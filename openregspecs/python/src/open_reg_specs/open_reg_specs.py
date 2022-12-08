@@ -409,17 +409,21 @@ class VTLEnrichedCube(EObject, metaclass=MetaEClass):
 
 class VTLGeneratedOutputlayer(EObject, metaclass=MetaEClass):
 
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     dependant_intermediate_layers = EReference(
         ordered=True, unique=True, containment=False, derived=False, upper=-1)
     VTLForOutputLayerAndIntemedateLayerCombinations = EReference(
         ordered=True, unique=True, containment=True, derived=False, upper=-1)
     outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, dependant_intermediate_layers=None, VTLForOutputLayerAndIntemedateLayerCombinations=None, outputLayer=None):
+    def __init__(self, *, name=None, dependant_intermediate_layers=None, VTLForOutputLayerAndIntemedateLayerCombinations=None, outputLayer=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
+
+        if name is not None:
+            self.name = name
 
         if dependant_intermediate_layers:
             self.dependant_intermediate_layers.extend(dependant_intermediate_layers)
@@ -457,15 +461,19 @@ class VTLForOutputLayerAndIntermediateLayerCombination(EObject, metaclass=MetaEC
 
 class VTLGeneratedIntermediateLayer(EObject, metaclass=MetaEClass):
 
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     dependant_enriched_cubes = EReference(
         ordered=True, unique=True, containment=False, derived=False)
     transformations = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, dependant_enriched_cubes=None, transformations=None):
+    def __init__(self, *, name=None, dependant_enriched_cubes=None, transformations=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
+
+        if name is not None:
+            self.name = name
 
         if dependant_enriched_cubes is not None:
             self.dependant_enriched_cubes = dependant_enriched_cubes
@@ -565,14 +573,18 @@ class EntityToVTLIntermediateLayerLink(EObject, metaclass=MetaEClass):
 
 class VTLForView(EObject, metaclass=MetaEClass):
 
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     view = EReference(ordered=True, unique=True, containment=False, derived=False)
     vtl = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, view=None, vtl=None):
+    def __init__(self, *, name=None, view=None, vtl=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
+
+        if name is not None:
+            self.name = name
 
         if view is not None:
             self.view = view

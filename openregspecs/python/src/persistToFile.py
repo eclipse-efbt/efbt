@@ -86,6 +86,6 @@ class PersistToFile:
         '''
         rset = ResourceSet()
 
-        resource = rset.create_resource(URI(self.outputDirectory + 'IL.rpmn'))  # This will create an XMI resource
+        resource = rset.create_resource(URI(context.outputDirectory + 'VTL.xmi'))  # This will create an XMI resource
         resource.append(context.moduleList)
         resource.save()

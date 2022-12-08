@@ -8,6 +8,8 @@
         upperBound="-1" eType="#//VTLForOutputLayerAndIntermediateLayerCombination"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="ecore:EClass Xcore.ecore#//XClass"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLForOutputLayerAndIntermediateLayerCombination">
     <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" upperBound="-1"
@@ -19,6 +21,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependant_enriched_cubes"
         eType="#//VTLScheme"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" eType="#//VTLScheme"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLTransformation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="expression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -59,5 +63,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="VTLForView">
     <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="ecore:EClass sql_lite.ecore#//View"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="vtl" eType="#//VTLGeneratedOutputlayer"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
   </eClassifiers>
 </ecore:EPackage>

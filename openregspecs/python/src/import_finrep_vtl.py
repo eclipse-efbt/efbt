@@ -61,9 +61,11 @@ class ImportFinrepVTL(object):
                         #new scheme
                         vtlScheme = VTLScheme()
                         vtlScheme.scheme_id = scheme
+                        context.vtlModule.VTLSchemes.append(vtlScheme) 
                     else:
                         vtlScheme = ImportFinrepVTL.lookupScheme(self,context,scheme)
-                        
+                     
+                      
                     transformation = VTLTransformation()
                     transformation.transformationID = transformationID
                     transformation.description = description
@@ -74,28 +76,36 @@ class ImportFinrepVTL(object):
                     #if scheme.startswith("G_F") and scheme.endswith("_FINREP_1"):
                     #    if "union" in expressio
         
-    def schemesContains(self,context,scheme):
+    def schemesContains(self,context,scheme_id):
         for scheme in context.vtlModule.VTLSchemes:
-            if scheme.scheme_id == scheme:
+            if scheme.scheme_id == scheme_id:
                 return True
         return False
     
-    def lookupScheme(self,context,scheme):
+    def lookupScheme(self,context,scheme_id):
         for scheme in context.vtlModule.VTLSchemes:
-            if scheme.scheme_id == scheme:
+            if scheme.scheme_id == scheme_id:
                 return scheme
         return None
     
     def buildROLToIntermediateLayerLink(self,context):
         for scheme in context.vtlModule.VTLSchemes:
-            if scheme.scheme_id.startswith("G_F") and scheme.endswith("_REF_UNFLDD_FINREP_1"):
+            #print("scheme")
+            #print(scheme)
+            if scheme.scheme_id.startswith("G_F") and scheme.scheme_id.endswith("_REF_UNFLDD_FINREP_1"):
+                print("intermediatescheme")
+                print(scheme)
                 # indexOfSchemeStart = scheme.scheme_id.find('G_')
-                indexOfSchemeEnd= scheme.scheme_id.find('UNFLDD_FINREP_1')
-                output_layer_name = scheme[2:indexOfSchemeEnd]
+                indexOfSchemeEnd= scheme.scheme_id.find('_REF_UNFLDD_FINREP_1')
+                output_layer_name = scheme.scheme_id[2:indexOfSchemeEnd]
                 
-                outputLayer=VTLGeneratedOutputlayer()
-                outputLayer.outputLayer = ImportFinrepVTL.findEntity(self,context,output_layer_name)
-                
+                outputLayer=VTLGeneratedOutputlayer(name=output_layer_name)
+                print("output_layer_name1")
+                print(output_layer_name)
+                outputLayer.outputLayer = ImportFinrepVTL.findEntity(self,context,output_layer_name + "_REF_OutputItem")
+                print("outputLayer.outputLayer")
+                print(outputLayer.outputLayer)
+                context.vtlModule.VTLGeneratedOutputLayers.append(outputLayer)
                 for transformation in scheme.expressions:
                     expression = transformation.expression
                     if "union" in expression:
@@ -103,33 +113,49 @@ class ImportFinrepVTL(object):
                         indexOfExpressionClosedBracket = expression.find(')')
                         print(indexOfExpressionOpenBracket)
                         print(indexOfExpressionClosedBracket)
-                        vtl_layer_list = expression[indexOfExpressionOpenBracket:indexOfExpressionClosedBracket].split(',')
+                        vtl_layer_list = expression[indexOfExpressionOpenBracket+1:indexOfExpressionClosedBracket].split(',')
                         for vtl_layer in vtl_layer_list:
-                            intermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,vtl_layer)
-                            outputLayer.dependant_intermediate_layers.append(intermediateLayer)
-                            combo = VTLForOutputLayerAndIntermediateLayerCombination()
-                            combo.outputLayer = outputLayer
-                            combo.intermediateLayer = intermediateLayer
-                            #get the special commands specific to the output layer and intermediate layer
-                            for  trans in scheme.expressions:
-                                indexOfColon = trans.expression.find(':')
-                                lhs = indexOfColon[0:indexOfColon]
-                                if lhs == intermediateLayer.transformations.scheme_id:
-                                    combo.transformations.append(trans)
-                            outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations.append(combo)
+                            print("vtl_layer")
+                            print(vtl_layer)
+                            
+                            intermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,"G_" + vtl_layer.strip() + "_1")
+                            print("intermediateLayer")
+                            print(intermediateLayer)
+                            if not(intermediateLayer is None):
+                                outputLayer.dependant_intermediate_layers.append(intermediateLayer)
+                                combo = VTLForOutputLayerAndIntermediateLayerCombination()
+                                combo.outputLayer = outputLayer
+                                combo.intermediateLayer = intermediateLayer
+                                #get the special commands specific to the output layer and intermediate layer
+                                for  trans in scheme.expressions:
+                                    indexOfColon = trans.expression.find(':')
+                                    lhs = trans.expression[0:indexOfColon]
+                                    if lhs == intermediateLayer.transformations.scheme_id:
+                                        combo.transformations.append(trans)
+                                outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations.append(combo)
                                     
 
     def findEntity(self,context,outputLayerName):
+        print("findEntity")
+        print(outputLayerName)
+        #print("outputLayerName")
         for rol in context.rpmnPackage.classifiers:
-            if rol.name == outputLayerName:
-                return rol
+            if isinstance(rol, XClass):
+                #print("rol.name")
+                #print(rol.name)
+                if rol.name == outputLayerName:
+                    return rol
         return None
             
         
-    def findIntermediateLayer(self,context,layer):
+    def findIntermediateLayer(self,context,layerName):
         
+        print("layerName")
+        print(layerName)
         for layer in context.vtlModule.VTLGeneratedIntermediateLayers:
-            if layer.transformations.scheme_id == layer:
+            #print(layer.transformations.scheme_id)
+            #print("layer.transformations.scheme_id")
+            if layer.transformations.scheme_id == layerName:
                 return layer
             
         return None
@@ -167,11 +193,12 @@ class ImportFinrepVTL(object):
     
     def buildListOfIntermediateFinrepLayers(self,context):
         for scheme in context.vtlModule.VTLSchemes:
-            if scheme.scheme_id.startsWith("G_") and not(scheme.scheme_id.startsWith("G_F_")) and scheme.scheme_id.endsWith("_FINREP_1"):  
-                intermediateLayer = VTLGeneratedIntermediateLayer()
+            if scheme.scheme_id.startswith("G_") and not(scheme.scheme_id.startswith("G_F_")) and scheme.scheme_id.endswith("_FINREP_1"):  
+                intermediateLayer = VTLGeneratedIntermediateLayer(name=scheme.scheme_id)
                 intermediateLayer.transformations = scheme
                 intermediateLayer.dependant_enriched_cubes = ImportFinrepVTL.findEnrichedCubeFor(self, context, scheme.scheme_id)
-                context.vtlModule.VTLGeneratedIntermediateLayers.append(intermediateLayer)
+                if ImportFinrepVTL.findIntermediateLayer(self,context,scheme.scheme_id) is None:
+                    context.vtlModule.VTLGeneratedIntermediateLayers.append(intermediateLayer)
     
     def findEnrichedCubeFor(self,context,scheme_id):
         indexOfSchemeStart = scheme_id.find('G_')
@@ -246,44 +273,56 @@ class ImportFinrepVTL(object):
                 else:
                     reportTemplate = row[0];
                     new = row[1];
-                    view =  View(name = reportTemplate)
+                    view =  View(name = "view_" + reportTemplate)
                     context.viewModule.views.append(view)
                     
-                    task = ScriptTask(name = reportTemplate)
+                    task = ScriptTask(name = "task_" + reportTemplate)
                     context.workflowModule.subProcess[0].flowElements.append(task)
                     ImportFinrepVTL.addLayers(self, context, view, task)
                     
                     
     def addLayers(self,context,view, task):
         
-        viewVTL = VTLForView()
-        viewVTL.view = view
-        rolVTL = ImportFinrepVTL.findOutputLayerVTL(self,context,view.name)
-        viewVTL.vtl = rolVTL
-        context.vtlModule.VTLForViews.append(viewVTL)
         
-        for intermediateLayer in rolVTL.dependant_intermediate_layers:
+        print("view.name")
+        print(view.name )
+        rolVTL = ImportFinrepVTL.findOutputLayerVTL(self,context,view.name + "_REF_OutputItem" )
+        print("rolVTL")
+        print(rolVTL)
+        if not (rolVTL is None):
+            viewVTL = VTLForView(name=view.name)
+            viewVTL.view = view
+            viewVTL.vtl = rolVTL
+            context.vtlModule.VTLForViews.append(viewVTL)
             
-            vtlLayer = intermediateLayer.transformations
-            link = ImportFinrepVTL.findEntityIntermediateLayerLink(self,context,vtlLayer) 
-            input_layer = link.entity
-            sqlfilter = link.filter
-            
-            selectionLayer = SelectionLayer(name = input_layer)
-            task.selectionLayers.extend([selectionLayer])
-            layerSQL = LayerSQL(name = input_layer)
-            vtlForSelectionLayer = VTLForSelectionLayer()
-            vtlForSelectionLayer.selectionLayer = selectionLayer
-            vtlForSelectionLayer.outputLayer = rolVTL
-            vtlForSelectionLayer.intermediateLayer = intermediateLayer
-            
-            
-            view.selectionLayerSQL.extend([layerSQL])
-            ImportFinrepVTL.addColumnsToLayer(self,layerSQL)
+            for intermediateLayer in rolVTL.dependant_intermediate_layers:
+                
+                vtlLayer = intermediateLayer.transformations
+                link = ImportFinrepVTL.findEntityIntermediateLayerLink(self,context,vtlLayer) 
+                if not( link is None):
+                    input_layer = link.entity
+                    sqlfilter = link.filter
+                    
+                    selectionLayer = SelectionLayer(name = input_layer)
+                    task.selectionLayers.extend([selectionLayer])
+                    layerSQL = LayerSQL(name = input_layer)
+                    vtlForSelectionLayer = VTLForSelectionLayer()
+                    vtlForSelectionLayer.selectionLayer = selectionLayer
+                    vtlForSelectionLayer.outputLayer = rolVTL
+                    vtlForSelectionLayer.intermediateLayer = intermediateLayer
+                    
+                    
+                    view.selectionLayerSQL.extend([layerSQL])
+                    ImportFinrepVTL.addColumnsToLayer(self,layerSQL)
            
     def findOutputLayerVTL(self,context, outputLayerName):
+        print("outputLayerName")
+        print(outputLayerName)
         for rol in context.vtlModule.VTLGeneratedOutputLayers:
-            if rol.outputLayer.name == outputLayerName:
+            if not(rol.outputLayer is None):
+                print("rol.outputLayer.name")
+                print(rol.outputLayer.name)
+            if not(rol.outputLayer is None) and (rol.outputLayer.name == outputLayerName):
                 return rol
         
 
@@ -340,5 +379,6 @@ class ImportFinrepVTL(object):
                     link.VTLIntermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,vtlLayer)
                     link.entity = ImportFinrepVTL.findEntity(self,context,inputLayer)
                     link.filter = filter 
+                    context.vtlModule.entityToVTLIntermediateLayerLinks.append(link)
                     
      
