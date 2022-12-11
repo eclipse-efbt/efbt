@@ -51,10 +51,12 @@ class ROLImport(object):
                 else:
 
                     className = row[0]
-                    objectID  = className
+                    objectID  = row[1]
                     cube_type = row[3]
                     valid_to  = row[11]
                     framework   = row[5]
+                    print("objectID")
+                    print(objectID)
                     
                     if ( (framework ==  "FINREP_REF") and (cube_type == "RC") and (valid_to == "12/31/9999") ) :
 
@@ -81,6 +83,8 @@ class ROLImport(object):
                         
             
                         # maintain a map a objectIDs to XClasses
+                        print("objectID")
+                        print(objectID)
                         context.classesMap[objectID]=xclass
                         context.tableMap[xclass]=xclassTable
                         
@@ -159,8 +163,11 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
+                    
                     variable = row[2]
-                    classID = row[0]
+                   
+                    classID = row[1]
+    
                     try: 
 
                         domainID = context.variableToDomainMap[variable]
@@ -197,9 +204,7 @@ class ROLImport(object):
                     adaptedValue = Utils.makeValidID(context.memberIDToMemberNameMap[member])
                     newAdaptedValue = Utils.uniqueValue( theEnum, adaptedValue)
                     newAdaptedName = Utils.uniqueName( theEnum, enumUsedName)
-                    
-                    
-                    
+
                     enumLiteral.name = newAdaptedName
                     enumLiteral.literal = newAdaptedValue
                     counter1 = counter1 + 1
@@ -222,11 +227,11 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    attributeName = row[1]
+                    attributeName = row[11]
                     amendedAttributeName = Utils.makeValidID(attributeName)
                     variable = row[2]
                    
-                    classID = row[0]
+                    classID = row[1]
                     try: 
                         theClass = context.classesMap[classID]
                         
@@ -239,40 +244,6 @@ class ROLImport(object):
                         amendedDomainName = Utils.makeValidID(domainID)
                         theEnum =  Utils.findROLEnum(amendedDomainName+"_domain",context.enumMap)
                         if  theEnum is not None:                     
-                            attribute = XAttribute()
-
-                            attribute.lowerBound=0
-                            attribute.upperBound=1
-                            if(theEnum.name == "String"):
-                                attribute.name = theAttributeName
-                                attribute.type = context.xString
-                            elif(theEnum.name.startswith("String_")):
-                                attribute.name = theAttributeName
-                                attribute.type = context.xString
-                            elif(theEnum.name == "Number"):
-                                attribute.name = theAttributeName
-                                attribute.type = context.xDouble
-                            elif(theEnum.name.startswith("Real_")):
-                                attribute.name = theAttributeName
-                                attribute.type = context.xDouble
-                            elif(theEnum.name.startswith("Monetary")):
-                                attribute.name = theAttributeName
-                                attribute.type = context.xInt
-                            elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
-                                attribute.name = theAttributeName
-                                attribute.type = context.xInt
-                            elif(theEnum.name.startswith("Non_negative_integers")): 
-                                attribute.name = theAttributeName
-                                attribute.type = context.xInt
-                            elif(theEnum.name.startswith("All_possible_dates")):
-                                attribute.name = theAttributeName
-                                attribute.type = context.xDate
-                                
-                            # This is a common domain used for String identifiers in BIRD in SQLDeveloper
-                            
-                            else:
-                                attribute.name = theAttributeName
-                                attribute.type = theEnum  
                             
                             if classIsDerived:
                                 operation = XOperation()
@@ -310,7 +281,7 @@ class ROLImport(object):
                             try:
             
                                 theClass = context.classesMap[classID]
-                                theClass.members.extend([attribute])
+                                
                                 if classIsDerived:
                                     theClass.members.extend([operation])
             
