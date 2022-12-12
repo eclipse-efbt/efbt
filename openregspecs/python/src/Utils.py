@@ -233,7 +233,8 @@ class Utils(object):
                 inputString = "_" + inputString
         # we replace special characters not allowed in id's with an underscore
         amendedInputString  =  inputString.replace('  ', ' ').replace(' ', '_').replace(')', '_').replace('(', '_') \
-                .replace(',', '_').replace('\\', '_').replace('/', '_').replace('-', '_').replace(':', '_') \
+                .replace(',', '_').replace('\'', '_').replace('\n', '_').replace('\r', '_').replace('\'t', '_').replace('new', 'New') \
+                .replace('\\', '_').replace('/', '_').replace('-', '_').replace(':', '_') \
                 .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_gt') \
                 .replace('<', '_lt').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_eq').replace('#', '_') \
                 .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace('?', '_').replace('–', '_').replace('__', '_').replace('__', '_') \
@@ -242,9 +243,10 @@ class Utils(object):
                 .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
                 .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
                 .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
-                .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_')
+                .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
+                .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_')
           
-        returnString = Utils.replaceAcutesGravesAndCircumflexes(amendedInputString)      
+        returnString = Utils.replaceAcutesGravesAndCircumflexes(amendedInputString).replace('\'', '_')      
 
         return returnString;
     

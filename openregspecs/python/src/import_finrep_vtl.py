@@ -129,8 +129,8 @@ class ImportFinrepVTL(object):
                                 #get the special commands specific to the output layer and intermediate layer
                                 for  trans in scheme.expressions:
                                     indexOfColon = trans.expression.find(':')
-                                    lhs = trans.expression[0:indexOfColon]
-                                    if lhs == intermediateLayer.transformations.scheme_id:
+                                    lhs = trans.expression[0:indexOfColon].strip()
+                                    if ("G_" + lhs +"_1") == intermediateLayer.transformations.scheme_id:
                                         combo.transformations.append(trans)
                                 outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations.append(combo)
                                     
@@ -203,9 +203,14 @@ class ImportFinrepVTL(object):
     def findEnrichedCubeFor(self,context,scheme_id):
         indexOfSchemeStart = scheme_id.find('G_')
         indexOfSchemeEnd= scheme_id.find('_FINREP_1')
-        enrichedCube = scheme_id[indexOfSchemeStart:indexOfSchemeEnd] + "E_1"
+        enrichedCube = "P_" + scheme_id[2:indexOfSchemeEnd] + "_E_1"
+        print("enrichedCube")
+        print(enrichedCube)
+
         returnTransformations = None
         for scheme in context.vtlModule.VTLSchemes:
+            print("scheme.scheme_id")
+            print(scheme.scheme_id)
             if scheme.scheme_id == enrichedCube:  
                 returnTransformations = scheme
                 
@@ -333,8 +338,8 @@ class ImportFinrepVTL(object):
         
 
     def findEntityIntermediateLayerLink(self,context,intermediateLayer):   
-        print("intermediateLayer")
-        print(intermediateLayer)  
+        #print("intermediateLayer")
+        #print(intermediateLayer)  
         for link in context.vtlModule.entityToVTLIntermediateLayerLinks:
             if link.VTLIntermediateLayer == intermediateLayer:
                 return link

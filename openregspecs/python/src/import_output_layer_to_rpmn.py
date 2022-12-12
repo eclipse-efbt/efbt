@@ -143,10 +143,17 @@ class ROLImport(object):
                     #domainName = Utils.makeValidID(row[3])
                     memberCode= row[0]
                     memberName = row[5]
+                    if (memberName is None) or (memberName == ""):
+                        memberName = memberID
                     domainId =  row[2]
-                    context.memberIDToDomainMap[memberID] = domainId
-                    context.memberIDToMemberNameMap[memberID] = memberName
-                    context.memberIDToMemberCodeMap[memberID] = memberCode
+                    
+                    if(memberID == "EBA_PL_EBA_x94"):
+                        a=2
+                    #if there is no domain ID this suggests a falty row in the csv due to return statements in fields
+                    if not(domainId is None) and not(domainId == ""):
+                        context.memberIDToDomainMap[memberID] = domainId
+                        context.memberIDToMemberNameMap[memberID] = memberName
+                        context.memberIDToMemberCodeMap[memberID] = memberCode
                     
                        
                        

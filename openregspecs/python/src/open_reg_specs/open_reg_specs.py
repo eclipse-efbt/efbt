@@ -206,16 +206,16 @@ class SelectClause(EObject, metaclass=MetaEClass):
 
 class SelectColumn(EObject, metaclass=MetaEClass):
 
-    as_ = EReference(ordered=True, unique=True, containment=False, derived=False)
+    asAttribute = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, as_=None):
+    def __init__(self, *, asAttribute=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
-        if as_ is not None:
-            self.as_ = as_
+        if asAttribute is not None:
+            self.asAttribute = asAttribute
 
 
 class WhereClause(EObject, metaclass=MetaEClass):

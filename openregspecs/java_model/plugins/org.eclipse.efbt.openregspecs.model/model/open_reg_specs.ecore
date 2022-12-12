@@ -266,7 +266,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectClause"/>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="#//XOperation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnMemberAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="#//XEnumLiteral"/>

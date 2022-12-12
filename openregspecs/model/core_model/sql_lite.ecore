@@ -19,7 +19,7 @@
         eType="#//WhereClause" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="ecore:EClass Xcore.ecore#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="ecore:EClass Xcore.ecore#//XOperation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnMemberAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass Xcore.ecore#//XEnumLiteral"/>
