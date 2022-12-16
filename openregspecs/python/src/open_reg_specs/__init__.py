@@ -1,13 +1,13 @@
 
 from .open_reg_specs import getEClassifier, eClassifiers
 from .open_reg_specs import name, nsURI, nsPrefix, eClass
-from .open_reg_specs import BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Module, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, LayerSQL, SelectClause, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, Comparitor, WhereClause, ViewModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, InputFile, WorkflowModule, XAttribute, XClass, XClassifier, XDataType, XEnum, XEnumLiteral, XMember, XModelElement, XNamedElement, XOperation, XPackage, XReference, XStructuralFeature, XTypedElement
+from .open_reg_specs import BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Module, ModuleList, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, LayerSQL, SelectClause, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, Comparitor, WhereClause, ViewModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, InputFile, WorkflowModule, XAttribute, XClass, XClassifier, XDataType, XEnum, XEnumLiteral, XMember, XModelElement, XNamedElement, XOperation, XPackage, XReference, XStructuralFeature, XTypedElement, VTLEnrichedCube, VTLGeneratedOutputlayer, VTLForOutputLayerAndIntermediateLayerCombination, VTLGeneratedIntermediateLayer, VTLTransformation, VTLScheme, VTLForSelectionLayer, VTLModule, EntityToVTLIntermediateLayerLink, VTLForView
 
 
 from . import open_reg_specs
 
-__all__ = ['BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Module', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'LayerSQL', 'SelectClause',
-           'SelectColumn', 'SelectColumnMemberAs', 'SelectColumnAttributeAs', 'Comparitor', 'WhereClause', 'ViewModule', 'ActivityTag', 'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope', 'UnitTestScope', 'E2ETestScope', 'InputFile', 'WorkflowModule', 'XAttribute', 'XClass', 'XClassifier', 'XDataType', 'XEnum', 'XEnumLiteral', 'XMember', 'XModelElement', 'XNamedElement', 'XOperation', 'XPackage', 'XReference', 'XStructuralFeature', 'XTypedElement']
+__all__ = ['BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Module', 'ModuleList', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'LayerSQL', 'SelectClause', 'SelectColumn', 'SelectColumnMemberAs', 'SelectColumnAttributeAs', 'Comparitor', 'WhereClause', 'ViewModule', 'ActivityTag',
+           'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope', 'UnitTestScope', 'E2ETestScope', 'InputFile', 'WorkflowModule', 'XAttribute', 'XClass', 'XClassifier', 'XDataType', 'XEnum', 'XEnumLiteral', 'XMember', 'XModelElement', 'XNamedElement', 'XOperation', 'XPackage', 'XReference', 'XStructuralFeature', 'XTypedElement', 'VTLEnrichedCube', 'VTLGeneratedOutputlayer', 'VTLForOutputLayerAndIntermediateLayerCombination', 'VTLGeneratedIntermediateLayer', 'VTLTransformation', 'VTLScheme', 'VTLForSelectionLayer', 'VTLModule', 'EntityToVTLIntermediateLayerLink', 'VTLForView']
 
 eSubpackages = []
 eSuperPackage = None
@@ -22,6 +22,7 @@ ScriptTask.selectionLayers.eType = SelectionLayer
 ScriptTask.outputLayer.eType = XClass
 UserTask.entity.eType = XClass
 Module.dependencies.eType = Module
+ModuleList.modules.eType = Module
 AllowedTypes.allowedTypes.eType = RequirementType
 RequirementsModule.rules.eType = TitledRequirementsSection
 RequirementsModule.allowedtypes.eType = AllowedTypes
@@ -34,7 +35,7 @@ View.selectionLayerSQL.eType = LayerSQL
 LayerSQL.selectionLayer.eType = SelectionLayer
 LayerSQL.columns.eType = SelectColumn
 LayerSQL.whereClause.eType = WhereClause
-SelectColumn.as_.eType = XAttribute
+SelectColumn.asAttribute.eType = XOperation
 SelectColumnMemberAs.memberAsConstant.eType = XEnumLiteral
 SelectColumnAttributeAs.attribute.eType = XAttribute
 WhereClause.attribute1.eType = XAttribute
@@ -61,6 +62,30 @@ WorkflowModule.scenarioTags.eType = ScenarioTag
 WorkflowModule.subProcess.eType = SubProcess
 XClass.superTypes.eType = XClass
 XTypedElement.type.eType = XClassifier
+VTLEnrichedCube.transformations.eType = VTLTransformation
+VTLGeneratedOutputlayer.dependant_intermediate_layers.eType = VTLGeneratedIntermediateLayer
+VTLGeneratedOutputlayer.VTLForOutputLayerAndIntemedateLayerCombinations.eType = VTLForOutputLayerAndIntermediateLayerCombination
+VTLGeneratedOutputlayer.outputLayer.eType = XClass
+VTLForOutputLayerAndIntermediateLayerCombination.transformations.eType = VTLTransformation
+VTLForOutputLayerAndIntermediateLayerCombination.outputLayer.eType = VTLGeneratedOutputlayer
+VTLForOutputLayerAndIntermediateLayerCombination.intermediateLayer.eType = VTLGeneratedIntermediateLayer
+VTLGeneratedIntermediateLayer.dependant_enriched_cubes.eType = VTLScheme
+VTLGeneratedIntermediateLayer.transformations.eType = VTLScheme
+VTLScheme.expressions.eType = VTLTransformation
+VTLForSelectionLayer.selectionLayer.eType = LayerSQL
+VTLForSelectionLayer.outputLayer.eType = VTLGeneratedOutputlayer
+VTLForSelectionLayer.intermediateLayer.eType = VTLGeneratedIntermediateLayer
+VTLModule.VTLSchemes.eType = VTLScheme
+VTLModule.VTLGeneratedOutputLayers.eType = VTLGeneratedOutputlayer
+VTLModule.VTLGeneratedIntermediateLayers.eType = VTLGeneratedIntermediateLayer
+VTLModule.VTLEnrichedCubes.eType = VTLEnrichedCube
+VTLModule.VTLForSelectionLayers.eType = VTLForSelectionLayer
+VTLModule.entityToVTLIntermediateLayerLinks.eType = EntityToVTLIntermediateLayerLink
+VTLModule.VTLForViews.eType = VTLForView
+EntityToVTLIntermediateLayerLink.VTLIntermediateLayer.eType = VTLGeneratedIntermediateLayer
+EntityToVTLIntermediateLayerLink.entity.eType = XClass
+VTLForView.view.eType = View
+VTLForView.vtl.eType = VTLGeneratedOutputlayer
 FlowNode.outgoing.eType = SequenceFlow
 FlowNode.incoming.eType = SequenceFlow
 SequenceFlow.targetRef.eType = FlowNode

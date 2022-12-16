@@ -71,6 +71,20 @@ class Module(EObject, metaclass=MetaEClass):
             self.dependencies.extend(dependencies)
 
 
+class ModuleList(EObject, metaclass=MetaEClass):
+
+    modules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, modules=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if modules:
+            self.modules.extend(modules)
+
+
 class AllowedTypes(EObject, metaclass=MetaEClass):
 
     allowedTypes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -192,16 +206,16 @@ class SelectClause(EObject, metaclass=MetaEClass):
 
 class SelectColumn(EObject, metaclass=MetaEClass):
 
-    as_ = EReference(ordered=True, unique=True, containment=False, derived=False)
+    asAttribute = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, as_=None):
+    def __init__(self, *, asAttribute=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
-        if as_ is not None:
-            self.as_ = as_
+        if asAttribute is not None:
+            self.asAttribute = asAttribute
 
 
 class WhereClause(EObject, metaclass=MetaEClass):
@@ -376,6 +390,207 @@ class XModelElement(EObject, metaclass=MetaEClass):
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
+
+
+class VTLEnrichedCube(EObject, metaclass=MetaEClass):
+
+    transformations = EReference(ordered=True, unique=True,
+                                 containment=False, derived=False, upper=-1)
+
+    def __init__(self, *, transformations=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if transformations:
+            self.transformations.extend(transformations)
+
+
+class VTLGeneratedOutputlayer(EObject, metaclass=MetaEClass):
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    dependant_intermediate_layers = EReference(
+        ordered=True, unique=True, containment=False, derived=False, upper=-1)
+    VTLForOutputLayerAndIntemedateLayerCombinations = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, name=None, dependant_intermediate_layers=None, VTLForOutputLayerAndIntemedateLayerCombinations=None, outputLayer=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if name is not None:
+            self.name = name
+
+        if dependant_intermediate_layers:
+            self.dependant_intermediate_layers.extend(dependant_intermediate_layers)
+
+        if VTLForOutputLayerAndIntemedateLayerCombinations:
+            self.VTLForOutputLayerAndIntemedateLayerCombinations.extend(
+                VTLForOutputLayerAndIntemedateLayerCombinations)
+
+        if outputLayer is not None:
+            self.outputLayer = outputLayer
+
+
+class VTLForOutputLayerAndIntermediateLayerCombination(EObject, metaclass=MetaEClass):
+
+    transformations = EReference(ordered=True, unique=True,
+                                 containment=False, derived=False, upper=-1)
+    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    intermediateLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, transformations=None, outputLayer=None, intermediateLayer=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if transformations:
+            self.transformations.extend(transformations)
+
+        if outputLayer is not None:
+            self.outputLayer = outputLayer
+
+        if intermediateLayer is not None:
+            self.intermediateLayer = intermediateLayer
+
+
+class VTLGeneratedIntermediateLayer(EObject, metaclass=MetaEClass):
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    dependant_enriched_cubes = EReference(
+        ordered=True, unique=True, containment=False, derived=False)
+    transformations = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, name=None, dependant_enriched_cubes=None, transformations=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if name is not None:
+            self.name = name
+
+        if dependant_enriched_cubes is not None:
+            self.dependant_enriched_cubes = dependant_enriched_cubes
+
+        if transformations is not None:
+            self.transformations = transformations
+
+
+class VTLTransformation(EObject, metaclass=MetaEClass):
+
+    expression = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    transformation_id = EAttribute(eType=EString, unique=True,
+                                   derived=False, changeable=True, iD=True)
+    order_in_scheme = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, expression=None, description=None, transformation_id=None, order_in_scheme=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if expression is not None:
+            self.expression = expression
+
+        if description is not None:
+            self.description = description
+
+        if transformation_id is not None:
+            self.transformation_id = transformation_id
+
+        if order_in_scheme is not None:
+            self.order_in_scheme = order_in_scheme
+
+
+class VTLScheme(EObject, metaclass=MetaEClass):
+
+    scheme_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    expressions = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, expressions=None, scheme_id=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if scheme_id is not None:
+            self.scheme_id = scheme_id
+
+        if expressions:
+            self.expressions.extend(expressions)
+
+
+class VTLForSelectionLayer(EObject, metaclass=MetaEClass):
+
+    selectionLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    intermediateLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, selectionLayer=None, outputLayer=None, intermediateLayer=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if selectionLayer is not None:
+            self.selectionLayer = selectionLayer
+
+        if outputLayer is not None:
+            self.outputLayer = outputLayer
+
+        if intermediateLayer is not None:
+            self.intermediateLayer = intermediateLayer
+
+
+class EntityToVTLIntermediateLayerLink(EObject, metaclass=MetaEClass):
+
+    filter = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    VTLIntermediateLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    entity = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, VTLIntermediateLayer=None, entity=None, filter=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if filter is not None:
+            self.filter = filter
+
+        if VTLIntermediateLayer is not None:
+            self.VTLIntermediateLayer = VTLIntermediateLayer
+
+        if entity is not None:
+            self.entity = entity
+
+
+class VTLForView(EObject, metaclass=MetaEClass):
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    view = EReference(ordered=True, unique=True, containment=False, derived=False)
+    vtl = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, name=None, view=None, vtl=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if name is not None:
+            self.name = name
+
+        if view is not None:
+            self.view = view
+
+        if vtl is not None:
+            self.vtl = vtl
 
 
 @abstract
@@ -651,6 +866,47 @@ class XPackage(Module):
 
         if classifiers:
             self.classifiers.extend(classifiers)
+
+
+class VTLModule(Module):
+
+    VTLSchemes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    VTLGeneratedOutputLayers = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    VTLGeneratedIntermediateLayers = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    VTLEnrichedCubes = EReference(ordered=True, unique=True,
+                                  containment=True, derived=False, upper=-1)
+    VTLForSelectionLayers = EReference(ordered=True, unique=True,
+                                       containment=True, derived=False, upper=-1)
+    entityToVTLIntermediateLayerLinks = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    VTLForViews = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, VTLSchemes=None, VTLGeneratedOutputLayers=None, VTLGeneratedIntermediateLayers=None, VTLEnrichedCubes=None, VTLForSelectionLayers=None, entityToVTLIntermediateLayerLinks=None, VTLForViews=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if VTLSchemes:
+            self.VTLSchemes.extend(VTLSchemes)
+
+        if VTLGeneratedOutputLayers:
+            self.VTLGeneratedOutputLayers.extend(VTLGeneratedOutputLayers)
+
+        if VTLGeneratedIntermediateLayers:
+            self.VTLGeneratedIntermediateLayers.extend(VTLGeneratedIntermediateLayers)
+
+        if VTLEnrichedCubes:
+            self.VTLEnrichedCubes.extend(VTLEnrichedCubes)
+
+        if VTLForSelectionLayers:
+            self.VTLForSelectionLayers.extend(VTLForSelectionLayers)
+
+        if entityToVTLIntermediateLayerLinks:
+            self.entityToVTLIntermediateLayerLinks.extend(entityToVTLIntermediateLayerLinks)
+
+        if VTLForViews:
+            self.VTLForViews.extend(VTLForViews)
 
 
 @abstract
