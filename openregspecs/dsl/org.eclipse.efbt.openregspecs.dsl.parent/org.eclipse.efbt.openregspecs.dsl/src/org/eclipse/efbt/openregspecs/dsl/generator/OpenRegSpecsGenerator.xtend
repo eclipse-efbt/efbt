@@ -119,7 +119,7 @@ catch (IOException e) {
 «var tableName = serviceTask.enrichedAttribute.containingClass.name»
 «var derived = tableName.endsWith("derived")»
 «IF derived »
-«IF serviceTask.enrichedAttribute.ID »
+«IF serviceTask.enrichedAttribute.name.endsWith("identifier") »
 «tableName»_DerivedTable «tableName»_DerivedTable1 = «capatilisedPackageNme»Factory.eINSTANCE.create«tableName»_DerivedTable();
 «var sourceTable1Name = ""»	
 «FOR member : (serviceTask.enrichedAttribute.eContainer as XClass).members»
@@ -130,20 +130,19 @@ EList<«tableName»> details«counter4» 	 = «tableName»_DerivedTable1.«table
 for («tableName» «tableName»1 : details«counter4++») {«ENDIF»
 «ENDFOR»
 «ENDIF»			 
-«IF (serviceTask.enrichedAttribute instanceof XAttribute) » «tableName»1.set«serviceTask.enrichedAttribute.name»(«tableName»1.«serviceTask.enrichedAttribute.name»_default());«ENDIF»
+«IF (serviceTask.enrichedAttribute.name.endsWith("identifier")) » «tableName»1.set«serviceTask.enrichedAttribute.name.substring(0, 1).toUpperCase()+ serviceTask.enrichedAttribute.name.substring(1)»(«tableName»1.«serviceTask.enrichedAttribute.name»());«ENDIF»
 
 «ENDIF»
 «ENDFOR»
 }
-// save netted_delta_sensitivities_per_risk_factor_and_tenor_derived_DerivedTable
-		    final ResourceSet resourceSet2 = new ResourceSetImpl();
+
 «FOR serviceTask : resource.allContents.filter(ServiceTask).toIterable»	 
-«IF serviceTask.enrichedAttribute.ID »
+«IF serviceTask.enrichedAttribute.name.endsWith("identifier") »
 «var tableName = serviceTask.enrichedAttribute.containingClass.name»
 «var derived = tableName.endsWith("derived")»
 «IF derived »
 	        
-	        Resource «tableName»Resource = resourceSet2.createResource(URI.createFileURI("«tableName»_DerivedTable1.xmi"));
+	        Resource «tableName»Resource = resSet.createResource(URI.createFileURI("«tableName»_DerivedTable1.xmi"));
 	        «tableName»Resource.getContents().add(«tableName»_DerivedTable1);
 	        try {
 				«tableName»Resource.save(null);

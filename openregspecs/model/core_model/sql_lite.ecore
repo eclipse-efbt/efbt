@@ -25,7 +25,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass Xcore.ecore#//XEnumLiteral"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnAttributeAs" eSuperTypes="#//SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass Xcore.ecore#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass Xcore.ecore#//XMember"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Comparitor">
     <eLiterals name="less_than"/>

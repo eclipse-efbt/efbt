@@ -49,10 +49,15 @@
   <eClassifiers xsi:type="ecore:EClass" name="InclusiveGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParallelGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ServiceTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="ecore:EClass Xcore.ecore#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="ecore:EClass Xcore.ecore#//XOperation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
         eType="#//Scenario" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="secondAttribute" eType="ecore:EClass Xcore.ecore#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributesForScenarioChoice"
+        upperBound="-1" eType="ecore:EClass Xcore.ecore#//XMember"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityCreationTask" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributesForEntityCreation"
+        upperBound="-1" eType="ecore:EClass Xcore.ecore#//XMember"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
@@ -95,7 +100,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributes" upperBound="-1"
-        eType="ecore:EClass Xcore.ecore#//XAttribute"/>
+        eType="ecore:EClass Xcore.ecore#//XMember"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="data_constraints" eType="#//DataConstraint"
         containment="true"/>
   </eClassifiers>
