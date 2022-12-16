@@ -11,6 +11,7 @@ class PersistToFile:
     def saveModelAsRPMNFile(self,context ):
         PersistToFile.persistDataModel(self,context)
         PersistToFile.persistWorkflow(self,context)
+        PersistToFile.persistGenerationTransformations(self,context)
         
     def persistDataModel(self,context):
             
@@ -123,7 +124,7 @@ class PersistToFile:
             
             for element in process.flowElements:
                 if not (counter == 0):
-                    f.write(",")
+                    f.write(",\r")
                 counter= counter +1
                 f.write("SequenceFlow sf" + str(counter) + " from gw1 to " + element.name )
             f.write("\r}\r") 
@@ -132,6 +133,82 @@ class PersistToFile:
             f.close()
             
             
+    def persistGenerationTransformations (self,context):
+        views = context.viewModule.views
+
+        for view in views:
+            f = open(context.outputDirectory + view.name + '_view.rpmn', "a",  encoding='utf-8')
+            f.write("ViewModule " + view.name + "_viewModule\r{\r")
+            f.write("\tviews " + "{\r")
+            f.write("\t\tView " + view.name + "_view {\r")
+            for layer in view.selectionLayerSQL:
+                if not(layer.selectionLayer.name is None):
+                    f.write("\t\t\tLayerSQL {\r")
+                    f.write("selectionLayer \"finrepWorkflow.finrepReports.task_" + view.name[5:len(view.name)] + "." + layer.selectionLayer.name + "\"\r")
+                    for column in layer.columns:
+                        f.write("\t\t\t\tSelectMember   \"\" as \"bird."+view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name +"\"\r")
+                    f.write("\t\t\t}\r")
+                    f.write(PersistToFile.getVTLTextForLayer(self,context,layer))
+            f.write("\t\t}\r")
+            f.write("\t}\r")
+            f.write("}\r")
+            f.write(PersistToFile.getVTLTextForView(self,context,view))
+            f.close()
+                    
+
+    def getVTLTextForLayer(self,context,layer):
+        
+        output = "" 
+        output = output + "/** VTL intermediate layer and report combination specific VTL \r"
+        intermediateLayer = None
+        for vtl in context.vtlModule.VTLForSelectionLayers:
+            if vtl.selectionLayer == layer:
+                intermediateLayer = vtl.intermediateLayer
+                for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
+                    if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.selectionLayer.generatedEntity):
+                        for trans in combo.transformations:
+                            output = output + trans.expression + "\r"
+        output = output +  "*/\r\r"
+        
+        output = output + "/** VTL intermediate layer specific VTL \r"
+        intermediateLayer = None
+        for vtl in context.vtlModule.VTLForSelectionLayers:
+            if vtl.selectionLayer == layer:
+                intermediateLayer = vtl.intermediateLayer
+                for trans in intermediateLayer.transformations.expressions:
+                    output = output + trans.expression + "\r"
+        output = output +  "*/\r\r"
+        
+        output = output + "/** assocated enriched layer in VTL \r"
+        enrichedLayer = intermediateLayer.dependant_enriched_cubes
+        if not(enrichedLayer is None):
+            output = output + "enriched Layer :" + enrichedLayer.scheme_id + "\r"
+            output = output + "enriched Layer transformations:\r"
+            for exp in enrichedLayer.expressions:
+                output = output + exp.expression + "\r"
+        output = output +  "*/\r\r"    
+       
+        output = output + "/** associated input layer table and filter \r"
+        for link in context.vtlModule.entityToVTLIntermediateLayerLinks:
+            if link.VTLIntermediateLayer == intermediateLayer:
+                output = output +  "input layer entity: " + link.entity.name + "\r"        
+                output = output +  "filter: " + link.filter + "\r"  
+        
+        output = output +  "*/\r\r" 
+        return output
+            
+        
+    def getVTLTextForView(self,context,view):
+        output = "" 
+        output = output + "/** View specific VTL \r"
+        for vtl in context.vtlModule.VTLForViews:
+            if vtl.view == view:
+                output = output + "output layer = " + vtl.vtl.outputLayer.name + "\r"
+        output = output +  "*/\r\r"
+        
+        return output
+        
+        
     def countNonNoneLayers(self,element ): 
         counter = 0
         for layer in element.selectionLayers:

@@ -209,9 +209,8 @@ class ImportFinrepVTL(object):
 
         returnTransformations = None
         for scheme in context.vtlModule.VTLSchemes:
-            print("scheme.scheme_id")
-            print(scheme.scheme_id)
-            if scheme.scheme_id == enrichedCube:  
+
+            if scheme.scheme_id == enrichedCube:
                 returnTransformations = scheme
                 
         return returnTransformations

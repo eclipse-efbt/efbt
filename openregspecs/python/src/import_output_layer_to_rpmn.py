@@ -147,8 +147,6 @@ class ROLImport(object):
                         memberName = memberID
                     domainId =  row[2]
                     
-                    if(memberID == "EBA_PL_EBA_x94"):
-                        a=2
                     #if there is no domain ID this suggests a falty row in the csv due to return statements in fields
                     if not(domainId is None) and not(domainId == ""):
                         context.memberIDToDomainMap[memberID] = domainId

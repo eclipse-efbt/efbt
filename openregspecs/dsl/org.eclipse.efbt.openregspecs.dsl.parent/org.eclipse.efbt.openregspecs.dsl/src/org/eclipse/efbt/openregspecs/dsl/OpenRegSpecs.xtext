@@ -454,14 +454,14 @@ SelectColumnMemberAs returns open_reg_specs::SelectColumnMemberAs:
 	{open_reg_specs::SelectColumnMemberAs}
 	'SelectMember'
 		( memberAsConstant=[open_reg_specs::XEnumLiteral|EString])?
-		('as' ^as=[open_reg_specs::XAttribute|EString])?
+		('as' asAttribute=[open_reg_specs::XOperation|EString])?
 		;
 	
 SelectColumnAttributeAs returns open_reg_specs::SelectColumnAttributeAs:
 	{open_reg_specs::SelectColumnAttributeAs}
 	'SelectAttribute'
 		( attribute=[open_reg_specs::XAttribute|EString])?
-		('as' ^as=[open_reg_specs::XAttribute|EString])?
+		('as' asAttribute=[open_reg_specs::XOperation|EString])?
 	;
 	
 
