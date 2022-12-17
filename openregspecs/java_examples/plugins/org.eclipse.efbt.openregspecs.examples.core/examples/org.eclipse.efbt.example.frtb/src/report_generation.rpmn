@@ -41,7 +41,7 @@ SPDX-License-Identifier: EPL-2.0
 					SelectMember "bird.Base.Memorandum_Items" as "bird.OUTPUT_LAYER_FRTB.Base"
 					SelectMember "bird.Main_Catagory.Instruments_Subject_To_Market_Risk" as "bird.OUTPUT_LAYER_FRTB.Main_Catagory"
 					SelectMember "bird.Prudential_Portfolio.Banking_And_Trading_Book" as "bird.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio"
-					SelectAttribute "bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.Netted_delta_sensitivities" as "bird.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors" 
+					SelectAttribute "bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities" as "bird.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors" 
 					SelectMember  "bird.Type_And_Nature_Of_Sensitivity.Sensitivity_Net_Per_Risk_Class_Unweighted" as "bird.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity"
 					SelectMember  "bird.Type_Of_Risk.GIRR" as "bird.OUTPUT_LAYER_FRTB.Type_Of_Risk"
 					}
