@@ -200,11 +200,12 @@ class PersistToFile:
         
     def getVTLTextForView(self,context,view):
         output = "" 
-        output = output + "/** View specific VTL \r"
-        for vtl in context.vtlModule.VTLForViews:
-            if vtl.view == view:
-                output = output + "output layer = " + vtl.vtl.outputLayer.name + "\r"
-        output = output +  "*/\r\r"
+        if context.persistVTLComments:
+            output = output + "/** View specific VTL \r"
+            for vtl in context.vtlModule.VTLForViews:
+                if vtl.view == view:
+                    output = output + "output layer = " + vtl.vtl.outputLayer.name + "\r"
+            output = output +  "*/\r\r"
         
         return output
         

@@ -34,6 +34,7 @@ if __name__ == '__main__':
     importFinrepVTL=True
     persistToXML = True
     persistToRPMN = True
+    context.persistVTLComments=True
     context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\resources'
     context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-nov\\git\\efbt\\openregspecs\\python\\results\\'
     
