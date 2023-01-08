@@ -63,7 +63,7 @@ class Context(object):
     vtlModule = VTLModule(name = "vtl")
     moduleList = ModuleList()
 
-    
+    persistVTLComments = True
     def __init__(self):
         
         
