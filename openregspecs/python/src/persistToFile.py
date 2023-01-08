@@ -159,42 +159,43 @@ class PersistToFile:
     def getVTLTextForLayer(self,context,layer):
         
         output = "" 
-        output = output + "/** VTL intermediate layer and report combination specific VTL \r"
-        intermediateLayer = None
-        for vtl in context.vtlModule.VTLForSelectionLayers:
-            if vtl.selectionLayer == layer:
-                intermediateLayer = vtl.intermediateLayer
-                for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
-                    if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.selectionLayer.generatedEntity):
-                        for trans in combo.transformations:
-                            output = output + trans.expression + "\r"
-        output = output +  "*/\r\r"
-        
-        output = output + "/** VTL intermediate layer specific VTL \r"
-        intermediateLayer = None
-        for vtl in context.vtlModule.VTLForSelectionLayers:
-            if vtl.selectionLayer == layer:
-                intermediateLayer = vtl.intermediateLayer
-                for trans in intermediateLayer.transformations.expressions:
-                    output = output + trans.expression + "\r"
-        output = output +  "*/\r\r"
-        
-        output = output + "/** assocated enriched layer in VTL \r"
-        enrichedLayer = intermediateLayer.dependant_enriched_cubes
-        if not(enrichedLayer is None):
-            output = output + "enriched Layer :" + enrichedLayer.scheme_id + "\r"
-            output = output + "enriched Layer transformations:\r"
-            for exp in enrichedLayer.expressions:
-                output = output + exp.expression + "\r"
-        output = output +  "*/\r\r"    
-       
-        output = output + "/** associated input layer table and filter \r"
-        for link in context.vtlModule.entityToVTLIntermediateLayerLinks:
-            if link.VTLIntermediateLayer == intermediateLayer:
-                output = output +  "input layer entity: " + link.entity.name + "\r"        
-                output = output +  "filter: " + link.filter + "\r"  
-        
-        output = output +  "*/\r\r" 
+        if context.persistVTLComments:
+            output = output + "/** VTL intermediate layer and report combination specific VTL \r"
+            intermediateLayer = None
+            for vtl in context.vtlModule.VTLForSelectionLayers:
+                if vtl.selectionLayer == layer:
+                    intermediateLayer = vtl.intermediateLayer
+                    for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
+                        if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.selectionLayer.generatedEntity):
+                            for trans in combo.transformations:
+                                output = output + trans.expression + "\r"
+            output = output +  "*/\r\r"
+            
+            output = output + "/** VTL intermediate layer specific VTL \r"
+            intermediateLayer = None
+            for vtl in context.vtlModule.VTLForSelectionLayers:
+                if vtl.selectionLayer == layer:
+                    intermediateLayer = vtl.intermediateLayer
+                    for trans in intermediateLayer.transformations.expressions:
+                        output = output + trans.expression + "\r"
+            output = output +  "*/\r\r"
+            
+            output = output + "/** assocated enriched layer in VTL \r"
+            enrichedLayer = intermediateLayer.dependant_enriched_cubes
+            if not(enrichedLayer is None):
+                output = output + "enriched Layer :" + enrichedLayer.scheme_id + "\r"
+                output = output + "enriched Layer transformations:\r"
+                for exp in enrichedLayer.expressions:
+                    output = output + exp.expression + "\r"
+            output = output +  "*/\r\r"    
+           
+            output = output + "/** associated input layer table and filter \r"
+            for link in context.vtlModule.entityToVTLIntermediateLayerLinks:
+                if link.VTLIntermediateLayer == intermediateLayer:
+                    output = output +  "input layer entity: " + link.entity.name + "\r"        
+                    output = output +  "filter: " + link.filter + "\r"  
+            
+            output = output +  "*/\r\r" 
         return output
             
         
