@@ -74,8 +74,19 @@ class PersistToFile:
                 f.write("\t\t\tenum " + classifier.name)
                 
                 f.write(" { ")  
+                counter = 0
                 for theLiteral in classifier.literals:
-                    f.write(" " + theLiteral.literal + " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
+                    counter=counter+1
+                    splitcount = 1
+                    if counter < 500:
+                        f.write(" " + theLiteral.literal + " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
+                    else:
+                        counter = 0
+                        splitcount = splitcount+1
+                        f.write(" }\r")
+                        f.write("\t\t\tenum " + classifier.name + "_" + str(splitcount))
+                        f.write(" { ")  
+                        print("splitting enum " + classifier.name)
                     
                 f.write(" }\r")
             
