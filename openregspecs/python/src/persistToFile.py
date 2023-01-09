@@ -78,7 +78,7 @@ class PersistToFile:
                 for theLiteral in classifier.literals:
                     counter=counter+1
                     splitcount = 1
-                    if counter < 500:
+                    if counter < 100:
                         f.write(" " + theLiteral.literal + " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
                     else:
                         counter = 0
@@ -157,7 +157,7 @@ class PersistToFile:
                     f.write("\t\t\tLayerSQL {\r")
                     f.write("selectionLayer \"finrepWorkflow.finrepReports.task_" + view.name[5:len(view.name)] + "." + Utils.makeValidID(str(layer.selectionLayer.name)) + "\"\r")
                     for column in layer.columns:
-                        f.write("\t\t\t\tSelectMember   \"\" as \"bird."+view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name +"\"\r")
+                        f.write("\t\t\t\tSelectMember   \"bird.BLN_domain.FALSE\" as \"bird."+view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name +"\"\r")
                     f.write("\t\t\t}\r")
                     f.write(PersistToFile.getVTLTextForLayer(self,context,layer))
             f.write("\t\t}\r")

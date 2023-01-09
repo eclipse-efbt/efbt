@@ -39,7 +39,7 @@ class ImportFinrepVTL(object):
         ImportFinrepVTL.addReports(self, context)
         
     def importTransformationsAndSchemes(self,context):
-        fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
+        fileLocation = context.fileDirectory + "\\transformations.csv"
 
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
@@ -162,7 +162,7 @@ class ImportFinrepVTL(object):
                 
     
     def buildOutputLayerToVTLLayerMap(self,context):
-        fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
+        fileLocation = context.fileDirectory + "\\transformations.csv"
 
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
@@ -216,7 +216,7 @@ class ImportFinrepVTL(object):
         return returnTransformations
                 
     def buildListOfVTLLayersForFinrep(self,context):
-        fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
+        fileLocation = context.fileDirectory + "\\transformations.csv"
 
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
@@ -241,7 +241,7 @@ class ImportFinrepVTL(object):
         
         for vtl_layer in context.vtl_layers:
             expressionlist = []
-            fileLocation = context.fileDirectory + "\\TRANSFORMATIONS_50.csv"
+            fileLocation = context.fileDirectory + "\\transformations.csv"
     
             headerSkipped = False
             # Load all the entities from the csv file, make an XClass per entity,
