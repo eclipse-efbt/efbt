@@ -244,7 +244,7 @@ class Utils(object):
                 .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
                 .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
                 .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
-                .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_')
+                .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_').replace('op', '_op')
           
         returnString = Utils.replaceAcutesGravesAndCircumflexes(amendedInputString).replace('\'', '_')      
 

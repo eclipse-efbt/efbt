@@ -155,7 +155,7 @@ class PersistToFile:
             for layer in view.selectionLayerSQL:
                 if not(layer.selectionLayer.name is None):
                     f.write("\t\t\tLayerSQL {\r")
-                    f.write("selectionLayer \"finrepWorkflow.finrepReports.task_" + view.name[5:len(view.name)] + "." + layer.selectionLayer.name + "\"\r")
+                    f.write("selectionLayer \"finrepWorkflow.finrepReports.task_" + view.name[5:len(view.name)] + "." + Utils.makeValidID(str(layer.selectionLayer.name)) + "\"\r")
                     for column in layer.columns:
                         f.write("\t\t\t\tSelectMember   \"\" as \"bird."+view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name +"\"\r")
                     f.write("\t\t\t}\r")
