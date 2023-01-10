@@ -40,7 +40,7 @@ Activity returns open_reg_specs::Activity:
 
 
 SelectColumn returns open_reg_specs::SelectColumn:
-	 SelectColumnMemberAs | SelectColumnAttributeAs;
+	 SelectColumnMemberAs | SelectColumnAttributeAs | SelectValueAs;
 
 
 TestScope returns open_reg_specs::TestScope:
@@ -466,6 +466,12 @@ SelectColumnAttributeAs returns open_reg_specs::SelectColumnAttributeAs:
 		('as' asAttribute=[open_reg_specs::XOperation|EString])?
 	;
 	
+SelectValueAs returns open_reg_specs::SelectValueAs:
+	{open_reg_specs::SelectValueAs}
+	'SelectValue'
+		( value=EString)?
+		('as' asAttribute=[open_reg_specs::XOperation|EString])?
+	;
 
 enum Comparitor returns open_reg_specs::Comparitor:
 				less_than = 'less_than' | equals = 'equals' | greater_than = 'greater_than';
