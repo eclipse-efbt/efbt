@@ -11,6 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 from pickle import TRUE
+from _ast import Try
 '''
 Created on 22 Jan 2022
 
@@ -30,10 +31,16 @@ class ROLImport(object):
         import the items from the Output layer csv files
         '''
         ROLImport.addROLClassesToPackage(self,context) 
+        
         ROLImport.createVariableToDomainMap(self,context) 
         ROLImport.createDomainToDomainNameMap(self,context)
         ROLImport.createMemberMaps(self,context)
-        ROLImport.addROLEnumsAndLiteralsToPackage(self,context)
+        if context.useSubDomains:
+            ROLImport.createSubDomainToDomainMap(self,context)
+            ROLImport.createSubDomainToMemberMaps(self,context)
+            ROLImport.addROLEnumsAndLiteralsToPackageUsingSubDomains(self,context)
+        else:
+            ROLImport.addROLEnumsAndLiteralsToPackage(self,context)
         ROLImport.addROLAttributesToClasses(self,context)
         
     
@@ -153,8 +160,48 @@ class ROLImport(object):
                         context.memberIDToMemberNameMap[memberID] = memberName
                         context.memberIDToMemberCodeMap[memberID] = memberCode
                     
-                       
-                       
+    def createSubDomainToDomainMap(self,context):
+        fileLocation = context.fileDirectory + "\\subdomain.csv"
+        headerSkipped = False
+        #for each subdomain createw a lsit
+
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:                   
+                    domain_id = row[2]
+                    subdomain_id = row[8]
+                    context.subDomainIDToDomainID[subdomain_id]=domain_id
+                    
+    def createSubDomainToMemberMaps(self,context):
+        fileLocation = context.fileDirectory + "\\subdomain_enumeration.csv"
+        headerSkipped = False
+        #for each subdomain createw a lsit
+
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:                   
+                    member_id = row[0]
+                    subdomain_id = row[2]
+                    valid_to=row[4]
+                    if (valid_to == "12/31/9999"):
+                        memberList = None
+                        try: 
+                            memberList =context.subDomainToMemberListMap[subdomain_id]
+                        except:
+                            memberList =[]
+                            context.subDomainToMemberListMap[subdomain_id] = memberList
+                        
+                        if not(member_id in memberList):
+                            memberList.append(member_id)
+                        
+                            
+                    
     def addROLEnumsAndLiteralsToPackage(self,context):                   
         fileLocation = context.fileDirectory + "\\cube_structure_item.csv"
         headerSkipped = False
@@ -215,7 +262,58 @@ class ROLImport(object):
                     counter1 = counter1 + 1
                     enumLiteral.value = counter1
                     theEnum.literals.extend([enumLiteral])
-            
+        
+    def addROLEnumsAndLiteralsToPackageUsingSubDomains(self,context):
+        fileLocation = context.fileDirectory + "\\cube_structure_item.csv"
+        headerSkipped = False
+        # or each attribute add an Xattribute to the correct XClass represtnting the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    
+                    variable = row[2]
+                    subDomainID = row[10]
+                    classID = row[1]
+    
+                    try: 
+
+                        domainID = context.subDomainIDToDomainID[subDomainID]
+                        domain_ID_Name = context.domainToDomainNameMap[domainID]
+                        amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                        theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
+                        if theEnum is None:
+                            if not( (amendedDomainName == "String") or (amendedDomainName == "Date")  ):
+                                theEnum = XEnum()
+                                theEnum.name = amendedDomainName 
+                                #maintain a map of enum IDS to XEnum objects
+                                context.enumMap[amendedDomainName] = theEnum
+                                context.rpmnPackage.classifiers.extend([theEnum])
+                                theDomainMembers= context.subDomainToMemberListMap[subDomainID]
+                                counter1 = 0
+                                for member in theDomainMembers:
+                                    enumLiteral = XEnumLiteral()
+                                    enumUsedName = Utils.makeValidID(context.memberIDToMemberCodeMap[member])
+                                    adaptedValue = Utils.makeValidID(context.memberIDToMemberNameMap[member])
+                                    newAdaptedValue = Utils.uniqueValue( theEnum, adaptedValue)
+                                    newAdaptedName = Utils.uniqueName( theEnum, enumUsedName)
+                
+                                    enumLiteral.name = newAdaptedName
+                                    enumLiteral.literal = newAdaptedValue
+                                    counter1 = counter1 + 1
+                                    enumLiteral.value = counter1
+                                    theEnum.literals.extend([enumLiteral])    
+                            
+                    except:
+                            print( "missing ROL class2: " )
+                            print(classID)    
+                            
+      
     def addROLAttributesToClasses(self,context):
         '''
         For each attribute add an Xattribute to the correct XClass represtnting the Entity
@@ -235,7 +333,7 @@ class ROLImport(object):
                     attributeName = row[11]
                     amendedAttributeName = Utils.makeValidID(attributeName)
                     variable = row[2]
-                   
+                    subDomainID = row[10]
                     classID = row[1]
                     try: 
                         theClass = context.classesMap[classID]
@@ -243,11 +341,17 @@ class ROLImport(object):
                         classIsDerived = True
                             
                         theAttributeName =  amendedAttributeName
-       
-                        domainID = context.variableToDomainMap[variable]
+                        amendedDomainName = None
+                        if context.useSubDomains:
+                            domainID = context.subDomainIDToDomainID[subDomainID]
+                            domain_ID_Name = context.domainToDomainNameMap[domainID]
+                            amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                        else:
+                            domainID = context.variableToDomainMap[variable]
+                            amendedDomainName = Utils.makeValidID(domainID+"_domain")
                         #domain_ID_Name = context.domainToDomainNameMap[domainID]
-                        amendedDomainName = Utils.makeValidID(domainID)
-                        theEnum =  Utils.findROLEnum(amendedDomainName+"_domain",context.enumMap)
+                      
+                        theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
                         if  theEnum is not None:                     
                             
                             if classIsDerived:

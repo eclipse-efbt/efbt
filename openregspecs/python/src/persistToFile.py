@@ -15,7 +15,7 @@ class PersistToFile:
         
     def persistDataModel(self,context):
             
-        f = open(context.outputDirectory + 'data_model.rpmn', "a",  encoding='utf-8')
+        f = open(context.outputDirectory + 'data_model.xcore', "a",  encoding='utf-8')
         f.write("\t\t package " + context.rpmnPackage.name + "\r")    
         for classifier in  context.rpmnPackage.classifiers:
             if isinstance(classifier,XClass):
@@ -75,9 +75,10 @@ class PersistToFile:
                 
                 f.write(" { ")  
                 counter = 0
+                splitcount = 1
                 for theLiteral in classifier.literals:
                     counter=counter+1
-                    splitcount = 1
+                    
                     if counter < 100:
                         f.write(" " + theLiteral.literal + " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
                     else:
@@ -93,7 +94,7 @@ class PersistToFile:
         f.write("\t\t\ttype Double wraps Double\r")
         f.write("\t\t\ttype String wraps String\r")
         f.write("\t\t\ttype Integer wraps Integer\r")  
-        f.write("\t\t\ttype Date wraps Date\r")        
+        f.write("\t\t\ttype Date wraps java.util.Date\r")        
         f.close()
     
         
