@@ -64,6 +64,11 @@ class Context(object):
     moduleList = ModuleList()
 
     persistVTLComments = True
+    
+    useSubDomains = False
+    
+    subDomainToMemberListMap = {}
+    subDomainIDToDomainID = {}
     def __init__(self):
         
         
