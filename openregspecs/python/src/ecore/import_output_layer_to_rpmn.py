@@ -247,7 +247,7 @@ class ROLImport(object):
                 theEnum.name = amendedDomainName 
                 #maintain a map of enum IDS to XEnum objects
                 context.enumMap[amendedDomainName] = theEnum
-                context.ouputLayerEnumsPackage.eClassifiers.extend([theEnum])
+                context.outputLayerEnumsPackage.eClassifiers.extend([theEnum])
                 theDomainMembers= Utils.getMembersOfTheDomain(theDomain, context.memberIDToDomainMap)
                 counter1 = 0
                 for member in theDomainMembers:
@@ -293,7 +293,7 @@ class ROLImport(object):
                                 theEnum.name = amendedDomainName 
                                 #maintain a map of enum IDS to XEnum objects
                                 context.enumMap[amendedDomainName] = theEnum
-                                context.ouputLayerEnumsPackage.eClassifiers.extend([theEnum])
+                                context.outputLayerEnumsPackage.eClassifiers.extend([theEnum])
                                 theDomainMembers= context.subDomainToMemberListMap[subDomainID]
                                 counter1 = 0
                                 for member in theDomainMembers:

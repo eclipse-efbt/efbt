@@ -46,5 +46,6 @@ if __name__ == '__main__':
         
     persister = PersistToFile()
     persister.saveModelAsXMIFile(context)
+    persister.saveModelAsHumanReadable(context)
     #persister.saveModelAsRPMNFile(context)
  

@@ -8,14 +8,26 @@ from context import Context
 from collections import Counter
 
 class PersistToFile:
-    def saveModelAsRPMNFile(self,context ):
-        PersistToFile.persistDataModel(self,context)
+    def saveModelAsHumanReadable(self,context ):
+        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"xcore")
+        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"xcore")
+        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"xcore")
+        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"xcore")
+        PersistToFile.persistTypesModel(self,context,context.typesPackage,"xcore")
         
-    def persistDataModel(self,context):
+        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"rpmn")
+        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"rpmn")
+        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"rpmn")
+        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"rpmn")
+        PersistToFile.persistTypesModel(self,context,context.typesPackage,"rpmn")
+        
+        
+        
+    def persistEntityModel(self,context,thePackage,extension):
             
-        f = open(context.outputDirectory + 'data_model.xcore', "a",  encoding='utf-8')
-        f.write("\t\t package " + context.rpmnPackage.name + "\r")    
-        for classifier in  context.rpmnPackage.eClassifiers:
+        f = open(context.outputDirectory + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
+        f.write("\t\t package " + thePackage.name + "\r")    
+        for classifier in  thePackage.eClassifiers:
             if isinstance(classifier,EClass):
                 f.write("\t\t\t")
                 if classifier.abstract==True:
@@ -25,13 +37,13 @@ class PersistToFile:
                     f.write(" extends " +  classifier.superTypes[0].name) 
                 f.write( " {\r")
                 for member in classifier.eStructuralFeatures:
-                    
+                    typesPackage = member.eType.eContainer().name
                     if isinstance(member, EReference):
                         if (member.containment):
                             f.write("\t\t\t\tcontains "  )
                         else:
                             f.write("\t\t\t\trefers "  )
-                      
+                        
                         f.write(member.eType.name + " " )
                         if member.upperBound == -1:
                             f.write("[] ")
@@ -54,7 +66,7 @@ class PersistToFile:
                         elif (member.eType.name == "EDate"):
                             f.write( "Date  " )
                         else:
-                            f.write(member.eType.name + " " )
+                            f.write(typesPackage + "." + member.eType.name + " " )
                             
                         if member.upperBound == -1:
                             f.write("[] ")
@@ -65,8 +77,12 @@ class PersistToFile:
                         f.write(member.name)
                         f.write(" \r"  )
                 for operation in classifier.eOperations:
+                    typesPackage = operation.eType.eContainer().name
                     if isinstance(operation, EOperation):
-                        f.write("\t\t\t\top " + operation.eType.name + " " )
+                        f.write("\t\t\t\top ")
+                        if not(classifier.name.endswith("_OutputTable")):
+                            f.write(typesPackage + ".")
+                        f.write(operation.eType.name + " " )
                     if operation.upperBound == -1:
                         f.write("[] ")
                     elif ( (operation.lowerBound == 0) and (operation.upperBound == 1)):
@@ -78,6 +94,29 @@ class PersistToFile:
                     f.write(" \r"  )
                         
                 f.write("\t\t\t}\r")
+            
+            
+       
+        f.close()
+    
+    def persistTypesModel(self,context,thePackage,extension):
+        f = open(context.outputDirectory + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
+        f.write("\t\t package " + thePackage.name + "\r")  
+        f.write("\t\t\ttype Double wraps Double\r")
+        f.write("\t\t\ttype String wraps String\r")
+        f.write("\t\t\ttype Integer wraps Integer\r") 
+        if extension == "rpmn":
+            f.write("\t\t\ttype Date wraps Date\r")
+        else:
+            f.write("\t\t\ttype Date wraps java.util.Date\r")  
+        f.close()
+        
+    def persistEnumModel(self,context,thePackage,extension):
+            
+        f = open(context.outputDirectory + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
+        f.write("\t\t package " + thePackage.name + "\r")    
+        for classifier in  thePackage.eClassifiers:
+            
             if isinstance(classifier,EEnum):
                 f.write("\t\t\tenum " + classifier.name)
                 
@@ -99,13 +138,8 @@ class PersistToFile:
                     
                 f.write(" }\r")
             
-        f.write("\t\t\ttype Double wraps Double\r")
-        f.write("\t\t\ttype String wraps String\r")
-        f.write("\t\t\ttype Integer wraps Integer\r")  
-        f.write("\t\t\ttype Date wraps java.util.Date\r")        
-        f.close()
-    
-        
+       
+        f.close()  
     
    
     
@@ -121,7 +155,7 @@ class PersistToFile:
         inputLayerEnums_resource2.append(context.inputLayerEnumsPackage)  # we add the EPackage instance in the resource
         inputLayerEnums_resource2.save()
         outputLayerEnums_resource2 = rset2.create_resource(URI(context.outputDirectory + "\\output_layer_enums.ecore"))  # This will create an XMI resource
-        outputLayerEnums_resource2.append(context.ouputLayerEnumsPackage)  # we add the EPackage instance in the resource
+        outputLayerEnums_resource2.append(context.outputLayerEnumsPackage)  # we add the EPackage instance in the resource
         outputLayerEnums_resource2.save()
         inputLayerEntities_resource2 = rset2.create_resource(URI(context.outputDirectory + "\\input_layer_entities.ecore"))  # This will create an XMI resource
         inputLayerEntities_resource2.append(context.inputLayerEntitiesPackage)  # we add the EPackage instance in the resource
