@@ -57,16 +57,32 @@ class PersistToFile:
                         f.write("\t\t\t\t")
                         # if member.iD:
                         #   f.write("id ")
-                        if (member.eType.name == "EString"):
-                            f.write( "String  " )
-                        elif (member.eType.name == "EDouble"):
-                            f.write( "Double  " )
-                        elif (member.eType.name == "EInt"):
-                            f.write( "Integer  " )
-                        elif (member.eType.name == "EDate"):
-                            f.write( "Date  " )
+                        if extension == "rpmn":
+                            
+                            if (member.eType.name == "EString"):
+                                f.write( "\"types.String\"  " )
+                            elif (member.eType.name == "EDouble"):
+                                f.write( "\"types.Double\"  " )
+                            elif (member.eType.name == "EInt"):
+                                f.write( "\"types.Integer\"  " )
+                            elif (member.eType.name == "EDate"):
+                                f.write( "\"types.Date\"  " )
+                            else:   
+                                f.write("\"" + typesPackage + "." + member.eType.name + "\" " )
+                            
                         else:
-                            f.write(typesPackage + "." + member.eType.name + " " )
+                            if (member.eType.name == "EString"):
+                                f.write( "String  " )
+                            elif (member.eType.name == "EDouble"):
+                                f.write( "Double  " )
+                            elif (member.eType.name == "EInt"):
+                                f.write( "Integer  " )
+                            elif (member.eType.name == "EDate"):
+                                f.write( "Date  " )
+                            else:   
+                                f.write(typesPackage + "." + member.eType.name + " " )
+                                
+                            
                             
                         if member.upperBound == -1:
                             f.write("[] ")
@@ -81,8 +97,12 @@ class PersistToFile:
                     if isinstance(operation, EOperation):
                         f.write("\t\t\t\top ")
                         if not(classifier.name.endswith("_OutputTable")):
-                            f.write(typesPackage + ".")
-                        f.write(operation.eType.name + " " )
+                            if extension == "rpmn":
+                                f.write("\"" + typesPackage + "." + operation.eType.name + "\" " )
+                            else:
+                                f.write(typesPackage + "." + operation.eType.name + " " )
+                        else:   
+                            f.write(operation.eType.name + " " )
                     if operation.upperBound == -1:
                         f.write("[] ")
                     elif ( (operation.lowerBound == 0) and (operation.upperBound == 1)):
