@@ -9,16 +9,65 @@ from pyecore import *
 class StandardBIRDQueries(object):
     
    
-    birdModel = None
+    inputLayerEnumsModel = None
+    inputLayerEntitiesModel = None
+    outputLayerEnumsModel = None
+    outputLayerEntitiesModel = None
+    typesModel = None
     
     def query1(self,fileDirectory): 
         rset = ResourceSet()
-        resource = rset.get_resource(URI(fileDirectory + "\\bird.ecore"))
-        mm_root = resource.contents[0]
-        rset.metamodel_registry[mm_root.nsURI] = mm_root
-        print(mm_root.eClassifiers[0])
-        self.birdModel = mm_root 
+        
+        types_resource = rset.get_resource(URI(fileDirectory + "\\types.ecore"))
+        types_root = types_resource.contents[0]
+        rset.metamodel_registry[types_root.nsURI] = types_root
+        print(types_root.eClassifiers[0])
+        self.typesModel = types_root
+        
+        inputLayerEnums_resource = rset.get_resource(URI(fileDirectory + "\\input_layer_enums.ecore"))
+        inputLayerEnums_root = inputLayerEnums_resource.contents[0]
+        rset.metamodel_registry[inputLayerEnums_root.nsURI] = inputLayerEnums_root
+        print(inputLayerEnums_root.eClassifiers[0])
+        self.inputLayerEnumsModel = inputLayerEnums_root
+        
+        outputLayerEnums_resource = rset.get_resource(URI(fileDirectory + "\\output_layer_enums.ecore"))
+        outputLayerEnums_root = outputLayerEnums_resource.contents[0]
+        rset.metamodel_registry[outputLayerEnums_root.nsURI] = outputLayerEnums_root
+        print(outputLayerEnums_root.eClassifiers[0])
+        self.outputLayerEnumsModel = outputLayerEnums_root
+        
+        inputLayerEntities_resource = rset.get_resource(URI(fileDirectory + "\\input_layer_entities.ecore"))
+        inputLayerEntities_root = inputLayerEntities_resource.contents[0]
+        rset.metamodel_registry[inputLayerEntities_root.nsURI] = inputLayerEntities_root
+        print(inputLayerEntities_root.eClassifiers[0])
+        self.inputLayerEntitiesModel = inputLayerEntities_root
+        
+        outputLayerEntities_resource = rset.get_resource(URI(fileDirectory + "\\output_layer_entities.ecore"))
+        outputLayerEntities_root = outputLayerEntities_resource.contents[0]
+        rset.metamodel_registry[outputLayerEntities_root.nsURI] = outputLayerEntities_root
+        print(outputLayerEntities_root.eClassifiers[0])
+        self.outputLayerEntitiesModel = outputLayerEntities_root
+        
+
         StandardBIRDQueries.createInputLayerToOutputLayerMatches(self,fileDirectory)
+        
+        rset2 = ResourceSet()
+        types_resource2 = rset2.create_resource(URI(fileDirectory + "\\types2.ecore"))  # This will create an XMI resource
+        types_resource2.append(self.typesModel)  # we add the EPackage instance in the resource
+        types_resource2.save()  # we then serialize it
+        inputLayerEnums_resource2 = rset2.create_resource(URI(fileDirectory + "\\inputLayerEnums2.ecore"))  # This will create an XMI resource
+        inputLayerEnums_resource2.append(self.inputLayerEnumsModel)  # we add the EPackage instance in the resource
+        inputLayerEnums_resource2.save()
+        outputLayerEnums_resource2 = rset2.create_resource(URI(fileDirectory + "\\outputLayerEnums2.ecore"))  # This will create an XMI resource
+        outputLayerEnums_resource2.append(self.outputLayerEnumsModel)  # we add the EPackage instance in the resource
+        outputLayerEnums_resource2.save()
+        inputLayerEntities_resource2 = rset2.create_resource(URI(fileDirectory + "\\inputLayerEntities2.ecore"))  # This will create an XMI resource
+        inputLayerEntities_resource2.append(self.inputLayerEntitiesModel)  # we add the EPackage instance in the resource
+        inputLayerEntities_resource2.save()
+        outputLayerEntities_resource2 = rset2.create_resource(URI(fileDirectory + "\\outputLayerEntities2.ecore"))  # This will create an XMI resource
+        outputLayerEntities_resource2.append(self.outputLayerEntitiesModel)  # we add the EPackage instance in the resource
+        outputLayerEntities_resource2.save()
+        
     
     def createInputLayerToOutputLayerMatches(self,fileDirectory): 
         outputLayers = StandardBIRDQueries.getOutputLayers(self)
@@ -77,7 +126,7 @@ class StandardBIRDQueries(object):
         
         
     def getRelatedInputLayerDomain(self,theDomainName,attributeType):
-        classifiers = self.birdModel.eClassifiers
+        classifiers = self.inputLayerEntitiesModel.eClassifiers
         returnDomain = None
         domainName=theDomainName.lower()
         for classifier in classifiers:
@@ -116,7 +165,7 @@ class StandardBIRDQueries(object):
         enum1Exists = False
         enum2Exists = False
         
-        classifiers = self.birdModel.eClassifiers
+        classifiers = self.inputLayerEnumsModel.eClassifiers
         for classifier in classifiers:
             if classifier.name.endswith("_domain") and not ("ISSUBDOMAINOF" in classifier.name):
                 for literal in classifier.eLiterals:
@@ -138,7 +187,7 @@ class StandardBIRDQueries(object):
         
         
     def getOutputLayers(self): 
-        classifiers = self.birdModel.eClassifiers
+        classifiers = self.outputLayerEntitiesModel.eClassifiers
         outputLayers = []
         for classifier in classifiers:
             if classifier.name.endswith("_OutputItem"):

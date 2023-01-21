@@ -88,90 +88,7 @@ class Utils(object):
             if value == theDomain:
                 returnList.append(key)
         return returnList
-    
-    @classmethod
-    def saveModelAsRPMNFile(cls,context ):
-        
-            f = open(context.outputDirectory + 'data_model.rpmn', "a",  encoding='utf-8')
-            f.write("\t\t package " + context.rpmnPackage.name + "\r")    
-            for classifier in  context.rpmnPackage.classifiers:
-                if isinstance(classifier,XClass):
-                    f.write("\t\t\t")
-                    if classifier.abstract==True:
-                        f.write("abstract ")
-                    f.write("class " + classifier.name)
-                    if (hasattr(classifier, "superTypes")  and len(classifier.superTypes) > 0):
-                        f.write(" extends " +  classifier.superTypes[0].name) 
-                    f.write( " {\r")
-                    for member in classifier.members:
-                        
-                        if isinstance(member, EReference):
-                            if (member.containment):
-                                f.write("\t\t\t\tcontains "  )
-                            else:
-                                f.write("\t\t\t\trefers "  )
-                          
-                            f.write(member.eType.name + " " )
-                            if member.upperBound == -1:
-                                f.write("[] ")
-                            elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
-                                f.write(" ")
-                            else:
-                                f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
-                            f.write(member.name)
-                            f.write(" \r"  )
-                        elif isinstance(member, XAttribute):
-                            f.write("\t\t\t\t")
-                            # if member.iD:
-                            #   f.write("id ")
-                            f.write(member.eType.name + " " )
-                            
-                            if member.upperBound == -1:
-                                f.write("[] ")
-                            elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
-                                f.write(" ")
-                            else:
-                                f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
-                            f.write(member.name)
-                            f.write(" \r"  )
-                        elif isinstance(member, XOperation):
-                            f.write("\t\t\t\top " + member.eType.name + " " )
-                            if member.upperBound == -1:
-                                f.write("[] ")
-                            elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
-                                f.write(" ")
-                            else:
-                                f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
-                            f.write(member.name)
-                            f.write("() {}")
-                            f.write(" \r"  )
-                            
-                    f.write("\t\t\t}\r")
-                if isinstance(classifier,XEnum):
-                    f.write("\t\t\tenum " + classifier.name)
-                    
-                    f.write(" { ")  
-                    for theLiteral in classifier.eLiterals:
-                        f.write(" " + theLiteral.literal + " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
-                        
-                    f.write(" }\r")
-                
-            f.write("\t\t\ttype Double wraps Double\r")
-            f.write("\t\t\ttype String wraps String\r")
-            f.write("\t\t\ttype Integer wraps Integer\r")  
-            f.write("\t\t\ttype Date wraps Date\r")        
-            f.close()
-        
-    @classmethod    
-    def saveModelAsXMIFile(cls,context):
-        '''
-         save model as an xmi file representing an object tree.
-        '''
-        rset = ResourceSet()
 
-        resource = rset.create_resource(URI(context.outputDirectory + 'IL.rpmn'))  # This will create an XMI resource
-        resource.append(context.rpmnPackage)
-        resource.save()
     
    
     @classmethod    
@@ -258,20 +175,6 @@ class Utils(object):
         We replace letters with acutes , graves, and circumflexes, with the basic letter.
         So for example "a acute" is replaced with "a"
         
-        returnString = theInputString.replace(chr(0x00E9), 'e').replace(chr(0x00C9), 'E').replace(chr(0x00E8), 'e')  \
-                .replace(chr(0x00EB), 'e').replace(chr(0x00CB), 'E').replace(chr(0x0116), 'E').replace(chr(0x0117), 'e').replace(chr(0x0118), 'E').replace(chr(0x0119), 'e') \
-                .replace(chr(0x00CA), 'E').replace(chr(0x00EA), 'e').replace(chr(0x00E7), 'c').replace(chr(0x00C7), 'C').replace(chr(0x010C), 'C').replace(chr(0x010D), 'c').replace(chr(0x00FC), 'u') \
-                .replace(chr(0x00DA), 'U').replace(chr(0x00FA), 'u').replace(chr(0x00DC), 'U').replace(chr(0x00FC), 'u').replace(chr(0x00F6), 'o') \
-                .replace(chr(0x00ED), 'i').replace(chr(0x00CC), 'I').replace(chr(0x00EC), 'i').replace(chr(0x00CE), 'I') \
-                .replace(chr(0x00EE), 'i').replace(chr(0x00E4), 'a').replace(chr(0x00E1), 'a').replace(chr(0x00C1), 'A').replace(chr(0x00D6), 'O') \
-                .replace(chr(0x00D3), 'O').replace(chr(0x00D4), 'O').replace(chr(0x00F3), 'o').replace(chr(0x00D1), 'N').replace(chr(0x00F1), 'n') \
-                .replace(chr(0x00DF), 'ss').replace(chr(0x00E0), 'a').replace(chr(0x00C0), 'A').replace(chr(0x00C2), 'A').replace(chr(0x00E2), 'a') \
-                .replace(chr(0x00C3), 'A').replace(chr(0x00E3), 'a') \
-                .replace(chr(0x00FD), 'y').replace(chr(0x017D), 'Z').replace(chr(0x017E), 'z').replace(chr(0x0179), 'Z').replace(chr(0x017A), 'z').replace(chr(0x017B), 'Z').replace(chr(0x017C), 'z') \
-                .replace(chr(0x0160), 'S').replace(chr(0x0161), 's').replace(chr(0x015A), 'S').replace(chr(0x015B), 's').replace(chr(0x00D8), 'O').replace(chr(0x00F8), 'o').replace(chr(0x00F4), 'o').replace(chr(0x00D5), 'O').replace(chr(0x00F5), 'o')  \
-                .replace(chr(0x00C6), 'AE').replace(chr(0x01E2), 'AE').replace(chr(0x01FC), 'AE')   \
-                .replace(chr(0x00E6), 'ae').replace(chr(0x01E3), 'ae').replace(chr(0x01FD), 'ae')    \
-                .replace(chr(0x00C5), 'A').replace(chr(0x00E5), 'a').replace(chr(0x0143), 'N').replace(chr(0x0144), 'n').replace(chr(0x0141), 'L').replace(chr(0x0142), 'l').replace(chr(0x0173), 'u')
         '''
         return unidecode.unidecode(theInputString)     
        
@@ -295,7 +198,7 @@ class Utils(object):
         '''
         contains = False;
         for eEnumLiteral in members:
-            if (eEnumLiteral.literal.lower() == adaptedValue.lower()):
+            if (eEnumLiteral.name.lower() == adaptedValue.lower()):
                 contains = True
 
         return contains
@@ -307,7 +210,7 @@ class Utils(object):
         '''
         contains = False;
         for eEnumLiteral in members:
-            if (eEnumLiteral.name.lower() == adaptedName.lower()):
+            if (eEnumLiteral.literal.lower() == adaptedName.lower()):
                 contains = True
 
         return contains

@@ -82,12 +82,12 @@ class InputLayerImport(object):
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
                         xclassTable.eStructuralFeatures.append(xclassTableOperation)
-                        context.rpmnPackage.eClassifiers.extend([xclass])
-                        context.rpmnPackage.eClassifiers.extend([xclassTable])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclassTable])
                     elif(className.startswith("OUTPUT_LAYER_")):
                         xclass = EClass(name=alteredClassName)
                         
-                        context.rpmnPackage.eClassifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
                       
                     else:
                         xclass = EClass(name=alteredClassName)
@@ -102,8 +102,8 @@ class InputLayerImport(object):
                         containmentReference.lowerBound=0
                         containmentReference.containment= True
                         xclassTable.eStructuralFeatures.append(containmentReference)
-                        context.rpmnPackage.eClassifiers.extend([xclass])
-                        context.rpmnPackage.eClassifiers.extend([xclassTable])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclassTable])
         
                     # maintain a map a objectIDs to XClasses
                     context.classesMap[objectID]=xclass
@@ -134,7 +134,7 @@ class InputLayerImport(object):
                         theEnum.name = adaptedEnumName
                         #maintain a map of enum IDS to XEnum objects
                         context.enumMap[enumID] = theEnum
-                        context.rpmnPackage.eClassifiers.extend([theEnum])
+                        context.inputLayerEnumsPackage.eClassifiers.extend([theEnum])
                         
     def addILLiteralsToEnums(self,context):
         '''
@@ -163,8 +163,8 @@ class InputLayerImport(object):
                             newAdaptedValue = Utils.uniqueValue(theEnum,adaptedValue)
                             newAdaptedName = Utils.uniqueName(theEnum,adaptedEnumName)
                             enumLiteral = EEnumLiteral()
-                            enumLiteral.name = newAdaptedName
-                            enumLiteral.literal = newAdaptedValue
+                            enumLiteral.name =  newAdaptedValue
+                            enumLiteral.literal = newAdaptedName
                             enumLiteral.value = counter
                             theEnum.eLiterals.extend([enumLiteral])
                                 

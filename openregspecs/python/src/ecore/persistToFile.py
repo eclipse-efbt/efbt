@@ -88,7 +88,7 @@ class PersistToFile:
                     counter=counter+1
                     
                     if counter < 100:
-                        f.write(" " + theLiteral.literal + " as \"" + theLiteral.name + "\" = " + str(theLiteral.value)  )
+                        f.write(" " + theLiteral.name + " as \"" + theLiteral.literal  + "\" = " + str(theLiteral.value)  )
                     else:
                         counter = 0
                         splitcount = splitcount+1
@@ -113,8 +113,19 @@ class PersistToFile:
         '''
          save model as an xmi file representing an object tree.
         '''
-        rset = ResourceSet()
-
-        resource = rset.create_resource(URI(context.outputDirectory + 'pybird.ecore'))  # This will create an XMI resource
-        resource.append(context.rpmnPackage)
-        resource.save()
+        rset2 = ResourceSet()
+        types_resource2 = rset2.create_resource(URI(context.outputDirectory + "\\types.ecore"))  # This will create an XMI resource
+        types_resource2.append(context.typesPackage)  # we add the EPackage instance in the resource
+        types_resource2.save()  # we then serialize it
+        inputLayerEnums_resource2 = rset2.create_resource(URI(context.outputDirectory + "\\input_layer_enums.ecore"))  # This will create an XMI resource
+        inputLayerEnums_resource2.append(context.inputLayerEnumsPackage)  # we add the EPackage instance in the resource
+        inputLayerEnums_resource2.save()
+        outputLayerEnums_resource2 = rset2.create_resource(URI(context.outputDirectory + "\\output_layer_enums.ecore"))  # This will create an XMI resource
+        outputLayerEnums_resource2.append(context.ouputLayerEnumsPackage)  # we add the EPackage instance in the resource
+        outputLayerEnums_resource2.save()
+        inputLayerEntities_resource2 = rset2.create_resource(URI(context.outputDirectory + "\\input_layer_entities.ecore"))  # This will create an XMI resource
+        inputLayerEntities_resource2.append(context.inputLayerEntitiesPackage)  # we add the EPackage instance in the resource
+        inputLayerEntities_resource2.save()
+        outputLayerEntities_resource2 = rset2.create_resource(URI(context.outputDirectory + "\\output_layer_entities.ecore"))  # This will create an XMI resource
+        outputLayerEntities_resource2.append(context.outputLayerEntitiesPackage)  # we add the EPackage instance in the resource
+        outputLayerEntities_resource2.save()
