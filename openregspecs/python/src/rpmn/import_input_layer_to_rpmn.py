@@ -17,34 +17,34 @@ Created on 22 Jan 2022
 @author: Neil
 '''
 from open_reg_specs import *
+from pyecore.ecore import *
 import csv
-from Utils import Utils 
+from Utils import Utils
 from context import Context
 
-class LDMImport(object):
+class InputLayerImport(object):
     
 
     def doImport(self,context):
         '''
         import the items from the BIRD LDM csv files
         '''
-        LDMImport.addLDMClassesToPackage(self,context)
-        LDMImport.setLDMSuperClasses(self,context)
-        LDMImport.addLDMEnumsToPackage(self,context)
-        LDMImport.addLDMLiteralsToEnums(self,context) 
-        LDMImport.createLDMTypesMap(self,context) 
-        LDMImport.addLDMAttributesToClasses(self,context) 
-        LDMImport.removeLDMAttributesAlreadyInSuperClass(self,context) 
-        LDMImport.addLDMRelationshipsBetweenClasses(self,context)
+        InputLayerImport.addILClassesToPackage(self,context)
+        InputLayerImport.addILEnumsToPackage(self,context)
+        InputLayerImport.addILLiteralsToEnums(self,context) 
+        InputLayerImport.createILTypesMap(self,context) 
+        InputLayerImport.addILAttributesToClasses(self,context) 
+        InputLayerImport.createFKToColumnMap(self,context) 
+        InputLayerImport.addILRelationshipsBetweenClasses(self,context)
         
-    
-        
-    def addLDMClassesToPackage(self,context):
+   
+                        
+    def addILClassesToPackage(self,context):
         '''
-        for each entity in the LDM, create a class and add it to the package
+        for each entity in the IL, create a class and add it to the package
         '''
         
-        fileLocation = context.fileDirectory + "\\DM_Entities.csv"
+        fileLocation = context.fileDirectory + "\\DM_Tables.csv"
         
         
         headerSkipped = False
@@ -60,10 +60,11 @@ class LDMImport(object):
 
                     className = row[0];
                     objectID = row[1];
-                    engineering_type = row[27];
-                    Num_SuperTypeEntity_ID = row[26];
                     
-                    alteredClassName = Utils.makeValidID(className);  
+                    # assume that SQLDve gives valid IDS fro table names according 
+                    # to the validity rules of RPMN
+                    alteredClassName = Utils.makeValidID(className);
+                   
                     if(alteredClassName.endswith("_derived")):
                         xclass = XClass(name=alteredClassName)
                         xclassTable = XClass(name=alteredClassName+"_DerivedTable")
@@ -81,20 +82,18 @@ class LDMImport(object):
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
                         xclassTable.members.append(xclassTableOperation)
-                        context.rpmnPackage.classifiers.extend([xclass])
-                        context.rpmnPackage.classifiers.extend([xclassTable])
+                        context.inputLayerEntitiesPackage.classifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.classifiers.extend([xclassTable])
                     elif(className.startswith("OUTPUT_LAYER_")):
                         xclass = XClass(name=alteredClassName)
                         
-                        context.rpmnPackage.classifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.classifiers.extend([xclass])
                       
                     else:
                         xclass = XClass(name=alteredClassName)
                         # of engineering type is single table, as i should be for all members of a type
                         # heirarchy, and num_suptype is blanck, then this means that this class is a root
                         # of a type heirarchy....we will set such classes to be abstract.
-                        if((engineering_type == "Single Table") and (Num_SuperTypeEntity_ID=="")   )    :
-                            xclass.abstract=True
                         xclassTable = XClass(name=alteredClassName+"_BaseTable")
                         containmentReference  = XReference()
                         containmentReference.name=xclass.name+"s"
@@ -103,36 +102,18 @@ class LDMImport(object):
                         containmentReference.lowerBound=0
                         containmentReference.containment= True
                         xclassTable.members.append(containmentReference)
-                        context.rpmnPackage.classifiers.extend([xclass])
-                        context.rpmnPackage.classifiers.extend([xclassTable])
+                        context.inputLayerEntitiesPackage.classifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.classifiers.extend([xclassTable])
         
                     # maintain a map a objectIDs to XClasses
                     context.classesMap[objectID]=xclass
                     context.tableMap[xclass]=xclassTable
          
-    def setLDMSuperClasses(self,context):           
-        fileLocation = context.fileDirectory + "\\DM_Entities.csv"
-        headerSkipped = False
-        
-        # Where an nxtity has a superclass, set the superclass on the XClass
-        with open(fileLocation) as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            for row in filereader:
-                # skip the first line which is the header.
-                if (not headerSkipped):
-                    headerSkipped = True
-                else:
-                    classID = row[1]
-                    superclassID =row[25]
-                    if ( not (len(superclassID.strip()) == 0)):
-                        theclass = context.classesMap[classID]
-                        superclass = context.classesMap[superclassID]
-                        theclass.superTypes.extend([superclass])
                         
                        
-    def addLDMEnumsToPackage(self,context):
+    def addILEnumsToPackage(self,context):
         '''
-        for each domain in the LDM add an enum to the package
+        for each domain in the IL add an enum to the package
         '''
         fileLocation = context.fileDirectory + "\\DM_Domains.csv"
         headerSkipped = False
@@ -148,16 +129,16 @@ class LDMImport(object):
                     enumID = row[0]
                     enumName = row[1]
                     adaptedEnumName = Utils.makeValidID(enumName)+"_domain"
-                    if(not Utils.inEnumBlackList(self,adaptedEnumName)):
+                    if(not Utils.inEnumBlackList(adaptedEnumName)):
                         theEnum = XEnum()
                         theEnum.name = adaptedEnumName
                         #maintain a map of enum IDS to XEnum objects
                         context.enumMap[enumID] = theEnum
-                        context.rpmnPackage.classifiers.extend([theEnum])
+                        context.inputLayerEnumsPackage.classifiers.extend([theEnum])
                         
-    def addLDMLiteralsToEnums(self,context):
+    def addILLiteralsToEnums(self,context):
         '''
-        for each memebr of a domain the LDM, add a literal to the corresponding enum
+        for each memebr of a domain the IL, add a literal to the corresponding enum
         '''
         fileLocation = context.fileDirectory + "\\DM_Domain_AVT.csv"
         headerSkipped = False
@@ -172,29 +153,29 @@ class LDMImport(object):
                     try:
                         counter=counter+1
                         enumID = row[0]
-                        enumUsedName = Utils.makeValidID(self,row[3])
+                        enumUsedName = Utils.makeValidID(row[3])
                         #enumName = row[5]
-                        adaptedEnumName = Utils.makeValidID(self,enumUsedName)
+                        adaptedEnumName = Utils.makeValidID(enumUsedName)
                         value = row[4]
-                        adaptedValue = Utils.makeValidID(self,value)
+                        adaptedValue = Utils.makeValidID(value)
                         try:
                             theEnum = context.enumMap[enumID]
-                            newAdaptedValue = Utils.uniqueValue(self,theEnum,adaptedValue)
-                            newAdaptedName = Utils.uniqueName(self,theEnum,adaptedEnumName)
+                            newAdaptedValue = Utils.uniqueValue(theEnum,adaptedValue)
+                            newAdaptedName = Utils.uniqueName(theEnum,adaptedEnumName)
                             enumLiteral = XEnumLiteral()
-                            enumLiteral.name = newAdaptedName
-                            enumLiteral.literal = newAdaptedValue
+                            enumLiteral.name =  newAdaptedValue
+                            enumLiteral.literal = newAdaptedName
                             enumLiteral.value = counter
                             theEnum.literals.extend([enumLiteral])
                                 
                         except KeyError:
                             print( "missing domain: " + enumID )
-                            
+                             
                     except IndexError:
                         print( "row in DM_Domain_AVT.csv skipped  due to improper formatting at row number")
                         print(counter)
 
-    def createLDMTypesMap(self,context):                
+    def createILTypesMap(self,context):                
         # for each logicalDatatype for orcle 12c, make a Datatype if we have an
         # equivalent
         
@@ -235,14 +216,15 @@ class LDMImport(object):
                         if (native_type.strip() == "UNKNOWN") :
 
                             context.datatypeMap[dataTypeID] = context.xString
-             
-    def addLDMAttributesToClasses(self,context):
+        
+                                     
+    def addILAttributesToClasses(self,context):
         '''
-        For each attribute on an entity of the LDM, add an attribute
+        For each attribute on an entity of the IL, add an attribute
         to the relevant class in the package
         '''
             
-        fileLocation = context.fileDirectory + "\\DM_Attributes.csv"
+        fileLocation = context.fileDirectory + "\\DM_Columns.csv"
         headerSkipped = False
         # For each attribute add an XAttribute to the correct XClass representing the Entity
         # the attribute should have the correct type, which may be a specific
@@ -255,12 +237,14 @@ class LDMImport(object):
                         headerSkipped = True
                 else:
                     attributeName = row[0]
-                    amendedAttributeName = Utils.makeValidID(self,attributeName);
+                    attributeID = row[1]
+                    amendedAttributeName = Utils.makeValidID(attributeName);
+                    mandatory = row[6]
                     attributeKind = row[7]
                    
                     classID = row[4]
-                    relationID = row[32]
-                    primary_key_or_not = row[35]
+                    relationID = row[35]
+                    primary_key_or_not = row[34]
                     theClass = context.classesMap[classID]
                     
                     classIsDerived = False
@@ -273,7 +257,7 @@ class LDMImport(object):
                     if relationID == "":
                         
                         if (attributeKind == "Domain"):
-                            enumID = row[12]
+                            enumID = row[13]
                             theEnum = context.enumMap[enumID]
                             
                             attribute = XAttribute()
@@ -381,33 +365,12 @@ class LDMImport(object):
                         except:
                             print( "missing class2: " )
                             print(classID)
+                    else:
+                        if mandatory == "Y":
+                            context.FKtoMandatoryMap[attributeID] = "M"  
                         
-    def removeLDMAttributesAlreadyInSuperClass(self,context):
-        '''
-        if we already have created an attribute in both a subclass and a superclass
-        then we delete it in the subclass
-        '''    
-        for theClass in context.classesMap.values():
-            if len(theClass.superTypes) > 0:
-                superclass = theClass.superTypes[0]
-                if (superclass):
-                    
-                    attributes = theClass.members
-                    attributesToDelete = []
-                    for theAttribute in attributes :
-                        if Utils.superclassContainsFeature(self,superclass, theAttribute):
-                            attributesToDelete.append(theAttribute);
-    
-                    for theAttribute in attributesToDelete :
-                        theClass.members.remove(theAttribute);
-                        print( "removed attribute or reference since it exists in the superclass")
-                        print(  theAttribute.name )
-               
-    def addLDMRelationshipsBetweenClasses(self,context):
-        '''
-        For each relationship in the LDM, add a reference between the relevant classes
-        '''    
-        fileLocation = context.fileDirectory + "\\DM_Relations.csv"
+    def createFKToColumnMap(self,context):
+        fileLocation = context.fileDirectory + "\\DM_Constr_Index_Columns.csv"
         headerSkipped = False
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -415,17 +378,38 @@ class LDMImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    sourceID = row[16]
-                    targetID = row[18]
-                    sourceTo_Target_Cardinality = row[10]
-                    targetTo_Source_Cardinality = row[11]
-                    targetClassName = row[7]
-                    source_Optional = row[12]
-                    target_Optional = row[13]
-                    attributeKind = row[7].strip();
-                    referenceID = row[4].strip();
+                    fk_name = row[6]
+                    columnID = row[2]
+                    context.FKToColumnMap[fk_name] = columnID
+                
+    def addILRelationshipsBetweenClasses(self,context):
+        '''
+        For each relationship in the IL, add a reference between the relevant classes
+        '''    
+        fileLocation = context.fileDirectory + "\\DM_ForeignKeys.csv"
+        headerSkipped = False
+        with open(fileLocation) as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    fk_id = row[0]
+                    sourceID = row[10]
+                    targetID = row[12]
                     
-                    referenceName = "the" + Utils.makeValidID(self,targetClassName);
+                    targetClassName = row[7]
+                    
+                    fkColumnnID = context.FKToColumnMap[fk_id]
+                    
+                    if fkColumnnID in context.FKtoMandatoryMap:
+                        target_Optional = "N"
+                    else:
+                        target_Optional = "Y"
+                        
+                    sourceTo_Target_Cardinality = "1"
+                    
+                    referenceName = "the" + Utils.makeValidID(targetClassName);
 
                     try:
                         theClass = context.classesMap[sourceID]
@@ -437,7 +421,7 @@ class LDMImport(object):
                     except KeyError:
                         print("missing target class: " + targetID) 
                                           
-                    numOfRelations = Utils.numberofRelationShipsToThisClass(self,theClass,targetClass)
+                    numOfRelations = Utils.numberofRelationShipsToThisClass(theClass,targetClass)
                     if(numOfRelations>0):
                         print("numOfRelations")
                         print(numOfRelations)
@@ -456,7 +440,7 @@ class LDMImport(object):
                             if (theClass.name.endswith("_derived")):
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                    
                                     sourceTablesReference  = XReference()
                                     sourceTablesReference.name="sourceTable1"
@@ -484,7 +468,7 @@ class LDMImport(object):
                             if (theClass.name.endswith("_derived")):
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                     
                                     sourceTablesReference  = XReference()
                                     sourceTablesReference.name="sourceTable1"
@@ -515,7 +499,7 @@ class LDMImport(object):
 
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                     
                                     sourceTablesReference  = XReference()
                                     sourceTablesReference.name="sourceTable1"
@@ -537,7 +521,7 @@ class LDMImport(object):
                             if (theClass.name.endswith("_derived")):
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                     
                                     sourceTablesReference  = XReference()
                                     sourceTablesReference.name="sourceTable1"
@@ -557,5 +541,6 @@ class LDMImport(object):
                                     theSourceTable.members.append(sourceTablesReference)
                     if (not (theClass is None) ) :                 
                         theClass.members.append(eReference)
-   
+                        
+    
             

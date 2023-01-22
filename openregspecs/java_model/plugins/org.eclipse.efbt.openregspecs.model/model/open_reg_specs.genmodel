@@ -60,12 +60,16 @@
     <genClasses ecoreClass="open_reg_specs.ecore#//UserTask">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//UserTask/entity"/>
     </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Import">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Import/importedNamespace"/>
+    </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//Module">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Module/dependencies"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/theDescription"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/license"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Module/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//Module/imports"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//ModuleList">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ModuleList/modules"/>
