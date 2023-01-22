@@ -85,8 +85,8 @@ class ROLImport(object):
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
                         xclassTable.members.append(xclassTableOperation)
-                        context.rpmnPackage.classifiers.extend([xclass])
-                        context.rpmnPackage.classifiers.extend([xclassTable])
+                        context.outputLayerEntitiesPackage.classifiers.extend([xclass])
+                        context.outputLayerEntitiesPackage.classifiers.extend([xclassTable])
                         
             
                         # maintain a map a objectIDs to XClasses
@@ -247,7 +247,7 @@ class ROLImport(object):
                 theEnum.name = amendedDomainName 
                 #maintain a map of enum IDS to XEnum objects
                 context.enumMap[amendedDomainName] = theEnum
-                context.rpmnPackage.classifiers.extend([theEnum])
+                context.outputLayerEnumsPackage.classifiers.extend([theEnum])
                 theDomainMembers= Utils.getMembersOfTheDomain(theDomain, context.memberIDToDomainMap)
                 counter1 = 0
                 for member in theDomainMembers:
@@ -257,8 +257,8 @@ class ROLImport(object):
                     newAdaptedValue = Utils.uniqueValue( theEnum, adaptedValue)
                     newAdaptedName = Utils.uniqueName( theEnum, enumUsedName)
 
-                    enumLiteral.name = newAdaptedName
-                    enumLiteral.literal = newAdaptedValue
+                    enumLiteral.name =  newAdaptedValue
+                    enumLiteral.literal = newAdaptedName
                     counter1 = counter1 + 1
                     enumLiteral.value = counter1
                     theEnum.literals.extend([enumLiteral])
@@ -293,7 +293,7 @@ class ROLImport(object):
                                 theEnum.name = amendedDomainName 
                                 #maintain a map of enum IDS to XEnum objects
                                 context.enumMap[amendedDomainName] = theEnum
-                                context.rpmnPackage.classifiers.extend([theEnum])
+                                context.outputLayerEnumsPackage.classifiers.extend([theEnum])
                                 theDomainMembers= context.subDomainToMemberListMap[subDomainID]
                                 counter1 = 0
                                 for member in theDomainMembers:
@@ -303,8 +303,8 @@ class ROLImport(object):
                                     newAdaptedValue = Utils.uniqueValue( theEnum, adaptedValue)
                                     newAdaptedName = Utils.uniqueName( theEnum, enumUsedName)
                 
-                                    enumLiteral.name = newAdaptedName
-                                    enumLiteral.literal = newAdaptedValue
+                                    enumLiteral.name =  newAdaptedValue
+                                    enumLiteral.literal = newAdaptedName
                                     counter1 = counter1 + 1
                                     enumLiteral.value = counter1
                                     theEnum.literals.extend([enumLiteral])    

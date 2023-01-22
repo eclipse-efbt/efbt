@@ -16,8 +16,11 @@ class Context(object):
 
     moduleList = ModuleList()
     
-    # This is the root packae where we add each type, class and enum
-    rpmnPackage = XPackage(name='bird')
+    typesPackage = XPackage(name='types')
+    inputLayerEnumsPackage = XPackage(name='input_layer_enums')
+    outputLayerEnumsPackage = XPackage(name='output_layer_enums')
+    inputLayerEntitiesPackage = XPackage(name='input_layer_entities')
+    outputLayerEntitiesPackage = XPackage(name='output_layer_entities')
     
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
@@ -71,14 +74,17 @@ class Context(object):
     subDomainIDToDomainID = {}
     def __init__(self):
         
-        
-        
-        
-        self.rpmnPackage.classifiers.append(self.xString)
-        self.rpmnPackage.classifiers.append(self.xDouble)
-        self.rpmnPackage.classifiers.append(self.xInt)
-        self.moduleList.modules.append(self.rpmnPackage)
+
+        self.typesPackage.classifiers.append(self.xString)
+        self.typesPackage.classifiers.append(self.xDouble)
+        self.typesPackage.classifiers.append(self.xInt)
+        self.moduleList.modules.append(self.typesPackage)
+        self.moduleList.modules.append(self.inputLayerEnumsPackage)
+        self.moduleList.modules.append(self.outputLayerEnumsPackage)
+        self.moduleList.modules.append(self.inputLayerEntitiesPackage)
+        self.moduleList.modules.append(self.outputLayerEntitiesPackage)
         self.moduleList.modules.append(self.viewModule)
         self.moduleList.modules.append(self.workflowModule)
         self.moduleList.modules.append(self.vtlModule)
+        
         

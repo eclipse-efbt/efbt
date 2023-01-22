@@ -139,12 +139,20 @@ class ImportFinrepVTL(object):
         #print("findEntity")
         #print(outputLayerName)
         #print("outputLayerName")
-        for rol in context.rpmnPackage.classifiers:
-            if isinstance(rol, XClass):
+        for theEntity in context.inputLayerEntitiesPackage.classifiers:
+            if isinstance(theEntity, XClass):
                 #print("rol.name")
                 #print(rol.name)
-                if rol.name == outputLayerName:
-                    return rol
+                if theEntity.name == outputLayerName:
+                    return theEntity
+                
+        for theEntity in context.outputLayerEntitiesPackage.classifiers:
+            if isinstance(theEntity, XClass):
+                #print("rol.name")
+                #print(rol.name)
+                if theEntity.name == outputLayerName:
+                    return theEntity
+                
         return None
             
         

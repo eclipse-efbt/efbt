@@ -41,6 +41,20 @@ class BaseElement(EObject, metaclass=MetaEClass):
             self.invisible = invisible
 
 
+class Import(EObject, metaclass=MetaEClass):
+
+    importedNamespace = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, importedNamespace=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if importedNamespace is not None:
+            self.importedNamespace = importedNamespace
+
+
 class Module(EObject, metaclass=MetaEClass):
 
     theDescription = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
@@ -48,8 +62,9 @@ class Module(EObject, metaclass=MetaEClass):
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     dependencies = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+    imports = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, dependencies=None, theDescription=None, license=None, name=None, version=None):
+    def __init__(self, *, dependencies=None, theDescription=None, license=None, name=None, version=None, imports=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -69,6 +84,9 @@ class Module(EObject, metaclass=MetaEClass):
 
         if dependencies:
             self.dependencies.extend(dependencies)
+
+        if imports:
+            self.imports.extend(imports)
 
 
 class ModuleList(EObject, metaclass=MetaEClass):
@@ -731,6 +749,18 @@ class SelectColumnMemberAs(SelectColumn):
             self.memberAsConstant = memberAsConstant
 
 
+class SelectValueAs(SelectColumn):
+
+    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, value=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if value is not None:
+            self.value = value
+
+
 class SelectColumnAttributeAs(SelectColumn):
 
     attribute = EReference(ordered=True, unique=True, containment=False, derived=False)
@@ -1122,13 +1152,21 @@ class XStructuralFeature(XMember):
 
 class ServiceTask(Task):
 
+    entityCreationTask = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     enrichedAttribute = EReference(ordered=True, unique=True, containment=False, derived=False)
     scenarios = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     secondAttribute = EReference(ordered=True, unique=True, containment=False, derived=False)
+    requiredAttributesForScenarioChoice = EReference(
+        ordered=True, unique=True, containment=False, derived=False, upper=-1)
+    requiredAttributesForEntityCreation = EReference(
+        ordered=True, unique=True, containment=False, derived=False, upper=-1)
 
-    def __init__(self, *, enrichedAttribute=None, scenarios=None, secondAttribute=None, **kwargs):
+    def __init__(self, *, enrichedAttribute=None, scenarios=None, secondAttribute=None, requiredAttributesForScenarioChoice=None, requiredAttributesForEntityCreation=None, entityCreationTask=None, **kwargs):
 
         super().__init__(**kwargs)
+
+        if entityCreationTask is not None:
+            self.entityCreationTask = entityCreationTask
 
         if enrichedAttribute is not None:
             self.enrichedAttribute = enrichedAttribute
@@ -1138,6 +1176,12 @@ class ServiceTask(Task):
 
         if secondAttribute is not None:
             self.secondAttribute = secondAttribute
+
+        if requiredAttributesForScenarioChoice:
+            self.requiredAttributesForScenarioChoice.extend(requiredAttributesForScenarioChoice)
+
+        if requiredAttributesForEntityCreation:
+            self.requiredAttributesForEntityCreation.extend(requiredAttributesForEntityCreation)
 
 
 class SubProcess(Activity, FlowElementsContainer):
