@@ -120,7 +120,7 @@ EBoolean returns ecore::EBoolean:
 XAttribute returns open_reg_specs::XAttribute:
 	{open_reg_specs::XAttribute}
 	(iD?='id')?
-	type=[open_reg_specs::XClassifier|EString] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
+	type=[open_reg_specs::XClassifier|QualifiedName] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
 	name=ID 
 	;
 
@@ -128,9 +128,9 @@ DataConstraint returns open_reg_specs::DataConstraint:
 	{open_reg_specs::DataConstraint}
 	'conditional'
 
-		( attr1=[open_reg_specs::XAttribute|EString])?
+		( attr1=[open_reg_specs::XAttribute|QualifiedName])?
 		( comparison=AttrComparison)?
-		('member' member=[open_reg_specs::XEnumLiteral|EString])?
+		('member' member=[open_reg_specs::XEnumLiteral|QualifiedName])?
 		('value' value=EString)?
 	;
 
@@ -138,7 +138,7 @@ DataConstraint returns open_reg_specs::DataConstraint:
 XClass returns open_reg_specs::XClass:
 	{open_reg_specs::XClass}
 	((abstract?='abstract'? 'class') ) name = ID
-	('extends' superTypes+=[open_reg_specs::XClass|EString] (',' superTypes+=[open_reg_specs::XClass|EString])*)?
+	('extends' superTypes+=[open_reg_specs::XClass|QualifiedName] (',' superTypes+=[open_reg_specs::XClass|QualifiedName])*)?
 	'{'
 	   (members+=XMember)*
 	'}'
@@ -161,7 +161,7 @@ XEnum returns open_reg_specs::XEnum:
 XOperation returns open_reg_specs::XOperation:
 	{open_reg_specs::XOperation}
 	'op'
-	type=[open_reg_specs::XClassifier|EString] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+	type=[open_reg_specs::XClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	'()'
 	'{'(body=EString)?'}'
@@ -172,7 +172,7 @@ XReference returns open_reg_specs::XReference:
 	((containment?='contains' ) |
 	 ('refers') 
 	)
-	type=[open_reg_specs::XClassifier|EString] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+	type=[open_reg_specs::XClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	;
 
@@ -189,7 +189,15 @@ EInt returns ecore::EInt:
 
 
 QualifiedName:
-	ValidID (=>'.' ValidID)*;
+	ID ('.' ID)*;
+	
+Import returns open_reg_specs::Import:
+	{open_reg_specs::Import}
+        'import' importedNamespace=QualifiedNameWithWildcard;
+
+
+QualifiedNameWithWildcard :
+	QualifiedName '.*'?;
 	
 ValidID:
 	ID;
@@ -415,7 +423,7 @@ XPackage returns open_reg_specs::XPackage:
 	{open_reg_specs::XPackage}
 	'package'
 	name = QualifiedName
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|EString])*
+	(importDirectives += Import)*
 	(classifiers += XClassifier)*
 	;
 

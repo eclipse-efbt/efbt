@@ -52,6 +52,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ServiceTask/requiredAttributesForEntityCreation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ServiceTask/entityCreationTask"/>
     </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//Import">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//Import/importedNamespace"/>
+    </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//SubProcess"/>
     <genClasses ecoreClass="open_reg_specs.ecore#//ScriptTask">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ScriptTask/selectionLayers"/>
@@ -229,6 +232,7 @@
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//XPackage">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XPackage/classifiers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XPackage/importDirectives"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//XReference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XReference/containment"/>
