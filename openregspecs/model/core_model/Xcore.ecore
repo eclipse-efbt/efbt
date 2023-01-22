@@ -48,8 +48,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="XPackage" eSuperTypes="module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="classifiers" upperBound="-1"
         eType="#//XClassifier" containment="true" eOpposite="#//XClassifier/package"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="importDirectives" upperBound="-1"
-        eType="#//Import" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XReference" eSuperTypes="#//XStructuralFeature">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="containment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -66,8 +64,5 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Import" eSuperTypes="#//XModelElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="importedNamespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -10,7 +10,7 @@ SPDX-License-Identifier: EPL-2.0
 				TitledRequirementsSection Title_IV  { 
 					title Title_IV requirementsType Title sections
 					{ 
-						TitledRequirementsSection "Title_IV;Chapter_1_General_Provisions" { 
+						TitledRequirementsSection Title_IV_Chapter_1_General_Provisions { 
 							title "Chapter 1 General Provisions" requirementsType Chapter sections {
 								TitledRequirementsSection Article_325 {
 									title "Article 325: Approaches for calculating the own funds requirements_text for market risks" requirementsType Article sections

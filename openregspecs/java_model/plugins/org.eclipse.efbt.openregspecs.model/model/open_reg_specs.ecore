@@ -46,9 +46,6 @@
         upperBound="-1" eType="#//XMember"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityCreationTask" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Import" eSuperTypes="#//XModelElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="importedNamespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayers" upperBound="-1"
@@ -57,6 +54,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UserTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//XClass"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Import">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="importedNamespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Module">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -95,6 +95,8 @@
         <details key="name" value="version"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
+        eType="#//Import" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModuleList">
     <eStructuralFeatures xsi:type="ecore:EReference" name="modules" upperBound="-1"
@@ -434,8 +436,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="XPackage" eSuperTypes="#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="classifiers" upperBound="-1"
         eType="#//XClassifier" containment="true" eOpposite="#//XClassifier/package"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="importDirectives" upperBound="-1"
-        eType="#//Import" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XReference" eSuperTypes="#//XStructuralFeature">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="containment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>

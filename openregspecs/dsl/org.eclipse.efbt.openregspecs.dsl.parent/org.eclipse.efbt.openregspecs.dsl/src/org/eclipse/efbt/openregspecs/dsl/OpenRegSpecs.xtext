@@ -53,10 +53,10 @@ Scenario returns open_reg_specs::Scenario:
 	{open_reg_specs::Scenario}
 	(invisible?='invisible')?
 	'Scenario'
-	name=EString
+	name=ID
 	'{'
 		('description' description=EString)?
-		('requiredAttributes' '(' requiredAttributes+=[open_reg_specs::XMember|EString] ( "," requiredAttributes+=[open_reg_specs::XMember|EString])* ')' )?
+		('requiredAttributes' '(' requiredAttributes+=[open_reg_specs::XMember|QualifiedName] ( "," requiredAttributes+=[open_reg_specs::XMember|QualifiedName])* ')' )?
 		('data_constraints' data_constraints=DataConstraint)?
 	'}';
 	
@@ -66,9 +66,9 @@ SelectionLayer returns open_reg_specs::SelectionLayer:
 	{open_reg_specs::SelectionLayer}
 	(invisible?='invisible')?
 	'SelectionLayer'
-	name=EString
+	name=ID
 	'{'
-		('generatedEntity' generatedEntity=[open_reg_specs::XClass|EString])?
+		('generatedEntity' generatedEntity=[open_reg_specs::XClass|QualifiedName])?
 	'}';
 
 
@@ -76,9 +76,10 @@ SelectionLayer returns open_reg_specs::SelectionLayer:
 RequirementsModule returns open_reg_specs::RequirementsModule:
 	{open_reg_specs::RequirementsModule}
 	'RequirementsModule'
-	name=EString
+	name=QualifiedName
+	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|EString])*
+		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
 		('rules' '{' rules+=TitledRequirementsSection ( "," rules+=TitledRequirementsSection)* '}' )?		
 		('allowedtypes' allowedtypes=AllowedTypes)?
 	'}';
@@ -88,9 +89,10 @@ RequirementsModule returns open_reg_specs::RequirementsModule:
 WorkflowModule returns open_reg_specs::WorkflowModule:
 	{open_reg_specs::WorkflowModule}
 	'WorkflowModule'
-	name=EString
+	name=QualifiedName
+	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|EString])*
+		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
 		('taskTags' '{' taskTags+=ActivityTag ( "," taskTags+=ActivityTag)* '}' )?
 		('scenarioTags' '{' scenarioTags+=ScenarioTag ( "," scenarioTags+=ScenarioTag)* '}' )?
 		('subProcess' '{' subProcess+=SubProcess ( "," subProcess+=SubProcess)* '}' )?
@@ -99,18 +101,20 @@ WorkflowModule returns open_reg_specs::WorkflowModule:
 ViewModule returns open_reg_specs::ViewModule:
 	{open_reg_specs::ViewModule}
 	'ViewModule'
-	name=EString
+	name=QualifiedName
+	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|EString])*
+		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
 		('views' '{' views+=View ( "," views+=View)* '}' )?
 	'}';
 
 TestModule returns open_reg_specs::TestModule:
 	{open_reg_specs::TestModule}
 	'TestModule'
-	name=EString
+	name=QualifiedName
+	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|EString])*
+		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
 		('tests' '{' tests+=Test ( "," tests+=Test)* '}' )?
 	'}';
 
@@ -213,9 +217,9 @@ SequenceFlow returns open_reg_specs::SequenceFlow:
 	{open_reg_specs::SequenceFlow}
 	(invisible?='invisible')?
 	'SequenceFlow'
-	name=EString
-		('from' sourceRef=[open_reg_specs::FlowNode|EString])?
-		('to' targetRef=[open_reg_specs::FlowNode|EString])?
+	name=ID
+		('from' sourceRef=[open_reg_specs::FlowNode|QualifiedName])?
+		('to' targetRef=[open_reg_specs::FlowNode|QualifiedName])?
 		('description' description=EString)?
 	;
 
@@ -223,9 +227,9 @@ Task_Impl returns open_reg_specs::Task:
 	{open_reg_specs::Task}
 	(invisible?='invisible')?
 	'Task'
-	name=EString
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
+	name=ID
+		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
 		('description' description=EString)?
 	;
 	
@@ -233,9 +237,9 @@ ExclusiveGateway returns open_reg_specs::ExclusiveGateway:
 	{open_reg_specs::ExclusiveGateway}
 	(invisible?='invisible')?
 	'ExclusiveGateway'
-	name=EString
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
+	name=ID
+		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
 		('description' description=EString)?
 ;
 
@@ -243,9 +247,9 @@ InclusiveGateway returns open_reg_specs::InclusiveGateway:
 	{open_reg_specs::InclusiveGateway}
 	(invisible?='invisible')?
 	'InclusiveGateway'
-	name=EString
-	('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-	('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
+	name=ID
+	('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+	('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
 	('description' description=EString)?
 ;
 
@@ -253,9 +257,9 @@ ParallelGateway returns open_reg_specs::ParallelGateway:
 	{open_reg_specs::ParallelGateway}
 	(invisible?='invisible')?
 	'ParallelGateway'
-	name=EString
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
+	name=ID
+		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
 		('description' description=EString)?
 
 ;
@@ -264,15 +268,15 @@ ServiceTask returns open_reg_specs::ServiceTask:
 	{open_reg_specs::ServiceTask}
 	(invisible?='invisible')?
 	'ServiceTask'
-	name=EString
+	name=ID
 		
 		
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('enrichedAttribute' enrichedAttribute=[open_reg_specs::XOperation|EString])?
-		('secondAttribute' secondAttribute=[open_reg_specs::XAttribute|EString])?
-		('requiredAttributesForScenarioChoice' '(' requiredAttributesForScenarioChoice+=[open_reg_specs::XMember|EString] ( "," requiredAttributesForScenarioChoice+=[open_reg_specs::XMember|EString])* ')' )?
-		('requiredAttributesForEntityCreation' '(' requiredAttributesForEntityCreation+=[open_reg_specs::XMember|EString] ( "," requiredAttributesForEntityCreation+=[open_reg_specs::XMember|EString])* ')' )?
+		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('enrichedAttribute' enrichedAttribute=[open_reg_specs::XOperation|QualifiedName])?
+		('secondAttribute' secondAttribute=[open_reg_specs::XAttribute|QualifiedName])?
+		('requiredAttributesForScenarioChoice' '(' requiredAttributesForScenarioChoice+=[open_reg_specs::XMember|QualifiedName] ( "," requiredAttributesForScenarioChoice+=[open_reg_specs::XMember|QualifiedName])* ')' )?
+		('requiredAttributesForEntityCreation' '(' requiredAttributesForEntityCreation+=[open_reg_specs::XMember|QualifiedName] ( "," requiredAttributesForEntityCreation+=[open_reg_specs::XMember|QualifiedName])* ')' )?
 		('scenarios' '{' scenarios+=Scenario ( "," scenarios+=Scenario)* '}' )?
 		('description' description=EString)?
 	'}';
@@ -282,9 +286,9 @@ SubProcess returns open_reg_specs::SubProcess:
 	{open_reg_specs::SubProcess}
 	(invisible?='invisible')?
 	'SubProcess'
-	name=EString
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
+	name=ID
+		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
 		('flowElements' '{' flowElements+=FlowElement ( "," flowElements+=FlowElement)* '}' )?
 		('description' description=EString)?
 		;
@@ -293,10 +297,10 @@ ScriptTask returns open_reg_specs::ScriptTask:
 	{open_reg_specs::ScriptTask}
 	(invisible?='invisible')?
 	'ScriptTask'
-	name=EString
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('outputLayer' outputLayer=[open_reg_specs::XClass|EString])?
+	name=ID
+		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('outputLayer' outputLayer=[open_reg_specs::XClass|QualifiedName])?
 		('selectionLayers' '{' selectionLayers+=SelectionLayer ( "," selectionLayers+=SelectionLayer)* '}' )?
 		('description' description=EString)?
 ;
@@ -305,11 +309,11 @@ UserTask returns open_reg_specs::UserTask:
 	{open_reg_specs::UserTask}
 	(invisible?='invisible')?
 	'UserTask'
-	name=EString
+	name=ID
 
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|EString] ( "," outgoing+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|EString] ( "," incoming+=[open_reg_specs::SequenceFlow|EString])* ')' )?
-		('entity' entity=[open_reg_specs::XClass|EString])?
+		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('entity' entity=[open_reg_specs::XClass|QualifiedName])?
 		('description' description=EString)?
 ;
 
@@ -319,11 +323,11 @@ UserTask returns open_reg_specs::UserTask:
 
 TitledRequirementsSection returns open_reg_specs::TitledRequirementsSection:
 	'TitledRequirementsSection'
-	name=EString
+	name=ID
 	'{'
 		('title' title=EString)?
-		('referencingSections' referencingSections=[open_reg_specs::RequirementsSectionLinkWithText|EString])?
-		'requirementsType' requirementsType=[open_reg_specs::RequirementType|EString]
+		('referencingSections' referencingSections=[open_reg_specs::RequirementsSectionLinkWithText|QualifiedName])?
+		'requirementsType' requirementsType=[open_reg_specs::RequirementType|QualifiedName]
 		('sections' '{' sections+=RequirementsSection ( "," sections+=RequirementsSection)* '}' )?
 	'}';
 	
@@ -341,18 +345,20 @@ AllowedTypes returns open_reg_specs::AllowedTypes:
 Module_Impl returns open_reg_specs::Module:
 	{open_reg_specs::Module}
 	'Module'
-	name=EString
+	name=QualifiedName
+	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|EString])*
+		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
 		
 	'}';
 
 TagGroup returns open_reg_specs::TagGroup:
 	{open_reg_specs::TagGroup}
 	'TagGroup'
-	name=EString
+	name=QualifiedName
+	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|EString])*
+		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
 		('tags' '{' tags+=Tag ( "," tags+=Tag)* '}' )?
 	'}';
 
@@ -360,52 +366,52 @@ TagGroup returns open_reg_specs::TagGroup:
 Tag_Impl returns open_reg_specs::Tag:
 	{open_reg_specs::Tag}
 	'Tag'
-	name=EString
+	name=ID
 	'{'
 		('displayName' displayName=EString)?
-		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|EString] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|EString])* ')' )?
+		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName])* ')' )?
 	'}';
 
 ActivityTag returns open_reg_specs::ActivityTag:
 	{open_reg_specs::ActivityTag}
 	'ActivityTag'
-	name=EString
+	name=ID
 	'{'
 		('displayName' displayName=EString)?
-		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|EString] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|EString])* ')' )?
-		('activity' activity=[open_reg_specs::Activity|EString])?
+		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName])* ')' )?
+		('activity' activity=[open_reg_specs::Activity|QualifiedName])?
 	'}';
 
 ScenarioTag returns open_reg_specs::ScenarioTag:
 	{open_reg_specs::ScenarioTag}
 	'ScenarioTag'
-	name=EString
+	name=ID
 	'{'
 		('displayName' displayName=EString)?
-		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|EString] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|EString])* ')' )?
-		('scenario' scenario=[open_reg_specs::Scenario|EString])?
+		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName])* ')' )?
+		('scenario' scenario=[open_reg_specs::Scenario|QualifiedName])?
 	'}';
 
 
 RequirementsSectionLinkWithText returns open_reg_specs::RequirementsSectionLinkWithText:
 	{open_reg_specs::RequirementsSectionLinkWithText}
 	'RequirementsSectionLinkWithText'
-	name=EString
+	name=ID
 	'{'
 		('linkText' linkText=EString)?
 		('subsection' subsection=EString)?
-		('linkedRuleSection' linkedRuleSection=[open_reg_specs::TitledRequirementsSection|EString])?
+		('linkedRuleSection' linkedRuleSection=[open_reg_specs::TitledRequirementsSection|QualifiedName])?
 	'}';
 
 RequirementType returns open_reg_specs::RequirementType:
 	{open_reg_specs::RequirementType}
 	'RequirementType'
-	name=EString;
+	name=ID;
 
 RequirementsSectionImage returns open_reg_specs::RequirementsSectionImage:
 	{open_reg_specs::RequirementsSectionImage}
 	'RequirementsSectionImage'
-	name=EString
+	name=ID
 	'{'
 		('style' style=EString)?
 		('uri' uri=EString)?
@@ -414,7 +420,7 @@ RequirementsSectionImage returns open_reg_specs::RequirementsSectionImage:
 RequirementsSectionText returns open_reg_specs::RequirementsSectionText:
 	{open_reg_specs::RequirementsSectionText}
 	'RequirementsSectionText'
-	name=EString
+	name=ID
 	'{'
 		('text' text=EString)?
 	'}';
@@ -423,7 +429,7 @@ XPackage returns open_reg_specs::XPackage:
 	{open_reg_specs::XPackage}
 	'package'
 	name = QualifiedName
-	(importDirectives += Import)*
+	(imports += Import)*
 	(classifiers += XClassifier)*
 	;
 
@@ -431,7 +437,7 @@ LayerSQL returns open_reg_specs::LayerSQL:
 	{open_reg_specs::LayerSQL}
 	'LayerSQL'
 	'{'
-		('selectionLayer' selectionLayer=[open_reg_specs::SelectionLayer|EString])?
+		('selectionLayer' selectionLayer=[open_reg_specs::SelectionLayer|QualifiedName])?
 		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
 		( whereClause+=WhereClause ( whereClause+=WhereClause)*  )?
 	'}';
@@ -439,9 +445,9 @@ LayerSQL returns open_reg_specs::LayerSQL:
 View returns open_reg_specs::View:
 	{open_reg_specs::View}
 	'View'
-	name=EString
+	name=ID
 	'{'
-		('outputLayer' outputLayer=[open_reg_specs::XClass|EString])?
+		('outputLayer' outputLayer=[open_reg_specs::XClass|QualifiedName])?
 		(selectionLayerSQL+=LayerSQL (selectionLayerSQL+=LayerSQL)*  )?
 	'}';
 
@@ -451,9 +457,9 @@ WhereClause returns open_reg_specs::WhereClause:
 	{open_reg_specs::WhereClause}
 	'where'
 
-		( attribute1=[open_reg_specs::XAttribute|EString])?
+		( attribute1=[open_reg_specs::XAttribute|QualifiedName])?
 		( comparitor=Comparitor)?
-		('member' member=[open_reg_specs::XEnumLiteral|EString])?
+		('member' member=[open_reg_specs::XEnumLiteral|QualifiedName])?
 		('value' value=EString)?
 ;
 
@@ -463,22 +469,22 @@ WhereClause returns open_reg_specs::WhereClause:
 SelectColumnMemberAs returns open_reg_specs::SelectColumnMemberAs:
 	{open_reg_specs::SelectColumnMemberAs}
 	'SelectMember'
-		( memberAsConstant=[open_reg_specs::XEnumLiteral|EString])?
-		('as' asAttribute=[open_reg_specs::XOperation|EString])?
+		( memberAsConstant=[open_reg_specs::XEnumLiteral|QualifiedName])?
+		('as' asAttribute=[open_reg_specs::XOperation|QualifiedName])?
 		;
 	
 SelectColumnAttributeAs returns open_reg_specs::SelectColumnAttributeAs:
 	{open_reg_specs::SelectColumnAttributeAs}
 	'SelectAttribute'
-		( attribute=[open_reg_specs::XAttribute|EString])?
-		('as' asAttribute=[open_reg_specs::XOperation|EString])?
+		( attribute=[open_reg_specs::XAttribute|QualifiedName])?
+		('as' asAttribute=[open_reg_specs::XOperation|QualifiedName])?
 	;
 	
 SelectValueAs returns open_reg_specs::SelectValueAs:
 	{open_reg_specs::SelectValueAs}
 	'SelectValue'
 		( value=EString)?
-		('as' asAttribute=[open_reg_specs::XOperation|EString])?
+		('as' asAttribute=[open_reg_specs::XOperation|QualifiedName])?
 	;
 
 enum Comparitor returns open_reg_specs::Comparitor:
@@ -487,7 +493,7 @@ enum Comparitor returns open_reg_specs::Comparitor:
 Test returns open_reg_specs::Test:
 	{open_reg_specs::Test}
 	'Test'
-	name=EString
+	name=ID
 	'{'
 		('inputData' '{' inputData+=InputFile ( "," inputData+=InputFile)* '}' )?
 		('expectedResult' '{' expectedResult+=InputFile ( "," expectedResult+=InputFile)* '}' )?
@@ -499,30 +505,30 @@ InputFile returns open_reg_specs::InputFile:
 	'InputFile'
 	'{'
 		('fileName' fileName=EString)?
-		('entity' entity=[open_reg_specs::XClass|EString])?
+		('entity' entity=[open_reg_specs::XClass|QualifiedName])?
 	'}';
 
 TestScope_Impl returns open_reg_specs::TestScope:
 	{open_reg_specs::TestScope}
 	'TestScope'
-	name=EString;
+	name=ID;
 
 UnitTestScope returns open_reg_specs::UnitTestScope:
 	{open_reg_specs::UnitTestScope}
 	'UnitTestScope'
-	name=EString
+	name=ID
 	'{'
-		('scenarios' scenarios=[open_reg_specs::Scenario|EString])?
+		('scenarios' scenarios=[open_reg_specs::Scenario|QualifiedName])?
 	'}';
 
 E2ETestScope_Impl returns open_reg_specs::E2ETestScope:
 	{open_reg_specs::E2ETestScope}
 	'E2ETestScope'
-	name=EString
+	name=ID
 	'{'
-		('scenarios' '(' scenarios+=[open_reg_specs::Scenario|EString] ( "," scenarios+=[open_reg_specs::Scenario|EString])* ')' )?
-		('layer' layer=[open_reg_specs::SelectionLayer|EString])?
-		('scriptTask' scriptTask=[open_reg_specs::ScriptTask|EString])?
+		('scenarios' '(' scenarios+=[open_reg_specs::Scenario|QualifiedName] ( "," scenarios+=[open_reg_specs::Scenario|QualifiedName])* ')' )?
+		('layer' layer=[open_reg_specs::SelectionLayer|QualifiedName])?
+		('scriptTask' scriptTask=[open_reg_specs::ScriptTask|QualifiedName])?
 	'}';
 
 	
