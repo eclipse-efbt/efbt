@@ -115,7 +115,7 @@ class PersistToFile:
         
     def persistEnumModel(self,context,thePackage,extension):
             
-        f = open(context.outputDirectory + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
+        f = open(context.outputDirectory + os.sep + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
         f.write("\t\t package " + thePackage.name + "\r")    
         for classifier in  thePackage.classifiers:
             
@@ -213,12 +213,12 @@ class PersistToFile:
         '''
         rset = ResourceSet()
 
-        resource = rset.create_resource(URI(context.outputDirectory + 'VTL.xmi'))  # This will create an XMI resource
+        resource = rset.create_resource(URI(context.outputDirectory + os.sep + 'VTL.xmi'))  # This will create an XMI resource
         resource.append(context.moduleList)
         resource.save()
         
     def persistWorkflow(self,context):
-        f = open(context.outputDirectory + 'workflow.rpmn', "a",  encoding='utf-8')
+        f = open(context.outputDirectory+ os.sep + 'workflow.rpmn', "a",  encoding='utf-8')
         f.write("WorkflowModule " + context.workflowModule.name + "\r{\r")
         f.write("\t\tsubProcess {\r")    
         for process in  context.workflowModule.subProcess:
@@ -268,7 +268,7 @@ class PersistToFile:
         views = context.viewModule.views
 
         for view in views:
-            f = open(context.outputDirectory + view.name + '_view.rpmn', "a",  encoding='utf-8')
+            f = open(context.outputDirectory + os.sep + view.name + '_view.rpmn', "a",  encoding='utf-8')
             f.write("ViewModule " + view.name + "_viewModule\r{\r")
             f.write("\tviews " + "{\r")
             f.write("\t\tView " + view.name + "_view {\r")

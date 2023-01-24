@@ -51,7 +51,7 @@ class InputLayerImport(object):
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
@@ -120,7 +120,7 @@ class InputLayerImport(object):
         headerSkipped = False
         counter = 0
         # Create an XEnum for each domain, and add it to the XPackage
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -145,7 +145,7 @@ class InputLayerImport(object):
         headerSkipped = False
         counter = 0
         # Add the members of a domain as literals of the related Enum
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -182,7 +182,7 @@ class InputLayerImport(object):
         
         fileLocation = context.fileDirectory + os.sep + "DM_Logical_To_Native.csv"
         headerSkipped = False
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -231,7 +231,7 @@ class InputLayerImport(object):
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -373,7 +373,7 @@ class InputLayerImport(object):
     def createFKToColumnMap(self,context):
         fileLocation = context.fileDirectory + os.sep + "DM_Constr_Index_Columns.csv"
         headerSkipped = False
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -389,7 +389,7 @@ class InputLayerImport(object):
         '''    
         fileLocation = context.fileDirectory + os.sep + "DM_ForeignKeys.csv"
         headerSkipped = False
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):

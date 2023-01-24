@@ -20,9 +20,9 @@ from pyecore.ecore import *
 
 from context import Context
 
-from import_ldm_to_rpmn import LDMImport
-from import_input_layer_to_rpmn import InputLayerImport
-from import_output_layer_to_rpmn import ROLImport
+from import_ldm_to_ecore import LDMImport
+from import_input_layer_to_ecore import InputLayerImport
+from import_output_layer_to_ecore import ROLImport
 from persistToFile import PersistToFile 
 
 if __name__ == '__main__':
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     persistToXML = True
     persistToRPMN = True
     context.useSubDomains = True
-    context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\git\\efbt\\openregspecs\\python\\resources'
+    context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\git\\efbt\\openregspecs\\python\\resources24jan'
     context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\ws\\results3\\src'
     
     if importLDM:

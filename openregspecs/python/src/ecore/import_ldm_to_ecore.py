@@ -51,7 +51,7 @@ class LDMImport(object):
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
@@ -116,7 +116,7 @@ class LDMImport(object):
         headerSkipped = False
         
         # Where an nxtity has a superclass, set the superclass on the XClass
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
@@ -139,7 +139,7 @@ class LDMImport(object):
         headerSkipped = False
         counter = 0
         # Create an XEnum for each domain, and add it to the XPackage
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -164,7 +164,7 @@ class LDMImport(object):
         headerSkipped = False
         counter = 0
         # Add the members of a domain as literals of the related Enum
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -201,7 +201,7 @@ class LDMImport(object):
         
         fileLocation = context.fileDirectory + os.sep + "DM_Logical_To_Native.csv"
         headerSkipped = False
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -249,7 +249,7 @@ class LDMImport(object):
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
@@ -410,7 +410,7 @@ class LDMImport(object):
         '''    
         fileLocation = context.fileDirectory + os.sep + "DM_Relations.csv"
         headerSkipped = False
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if (not headerSkipped):
