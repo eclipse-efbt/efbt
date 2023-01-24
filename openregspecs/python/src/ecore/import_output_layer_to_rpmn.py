@@ -12,6 +12,7 @@
 #
 from pickle import TRUE
 from _ast import Try
+import os
 '''
 Created on 22 Jan 2022
 
@@ -45,7 +46,7 @@ class ROLImport(object):
         
     
     def addROLClassesToPackage(self,context):        
-        fileLocation = context.fileDirectory + "\\cube.csv"
+        fileLocation = context.fileDirectory + os.sep + "cube.csv"
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
@@ -97,7 +98,7 @@ class ROLImport(object):
                         
     def createVariableToDomainMap(self,context):       
         # Make a variable to Domain Map
-        fileLocation = context.fileDirectory + "\\variable.csv"
+        fileLocation = context.fileDirectory + os.sep + "variable.csv"
         headerSkipped = False
         # or each attribute add an Xattribute to the correct XClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
@@ -118,7 +119,7 @@ class ROLImport(object):
         '''
          Make a domain  to Domain Name Map
         ''' 
-        fileLocation = context.fileDirectory + "\\domain.csv"
+        fileLocation = context.fileDirectory + os.sep + "domain.csv"
         headerSkipped = False
 
         with open(fileLocation,  encoding='utf-8') as csvfile:
@@ -134,7 +135,7 @@ class ROLImport(object):
                    
     def createMemberMaps(self,context):   
          # Make a domain  to Domain Name Map 
-        fileLocation = context.fileDirectory + "\\member.csv"
+        fileLocation = context.fileDirectory + os.sep + "member.csv"
         headerSkipped = False
 
         
@@ -161,7 +162,7 @@ class ROLImport(object):
                         context.memberIDToMemberCodeMap[memberID] = memberCode
                     
     def createSubDomainToDomainMap(self,context):
-        fileLocation = context.fileDirectory + "\\subdomain.csv"
+        fileLocation = context.fileDirectory + os.sep + "subdomain.csv"
         headerSkipped = False
         #for each subdomain createw a lsit
 
@@ -176,7 +177,7 @@ class ROLImport(object):
                     context.subDomainIDToDomainID[subdomain_id]=domain_id
                     
     def createSubDomainToMemberMaps(self,context):
-        fileLocation = context.fileDirectory + "\\subdomain_enumeration.csv"
+        fileLocation = context.fileDirectory + os.sep + "subdomain_enumeration.csv"
         headerSkipped = False
         #for each subdomain createw a lsit
 
@@ -203,7 +204,7 @@ class ROLImport(object):
                             
                     
     def addROLEnumsAndLiteralsToPackage(self,context):                   
-        fileLocation = context.fileDirectory + "\\cube_structure_item.csv"
+        fileLocation = context.fileDirectory + os.sep + "cube_structure_item.csv"
         headerSkipped = False
         # or each attribute add an Xattribute to the correct XClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
@@ -264,7 +265,7 @@ class ROLImport(object):
                     theEnum.eLiterals.extend([enumLiteral])
         
     def addROLEnumsAndLiteralsToPackageUsingSubDomains(self,context):
-        fileLocation = context.fileDirectory + "\\cube_structure_item.csv"
+        fileLocation = context.fileDirectory + os.sep + "cube_structure_item.csv"
         headerSkipped = False
         # or each attribute add an Xattribute to the correct XClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
@@ -320,7 +321,7 @@ class ROLImport(object):
         the attribute should have the correct type, which may be a specific
         enumeration
         '''
-        fileLocation = context.fileDirectory + "\\cube_structure_item.csv"
+        fileLocation = context.fileDirectory + os.sep + "cube_structure_item.csv"
         headerSkipped = False
         
 

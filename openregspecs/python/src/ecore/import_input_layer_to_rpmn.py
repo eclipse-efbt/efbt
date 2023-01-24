@@ -21,6 +21,7 @@ from pyecore.ecore import *
 import csv
 from Utils import Utils
 from context import Context
+import os
 
 class InputLayerImport(object):
     
@@ -44,7 +45,7 @@ class InputLayerImport(object):
         for each entity in the IL, create a class and add it to the package
         '''
         
-        fileLocation = context.fileDirectory + "\\DM_Tables.csv"
+        fileLocation = context.fileDirectory + os.sep + "DM_Tables.csv"
         
         
         headerSkipped = False
@@ -115,7 +116,7 @@ class InputLayerImport(object):
         '''
         for each domain in the IL add an enum to the package
         '''
-        fileLocation = context.fileDirectory + "\\DM_Domains.csv"
+        fileLocation = context.fileDirectory + os.sep + "DM_Domains.csv"
         headerSkipped = False
         counter = 0
         # Create an XEnum for each domain, and add it to the XPackage
@@ -140,7 +141,7 @@ class InputLayerImport(object):
         '''
         for each memebr of a domain the IL, add a literal to the corresponding enum
         '''
-        fileLocation = context.fileDirectory + "\\DM_Domain_AVT.csv"
+        fileLocation = context.fileDirectory + os.sep + "DM_Domain_AVT.csv"
         headerSkipped = False
         counter = 0
         # Add the members of a domain as literals of the related Enum
@@ -179,7 +180,7 @@ class InputLayerImport(object):
         # for each logicalDatatype for orcle 12c, make a Datatype if we have an
         # equivalent
         
-        fileLocation = context.fileDirectory + "\\DM_Logical_To_Native.csv"
+        fileLocation = context.fileDirectory + os.sep + "DM_Logical_To_Native.csv"
         headerSkipped = False
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -224,7 +225,7 @@ class InputLayerImport(object):
         to the relevant class in the package
         '''
             
-        fileLocation = context.fileDirectory + "\\DM_Columns.csv"
+        fileLocation = context.fileDirectory + os.sep + "DM_Columns.csv"
         headerSkipped = False
         # For each attribute add an XAttribute to the correct XClass representing the Entity
         # the attribute should have the correct type, which may be a specific
@@ -370,7 +371,7 @@ class InputLayerImport(object):
                             context.FKtoMandatoryMap[attributeID] = "M"  
                         
     def createFKToColumnMap(self,context):
-        fileLocation = context.fileDirectory + "\\DM_Constr_Index_Columns.csv"
+        fileLocation = context.fileDirectory + os.sep + "DM_Constr_Index_Columns.csv"
         headerSkipped = False
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -386,7 +387,7 @@ class InputLayerImport(object):
         '''
         For each relationship in the IL, add a reference between the relevant classes
         '''    
-        fileLocation = context.fileDirectory + "\\DM_ForeignKeys.csv"
+        fileLocation = context.fileDirectory + os.sep + "DM_ForeignKeys.csv"
         headerSkipped = False
         with open(fileLocation) as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')

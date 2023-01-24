@@ -6,6 +6,7 @@ from pyecore.resources.xmi import XMIOptions
 from Utils import Utils
 from context import Context
 from collections import Counter
+import os
 
 class PersistToFile:
     def saveModelAsRPMNFile(self,context ):
@@ -22,7 +23,7 @@ class PersistToFile:
         
     def persistEntityModel(self,context,thePackage,extension,importedPackage):
             
-        f = open(context.outputDirectory + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
+        f = open(context.outputDirectory + os.sep +thePackage.name  +'.' +extension, "a",  encoding='utf-8')
         f.write("\t\t package " + thePackage.name + "\r")  
         f.write("\t\t import " + importedPackage.name + ".*\r")   
         if extension == "rpmn":
@@ -101,7 +102,7 @@ class PersistToFile:
         f.close()
     
     def persistTypesModel(self,context,thePackage,extension):
-        f = open(context.outputDirectory + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
+        f = open(context.outputDirectory + os.sep + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
         f.write("\t\t package " + thePackage.name + "\r")  
         f.write("\t\t\ttype double wraps Double\r")
         f.write("\t\t\ttype String wraps String\r")

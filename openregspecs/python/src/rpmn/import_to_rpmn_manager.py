@@ -37,7 +37,7 @@ if __name__ == '__main__':
     context.persistVTLComments=False
     context.useSubDomains = True
     context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\git\\efbt\\openregspecs\\python\\resources'
-    context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\ws\\results\\src\\'
+    context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\ws\\results\\src'
     
     if importLDM:
         LDMImport().doImport(context)
