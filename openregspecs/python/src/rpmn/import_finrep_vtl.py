@@ -6,6 +6,8 @@ Created on 22 Jan 2022
 import csv
 from open_reg_specs import *
 from pickle import TRUE
+import os
+
 class ImportFinrepVTL(object):
     '''
     1.) Look throug in scope reports
@@ -39,7 +41,7 @@ class ImportFinrepVTL(object):
         ImportFinrepVTL.addReports(self, context)
         
     def importTransformationsAndSchemes(self,context):
-        fileLocation = context.fileDirectory + "\\transformations.csv"
+        fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
@@ -170,7 +172,7 @@ class ImportFinrepVTL(object):
                 
     
     def buildOutputLayerToVTLLayerMap(self,context):
-        fileLocation = context.fileDirectory + "\\transformations.csv"
+        fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
@@ -224,7 +226,7 @@ class ImportFinrepVTL(object):
         return returnTransformations
                 
     def buildListOfVTLLayersForFinrep(self,context):
-        fileLocation = context.fileDirectory + "\\transformations.csv"
+        fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
@@ -249,7 +251,7 @@ class ImportFinrepVTL(object):
         
         for vtl_layer in context.vtl_layers:
             expressionlist = []
-            fileLocation = context.fileDirectory + "\\transformations.csv"
+            fileLocation = context.fileDirectory + os.sep + "transformations.csv"
     
             headerSkipped = False
             # Load all the entities from the csv file, make an XClass per entity,
@@ -270,7 +272,7 @@ class ImportFinrepVTL(object):
                        
         
     def addReports(self,context):
-        fileLocation = context.fileDirectory + "\\in_scope_reports.csv"
+        fileLocation = context.fileDirectory + os.sep + "in_scope_reports.csv"
         
         
         headerSkipped = False
@@ -362,7 +364,7 @@ class ImportFinrepVTL(object):
                 layerSQL.columns.extend([selectColumn])
                     
     def buildIntermediateLayerToInputLayer(self,context):
-        fileLocation = context.fileDirectory + "\\VTL_layer_to_IL.csv"
+        fileLocation = context.fileDirectory + os.sep + "VTL_layer_to_IL.csv"
         #il_name = layerSQL.name
         #amended_il_name = "FINREP_REF_" + il_name + "_REF_FINREP 3.0"
 
