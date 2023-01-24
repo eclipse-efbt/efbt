@@ -231,7 +231,7 @@ class ImportFinrepVTL(object):
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
@@ -256,7 +256,7 @@ class ImportFinrepVTL(object):
             headerSkipped = False
             # Load all the entities from the csv file, make an XClass per entity,
             # and add the XClass to the package
-            with open(fileLocation) as csvfile:
+            with open(fileLocation,  encoding='utf-8') as csvfile:
                 filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
                 for row in filereader:
                     # skip the first line which is the header.
@@ -278,7 +278,7 @@ class ImportFinrepVTL(object):
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
@@ -372,7 +372,7 @@ class ImportFinrepVTL(object):
         headerSkipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
-        with open(fileLocation) as csvfile:
+        with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
