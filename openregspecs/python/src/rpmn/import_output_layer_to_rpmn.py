@@ -190,7 +190,7 @@ class ROLImport(object):
                     member_id = row[0]
                     subdomain_id = row[2]
                     valid_to=row[4]
-                    if (valid_to == "12/31/9999"):
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999"):
                         memberList = None
                         try: 
                             memberList =context.subDomainToMemberListMap[subdomain_id]
