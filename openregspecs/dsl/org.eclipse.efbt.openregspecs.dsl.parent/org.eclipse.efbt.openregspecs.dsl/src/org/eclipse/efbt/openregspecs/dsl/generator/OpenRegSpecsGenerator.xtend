@@ -26,12 +26,17 @@ import org.eclipse.efbt.openregspecs.model.open_reg_specs.Module
 class OpenRegSpecsGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		
-		fsa.generateFile('datamodel.xcore',  '''
-«FOR xpackage : resource.allContents.filter(XPackage).toIterable»
+		        for (xpackage : resource.allContents.toIterable.filter(XPackage)) {
+                
+       
+		fsa.generateFile(xpackage.name + '.xcore',  '''
+
 package «xpackage.name»
+
+«FOR theImport : xpackage.imports»
+import «theImport.importedNamespace» 
 «ENDFOR»
-«FOR xclass : resource.allContents.filter(XClass).toIterable»
+«FOR xclass : xpackage.classifiers.filter(XClass)»
 «IF xclass.abstract»abstract «ENDIF»class «xclass.name» «IF xclass.superTypes.length == 1» extends «xclass.superTypes.get(0).name» «ENDIF»{
 «FOR xmember : xclass.members»  
 «IF xmember instanceof XAttribute» 	«IF xmember.ID»id «ENDIF»«xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name» «ENDIF»
@@ -43,7 +48,7 @@ package «xpackage.name»
 	«ENDIF»«ENDFOR» 
 }
 «ENDFOR»
-«FOR xEnum : resource.allContents.filter(XEnum).toIterable»
+«FOR xEnum : xpackage.classifiers.filter(XEnum)»
 enum «xEnum.name» {«FOR xliteral : xEnum.literals»  «xliteral.name»  as "«xliteral.literal»"  = «xliteral.value» «ENDFOR»}
 «ENDFOR»
 «FOR xDataType : resource.allContents.filter(XDataType).toIterable»
@@ -52,7 +57,7 @@ type  «xDataType.name» wraps «IF xDataType.name == "Date"»java.util.Date «E
 «ENDIF»	
 «ENDFOR»
         ''')
-        
+         }
        fsa.generateFile('JavaRunner.java',  '''
 import java.io.IOException;
 import java.util.Collections;
