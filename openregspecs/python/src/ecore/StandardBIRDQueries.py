@@ -71,7 +71,7 @@ class StandardBIRDQueries(object):
         attributeAllowedValues = firstAttribute.eType.eLiterals
         print(attributeAllowedValues)
               
-        
+        #StandardBIRDQueries.createInputLayerToOutputLayerMatches(self,fileDirectory)
         rset2 = ResourceSet()
         types_resource2 = rset2.create_resource(URI(fileDirectory + os.sep + "types2.ecore"))  # This will create an XMI resource
         types_resource2.append(self.typesModel)  # we add the EPackage instance in the resource
@@ -211,7 +211,7 @@ class StandardBIRDQueries(object):
         return outputLayers
     
 if __name__ == '__main__':
-    fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\git\\efbt\\openregspecs\\python\\resources'
+    fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\git\\efbt\\openregspecs\\python\\results_finrep_30'
     standardBIRDQueries = StandardBIRDQueries()
     standardBIRDQueries.query1(fileDirectory)
     

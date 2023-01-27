@@ -33,8 +33,8 @@ if __name__ == '__main__':
     persistToXML = True
     persistToRPMN = True
     context.useSubDomains = True
-    context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\git\\efbt\\openregspecs\\python\\resources24jan'
-    context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\ws\\results3\\src'
+    context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\git\\efbt\\openregspecs\\python\\resourcesfinrep30'
+    context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-dec22\\git\\efbt\\openregspecs\\python\\results_finrep_30'
     
     if importLDM:
         LDMImport().doImport(context)
