@@ -47,7 +47,7 @@ TestScope returns open_reg_specs::TestScope:
 	TestScope_Impl  | UnitTestScope | E2ETestScope_Impl;
 
 EString returns ecore::EString:
-	STRING | ID;
+	STRING ;
 
 Scenario returns open_reg_specs::Scenario:
 	{open_reg_specs::Scenario}
@@ -118,8 +118,7 @@ TestModule returns open_reg_specs::TestModule:
 		('tests' '{' tests+=Test ( "," tests+=Test)* '}' )?
 	'}';
 
-EBoolean returns ecore::EBoolean:
-	'true' | 'false';
+
 
 XAttribute returns open_reg_specs::XAttribute:
 	{open_reg_specs::XAttribute}
@@ -151,7 +150,7 @@ XClass returns open_reg_specs::XClass:
 XDataType_Impl returns open_reg_specs::XDataType:
 	{open_reg_specs::XDataType}
 	'type' name = ID
-	'wraps' industryName = EString
+	'wraps' industryName = ID
 	
 	;
 
@@ -203,16 +202,10 @@ Import returns open_reg_specs::Import:
 QualifiedNameWithWildcard :
 	QualifiedName '.*'?;
 	
-ValidID:
-	ID;
 
 enum AttrComparison returns open_reg_specs::AttrComparison:
 				equals = 'equals' | less_than = 'less_than' | greater_than = 'greater_than' | not_equals = 'not_equals';
 
-EBooleanObject returns ecore::EBooleanObject:
-	'true' | 'false';
-
-	
 SequenceFlow returns open_reg_specs::SequenceFlow:
 	{open_reg_specs::SequenceFlow}
 	(invisible?='invisible')?

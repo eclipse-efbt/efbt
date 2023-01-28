@@ -26,9 +26,10 @@ import org.eclipse.efbt.openregspecs.model.open_reg_specs.Module
 class OpenRegSpecsGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		System.out.println("resource = " + resource)
 		        for (xpackage : resource.allContents.toIterable.filter(XPackage)) {
-                
-       
+                System.out.println("package =  " + xpackage.name)
+        
 		fsa.generateFile(xpackage.name + '.xcore',  '''
 
 package «xpackage.name»
