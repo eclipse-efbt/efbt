@@ -58,7 +58,6 @@
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
-				<version>${xtextVersion}</version>
 			</plugin>
 	
 			<plugin>
@@ -73,6 +72,12 @@
 							</includes>
 						</fileset>
 						<fileset>
+							<directory>${basedir}/../org.eclipse.efbt.openregspecs.dsl.tests/src-gen/</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</fileset>
+						<fileset>
 							<directory>${basedir}/../org.eclipse.efbt.openregspecs.dsl.ide/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
@@ -80,6 +85,12 @@
 						</fileset>
 						<fileset>
 							<directory>${basedir}/../org.eclipse.efbt.openregspecs.dsl.ui/src-gen/</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>${basedir}/../org.eclipse.efbt.openregspecs.dsl.ui.tests/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>
