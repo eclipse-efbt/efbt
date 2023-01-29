@@ -9,8 +9,5 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.efbt.openregspecs.dsl,
  org.eclipse.efbt.openregspecs.model,
  org.eclipse.xtext.ide,
- org.eclipse.xtext.xbase.ide,
- org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+ org.eclipse.xtext.xbase.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.openregspecs.dsl.ide.contentassist.antlr,
- org.eclipse.efbt.openregspecs.dsl.ide.contentassist.antlr.internal
