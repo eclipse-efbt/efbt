@@ -5,6 +5,7 @@ import os
 
 
 
+
         
         
 class StandardMatchingQueries(object):
@@ -60,36 +61,63 @@ class StandardMatchingQueries(object):
                 attributeType = attribute.eType
                 atributeTypeName = attributeType.name
                 attributeName = attribute.name
-                print("atributeTypeName")
-                print(atributeTypeName)
-                indexOfISSUBDMAOINOF = atributeTypeName.index('_ISSUBDOMAINOF_')
-                length = len(atributeTypeName)
-                domainName = atributeTypeName[indexOfISSUBDMAOINOF + 15:length]
-                print("domainName")
-                print(domainName)
-                relatedInputLayerDomain = StandardMatchingQueries.getRelatedInputLayerDomain(self,domainName,attributeType)
-                print("relatedInputLayerDomain")
-                print(relatedInputLayerDomain)
-                csvTextString = None
-                if not( relatedInputLayerDomain is None):
-                    for literal in attributeType.eLiterals:
-                        literalName = literal.name
-                        relatedLiteral = StandardMatchingQueries.getRelatedInputLayerLiteral(self,literal,relatedInputLayerDomain)
-                        relatedLiteralName = "None"
-                        if not (relatedLiteral is None):
-                            relatedLiteralName = relatedLiteral.name
-                        csvTextString = outputLayerName + "," + attributeName + "," +  atributeTypeName  + "," + domainName + "," +relatedInputLayerDomain.name + "," + literalName +"," +relatedLiteralName
+                if not(StandardMatchingQueries.inBlacklist(self,attributeName)):
+                    print("atributeTypeName")
+                    print(atributeTypeName)
+                    indexOfISSUBDMAOINOF = atributeTypeName.index('_ISSUBDOMAINOF_')
+                    length = len(atributeTypeName)
+                    domainName = atributeTypeName[indexOfISSUBDMAOINOF + 15:length]
+                    print("domainName")
+                    print(domainName)
+                    relatedInputLayerDomain = StandardMatchingQueries.getRelatedInputLayerDomain(self,domainName,attributeType)
+                    print("relatedInputLayerDomain")
+                    print(relatedInputLayerDomain)
+                    csvTextString = None
+                    if not( relatedInputLayerDomain is None):
+                        for literal in attributeType.eLiterals:
+                            literalName = literal.name
+                            relatedLiteral = StandardMatchingQueries.getRelatedInputLayerLiteral(self,literal,relatedInputLayerDomain)
+                            relatedLiteralName = "None"
+                            if not (relatedLiteral is None):
+                                relatedLiteralName = relatedLiteral.name
+                            csvTextString = outputLayerName + "," + attributeName + "," +  atributeTypeName  + "," + domainName + "," +relatedInputLayerDomain.name + "," + literalName +"," +relatedLiteralName
+                            csvStrings.append(csvTextString)
+                    else:
+                        csvTextString = outputLayerName + "," + attributeName + "," + atributeTypeName + "," + domainName + ",None,,"
                         csvStrings.append(csvTextString)
-                else:
-                    csvTextString = outputLayerName + "," + attributeName + "," + atributeTypeName + "," + domainName + ",None,,"
-                    csvStrings.append(csvTextString)
 
         f = open(fileDirectory + os.sep + 'matches.csv', "a",  encoding='utf-8') 
         for theString in csvStrings:
              f.write(theString)
              f.write('\n') 
         f.close()
-                        
+               
+    def inBlacklist(self,theString):
+        blacklist = False
+        if(theString.strip() == 'HLD_TRDNG_INDCTR'):
+            blacklist = True 
+        if(theString.strip() == 'HLD_MTRTY_INDCTR'):
+            blacklist = True
+        if(theString.strip() == 'ACCNTNG_PRTFL_VLTN_RL'):
+            blacklist = True
+        if(theString.strip() == 'ACCNTNG_FRMWRK'):
+            blacklist = True
+        if(theString.strip() == 'SBJCT_IMPRMNT_INDCTR'):
+            blacklist = True
+        if(theString.strip() == 'DT_RFRNC'):
+            blacklist = True
+        if(theString.strip() == 'VALUE_DECIMAL'):
+            blacklist = True
+        if(theString.strip() == 'ENTTY_RIAD_CD_RPRTNG_AGNT'):
+            blacklist = True
+        if(theString.strip() == 'MTRCS'):
+            blacklist = True
+        if(theString.strip() == 'SUBA_CD'):
+            blacklist = True
+            
+        return blacklist
+            
+                
     def getRelatedInputLayerLiteral(self,literal,relatedInputLayerDomain):
         returnLiteral = None
         for theLiteral in relatedInputLayerDomain.eLiterals:
@@ -168,8 +196,10 @@ class StandardMatchingQueries(object):
         
         return outputLayers
     
+  
+    
 if __name__ == '__main__':
     fileDirectory = '/workspaces/efbt/openregspecs/python/results'
-    StandardMatchingQueries = StandardMatchingQueries()
-    StandardMatchingQueries.query1(fileDirectory)
+    standardMatchingQueries = StandardMatchingQueries()
+    standardMatchingQueries.query1(fileDirectory)
     
