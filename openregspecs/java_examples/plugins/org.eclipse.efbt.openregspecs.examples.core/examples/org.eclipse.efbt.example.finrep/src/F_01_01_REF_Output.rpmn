@@ -1,0 +1,178 @@
+
+package F_01_01_REF_Output_Logic
+
+import output_layer_entities.* 
+
+import output_layer_enums.* 
+
+import input_layer_entities.* 
+
+import input_layer_enums.*
+import types.*
+
+class F_01_01_REF_Output_Layer_UnionItem {
+ 	op ACCNTNG_CLSSFCTN_F_01_01_14_ACCNTNG_CLSSFCTN_REF_ISSUBDOMAINOF_Accounting_classification  ACCNTNG_CLSSFCTN() 
+	{
+	 	"base.ACCNTNG_CLSSFCTN()"
+	}
+ 	op Date  DT_RFRNC() 
+	{
+	 	"base.DT_RFRNC()"
+	}
+ 	op HDG_INSTRMNT_F_01_01_14_HDG_INSTRMNT_REF_ISSUBDOMAINOF_Hedged_or_hedging_instrument  HDG_INSTRMNT() 
+	{
+	 	"base.HDG_INSTRMNT()"
+	}
+ 	op INSTTTNL_SCTR_F_01_01_14_INSTTTNL_SCTR_REF_ISSUBDOMAINOF_Institutional_sectors  INSTTTNL_SCTR() 
+	{
+	 	"base.INSTTTNL_SCTR()"
+	}
+ 	op BLN_F_01_01_14_IS_HFS_REF_ISSUBDOMAINOF_Boolean  IS_HFS() 
+	{
+	 	"base.IS_HFS()"
+	}
+ 	op String  OBSERVATION_VALUE() 
+	{
+	 	"base.OBSERVATION_VALUE()"
+	}
+ 	op String  OBSRVD_AGNT_INTRNL_ID() 
+	{
+	 	"base.OBSRVD_AGNT_INTRNL_ID()"
+	}
+ 	op RPYMNT_RGHTS_F_01_01_14_RPYMNT_RGHTS_REF_ISSUBDOMAINOF_Repayment_rights  RPYMNT_RGHTS() 
+	{
+	 	"base.RPYMNT_RGHTS()"
+	}
+ 	op TYP_ACCNTNG_ITM_F_01_01_14_TYP_ACCNTNG_ITM_REF_ISSUBDOMAINOF_Type_of_accounting_item  TYP_ACCNTNG_ITM() 
+	{
+	 	"base.TYP_ACCNTNG_ITM()"
+	}
+ 	op TYP_HDG_F_01_01_14_TYP_HDG_REF_ISSUBDOMAINOF_Type_of_hedge  TYP_HDG() 
+	{
+	 	"base.TYP_HDG()"
+	}
+ 	op TYP_INSTRMNT_F_01_01_14_TYP_INSTRMNT_REF_ISSUBDOMAINOF_Type_of_instrument  TYP_INSTRMNT() 
+	{
+	 	"base.TYP_INSTRMNT()"
+	}
+ 	refers Layer_F_01_01_REF_OutputItem_Base  base	
+}
+class F_01_01_REF_Output_Layer_UnionTable {
+ 	refers Layer_F_01_01_REF_OutputItem_Cash_on_handTable  layer1Table	
+ 	refers Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq_2_investment_pr_operty_not_taken_into_possession_3_Investment_pr_operty_taken_into_possession_before_the_period_4_Investment_pr_operty_taken_into_possession_during_the_period_possessionTable  layer2Table	
+ 	refers Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq440_Current_tax_assets_IAS_1_54_n_IAS_12_5_or_Type_non_financial_asset_eq450_Deferred_tax_assets_for_nGaap_Accounting_Directive_art_17_1_f_CRR_art_4_1_106_for_IFRS_IAS_1_54_o_IAS_12_5_CRR_art_4_1_106_Table  layer3Table	
+ 	contains  F_01_01_REF_Output_Layer_UnionItem []   F_01_01_REF_Output_Layer_UnionItems	
+ 	op F_01_01_REF_Output_Layer_UnionItem []   F_01_01_REF_Output_Layer_UnionItems() 
+	{
+	 	//Just go through all the layers and create a union of the items, each will refer to an item of the layer
+	}
+}
+class Layer_F_01_01_REF_OutputItem_Base {
+	op ACCNTNG_CLSSFCTN_F_01_01_14_ACCNTNG_CLSSFCTN_REF_ISSUBDOMAINOF_Accounting_classification  ACCNTNG_CLSSFCTN() 
+	{
+	 	"null"
+	}
+ 	op Date  DT_RFRNC() 
+	{
+	 	"null"
+	}
+ 	op HDG_INSTRMNT_F_01_01_14_HDG_INSTRMNT_REF_ISSUBDOMAINOF_Hedged_or_hedging_instrument  HDG_INSTRMNT() 
+	{
+	 	"null"
+	}
+ 	op INSTTTNL_SCTR_F_01_01_14_INSTTTNL_SCTR_REF_ISSUBDOMAINOF_Institutional_sectors  INSTTTNL_SCTR() 
+	{
+	 	"null"
+	}
+ 	op BLN_F_01_01_14_IS_HFS_REF_ISSUBDOMAINOF_Boolean  IS_HFS() 
+	{
+	 	"null"
+	}
+ 	op String  OBSERVATION_VALUE() 
+	{
+	 	 "null"
+	}
+ 	op String  OBSRVD_AGNT_INTRNL_ID() 
+	{
+	 	"null"
+	}
+ 	op RPYMNT_RGHTS_F_01_01_14_RPYMNT_RGHTS_REF_ISSUBDOMAINOF_Repayment_rights  RPYMNT_RGHTS() 
+	{
+	 	"null"
+	}
+ 	op TYP_ACCNTNG_ITM_F_01_01_14_TYP_ACCNTNG_ITM_REF_ISSUBDOMAINOF_Type_of_accounting_item  TYP_ACCNTNG_ITM() 
+	{
+	 	"null"
+	}
+ 	op TYP_HDG_F_01_01_14_TYP_HDG_REF_ISSUBDOMAINOF_Type_of_hedge  TYP_HDG() 
+	{
+	 	"null"
+	}
+ 	op TYP_INSTRMNT_F_01_01_14_TYP_INSTRMNT_REF_ISSUBDOMAINOF_Type_of_instrument  TYP_INSTRMNT() 
+	{
+	 	"null"
+	}
+}
+class Layer_F_01_01_REF_OutputItem_Cash_on_hand  extends Layer_F_01_01_REF_OutputItem_Base {
+ 	op ACCNTNG_CLSSFCTN_F_01_01_14_ACCNTNG_CLSSFCTN_REF_ISSUBDOMAINOF_Accounting_classification  ACCNTNG_CLSSFCTN() 
+	{
+	 	"ACCNTNG_CLSSFCTN_F_01_01_14_ACCNTNG_CLSSFCTN_REF_ISSUBDOMAINOF_Accounting_classification.CASH_BALANCES_AT_CENTRAL_BANKS_AND_OTHER_DEMAND_DEPOSITS"
+	}
+ 	op Date  DT_RFRNC() 
+	{
+	 	"new Date(\"01/01/2023\")"
+	}
+ 	op HDG_INSTRMNT_F_01_01_14_HDG_INSTRMNT_REF_ISSUBDOMAINOF_Hedged_or_hedging_instrument  HDG_INSTRMNT() 
+	{
+	 	"HDG_INSTRMNT_F_01_01_14_HDG_INSTRMNT_REF_ISSUBDOMAINOF_Hedged_or_hedging_instrument.NOT_APPLICABLE"
+	}
+ 	op INSTTTNL_SCTR_F_01_01_14_INSTTTNL_SCTR_REF_ISSUBDOMAINOF_Institutional_sectors  INSTTTNL_SCTR() 
+	{
+	 	"INSTTTNL_SCTR_F_01_01_14_INSTTTNL_SCTR_REF_ISSUBDOMAINOF_Institutional_sectors.NOT_APPLICABLE"
+	}
+ 	op BLN_F_01_01_14_IS_HFS_REF_ISSUBDOMAINOF_Boolean  IS_HFS() 
+	{
+	 	"BLN_F_01_01_14_IS_HFS_REF_ISSUBDOMAINOF_Boolean.FALSE"
+	}
+ 	op String  OBSERVATION_VALUE() 
+	{
+	 	 "cash_on_hand.carrying_amount.toString()"
+	}
+ 	op String  OBSRVD_AGNT_INTRNL_ID() 
+	{
+	 	"\"REPORTING_ENTITY1\""
+	}
+ 	op RPYMNT_RGHTS_F_01_01_14_RPYMNT_RGHTS_REF_ISSUBDOMAINOF_Repayment_rights  RPYMNT_RGHTS() 
+	{
+	 	"RPYMNT_RGHTS_F_01_01_14_RPYMNT_RGHTS_REF_ISSUBDOMAINOF_Repayment_rights.NOT_APPLICABLE"
+	}
+ 	op TYP_ACCNTNG_ITM_F_01_01_14_TYP_ACCNTNG_ITM_REF_ISSUBDOMAINOF_Type_of_accounting_item  TYP_ACCNTNG_ITM() 
+	{
+	 	"TYP_ACCNTNG_ITM_F_01_01_14_TYP_ACCNTNG_ITM_REF_ISSUBDOMAINOF_Type_of_accounting_item.CASH_ON_HANDS"
+	}
+ 	op TYP_HDG_F_01_01_14_TYP_HDG_REF_ISSUBDOMAINOF_Type_of_hedge  TYP_HDG() 
+	{
+	 	"TYP_HDG_F_01_01_14_TYP_HDG_REF_ISSUBDOMAINOF_Type_of_hedge.NOT_APPLICABLE"
+	}
+ 	op TYP_INSTRMNT_F_01_01_14_TYP_INSTRMNT_REF_ISSUBDOMAINOF_Type_of_instrument  TYP_INSTRMNT() 
+	{
+	 	"TYP_INSTRMNT_F_01_01_14_TYP_INSTRMNT_REF_ISSUBDOMAINOF_Type_of_instrument.NOT_APPLICABLE"
+	}
+ 	refers Cash_on_hand  cash_on_hand	
+}
+class Layer_F_01_01_REF_OutputItem_Cash_on_handTable {
+ 	refers Cash_on_hand  cash_on_hand_reference	
+ 	contains  Layer_F_01_01_REF_OutputItem_Cash_on_hand  Layer_F_01_01_REF_OutputItem_Cash_on_hands	
+ 	op Layer_F_01_01_REF_OutputItem_Cash_on_hand  Layer_F_01_01_REF_OutputItem_Cash_on_hands() 
+	{
+	 	// "get all cash on hands, possibly with a filter"
+	}
+}
+class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq_2_investment_pr_operty_not_taken_into_possession_3_Investment_pr_operty_taken_into_possession_before_the_period_4_Investment_pr_operty_taken_into_possession_during_the_period_possession {
+}
+class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq_2_investment_pr_operty_not_taken_into_possession_3_Investment_pr_operty_taken_into_possession_before_the_period_4_Investment_pr_operty_taken_into_possession_during_the_period_possessionTable {
+}
+class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq440_Current_tax_assets_IAS_1_54_n_IAS_12_5_or_Type_non_financial_asset_eq450_Deferred_tax_assets_for_nGaap_Accounting_Directive_art_17_1_f_CRR_art_4_1_106_for_IFRS_IAS_1_54_o_IAS_12_5_CRR_art_4_1_106_ {
+}
+class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq440_Current_tax_assets_IAS_1_54_n_IAS_12_5_or_Type_non_financial_asset_eq450_Deferred_tax_assets_for_nGaap_Accounting_Directive_art_17_1_f_CRR_art_4_1_106_for_IFRS_IAS_1_54_o_IAS_12_5_CRR_art_4_1_106_Table {
+}
