@@ -21,8 +21,8 @@
     <maven>3.0</maven>
   </prerequisites>
 	<properties>
-	 <xtextVersion>2.29.0</xtextVersion>
-		<mwe2Version>2.14.0</mwe2Version>
+	 <xtextVersion>2.28.0</xtextVersion>
+		<mwe2Version>2.13.0</mwe2Version>
 		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
