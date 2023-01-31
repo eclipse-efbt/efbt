@@ -70,47 +70,47 @@ class F_01_01_REF_Output_Layer_UnionTable {
 class Layer_F_01_01_REF_OutputItem_Base {
 	op ACCNTNG_CLSSFCTN_F_01_01_14_ACCNTNG_CLSSFCTN_REF_ISSUBDOMAINOF_Accounting_classification  ACCNTNG_CLSSFCTN() 
 	{
-	 	"null"
+	 	
 	}
  	op Date  DT_RFRNC() 
 	{
-	 	"null"
+	 	
 	}
  	op HDG_INSTRMNT_F_01_01_14_HDG_INSTRMNT_REF_ISSUBDOMAINOF_Hedged_or_hedging_instrument  HDG_INSTRMNT() 
 	{
-	 	"null"
+	 	
 	}
  	op INSTTTNL_SCTR_F_01_01_14_INSTTTNL_SCTR_REF_ISSUBDOMAINOF_Institutional_sectors  INSTTTNL_SCTR() 
 	{
-	 	"null"
+	 	
 	}
  	op BLN_F_01_01_14_IS_HFS_REF_ISSUBDOMAINOF_Boolean  IS_HFS() 
 	{
-	 	"null"
+	 	
 	}
  	op String  OBSERVATION_VALUE() 
 	{
-	 	 "null"
+	 	 
 	}
  	op String  OBSRVD_AGNT_INTRNL_ID() 
 	{
-	 	"null"
+	 	
 	}
  	op RPYMNT_RGHTS_F_01_01_14_RPYMNT_RGHTS_REF_ISSUBDOMAINOF_Repayment_rights  RPYMNT_RGHTS() 
 	{
-	 	"null"
+	 	
 	}
  	op TYP_ACCNTNG_ITM_F_01_01_14_TYP_ACCNTNG_ITM_REF_ISSUBDOMAINOF_Type_of_accounting_item  TYP_ACCNTNG_ITM() 
 	{
-	 	"null"
+	 	
 	}
  	op TYP_HDG_F_01_01_14_TYP_HDG_REF_ISSUBDOMAINOF_Type_of_hedge  TYP_HDG() 
 	{
-	 	"null"
+	 	
 	}
  	op TYP_INSTRMNT_F_01_01_14_TYP_INSTRMNT_REF_ISSUBDOMAINOF_Type_of_instrument  TYP_INSTRMNT() 
 	{
-	 	"null"
+	 	
 	}
 }
 class Layer_F_01_01_REF_OutputItem_Cash_on_hand  extends Layer_F_01_01_REF_OutputItem_Base {
@@ -120,7 +120,7 @@ class Layer_F_01_01_REF_OutputItem_Cash_on_hand  extends Layer_F_01_01_REF_Outpu
 	}
  	op Date  DT_RFRNC() 
 	{
-	 	"new Date(\"01/01/2023\")"
+	 	"new java.util.Date(\"01/01/2023\")"
 	}
  	op HDG_INSTRMNT_F_01_01_14_HDG_INSTRMNT_REF_ISSUBDOMAINOF_Hedged_or_hedging_instrument  HDG_INSTRMNT() 
 	{
