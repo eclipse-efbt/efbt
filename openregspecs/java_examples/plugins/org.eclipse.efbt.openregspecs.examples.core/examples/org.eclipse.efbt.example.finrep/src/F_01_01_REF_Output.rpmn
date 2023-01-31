@@ -64,8 +64,14 @@ class F_01_01_REF_Output_Layer_UnionTable {
  	contains  F_01_01_REF_Output_Layer_UnionItem []   F_01_01_REF_Output_Layer_UnionItems	
  	op F_01_01_REF_Output_Layer_UnionItem []   F_01_01_REF_Output_Layer_UnionItems() 
 	{
-	 	//Just go through all the layers and create a union of the items, each will refer to an item of the layer
+	 	"initialise each of the layerTables"
 	}
+	op Year_domain init() {
+		"layer1Table = RPMNUtils.initialise(\"Layer_F_01_01_REF_OutputItem_Cash_on_handTable\"
+		layer2Table = RPMNUtils.initialise(\"Layer_F_01_01_REF_OutputItem_Cash_on_handTable\" 
+		layer3Table = RPMNUtils.initialise(\"Layer_F_01_01_REF_OutputItem_Cash_on_handTable\" 
+		return null"
+		} 
 }
 class Layer_F_01_01_REF_OutputItem_Base {
 	op ACCNTNG_CLSSFCTN_F_01_01_14_ACCNTNG_CLSSFCTN_REF_ISSUBDOMAINOF_Accounting_classification  ACCNTNG_CLSSFCTN() 
@@ -165,7 +171,7 @@ class Layer_F_01_01_REF_OutputItem_Cash_on_handTable {
  	contains  Layer_F_01_01_REF_OutputItem_Cash_on_hand  Layer_F_01_01_REF_OutputItem_Cash_on_hands	
  	op Layer_F_01_01_REF_OutputItem_Cash_on_hand  Layer_F_01_01_REF_OutputItem_Cash_on_hands() 
 	{
-	 	// "get all cash on hands, possibly with a filter"
+	 	 "get all cash on hands, possibly with a filter"
 	}
 }
 class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq_2_investment_pr_operty_not_taken_into_possession_3_Investment_pr_operty_taken_into_possession_before_the_period_4_Investment_pr_operty_taken_into_possession_during_the_period_possession {
