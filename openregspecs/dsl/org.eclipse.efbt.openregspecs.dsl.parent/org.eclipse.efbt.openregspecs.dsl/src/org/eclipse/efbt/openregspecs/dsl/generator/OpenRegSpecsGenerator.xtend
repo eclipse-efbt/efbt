@@ -67,7 +67,7 @@ type  «xDataType.name» wraps «IF xDataType.name == "Date"»java.util.Date «E
         ''')
          }
          
-         for (workflowModule : resource.allContents.toIterable.filter(WorkflowModule)) 
+         for (xPackage : resource.allContents.toIterable.filter(XPackage)) 
          
          {
          	fsa.generateFile('JavaRunner.java',  '''
@@ -88,12 +88,10 @@ import org.eclipse.efbt.openregspecs.model.open_reg_specs.UserTask;
 
 «var packageName = ""»
 «var capatilisedPackageNme = ""»
-«FOR dependency : workflowModule.dependencies»
-«IF dependency instanceof XPackage »
-import «packageName = dependency.name».«capatilisedPackageNme =  packageName.substring(0, 1).toUpperCase() + packageName.substring(1)»Package;
+
+import «packageName = xPackage.name».«capatilisedPackageNme =  packageName.substring(0, 1).toUpperCase() + packageName.substring(1)»Package;
 import «packageName».*;
-«ENDIF»	
-«ENDFOR»
+
 
 public class JavaRunner {
 	
@@ -112,33 +110,39 @@ public class JavaRunner {
 
 		    ResourceSet resSet = new ResourceSetImpl();
 «var counter = 0» 
-«FOR userTask : workflowModule.eContents.filter(UserTask)»
-Resource resource«counter++»  = resSet.getResource(URI.createURI("«userTask.entity.name»_BaseTable.xmi"), true);
+«FOR xclass : xPackage.eContents.filter(XClass)»
+Resource resource«counter++»  = resSet.getResource(URI.createURI("«xclass.name»_BaseTable.xmi"), true);
 «ENDFOR»
-try {
+
 «var counter2 = 0» 	
-«FOR userTask2 : resource.allContents.filter(UserTask).toIterable»
+«FOR xclass : xPackage.eContents.filter(XClass)»
+try{
 resource«counter2++».load(Collections.EMPTY_MAP);
-«ENDFOR»
 }
 catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(e)
 			}
+«ENDFOR»
+
 		    EcoreUtil.resolveAll(resSet);
 «var counter3 = 0» 	
-«FOR userTask3 : resource.allContents.filter(UserTask).toIterable»
-
-«userTask3.entity.name»_BaseTable «userTask3.entity.name»_BaseTable1 = («userTask3.entity.name»_BaseTable) resource«counter3++».getContents().get(0);
+«FOR xclass : xPackage.eContents.filter(XClass)»
+try{
+«xclass.name»_BaseTable «xclass.name»_BaseTable1 = («xclass.name»_BaseTable) resource«counter3++».getContents().get(0);
+catch (Exception e) {
+				// TODO Auto-generated catch block
+				System.out.println(e)
+			}
 «ENDFOR»
 «var counter4 = 0»	
-«FOR serviceTask : resource.allContents.filter(ServiceTask).toIterable»	 
+«FOR xclass : xPackage.eContents.filter(XClass)»
 
-«var tableName = serviceTask.enrichedAttribute.containingClass.name»
-«var derived = tableName.endsWith("derived")»
-«IF derived »
-«IF serviceTask.enrichedAttribute.name.endsWith("identifier") »
-«tableName»_DerivedTable «tableName»_DerivedTable1 = «capatilisedPackageNme»Factory.eINSTANCE.create«tableName»_DerivedTable();
+«var tableName = xclass.name»
+«var outputTable = tableName.endsWith("_OutputTable")»
+«IF outputTable »
+
+«tableName»_1 = «capatilisedPackageNme»Factory.eINSTANCE.create«tableName»();
 «var sourceTable1Name = ""»	
 «FOR member : (serviceTask.enrichedAttribute.eContainer as XClass).members»
 «IF ((member instanceof XReference) && (sourceTable1Name == ""))» «tableName»_DerivedTable1.setSourceTable1(«sourceTable1Name = member.type.name»«IF member.type.name.endsWith("derived")»_DerivedTable1«ELSE»_BaseTable1«ENDIF»);
@@ -147,7 +151,7 @@ EList<«tableName»> details«counter4» 	 = «tableName»_DerivedTable1.«table
 «tableName»_DerivedTable1.get«tableName»s().addAll(details«counter4»);
 for («tableName» «tableName»1 : details«counter4++») {«ENDIF»
 «ENDFOR»
-«ENDIF»			 
+	 
 «IF (serviceTask.enrichedAttribute.name.endsWith("identifier")) » «tableName»1.set«serviceTask.enrichedAttribute.name.substring(0, 1).toUpperCase()+ serviceTask.enrichedAttribute.name.substring(1)»(«tableName»1.«serviceTask.enrichedAttribute.name»());«ENDIF»
 
 «ENDIF»

@@ -13,6 +13,8 @@
 from pickle import TRUE
 from _ast import Try
 import os
+from pydoc import classname
+
 '''
 Created on 22 Jan 2022
 
@@ -59,6 +61,7 @@ class ROLImport(object):
                 else:
 
                     className = row[0]
+                    alteredClassName = Utils.makeValidID(className); 
                     objectID  = row[1]
                     cube_type = row[3]
                     valid_to  = row[11]
@@ -67,6 +70,58 @@ class ROLImport(object):
                     print(objectID)
                     
                     if ( (framework ==  "FINREP_REF") and (cube_type == "RC") and (valid_to == "12/31/9999") ) :
+
+                        if context.addLogicPackages:
+                            logicPackage = EPackage(name=alteredClassName +'output_logic', nsURI='http://www.eclipse.org/bird/' +alteredClassName +'output_logic', nsPrefix=alteredClassName +'output_logic')
+                            context.logicPackages.append(logicPackage)
+                            
+                            unionItemClass = EClass(name=alteredClassName+"_Output_Layer_UnionItem") 
+                            logicPackage.eClassifiers.extend([unionItemClass])
+                            baseClass = EClass(name=alteredClassName+"_OutputItem_Base") 
+                            logicPackage.eClassifiers.extend([baseClass])
+                            
+                            #create a reference from union class to a list of base classes
+                            nonContainmentReference  = EReference()
+                            nonContainmentReference.name=alteredClassName + "_OutputItem_Base"
+                            nonContainmentReference.eType=baseClass
+                            nonContainmentReference.upperBound = 1
+                            nonContainmentReference.lowerBound=0
+                            nonContainmentReference.containment= False
+                            unionItemClass.eStructuralFeatures.append(nonContainmentReference)
+                            
+                            #creat a union item table
+                            unionItemTableClass = EClass(name=alteredClassName+"_Output_Layer_UnionTable") 
+                            logicPackage.eClassifiers.extend([unionItemTableClass])
+                            #contains  F_01_01_REF_Output_Layer_UnionItem[]  F_01_01_REF_Output_Layer_UnionItem
+                            containmentReference  = EReference()
+                            containmentReference.name=alteredClassName + "__Output_Layer_UnionItems"
+                            containmentReference.eType=unionItemClass
+                            containmentReference.upperBound = -1
+                            containmentReference.lowerBound=0
+                            containmentReference.containment= True
+                            unionItemTableClass.eStructuralFeatures.append(containmentReference)
+                            #op F_01_01_REF_Output_Layer_UnionItem  F_01_01_REF_Output_Layer_UnionItems() 
+                            unionItemsOperation = EOperation()
+                            unionItemsOperation.name=alteredClassName + "__Output_Layer_UnionItems"
+                            unionItemsOperation.eType=unionItemClass
+                            unionItemsOperation.upperBound = -1
+                            unionItemsOperation.lowerBound=0
+                            #unionItemsOperation.rpmnText = "\tvar items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t{\n" + "\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\tnewItem.unionOfLayers =  item\n" + "\t\titems.add(newItem)\n" + "}"
+                            unionItemTableClass.eOperations.append(unionItemsOperation)
+                            
+                            #op Year_domain  init() 
+                            initOperation = EOperation()
+                            initOperation.name=alteredClassName + "init"
+                            initOperation.eType=unionItemClass
+                            initOperation.upperBound = -1
+                            initOperation.lowerBound=0
+                            initOperation.rpmnText = "\tRPMNUtils.init(this) \n this.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n + \t  return null"
+                            unionItemTableClass.eOperations.append(initOperation)
+                                
+
+                            
+                            
+                            
 
                         alteredClassName = Utils.makeValidID(className);  
                         
@@ -85,7 +140,18 @@ class ROLImport(object):
                         xclassTableOperation.eType=xclass
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
+                        xclassTableOperation.rpmnText = "\tvar items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t{\n" + "\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\tnewItem.unionOfLayers =  item\n" + "\t\titems.add(newItem)\n" + "}"
                         xclassTable.eOperations.append(xclassTableOperation)
+                        
+                        xclassTableInitOperation = EOperation()
+                        xclassTableInitOperation.name="init"
+                        xclassTableInitOperation.eType=context.xString
+                        xclassTableInitOperation.upperBound = 1
+                        xclassTableInitOperation.lowerBound=0
+                        xclassTableInitOperation.rpmnText = "\tRPMNUtils.init(this)\n" + "\t this." + alteredClassName+"OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \treturn null"
+                        xclassTable.eOperations.append(xclassTableInitOperation)
+                        
+                        
                         context.outputLayerEntitiesPackage.eClassifiers.extend([xclass])
                         context.outputLayerEntitiesPackage.eClassifiers.extend([xclassTable])
                         
@@ -111,9 +177,11 @@ class ROLImport(object):
                         headerSkipped = True
                 else:
                     variableName = row[6]
+                    longName = row[4]
                     #domainName = Utils.makeValidID(row[3])
                     domain = row[2]
                     context.variableToDomainMap[variableName] = domain
+                    context.variableToLongNamesMap[variableName] = longName
              
     def createDomainToDomainNameMap(self,context):         
         '''
@@ -286,7 +354,10 @@ class ROLImport(object):
 
                         domainID = context.subDomainIDToDomainID[subDomainID]
                         domain_ID_Name = context.domainToDomainNameMap[domainID]
-                        amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                        if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                            amendedDomainName = domain_ID_Name
+                        else:
+                            amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
                         theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
                         if theEnum is None:
                             if not( (amendedDomainName == "String") or (amendedDomainName == "Date")  ):
@@ -308,7 +379,12 @@ class ROLImport(object):
                                     enumLiteral.literal = newAdaptedName
                                     counter1 = counter1 + 1
                                     enumLiteral.value = counter1
-                                    theEnum.eLiterals.extend([enumLiteral])    
+                                    theEnum.eLiterals.extend([enumLiteral]) 
+                            else:
+                                theEnum = EEnum()
+                                theEnum.name = amendedDomainName 
+                                context.enumMap[amendedDomainName] = theEnum
+                                  
                             
                     except:
                             print( "missing ROL class2: " )
@@ -332,7 +408,9 @@ class ROLImport(object):
                         headerSkipped = True
                 else:
                     attributeName = row[11]
+                    longName = context.variableToLongNamesMap[attributeName]
                     amendedAttributeName = Utils.makeValidID(attributeName)
+                    amendedAttributeLongName = Utils.makeValidID(longName)
                     variable = row[2]
                     subDomainID = row[10]
                     classID = row[1]
@@ -340,13 +418,20 @@ class ROLImport(object):
                         theClass = context.classesMap[classID]
                         
                         classIsDerived = True
-                            
-                        theAttributeName =  amendedAttributeName
+                        
+                        if(context.useVariableLongName):   
+                            theAttributeName = amendedAttributeLongName 
+                        else:
+                            theAttributeName = amendedAttributeName
+                        
                         amendedDomainName = None
                         if context.useSubDomains:
                             domainID = context.subDomainIDToDomainID[subDomainID]
                             domain_ID_Name = context.domainToDomainNameMap[domainID]
-                            amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                            if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                amendedDomainName = domain_ID_Name
+                            else:
+                                amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
                         else:
                             domainID = context.variableToDomainMap[variable]
                             amendedDomainName = Utils.makeValidID(domainID+"_domain")
@@ -362,6 +447,9 @@ class ROLImport(object):
                                 if(theEnum.name == "String"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xString
+                                elif(theEnum.name == "Date"):
+                                    operation.name = theAttributeName
+                                    operation.eType = context.xDate
                                 elif(theEnum.name.startswith("String_")):
                                     operation.name = theAttributeName
                                     operation.eType = context.xString
@@ -406,4 +494,5 @@ class ROLImport(object):
                     except:
                             print( "XX missing ROL class1: " )
                             print(classID)                                
-                            
+    
+              

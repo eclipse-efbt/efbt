@@ -11,6 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 from pickle import TRUE, FALSE
+
 '''
 Created on 22 Jan 2022
 
@@ -35,7 +36,8 @@ if __name__ == '__main__':
     context.useSubDomains = True
     context.fileDirectory = '/workspaces/efbt/openregspecs/python/resources'
     context.outputDirectory = '/workspaces/efbt/openregspecs/python/results'
-    
+    context.addExecutableStubs = False
+    context.addLogicPackages = False
     if importLDM:
         LDMImport().doImport(context)
     if importIL:
