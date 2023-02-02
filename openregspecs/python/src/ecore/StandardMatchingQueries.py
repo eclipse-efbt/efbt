@@ -61,7 +61,7 @@ class StandardMatchingQueries(object):
                     attributeName = attribute.name
                     print("attributeName")
                     print(attributeName)
-                    if not(StandardMatchingQueries.inBlacklist(self,attributeName)):
+                    if not(StandardMatchingQueries.inExcludedList(self,attributeName)):
                         print("atributeTypeName")
                         print(atributeTypeName)
                         domainName = None
@@ -113,30 +113,30 @@ class StandardMatchingQueries(object):
              f.write('\n') 
         f.close()
                
-    def inBlacklist(self,theString):
-        blacklist = False
-        if(theString.strip() == 'HLD_TRDNG_INDCTR'):
-            blacklist = True 
-        if(theString.strip() == 'HLD_MTRTY_INDCTR'):
-            blacklist = True
-        if(theString.strip() == 'ACCNTNG_PRTFL_VLTN_RL'):
-            blacklist = True
-        if(theString.strip() == 'ACCNTNG_FRMWRK'):
-            blacklist = True
-        if(theString.strip() == 'SBJCT_IMPRMNT_INDCTR'):
-            blacklist = True
-        if(theString.strip() == 'DT_RFRNC'):
-            blacklist = True
-        if(theString.strip() == 'VALUE_DECIMAL'):
-            blacklist = True
-        if(theString.strip() == 'ENTTY_RIAD_CD_RPRTNG_AGNT'):
-            blacklist = True
-        if(theString.strip() == 'MTRCS'):
-            blacklist = True
-        if(theString.strip() == 'SUBA_CD'):
-            blacklist = True
+    def inExcludedList(self,theString):
+        excludedList = False
+        if(theString.strip() == 'Held_for_trading_indicator'):
+            excludedList = True 
+        if(theString.strip() == 'Held_to_maturity_indicator'):
+            excludedList = True
+        if(theString.strip() == 'Accounting_portfolio_valuation_rules'):
+            excludedList = True
+        if(theString.strip() == 'Accounting_framework'):
+            excludedList = True
+        if(theString.strip() == 'Subject_to_impairment_indicator'):
+            excludedList = True
+        if(theString.strip() == 'Reference_date'):
+            excludedList = True
+        if(theString.strip() == 'Value_Decimal'):
+            excludedList = True
+        if(theString.strip() == 'The_RIAD_code_of_the_reporting_agent'):
+            excludedList = True
+        if(theString.strip() == 'Observation_value'):
+            excludedList = True
+        if(theString.strip() == 'SUBA_Reporting_Identifier'):
+            excludedList = True
             
-        return blacklist
+        return excludedList
             
                 
     def getRelatedInputLayerLiteral(self,literal,relatedInputLayerDomain):
