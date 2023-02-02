@@ -14,6 +14,10 @@ class PersistToFile:
         PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"xcore",context.outputLayerEnumsPackage)
         PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"xcore")
         PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"xcore")
+        
+        for package in context.logicPackages:
+            PersistToFile.persistEntityModel(self,context,package,"xcore",context.outputLayerEnumsPackage)
+            
         #PersistToFile.persistTypesModel(self,context,context.typesPackage,"xcore")
         
         PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"rpmn",context.inputLayerEnumsPackage)
@@ -21,6 +25,9 @@ class PersistToFile:
         PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"rpmn")
         PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"rpmn")
         PersistToFile.persistTypesModel(self,context,context.typesPackage,"rpmn")
+        
+        for package in context.logicPackages:
+            PersistToFile.persistEntityModel(self,context,package,"rpmn",context.outputLayerEnumsPackage)
         
         
         
@@ -87,8 +94,16 @@ class PersistToFile:
                     
                     if isinstance(operation, EOperation):
                         f.write("\t\t\t\top ")
-                          
-                        f.write(operation.eType.name + " " )
+                        if (operation.eType.name == "EString"):
+                            f.write( "String  " )
+                        elif (operation.eType.name == "EDouble"):
+                            f.write( "double  " )
+                        elif (operation.eType.name == "EInt"):
+                            f.write( "int  " )
+                        elif (operation.eType.name == "EDate"):
+                            f.write( "Date  " )
+                        else:     
+                            f.write(operation.eType.name + " " )
                     if operation.upperBound == -1:
                         f.write("[] ")
                     elif ( (operation.lowerBound == 0) and (operation.upperBound == 1)):
@@ -96,7 +111,14 @@ class PersistToFile:
                     else:
                         f.write("[" + str(operation.lowerBound) + ".." +str(operation.upperBound) + "] ")
                     f.write(operation.name)
-                    f.write("() {}")
+                    if extension == "rpmn" and context.addExecutableStubs:
+                        if hasattr(operation, "rpmnText"):
+                            f.write("() {\n\"" + operation.rpmnText + "\"\n}")
+                        else:
+                            f.write("() {}")
+                    else:
+                        f.write("() {}")
+
                     f.write(" \r"  )
                         
                 f.write("\t\t\t}\r")

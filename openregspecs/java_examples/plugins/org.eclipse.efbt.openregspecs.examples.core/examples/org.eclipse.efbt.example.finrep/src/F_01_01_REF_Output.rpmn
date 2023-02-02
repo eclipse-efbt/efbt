@@ -7,7 +7,8 @@ import output_layer_enums.*
 
 import input_layer_entities.* 
 
-import input_layer_enums.*
+import input_layer_enums.* 
+
 import types.*
 
 class F_01_01_REF_Output_Layer_UnionItem {
@@ -59,64 +60,58 @@ class F_01_01_REF_Output_Layer_UnionItem {
 }
 class F_01_01_REF_Output_Layer_UnionTable {
  	refers Layer_F_01_01_REF_OutputItem_Cash_on_handTable  layer1Table	
- 	refers Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq_2_investment_pr_operty_not_taken_into_possession_3_Investment_pr_operty_taken_into_possession_before_the_period_4_Investment_pr_operty_taken_into_possession_during_the_period_possessionTable  layer2Table	
- 	refers Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq440_Current_tax_assets_IAS_1_54_n_IAS_12_5_or_Type_non_financial_asset_eq450_Deferred_tax_assets_for_nGaap_Accounting_Directive_art_17_1_f_CRR_art_4_1_106_for_IFRS_IAS_1_54_o_IAS_12_5_CRR_art_4_1_106_Table  layer3Table	
- 	contains  F_01_01_REF_Output_Layer_UnionItem []   F_01_01_REF_Output_Layer_UnionItems	
- 	op F_01_01_REF_Output_Layer_UnionItem []   F_01_01_REF_Output_Layer_UnionItems() 
+ 	contains  F_01_01_REF_Output_Layer_UnionItem[]  F_01_01_REF_Output_Layer_UnionItems	
+ 	op F_01_01_REF_Output_Layer_UnionItem[]  F_01_01_REF_Output_Layer_UnionItems() 
 	{
-	 	"initialise each of the layerTables"
+		"var items = new org.eclipse.emf.common.util.BasicEList<F_01_01_REF_Output_Layer_UnionItem>()
+	 	for( Layer_F_01_01_REF_OutputItem_Cash_on_hand item : layer1Table.layer_F_01_01_REF_OutputItem_Cash_on_hands)
+	 	{
+	 		var newItem = F_01_01_REF_Output_LogicFactory.eINSTANCE.createF_01_01_REF_Output_Layer_UnionItem
+	 		newItem.base = item
+	 		items.add(newItem)
+	 	}
+	 	return items"
 	}
-	op Year_domain init() {
-		"layer1Table = RPMNUtils.initialise(\"Layer_F_01_01_REF_OutputItem_Cash_on_handTable\"
-		layer2Table = RPMNUtils.initialise(\"Layer_F_01_01_REF_OutputItem_Cash_on_handTable\" 
-		layer3Table = RPMNUtils.initialise(\"Layer_F_01_01_REF_OutputItem_Cash_on_handTable\" 
-		return null"
-		} 
+ 	op Year_domain  init() 
+	{
+	 	"org.eclipse.efbt.openregspecs.model.generate.RPMNUtils.init(this)
+	 	this.f_01_01_REF_Output_Layer_UnionItems.addAll(F_01_01_REF_Output_Layer_UnionItems()) 		 
+	 	return null"
+	}
 }
 class Layer_F_01_01_REF_OutputItem_Base {
-	op ACCNTNG_CLSSFCTN_F_01_01_14_ACCNTNG_CLSSFCTN_REF_ISSUBDOMAINOF_Accounting_classification  ACCNTNG_CLSSFCTN() 
+ 	op ACCNTNG_CLSSFCTN_F_01_01_14_ACCNTNG_CLSSFCTN_REF_ISSUBDOMAINOF_Accounting_classification  ACCNTNG_CLSSFCTN() 
 	{
-	 	
 	}
  	op Date  DT_RFRNC() 
 	{
-	 	
 	}
  	op HDG_INSTRMNT_F_01_01_14_HDG_INSTRMNT_REF_ISSUBDOMAINOF_Hedged_or_hedging_instrument  HDG_INSTRMNT() 
 	{
-	 	
 	}
  	op INSTTTNL_SCTR_F_01_01_14_INSTTTNL_SCTR_REF_ISSUBDOMAINOF_Institutional_sectors  INSTTTNL_SCTR() 
 	{
-	 	
 	}
  	op BLN_F_01_01_14_IS_HFS_REF_ISSUBDOMAINOF_Boolean  IS_HFS() 
 	{
-	 	
 	}
  	op String  OBSERVATION_VALUE() 
 	{
-	 	 
 	}
  	op String  OBSRVD_AGNT_INTRNL_ID() 
 	{
-	 	
 	}
  	op RPYMNT_RGHTS_F_01_01_14_RPYMNT_RGHTS_REF_ISSUBDOMAINOF_Repayment_rights  RPYMNT_RGHTS() 
 	{
-	 	
 	}
  	op TYP_ACCNTNG_ITM_F_01_01_14_TYP_ACCNTNG_ITM_REF_ISSUBDOMAINOF_Type_of_accounting_item  TYP_ACCNTNG_ITM() 
 	{
-	 	
 	}
  	op TYP_HDG_F_01_01_14_TYP_HDG_REF_ISSUBDOMAINOF_Type_of_hedge  TYP_HDG() 
 	{
-	 	
 	}
  	op TYP_INSTRMNT_F_01_01_14_TYP_INSTRMNT_REF_ISSUBDOMAINOF_Type_of_instrument  TYP_INSTRMNT() 
 	{
-	 	
 	}
 }
 class Layer_F_01_01_REF_OutputItem_Cash_on_hand  extends Layer_F_01_01_REF_OutputItem_Base {
@@ -142,7 +137,7 @@ class Layer_F_01_01_REF_OutputItem_Cash_on_hand  extends Layer_F_01_01_REF_Outpu
 	}
  	op String  OBSERVATION_VALUE() 
 	{
-	 	 "cash_on_hand.carrying_amount.toString()"
+	 	"cash_on_hand.carrying_amount.toString()"
 	}
  	op String  OBSRVD_AGNT_INTRNL_ID() 
 	{
@@ -167,18 +162,24 @@ class Layer_F_01_01_REF_OutputItem_Cash_on_hand  extends Layer_F_01_01_REF_Outpu
  	refers Cash_on_hand  cash_on_hand	
 }
 class Layer_F_01_01_REF_OutputItem_Cash_on_handTable {
- 	refers Cash_on_hand  cash_on_hand_reference	
- 	contains  Layer_F_01_01_REF_OutputItem_Cash_on_hand  Layer_F_01_01_REF_OutputItem_Cash_on_hands	
- 	op Layer_F_01_01_REF_OutputItem_Cash_on_hand  Layer_F_01_01_REF_OutputItem_Cash_on_hands() 
+ 	refers Cash_on_hand_BaseTable  cash_on_hand_table_reference	
+ 	contains  Layer_F_01_01_REF_OutputItem_Cash_on_hand[]  Layer_F_01_01_REF_OutputItem_Cash_on_hands	
+ 	op Layer_F_01_01_REF_OutputItem_Cash_on_hand[]  Layer_F_01_01_REF_OutputItem_Cash_on_hands() 
 	{
-	 	 "get all cash on hands, possibly with a filter"
+	 	"var items = new org.eclipse.emf.common.util.BasicEList<Layer_F_01_01_REF_OutputItem_Cash_on_hand>()
+	 	for( Cash_on_hand item : cash_on_hand_table_reference.cash_on_hands)
+	 	{
+	 		var newItem = F_01_01_REF_Output_LogicFactory.eINSTANCE.createLayer_F_01_01_REF_OutputItem_Cash_on_hand
+	 		newItem.cash_on_hand = item
+	 		items.add(newItem)
+	 	}
+	 	return items"
 	}
+	op Year_domain  init() 
+	{
+	 	"org.eclipse.efbt.openregspecs.model.generate.RPMNUtils.init(this)
+	 	this.layer_F_01_01_REF_OutputItem_Cash_on_hands.addAll(Layer_F_01_01_REF_OutputItem_Cash_on_hands()) 		 
+	 	return null"
+	} 
 }
-class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq_2_investment_pr_operty_not_taken_into_possession_3_Investment_pr_operty_taken_into_possession_before_the_period_4_Investment_pr_operty_taken_into_possession_during_the_period_possession {
-}
-class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq_2_investment_pr_operty_not_taken_into_possession_3_Investment_pr_operty_taken_into_possession_before_the_period_4_Investment_pr_operty_taken_into_possession_during_the_period_possessionTable {
-}
-class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq440_Current_tax_assets_IAS_1_54_n_IAS_12_5_or_Type_non_financial_asset_eq450_Deferred_tax_assets_for_nGaap_Accounting_Directive_art_17_1_f_CRR_art_4_1_106_for_IFRS_IAS_1_54_o_IAS_12_5_CRR_art_4_1_106_ {
-}
-class Layer_F_01_01_REF_OutputItem_Non_financial_assetType_non_financial_asset_eq440_Current_tax_assets_IAS_1_54_n_IAS_12_5_or_Type_non_financial_asset_eq450_Deferred_tax_assets_for_nGaap_Accounting_Directive_art_17_1_f_CRR_art_4_1_106_for_IFRS_IAS_1_54_o_IAS_12_5_CRR_art_4_1_106_Table {
-}
+

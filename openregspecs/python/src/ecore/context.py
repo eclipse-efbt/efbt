@@ -1,5 +1,6 @@
 from pyecore.ecore import *
 
+
 class Context(object):
     
     xString = EString
@@ -20,6 +21,7 @@ class Context(object):
     inputLayerEntitiesPackage = EPackage(name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
     outputLayerEntitiesPackage = EPackage(name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
     
+    logicPackages = []
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classesMap = {}
@@ -32,6 +34,7 @@ class Context(object):
     # For the reference output layers we record a map between variables 
     # and domains
     variableToDomainMap = {}
+    variableToLongNamesMap = {}
     # For the reference output layers we record a map between domains 
     # and domain names
     domainToDomainNameMap = {}
@@ -62,6 +65,11 @@ class Context(object):
     
     subDomainToMemberListMap = {}
     subDomainIDToDomainID = {}
+    
+    addExecutableStubs = False
+    addLogicPackages = False
+    
+    useVariableLongName=True
     def __init__(self):
 
         a=0
