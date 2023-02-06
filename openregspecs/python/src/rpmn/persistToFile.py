@@ -46,12 +46,11 @@ class PersistToFile:
                             f.write("\t\t\t\trefers "  )
                         
                         f.write(member.type.name + " " )
-                        if member.upperBound == -1:
-                            f.write("[] ")
-                        elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
+                        if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                             f.write(" ")
                         else:
                             f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
+                    
                         f.write(member.name)
                         f.write(" \r"  )
                     elif isinstance(member, XAttribute):
@@ -72,12 +71,11 @@ class PersistToFile:
                                 
                             
                             
-                        if member.upperBound == -1:
-                            f.write("[] ")
-                        elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
+                        if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                             f.write(" ")
                         else:
                             f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
+                    
                         f.write(member.name)
                         f.write(" \r"  )
 
@@ -85,12 +83,11 @@ class PersistToFile:
                             f.write("\t\t\t\top ")
                               
                             f.write(member.type.name + " " )
-                            if member.upperBound == -1:
-                                f.write("[] ")
-                            elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
+                            if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                                 f.write(" ")
                             else:
                                 f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
+                     
                             f.write(member.name)
                             f.write("() {}")
                             f.write(" \r"  )
