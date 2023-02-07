@@ -163,7 +163,7 @@ class ROLImport(object):
                         xclassTableInitOperation.eType=context.xString
                         xclassTableInitOperation.upperBound = 1
                         xclassTableInitOperation.lowerBound=0
-                        xclassTableInitOperation.rpmnText = "\trpmnutils.RPMNUtils.init(this)\n" + "\t this." + alteredClassName+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \treturn null"
+                        xclassTableInitOperation.rpmnText = "\trpmnutils.RPMNUtils.init(this)\n" + "\t this.f" + alteredClassName[1:len(alteredClassName)]+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \treturn null"
                         xclassTable.eOperations.append(xclassTableInitOperation)
                         if context.addLogicPackages:
                             nonContainmentReference2  = EReference()
