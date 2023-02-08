@@ -34,10 +34,12 @@ if __name__ == '__main__':
     importFinrepVTL=True
     persistToXML = True
     persistToRPMN = True
-    context.persistVTLComments=False
-    context.useSubDomains = True
-    context.fileDirectory = '/workspaces/efbt/openregspecs/python/resources'
-    context.outputDirectory = '/workspaces/efbt/openregspecs/python/results'
+    context.persistVTLComments=True
+    context.useSubDomains = False
+    context.fileDirectory = '/workspaces/efbt/openregspecs/python/resourcesfinrep28'
+    context.outputDirectory = '/workspaces/efbt/openregspecs/python/resultsfinrep28'
+    context.addExecutableStubs = True
+    context.addLogicPackages = True
     
     if importLDM:
         LDMImport().doImport(context)

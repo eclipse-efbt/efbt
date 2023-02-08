@@ -13,7 +13,7 @@
 from pickle import TRUE
 from _ast import Try
 import os
-from pydoc import classname
+
 
 '''
 Created on 22 Jan 2022
@@ -118,8 +118,8 @@ class ROLImport(object):
                             
                             #op Year_domain  init() 
                             initOperation = EOperation()
-                            initOperation.name=alteredClassName + "init"
-                            initOperation.eType=unionItemClass
+                            initOperation.name="init"
+                            initOperation.eType=context.xString
                             initOperation.upperBound = -1
                             initOperation.lowerBound=0
                             initOperation.rpmnText = "rpmnutils.RPMNUtils.init(this) \n \t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t  return null"
@@ -269,6 +269,49 @@ class ROLImport(object):
                     subdomain_id = row[8]
                     context.subDomainIDToDomainID[subdomain_id]=domain_id
                     
+    def createMemberMaps(self,context):   
+         # Make a domain  to Domain Name Map 
+        fileLocation = context.fileDirectory + os.sep + "member.csv"
+        headerSkipped = False
+
+        
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    memberID = row[4]
+                    print("memberid")
+                    print(memberID)
+                    #domainName = Utils.makeValidID(row[3])
+                    memberCode= row[0]
+                    memberName = row[5]
+                    if (memberName is None) or (memberName == ""):
+                        memberName = memberID
+                    domainId =  row[2]
+                    
+                    #if there is no domain ID this suggests a falty row in the csv due to return statements in fields
+                    if not(domainId is None) and not(domainId == ""):
+                        context.memberIDToDomainMap[memberID] = domainId
+                        context.memberIDToMemberNameMap[memberID] = memberName
+                        context.memberIDToMemberCodeMap[memberID] = memberCode
+                    
+    def createSubDomainToDomainMap(self,context):
+        fileLocation = context.fileDirectory + os.sep + "subdomain.csv"
+        headerSkipped = False
+        #for each subdomain createw a lsit
+
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:                   
+                    domain_id = row[2]
+                    subdomain_id = row[8]
+                    context.subDomainIDToDomainID[subdomain_id]=domain_id
+                    
     def createSubDomainToMemberMaps(self,context):
         fileLocation = context.fileDirectory + os.sep + "subdomain_enumeration.csv"
         headerSkipped = False
@@ -283,7 +326,7 @@ class ROLImport(object):
                     member_id = row[0]
                     subdomain_id = row[2]
                     valid_to=row[4]
-                    if (valid_to == "12/31/9999"):
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999"):
                         memberList = None
                         try: 
                             memberList =context.subDomainToMemberListMap[subdomain_id]

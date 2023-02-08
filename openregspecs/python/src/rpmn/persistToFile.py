@@ -18,6 +18,8 @@ class PersistToFile:
         PersistToFile.persistTypesModel(self,context,context.typesPackage,"rpmn")
         PersistToFile.persistWorkflow(self,context)
         PersistToFile.persistGenerationTransformations(self,context)
+        for package in context.logicPackages:
+            PersistToFile.persistEntityModel(self,context,package,"rpmn",context.outputLayerEnumsPackage)
         
    
         
@@ -26,6 +28,9 @@ class PersistToFile:
         f = open(context.outputDirectory + os.sep +thePackage.name  +'.' +extension, "a",  encoding='utf-8')
         f.write("\t\t package " + thePackage.name + "\r")  
         f.write("\t\t import " + importedPackage.name + ".*\r")   
+        if thePackage ==context.outputLayerEntitiesPackage: 
+            for importString in context.importLogicStrings:
+                f.write("\t\t import " + importString + ".*\r")  
         if extension == "rpmn":
             f.write("\t\t import types.*\r")    
         for classifier in  thePackage.classifiers:
@@ -89,7 +94,14 @@ class PersistToFile:
                                 f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
                      
                             f.write(member.name)
-                            f.write("() {}")
+                            if extension == "rpmn" and context.addExecutableStubs:
+                                if hasattr(member, "rpmnText"):
+                                    f.write("() {\n\t\t\t\t\t\"" + member.rpmnText + "\"\n\t\t\t\t\t}")
+                                else:
+                                    f.write("() {}")
+                            else:
+                                f.write("() {}")
+        
                             f.write(" \r"  )
                         
                 f.write("\t\t\t}\r")

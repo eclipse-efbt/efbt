@@ -319,7 +319,7 @@ class ImportFinrepVTL(object):
                     sqlfilter = link.filter
                     selectionLayer = SelectionLayer()
                     if input_layer is not None:
-                        selectionLayer.name=view.outputLayer.name + "_" + input_layer.name + sqlfilter
+                        selectionLayer.name=view.outputLayer.name + "_" + input_layer.name + "_" + link.filterName
                     selectionLayer.generatedEntity = rolVTL.outputLayer
                     task.selectionLayers.extend([selectionLayer])
                     layerSQL = LayerSQL()
@@ -358,10 +358,11 @@ class ImportFinrepVTL(object):
 
         outputLayer = layerSQL.selectionLayer.generatedEntity
         if not (outputLayer is None):
-            for member in outputLayer.members:       
-                selectColumn  = SelectColumnAttributeAs ( )
-                selectColumn.asAttribute = member
-                layerSQL.columns.extend([selectColumn])
+            for member in outputLayer.members:
+                if isinstance(member, XOperation):     
+                    selectColumn  = SelectColumnAttributeAs ( )
+                    selectColumn.asAttribute = member
+                    layerSQL.columns.extend([selectColumn])
                     
     def buildIntermediateLayerToInputLayer(self,context):
         fileLocation = context.fileDirectory + os.sep + "VTL_layer_to_IL.csv"
@@ -382,10 +383,12 @@ class ImportFinrepVTL(object):
                     vtlLayer = row[0]
                     inputLayer = row[2]
                     filter = row[3]
+                    filterName = row[5]
                     link = EntityToVTLIntermediateLayerLink()
                     link.VTLIntermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,"G_" + vtlLayer.strip() + "_FINREP_1")
                     link.entity = ImportFinrepVTL.findEntity(self,context,inputLayer)
                     link.filter = filter 
+                    link.filterName = filterName
                     context.vtlModule.entityToVTLIntermediateLayerLinks.append(link)
                     
      
