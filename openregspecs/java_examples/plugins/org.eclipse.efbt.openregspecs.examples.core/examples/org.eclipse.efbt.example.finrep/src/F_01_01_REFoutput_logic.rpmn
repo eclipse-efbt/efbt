@@ -1,0 +1,31 @@
+		 package F_01_01_REFoutput_logic 		 import output_layer_enums.*		 import input_layer_entities.*		 import types.*			class F_01_01_REF_Output_Layer_UnionItem {				refers F_01_01_REF_OutputItem_Base  base 				op ACCNTNG_CLSSFCTN_domain  Accounting_classification() {
+		"base.Accounting_classification()"
+		} 				op Date  Reference_date() {
+		"base.Reference_date()"
+		} 				op String  Unit() {
+		"base.Unit()"
+		} 				op HDG_INSTRMNT_domain  Hedged_or_hedging_instrument() {
+		"base.Hedged_or_hedging_instrument()"
+		} 				op INSTTTNL_SCTR_domain  Institutional_sector() {
+		"base.Institutional_sector()"
+		} 				op BLN_domain  Is_held_for_sale() {
+		"base.Is_held_for_sale()"
+		} 				op String  Variable_for_metrics() {
+		"base.Variable_for_metrics()"
+		} 				op String  Observation_value() {
+		"base.Observation_value()"
+		} 				op String  Observed_agent_internal_identifier() {
+		"base.Observed_agent_internal_identifier()"
+		} 				op RPYMNT_RGHTS_domain  Repayment_rights() {
+		"base.Repayment_rights()"
+		} 				op TYP_ACCNTNG_ITM_domain  Type_of_accounting_item() {
+		"base.Type_of_accounting_item()"
+		} 				op TYP_HDG_domain  Type_of_hedge() {
+		"base.Type_of_hedge()"
+		} 				op TYP_INSTRMNT_domain  Type_of_instrument() {
+		"base.Type_of_instrument()"
+		} 			}			class F_01_01_REF_OutputItem_Base {				op ACCNTNG_CLSSFCTN_domain  Accounting_classification() {} 				op Date  Reference_date() {} 				op String  Unit() {} 				op HDG_INSTRMNT_domain  Hedged_or_hedging_instrument() {} 				op INSTTTNL_SCTR_domain  Institutional_sector() {} 				op BLN_domain  Is_held_for_sale() {} 				op String  Variable_for_metrics() {} 				op String  Observation_value() {} 				op String  Observed_agent_internal_identifier() {} 				op RPYMNT_RGHTS_domain  Repayment_rights() {} 				op TYP_ACCNTNG_ITM_domain  Type_of_accounting_item() {} 				op TYP_HDG_domain  Type_of_hedge() {} 				op TYP_INSTRMNT_domain  Type_of_instrument() {} 			}			class F_01_01_REF_Output_Layer_UnionTable {				contains F_01_01_REF_Output_Layer_UnionItem [0..-1] F_01_01_REF_Output_Layer_UnionItems 				refers Layer_F_01_01_REF_OutputItem_Cash_on_handTable  layer1Table				op F_01_01_REF_Output_Layer_UnionItem [0..-1] F_01_01_REF_Output_Layer_UnionItems() {					"var items = new org.eclipse.emf.common.util.BasicEList<F_01_01_REF_Output_Layer_UnionItem>()	 		 	for( Layer_F_01_01_REF_OutputItem_Cash_on_hand item : layer1Table.layer_F_01_01_REF_OutputItem_Cash_on_hands)	 		 	{	 		 		var newItem = F_01_01_REFoutput_logicFactory.eINSTANCE.createF_01_01_REF_Output_Layer_UnionItem	 		 		newItem.base = item	 		 		items.add(newItem)	 		 	}	 		 	return items"				} 				op F_01_01_REF_Output_Layer_UnionItem [0..-1] F_01_01_REFinit() {
+		"rpmnutils.RPMNUtils.init(this) 
+ 			this.f_01_01_REF_Output_Layer_UnionItems.addAll(F_01_01_REF_Output_Layer_UnionItems())
+ 			  return null"
+		} 			}			class Layer_F_01_01_REF_OutputItem_Cash_on_hand  extends F_01_01_REF_OutputItem_Base {			 	op ACCNTNG_CLSSFCTN_domain  Accounting_classification() 				{				 	"ACCNTNG_CLSSFCTN_domain.CASH_BALANCES_AT_CENTRAL_BANKS_AND_OTHER_DEMAND_DEPOSITS"				}			 	op Date  Reference_date() 				{				 	"new java.util.Date(\"01/01/2023\")"				}			 	op HDG_INSTRMNT_domain  Hedged_or_hedging_instrument() 				{				 	"HDG_INSTRMNT_domain.NOT_APPLICABLE"				}			 	op INSTTTNL_SCTR_domain  Institutional_sector() 				{				 	"INSTTTNL_SCTR_domain.NOT_APPLICABLE"				}			 	op BLN_domain  Is_held_for_sale() 				{				 	"BLN_domain.FALSE"				}			 	op String  Observation_value() 				{				 	"cash_on_hand.carrying_amount.toString()"				}			 	op String  Observed_agent_internal_identifier() 				{				 	"\"REPORTING_ENTITY1\""				}			 	op RPYMNT_RGHTS_domain  Repayment_rights() 				{				 	"RPYMNT_RGHTS_domain.NOT_APPLICABLE"				}			 	op TYP_ACCNTNG_ITM_domain  Type_of_accounting_item() 				{				 	"TYP_ACCNTNG_ITM_domain.CASH_ON_HANDS"				}			 	op TYP_HDG_domain  Type_of_hedge() 				{				 	"TYP_HDG_domain.NOT_APPLICABLE"				}			 	op TYP_INSTRMNT_domain  Type_of_instrument() 				{				 	"TYP_INSTRMNT_domain.NOT_APPLICABLE"				}			 	refers Cash_on_hand  cash_on_hand				}			class Layer_F_01_01_REF_OutputItem_Cash_on_handTable {			 	refers  Cash_on_hand_BaseTable cash_on_hand_table_reference				 	contains  Layer_F_01_01_REF_OutputItem_Cash_on_hand[0..-1]  Layer_F_01_01_REF_OutputItem_Cash_on_hands				 	op Layer_F_01_01_REF_OutputItem_Cash_on_hand[0..-1]  Layer_F_01_01_REF_OutputItem_Cash_on_hands() 				{				 	"var items = new org.eclipse.emf.common.util.BasicEList<Layer_F_01_01_REF_OutputItem_Cash_on_hand>()				 		 	for( Cash_on_hand item : cash_on_hand_table_reference.cash_on_hands)				 		 	{				 		 		var newItem = F_01_01_REFoutput_logicFactory.eINSTANCE.createLayer_F_01_01_REF_OutputItem_Cash_on_hand				 		 		newItem.cash_on_hand = item				 		 		items.add(newItem)				 		 	}				 		 	return items"				}			 	op String  init() 				{				 	"rpmnutils.RPMNUtils.init(this)				 		 	this.layer_F_01_01_REF_OutputItem_Cash_on_hands.addAll(Layer_F_01_01_REF_OutputItem_Cash_on_hands()) 		 				 		 	return null"				}			}

@@ -396,9 +396,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="XClass" eSuperTypes="#//XClassifier">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="abstract" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="members" upperBound="-1"
-        eType="#//XMember" containment="true" eOpposite="#//XMember/containingClass"/>
+        eType="#//XMember" containment="true" resolveProxies="false" eOpposite="#//XMember/containingClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="superTypes" upperBound="-1"
-        eType="#//XClass" unsettable="true">
+        eType="#//XClass" unsettable="true" resolveProxies="false">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="suppressedIsSetVisibility" value="true"/>
         <details key="suppressedUnsetVisibility" value="true"/>
@@ -414,7 +414,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XEnum" eSuperTypes="#//XDataType">
     <eStructuralFeatures xsi:type="ecore:EReference" name="literals" upperBound="-1"
-        eType="#//XEnumLiteral" containment="true" eOpposite="#//XEnumLiteral/enum"/>
+        eType="#//XEnumLiteral" containment="true" resolveProxies="false" eOpposite="#//XEnumLiteral/enum"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XEnumLiteral" eSuperTypes="#//XNamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -424,7 +424,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XMember" abstract="true" eSuperTypes="#//XTypedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="containingClass" eType="#//XClass"
-        changeable="false" transient="true" eOpposite="#//XClass/members"/>
+        changeable="false" transient="true" resolveProxies="false" eOpposite="#//XClass/members"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XModelElement" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="XNamedElement" abstract="true" eSuperTypes="#//XModelElement">
@@ -444,7 +444,7 @@
       eSuperTypes="#//XMember"/>
   <eClassifiers xsi:type="ecore:EClass" name="XTypedElement" abstract="true" eSuperTypes="#//XNamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//XClassifier"
-        unsettable="true">
+        unsettable="true" resolveProxies="false">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="suppressedIsSetVisibility" value="true"/>
         <details key="suppressedUnsetVisibility" value="true"/>

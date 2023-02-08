@@ -70,6 +70,7 @@ class Context(object):
     addLogicPackages = False
     
     useVariableLongName=True
+    importLogicStrings = []
     def __init__(self):
 
         a=0

@@ -35,7 +35,10 @@ class PersistToFile:
             
         f = open(context.outputDirectory + os.sep + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
         f.write("\t\t package " + thePackage.name + "\r")  
-        f.write("\t\t import " + importedPackage.name + ".*\r")   
+        f.write("\t\t import " + importedPackage.name + ".*\r") 
+        if thePackage ==context.outputLayerEntitiesPackage: 
+            for importString in context.importLogicStrings:
+                f.write("\t\t import " + importString + ".*\r")      
         if extension == "rpmn":
             f.write("\t\t import types.*\r")    
         for classifier in  thePackage.eClassifiers:
@@ -56,12 +59,11 @@ class PersistToFile:
                             f.write("\t\t\t\trefers "  )
                         
                         f.write(member.eType.name + " " )
-                        if member.upperBound == -1:
-                            f.write("[] ")
-                        elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
+                        if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                             f.write(" ")
                         else:
                             f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
+                    
                         f.write(member.name)
                         f.write(" \r"  )
                     elif isinstance(member, EAttribute):
@@ -82,12 +84,11 @@ class PersistToFile:
                                 
                             
                             
-                        if member.upperBound == -1:
-                            f.write("[] ")
-                        elif ( (member.lowerBound == 0) and (member.upperBound == 1)):
+                        if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                             f.write(" ")
                         else:
                             f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
+                    
                         f.write(member.name)
                         f.write(" \r"  )
                 for operation in classifier.eOperations:
@@ -104,16 +105,14 @@ class PersistToFile:
                             f.write( "Date  " )
                         else:     
                             f.write(operation.eType.name + " " )
-                    if operation.upperBound == -1:
-                        f.write("[] ")
-                    elif ( (operation.lowerBound == 0) and (operation.upperBound == 1)):
+                    if ( (operation.lowerBound == 0) and (operation.upperBound == 1)):
                         f.write(" ")
                     else:
                         f.write("[" + str(operation.lowerBound) + ".." +str(operation.upperBound) + "] ")
                     f.write(operation.name)
                     if extension == "rpmn" and context.addExecutableStubs:
                         if hasattr(operation, "rpmnText"):
-                            f.write("() {\n\"" + operation.rpmnText + "\"\n}")
+                            f.write("() {\n\t\t\"" + operation.rpmnText + "\"\n\t\t}")
                         else:
                             f.write("() {}")
                     else:

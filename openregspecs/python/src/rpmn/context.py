@@ -22,6 +22,7 @@ class Context(object):
     inputLayerEntitiesPackage = XPackage(name='input_layer_entities')
     outputLayerEntitiesPackage = XPackage(name='output_layer_entities')
     
+    logicPackages = []
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classesMap = {}
@@ -34,6 +35,7 @@ class Context(object):
     # For the reference output layers we record a map between variables 
     # and domains
     variableToDomainMap = {}
+    variableToLongNamesMap = {}
     # For the reference output layers we record a map between domains 
     # and domain names
     domainToDomainNameMap = {}
@@ -72,6 +74,12 @@ class Context(object):
     
     subDomainToMemberListMap = {}
     subDomainIDToDomainID = {}
+    
+    addExecutableStubs = False
+    addLogicPackages = False
+    
+    useVariableLongName=True
+    importLogicStrings = []
     def __init__(self):
         
 

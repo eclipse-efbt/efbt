@@ -13,7 +13,7 @@
 from pickle import TRUE
 from _ast import Try
 import os
-from pydoc import classname
+
 
 '''
 Created on 22 Jan 2022
@@ -71,6 +71,8 @@ class ROLImport(object):
                     
                     if ( (framework ==  "FINREP_REF") and (cube_type == "RC") and (valid_to == "12/31/9999") ) :
 
+                        unionItemClass = None
+                        unionItemTableClass = None
                         if context.addLogicPackages:
                             logicPackage = EPackage(name=alteredClassName +'output_logic', nsURI='http://www.eclipse.org/bird/' +alteredClassName +'output_logic', nsPrefix=alteredClassName +'output_logic')
                             context.logicPackages.append(logicPackage)
@@ -82,19 +84,24 @@ class ROLImport(object):
                             
                             #create a reference from union class to a list of base classes
                             nonContainmentReference  = EReference()
-                            nonContainmentReference.name=alteredClassName + "_OutputItem_Base"
+                            nonContainmentReference.name="base"
                             nonContainmentReference.eType=baseClass
                             nonContainmentReference.upperBound = 1
                             nonContainmentReference.lowerBound=0
                             nonContainmentReference.containment= False
                             unionItemClass.eStructuralFeatures.append(nonContainmentReference)
+                            context.classesMap[objectID+"_Output_Layer_UnionItem"]=unionItemClass
+                            context.classesMap[objectID+"_OutputItem_Base"]=baseClass
+                            context.importLogicStrings.append(alteredClassName+"output_logic")
                             
                             #creat a union item table
                             unionItemTableClass = EClass(name=alteredClassName+"_Output_Layer_UnionTable") 
                             logicPackage.eClassifiers.extend([unionItemTableClass])
+                            
+                            context.tableMap[unionItemClass]=unionItemTableClass
                             #contains  F_01_01_REF_Output_Layer_UnionItem[]  F_01_01_REF_Output_Layer_UnionItem
                             containmentReference  = EReference()
-                            containmentReference.name=alteredClassName + "__Output_Layer_UnionItems"
+                            containmentReference.name=alteredClassName + "_Output_Layer_UnionItems"
                             containmentReference.eType=unionItemClass
                             containmentReference.upperBound = -1
                             containmentReference.lowerBound=0
@@ -102,7 +109,7 @@ class ROLImport(object):
                             unionItemTableClass.eStructuralFeatures.append(containmentReference)
                             #op F_01_01_REF_Output_Layer_UnionItem  F_01_01_REF_Output_Layer_UnionItems() 
                             unionItemsOperation = EOperation()
-                            unionItemsOperation.name=alteredClassName + "__Output_Layer_UnionItems"
+                            unionItemsOperation.name=alteredClassName + "_Output_Layer_UnionItems"
                             unionItemsOperation.eType=unionItemClass
                             unionItemsOperation.upperBound = -1
                             unionItemsOperation.lowerBound=0
@@ -111,11 +118,11 @@ class ROLImport(object):
                             
                             #op Year_domain  init() 
                             initOperation = EOperation()
-                            initOperation.name=alteredClassName + "init"
-                            initOperation.eType=unionItemClass
+                            initOperation.name="init"
+                            initOperation.eType=context.xString
                             initOperation.upperBound = -1
                             initOperation.lowerBound=0
-                            initOperation.rpmnText = "\tRPMNUtils.init(this) \n this.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n + \t  return null"
+                            initOperation.rpmnText = "rpmnutils.RPMNUtils.init(this) \n \t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t  return null"
                             unionItemTableClass.eOperations.append(initOperation)
                                 
 
@@ -126,6 +133,14 @@ class ROLImport(object):
                         alteredClassName = Utils.makeValidID(className);  
                         
                         xclass = EClass(name=alteredClassName+"_OutputItem")
+                        if context.addLogicPackages:
+                            nonContainmentReference  = EReference()
+                            nonContainmentReference.name="unionOfLayers"
+                            nonContainmentReference.eType=unionItemClass
+                            nonContainmentReference.upperBound = 1
+                            nonContainmentReference.lowerBound=0
+                            nonContainmentReference.containment= False
+                            xclass.eStructuralFeatures.append(nonContainmentReference)
                         xclassTable = EClass(name=alteredClassName+"_OutputTable")
                         xclassTable.containedEntityType = xclass
                         containmentReference  = EReference()
@@ -140,7 +155,7 @@ class ROLImport(object):
                         xclassTableOperation.eType=xclass
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
-                        xclassTableOperation.rpmnText = "\tvar items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t{\n" + "\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\tnewItem.unionOfLayers =  item\n" + "\t\titems.add(newItem)\n" + "}"
+                        xclassTableOperation.rpmnText = "\tvar items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t{\n" + "\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\tnewItem.unionOfLayers =  item\n" + "\t\titems.add(newItem)\n" + "}\n\treturn items"
                         xclassTable.eOperations.append(xclassTableOperation)
                         
                         xclassTableInitOperation = EOperation()
@@ -148,8 +163,18 @@ class ROLImport(object):
                         xclassTableInitOperation.eType=context.xString
                         xclassTableInitOperation.upperBound = 1
                         xclassTableInitOperation.lowerBound=0
-                        xclassTableInitOperation.rpmnText = "\tRPMNUtils.init(this)\n" + "\t this." + alteredClassName+"OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \treturn null"
+                        xclassTableInitOperation.rpmnText = "\trpmnutils.RPMNUtils.init(this)\n" + "\t this.f" + alteredClassName[1:len(alteredClassName)]+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \treturn null"
                         xclassTable.eOperations.append(xclassTableInitOperation)
+                        if context.addLogicPackages:
+                            nonContainmentReference2  = EReference()
+                            nonContainmentReference2.name="unionOfLayersTable"
+                            nonContainmentReference2.eType=unionItemTableClass
+                            nonContainmentReference2.upperBound = 1
+                            nonContainmentReference2.lowerBound=0
+                            nonContainmentReference2.containment= False
+                            xclassTable.eStructuralFeatures.append(nonContainmentReference2)
+                        
+                        
                         
                         
                         context.outputLayerEntitiesPackage.eClassifiers.extend([xclass])
@@ -244,6 +269,49 @@ class ROLImport(object):
                     subdomain_id = row[8]
                     context.subDomainIDToDomainID[subdomain_id]=domain_id
                     
+    def createMemberMaps(self,context):   
+         # Make a domain  to Domain Name Map 
+        fileLocation = context.fileDirectory + os.sep + "member.csv"
+        headerSkipped = False
+
+        
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    memberID = row[4]
+                    print("memberid")
+                    print(memberID)
+                    #domainName = Utils.makeValidID(row[3])
+                    memberCode= row[0]
+                    memberName = row[5]
+                    if (memberName is None) or (memberName == ""):
+                        memberName = memberID
+                    domainId =  row[2]
+                    
+                    #if there is no domain ID this suggests a falty row in the csv due to return statements in fields
+                    if not(domainId is None) and not(domainId == ""):
+                        context.memberIDToDomainMap[memberID] = domainId
+                        context.memberIDToMemberNameMap[memberID] = memberName
+                        context.memberIDToMemberCodeMap[memberID] = memberCode
+                    
+    def createSubDomainToDomainMap(self,context):
+        fileLocation = context.fileDirectory + os.sep + "subdomain.csv"
+        headerSkipped = False
+        #for each subdomain createw a lsit
+
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:                   
+                    domain_id = row[2]
+                    subdomain_id = row[8]
+                    context.subDomainIDToDomainID[subdomain_id]=domain_id
+                    
     def createSubDomainToMemberMaps(self,context):
         fileLocation = context.fileDirectory + os.sep + "subdomain_enumeration.csv"
         headerSkipped = False
@@ -258,7 +326,7 @@ class ROLImport(object):
                     member_id = row[0]
                     subdomain_id = row[2]
                     valid_to=row[4]
-                    if (valid_to == "12/31/9999"):
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999"):
                         memberList = None
                         try: 
                             memberList =context.subDomainToMemberListMap[subdomain_id]
@@ -408,7 +476,11 @@ class ROLImport(object):
                         headerSkipped = True
                 else:
                     attributeName = row[11]
-                    longName = context.variableToLongNamesMap[attributeName]
+                    longName=None
+                    try:
+                        longName = context.variableToLongNamesMap[attributeName]
+                    except:
+                        longName = attributeName
                     amendedAttributeName = Utils.makeValidID(attributeName)
                     amendedAttributeLongName = Utils.makeValidID(longName)
                     variable = row[2]
@@ -453,6 +525,15 @@ class ROLImport(object):
                                 elif(theEnum.name.startswith("String_")):
                                     operation.name = theAttributeName
                                     operation.eType = context.xString
+                                elif(theEnum.name == "STRNG_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                elif(theEnum.name == "EBA_String_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                elif(theEnum.name == "DT_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDate
                                 elif(theEnum.name == "Number"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xDouble
@@ -485,6 +566,8 @@ class ROLImport(object):
             
                             except:
                                 print( "missing class2: " )
+                       
+                            
                         else:
                             print( "XXXXX missing domainID: " )
                             print(domainID)
@@ -493,6 +576,184 @@ class ROLImport(object):
                                 context.missingDomains.append(domainID)
                     except:
                             print( "XX missing ROL class1: " )
-                            print(classID)                                
+                            print(classID) 
+                            
+                    if context.addLogicPackages:
+                        try: 
+                            theUnionItemClass = context.classesMap[classID+"_Output_Layer_UnionItem"]
+                            
+                            classIsDerived = True
+                            
+                            if(context.useVariableLongName):   
+                                theAttributeName = amendedAttributeLongName 
+                            else:
+                                theAttributeName = amendedAttributeName
+                            
+                            amendedDomainName = None
+                            if context.useSubDomains:
+                                domainID = context.subDomainIDToDomainID[subDomainID]
+                                domain_ID_Name = context.domainToDomainNameMap[domainID]
+                                if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                    amendedDomainName = domain_ID_Name
+                                else:
+                                    amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                            else:
+                                domainID = context.variableToDomainMap[variable]
+                                amendedDomainName = Utils.makeValidID(domainID+"_domain")
+                            #domain_ID_Name = context.domainToDomainNameMap[domainID]
+                          
+                            theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
+                            if  theEnum is not None:                     
+                                
+                                if classIsDerived:
+                                    operation = EOperation()
+                                    operation.lowerBound=0
+                                    operation.upperBound=1
+                                    if(theEnum.name == "String"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                    elif(theEnum.name == "Date"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDate
+                                    elif(theEnum.name == "STRNG_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                    elif(theEnum.name == "EBA_String_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                    elif(theEnum.name == "DT_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDate
+                                    elif(theEnum.name.startswith("String_")):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                    elif(theEnum.name == "Number"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDouble
+                                    
+                                    elif(theEnum.name.startswith("Real_")):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDouble
+                                    elif(theEnum.name.startswith("Monetary")): 
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xInt
+                                    elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xInt
+                                    elif(theEnum.name.startswith("Non_negative_integers")): 
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xInt
+                                    elif(theEnum.name.startswith("All_possible_dates")):   
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDate  
+                                    else:
+                                        operation.name = theAttributeName
+                                        operation.eType = theEnum  
+                                        
+                                    operation.rpmnText = "base."+theAttributeName + "()"
+            
+                                try:
+                
+                                    theUnionItemClass = context.classesMap[classID+"_Output_Layer_UnionItem"]
+                                    
+                                    if classIsDerived:
+                                        theUnionItemClass.eOperations.extend([operation])
+                
+                                except:
+                                    print( "missing class3: " )
+                           
+                                
+                            
+                        except:
+                                print( "XX missing ROL class1: " )
+                                print(classID)   
+                        
+                        try: 
+                            theUnionBaseClass = context.classesMap[classID+"_OutputItem_Base"]
+                            
+                            classIsDerived = True
+                            
+                            if(context.useVariableLongName):   
+                                theAttributeName = amendedAttributeLongName 
+                            else:
+                                theAttributeName = amendedAttributeName
+                            
+                            amendedDomainName = None
+                            if context.useSubDomains:
+                                domainID = context.subDomainIDToDomainID[subDomainID]
+                                domain_ID_Name = context.domainToDomainNameMap[domainID]
+                                if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                    amendedDomainName = domain_ID_Name
+                                else:
+                                    amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                            else:
+                                domainID = context.variableToDomainMap[variable]
+                                amendedDomainName = Utils.makeValidID(domainID+"_domain")
+                            #domain_ID_Name = context.domainToDomainNameMap[domainID]
+                          
+                            theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
+                            if  theEnum is not None:                     
+                                
+                                if classIsDerived:
+                                    operation = EOperation()
+                                    operation.lowerBound=0
+                                    operation.upperBound=1
+                                    if(theEnum.name == "String"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                    elif(theEnum.name == "Date"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDate
+                                    elif(theEnum.name == "STRNG_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                    elif(theEnum.name == "EBA_String_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                    elif(theEnum.name == "DT_domain"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDate
+                                    elif(theEnum.name.startswith("String_")):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xString
+                                    elif(theEnum.name == "Number"):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDouble
+                                    
+                                    elif(theEnum.name.startswith("Real_")):
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDouble
+                                    elif(theEnum.name.startswith("Monetary")): 
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xInt
+                                    elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xInt
+                                    elif(theEnum.name.startswith("Non_negative_integers")): 
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xInt
+                                    elif(theEnum.name.startswith("All_possible_dates")):   
+                                        operation.name = theAttributeName
+                                        operation.eType = context.xDate  
+                                    else:
+                                        operation.name = theAttributeName
+                                        operation.eType = theEnum  
+            
+                                try:
+                
+                                    theUnionBaseClass = context.classesMap[classID+"_OutputItem_Base"]
+                                    
+                                    if classIsDerived:
+                                        theUnionBaseClass.eOperations.extend([operation])
+                
+                                except:
+                                    print( "missing class4: " )
+                           
+                                
+                            
+                        except:
+                                print( "XX missing ROL class1: " )
+                                print(classID)                               
+                                
     
               

@@ -66,121 +66,243 @@ type  «xDataType.name» wraps «IF xDataType.name == "Date"»java.util.Date «E
 «ENDIF»
         ''')
          }
-         
-         for (xPackage : resource.allContents.toIterable.filter(XPackage)) 
-         
-         {
-         	fsa.generateFile('JavaRunner.java',  '''
-         	
+
+         	fsa.generateFile('RPMNUtils.java',  '''
+ 
+ 
+package rpmnutils;
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EParameter;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.efbt.openregspecs.model.open_reg_specs.UserTask;
 
-«var packageName = ""»
-«var capatilisedPackageNme = ""»
+import F_01_01_REFoutput_logic.F_01_01_REFoutput_logicPackage;
+import F_01_01_REFoutput_logic.impl.F_01_01_REFoutput_logicPackageImpl;
+import output_layer_entities.Output_layer_entitiesFactory;
+import output_layer_entities.Output_layer_entitiesPackage;
 
-import «packageName = xPackage.name».«capatilisedPackageNme =  packageName.substring(0, 1).toUpperCase() + packageName.substring(1)»Package;
-import «packageName».*;
-
-
-public class JavaRunner {
+public class RPMNUtils {
 	
-	 public static void main(String[] args)
-	 {
-		 //run those specific steps, ans save as xmi
-		 //load in the xmi files
-		 
-		 EPackage.Registry.INSTANCE.put(«packageName».«capatilisedPackageNme»Package.eNS_URI, «packageName».«capatilisedPackageNme»Package.eINSTANCE);
-		 
-		 
-		 
-		 Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		    Map<String, Object> m = reg.getExtensionToFactoryMap();
-		    m.put("xmi", new XMIResourceFactoryImpl());
+	public static String fileDirectory = null;
+	
+	public static ResourceSet resSet =  null;
+	
+	
+	public static void main(String[] args)
+	{
+		fileDirectory = args[0];
+		EPackage.Registry.INSTANCE.put(F_01_01_REFoutput_logicPackage.eNS_URI, F_01_01_REFoutput_logicPackage.eINSTANCE);
+		EPackage.Registry.INSTANCE.put(Output_layer_entitiesPackage.eNS_URI, Output_layer_entitiesPackage.eINSTANCE);
+		
+		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+		Map<String, Object> m = reg.getExtensionToFactoryMap();
+		m.put("xmi", new XMIResourceFactoryImpl());
+		resSet = new ResourceSetImpl();
+		
+		//look at the file names in the directory, find the one with _Expected_results at the end, 
+		// this is the callss, the others provide the detials for input data.
+		EList<EClassifier> outputClasses = Output_layer_entitiesPackage.eINSTANCE.getEClassifiers();
+		EClass outputEClass = null;
+		String className = getClassNameFromExpectedResultsFile();
+		for (Iterator iterator = outputClasses.iterator(); iterator.hasNext();) {
+			EClassifier eClassifier = (EClassifier) iterator.next();
 
-		    ResourceSet resSet = new ResourceSetImpl();
-«var counter = 0» 
-«FOR xclass : xPackage.eContents.filter(XClass)»
-Resource resource«counter++»  = resSet.getResource(URI.createURI("«xclass.name»_BaseTable.xmi"), true);
-«ENDFOR»
+			if (eClassifier.getName().equals(className))
+				outputEClass = (EClass) eClassifier;
+				
+			
+		}
+		EObject table = Output_layer_entitiesFactory.eINSTANCE.create(outputEClass);
+		Resource resource2 = resSet.createResource(URI.createFileURI(fileDirectory + File.separator +className + ".xmi"));
 
-«var counter2 = 0» 	
-«FOR xclass : xPackage.eContents.filter(XClass)»
-try{
-resource«counter2++».load(Collections.EMPTY_MAP);
-}
-catch (IOException e) {
-				// TODO Auto-generated catch block
-				System.out.println(e)
+		resource2.getContents().add(table);
+		EList<EOperation> operations = outputEClass.getEOperations();
+		for (Iterator iterator2 = operations.iterator(); iterator2.hasNext();) {
+			EOperation eOperation = (EOperation) iterator2.next();
+			EList<EParameter> params = new BasicEList<EParameter>();
+			if (eOperation.getName().equals("init"))
+				try {
+					table.eInvoke(eOperation, params);
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+		}
+		persistObject(table);
+		
+		TreeIterator<EObject> contents = table.eAllContents();
+		
+		while (contents.hasNext())
+		{
+			EObject o = contents.next();
+			operations = o.eClass().getEAllOperations();
+			System.out.println(o.eClass().getName() +" {");
+			for (Iterator iterator3 = operations.iterator(); iterator3.hasNext();) {
+				EOperation eOperation = (EOperation) iterator3.next();
+				EList<EParameter> params = new BasicEList<EParameter>();
+				if (!eOperation.getName().equals("init"))
+					try {
+						Object result = o.eInvoke(eOperation, params);
+						System.out.println(result);
+						
+					} catch (InvocationTargetException e) {
+
+						e.printStackTrace();
+					}
+					
 			}
-«ENDFOR»
+			System.out.println("}\n");
 
-		    EcoreUtil.resolveAll(resSet);
-«var counter3 = 0» 	
-«FOR xclass : xPackage.eContents.filter(XClass)»
-try{
-«xclass.name»_BaseTable «xclass.name»_BaseTable1 = («xclass.name»_BaseTable) resource«counter3++».getContents().get(0);
-catch (Exception e) {
-				// TODO Auto-generated catch block
-				System.out.println(e)
+		}
+			
+		
+		
+	}
+	private static String getClassNameFromExpectedResultsFile() {
+		// TODO Auto-generated method stub
+		//getTHe listOfFileNames
+		File dir = new File(fileDirectory);
+		File[] contents = dir.listFiles();
+		String returnString = null;
+		for (File object :contents)
+		{
+			String fileName = object.getName();
+			if (fileName.endsWith("_ExpectedResults.csv"))
+			{
+				int index = fileName.indexOf("_ExpectedResults");
+				returnString = fileName.substring(0, index);
 			}
-«ENDFOR»
-«var counter4 = 0»	
-«FOR xclass : xPackage.eContents.filter(XClass)»
+		}
+		return returnString;
+		
+	}
+	public static void init(EObject theObject)
+	{
+		if (resSet == null) 
+			resSet = new ResourceSetImpl(); // theObject.eResource().getResourceSet();
+		
 
-«var tableName = xclass.name»
-«var outputTable = tableName.endsWith("_OutputTable")»
-«IF outputTable »
 
-«tableName»_1 = «capatilisedPackageNme»Factory.eINSTANCE.create«tableName»();
-«var sourceTable1Name = ""»	
-«FOR member : (serviceTask.enrichedAttribute.eContainer as XClass).members»
-«IF ((member instanceof XReference) && (sourceTable1Name == ""))» «tableName»_DerivedTable1.setSourceTable1(«sourceTable1Name = member.type.name»«IF member.type.name.endsWith("derived")»_DerivedTable1«ELSE»_BaseTable1«ENDIF»);
-«ELSEIF ((member instanceof XReference) && !(sourceTable1Name == "")) » «tableName»_DerivedTable1.setSourceTable2(«member.type.name»«IF member.type.name.endsWith("derived")»_DerivedTable1«ELSE»_BaseTable1«ENDIF»);
-EList<«tableName»> details«counter4» 	 = «tableName»_DerivedTable1.«tableName»s();
-«tableName»_DerivedTable1.get«tableName»s().addAll(details«counter4»);
-for («tableName» «tableName»1 : details«counter4++») {«ENDIF»
-«ENDFOR»
-	 
-«IF (serviceTask.enrichedAttribute.name.endsWith("identifier")) » «tableName»1.set«serviceTask.enrichedAttribute.name.substring(0, 1).toUpperCase()+ serviceTask.enrichedAttribute.name.substring(1)»(«tableName»1.«serviceTask.enrichedAttribute.name»());«ENDIF»
+		EClass eclass = theObject.eClass();
+		EList<EReference> references = eclass.getEAllReferences();
+		for (Iterator iterator = references.iterator(); iterator.hasNext();) {
+			EReference eReference = (EReference) iterator.next();
+			if (!eReference.isContainment())
+			{
+				EObject newObject = findTableInXMIFile(eReference.getEType(), eclass);
+				if(newObject != null)
+					theObject.eSet(eReference, newObject);
+				else
+				{
+					newObject = createObjectFromReferenceType( eReference);
+					
+					EClass newObjectsClass = newObject.eClass();
+					EList<EOperation> operations = newObjectsClass.getEOperations();
+					for (Iterator iterator2 = operations.iterator(); iterator2.hasNext();) {
+						EOperation eOperation = (EOperation) iterator2.next();
+						EList<EParameter> params = new BasicEList<EParameter>();
+						if (eOperation.getName().equals("init"))
+							try {
+								newObject.eInvoke(eOperation, params);
+							} catch (InvocationTargetException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+					}
+					persistObject(newObject);
+					System.out.println("theObject" + theObject);
+					System.out.println("eReference" + eReference);
+					System.out.println("eReference.etype" + eReference.getEType().getName());
+					theObject.eSet(eReference, newObject);
+				}
+			}
+			
+			
+		}
 
-«ENDIF»
-«ENDFOR»
-}
+	}
+	
+	
+	private static void persistObject(EObject theObject) {
 
-«FOR serviceTask : resource.allContents.filter(ServiceTask).toIterable»	 
-«IF serviceTask.enrichedAttribute.name.endsWith("identifier") »
-«var tableName = serviceTask.enrichedAttribute.containingClass.name»
-«var derived = tableName.endsWith("derived")»
-«IF derived »
-	        
-	        Resource «tableName»Resource = resSet.createResource(URI.createFileURI("«tableName»_DerivedTable1.xmi"));
-	        «tableName»Resource.getContents().add(«tableName»_DerivedTable1);
 	        try {
-				«tableName»Resource.save(null);
+	        	theObject.eResource().save(Collections.EMPTY_MAP);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}   
-«ENDIF»
-«ENDIF»
-«ENDFOR»
-    }
-   }     ''')
+			} 
 	}
-}
+
+
+	private static EObject createObjectFromReferenceType( EReference eReference) {
+		
+		EClass theClass = (EClass) eReference.getEType();
+		Resource resource1 = resSet.createResource(URI.createFileURI(fileDirectory + File.separator +theClass.getName() + ".xmi"));
+		
+		EObject newObject = theClass.getEPackage().getEFactoryInstance().create(theClass);
+		resource1.getContents().add(newObject);
+		return newObject;
+		
+	}
+
+
+	private static EObject findTableInXMIFile(EClassifier eClassifier, EClass eclass) {
+
+		EObject returnVal = null;
+		EPackage ePackage = eclass.getEPackage(); 
+
+		 Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+		 Map<String, Object> m = reg.getExtensionToFactoryMap();
+		 m.put("xmi", new XMIResourceFactoryImpl());
+
+		
+		try{
+		Resource resource1  = resSet.getResource(URI.createFileURI(fileDirectory + File.separator + eClassifier.getName() +".xmi"), true);
+
+		
+		resource1.load(Collections.EMPTY_MAP);
+		returnVal = resource1.getContents().get(0);
+		}
+		catch (Exception e) {
+						// TODO Auto-generated catch block
+						System.out.println(e);
+					}
+	
+		return returnVal;
+				
+	}
 
 }
+
+
+
+'''
+)
+}
+}
+
  
 	
  
