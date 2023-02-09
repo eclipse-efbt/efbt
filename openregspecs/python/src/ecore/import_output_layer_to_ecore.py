@@ -60,12 +60,12 @@ class ROLImport(object):
                     headerSkipped = True
                 else:
 
-                    className = row[0]
+                    className = row[context.cubeClassNameIndex]
                     alteredClassName = Utils.makeValidID(className); 
-                    objectID  = row[1]
-                    cube_type = row[3]
-                    valid_to  = row[11]
-                    framework   = row[5]
+                    objectID  = row[context.cubeObjectIDIndex ]
+                    cube_type = row[context.cubeCubeTypeIndex ]
+                    valid_to  = row[context.cubeValidToIndex ]
+                    framework   = row[context.cubeFrameworkIndex ]
                     print("objectID")
                     print(objectID)
                     
@@ -201,10 +201,10 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    variableName = row[6]
-                    longName = row[4]
+                    variableName = row[context.variableVariableNameIndex ]
+                    longName = row[context.variableLongNameIndex ]
                     #domainName = Utils.makeValidID(row[3])
-                    domain = row[2]
+                    domain = row[context.variableDomainIndex ]
                     context.variableToDomainMap[variableName] = domain
                     context.variableToLongNamesMap[variableName] = longName
              
@@ -221,9 +221,9 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    domainID = row[0]
+                    domainID = row[context.domainDomainIDIndex]
                     #domainName = Utils.makeValidID(row[3])
-                    domainName = row[8]
+                    domainName = row[context.domainDomainNameIndex]
                     context.domainToDomainNameMap[domainID] = domainName
                    
     def createMemberMaps(self,context):   
@@ -238,15 +238,15 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    memberID = row[4]
+                    memberID = row[context.memberMemberIDIndex  ]
                     print("memberid")
                     print(memberID)
                     #domainName = Utils.makeValidID(row[3])
-                    memberCode= row[0]
-                    memberName = row[5]
+                    memberCode= row[context.memberMemberCodeIndex  ]
+                    memberName = row[context.memberMemberNameIndex  ]
                     if (memberName is None) or (memberName == ""):
                         memberName = memberID
-                    domainId =  row[2]
+                    domainId =  row[context.memberDomainIDIndex  ]
                     
                     #if there is no domain ID this suggests a falty row in the csv due to return statements in fields
                     if not(domainId is None) and not(domainId == ""):
@@ -308,8 +308,8 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:                   
-                    domain_id = row[2]
-                    subdomain_id = row[8]
+                    domain_id = row[context.subdomainDomainIDIndex]
+                    subdomain_id = row[context.subDomainSubDomainIDIndex]
                     context.subDomainIDToDomainID[subdomain_id]=domain_id
                     
     def createSubDomainToMemberMaps(self,context):
@@ -323,9 +323,9 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:                   
-                    member_id = row[0]
-                    subdomain_id = row[2]
-                    valid_to=row[4]
+                    member_id = row[context.subdomain_enumerationMemberIDIndex ]
+                    subdomain_id = row[context.subdomain_enumerationSubdomainIDIndex ]
+                    valid_to=row[context.subdomain_enumerationValidToIndex ]
                     if (valid_to == "12/31/9999") or (valid_to == "12/31/2999"):
                         memberList = None
                         try: 
@@ -353,9 +353,8 @@ class ROLImport(object):
                         headerSkipped = True
                 else:
                     
-                    variable = row[2]
-                   
-                    classID = row[1]
+                    variable = row[context.cube_structure_itemVariableIndex ]
+                    classID = row[context.cube_structure_itemClassIDIndex ]
     
                     try: 
 
@@ -401,6 +400,7 @@ class ROLImport(object):
                     theEnum.eLiterals.extend([enumLiteral])
         
     def addROLEnumsAndLiteralsToPackageUsingSubDomains(self,context):
+
         fileLocation = context.fileDirectory + os.sep + "cube_structure_item.csv"
         headerSkipped = False
         # or each attribute add an Xattribute to the correct XClass represtnting the Entity
@@ -414,49 +414,71 @@ class ROLImport(object):
                         headerSkipped = True
                 else:
                     
-                    variable = row[2]
-                    subDomainID = row[10]
-                    classID = row[1]
-    
-                    try: 
-
-                        domainID = context.subDomainIDToDomainID[subDomainID]
-                        domain_ID_Name = context.domainToDomainNameMap[domainID]
-                        if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
-                            amendedDomainName = domain_ID_Name
-                        else:
-                            amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
-                        theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
-                        if theEnum is None:
-                            if not( (amendedDomainName == "String") or (amendedDomainName == "Date")  ):
-                                theEnum = EEnum()
-                                theEnum.name = amendedDomainName 
-                                #maintain a map of enum IDS to XEnum objects
-                                context.enumMap[amendedDomainName] = theEnum
-                                context.outputLayerEnumsPackage.eClassifiers.extend([theEnum])
-                                theDomainMembers= context.subDomainToMemberListMap[subDomainID]
-                                counter1 = 0
-                                for member in theDomainMembers:
-                                    enumLiteral = EEnumLiteral()
-                                    enumUsedName = Utils.makeValidID(context.memberIDToMemberCodeMap[member])
-                                    adaptedValue = Utils.makeValidID(context.memberIDToMemberNameMap[member])
-                                    newAdaptedValue = Utils.uniqueValue( theEnum, adaptedValue)
-                                    newAdaptedName = Utils.uniqueName( theEnum, enumUsedName)
-                
-                                    enumLiteral.name =  newAdaptedValue
-                                    enumLiteral.literal = newAdaptedName
-                                    counter1 = counter1 + 1
-                                    enumLiteral.value = counter1
-                                    theEnum.eLiterals.extend([enumLiteral]) 
+                    variable = row[context.cube_structure_itemVariableIndex ]
+                    subDomainID = row[context.cube_structure_itemSubdomainIndex ]
+                    classID = row[context.cube_structure_itemClassIDIndex ]
+                    specificMember = row[context.cube_structure_itemSpecificMember ]
+                    try:
+                        cubeName = context.classesMap[classID]
+                        print("cubeName")
+                        print(cubeName)
+                        domainID = None
+                        # deal with the case where we have no subdomain but have a specific member
+                        if ((subDomainID == "") or (subDomainID == None)) and (len(specificMember) > 0):
+                            domainID = context.variableToDomainMap[variable]
+                            if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                amendedDomainName = domain_ID_Name
                             else:
-                                theEnum = EEnum()
-                                theEnum.name = amendedDomainName 
-                                context.enumMap[amendedDomainName] = theEnum
-                                  
-                            
+                                amendedDomainName = Utils.makeValidID(subDomainID + "_ISMEMBER_" + specificMember)
+    
+                        else:
+                            domainID = context.subDomainIDToDomainID[subDomainID]
+                            domain_ID_Name = context.domainToDomainNameMap[domainID]
+                            if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                amendedDomainName = domain_ID_Name
+                            else:
+                                amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                             
+                        try: 
+    
+                            theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
+                            if theEnum is None:
+                                if not( (amendedDomainName == "String") or (amendedDomainName == "Date")  ):
+                                    theEnum = EEnum()
+                                    theEnum.name = amendedDomainName 
+                                    #maintain a map of enum IDS to XEnum objects
+                                    context.enumMap[amendedDomainName] = theEnum
+                                    context.outputLayerEnumsPackage.eClassifiers.extend([theEnum])
+                                    theDomainMembers= None
+                                    if ((subDomainID == "") or (subDomainID == None)) and (len(specificMember) > 0):
+                                        theDomainMembers=[specificMember]
+                                    else:
+                                        theDomainMembers= context.subDomainToMemberListMap[subDomainID]
+                                    counter1 = 0
+                                    for member in theDomainMembers:
+                                        enumLiteral = EEnumLiteral()
+                                        enumUsedName = Utils.makeValidID(context.memberIDToMemberCodeMap[member])
+                                        adaptedValue = Utils.makeValidID(context.memberIDToMemberNameMap[member])
+                                        newAdaptedValue = Utils.uniqueValue( theEnum, adaptedValue)
+                                        newAdaptedName = Utils.uniqueName( theEnum, enumUsedName)
+                    
+                                        enumLiteral.name =  newAdaptedValue
+                                        enumLiteral.literal = newAdaptedName
+                                        counter1 = counter1 + 1
+                                        enumLiteral.value = counter1
+                                        theEnum.eLiterals.extend([enumLiteral]) 
+                                else:
+                                    theEnum = EEnum()
+                                    theEnum.name = amendedDomainName 
+                                    context.enumMap[amendedDomainName] = theEnum
+                                      
+                                
+                        except:
+                                print( "missing ROL class2: " )
+                                print(classID)
                     except:
-                            print( "missing ROL class2: " )
-                            print(classID)    
+                                print( "class not in list: " )
+                                print(classID)    
                             
       
     def addROLAttributesToClasses(self,context):
@@ -475,7 +497,7 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    attributeName = row[11]
+                    attributeName = row[context.cube_structure_itemAttributeName ]
                     longName=None
                     try:
                         longName = context.variableToLongNamesMap[attributeName]
@@ -483,9 +505,12 @@ class ROLImport(object):
                         longName = attributeName
                     amendedAttributeName = Utils.makeValidID(attributeName)
                     amendedAttributeLongName = Utils.makeValidID(longName)
-                    variable = row[2]
-                    subDomainID = row[10]
-                    classID = row[1]
+                    
+                    variable = row[context.cube_structure_itemVariableIndex ]
+                    subDomainID = row[context.cube_structure_itemSubdomainIndex ]
+                    classID = row[context.cube_structure_itemClassIDIndex ]
+                    specificMember = row[context.cube_structure_itemSpecificMember ]
+                    
                     try: 
                         theClass = context.classesMap[classID]
                         
@@ -498,12 +523,21 @@ class ROLImport(object):
                         
                         amendedDomainName = None
                         if context.useSubDomains:
-                            domainID = context.subDomainIDToDomainID[subDomainID]
-                            domain_ID_Name = context.domainToDomainNameMap[domainID]
-                            if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
-                                amendedDomainName = domain_ID_Name
+                            if ((subDomainID == "") or (subDomainID == None)) and (len(specificMember) > 0):
+                                domainID = context.variableToDomainMap[variable]
+                                if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                    amendedDomainName = domain_ID_Name
+                                else:
+                                    amendedDomainName = Utils.makeValidID(subDomainID + "_ISMEMBER_" + specificMember)
+        
                             else:
-                                amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                                domainID = context.subDomainIDToDomainID[subDomainID]
+                                domain_ID_Name = context.domainToDomainNameMap[domainID]
+                                if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                    amendedDomainName = domain_ID_Name
+                                else:
+                                    amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                                 
                         else:
                             domainID = context.variableToDomainMap[variable]
                             amendedDomainName = Utils.makeValidID(domainID+"_domain")

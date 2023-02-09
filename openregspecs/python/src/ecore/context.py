@@ -71,6 +71,40 @@ class Context(object):
     
     useVariableLongName=True
     importLogicStrings = []
+    
+    
+    
+    cubeClassNameIndex = 0
+    cubeObjectIDIndex = 1
+    cubeCubeTypeIndex = 3
+    cubeValidToIndex = 11
+    cubeFrameworkIndex = 5
+    
+    variableVariableNameIndex = 6
+    variableLongNameIndex = 4
+    variableDomainIndex = 2
+    
+    domainDomainIDIndex = 0
+    domainDomainNameIndex = 8
+    
+    memberMemberIDIndex = 4
+    memberMemberCodeIndex = 0
+    memberMemberNameIndex = 5
+    memberDomainIDIndex = 2
+    
+    subdomainDomainIDIndex = 2
+    subDomainSubDomainIDIndex = 8
+    
+    subdomain_enumerationMemberIDIndex = 0
+    subdomain_enumerationSubdomainIDIndex = 2
+    subdomain_enumerationValidToIndex = 4
+    
+    cube_structure_itemVariableIndex = 2
+    cube_structure_itemClassIDIndex = 1
+    cube_structure_itemSubdomainIndex = 10
+    cube_structure_itemSpecificMember = 7
+    cube_structure_itemAttributeName = 11
+
     def __init__(self):
 
         a=0
