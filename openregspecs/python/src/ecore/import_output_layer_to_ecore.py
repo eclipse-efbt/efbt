@@ -122,7 +122,7 @@ class ROLImport(object):
                             initOperation.eType=context.xString
                             initOperation.upperBound = -1
                             initOperation.lowerBound=0
-                            initOperation.rpmnText = "rpmnutils.RPMNUtils.init(this) \n \t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t  return null"
+                            initOperation.rpmnText = "<xcore>rpmnutils.RPMNUtils.init(this) \n \t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t  return null</xcore>"
                             unionItemTableClass.eOperations.append(initOperation)
                                 
 
@@ -155,7 +155,7 @@ class ROLImport(object):
                         xclassTableOperation.eType=xclass
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
-                        xclassTableOperation.rpmnText = "\tvar items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t{\n" + "\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\tnewItem.unionOfLayers =  item\n" + "\t\titems.add(newItem)\n" + "}\n\treturn items"
+                        xclassTableOperation.rpmnText = "<xcore>\tvar items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t{\n" + "\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\tnewItem.unionOfLayers =  item\n" + "\t\titems.add(newItem)\n" + "}\n\treturn items</xcore>"
                         xclassTable.eOperations.append(xclassTableOperation)
                         
                         xclassTableInitOperation = EOperation()
@@ -163,7 +163,7 @@ class ROLImport(object):
                         xclassTableInitOperation.eType=context.xString
                         xclassTableInitOperation.upperBound = 1
                         xclassTableInitOperation.lowerBound=0
-                        xclassTableInitOperation.rpmnText = "\trpmnutils.RPMNUtils.init(this)\n" + "\t this.f" + alteredClassName[1:len(alteredClassName)]+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \treturn null"
+                        xclassTableInitOperation.rpmnText = "<xcore>\trpmnutils.RPMNUtils.init(this)\n" + "\t this.f" + alteredClassName[1:len(alteredClassName)]+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \treturn null</xcore>"
                         xclassTable.eOperations.append(xclassTableInitOperation)
                         if context.addLogicPackages:
                             nonContainmentReference2  = EReference()
@@ -684,7 +684,7 @@ class ROLImport(object):
                                         operation.name = theAttributeName
                                         operation.eType = theEnum  
                                         
-                                    operation.rpmnText = "base."+theAttributeName + "()"
+                                    operation.rpmnText = "<xcore>base."+theAttributeName + "()</xcore>"
             
                                 try:
                 
