@@ -501,7 +501,8 @@ class ROLImport(object):
                                 else:
                                     operation.name = theAttributeName
                                     operation.type = theEnum  
-        
+                                if context.addExecutableStubs:
+                                    operation.rpmnText = "<xcore>unionOfLayers." + theAttributeName + "()</xcore>"
                             try:
             
                                 theClass = context.classesMap[classID]

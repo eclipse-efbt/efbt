@@ -590,6 +590,8 @@ class ROLImport(object):
                                 else:
                                     operation.name = theAttributeName
                                     operation.eType = theEnum  
+                                if context.addExecutableStubs:
+                                    operation.rpmnText = "<xcore>unionOfLayers." + theAttributeName + "()</xcore>"
         
                             try:
             
