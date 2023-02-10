@@ -264,4 +264,13 @@ class Utils(object):
                returnVal =  value
         
         return returnVal
+    
+    @classmethod
+    def specialCases(cls,theEnum,newAdaptedValue):
+        returnVal = newAdaptedValue
+        if (newAdaptedValue == "A_S"):
+           returnVal = "A_S_dup"
+        if (newAdaptedValue == "s_p_"):
+           returnVal = "s_p_dup"
+        return returnVal
   
