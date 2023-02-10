@@ -14,7 +14,7 @@ SPDX-License-Identifier: EPL-2.0
 			
 			taskTags
 			{ ActivityTag tenorTag 
-				{displayName tenorTag  
+				{displayName "tenorTag"  
 					requirements (  
 					CRRRuleBook.Title_IV.Title_IV_Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_a ,
 					CRRRuleBook.Title_IV.Title_IV_Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_b

@@ -8,13 +8,13 @@ SPDX-License-Identifier: EPL-2.0
  Neil Mackenzie - initial API and implementation*/
 			rules {  
 				TitledRequirementsSection Title_IV  { 
-					title Title_IV requirementsType Title sections
+					title "Title_IV" requirementsType Title sections
 					{ 
 						TitledRequirementsSection Title_IV_Chapter_1_General_Provisions { 
 							title "Chapter 1 General Provisions" requirementsType Chapter sections {
 								TitledRequirementsSection Article_325 {
 									title "Article 325: Approaches for calculating the own funds requirements_text for market risks" requirementsType Article sections
-									{ TitledRequirementsSection Artice_325_1 { title "1" requirementsType NumericParagraph sections { RequirementsSectionText Articel_325_1_text { text "An institution shall calculate the own funds requirements for market risk of all trading book positions and non-trading book positions that are subject to foreign exchange risk or commodity risk in accordance with the following approaches:" } , TitledRequirementsSection Article_325_1_a { title b requirementsType LetterParagraph sections { RequirementsSectionText Articel_325_1_a_text { text "the standardised approach referred to in paragraph 2;" } } } , TitledRequirementsSection Article_325_1_b { title b requirementsType LetterParagraph sections { RequirementsSectionText Articel_325_1_b_text { text "the internal model approach set out in Chapter 5 of this Title for those risk categories for which the institution has been granted permission in accordance with Article 363 to use that approach." } } } } }
+									{ TitledRequirementsSection Artice_325_1 { title "1" requirementsType NumericParagraph sections { RequirementsSectionText Articel_325_1_text { text "An institution shall calculate the own funds requirements for market risk of all trading book positions and non-trading book positions that are subject to foreign exchange risk or commodity risk in accordance with the following approaches:" } , TitledRequirementsSection Article_325_1_a { title "b" requirementsType LetterParagraph sections { RequirementsSectionText Articel_325_1_a_text { text "the standardised approach referred to in paragraph 2;" } } } , TitledRequirementsSection Article_325_1_b { title "b" requirementsType LetterParagraph sections { RequirementsSectionText Articel_325_1_b_text { text "the internal model approach set out in Chapter 5 of this Title for those risk categories for which the institution has been granted permission in accordance with Article 363 to use that approach." } } } } }
 										
 									}
 								} } }
