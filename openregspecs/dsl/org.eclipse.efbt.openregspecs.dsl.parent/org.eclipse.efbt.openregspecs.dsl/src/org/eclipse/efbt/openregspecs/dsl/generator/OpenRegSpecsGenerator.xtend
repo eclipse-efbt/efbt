@@ -68,7 +68,7 @@ type  «xDataType.name» wraps «IF xDataType.name == "Date"»java.util.Date «E
         ''')
          }
 
-         	fsa.generateFile('rpmnutils' + File.pathSeparator +'RPMNUtils.java',  '''
+         	fsa.generateFile('rpmnutils' + File.separator +'RPMNUtils.java',  '''
  
 package rpmnutils;
 import java.io.File;

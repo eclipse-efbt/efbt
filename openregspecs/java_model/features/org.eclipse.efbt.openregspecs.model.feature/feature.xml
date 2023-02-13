@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.efbt.openregspecs.model.feature"
       label="OpenRegSpecs Model"
-      version="1.0.0.qualifier"
+      version="1.1.0.qualifier"
       provider-name="BIRD Software Solutions">
 
    <description url="http://www.example.com/description">
