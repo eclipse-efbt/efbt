@@ -120,7 +120,7 @@ class ROLImport(object):
                             initOperation.type=context.xString
                             initOperation.upperBound = -1
                             initOperation.lowerBound=0
-                            initOperation.rpmnText = "rpmnutils.RPMNUtils.init(this) \n \t\t\t\t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t\t\t\t  return null"
+                            initOperation.rpmnText = "<xcore>rpmnutils.RPMNUtils.init(this) \n \t\t\t\t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t\t\t\t  return null</xcore>"
                             unionItemTableClass.members.append(initOperation)
                                 
 
@@ -149,7 +149,7 @@ class ROLImport(object):
                         xclassTableOperation.type=xclass
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
-                        xclassTableOperation.rpmnText = "var items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\t\t\t\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t\t\t\t{\n" + "\t\t\t\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\t\t\t\tnewItem.unionOfLayers =  item\n" + "\t\t\t\t\titems.add(newItem)\n" + "}\n\t\t\t\treturn items"
+                        xclassTableOperation.rpmnText = "<xcore>var items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\t\t\t\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t\t\t\t{\n" + "\t\t\t\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\t\t\t\tnewItem.unionOfLayers =  item\n" + "\t\t\t\t\titems.add(newItem)\n" + "}\n\t\t\t\treturn items</xcore>"
                         
                         xclassTable.members.append(xclassTableOperation)
                         xclassTableInitOperation = XOperation()
@@ -157,7 +157,7 @@ class ROLImport(object):
                         xclassTableInitOperation.type=context.xString
                         xclassTableInitOperation.upperBound = 1
                         xclassTableInitOperation.lowerBound=0
-                        xclassTableInitOperation.rpmnText = "rpmnutils.RPMNUtils.init(this)\n" + "\t\t\t\t this.f" + alteredClassName[1:len(alteredClassName)]+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \t\t\t\treturn null"
+                        xclassTableInitOperation.rpmnText = "<xcore>rpmnutils.RPMNUtils.init(this)\n" + "\t\t\t\t this.f" + alteredClassName[1:len(alteredClassName)]+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \t\t\t\treturn null</xcore>"
                         xclassTable.members.append(xclassTableInitOperation)
                         if context.addLogicPackages:
                             nonContainmentReference2  = XReference()
@@ -501,7 +501,8 @@ class ROLImport(object):
                                 else:
                                     operation.name = theAttributeName
                                     operation.type = theEnum  
-        
+                                if context.addExecutableStubs:
+                                    operation.rpmnText = "<xcore>unionOfLayers." + theAttributeName + "()</xcore>"
                             try:
             
                                 theClass = context.classesMap[classID]
@@ -593,7 +594,7 @@ class ROLImport(object):
                                         operation.name = theAttributeName
                                         operation.type = theEnum  
                                         
-                                    operation.rpmnText = "base."+theAttributeName + "()"
+                                    operation.rpmnText = "<xcore>base."+theAttributeName + "()</xcore>"
             
                                 try:
                 

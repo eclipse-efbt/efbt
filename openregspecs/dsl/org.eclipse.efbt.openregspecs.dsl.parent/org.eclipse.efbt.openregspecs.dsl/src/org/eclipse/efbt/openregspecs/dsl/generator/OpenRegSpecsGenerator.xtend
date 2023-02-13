@@ -19,6 +19,7 @@ import org.eclipse.efbt.openregspecs.model.open_reg_specs.ServiceTask
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.Module
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.ViewModule
 import org.eclipse.efbt.openregspecs.model.open_reg_specs.WorkflowModule
+import java.io.File
 
 /**
  * Generates code from your model files on save.
@@ -49,7 +50,7 @@ import «theImport.importedNamespace»
 «IF xmember instanceof XReference» 	«IF xmember.containment»contains «ELSE»refers«ENDIF» «xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name»«ENDIF»	
 «IF xmember instanceof XOperation» 	op «xmember.type.name» «IF xmember.upperBound == -1»[]  «ELSEIF !((xmember.lowerBound == 0) && (xmember.upperBound == 1)) »[«xmember.lowerBound»..«xmember.upperBound»]«ENDIF» «xmember.name»() 
 	{
-	 	«IF xmember.body !== null»«xmember.body»«ENDIF»
+	 	«IF xmember.body !== null»«findXCoreSubstring(xmember.body)»«ENDIF»
 	}
 	«ENDIF»«ENDFOR» 
 }
@@ -67,8 +68,7 @@ type  «xDataType.name» wraps «IF xDataType.name == "Date"»java.util.Date «E
         ''')
          }
 
-         	fsa.generateFile('RPMNUtils.java',  '''
- 
+         	fsa.generateFile('rpmnutils' + File.pathSeparator +'RPMNUtils.java',  '''
  
 package rpmnutils;
 import java.io.File;
@@ -301,6 +301,16 @@ public class RPMNUtils {
 '''
 )
 }
+	
+	def String findXCoreSubstring(String string) {
+		var startIndex = string.indexOf("<xcore>")
+		var endIndex = string.indexOf("</xcore>")
+		var returnString = string
+		if ( ( endIndex>0) && ( startIndex>-1))
+			returnString = string.substring(startIndex+7,endIndex)
+		return returnString
+	}
+	
 }
 
  

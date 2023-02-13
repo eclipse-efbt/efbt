@@ -162,7 +162,9 @@ class InputLayerImport(object):
                         try:
                             theEnum = context.enumMap[enumID]
                             newAdaptedValue = Utils.uniqueValue(theEnum,adaptedValue)
+                            newAdaptedValue = Utils.specialCases(theEnum,newAdaptedValue)
                             newAdaptedName = Utils.uniqueName(theEnum,adaptedEnumName)
+                            
                             enumLiteral = XEnumLiteral()
                             enumLiteral.name =  newAdaptedValue
                             enumLiteral.literal = newAdaptedName

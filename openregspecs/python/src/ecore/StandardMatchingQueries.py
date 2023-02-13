@@ -226,8 +226,11 @@ class StandardMatchingQueries(object):
         return False    
     
 if __name__ == '__main__':
+    
     fileDirectory = '/workspaces/efbt/openregspecs/python/results'
     inScopeFileDirectory = '/workspaces/efbt/openregspecs/python/resources'
+    
+    
     standardMatchingQueries = StandardMatchingQueries()
     standardMatchingQueries.query1(fileDirectory,inScopeFileDirectory)
     
