@@ -69,7 +69,7 @@ class ROLImport(object):
                     print("objectID")
                     print(objectID)
                     
-                    if ( (framework ==  "FINREP_REF") and (cube_type == "RC") and (valid_to == "12/31/9999") ) :
+                    if ( (framework ==  "FINREP_REF") and (cube_type == "RC") and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999") ) ):
 
                         unionItemClass = None
                         unionItemTableClass = None
@@ -326,7 +326,7 @@ class ROLImport(object):
                     member_id = row[context.subdomain_enumerationMemberIDIndex ]
                     subdomain_id = row[context.subdomain_enumerationSubdomainIDIndex ]
                     valid_to=row[context.subdomain_enumerationValidToIndex ]
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999"):
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         memberList = None
                         try: 
                             memberList =context.subDomainToMemberListMap[subdomain_id]
