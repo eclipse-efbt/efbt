@@ -13,7 +13,7 @@
  -->
 <feature id="org.eclipse.efbt.openregspecs.dsl.feature"
 	label="OpenRegSpecs Feature "
-	version="1.0.0.qualifier">
+	version="1.1.0.qualifier">
 	<plugin
 			id="org.eclipse.efbt.openregspecs.dsl"
 			download-size="0"
