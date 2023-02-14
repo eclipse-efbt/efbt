@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.efbt.openregspecs.sirius_ui.feature"
       label="OpenRegSpecs Sirius UI"
-      version="1.0.0.qualifier"
+      version="1.1.0.qualifier"
       provider-name="BIRD Software Solutions">
 
    <description url="http://www.example.com/description">
@@ -38,28 +38,11 @@
       <import plugin="org.eclipse.emf.edit.ui"/>
       <import plugin="org.eclipse.sirius.diagram"/>
       <import plugin="com.google.guava"/>
-      <import plugin="org.eclipse.efbt.openregspecs.model" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.efbt.openregspecs.smcubes.query.core" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.efbt.controller.platformcall.component.core" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.efbt.openregspecs.model" version="1.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="org.eclipse.efbt.openregspecs.testing.ui.sirius.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.openregspecs.smcubes.ui.sirius"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core"
          download-size="0"
          install-size="0"
          version="0.0.0"

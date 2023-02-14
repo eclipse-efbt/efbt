@@ -12,22 +12,7 @@
        Neil Mackenzie - initial API and implementation
  -->
 <site>
-   <feature id="org.eclipse.efbt.controller.smcubes.component.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.controller.ldm.component.testing.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.controller.platformcall.component.core.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.openregspecs.model.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.openregspecs.query.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.efbt.openregspecs.sirius_ui.feature">
@@ -39,8 +24,5 @@
    <feature id="org.eclipse.efbt.openregspecs.examples.feature">
       <category name="efbt"/>
    </feature>
-   <bundle id="org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core">
-      <category name="efbt"/>
-   </bundle>
    <category-def name="efbt" label="Complete EFBT Repository"/>
 </site>

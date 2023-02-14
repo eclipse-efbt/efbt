@@ -143,13 +143,13 @@
         label="Modeling Edition">
       <requirement
           name="epp.package.modeling"
-          versionRange="[4.6.0,5.0.0)"/>
+          versionRange="[4.25.0,5.0.0)"/>
       <requirement
           name="org.eclipse.platform.feature.group"
-          versionRange="[4.6.0,5.0.0)"/>
+          versionRange="[4.25.0,5.0.0)"/>
       <requirement
           name="org.eclipse.rcp.feature.group"
-          versionRange="[4.6.0,5.0.0)"/>
+          versionRange="[4.25.0,5.0.0)"/>
       <requirement
           name="org.eclipse.egit.feature.group"/>
       <requirement
@@ -177,20 +177,6 @@
       <requirement
           name="org.eclipse.jdt.feature.group"/>
       <requirement
-          name="org.eclipse.mylyn.bugzilla_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.context_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.ide_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.java_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.pde_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn.wikitext_feature.feature.group"/>
-      <requirement
-          name="org.eclipse.mylyn_feature.feature.group"/>
-      <requirement
           name="org.eclipse.ocl.all.sdk.feature.group"/>
       <requirement
           name="org.eclipse.pde.feature.group"/>
@@ -203,12 +189,6 @@
       <requirement
           name="org.eclipse.eclemma.feature.feature.group"/>
       <requirement
-          name="org.eclipse.pde.api.tools.ee.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.wst.web_ui.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.wst.xml_ui.feature.feature.group"/>
-      <requirement
           name="org.eclipse.m2e.feature.feature.group"/>
       <requirement
           name="org.eclipse.xtend.sdk.feature.group"/>
@@ -217,38 +197,27 @@
       <requirement
           name="org.eclipse.sirius.specifier.feature.group"/>
       <requirement
-          name="org.eclipse.mylyn.github.feature.feature.group"/>
-      <requirement
-          name="org.eclipse.buildship.feature.group"/>
-      <requirement
           name="org.apache.commons.csv"/>
       <requirement
           name="org.eclipse.xtext.sdk.feature.group"/>
       <requirement
-          name="org.eclipse.efbt.controller.smcubes.access_dependencies_plugin.feature.feature.group"/>
+          name="hu.bme.mit.ecoredocgen.feature.feature.group"/>
       <requirement
-          name="org.emfjson.jackson"/>
-      <requirement
-          name="com.fasterxml.jackson.core.jackson-annotations"
-          versionRange="[2.9.1,2.9.1]"/>
-      <requirement
-          name="com.fasterxml.jackson.core.jackson-core"
-          versionRange="[2.9.1,2.9.1]"/>
-      <requirement
-          name="com.fasterxml.jackson.core.jackson-databind"
-          versionRange="[2.9.1,2.9.1]"/>
+          name="org.python.pydev.feature.feature.group"/>
       <repository
-          url="http://ghillairet.github.io/p2"/>
+          url="http://download.eclipse.org/releases/2022-12"/>
       <repository
-          url="http://download.eclipse.org/releases/2022-06"/>
-      <repository
-          url="http://download.eclipse.org/technology/epp/packages/2022-06"/>
+          url="http://download.eclipse.org/technology/epp/packages/2022-12"/>
       <repository
           url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
       <repository
-          url="https://download.eclipse.org/tools/orbit/downloads/2022-06"/>
+          url="https://download.eclipse.org/tools/orbit/downloads/2022-12"/>
       <repository
           url="https://download.eclipse.org/efbt/snapshots/"/>
+      <repository
+          url="http://static.incquerylabs.com/projects/ecoredocgen/release/"/>
+      <repository
+          url="http://update.liclipse.com/latest"/>
     </setupTask>
     <description></description>
   </version>

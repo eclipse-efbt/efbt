@@ -1,9 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Examples
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.efbt.openregspecs.examples.core;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
+Bundle-ClassPath: .
 Automatic-Module-Name: org.eclipse.efbt.openregspecs.examples.core
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.emf.common.ui
-Bundle-Vendor: Eclipse Free BIRD Tools
+Require-Bundle: org.eclipse.emf.common.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport#
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin

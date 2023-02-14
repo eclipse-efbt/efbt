@@ -3,24 +3,11 @@ Automatic-Module-Name: org.eclipse.efbt.openregspecs.dsl
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.efbt.openregspecs.dsl
 Bundle-Vendor: Eclipse Free BIRD Tools
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-SymbolicName: org.eclipse.efbt.openregspecs.dsl; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.efbt.openregspecs.model,
  org.eclipse.xtext,
  org.eclipse.xtext.xbase,
- org.eclipse.equinox.common;bundle-version="3.5.0",
- org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
- org.eclipse.xtext.util,
- org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+ org.eclipse.equinox.common;bundle-version="3.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.openregspecs.dsl.scoping,
- org.eclipse.efbt.openregspecs.dsl.generator,
- org.eclipse.efbt.openregspecs.dsl.serializer,
- org.eclipse.efbt.openregspecs.dsl,
- org.eclipse.efbt.openregspecs.dsl.validation,
- org.eclipse.efbt.openregspecs.dsl.services,
- org.eclipse.efbt.openregspecs.dsl.parser.antlr.internal,
- org.eclipse.efbt.openregspecs.dsl.formatting2,
- org.eclipse.efbt.openregspecs.dsl.parser.antlr
-Import-Package: org.apache.log4j

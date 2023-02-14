@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Wed Jun 15 07:00:19 BST 2022-->
+<!-- Creation date: Sat Aug 27 10:10:15 BST 2022-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -131,7 +131,60 @@ function getElementsByTagNames(list,obj) {
 <div class="">EPackage properties:</div>
 <div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">testing</span></div>
 <div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.eclipse.org/efbt/testing</span></div>
-<h2 id="testingCSVFile"><a href="#testingCSVFile"><a href="#testingCSVFile">CSVFile</a></a></h2>
+<h2 id="testingAttrComparison"><a href="#testingAttrComparison"><a href="#testingAttrComparison">AttrComparison</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Literals</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Value</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>
+	<td>
+		<span class="teletype">equals</span>
+	</td>
+	<td>
+		0
+	</td>
+	<td>
+	</td>	
+</tr>
+<tr>
+	<td>
+		<span class="teletype">less_than</span>
+	</td>
+	<td>
+		1
+	</td>
+	<td>
+	</td>	
+</tr>
+<tr>
+	<td>
+		<span class="teletype">greater_than</span>
+	</td>
+	<td>
+		2
+	</td>
+	<td>
+	</td>	
+</tr>
+<tr>
+	<td>
+		<span class="teletype">not_equals</span>
+	</td>
+	<td>
+		3
+	</td>
+	<td>
+	</td>	
+</tr>
+</table>
+<a href="#testing.AttrComparison.lit"></a>
+<h2 id="testingDataConstraint"><a href="#testingDataConstraint"><a href="#testingDataConstraint">DataConstraint</a></a></h2>
 
 <table>
 <tr>
@@ -142,13 +195,18 @@ function getElementsByTagNames(list,obj) {
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="testingCSVFile.fileName" class="teletype">fileName</div>
+<tr>	<td><div id="testingDataConstraint.comparison" class="teletype">comparison</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testingAttrComparison">AttrComparison</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr><tr>	<td><div id="testingDataConstraint.value" class="teletype">value</div>
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
 <div class="label">Cardinality: [0..1]</div>
  </td> <td></td>
 		</tr></table>
-<a href="#testing.CSVFile.attr"></a>
+<a href="#testing.DataConstraint.attr"></a>
 <table>
 <tr>
 	<th colspan="3"><div class="tableHeader">References</div></th>
@@ -158,38 +216,20 @@ function getElementsByTagNames(list,obj) {
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="testingCSVFile.rows" class="teletype">rows</div>
+<tr>	<td><div id="testingDataConstraint.attr1" class="teletype">attr1</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testingCSVRow">CSVRow</a></span></div>
-<div class="label">Cardinality: [0..*]</div>
-<div class="label">Containment</div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="testingDataConstraint.member" class="teletype">member</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXEnumLiteral">XEnumLiteral</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
 		</tr></table>
-<a href="#testing.CSVFile.ref"></a>
-<h2 id="testingCSVRow"><a href="#testingCSVRow"><a href="#testingCSVRow">CSVRow</a></a></h2>
-
-<table>
-<tr>
-	<th colspan="3"><div class="tableHeader">Attributes</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="testingCSVRow.isHeader" class="teletype">isHeader</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBoolean</span></div>
-<div class="label">Cardinality: [0..1]</div>
- </td> <td></td>
-		</tr><tr>	<td><div id="testingCSVRow.value" class="teletype">value</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
-<div class="label">Cardinality: [0..*]</div>
- </td> <td></td>
-		</tr></table>
-<a href="#testing.CSVRow.attr"></a>
+<a href="#testing.DataConstraint.ref"></a>
 <h2 id="testingE2ETestScope"><a href="#testingE2ETestScope"><a href="#testingE2ETestScope">E2ETestScope</a></a></h2>
 
 <h4><b>Supertype:</b><a href="#testingTestScope">TestScope</a></h4><table>
@@ -203,7 +243,7 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="testingE2ETestScope.layer" class="teletype">layer</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#bpmnliteSelectionLayer">SelectionLayer</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testingSelectionLayer">SelectionLayer</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -221,6 +261,82 @@ function getElementsByTagNames(list,obj) {
 <td> </td>
 		</tr></table>
 <a href="#testing.E2ETestScope.ref"></a>
+<h2 id="testingInputFile"><a href="#testingInputFile"><a href="#testingInputFile">InputFile</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="testingInputFile.fileName" class="teletype">fileName</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#testing.InputFile.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="testingInputFile.entity" class="teletype">entity</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClass">XClass</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#testing.InputFile.ref"></a>
+<h2 id="testingSelectionLayer"><a href="#testingSelectionLayer"><a href="#testingSelectionLayer">SelectionLayer</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="testingSelectionLayer.invisible" class="teletype">invisible</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBooleanObject</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr><tr>	<td><div id="testingSelectionLayer.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Identifier</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#testing.SelectionLayer.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="testingSelectionLayer.generatedEntity" class="teletype">generatedEntity</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClass">XClass</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#testing.SelectionLayer.ref"></a>
 <h2 id="testingTest"><a href="#testingTest"><a href="#testingTest">Test</a></a></h2>
 
 <table>
@@ -251,14 +367,14 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="testingTest.expectedResult" class="teletype">expectedResult</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testingCSVFile">CSVFile</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testingInputFile">InputFile</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
 <div class="label">Containment</div>
 </td> 
 <td> </td>
 		</tr><tr>	<td><div id="testingTest.inputData" class="teletype">inputData</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testingCSVFile">CSVFile</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#testingInputFile">InputFile</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
 <div class="label">Containment</div>
 </td> 

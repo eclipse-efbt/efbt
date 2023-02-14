@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_37GsIO_NEeyKv6cwEnD26g" version="15.0.0.202201261500">
-  <semanticResources>src/data_model.open_reg_specs</semanticResources>
-  <semanticResources>src/types_and_concepts.open_reg_specs</semanticResources>
-  <semanticResources>src/report_generation.open_reg_specs</semanticResources>
-  <semanticResources>src/workflow.open_reg_specs</semanticResources>
-  <semanticResources>src/requirements.open_reg_specs</semanticResources>
-  <semanticResources>src/tests.open_reg_specs</semanticResources>
-</viewpoint:DAnalysis>

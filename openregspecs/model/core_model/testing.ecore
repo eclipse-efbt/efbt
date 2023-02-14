@@ -6,9 +6,9 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Test">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" upperBound="-1"
-        eType="#//CSVFile" containment="true"/>
+        eType="#//InputFile" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResult" upperBound="-1"
-        eType="#//CSVFile" containment="true"/>
+        eType="#//InputFile" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scope" eType="#//TestScope"
@@ -17,6 +17,24 @@
   <eClassifiers xsi:type="ecore:EClass" name="TestModule" eSuperTypes="module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
         eType="#//Test" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataConstraint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attr1" eType="ecore:EClass Xcore.ecore#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparison" eType="#//AttrComparison"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass Xcore.ecore#//XEnumLiteral"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="AttrComparison">
+    <eLiterals name="equals"/>
+    <eLiterals name="less_than" value="1"/>
+    <eLiterals name="greater_than" value="2"/>
+    <eLiterals name="not_equals" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectionLayer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="invisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generatedEntity" eType="ecore:EClass Xcore.ecore#//XClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TestScope">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -28,24 +46,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="E2ETestScope" eSuperTypes="#//TestScope">
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
         eType="ecore:EClass bpmn_lite.ecore#//Scenario"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="layer" eType="ecore:EClass bpmn_lite.ecore#//SelectionLayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="layer" eType="#//SelectionLayer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scriptTask" eType="ecore:EClass bpmn_lite.ecore#//ScriptTask"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSVFile">
+  <eClassifiers xsi:type="ecore:EClass" name="InputFile">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass data_meta_model.ecore#//Entity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="header" eType="#//CSVHeader"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//CSVRow"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSVRow">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isHeader" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSVHeader">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
-        eType="ecore:EClass data_meta_model.ecore#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass Xcore.ecore#//XClass"/>
   </eClassifiers>
 </ecore:EPackage>

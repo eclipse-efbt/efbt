@@ -29,10 +29,12 @@
              project="true">
        </wizard>      
     </extension>
-   <extension point="org.eclipse.emf.common.ui.examples">
+       <extension point="org.eclipse.emf.common.ui.examples">
         <example wizardID="org.eclipse.efbt.wizard.EFBTExampleWizard" pageImage="icons/EObject.gif">
-            <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB Example"/>
-            <projectDescriptor name="org.eclipse.efbt.example.openregspecs" contentURI="examples/org.eclipse.efbt.example.open_reg_specs/" description="OpenRegSpecs Example"/>
+            <projectDescriptor name="org.eclipse.efbt.example.frtb" contentURI="examples/org.eclipse.efbt.example.frtb/" description="FRTB LDM Example"/> 
+            <projectDescriptor name="org.eclipse.efbt.example.frtb_cutdown" contentURI="examples/org.eclipse.efbt.example.frtb_cutdown/" description="FRTB LDM Cut Down Example"/>  
+            <projectDescriptor name="org.eclipse.efbt.example.finrep" contentURI="examples/org.eclipse.efbt.example.finrep/" description="FINREP Example"/>    
         </example>
     </extension>
+  
 </plugin>

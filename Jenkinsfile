@@ -11,30 +11,12 @@ pipeline {
                     cd openregspecs/java_model
 					mvn install
 					cd ../..
-					cd openregspecs/java_query
-					mvn install
-					cd ../..
 					cd openregspecs/java_examples
 					mvn install
 					cd ../..
 					cd openregspecs/dsl/org.eclipse.efbt.openregspecs.dsl.parent
 					mvn install
-					cd ../../..  
-					cd controller/ldm
-					mvn install
-					cd ../..
-					cd controller/smcubes/access_dependencies_external
-					mvn install
-					cd ../../..
-					cd controller/smcubes/access_dependencies_plugin
-					mvn install
-					cd ../../..
-					cd controller/smcubes/component
-					mvn install
-					cd ../../..
-					cd controller/platformcall/component
-					mvn install
-					cd ../../..
+					cd ../../..  		
 					cd openregspecs/sirius_ui
 					mvn install
 					cd ../..

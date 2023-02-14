@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Wed Jun 15 07:00:26 BST 2022-->
+<!-- Creation date: Sat Aug 27 10:09:53 BST 2022-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -193,6 +193,16 @@ function getElementsByTagNames(list,obj) {
 	<td>
 	</td>	
 </tr>
+<tr>
+	<td>
+		<span class="teletype">not_equals</span>
+	</td>
+	<td>
+		4
+	</td>
+	<td>
+	</td>	
+</tr>
 </table>
 <a href="#bpmn_lite.AttrComparison.lit"></a>
 <h2 id="bpmnliteBaseElement"><a href="#bpmnliteBaseElement"><a href="#bpmnliteBaseElement">BaseElement</a></a></h2>
@@ -241,6 +251,11 @@ function getElementsByTagNames(list,obj) {
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#bpmnliteAttrComparison">AttrComparison</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
  </td> <td></td>
+		</tr><tr>	<td><div id="bpmnliteDataConstraint.value" class="teletype">value</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
 		</tr></table>
 <a href="#bpmn_lite.DataConstraint.attr"></a>
 <table>
@@ -254,13 +269,13 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="bpmnliteDataConstraint.attr1" class="teletype">attr1</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datametamodelAttribute">Attribute</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
-		</tr><tr>	<td><div id="bpmnliteDataConstraint.attr2" class="teletype">attr2</div>
+		</tr><tr>	<td><div id="bpmnliteDataConstraint.member" class="teletype">member</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datametamodelAttribute">Attribute</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -392,7 +407,7 @@ function getElementsByTagNames(list,obj) {
 <td> </td>
 		</tr><tr>	<td><div id="bpmnliteScenario.requiredAttributes" class="teletype">requiredAttributes</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datametamodelAttribute">Attribute</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
 <div class="label">Cardinality: [0..*]</div>
 </td> 
 <td> </td>
@@ -432,7 +447,7 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="bpmnliteScriptTask.outputLayer" class="teletype">outputLayer</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datametamodelGeneratedEntity">GeneratedEntity</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClass">XClass</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -480,7 +495,7 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="bpmnliteSelectionLayer.generatedEntity" class="teletype">generatedEntity</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datametamodelGeneratedEntity">GeneratedEntity</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClass">XClass</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -528,7 +543,7 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="bpmnliteServiceTask.enrichedAttribute" class="teletype">enrichedAttribute</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datametamodelAttribute">Attribute</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -541,7 +556,7 @@ function getElementsByTagNames(list,obj) {
 <td> </td>
 		</tr><tr>	<td><div id="bpmnliteServiceTask.secondAttribute" class="teletype">secondAttribute</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datametamodelAttribute">Attribute</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -564,7 +579,7 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="bpmnliteUserTask.entity" class="teletype">entity</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#datametamodelBasicEntity">BasicEntity</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClass">XClass</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>

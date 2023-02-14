@@ -14,7 +14,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.efbt.openregspecs.sirius_ui</groupId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<artifactId>org.eclipse.efbt.openregspecs.sirius_ui</artifactId>
 	<packaging>pom</packaging>
 <prerequisites>
@@ -26,7 +26,7 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<!-- Tycho settings -->
-		<tycho-version>2.7.3</tycho-version>
+		<tycho-version>2.7.5</tycho-version>
 		<junit.jupiter.version>5.7.1</junit.jupiter.version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<platformSystemProperties></platformSystemProperties>
@@ -35,25 +35,11 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>plugins/org.eclipse.efbt.openregspecs.platform_call.ui.sirius.core</module>
-		<module>plugins/org.eclipse.efbt.openregspecs.smcubes.ui.sirius</module>
 		<module>plugins/org.eclipse.efbt.openregspecs.testing.ui.sirius.core</module>
 		<module>features/org.eclipse.efbt.openregspecs.sirius_ui.feature</module>
 	</modules>
 	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
-				<artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
-				<version>1.0.0-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
-				<artifactId>pomfirst-thirdparty</artifactId>
-				<version>1.0.0-SNAPSHOT</version>
-			</dependency>
-
-		</dependencies>
+		
 	</dependencyManagement>
 
 	<build>
@@ -349,16 +335,7 @@
 
 	<dependencies>
    
-     <dependency>
-			<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
-			<artifactId>org.eclipse.efbt.dependencies.access.jackcess</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.efbt.dependencies.accessdb</groupId>
-			<artifactId>pomfirst-thirdparty</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
+     
     <!-- ... -->
    <dependency>
 			<groupId>org.junit.jupiter</groupId>

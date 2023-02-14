@@ -1,9 +1,9 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Fri Jun 10 10:33:03 BST 2022-->
+<!-- Creation date: Tue Oct 04 06:34:54 BST 2022-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-      	<title>Metamodel Documentation (platform:/resource/efbt/openregspecs/model/core_model/module_management.ecore)</title>
+      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.openregspecs.model.core_model/module_management.ecore)</title>
     	<script type="text/javascript">
 //<![CDATA[				    	
 // TOC script based on code taken from http://www.quirksmode.org/dom/toc.html
@@ -184,114 +184,12 @@ Modules can also state which other modules they depend upon, allowing for fine g
 </tr>
 <tr>	<td><div id="modulemanagementModule.dependencies" class="teletype">dependencies</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#modulemanagementModuleDependencies">ModuleDependencies</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>These are the modules (and their version numbers) upon which this module is dependent.</p>
-</td>
-		</tr><tr>	<td><div id="modulemanagementModule.longName" class="teletype">longName</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#modulemanagementModuleLongName">ModuleLongName</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The long name associated with the module.</p>
-</td>
-		</tr></table>
-<a href="#module_management.Module.ref"></a>
-<h2 id="modulemanagementModuleDependencies"><a href="#modulemanagementModuleDependencies"><a href="#modulemanagementModuleDependencies">ModuleDependencies</a></a></h2>
-
-<p>a  list of module dependencies</p>
-<table>
-<tr>
-	<th colspan="3"><div class="tableHeader">References</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="modulemanagementModuleDependencies.theModules" class="teletype">theModules</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#modulemanagementModuleDependency">ModuleDependency</a></span></div>
-<div class="label">Cardinality: [0..*]</div>
-<div class="label">Containment</div>
-</td> 
-<td> <p>The dependent Modules</p>
-</td>
-		</tr></table>
-<a href="#module_management.ModuleDependencies.ref"></a>
-<h2 id="modulemanagementModuleDependency"><a href="#modulemanagementModuleDependency"><a href="#modulemanagementModuleDependency">ModuleDependency</a></a></h2>
-
-<p>A module dependency, including its version number and its long name</p>
-<table>
-<tr>
-	<th colspan="3"><div class="tableHeader">Attributes</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="modulemanagementModuleDependency.moduleName" class="teletype">moduleName</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
-<div class="label">Cardinality: [0..1]</div>
- </td> <td><p>The name of the dependant Module</p>
-</td>
-		</tr><tr>	<td><div id="modulemanagementModuleDependency.moduleVersion" class="teletype">moduleVersion</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
-<div class="label">Cardinality: [0..1]</div>
- </td> <td><p>The version of the dependent Module</p>
-</td>
-		</tr></table>
-<a href="#module_management.ModuleDependency.attr"></a>
-<table>
-<tr>
-	<th colspan="3"><div class="tableHeader">References</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="modulemanagementModuleDependency.longName" class="teletype">longName</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#modulemanagementModuleLongName">ModuleLongName</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-</td> 
-<td> <p>The dependent Module</p>
-</td>
-		</tr><tr>	<td><div id="modulemanagementModuleDependency.theModule" class="teletype">theModule</div>
-	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#modulemanagementModule">Module</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
-<td> <p>The dependent Module</p>
+<td> <p>These are the modules (and their version numbers) upon which this module is dependent.</p>
 </td>
 		</tr></table>
-<a href="#module_management.ModuleDependency.ref"></a>
-<h2 id="modulemanagementModuleLongName"><a href="#modulemanagementModuleLongName"><a href="#modulemanagementModuleLongName">ModuleLongName</a></a></h2>
-
-<p>A long name associated with a module</p>
-<table>
-<tr>
-	<th colspan="3"><div class="tableHeader">Attributes</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="modulemanagementModuleLongName.name" class="teletype">name</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
-<div class="label">Cardinality: [0..1]</div>
-<div class="label">Identifier</div>
- </td> <td></td>
-		</tr></table>
-<a href="#module_management.ModuleLongName.attr"></a>
+<a href="#module_management.Module.ref"></a>
 </body>
 </html>

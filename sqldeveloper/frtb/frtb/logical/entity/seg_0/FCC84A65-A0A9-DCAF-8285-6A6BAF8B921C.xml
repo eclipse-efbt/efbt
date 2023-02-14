@@ -31,7 +31,7 @@
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<domain>61D993CB-3857-0254-82CE-4524A856851C</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="ccy2" id="CEA079F2-E011-E332-677A-8E2446896C08">
@@ -46,7 +46,7 @@
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
-<domain>78E25C16-8968-20B4-E330-DA4578EE46CF</domain>
+<domain>61D993CB-3857-0254-82CE-4524A856851C</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
