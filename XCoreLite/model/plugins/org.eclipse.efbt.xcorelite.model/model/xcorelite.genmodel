@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.xcorelite.model/src" editDirectory="/org.eclipse.efbt.xcorelite.model.edit/src"
+    editorDirectory="/org.eclipse.efbt.xcorelite.model.editor/src" modelPluginID="org.eclipse.efbt.xcorelite.model"
+    modelName="Xcorelite" editPluginClass="org.eclipse.efbt.xcorelite.model.xcorelite.provider.XcoreliteEditPlugin"
+    editorPluginClass="org.eclipse.efbt.xcorelite.model.xcorelite.presentation.XcoreliteEditorPlugin"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" testSuiteClass="org.eclipse.efbt.xcorelite.model.xcorelite.tests.XcoreliteAllTests"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    editPluginID="org.eclipse.efbt.xcorelite.model.edit" editorPluginID="org.eclipse.efbt.xcorelite.model.editor"
+    operationReflection="true" importOrganizing="true" pluginKey="">
+  <foreignModel>xcorelite.ecore</foreignModel>
+  <genPackages prefix="Xcorelite" basePackage="org.eclipse.efbt.xcorelite.model" resource="XMI"
+      disposableProviderFactory="true" loadInitialization="true" literalsInterface="false"
+      ecorePackage="xcorelite.ecore#/">
+    <genClasses ecoreClass="xcorelite.ecore#//Module">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xcorelite.ecore#//Module/dependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//Module/theDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//Module/license"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//Module/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//Module/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xcorelite.ecore#//Module/imports"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//ModuleList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xcorelite.ecore#//ModuleList/modules"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//Import">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//Import/importedNamespace"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//XAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XAttribute/defaultValueLiteral"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XAttribute/iD"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//XClass">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XClass/abstract"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xcorelite.ecore#//XClass/members"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xcorelite.ecore#//XClass/superTypes"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xcorelite.ecore#//XClassifier">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xcorelite.ecore#//XClassifier/package"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//XDataType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XDataType/industryName"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//XEnum">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xcorelite.ecore#//XEnum/literals"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//XEnumLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XEnumLiteral/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XEnumLiteral/literal"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xcorelite.ecore#//XEnumLiteral/enum"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xcorelite.ecore#//XMember">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xcorelite.ecore#//XMember/containingClass"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xcorelite.ecore#//XModelElement"/>
+    <genClasses image="false" ecoreClass="xcorelite.ecore#//XNamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XNamedElement/name"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//XOperation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XOperation/body"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//XPackage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xcorelite.ecore#//XPackage/classifiers"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XPackage/nsPrefix"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XPackage/nsURI"/>
+    </genClasses>
+    <genClasses ecoreClass="xcorelite.ecore#//XReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XReference/containment"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xcorelite.ecore#//XStructuralFeature"/>
+    <genClasses image="false" ecoreClass="xcorelite.ecore#//XTypedElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference xcorelite.ecore#//XTypedElement/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XTypedElement/upperBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xcorelite.ecore#//XTypedElement/lowerBound"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

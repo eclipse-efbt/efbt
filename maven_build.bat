@@ -13,3 +13,9 @@ cd ..\..
 cd installations\complete_repo\
 call mvn install
 cd ..\..
+cd XCoreLite\model
+call mvn install
+cd ..\..
+cd XCoreLite\dsl\org.eclipse.efbt.xcorelite.dsl.parent
+call mvn install
+cd ..\..\..

@@ -23,6 +23,12 @@ pipeline {
 					cd installations/complete_repo/
 					mvn install
 					cd ../..
+					cd XCoreLite/model
+					mvn install
+					cd ../..
+					cd XCoreLite/dsl/org.eclipse.efbt.xcorelite.dsl.parent
+					mvn install
+					cd ../../.. 
                     
                 '''
             }
