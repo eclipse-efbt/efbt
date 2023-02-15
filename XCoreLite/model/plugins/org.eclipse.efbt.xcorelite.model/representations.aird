@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_lK8EIKz7Ee2dLO_5-memTg" version="15.0.0.202209061200">
+  <semanticResources>model/xcorelite.genmodel</semanticResources>
+  <semanticResources>src/org/eclipse/efbt/xcorelite/model/generate/GenerateXCoreLiteModel.mwe2</semanticResources>
+  <semanticResources>src/org/eclipse/efbt/xcorelite/model/xcorelite/impl/xcorelite.ecore</semanticResources>
+  <semanticResources>model/xcorelite.ecore</semanticResources>
+</viewpoint:DAnalysis>
