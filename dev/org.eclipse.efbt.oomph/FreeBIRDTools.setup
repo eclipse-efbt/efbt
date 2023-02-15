@@ -203,6 +203,16 @@
           xsi:type="predicates:NamePredicate"
           pattern="*.eclipse.efbt.wiki_images"/>
     </workingSet>
+    <workingSet
+        name="xcorelite"
+        id="xcorelite">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.xcorelite.*"/>
+      </predicate>
+    </workingSet>
     <description>efbt_working_sets</description>
   </setupTask>
   <setupTask
