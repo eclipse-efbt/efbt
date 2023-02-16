@@ -12,36 +12,57 @@ SPDX-License-Identifier: EPL-2.0
 				{ 
 					LayerSQL {
 						selectionLayer frtb_workflow_module.frtb.Report_Generation.FRTB_C91.GIRR_LongDeltaSensitivity_Layer 
-						SelectMember   bird.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as bird.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes
-						SelectMember bird.Base.Memorandum_Items as bird.OUTPUT_LAYER_FRTB.Base
-						SelectMember  bird.Main_Catagory.Instruments_Subject_To_Market_Risk as bird.OUTPUT_LAYER_FRTB.Main_Catagory
-						SelectMember  bird.Prudential_Portfolio.Banking_And_Trading_Book as bird.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio
-						SelectAttribute bird.Delta_sensitivity.Delta_sensitivity as bird.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors
-						SelectMember  bird.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted as bird.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity
-						SelectMember  bird.Type_Of_Risk.GIRR as bird.OUTPUT_LAYER_FRTB.Type_Of_Risk
-						where   bird.Delta_sensitivity.Delta_sensitivity greater_than value "0" 
+						SelectMember   input_layer_enums.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as output_layer_entities.C91_REF_OutputItem.Approach_For_Prudential_Purposes
+						SelectMember input_layer_enums.Base.Memorandum_Items as output_layer_entities.C91_REF_OutputItem.Base
+						SelectMember output_layer_enums.Contingent_Scenario.NA as  output_layer_entities.C91_REF_OutputItem.Contingent_Scenario
+						SelectMember input_layer_enums.Delta_Vega_Or_Curvature_Risk.Delta_Risk as  output_layer_entities.C91_REF_OutputItem.Delta_Vega_Or_Curvature_Risk
+						SelectValue "False"  as  output_layer_entities.C91_REF_OutputItem.Hypothetical_Value_Under_Specific_Assumptions
+						SelectMember input_layer_enums.Instrument.Instruments_Other_Than_Securitisation_Positions as  output_layer_entities.C91_REF_OutputItem.Instrument
+						SelectMember  input_layer_enums.Main_Catagory.Instruments_Subject_To_Market_Risk as output_layer_entities.C91_REF_OutputItem.Main_Catagory
+						SelectMember input_layer_enums.Market_Risk_Portfolio.Non_ACTP as  output_layer_entities.C91_REF_OutputItem.Market_Risk_Portfolio
+						SelectValue "0" as  output_layer_entities.C91_REF_OutputItem.Own_Funds_Requirements
+						SelectMember input_layer_enums.Position_In_The_Instrument.Long_Position as  output_layer_entities.C91_REF_OutputItem.Position_In_The_Instrument
+						SelectMember  input_layer_enums.Prudential_Portfolio.Banking_And_Trading_Book as output_layer_entities.C91_REF_OutputItem.Prudentia_lPortfolio
+						SelectAttribute input_layer_entities.Delta_sensitivity.Delta_sensitivity as output_layer_entities.C91_REF_OutputItem.Sensitivity_To_Delta_Risk_Factors
+						SelectMember  input_layer_enums.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted as output_layer_entities.C91_REF_OutputItem.Type_And_Nature_Of_Sensitivity
+						SelectMember  input_layer_enums.Type_Of_Risk.GIRR as output_layer_entities.C91_REF_OutputItem.Type_Of_Risk
+						where   input_layer_entities.Delta_sensitivity.Delta_sensitivity greater_than value "0" 
 					}
 					
 					LayerSQL {
 						selectionLayer frtb_workflow_module.frtb.Report_Generation.FRTB_C91.GIRR_ShortDeltaSensitivity_Layer
-						SelectMember bird.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as bird.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes
-						SelectMember bird.Base.Memorandum_Items as bird.OUTPUT_LAYER_FRTB.Base
-						SelectMember bird.Main_Catagory.Instruments_Subject_To_Market_Risk as bird.OUTPUT_LAYER_FRTB.Main_Catagory
-						SelectMember bird.Prudential_Portfolio.Banking_And_Trading_Book as bird.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio
-						SelectAttribute  bird.Delta_sensitivity.Delta_sensitivity as bird.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors
-						SelectMember   bird.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted as bird.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity
-						SelectMember  bird.Type_Of_Risk.GIRR as bird.OUTPUT_LAYER_FRTB.Type_Of_Risk
-						where  bird.Delta_sensitivity.Delta_sensitivity less_than value "0"  
+						SelectMember input_layer_enums.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as output_layer_entities.C91_REF_OutputItem.Approach_For_Prudential_Purposes
+						SelectMember input_layer_enums.Base.Memorandum_Items as output_layer_entities.C91_REF_OutputItem.Base
+						SelectMember output_layer_enums.Contingent_Scenario.NA as  output_layer_entities.C91_REF_OutputItem.Contingent_Scenario
+						SelectMember input_layer_enums.Delta_Vega_Or_Curvature_Risk.Delta_Risk as  output_layer_entities.C91_REF_OutputItem.Delta_Vega_Or_Curvature_Risk
+						SelectValue "False"  as  output_layer_entities.C91_REF_OutputItem.Hypothetical_Value_Under_Specific_Assumptions
+						SelectMember input_layer_enums.Instrument.Instruments_Other_Than_Securitisation_Positions as  output_layer_entities.C91_REF_OutputItem.Instrument
+						SelectMember input_layer_enums.Main_Catagory.Instruments_Subject_To_Market_Risk as output_layer_entities.C91_REF_OutputItem.Main_Catagory
+						SelectMember input_layer_enums.Market_Risk_Portfolio.Non_ACTP as  output_layer_entities.C91_REF_OutputItem.Market_Risk_Portfolio
+						SelectValue "0" as  output_layer_entities.C91_REF_OutputItem.Own_Funds_Requirements
+						SelectMember input_layer_enums.Position_In_The_Instrument.Short_Position as  output_layer_entities.C91_REF_OutputItem.Position_In_The_Instrument
+						SelectMember input_layer_enums.Prudential_Portfolio.Banking_And_Trading_Book as output_layer_entities.C91_REF_OutputItem.Prudentia_lPortfolio
+						SelectAttribute  input_layer_entities.Delta_sensitivity.Delta_sensitivity as output_layer_entities.C91_REF_OutputItem.Sensitivity_To_Delta_Risk_Factors
+						SelectMember   input_layer_enums.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted as output_layer_entities.C91_REF_OutputItem.Type_And_Nature_Of_Sensitivity
+						SelectMember  input_layer_enums.Type_Of_Risk.GIRR as output_layer_entities.C91_REF_OutputItem.Type_Of_Risk
+						where  input_layer_entities.Delta_sensitivity.Delta_sensitivity less_than value "0"  
 					 }
 					LayerSQL {
 						selectionLayer frtb_workflow_module.frtb.Report_Generation.FRTB_C91.GIRR_Net_Sensitivity_Layer
-						SelectMember bird.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as bird.OUTPUT_LAYER_FRTB.Approach_For_Prudential_Purposes
-						SelectMember bird.Base.Memorandum_Items as bird.OUTPUT_LAYER_FRTB.Base
-						SelectMember bird.Main_Catagory.Instruments_Subject_To_Market_Risk as bird.OUTPUT_LAYER_FRTB.Main_Catagory
-						SelectMember bird.Prudential_Portfolio.Banking_And_Trading_Book as bird.OUTPUT_LAYER_FRTB.Prudentia_lPortfolio
-						SelectAttribute bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities as bird.OUTPUT_LAYER_FRTB.Sensitivity_To_Delta_Risk_Factors 
-						SelectMember  bird.Type_And_Nature_Of_Sensitivity.Sensitivity_Net_Per_Risk_Class_Unweighted as bird.OUTPUT_LAYER_FRTB.Type_And_Nature_Of_Sensitivity
-						SelectMember  bird.Type_Of_Risk.GIRR as bird.OUTPUT_LAYER_FRTB.Type_Of_Risk
+						SelectMember input_layer_enums.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as output_layer_entities.C91_REF_OutputItem.Approach_For_Prudential_Purposes
+						SelectMember input_layer_enums.Base.Memorandum_Items as output_layer_entities.C91_REF_OutputItem.Base
+						SelectMember output_layer_enums.Contingent_Scenario.NA as  output_layer_entities.C91_REF_OutputItem.Contingent_Scenario
+						SelectMember input_layer_enums.Delta_Vega_Or_Curvature_Risk.Delta_Risk as  output_layer_entities.C91_REF_OutputItem.Delta_Vega_Or_Curvature_Risk
+						SelectValue "False"  as  output_layer_entities.C91_REF_OutputItem.Hypothetical_Value_Under_Specific_Assumptions
+						SelectMember input_layer_enums.Instrument.Instruments_Other_Than_Securitisation_Positions as  output_layer_entities.C91_REF_OutputItem.Instrument
+						SelectMember input_layer_enums.Main_Catagory.Instruments_Subject_To_Market_Risk as output_layer_entities.C91_REF_OutputItem.Main_Catagory
+						SelectMember input_layer_enums.Market_Risk_Portfolio.Non_ACTP as  output_layer_entities.C91_REF_OutputItem.Market_Risk_Portfolio
+						SelectValue "0" as  output_layer_entities.C91_REF_OutputItem.Own_Funds_Requirements
+						SelectMember input_layer_enums.Position_In_The_Instrument.NA as  output_layer_entities.C91_REF_OutputItem.Position_In_The_Instrument
+						SelectMember input_layer_enums.Prudential_Portfolio.Banking_And_Trading_Book as output_layer_entities.C91_REF_OutputItem.Prudentia_lPortfolio
+						SelectAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities as output_layer_entities.C91_REF_OutputItem.Sensitivity_To_Delta_Risk_Factors 
+						SelectMember  input_layer_enums.Type_And_Nature_Of_Sensitivity.Sensitivity_Net_Per_Risk_Class_Unweighted as output_layer_entities.C91_REF_OutputItem.Type_And_Nature_Of_Sensitivity
+						SelectMember  input_layer_enums.Type_Of_Risk.GIRR as output_layer_entities.C91_REF_OutputItem.Type_Of_Risk
 					}}
 
 			}
