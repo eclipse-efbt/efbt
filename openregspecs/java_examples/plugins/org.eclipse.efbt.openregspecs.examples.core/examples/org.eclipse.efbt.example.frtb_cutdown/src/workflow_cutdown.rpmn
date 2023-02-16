@@ -9,7 +9,9 @@ SPDX-License-Identifier: EPL-2.0
  Neil Mackenzie - initial API and implementation */
  	
 			annotation "dependency" as CRRRuleBook
-			annotation "dependency" as bird 
+			annotation "dependency" as input_layer_entities 
+			annotation "dependency" as output_layer_entities
+			
 			 
 			
 			taskTags
@@ -28,10 +30,10 @@ SPDX-License-Identifier: EPL-2.0
 				SubProcess Read_Data incoming ( sf1 ) flowElements { 
 					ParallelGateway gw2 outgoing ( sf5 , sf6 ,  sf8 ) , 
 
-					UserTask GIRR_risk_factor incoming ( sf5 ) entity bird.GIRR_risk_factor , 
-					UserTask Delta_sensitivity incoming ( sf6 ) entity bird.Delta_sensitivity, 
+					UserTask GIRR_risk_factor incoming ( sf5 ) entity input_layer_entities.GIRR_risk_factor , 
+					UserTask Delta_sensitivity incoming ( sf6 ) entity input_layer_entities.Delta_sensitivity, 
 
-					UserTask Security_or_exchange_tradable_derivative_position incoming ( sf8 ) entity bird.Security_or_exchange_tradable_derivative_position , 
+					UserTask Security_or_exchange_tradable_derivative_position incoming ( sf8 ) entity input_layer_entities.Security_or_exchange_tradable_derivative_position , 
 
 
 					SequenceFlow sf5 from gw2 to GIRR_risk_factor , 
@@ -45,29 +47,29 @@ SPDX-License-Identifier: EPL-2.0
 						ParallelGateway gw4 outgoing ( sf12 ) , 
 						SubProcess DeltaNetting incoming ( sf12 ) flowElements { 
 							InclusiveGateway gw8 outgoing ( sf226, sf27 , sf28 ) ,
-							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf226 ) enrichedAttribute bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities_identifier
+							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf226 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities_identifier
 								} , 
-							ServiceTask Tenor incoming ( sf27 ) enrichedAttribute bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.tenor
+							ServiceTask Tenor incoming ( sf27 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.tenor
 							scenarios {
 									Scenario  primary_scenario {
 										requiredAttributes ( 
-											bird.Delta_sensitivity.Tenor
+											input_layer_entities.Delta_sensitivity.Tenor
 											)    
 										data_constraints conditional 
-										bird.GIRR_risk_factor.GIRR_risk_factor_type not_equals member  bird.GIRR_risk_factor_type.Inflation },
+										input_layer_entities.GIRR_risk_factor.GIRR_risk_factor_type not_equals member  input_layer_enums.GIRR_risk_factor_type.Inflation },
 										
 										Scenario inflation_risk_factor  {
 											
 										data_constraints conditional 
-										 bird.GIRR_risk_factor.GIRR_risk_factor_type equals member  bird.GIRR_risk_factor_type.Inflation
+										 input_layer_entities.GIRR_risk_factor.GIRR_risk_factor_type equals member  input_layer_enums.GIRR_risk_factor_type.Inflation
 										
 										
 										}
-						} }, ServiceTask Netted_delta_sensitivities incoming ( sf28 ) enrichedAttribute bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities
+						} }, ServiceTask Netted_delta_sensitivities incoming ( sf28 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities
 						scenarios { 
 							 	Scenario Netted_delta_sensitivities_primary_sceanrio {
 							 		requiredAttributes (
-											bird.Delta_sensitivity.Delta_sensitivity)   
+											input_layer_entities.Delta_sensitivity.Delta_sensitivity)   
 							 		} 
 						 
 				} } , 
@@ -82,14 +84,14 @@ SPDX-License-Identifier: EPL-2.0
 						SubProcess DeltaProcessing incoming ( sf16 ) flowElements { 
 							InclusiveGateway gw7 outgoing ( sf18 , sf19 ) , 
 							SubProcess AssignDeltaBucket incoming ( sf18 ) flowElements {  
-								ServiceTask Bucket_identifier enrichedAttribute bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.bucket_id
+								ServiceTask Bucket_identifier enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.bucket_id
 								} 
 								} ,
 								SubProcess AssignDeltaWeighting incoming ( sf19 ) flowElements { 
 									InclusiveGateway gw9 outgoing ( sf30 , sf31 , sf37 ) , 
-									ServiceTask GIRR_delta_risk_weight incoming ( sf30 ) enrichedAttribute bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.GIRR_delta_risk_weight
-								} , ServiceTask Weighted_GIRR_delta_sensitivity incoming ( sf31 ) enrichedAttribute bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.weighted_GIRR_delta_sensitivity
-								} , ServiceTask Weighted_GIRR_delta_sensitivity_squared incoming ( sf37 ) enrichedAttribute bird.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.weighted_GIRR_delta_sensitivity_squared } , 
+									ServiceTask GIRR_delta_risk_weight incoming ( sf30 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.GIRR_delta_risk_weight
+								} , ServiceTask Weighted_GIRR_delta_sensitivity incoming ( sf31 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.weighted_GIRR_delta_sensitivity
+								} , ServiceTask Weighted_GIRR_delta_sensitivity_squared incoming ( sf37 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.weighted_GIRR_delta_sensitivity_squared } , 
 									SequenceFlow sf30 from gw9 to GIRR_delta_risk_weight , 
 									SequenceFlow sf31 from gw9 to Weighted_GIRR_delta_sensitivity , 
 									SequenceFlow sf37 from gw9 to Weighted_GIRR_delta_sensitivity_squared } , 
@@ -104,10 +106,10 @@ SequenceFlow sf10 from gw3 to PreNetting ,
  	ParallelGateway gw80 outgoing ( sf80 ) , 
  	ScriptTask FRTB_C91 incoming ( sf80 ) 
  	selectionLayers { 
- 		SelectionLayer GIRR_LongDeltaSensitivity_Layer {generatedEntity bird.OUTPUT_LAYER_FRTB } ,
- 		SelectionLayer GIRR_ShortDeltaSensitivity_Layer { generatedEntity bird.OUTPUT_LAYER_FRTB },
- 		SelectionLayer GIRR_Net_Sensitivity_Layer { generatedEntity bird.OUTPUT_LAYER_FRTB },
- 		SelectionLayer GIRR_Delta_Risk_Layer { generatedEntity bird.OUTPUT_LAYER_FRTB }
+ 		SelectionLayer GIRR_LongDeltaSensitivity_Layer {generatedEntity output_layer_entities.C91_REF_OutputItem } ,
+ 		SelectionLayer GIRR_ShortDeltaSensitivity_Layer { generatedEntity output_layer_entities.C91_REF_OutputItem },
+ 		SelectionLayer GIRR_Net_Sensitivity_Layer { generatedEntity output_layer_entities.C91_REF_OutputItem },
+ 		SelectionLayer GIRR_Delta_Risk_Layer { generatedEntity output_layer_entities.C91_REF_OutputItem }
  		
  	} , 
  	SequenceFlow sf80 from gw80 to FRTB_C91 
