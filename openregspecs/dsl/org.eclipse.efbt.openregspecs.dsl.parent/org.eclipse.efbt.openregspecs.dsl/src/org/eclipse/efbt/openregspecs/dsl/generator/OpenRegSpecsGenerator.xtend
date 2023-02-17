@@ -100,8 +100,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-import F_01_01_REFoutput_logic.F_01_01_REFoutput_logicPackage;
-import F_01_01_REFoutput_logic.impl.F_01_01_REFoutput_logicPackageImpl;
 import output_layer_entities.Output_layer_entitiesFactory;
 import output_layer_entities.Output_layer_entitiesPackage;
 
@@ -115,7 +113,7 @@ public class RPMNUtils {
 	public static void main(String[] args)
 	{
 		fileDirectory = args[0];
-		EPackage.Registry.INSTANCE.put(F_01_01_REFoutput_logicPackage.eNS_URI, F_01_01_REFoutput_logicPackage.eINSTANCE);
+
 		EPackage.Registry.INSTANCE.put(Output_layer_entitiesPackage.eNS_URI, Output_layer_entitiesPackage.eINSTANCE);
 		
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;

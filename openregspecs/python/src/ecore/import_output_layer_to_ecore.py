@@ -120,7 +120,7 @@ class ROLImport(object):
                             initOperation = EOperation()
                             initOperation.name="init"
                             initOperation.eType=context.xString
-                            initOperation.upperBound = -1
+                            initOperation.upperBound = 1
                             initOperation.lowerBound=0
                             initOperation.rpmnText = "<xcore>rpmnutils.RPMNUtils.init(this) \n \t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t  return null</xcore>"
                             unionItemTableClass.eOperations.append(initOperation)
