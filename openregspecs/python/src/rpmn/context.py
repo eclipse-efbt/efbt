@@ -13,18 +13,21 @@
 from open_reg_specs import *
 
 class Context(object):
-    # we create the main 4 'primitive' data types
+    # we create the main 5 'primitive' data types
     xString = XDataType()
     xString.name = "String"
     
     xDouble = XDataType()
-    xDouble.name = "Double"
+    xDouble.name = "double"
     
     xInt = XDataType()
-    xInt.name = "Integer"
+    xInt.name = "int"
     
     xDate = XDataType()
     xDate.name = "Date"
+    
+    xBoolean = XDataType()
+    xBoolean.name = "boolean"
 
     moduleList = ModuleList()
     
@@ -92,6 +95,9 @@ class Context(object):
     
     useVariableLongName=True
     importLogicStrings = []
+    
+    variableSetToVariableMap = {}
+    
     def __init__(self):
         
 

@@ -98,7 +98,7 @@ class PersistToFile:
 
                     elif isinstance(member, XOperation):
                             f.write("\t\t\t\top ")
-                              
+                            
                             f.write(member.type.name + " " )
                             if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                                 f.write(" ")
@@ -125,13 +125,14 @@ class PersistToFile:
     def persistTypesModel(self,context,thePackage,extension):
         f = open(context.outputDirectory + os.sep + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
         f.write("\t\t package " + thePackage.name + "\r")  
-        f.write("\t\t\ttype double wraps Double\r")
+        f.write("\t\t\ttype double wraps double\r")
         f.write("\t\t\ttype String wraps String\r")
-        f.write("\t\t\ttype int wraps Integer\r") 
+        f.write("\t\t\ttype int wraps int\r") 
         if extension == "rpmn":
             f.write("\t\t\ttype Date wraps Date\r")
         else:
-            f.write("\t\t\ttype Date wraps java.util.Date\r")  
+            f.write("\t\t\ttype Date wraps java.util.Date\r")
+        f.write("\t\t\ttype boolean wraps boolean\r")  
         f.close()
         
     def persistEnumModel(self,context,thePackage,extension):
