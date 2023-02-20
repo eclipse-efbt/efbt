@@ -179,7 +179,7 @@ class PersistToFile:
                     for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
                         if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.selectionLayer.generatedEntity):
                             for trans in combo.transformations:
-                                output = output + trans.expression + "\r"
+                                output = output + PersistToFile.removeCommentChars(self,trans.expression) + "\r"
             output = output +  "*/\r\r"
             
             output = output + "/** VTL intermediate layer specific VTL \r"
@@ -188,7 +188,7 @@ class PersistToFile:
                 if vtl.selectionLayer == layer:
                     intermediateLayer = vtl.intermediateLayer
                     for trans in intermediateLayer.transformations.expressions:
-                        output = output + trans.expression + "\r"
+                        output = output + PersistToFile.removeCommentChars(self,trans.expression) + "\r"
             output = output +  "*/\r\r"
             
             output = output + "/** assocated enriched layer in VTL \r"
@@ -197,7 +197,7 @@ class PersistToFile:
                 output = output + "enriched Layer :" + enrichedLayer.scheme_id + "\r"
                 output = output + "enriched Layer transformations:\r"
                 for exp in enrichedLayer.expressions:
-                    output = output + exp.expression + "\r"
+                    output = output + PersistToFile.removeCommentChars(self,exp.expression) + "\r"
             output = output +  "*/\r\r"    
            
             output = output + "/** associated input layer table and filter \r"
@@ -307,3 +307,6 @@ class PersistToFile:
             f.write("}\r")
             f.write(PersistToFile.getVTLTextForView(self,context,view))
             f.close()
+            
+    def removeCommentChars(self, theString):
+        return theString.replace("/**", "").replace("/*", "").replace("*/", "")
