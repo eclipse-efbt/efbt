@@ -98,7 +98,7 @@ class PersistToFile:
 
                     elif isinstance(member, XOperation):
                             f.write("\t\t\t\top ")
-                              
+                            
                             f.write(member.type.name + " " )
                             if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                                 f.write(" ")
@@ -125,13 +125,14 @@ class PersistToFile:
     def persistTypesModel(self,context,thePackage,extension):
         f = open(context.outputDirectory + os.sep + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
         f.write("\t\t package " + thePackage.name + "\r")  
-        f.write("\t\t\ttype double wraps Double\r")
+        f.write("\t\t\ttype double wraps double\r")
         f.write("\t\t\ttype String wraps String\r")
-        f.write("\t\t\ttype int wraps Integer\r") 
+        f.write("\t\t\ttype int wraps int\r") 
         if extension == "rpmn":
             f.write("\t\t\ttype Date wraps Date\r")
         else:
-            f.write("\t\t\ttype Date wraps java.util.Date\r")  
+            f.write("\t\t\ttype Date wraps java.util.Date\r")
+        f.write("\t\t\ttype boolean wraps boolean\r")  
         f.close()
         
     def persistEnumModel(self,context,thePackage,extension):
@@ -178,7 +179,7 @@ class PersistToFile:
                     for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
                         if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.selectionLayer.generatedEntity):
                             for trans in combo.transformations:
-                                output = output + trans.expression + "\r"
+                                output = output + PersistToFile.removeCommentChars(self,trans.expression) + "\r"
             output = output +  "*/\r\r"
             
             output = output + "/** VTL intermediate layer specific VTL \r"
@@ -187,7 +188,7 @@ class PersistToFile:
                 if vtl.selectionLayer == layer:
                     intermediateLayer = vtl.intermediateLayer
                     for trans in intermediateLayer.transformations.expressions:
-                        output = output + trans.expression + "\r"
+                        output = output + PersistToFile.removeCommentChars(self,trans.expression) + "\r"
             output = output +  "*/\r\r"
             
             output = output + "/** assocated enriched layer in VTL \r"
@@ -196,7 +197,7 @@ class PersistToFile:
                 output = output + "enriched Layer :" + enrichedLayer.scheme_id + "\r"
                 output = output + "enriched Layer transformations:\r"
                 for exp in enrichedLayer.expressions:
-                    output = output + exp.expression + "\r"
+                    output = output + PersistToFile.removeCommentChars(self,exp.expression) + "\r"
             output = output +  "*/\r\r"    
            
             output = output + "/** associated input layer table and filter \r"
@@ -306,3 +307,6 @@ class PersistToFile:
             f.write("}\r")
             f.write(PersistToFile.getVTLTextForView(self,context,view))
             f.close()
+            
+    def removeCommentChars(self, theString):
+        return theString.replace("/**", "").replace("/*", "").replace("*/", "")

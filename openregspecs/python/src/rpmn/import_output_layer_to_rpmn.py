@@ -32,7 +32,7 @@ class ROLImport(object):
         import the items from the Output layer csv files
         '''
         ROLImport.addROLClassesToPackage(self,context) 
-        
+        ROLImport.createVariableSetToVariableMap(self,context)
         ROLImport.createVariableToDomainMap(self,context) 
         ROLImport.createDomainToDomainNameMap(self,context)
         ROLImport.createMemberMaps(self,context)
@@ -67,7 +67,7 @@ class ROLImport(object):
                     print("objectID")
                     print(objectID)
                     
-                    if ( (framework ==  "FINREP_REF") and (cube_type == "RC") and (valid_to == "12/31/9999") ) :
+                    if ( (framework ==  "FINREP_REF") and (cube_type == "RC") and ( (valid_to == "12/31/9999") or (valid_to == "31/12/9999")) ) :
 
                         unionItemClass = None
                         unionItemTableClass = None
@@ -178,7 +178,36 @@ class ROLImport(object):
                         print(objectID)
                         context.classesMap[objectID]=xclass
                         context.tableMap[xclass]=xclassTable
+       
+    def createVariableSetToVariableMap(self,context):       
+        # Make a variable to Domain Map
+        fileLocation = context.fileDirectory + os.sep + "variable_set_enumeration.csv"
+        headerSkipped = False
+        # or each attribute add an Xattribute to the correct XClass represtnting the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+        
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    valid_to = row[4]          
+                    variableID = row[5]
+                    variableSet = row[6]
+                    
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"): 
+                        variableList = None
+                        try: 
+                            variableList =context.variableSetToVariableMap[variableSet]
+                        except:
+                            variableList =[]
+                            context.variableSetToVariableMap[variableSet] = variableList
                         
+                        if not(variableID in variableList):
+                            variableList.append(variableID)
+                            
     def createVariableToDomainMap(self,context):       
         # Make a variable to Domain Map
         fileLocation = context.fileDirectory + os.sep + "variable.csv"
@@ -275,7 +304,7 @@ class ROLImport(object):
                     member_id = row[0]
                     subdomain_id = row[2]
                     valid_to=row[4]
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999"):
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"): 
                         memberList = None
                         try: 
                             memberList =context.subDomainToMemberListMap[subdomain_id]
@@ -423,116 +452,35 @@ class ROLImport(object):
                 if (not headerSkipped):
                         headerSkipped = True
                 else:
-                    attributeName = row[11]
+                    theAttributeName1 = row[11]
                     longName=None
-                    try:
-                        longName = context.variableToLongNamesMap[attributeName]
-                    except:
-                        longName = attributeName
-                    amendedAttributeName = Utils.makeValidID(attributeName)
-                    amendedAttributeLongName = Utils.makeValidID(longName)
-                    variable = row[2]
+                    
+                    
                     subDomainID = row[10]
+                    variableSet = row[12]
                     classID = row[1]
-                    try: 
-                        theClass = context.classesMap[classID]
-                        
-                        classIsDerived = True
-                            
-                        if(context.useVariableLongName):   
-                            theAttributeName = amendedAttributeLongName 
-                        else:
-                            theAttributeName = amendedAttributeName
-                            
-                        amendedDomainName = None
-                        if context.useSubDomains:
-                            domainID = context.subDomainIDToDomainID[subDomainID]
-                            domain_ID_Name = context.domainToDomainNameMap[domainID]
-                            if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
-                                amendedDomainName = domain_ID_Name
-                            else:
-                                amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
-                        else:
-                            domainID = context.variableToDomainMap[variable]
-                            amendedDomainName = Utils.makeValidID(domainID+"_domain")
-                        #domain_ID_Name = context.domainToDomainNameMap[domainID]
-                      
-                        theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
-                        if  theEnum is not None:                     
-                            
-                            if classIsDerived:
-                                operation = XOperation()
-                                operation.lowerBound=0
-                                operation.upperBound=1
-                                if(theEnum.name == "String"):
-                                    operation.name = theAttributeName
-                                    operation.type = context.xString
-                                elif(theEnum.name.startswith("String_")):
-                                    operation.name = theAttributeName
-                                    operation.type = context.xString
-                                elif(theEnum.name == "STRNG_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xString
-                                elif(theEnum.name == "EBA_String_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xString
-                                elif(theEnum.name == "DT_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xDate
-                                elif(theEnum.name == "Number"):
-                                    operation.name = theAttributeName
-                                    operation.type = context.xDouble
-                                
-                                elif(theEnum.name.startswith("Real_")):
-                                    operation.name = theAttributeName
-                                    operation.type = context.xDouble
-                                elif(theEnum.name.startswith("Monetary")): 
-                                    operation.name = theAttributeName
-                                    operation.type = context.xInt
-                                elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
-                                    operation.name = theAttributeName
-                                    operation.type = context.xInt
-                                elif(theEnum.name.startswith("Non_negative_integers")): 
-                                    operation.name = theAttributeName
-                                    operation.type = context.xInt
-                                elif(theEnum.name.startswith("All_possible_dates")):   
-                                    operation.name = theAttributeName
-                                    operation.type = context.xDate  
-                                else:
-                                    operation.name = theAttributeName
-                                    operation.type = theEnum  
-                                if context.addExecutableStubs:
-                                    operation.rpmnText = "<xcore>unionOfLayers." + theAttributeName + "()</xcore>"
+                    attributeList = [theAttributeName1]
+                    if (theAttributeName1=="MTRCS"):
+                        attributeList = context.variableSetToVariableMap[variableSet]
+                    if (theAttributeName1 == "OBSERVATION_VALUE"):
+                        attributeList = []
+                    for attributeName in attributeList:    
+                        try:
                             try:
-            
-                                theClass = context.classesMap[classID]
-                                
-                                if classIsDerived:
-                                    theClass.members.extend([operation])
-            
+                                longName = context.variableToLongNamesMap[attributeName]
                             except:
-                                print( "missing class2: " )
-                        else:
-                            print( "XXXXX missing domainID: " )
-                            print(domainID)
-                            print(classID)
-                            if not(domainID in context.missingDomains):
-                                context.missingDomains.append(domainID)
-                    except:
-                            print( "XX missing ROL class1: " )
-                            print(classID) 
-                            
-                    if context.addLogicPackages:
-                        try: 
-                            theUnionItemClass = context.classesMap[classID+"_Output_Layer_UnionItem"]
+                                longName = attributeName
+                            amendedAttributeName = Utils.makeValidID(attributeName)
+                            amendedAttributeLongName = Utils.makeValidID(longName) 
+                            theClass = context.classesMap[classID]
                             
                             classIsDerived = True
-                            
+                                
                             if(context.useVariableLongName):   
                                 theAttributeName = amendedAttributeLongName 
                             else:
                                 theAttributeName = amendedAttributeName
-                            
+                                
                             amendedDomainName = None
                             if context.useSubDomains:
                                 domainID = context.subDomainIDToDomainID[subDomainID]
@@ -542,7 +490,7 @@ class ROLImport(object):
                                 else:
                                     amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
                             else:
-                                domainID = context.variableToDomainMap[variable]
+                                domainID = context.variableToDomainMap[attributeName]
                                 amendedDomainName = Utils.makeValidID(domainID+"_domain")
                             #domain_ID_Name = context.domainToDomainNameMap[domainID]
                           
@@ -556,21 +504,18 @@ class ROLImport(object):
                                     if(theEnum.name == "String"):
                                         operation.name = theAttributeName
                                         operation.type = context.xString
-                                    elif(theEnum.name == "Date"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xDate
-                                    elif(theEnum.name == "STRNG_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xString
-                                    elif(theEnum.name == "EBA_String_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xString
-                                    elif(theEnum.name == "DT_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xDate
                                     elif(theEnum.name.startswith("String_")):
                                         operation.name = theAttributeName
                                         operation.type = context.xString
+                                    elif(theEnum.name == "STRNG_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                    elif(theEnum.name == "EBA_String_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                    elif(theEnum.name == "DT_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDate
                                     elif(theEnum.name == "Number"):
                                         operation.name = theAttributeName
                                         operation.type = context.xDouble
@@ -578,9 +523,18 @@ class ROLImport(object):
                                     elif(theEnum.name.startswith("Real_")):
                                         operation.name = theAttributeName
                                         operation.type = context.xDouble
+                                    elif(theEnum.name.startswith("RL_domain")):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDouble 
                                     elif(theEnum.name.startswith("Monetary")): 
                                         operation.name = theAttributeName
                                         operation.type = context.xInt
+                                    elif(theEnum.name.startswith("MNTRY")): 
+                                        operation.name = theAttributeName
+                                        operation.type = context.xInt
+                                    elif(theEnum.name.startswith("BLN")): 
+                                        operation.name = theAttributeName
+                                        operation.type = context.xBoolean
                                     elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                         operation.name = theAttributeName
                                         operation.type = context.xInt
@@ -593,110 +547,224 @@ class ROLImport(object):
                                     else:
                                         operation.name = theAttributeName
                                         operation.type = theEnum  
+                                    if context.addExecutableStubs:
+                                        operation.rpmnText = "<xcore>unionOfLayers." + theAttributeName + "()</xcore>"
+                                try:
+                
+                                    theClass = context.classesMap[classID]
+                                    
+                                    if classIsDerived:
+                                        theClass.members.extend([operation])
+                
+                                except:
+                                    print( "missing class2: " )
+                            else:
+                                print( "XXXXX missing domainID: " )
+                                print(domainID)
+                                print(classID)
+                                if not(domainID in context.missingDomains):
+                                    context.missingDomains.append(domainID)
+                        except:
+                                print( "XX missing ROL class1: " )
+                                print(classID) 
+                                
+                        if context.addLogicPackages:
+                            try: 
+                                theUnionItemClass = context.classesMap[classID+"_Output_Layer_UnionItem"]
+                                
+                                classIsDerived = True
+                                
+                                if(context.useVariableLongName):   
+                                    theAttributeName = amendedAttributeLongName 
+                                else:
+                                    theAttributeName = amendedAttributeName
+                                
+                                amendedDomainName = None
+                                if context.useSubDomains:
+                                    domainID = context.subDomainIDToDomainID[subDomainID]
+                                    domain_ID_Name = context.domainToDomainNameMap[domainID]
+                                    if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                        amendedDomainName = domain_ID_Name
+                                    else:
+                                        amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                                else:
+                                    domainID = context.variableToDomainMap[attributeName]
+                                    amendedDomainName = Utils.makeValidID(domainID+"_domain")
+                                #domain_ID_Name = context.domainToDomainNameMap[domainID]
+                              
+                                theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
+                                if  theEnum is not None:                     
+                                    
+                                    if classIsDerived:
+                                        operation = XOperation()
+                                        operation.lowerBound=0
+                                        operation.upperBound=1
+                                        if(theEnum.name == "String"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                        elif(theEnum.name == "Date"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDate
+                                        elif(theEnum.name == "STRNG_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                        elif(theEnum.name == "EBA_String_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                        elif(theEnum.name == "DT_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDate
+                                        elif(theEnum.name.startswith("String_")):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                        elif(theEnum.name == "Number"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDouble
                                         
-                                    operation.rpmnText = "<xcore>base."+theAttributeName + "()</xcore>"
-            
-                                try:
+                                        elif(theEnum.name.startswith("Real_")):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDouble
+                                        elif(theEnum.name.startswith("RL_domain")):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDouble 
+                                        elif(theEnum.name.startswith("Monetary")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xInt
+                                        elif(theEnum.name.startswith("MNTRY")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xInt
+                                        elif(theEnum.name.startswith("BLN")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xBoolean
+                                        elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xInt
+                                        elif(theEnum.name.startswith("Non_negative_integers")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xInt
+                                        elif(theEnum.name.startswith("All_possible_dates")):   
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDate  
+                                        else:
+                                            operation.name = theAttributeName
+                                            operation.type = theEnum  
+                                            
+                                        operation.rpmnText = "<xcore>base."+theAttributeName + "()</xcore>"
                 
-                                    theUnionItemClass = context.classesMap[classID+"_Output_Layer_UnionItem"]
+                                    try:
+                    
+                                        theUnionItemClass = context.classesMap[classID+"_Output_Layer_UnionItem"]
+                                        
+                                        if classIsDerived:
+                                            theUnionItemClass.members.extend([operation])
+                    
+                                    except:
+                                        print( "missing class3: " )
+                               
                                     
-                                    if classIsDerived:
-                                        theUnionItemClass.members.extend([operation])
-                
-                                except:
-                                    print( "missing class3: " )
-                           
                                 
+                            except:
+                                    print( "XX missing ROL class1: " )
+                                    print(classID)   
                             
-                        except:
-                                print( "XX missing ROL class1: " )
-                                print(classID)   
-                        
-                        try: 
-                            theUnionBaseClass = context.classesMap[classID+"_OutputItem_Base"]
-                            
-                            classIsDerived = True
-                            
-                            if(context.useVariableLongName):   
-                                theAttributeName = amendedAttributeLongName 
-                            else:
-                                theAttributeName = amendedAttributeName
-                            
-                            amendedDomainName = None
-                            if context.useSubDomains:
-                                domainID = context.subDomainIDToDomainID[subDomainID]
-                                domain_ID_Name = context.domainToDomainNameMap[domainID]
-                                if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
-                                    amendedDomainName = domain_ID_Name
+                            try: 
+                                theUnionBaseClass = context.classesMap[classID+"_OutputItem_Base"]
+                                
+                                classIsDerived = True
+                                
+                                if(context.useVariableLongName):   
+                                    theAttributeName = amendedAttributeLongName 
                                 else:
-                                    amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
-                            else:
-                                domainID = context.variableToDomainMap[variable]
-                                amendedDomainName = Utils.makeValidID(domainID+"_domain")
-                            #domain_ID_Name = context.domainToDomainNameMap[domainID]
-                          
-                            theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
-                            if  theEnum is not None:                     
+                                    theAttributeName = amendedAttributeName
                                 
-                                if classIsDerived:
-                                    operation = XOperation()
-                                    operation.lowerBound=0
-                                    operation.upperBound=1
-                                    if(theEnum.name == "String"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xString
-                                    elif(theEnum.name == "Date"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xDate
-                                    elif(theEnum.name == "STRNG_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xString
-                                    elif(theEnum.name == "EBA_String_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xString
-                                    elif(theEnum.name == "DT_domain"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xDate
-                                    elif(theEnum.name.startswith("String_")):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xString
-                                    elif(theEnum.name == "Number"):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xDouble
-                                    
-                                    elif(theEnum.name.startswith("Real_")):
-                                        operation.name = theAttributeName
-                                        operation.type = context.xDouble
-                                    elif(theEnum.name.startswith("Monetary")): 
-                                        operation.name = theAttributeName
-                                        operation.type = context.xInt
-                                    elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
-                                        operation.name = theAttributeName
-                                        operation.type = context.xInt
-                                    elif(theEnum.name.startswith("Non_negative_integers")): 
-                                        operation.name = theAttributeName
-                                        operation.type = context.xInt
-                                    elif(theEnum.name.startswith("All_possible_dates")):   
-                                        operation.name = theAttributeName
-                                        operation.type = context.xDate  
+                                amendedDomainName = None
+                                if context.useSubDomains:
+                                    domainID = context.subDomainIDToDomainID[subDomainID]
+                                    domain_ID_Name = context.domainToDomainNameMap[domainID]
+                                    if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
+                                        amendedDomainName = domain_ID_Name
                                     else:
-                                        operation.name = theAttributeName
-                                        operation.type = theEnum  
-            
-                                try:
-                
-                                    theUnionBaseClass = context.classesMap[classID+"_OutputItem_Base"]
+                                        amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                                else:
+                                    domainID = context.variableToDomainMap[attributeName]
+                                    amendedDomainName = Utils.makeValidID(domainID+"_domain")
+                                #domain_ID_Name = context.domainToDomainNameMap[domainID]
+                              
+                                theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
+                                if  theEnum is not None:                     
                                     
                                     if classIsDerived:
-                                        theUnionBaseClass.members.extend([operation])
-                
-                                except:
-                                    print( "missing class4: " )
-
-                        except:
-                                print( "XX missing ROL class1: " )
-                                print(classID)                               
-                                
+                                        operation = XOperation()
+                                        operation.lowerBound=0
+                                        operation.upperBound=1
+                                        if(theEnum.name == "String"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                        elif(theEnum.name == "Date"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDate
+                                        elif(theEnum.name == "STRNG_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                        elif(theEnum.name == "EBA_String_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                        elif(theEnum.name == "DT_domain"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDate
+                                        elif(theEnum.name.startswith("String_")):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xString
+                                        elif(theEnum.name == "Number"):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDouble
+                                        
+                                        elif(theEnum.name.startswith("Real_")):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDouble
+                                        elif(theEnum.name.startswith("RL_domain")):
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDouble    
+                                        elif(theEnum.name.startswith("Monetary")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xInt
+                                        elif(theEnum.name.startswith("MNTRY")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xInt
+                                        elif(theEnum.name.startswith("BLN")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xBoolean
+                                        elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xInt
+                                        elif(theEnum.name.startswith("Non_negative_integers")): 
+                                            operation.name = theAttributeName
+                                            operation.type = context.xInt
+                                        elif(theEnum.name.startswith("All_possible_dates")):   
+                                            operation.name = theAttributeName
+                                            operation.type = context.xDate  
+                                        else:
+                                            operation.name = theAttributeName
+                                            operation.type = theEnum  
+                                            
+                                        if (operation.type == context.xDouble) or (operation.type == context.xInt):
+                                            operation.rpmnText = "<xcore>return 0</xcore>"
+                                        if operation.type == context.xBoolean:
+                                            operation.rpmnText = "<xcore>return false</xcore>"
+                                    try:
+                    
+                                        theUnionBaseClass = context.classesMap[classID+"_OutputItem_Base"]
+                                        
+                                        if classIsDerived:
+                                            theUnionBaseClass.members.extend([operation])
+                    
+                                    except:
+                                        print( "missing class4: " )
     
+                            except:
+                                    print( "XX missing ROL class1: " )
+                                    print(classID)                               
+                                    
+        
                                              
                             
