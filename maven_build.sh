@@ -10,12 +10,12 @@ cd ../../..
 cd openregspecs/sirius_ui
 mvn install
 cd ../..
-cd installations/complete_repo/
-mvn install
-cd ../..
 cd XCoreLite/model
 mvn install
 cd ../..
 cd XCoreLite/dsl/org.eclipse.efbt.xcorelite.dsl.parent
 mvn install
 cd ../../..
+cd installations/complete_repo/
+mvn install
+cd ../..
