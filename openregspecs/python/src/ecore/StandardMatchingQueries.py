@@ -225,6 +225,12 @@ class StandardMatchingQueries(object):
                     if literal.name.lower() in theLiteral.name.lower():
                         returnLiteral = theLiteral
                         returnLiteral.matchType ="SUBSTRING"
+                        
+            if returnLiteral is None:
+                for theLiteral in relatedInputLayerDomain.eLiterals:
+                    if theLiteral.name.lower() in literal.name.lower():
+                        returnLiteral = theLiteral
+                        returnLiteral.matchType ="REVERSE_SUBSTRING"
                     
         return returnLiteral
         
