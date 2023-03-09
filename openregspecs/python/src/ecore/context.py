@@ -47,6 +47,7 @@ class Context(object):
     # and domains
     variableToDomainMap = {}
     variableToLongNamesMap = {}
+    variableNameToCodeMap = {}
     # For the reference output layers we record a map between domains 
     # and domain names
     domainToDomainNameMap = {}
@@ -84,7 +85,7 @@ class Context(object):
     useVariableLongName=True
     importLogicStrings = []
     
-    
+    variableSetToVariableMap = {}
     
     cubeClassNameIndex = 0
     cubeObjectIDIndex = 1
@@ -95,6 +96,7 @@ class Context(object):
     variableVariableNameIndex = 6
     variableLongNameIndex = 4
     variableDomainIndex = 2
+    variableCodeIndex = 0
     
     domainDomainIDIndex = 0
     domainDomainNameIndex = 8
@@ -116,6 +118,7 @@ class Context(object):
     cube_structure_itemSubdomainIndex = 10
     cube_structure_itemSpecificMember = 7
     cube_structure_itemAttributeName = 11
+    cube_structure_itemVariableSet = 12
 
     def __init__(self):
 
