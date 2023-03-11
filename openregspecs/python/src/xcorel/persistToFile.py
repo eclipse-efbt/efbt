@@ -21,17 +21,17 @@ from collections import Counter
 import os
 
 class PersistToFile:
-    def saveModelAsRPMNFile(self,context ):
+    def saveModelAsXCoreLFile(self,context ):
         
-        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"rpmn",context.inputLayerEnumsPackage)
-        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"rpmn",context.outputLayerEnumsPackage)
-        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"rpmn")
-        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"rpmn")
-        PersistToFile.persistTypesModel(self,context,context.typesPackage,"rpmn")
+        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"xcorel",context.inputLayerEnumsPackage)
+        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"xcorel",context.outputLayerEnumsPackage)
+        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"xcorel")
+        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"xcorel")
+        PersistToFile.persistTypesModel(self,context,context.typesPackage,"xcorel")
         PersistToFile.persistWorkflow(self,context)
         PersistToFile.persistGenerationTransformations(self,context)
         for package in context.logicPackages:
-            PersistToFile.persistEntityModel(self,context,package,"rpmn",context.outputLayerEnumsPackage)
+            PersistToFile.persistEntityModel(self,context,package,"xcorel",context.outputLayerEnumsPackage)
         
    
         
@@ -43,7 +43,7 @@ class PersistToFile:
         if thePackage ==context.outputLayerEntitiesPackage: 
             for importString in context.importLogicStrings:
                 f.write("\t\t import " + importString + ".*\r")  
-        if extension == "rpmn":
+        if extension == "xcorel":
             f.write("\t\t import types.*\r")    
         for classifier in  thePackage.classifiers:
             if isinstance(classifier,XClass):
@@ -106,9 +106,9 @@ class PersistToFile:
                                 f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
                      
                             f.write(member.name)
-                            if extension == "rpmn" and context.addExecutableStubs:
-                                if hasattr(member, "rpmnText"):
-                                    f.write("() {\n\t\t\t\t\t\"" + member.rpmnText + "\"\n\t\t\t\t\t}")
+                            if extension == "xcorel" and context.addExecutableStubs:
+                                if hasattr(member, "xcorelText"):
+                                    f.write("() {\n\t\t\t\t\t\"" + member.xcorelText + "\"\n\t\t\t\t\t}")
                                 else:
                                     f.write("() {}")
                             else:
@@ -128,7 +128,7 @@ class PersistToFile:
         f.write("\t\t\ttype double wraps double\r")
         f.write("\t\t\ttype String wraps String\r")
         f.write("\t\t\ttype int wraps int\r") 
-        if extension == "rpmn":
+        if extension == "xcorel":
             f.write("\t\t\ttype Date wraps Date\r")
         else:
             f.write("\t\t\ttype Date wraps java.util.Date\r")
@@ -240,7 +240,7 @@ class PersistToFile:
         resource.save()
         
     def persistWorkflow(self,context):
-        f = open(context.outputDirectory+ os.sep + 'workflow.rpmn', "a",  encoding='utf-8')
+        f = open(context.outputDirectory+ os.sep + 'workflow.xcorel', "a",  encoding='utf-8')
         f.write("WorkflowModule " + context.workflowModule.name + "\r{\r")
         f.write("\t\tsubProcess {\r")    
         for process in  context.workflowModule.subProcess:
@@ -290,7 +290,7 @@ class PersistToFile:
         views = context.viewModule.views
 
         for view in views:
-            f = open(context.outputDirectory + os.sep + view.name + '_view.rpmn', "a",  encoding='utf-8')
+            f = open(context.outputDirectory + os.sep + view.name + '_view.xcorel', "a",  encoding='utf-8')
             f.write("ViewModule " + view.name + "_viewModule\r{\r")
             f.write("\tviews " + "{\r")
             f.write("\t\tView " + view.name + "_view {\r")

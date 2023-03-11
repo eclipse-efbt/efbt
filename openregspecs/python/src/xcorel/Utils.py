@@ -97,8 +97,8 @@ class Utils(object):
         '''
         rset = ResourceSet()
 
-        resource = rset.create_resource(URI(context.outputDirectory + 'IL.rpmn'))  # This will create an XMI resource
-        resource.append(context.rpmnPackage)
+        resource = rset.create_resource(URI(context.outputDirectory + 'IL.xcorel'))  # This will create an XMI resource
+        resource.append(context.xcorelPackage)
         resource.save()
     
    
@@ -152,7 +152,7 @@ class Utils(object):
     def makeValidID(cls,inputString):
         ''' 
         Tranlate text to be a valid id, without special characters, and following
-        the rules for valid id's in RPMN
+        the rules for valid id's in XCoreL
         '''
        
         # we do not allow id's to start with  number, if it does then we prepend with an underscore

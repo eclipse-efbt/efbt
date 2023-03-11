@@ -31,14 +31,14 @@ class PersistToFile:
             
         #PersistToFile.persistTypesModel(self,context,context.typesPackage,"xcore")
         
-        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"rpmn",context.inputLayerEnumsPackage)
-        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"rpmn",context.outputLayerEnumsPackage)
-        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"rpmn")
-        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"rpmn")
-        PersistToFile.persistTypesModel(self,context,context.typesPackage,"rpmn")
+        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"xcorel",context.inputLayerEnumsPackage)
+        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"xcorel",context.outputLayerEnumsPackage)
+        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"xcorel")
+        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"xcorel")
+        PersistToFile.persistTypesModel(self,context,context.typesPackage,"xcorel")
         
         for package in context.logicPackages:
-            PersistToFile.persistEntityModel(self,context,package,"rpmn",context.outputLayerEnumsPackage)
+            PersistToFile.persistEntityModel(self,context,package,"xcorel",context.outputLayerEnumsPackage)
         
         
         
@@ -50,7 +50,7 @@ class PersistToFile:
         if thePackage ==context.outputLayerEntitiesPackage: 
             for importString in context.importLogicStrings:
                 f.write("\t\t import " + importString + ".*\r")      
-        if extension == "rpmn":
+        if extension == "xcorel":
             f.write("\t\t import types.*\r")    
         for classifier in  thePackage.eClassifiers:
             if isinstance(classifier,EClass):
@@ -121,9 +121,9 @@ class PersistToFile:
                     else:
                         f.write("[" + str(operation.lowerBound) + ".." +str(operation.upperBound) + "] ")
                     f.write(operation.name)
-                    if extension == "rpmn" and context.addExecutableStubs:
-                        if hasattr(operation, "rpmnText"):
-                            f.write("() {\n\t\t\"" + operation.rpmnText + "\"\n\t\t}")
+                    if extension == "xcorel" and context.addExecutableStubs:
+                        if hasattr(operation, "xcorelText"):
+                            f.write("() {\n\t\t\"" + operation.xcorelText + "\"\n\t\t}")
                         else:
                             f.write("() {}")
                     else:
@@ -143,7 +143,7 @@ class PersistToFile:
         f.write("\t\t\ttype double wraps Double\r")
         f.write("\t\t\ttype String wraps String\r")
         f.write("\t\t\ttype int wraps Integer\r") 
-        if extension == "rpmn":
+        if extension == "xcorel":
             f.write("\t\t\ttype Date wraps Date\r")
         else:
             f.write("\t\t\ttype Date wraps java.util.Date\r")  
