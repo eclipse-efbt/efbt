@@ -30,7 +30,7 @@ class ImportFinrepVTL(object):
     6.) for each layer: 
     7.) get the Input Layers.
     8.) for each input layer:
-    9.) write the rpmn volumns:
+    9.) write the xcorel volumns:
     10.) write the filter condition
     11.) write the VTL that is on top of the layer to make the report
     12.) write the VTL that is for the layer

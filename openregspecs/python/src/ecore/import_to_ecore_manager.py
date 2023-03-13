@@ -32,10 +32,13 @@ if __name__ == '__main__':
     importIL=True
     importROL=True
     persistToXML = True
-    persistToRPMN = True
+    persistToXCoreL = True
     context.useSubDomains = True
     context.fileDirectory = '/workspaces/efbt/openregspecs/python/resources'
     context.outputDirectory = '/workspaces/efbt/openregspecs/python/results'
+    
+    
+    
     context.addExecutableStubs = False
     context.addLogicPackages = False
     if importLDM:
@@ -49,5 +52,5 @@ if __name__ == '__main__':
     persister = PersistToFile()
     persister.saveModelAsXMIFile(context)
     persister.saveModelAsHumanReadable(context)
-    #persister.saveModelAsRPMNFile(context)
+    #persister.saveModelAsXCoreLFile(context)
  

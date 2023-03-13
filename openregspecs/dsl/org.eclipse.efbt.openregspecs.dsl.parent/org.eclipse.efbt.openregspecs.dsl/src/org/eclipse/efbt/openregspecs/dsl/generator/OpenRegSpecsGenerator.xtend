@@ -72,9 +72,9 @@ type  «xDataType.name» wraps «IF xDataType.name == "Date"»java.util.Date «E
         ''')
          }
 
-         	fsa.generateFile('rpmnutils' + File.separator +'RPMNUtils.java',  '''
+         	fsa.generateFile('xcorelutils' + File.separator +'XCoreLUtils.java',  '''
  
-package rpmnutils;
+package xcorelutils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -103,7 +103,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import output_layer_entities.Output_layer_entitiesFactory;
 import output_layer_entities.Output_layer_entitiesPackage;
 
-public class RPMNUtils {
+public class XCoreLUtils {
 	
 	public static String fileDirectory = null;
 	

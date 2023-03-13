@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_5YokAH29Ee2hZ8vltJNxng" version="15.0.0.202209061200">
-  <semanticResources>Delta_sensitivity_BaseTable.xmi</semanticResources>
-  <semanticResources>GIRR_risk_factor_BaseTable.xmi</semanticResources>
-  <semanticResources>Security_or_exchange_tradable_derivative_position_BaseTable.xmi</semanticResources>
-  <semanticResources>src/crr_regulation_text.rpmn</semanticResources>
-  <semanticResources>src/data_model.rpmn</semanticResources>
-  <semanticResources>src/frtb_e2e_test1.rpmn</semanticResources>
-  <semanticResources>src/workflow.rpmn</semanticResources>
-  <semanticResources>src/report_generation.rpmn</semanticResources>
-  <semanticResources>src/test_netted_delta_sensitivities.rpmn</semanticResources>
-  <semanticResources>src/test_tenor_transformation.rpmn</semanticResources>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_VqsZsL_QEe2R2a7D6DrwpQ" version="15.0.0.202209061200">
+  <semanticResources>src/crr_regulation_text.xcorel</semanticResources>
+  <semanticResources>src/data_model.xcorel</semanticResources>
+  <semanticResources>src/frtb_e2e_test1.xcorel</semanticResources>
+  <semanticResources>src/workflow.xcorel</semanticResources>
+  <semanticResources>src/report_generation.xcorel</semanticResources>
+  <semanticResources>src/test_netted_delta_sensitivities.xcorel</semanticResources>
+  <semanticResources>src/test_tenor_transformation.xcorel</semanticResources>
 </viewpoint:DAnalysis>

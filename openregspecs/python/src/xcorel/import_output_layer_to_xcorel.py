@@ -111,7 +111,7 @@ class ROLImport(object):
                             unionItemsOperation.type=unionItemClass
                             unionItemsOperation.upperBound = -1
                             unionItemsOperation.lowerBound=0
-                            #unionItemsOperation.rpmnText = "\tvar items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t{\n" + "\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\tnewItem.unionOfLayers =  item\n" + "\t\titems.add(newItem)\n" + "}"
+                            #unionItemsOperation.xcorelText = "\tvar items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t{\n" + "\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\tnewItem.unionOfLayers =  item\n" + "\t\titems.add(newItem)\n" + "}"
                             unionItemTableClass.members.append(unionItemsOperation)
                             
                             #op Year_domain  init() 
@@ -120,7 +120,7 @@ class ROLImport(object):
                             initOperation.type=context.xString
                             initOperation.upperBound = 1
                             initOperation.lowerBound=0
-                            initOperation.rpmnText = "<xcore>rpmnutils.RPMNUtils.init(this) \n \t\t\t\t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t\t\t\t  return null</xcore>"
+                            initOperation.xcorelText = "<xcore>xcorelutils.XCoreLUtils.init(this) \n \t\t\t\t\t\tthis.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems.addAll(" + alteredClassName + "_Output_Layer_UnionItems())\n \t\t\t\t\t\t  return null</xcore>"
                             unionItemTableClass.members.append(initOperation)
                                 
 
@@ -149,7 +149,7 @@ class ROLImport(object):
                         xclassTableOperation.type=xclass
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
-                        xclassTableOperation.rpmnText = "<xcore>var items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\t\t\t\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t\t\t\t{\n" + "\t\t\t\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\t\t\t\tnewItem.unionOfLayers =  item\n" + "\t\t\t\t\titems.add(newItem)\n" + "}\n\t\t\t\treturn items</xcore>"
+                        xclassTableOperation.xcorelText = "<xcore>var items = new org.eclipse.emf.common.util.BasicEList<" + alteredClassName+"_OutputItem >()\n" +"\t\t\t\tfor( " + alteredClassName + "_Output_Layer_UnionItem item : unionOfLayersTable.f" + alteredClassName[1:len(alteredClassName)] + "_Output_Layer_UnionItems)\n" +         "\t\t\t\t{\n" + "\t\t\t\t\tvar newItem = Output_layer_entitiesFactory.eINSTANCE.create" + alteredClassName + "_OutputItem\n" +   "\t\t\t\t\tnewItem.unionOfLayers =  item\n" + "\t\t\t\t\titems.add(newItem)\n" + "}\n\t\t\t\treturn items</xcore>"
                         
                         xclassTable.members.append(xclassTableOperation)
                         xclassTableInitOperation = XOperation()
@@ -157,7 +157,7 @@ class ROLImport(object):
                         xclassTableInitOperation.type=context.xString
                         xclassTableInitOperation.upperBound = 1
                         xclassTableInitOperation.lowerBound=0
-                        xclassTableInitOperation.rpmnText = "<xcore>rpmnutils.RPMNUtils.init(this)\n" + "\t\t\t\t this.f" + alteredClassName[1:len(alteredClassName)]+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \t\t\t\treturn null</xcore>"
+                        xclassTableInitOperation.xcorelText = "<xcore>xcorelutils.XCoreLUtils.init(this)\n" + "\t\t\t\t this.f" + alteredClassName[1:len(alteredClassName)]+"_OutputItems.addAll(" + alteredClassName+"_OutputItems()) \n \t\t\t\treturn null</xcore>"
                         xclassTable.members.append(xclassTableInitOperation)
                         if context.addLogicPackages:
                             nonContainmentReference2  = XReference()
@@ -548,7 +548,7 @@ class ROLImport(object):
                                         operation.name = theAttributeName
                                         operation.type = theEnum  
                                     if context.addExecutableStubs:
-                                        operation.rpmnText = "<xcore>unionOfLayers." + theAttributeName + "()</xcore>"
+                                        operation.xcorelText = "<xcore>unionOfLayers." + theAttributeName + "()</xcore>"
                                 try:
                 
                                     theClass = context.classesMap[classID]
@@ -649,7 +649,7 @@ class ROLImport(object):
                                             operation.name = theAttributeName
                                             operation.type = theEnum  
                                             
-                                        operation.rpmnText = "<xcore>base."+theAttributeName + "()</xcore>"
+                                        operation.xcorelText = "<xcore>base."+theAttributeName + "()</xcore>"
                 
                                     try:
                     
@@ -748,9 +748,9 @@ class ROLImport(object):
                                             operation.type = theEnum  
                                             
                                         if (operation.type == context.xDouble) or (operation.type == context.xInt):
-                                            operation.rpmnText = "<xcore>return 0</xcore>"
+                                            operation.xcorelText = "<xcore>return 0</xcore>"
                                         if operation.type == context.xBoolean:
-                                            operation.rpmnText = "<xcore>return false</xcore>"
+                                            operation.xcorelText = "<xcore>return false</xcore>"
                                     try:
                     
                                         theUnionBaseClass = context.classesMap[classID+"_OutputItem_Base"]

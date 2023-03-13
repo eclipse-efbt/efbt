@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description" uid="_aMoaoEVMEe28qOdE6zTTKg" selectedViews="_ogoEsEVMEe28qOdE6zTTKg" version="15.0.0.202201261500">
-  <semanticResources>src/crr_regulation_text.rpmn</semanticResources>
-  <semanticResources>src/data_model_cutdown.rpmn</semanticResources>
-  <semanticResources>src/frtb_e2e_test1.rpmn</semanticResources>
-  <semanticResources>src/workflow_cutdown.rpmn</semanticResources>
-  <semanticResources>src/report_generation.rpmn</semanticResources>
-  <semanticResources>src/test_netted_delta_sensitivities.rpmn</semanticResources>
-  <semanticResources>src/test_tenor_transformation.rpmn</semanticResources>
-  <ownedViews xmi:type="viewpoint:DView" uid="_ogoEsEVMEe28qOdE6zTTKg">
-    <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.efbt.openregspecs.testing.ui.sirius.core/description/bpmn_lite.odesign#//@ownedViewpoints[name='Process']"/>
-  </ownedViews>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_m0fMML_QEe2R2a7D6DrwpQ" version="15.0.0.202209061200">
+  <semanticResources>src/C91_REFoutput_logic.xcorel</semanticResources>
+  <semanticResources>src/input_layer_enums.xcorel</semanticResources>
+  <semanticResources>src/output_layer_enums.xcorel</semanticResources>
+  <semanticResources>src/types.xcorel</semanticResources>
+  <semanticResources>src/input_layer_entities.xcorel</semanticResources>
+  <semanticResources>src/crr_regulation_text.xcorel</semanticResources>
+  <semanticResources>src/frtb_e2e_test1.xcorel</semanticResources>
+  <semanticResources>src/output_layer_entities.xcorel</semanticResources>
+  <semanticResources>src/workflow_cutdown.xcorel</semanticResources>
+  <semanticResources>src/report_generation.xcorel</semanticResources>
+  <semanticResources>src/test_netted_delta_sensitivities.xcorel</semanticResources>
+  <semanticResources>src/test_tenor_transformation.xcorel</semanticResources>
 </viewpoint:DAnalysis>
