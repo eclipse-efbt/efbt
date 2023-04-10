@@ -14,6 +14,7 @@ from pyecore.resources import ResourceSet, URI
 from pyecore import *
 import os
 import csv
+from Utils import Utils
        
         
 class StandardMatchingQueries(object):
@@ -24,8 +25,12 @@ class StandardMatchingQueries(object):
     outputLayerEnumsModel = None
     outputLayerEntitiesModel = None
     typesModel = None
+    variableNameToCodeMap = {}
+    uniqueTupleList = []
+    derivableList = []
     
     def query1(self,fileDirectory,inScopeFileDirectory): 
+        
         rset = ResourceSet()
         
         types_resource = rset.get_resource(URI(fileDirectory + os.sep + "types.ecore"))
@@ -60,7 +65,7 @@ class StandardMatchingQueries(object):
     def createInputLayerToOutputLayerMatches(self,fileDirectory): 
         outputLayers = StandardMatchingQueries.getOutputLayers(self)
         csvStrings = []
-        headerString = "outputLayer,Variable,SubDomain,Domain,MatchingAttribute,MatchingAttributeILDomain,MatchingAttributeEntity,AttributeMatchType,SubDomainMember,InputLayerDomainMember,MemberMatchType"
+        headerString = "outputLayer,Variable name in outputLayer,Variable code in outputLayer,SubDomain code in outputLayer,Domain name in outputLayer ,MatchedAttribute in inputLayer,MatchedAttributeILDomain in inputLayer ,MatchedAttributeEntity in inputLayer,AttributeMatchType,SubDomainMember name in outputLayer ,MatchedDomainMember in inputLayer ,MemberMatchType"
         csvStrings.append(headerString)
         for outputLayer in outputLayers:
             outputLayerName = outputLayer.name
@@ -86,44 +91,94 @@ class StandardMatchingQueries(object):
                         print("domainName")
                         print(domainName)
                         
-                        relatedInputLayerAttributes = StandardMatchingQueries.getRelatedInputLayerAttributes(self,attributeName,attributeType)
-                        
-                        if  len(relatedInputLayerAttributes) > 0:
-                            for relatedInputLayerAttribute in relatedInputLayerAttributes:
-                                print(relatedInputLayerAttribute)
-                                print("relatedInputLayerAttribute")
-                                relatedInputLayerDomain = relatedInputLayerAttribute.eType
-                                print("relatedInputLayerDomain")
-                                print(relatedInputLayerDomain)
-                                attributeMatchType = relatedInputLayerAttribute.matchType
-                                if(hasattr( relatedInputLayerAttribute, "subStringGuess")):
-                                   subStringGuess = "SUBSTRING"
-                                   
-                                csvTextString = None
-                                if hasattr(attributeType, "eLiterals"):
-                                    for literal in attributeType.eLiterals:
-                                        literalName = literal.name
-                                        literalMatchType = "NONE"
-                                        
-                                        relatedLiteral = StandardMatchingQueries.getRelatedInputLayerLiteral(self,literal,relatedInputLayerDomain)
-                                        relatedLiteralName = "None"
-                                        if not (relatedLiteral is None):
-                                            relatedLiteralName = relatedLiteral.name
-                                            literalMatchType = relatedLiteral.matchType
-                                        csvTextString = outputLayerName + "," + attributeName + "," +  atributeTypeName  + "," + domainName + "," +relatedInputLayerAttribute.name + "," +relatedInputLayerAttribute.eType.name+ "," +relatedInputLayerAttribute.eContainer().name + "," + attributeMatchType +","+ literalName +"," +relatedLiteralName + "," + literalMatchType
-                                        csvStrings.append(csvTextString)
-                                else:
-                                    csvTextString = outputLayerName + "," + attributeName + "," + atributeTypeName + "," + domainName + "," + relatedInputLayerAttribute.name + "," +relatedInputLayerAttribute.eType.name + "," +relatedInputLayerAttribute.eContainer().name +"," +attributeMatchType  +",,,"
-                                    csvStrings.append(csvTextString)
-                        else:
-                            csvTextString = outputLayerName + "," + attributeName + "," + atributeTypeName + "," + domainName + ",,NONE,,,,,"
+                        if(attributeName in self.derivableList):
+                            csvTextString = outputLayerName + "," + attributeName + "," + self.variableNameToCodeMap[attributeName] + "," + atributeTypeName + "," + domainName + ",,DERIVABLE,,,,,"
                             csvStrings.append(csvTextString)
-    
+                            tuple = (attributeName,
+                                                 self.variableNameToCodeMap[attributeName],
+                                                 "NONE",
+                                                 "NONE",
+                                                 "DERIVABLE")
+                            if not(tuple in self.uniqueTupleList):
+                                self.uniqueTupleList.append(tuple)
+                        else:
+                            relatedInputLayerAttributes = StandardMatchingQueries.getRelatedInputLayerAttributes(self,attributeName,attributeType)
+                        
+                            if  len(relatedInputLayerAttributes) > 0:
+                                for relatedInputLayerAttribute in relatedInputLayerAttributes:
+                                    print(relatedInputLayerAttribute)
+                                    print("relatedInputLayerAttribute")
+                                    relatedInputLayerDomain = relatedInputLayerAttribute.eType
+                                    print("relatedInputLayerDomain")
+                                    print(relatedInputLayerDomain)
+                                    attributeMatchType = relatedInputLayerAttribute.matchType
+                                    if(hasattr( relatedInputLayerAttribute, "subStringGuess")):
+                                       subStringGuess = "SUBSTRING"
+                                       
+                                    csvTextString = None
+                                    if hasattr(attributeType, "eLiterals"):
+                                        for literal in attributeType.eLiterals:
+                                            literalName = literal.name
+                                            literalMatchType = "NONE"
+                                            
+                                            relatedLiteral = StandardMatchingQueries.getRelatedInputLayerLiteral(self,literal,relatedInputLayerDomain)
+                                            relatedLiteralName = "None"
+                                            if not (relatedLiteral is None):
+                                                relatedLiteralName = relatedLiteral.name
+                                                literalMatchType = relatedLiteral.matchType
+                                            csvTextString = outputLayerName + "," + attributeName + "," + self.variableNameToCodeMap[attributeName] + "," +  atributeTypeName  + "," + domainName + "," +relatedInputLayerAttribute.name + "," +relatedInputLayerAttribute.eType.name+ "," +relatedInputLayerAttribute.eContainer().name + "," + attributeMatchType +","+ literalName +"," +relatedLiteralName + "," + literalMatchType
+                                            csvStrings.append(csvTextString)
+                                            tuple = (attributeName,
+                                                     self.variableNameToCodeMap[attributeName],
+                                                     relatedInputLayerAttribute.name,
+                                                     relatedInputLayerAttribute.eContainer().name,
+                                                     attributeMatchType)
+                                            if not(tuple in self.uniqueTupleList):
+                                                self.uniqueTupleList.append(tuple)
+                                                
+                                    else:
+                                        csvTextString = outputLayerName + "," + attributeName + "," + self.variableNameToCodeMap[attributeName] + "," + atributeTypeName + "," + domainName + "," + relatedInputLayerAttribute.name + "," +relatedInputLayerAttribute.eType.name + "," +relatedInputLayerAttribute.eContainer().name +"," +attributeMatchType  +",,,"
+                                        csvStrings.append(csvTextString)
+                                        tuple = (attributeName,
+                                                     self.variableNameToCodeMap[attributeName],
+                                                     relatedInputLayerAttribute.name,
+                                                     relatedInputLayerAttribute.eContainer().name,
+                                                     attributeMatchType)
+                                        if not(tuple in self.uniqueTupleList):
+                                            self.uniqueTupleList.append(tuple)
+                            else:
+                                csvTextString = outputLayerName + "," + attributeName + "," + self.variableNameToCodeMap[attributeName] + "," + atributeTypeName + "," + domainName + ",,NONE,,,,,"
+                                csvStrings.append(csvTextString)
+                                tuple = (attributeName,
+                                                     self.variableNameToCodeMap[attributeName],
+                                                     "NONE",
+                                                     "NONE",
+                                                     "NONE")
+                                if not(tuple in self.uniqueTupleList):
+                                    self.uniqueTupleList.append(tuple)
+        
         f = open(fileDirectory + os.sep + 'matches.csv', "a",  encoding='utf-8') 
         for theString in csvStrings:
              f.write(theString)
              f.write('\n') 
         f.close()
+        
+        f2 = open(fileDirectory + os.sep + 'uniqueMatches.csv', "a",  encoding='utf-8') 
+
+        f2.write("Variable name in outputLayer,Variable code in outputLayer,MatchedAttribute in inputLayer,MatchedAttributeEntity in inputLayer,AttributeMatchType")
+        f2.write('\n') 
+        for t in self.uniqueTupleList:
+             f2.write(t[0])
+             f2.write(',')
+             f2.write(t[1])
+             f2.write(',')
+             f2.write(t[2])
+             f2.write(',')
+             f2.write(t[3])
+             f2.write(',')
+             f2.write(t[4])
+             f2.write('\n') 
+        f2.close()
                
     def inExcludedList(self,theString):
         excludedList = False
@@ -170,6 +225,12 @@ class StandardMatchingQueries(object):
                     if literal.name.lower() in theLiteral.name.lower():
                         returnLiteral = theLiteral
                         returnLiteral.matchType ="SUBSTRING"
+                        
+            if returnLiteral is None:
+                for theLiteral in relatedInputLayerDomain.eLiterals:
+                    if theLiteral.name.lower() in literal.name.lower():
+                        returnLiteral = theLiteral
+                        returnLiteral.matchType ="REVERSE_SUBSTRING"
                     
         return returnLiteral
         
@@ -177,17 +238,22 @@ class StandardMatchingQueries(object):
         classifiers = self.inputLayerEntitiesModel.eClassifiers
         returnAttributes = []
         returnAttribute = None
+        
         for classifier in classifiers:
             attributes = classifier.eAttributes
             for attribute in attributes:
                 attributeName = attribute.name.lower()
+                
                 if (theAttributeName.lower() == attributeName):
                     attribute.matchType = "EXACT"
                     returnAttributes.append(attribute)
-                elif theAttributeName in attributeName:
+                elif theAttributeName.lower() in attributeName:
                     attribute.matchType = "SUBSTRING"
                     returnAttributes.append(attribute)
-                    
+                elif attributeName in theAttributeName.lower():
+                    attribute.matchType = "REVERSE_SUBSTRING"
+                    returnAttributes.append(attribute)
+                
                     
                 
         return returnAttributes
@@ -237,6 +303,39 @@ class StandardMatchingQueries(object):
         print(classname)          
         return False    
     
+    def createVariableNameToCodeMap(self):       
+        # Make a variable to Domain Map
+        fileLocation = inScopeFileDirectory + os.sep + "variable.csv"
+        headerSkipped = False
+        # or each attribute add an Xattribute to the correct XClass represtnting the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+        
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    longName = row[4 ]
+                    variableCode = row[0]
+                    self.variableNameToCodeMap[Utils.makeValidID(longName)] = variableCode
+                    
+    def createDerivableList(self):       
+        # Make a variable to Domain Map
+        fileLocation = inScopeFileDirectory + os.sep + "derivable.csv"
+        headerSkipped = False
+
+        
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    longName = row[1]
+                    self.derivableList.append(longName)
+    
 if __name__ == '__main__':
     
     fileDirectory = '/workspaces/efbt/openregspecs/python/results'
@@ -244,5 +343,7 @@ if __name__ == '__main__':
     
     
     standardMatchingQueries = StandardMatchingQueries()
+    standardMatchingQueries.createVariableNameToCodeMap()
+    standardMatchingQueries.createDerivableList()
     standardMatchingQueries.query1(fileDirectory,inScopeFileDirectory)
     

@@ -20,9 +20,9 @@ from open_reg_specs import *
 
 from context import Context
 
-from import_ldm_to_rpmn import LDMImport
-from import_input_layer_to_rpmn import InputLayerImport
-from import_output_layer_to_rpmn import ROLImport
+from import_ldm_to_xcorel import LDMImport
+from import_input_layer_to_xcorel import InputLayerImport
+from import_output_layer_to_xcorel import ROLImport
 from import_finrep_vtl import ImportFinrepVTL
 from persistToFile import PersistToFile 
 
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     importROL=True
     importFinrepVTL=True
     persistToXML = True
-    persistToRPMN = True
+    persistToXCoreL = True
     context.persistVTLComments=True
     context.useSubDomains = False
     context.fileDirectory = '/workspaces/efbt/openregspecs/python/resourcesfinrep28'
@@ -52,5 +52,5 @@ if __name__ == '__main__':
         
     persister = PersistToFile()
     persister.saveModelAsXMIFile(context)
-    persister.saveModelAsRPMNFile(context)
+    persister.saveModelAsXCoreLFile(context)
  

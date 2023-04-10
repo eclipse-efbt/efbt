@@ -63,7 +63,7 @@ class InputLayerImport(object):
                     objectID = row[1];
                     
                     # assume that SQLDve gives valid IDS fro table names according 
-                    # to the validity rules of RPMN
+                    # to the validity rules of XCoreL
                     alteredClassName = Utils.makeValidID(className);
                    
                     if(alteredClassName.endswith("_derived")):
