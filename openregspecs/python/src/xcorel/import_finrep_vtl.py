@@ -46,13 +46,37 @@ class ImportFinrepVTL(object):
         subProcess = SubProcess(name = "finrepReports")
         context.workflowModule.subProcess.extend([subProcess])
         #ImportFinrepVTL.addReports(self,context)
-        ImportFinrepVTL.importTransformationsAndSchemes(self,context)
+        ImportFinrepVTL.importFinrepEIL_to_ROLTransformationSchemes(self,context)
+        ImportFinrepVTL.importTransformations(self,context)
         ImportFinrepVTL.buildListOfIntermediateFinrepLayers(self,context)
         ImportFinrepVTL.buildROLToIntermediateLayerLink(self,context)
         ImportFinrepVTL.buildIntermediateLayerToInputLayer(self,context)
         ImportFinrepVTL.addReports(self, context)
         
-    def importTransformationsAndSchemes(self,context):
+    def importFinrepEIL_to_ROLTransformationSchemes(self,context):
+        fileLocation = context.fileDirectory + os.sep + "transformation_scheme.csv"
+
+        headerSkipped = False
+        # Load all the entities from the csv file, make an XClass per entity,
+        # and add the XClass to the package
+        with open(fileLocation,encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if (not headerSkipped):
+                    headerSkipped = True
+                else:
+                    transformation_scheme_id = row[6]
+                    phase = row[5]
+                    
+                    if transformation_scheme_id.find('_FINREP') > 0 and phase == 'EIL_ROL':
+                        vtlScheme = VTLScheme()
+                        vtlScheme.scheme_id = transformation_scheme_id
+                        context.vtlModule.VTLSchemes.append(vtlScheme)
+                        
+                        
+    
+    def importTransformations(self,context):
         fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
         headerSkipped = False
@@ -71,21 +95,16 @@ class ImportFinrepVTL(object):
                     transformationID = row[6]
                     order = row[5]
                     vtlScheme = None
-                    if not(ImportFinrepVTL.schemesContains(self,context,scheme)):
-                        #new scheme
-                        vtlScheme = VTLScheme()
-                        vtlScheme.scheme_id = scheme
-                        context.vtlModule.VTLSchemes.append(vtlScheme) 
-                    else:
-                        vtlScheme = ImportFinrepVTL.lookupScheme(self,context,scheme)
+                    vtlScheme = ImportFinrepVTL.lookupScheme(self,context,scheme)
                      
-                      
-                    transformation = VTLTransformation()
-                    transformation.transformationID = transformationID
-                    transformation.description = description
-                    transformation.order_in_scheme = order
-                    transformation.expression = expression
-                    vtlScheme.expressions.append(transformation)
+                    if not (vtlScheme is None):
+                        
+                        transformation = VTLTransformation()
+                        transformation.transformation_id = transformationID
+                        transformation.description = description
+                        transformation.order_in_scheme = order
+                        transformation.expression = expression
+                        vtlScheme.expressions.append(transformation)
                     
                     #if scheme.startswith("G_F") and scheme.endswith("_FINREP_1"):
                     #    if "union" in expressio
@@ -132,7 +151,7 @@ class ImportFinrepVTL(object):
                             #print("vtl_layer")
                             #print(vtl_layer)
                             
-                            intermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,"G_" + vtl_layer.strip() + "_1")
+                            intermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,vtl_layer.strip())
                             #print("intermediateLayer")
                             #print(intermediateLayer)
                             if not(intermediateLayer is None):
@@ -144,7 +163,7 @@ class ImportFinrepVTL(object):
                                 for  trans in scheme.expressions:
                                     indexOfColon = trans.expression.find(':')
                                     lhs = trans.expression[0:indexOfColon].strip()
-                                    if ("G_" + lhs +"_1") == intermediateLayer.transformations.scheme_id:
+                                    if ( lhs ) == intermediateLayer.name:
                                         combo.transformations.append(trans)
                                 outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations.append(combo)
                                     
@@ -177,7 +196,7 @@ class ImportFinrepVTL(object):
         for layer in context.vtlModule.VTLGeneratedIntermediateLayers:
             #print(layer.transformations.scheme_id)
             #print("layer.transformations.scheme_id")
-            if layer.transformations.scheme_id == layerName:
+            if layer.name == layerName:
                 return layer
             
         return None
@@ -215,17 +234,39 @@ class ImportFinrepVTL(object):
     
     def buildListOfIntermediateFinrepLayers(self,context):
         for scheme in context.vtlModule.VTLSchemes:
-            if scheme.scheme_id.startswith("G_") and not(scheme.scheme_id.startswith("G_F_")) and scheme.scheme_id.endswith("_FINREP_1"):  
-                intermediateLayer = VTLGeneratedIntermediateLayer(name=scheme.scheme_id)
-                intermediateLayer.transformations = scheme
-                intermediateLayer.dependant_enriched_cubes = ImportFinrepVTL.findEnrichedCubeFor(self, context, scheme.scheme_id)
-                if ImportFinrepVTL.findIntermediateLayer(self,context,scheme.scheme_id) is None:
-                    context.vtlModule.VTLGeneratedIntermediateLayers.append(intermediateLayer)
+            
+            if not(scheme.scheme_id.startswith("G_F_")):
+                ImportFinrepVTL.buildListOfIntermediateFinrepLayersForScheme(self,scheme, context)
+                
+    
+    def buildListOfIntermediateFinrepLayersForScheme(self,scheme, context):
+        for transformation in scheme.expressions:
+            transformationText = transformation.expression
+            indexOfLHSEnd = transformationText.find(' :=')
+            expressionLHS = ImportFinrepVTL.stripComment(self,transformationText[0:indexOfLHSEnd])
+            theIntermediateLayer =  None  
+            for intermediateLayer in context.vtlModule.VTLGeneratedIntermediateLayers:
+                intermediateLayerName = intermediateLayer.name
+                if intermediateLayerName == expressionLHS:
+                    theIntermediateLayer = intermediateLayer
+            
+            if theIntermediateLayer == None:
+                theIntermediateLayer = VTLGeneratedIntermediateLayer(name=expressionLHS)
+                theIntermediateLayer.dependant_enriched_cubes = ImportFinrepVTL.findEnrichedCubeFor(self, context, expressionLHS)
+                context.vtlModule.VTLGeneratedIntermediateLayers.append(theIntermediateLayer)
+             
+            theIntermediateLayer.transformations.append(transformation)            
+        
+    def stripComment(self,text):
+        endCommentIndex = text.find('*/') 
+        if endCommentIndex > 0:
+            return text[endCommentIndex +2 :len(text)]
+        else:
+            return text
     
     def findEnrichedCubeFor(self,context,scheme_id):
-        indexOfSchemeStart = scheme_id.find('G_')
-        indexOfSchemeEnd= scheme_id.find('_FINREP_1')
-        enrichedCube = "P_" + scheme_id[2:indexOfSchemeEnd] + "_E_1"
+        indexOfSchemeEnd= scheme_id.find('_FINREP')
+        enrichedCube = "P_" + scheme_id[0:indexOfSchemeEnd] + "_E_1"
         print("enrichedCube")
         print(enrichedCube)
 
@@ -237,52 +278,7 @@ class ImportFinrepVTL(object):
                 
         return returnTransformations
                 
-    def buildListOfVTLLayersForFinrep(self,context):
-        fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
-        headerSkipped = False
-        # Load all the entities from the csv file, make an XClass per entity,
-        # and add the XClass to the package
-        with open(fileLocation,  encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            for row in filereader:
-                # skip the first line which is the header.
-                if (not headerSkipped):
-                    headerSkipped = True
-                else:
-                    expression = row[2]
-                    scheme = row[7] 
-                    if scheme.startsWith("G_") and not(scheme.startsWith("G_F_")) and scheme.endsWith("_FINREP_1"):   
-                        indexOfSchemeStart = expression.find('G_')
-                        indexOfSchemeEnd= expression.find('_FINREP_1')
-                        output_layer = scheme.substring(indexOfSchemeStart,indexOfSchemeEnd)
-                        if not(context.vtl_layers.contains(output_layer)):
-                            context.vtl_layers.append(output_layer)
-                                                                      
-    def VTLLayerToVTLLayerLogicMap(self,context):
-        
-        for vtl_layer in context.vtl_layers:
-            expressionlist = []
-            fileLocation = context.fileDirectory + os.sep + "transformations.csv"
-    
-            headerSkipped = False
-            # Load all the entities from the csv file, make an XClass per entity,
-            # and add the XClass to the package
-            with open(fileLocation,  encoding='utf-8') as csvfile:
-                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-                for row in filereader:
-                    # skip the first line which is the header.
-                    if (not headerSkipped):
-                        headerSkipped = True
-                    else:
-                        expression = row[2]
-                        scheme = row[7]
-                        if ("G_F_" + vtl_layer + "_FINREP_1") == scheme:
-                            expressionlist.add()
-                        
-                    
-                       
-        
     def addReports(self,context):
         fileLocation = context.fileDirectory + os.sep + "in_scope_reports.csv"
         
@@ -397,7 +393,7 @@ class ImportFinrepVTL(object):
                     filter = row[3]
                     filterName = row[5]
                     link = EntityToVTLIntermediateLayerLink()
-                    link.VTLIntermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,"G_" + vtlLayer.strip() + "_FINREP_1")
+                    link.VTLIntermediateLayer = ImportFinrepVTL.findIntermediateLayer(self,context,vtlLayer.strip() + "_FINREP")
                     link.entity = ImportFinrepVTL.findEntity(self,context,inputLayer)
                     link.filter = filter 
                     link.filterName = filterName

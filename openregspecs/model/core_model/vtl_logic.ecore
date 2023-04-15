@@ -20,7 +20,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedIntermediateLayer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependant_enriched_cubes"
         eType="#//VTLScheme"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" eType="#//VTLScheme"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" upperBound="-1"
+        eType="#//VTLTransformation"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
   </eClassifiers>

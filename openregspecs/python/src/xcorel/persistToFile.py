@@ -187,7 +187,7 @@ class PersistToFile:
             for vtl in context.vtlModule.VTLForSelectionLayers:
                 if vtl.selectionLayer == layer:
                     intermediateLayer = vtl.intermediateLayer
-                    for trans in intermediateLayer.transformations.expressions:
+                    for trans in intermediateLayer.transformations:
                         output = output + PersistToFile.removeCommentChars(self,trans.expression) + "\r"
             output = output +  "*/\r\r"
             
