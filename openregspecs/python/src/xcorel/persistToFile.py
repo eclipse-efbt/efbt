@@ -173,7 +173,7 @@ class PersistToFile:
         if context.persistVTLComments:
             output = output + "/** VTL intermediate layer and report combination specific VTL \r"
             intermediateLayer = None
-            for vtl in context.vtlModule.VTLForSelectionLayers:
+            for vtl in context.vtlModule.VTLForSelectionLayers.vTLForSelectionLayers:
                 if vtl.selectionLayer == layer:
                     intermediateLayer = vtl.intermediateLayer
                     for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
@@ -184,7 +184,7 @@ class PersistToFile:
             
             output = output + "/** VTL intermediate layer specific VTL \r"
             intermediateLayer = None
-            for vtl in context.vtlModule.VTLForSelectionLayers:
+            for vtl in context.vtlModule.VTLForSelectionLayers.vTLForSelectionLayers:
                 if vtl.selectionLayer == layer:
                     intermediateLayer = vtl.intermediateLayer
                     for trans in intermediateLayer.transformations:
@@ -194,14 +194,14 @@ class PersistToFile:
             output = output + "/** assocated enriched layer in VTL \r"
             enrichedLayer = intermediateLayer.dependant_enriched_cubes
             if not(enrichedLayer is None):
-                output = output + "enriched Layer :" + enrichedLayer.scheme_id + "\r"
+                output = output + "enriched Layer :" + enrichedLayer.name + "\r"
                 output = output + "enriched Layer transformations:\r"
-                for exp in enrichedLayer.expressions:
+                for exp in enrichedLayer.transformations:
                     output = output + PersistToFile.removeCommentChars(self,exp.expression) + "\r"
             output = output +  "*/\r\r"    
            
             output = output + "/** associated input layer table and filter \r"
-            for link in context.vtlModule.entityToVTLIntermediateLayerLinks:
+            for link in context.vtlModule.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks:
                 if link.VTLIntermediateLayer == intermediateLayer:
                     output = output +  "input layer entity: " + link.entity.name + "\r"        
                     output = output +  "filter: " + link.filter + "\r"  
@@ -214,7 +214,7 @@ class PersistToFile:
         output = "" 
         if context.persistVTLComments:
             output = output + "/** View specific VTL \r"
-            for vtl in context.vtlModule.VTLForViews:
+            for vtl in context.vtlModule.VTLForViews.vTLForViews:
                 if vtl.view == view:
                     output = output + "output layer = " + vtl.vtl.outputLayer.name + "\r"
             output = output +  "*/\r\r"

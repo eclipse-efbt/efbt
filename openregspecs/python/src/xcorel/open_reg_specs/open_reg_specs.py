@@ -456,16 +456,20 @@ class VTLGeneratedOutputlayer(EObject, metaclass=MetaEClass):
 
 class VTLForOutputLayerAndIntermediateLayerCombination(EObject, metaclass=MetaEClass):
 
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     transformations = EReference(ordered=True, unique=True,
                                  containment=False, derived=False, upper=-1)
     outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
     intermediateLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, transformations=None, outputLayer=None, intermediateLayer=None):
+    def __init__(self, *, transformations=None, outputLayer=None, intermediateLayer=None, name=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
+
+        if name is not None:
+            self.name = name
 
         if transformations:
             self.transformations.extend(transformations)
@@ -480,12 +484,13 @@ class VTLForOutputLayerAndIntermediateLayerCombination(EObject, metaclass=MetaEC
 class VTLGeneratedIntermediateLayer(EObject, metaclass=MetaEClass):
 
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    isEnrichment = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     dependant_enriched_cubes = EReference(
         ordered=True, unique=True, containment=False, derived=False)
     transformations = EReference(ordered=True, unique=True,
                                  containment=False, derived=False, upper=-1)
 
-    def __init__(self, *, name=None, dependant_enriched_cubes=None, transformations=None):
+    def __init__(self, *, dependant_enriched_cubes=None, transformations=None, name=None, isEnrichment=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -493,6 +498,9 @@ class VTLGeneratedIntermediateLayer(EObject, metaclass=MetaEClass):
 
         if name is not None:
             self.name = name
+
+        if isEnrichment is not None:
+            self.isEnrichment = isEnrichment
 
         if dependant_enriched_cubes is not None:
             self.dependant_enriched_cubes = dependant_enriched_cubes
@@ -901,43 +909,131 @@ class XPackage(Module):
 
 class VTLModule(Module):
 
-    VTLSchemes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    VTLSchemes = EReference(ordered=True, unique=True, containment=True, derived=False)
     VTLGeneratedOutputLayers = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+        ordered=True, unique=True, containment=True, derived=False)
     VTLGeneratedIntermediateLayers = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    VTLEnrichedCubes = EReference(ordered=True, unique=True,
-                                  containment=True, derived=False, upper=-1)
-    VTLForSelectionLayers = EReference(ordered=True, unique=True,
-                                       containment=True, derived=False, upper=-1)
+        ordered=True, unique=True, containment=True, derived=False)
+    VTLEnrichedLayers = EReference(ordered=True, unique=True, containment=True, derived=False)
+    VTLForSelectionLayers = EReference(ordered=True, unique=True, containment=True, derived=False)
     entityToVTLIntermediateLayerLinks = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    VTLForViews = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+        ordered=True, unique=True, containment=True, derived=False)
+    VTLForViews = EReference(ordered=True, unique=True, containment=True, derived=False)
 
-    def __init__(self, *, VTLSchemes=None, VTLGeneratedOutputLayers=None, VTLGeneratedIntermediateLayers=None, VTLEnrichedCubes=None, VTLForSelectionLayers=None, entityToVTLIntermediateLayerLinks=None, VTLForViews=None, **kwargs):
+    def __init__(self, *, VTLSchemes=None, VTLGeneratedOutputLayers=None, VTLGeneratedIntermediateLayers=None, VTLEnrichedLayers=None, VTLForSelectionLayers=None, entityToVTLIntermediateLayerLinks=None, VTLForViews=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if VTLSchemes:
-            self.VTLSchemes.extend(VTLSchemes)
+        if VTLSchemes is not None:
+            self.VTLSchemes = VTLSchemes
 
-        if VTLGeneratedOutputLayers:
-            self.VTLGeneratedOutputLayers.extend(VTLGeneratedOutputLayers)
+        if VTLGeneratedOutputLayers is not None:
+            self.VTLGeneratedOutputLayers = VTLGeneratedOutputLayers
 
-        if VTLGeneratedIntermediateLayers:
-            self.VTLGeneratedIntermediateLayers.extend(VTLGeneratedIntermediateLayers)
+        if VTLGeneratedIntermediateLayers is not None:
+            self.VTLGeneratedIntermediateLayers = VTLGeneratedIntermediateLayers
 
-        if VTLEnrichedCubes:
-            self.VTLEnrichedCubes.extend(VTLEnrichedCubes)
+        if VTLEnrichedLayers is not None:
+            self.VTLEnrichedLayers = VTLEnrichedLayers
 
-        if VTLForSelectionLayers:
-            self.VTLForSelectionLayers.extend(VTLForSelectionLayers)
+        if VTLForSelectionLayers is not None:
+            self.VTLForSelectionLayers = VTLForSelectionLayers
+
+        if entityToVTLIntermediateLayerLinks is not None:
+            self.entityToVTLIntermediateLayerLinks = entityToVTLIntermediateLayerLinks
+
+        if VTLForViews is not None:
+            self.VTLForViews = VTLForViews
+
+
+class VTLGeneratedOutputlayerModule(Module):
+
+    vTLGeneratedOutputlayerModules = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, vTLGeneratedOutputlayerModules=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if vTLGeneratedOutputlayerModules:
+            self.vTLGeneratedOutputlayerModules.extend(vTLGeneratedOutputlayerModules)
+
+
+class VTLForOutputLayerAndIntermediateLayerCombinationModule(Module):
+
+    vTLForOutputLayerAndIntermediateLayerCombinations = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, vTLForOutputLayerAndIntermediateLayerCombinations=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if vTLForOutputLayerAndIntermediateLayerCombinations:
+            self.vTLForOutputLayerAndIntermediateLayerCombinations.extend(
+                vTLForOutputLayerAndIntermediateLayerCombinations)
+
+
+class VTLGeneratedIntermediateLayerModule(Module):
+
+    vTLGeneratedIntermediateLayers = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, vTLGeneratedIntermediateLayers=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if vTLGeneratedIntermediateLayers:
+            self.vTLGeneratedIntermediateLayers.extend(vTLGeneratedIntermediateLayers)
+
+
+class VTLSchemesModule(Module):
+
+    vTLSchemes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, vTLSchemes=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if vTLSchemes:
+            self.vTLSchemes.extend(vTLSchemes)
+
+
+class VTLForSelectionLayerModule(Module):
+
+    vTLForSelectionLayers = EReference(ordered=True, unique=True,
+                                       containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, vTLForSelectionLayers=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if vTLForSelectionLayers:
+            self.vTLForSelectionLayers.extend(vTLForSelectionLayers)
+
+
+class EntityToVTLIntermediateLayerLinkModule(Module):
+
+    entityToVTLIntermediateLayerLinks = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, entityToVTLIntermediateLayerLinks=None, **kwargs):
+
+        super().__init__(**kwargs)
 
         if entityToVTLIntermediateLayerLinks:
             self.entityToVTLIntermediateLayerLinks.extend(entityToVTLIntermediateLayerLinks)
 
-        if VTLForViews:
-            self.VTLForViews.extend(VTLForViews)
+
+class VTLForViewModule(Module):
+
+    vTLForViews = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, vTLForViews=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if vTLForViews:
+            self.vTLForViews.extend(vTLForViews)
 
 
 @abstract

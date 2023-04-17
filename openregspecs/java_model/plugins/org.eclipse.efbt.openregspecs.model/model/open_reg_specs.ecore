@@ -473,14 +473,17 @@
         eType="#//VTLTransformation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//VTLGeneratedOutputlayer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedIntermediateLayer">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedIntermediateLayer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependant_enriched_cubes"
-        eType="#//VTLScheme"/>
+        eType="#//VTLGeneratedIntermediateLayer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" upperBound="-1"
         eType="#//VTLTransformation"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEnrichment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLTransformation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="expression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -500,20 +503,20 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLModule" eSuperTypes="#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLSchemes" upperBound="-1"
-        eType="#//VTLScheme" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLSchemes" eType="#//VTLSchemesModule"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="VTLGeneratedOutputLayers"
-        upperBound="-1" eType="#//VTLGeneratedOutputlayer" containment="true"/>
+        eType="#//VTLGeneratedOutputlayerModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="VTLGeneratedIntermediateLayers"
-        upperBound="-1" eType="#//VTLGeneratedIntermediateLayer" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLEnrichedCubes" upperBound="-1"
-        eType="#//VTLEnrichedCube" containment="true"/>
+        eType="#//VTLGeneratedIntermediateLayerModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLEnrichedLayers" eType="#//VTLGeneratedIntermediateLayerModule"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="VTLForSelectionLayers"
-        upperBound="-1" eType="#//VTLForSelectionLayer" containment="true"/>
+        eType="#//VTLForSelectionLayerModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entityToVTLIntermediateLayerLinks"
-        upperBound="-1" eType="#//EntityToVTLIntermediateLayerLink" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLForViews" upperBound="-1"
-        eType="#//VTLForView" containment="true"/>
+        eType="#//EntityToVTLIntermediateLayerLinkModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="VTLForViews" eType="#//VTLForViewModule"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EntityToVTLIntermediateLayerLink">
     <eStructuralFeatures xsi:type="ecore:EReference" name="VTLIntermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
@@ -525,5 +528,37 @@
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="#//View"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="vtl" eType="#//VTLGeneratedOutputlayer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedOutputlayerModule" eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vTLGeneratedOutputlayerModules"
+        upperBound="-1" eType="#//VTLGeneratedOutputlayer" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLForOutputLayerAndIntermediateLayerCombinationModule"
+      eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vTLForOutputLayerAndIntermediateLayerCombinations"
+        upperBound="-1" eType="#//VTLForOutputLayerAndIntermediateLayerCombinationModule"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedIntermediateLayerModule"
+      eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vTLGeneratedIntermediateLayers"
+        upperBound="-1" eType="#//VTLGeneratedIntermediateLayer" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLSchemesModule" eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vTLSchemes" upperBound="-1"
+        eType="#//VTLScheme" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLForSelectionLayerModule" eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vTLForSelectionLayers"
+        upperBound="-1" eType="#//VTLForSelectionLayer" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EntityToVTLIntermediateLayerLinkModule"
+      eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityToVTLIntermediateLayerLinks"
+        upperBound="-1" eType="#//EntityToVTLIntermediateLayerLink" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VTLForViewModule" eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vTLForViews" upperBound="-1"
+        eType="#//VTLForView" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
