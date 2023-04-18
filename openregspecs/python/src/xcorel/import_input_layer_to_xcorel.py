@@ -33,7 +33,8 @@ class InputLayerImport(object):
         InputLayerImport.addILClassesToPackage(self,context)
         InputLayerImport.addILEnumsToPackage(self,context)
         InputLayerImport.addILLiteralsToEnums(self,context) 
-        InputLayerImport.createILTypesMap(self,context) 
+        InputLayerImport.createILTypesMap(self,context)
+        InputLayerImport.addIL_PK_AttributesToClasses(self,context) 
         InputLayerImport.addILAttributesToClasses(self,context) 
         InputLayerImport.createFKToColumnMap(self,context) 
         InputLayerImport.addILRelationshipsBetweenClasses(self,context)
@@ -221,6 +222,169 @@ class InputLayerImport(object):
                             context.datatypeMap[dataTypeID] = context.xString
         
                                      
+    
+    def addIL_PK_AttributesToClasses(self,context):
+        fileLocation = context.fileDirectory + os.sep + "DM_Columns.csv"
+        headerSkipped = False
+        # For each attribute add an XAttribute to the correct XClass representing the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if (not headerSkipped):
+                        headerSkipped = True
+                else:
+                    attributeName = row[0]
+                    attributeID = row[1]
+                    amendedAttributeName = Utils.makeValidID(attributeName);
+                    mandatory = row[6]
+                    attributeKind = row[7]
+                   
+                    classID = row[4]
+                    relationID = row[35]
+                    primary_key_or_not = row[34]
+                    theClass = context.classesMap[classID]
+                    
+                    classIsDerived = False
+                    if (theClass.name.endswith("_derived")):
+                        classIsDerived = True
+                        
+                    theAttributeName =  amendedAttributeName
+                    
+                    # we only add attributes here if they are not representing a relationship
+                    if primary_key_or_not == "P":
+                        
+                        if (attributeKind == "Domain"):
+                            enumID = row[13]
+                            theEnum = context.enumMap[enumID]
+                            
+                            attribute = XAttribute()
+                            
+                            attribute.lowerBound=0
+                            attribute.upperBound=1
+                            if(theEnum.name == "String"):
+                                attribute.name = theAttributeName
+                                attribute.type = context.xString
+                            elif(theEnum.name.startswith("String_")):
+                                attribute.name = theAttributeName
+                                attribute.type = context.xString
+                            elif(theEnum.name == "Number"):
+                                attribute.name = theAttributeName
+                                attribute.type = context.xDouble
+                            elif(theEnum.name.startswith("Real_")):
+                                attribute.name = theAttributeName
+                                attribute.type = context.xDouble
+                            elif(theEnum.name.startswith("Monetary")):
+                                attribute.name = theAttributeName
+                                attribute.type = context.xInt
+                            elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                attribute.name = theAttributeName
+                                attribute.type = context.xInt
+                            elif(theEnum.name.startswith("Non_negative_integers")): 
+                                attribute.name = theAttributeName
+                                attribute.type = context.xInt
+                            elif(theEnum.name.startswith("All_possible_dates")):
+                                attribute.name = theAttributeName
+                                attribute.type = context.xDate
+                                
+                            # This is a common domain used for String identifiers in BIRD in SQLDeveloper
+                            
+                            else:
+                                attribute.name = theAttributeName
+                                attribute.type = theEnum  
+                            
+                            if classIsDerived:
+                                operation = XOperation()
+                                operation.lowerBound=0
+                                operation.upperBound=1
+                                if(theEnum.name == "String"):
+                                    operation.name = theAttributeName
+                                    operation.type = context.xString
+                                elif(theEnum.name.startswith("String_")):
+                                    operation.name = theAttributeName
+                                    operation.type = context.xString
+                                elif(theEnum.name == "Number"):
+                                    operation.name = theAttributeName
+                                    operation.type = context.xDouble
+                                
+                                elif(theEnum.name.startswith("Real_")):
+                                    operation.name = theAttributeName
+                                    operation.type = context.xDouble
+                                elif(theEnum.name.startswith("Monetary")): 
+                                    operation.name = theAttributeName
+                                    operation.type = context.xInt
+                                elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                    operation.name = theAttributeName
+                                    operation.type = context.xInt
+                                elif(theEnum.name.startswith("Non_negative_integers")): 
+                                    operation.name = theAttributeName
+                                    operation.type = context.xInt
+                                elif(theEnum.name.startswith("All_possible_dates")):   
+                                    operation.name = theAttributeName
+                                    operation.type = context.xDate  
+                                else:
+                                    operation.name = theAttributeName
+                                    operation.type = theEnum  
+                                          
+    
+                        if (attributeKind == "Logical Type"):
+                            print("Logical Type")
+                            dataTypeID = row[14]
+                            try:
+                                datatype = context.datatypeMap[dataTypeID]
+                                attribute = XAttribute()
+                                attribute.lowerBound=0
+                                attribute.upperBound=1
+                                attribute.name =amendedAttributeName
+                                attribute.type = Utils.getEcoreDataTypeForDataType(self)
+                                
+                                if classIsDerived:
+                                    operation = XOperation()
+                                    operation.lowerBound=0
+                                    operation.upperBound=1
+                                    operation.name =amendedAttributeName
+                                    operation.type = Utils.getEcoreDataTypeForDataType(self)
+                                
+                            except KeyError:
+                                print("missing datatype: ")
+                                print(dataTypeID)                       
+    
+                        
+    
+                        try:
+    
+                            theClass = context.classesMap[classID]
+                            InputLayerImport.addCompositePKIFMissing(self,context,theClass)
+                            theClass.members.extend([attribute])
+                            if classIsDerived:
+                                theClass.members.extend([operation])
+    
+                        except:
+                            print( "missing class2: " )
+                            print(classID)
+                    else:
+                        if mandatory == "Y":
+                            context.FKtoMandatoryMap[attributeID] = "M"  
+        
+    def addCompositePKIFMissing(self,context,theClass):
+        pkName = theClass.name + "_PK"
+        PKExists = False
+        for member in theClass.members:
+            if member.name == pkName:
+               PKExists = True 
+               
+        if not(PKExists):
+            attribute = XAttribute()
+            attribute.name=pkName
+            attribute.type = context.xString
+            attribute.iD = True
+            theClass.members.append(attribute)
+            
+            
+        
+            
     def addILAttributesToClasses(self,context):
         '''
         For each attribute on an entity of the IL, add an attribute
@@ -257,16 +421,14 @@ class InputLayerImport(object):
                     theAttributeName =  amendedAttributeName
                     
                     # we only add attributes here if they are not representing a relationship
-                    if relationID == "":
+                    if (relationID == "") and  not (primary_key_or_not == "P"):
                         
                         if (attributeKind == "Domain"):
                             enumID = row[13]
                             theEnum = context.enumMap[enumID]
                             
                             attribute = XAttribute()
-                            if(primary_key_or_not == "P"):
-                                attribute.iD = True
-                                
+                            
                             attribute.lowerBound=0
                             attribute.upperBound=1
                             if(theEnum.name == "String"):

@@ -72,8 +72,8 @@ class PersistToFile:
                         f.write(" \r"  )
                     elif isinstance(member, XAttribute):
                         f.write("\t\t\t\t")
-                        # if member.iD:
-                        #   f.write("id ")
+                        if member.iD:
+                           f.write("id ")
                         
                         if (member.type.name == "String"):
                             f.write( "String  " )
