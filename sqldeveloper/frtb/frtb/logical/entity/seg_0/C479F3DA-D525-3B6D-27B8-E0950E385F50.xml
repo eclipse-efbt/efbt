@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C479F3DA-D525-3B6D-27B8-E0950E385F50" name="Equity risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-27 11:26:02 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of an Equity based , this will e a particular Security (usually with a n ISIN)]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -22,6 +23,7 @@
 <Attribute name="Equity factor type" id="BAF2B796-C678-E47C-0645-8A1FFD2A0399">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:45:24 UTC</createdTime>
+<commentInRDBMS><![CDATA[identifies if this is a Spot or Repo Euqity Risk Factor]]></commentInRDBMS>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -38,6 +40,7 @@
 <Attribute name="Issue Identifier" id="E018E7F5-EA38-5477-756A-90B090C11B75">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-17 04:07:05 UTC</createdTime>
+<commentInRDBMS><![CDATA[Identifier of the risk factor]]></commentInRDBMS>
 <generatorID>51581835-0EB3-A20D-FE96-99D73DC26D32</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>

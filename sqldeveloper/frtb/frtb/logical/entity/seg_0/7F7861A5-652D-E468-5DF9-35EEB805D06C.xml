@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="7F7861A5-652D-E468-5DF9-35EEB805D06C" name="Security or exchange tradable derivative position">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:04:05 UTC</createdTime>
+<comment><![CDATA[The position which has risks measured and provided against different risk factors.]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -20,6 +21,7 @@
 <Attribute name="Position identifier" id="F905716C-56AA-D854-32B3-33220A5D482E">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:14:37 UTC</createdTime>
+<comment><![CDATA[the positions identifier]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

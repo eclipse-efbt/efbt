@@ -2,6 +2,14 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="CAAA6A13-3408-32AA-C628-9F0995673C28" name="Curvature">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:18:22 UTC</createdTime>
+<comment><![CDATA[bcbs d457 
+10.13 Sensitivity: a bank’s estimate of the change in value of an instrument due to a small change in
+one of its underlying risk factors. Delta and vega risks are sensitivities.
+
+10.16 Curvature risk: the additional potential loss beyond delta risk due to a change in a risk factor for
+financial instruments with optionality. In the standardised approach in the market risk framework,
+it is based on two stress scenarios involving an upward shock and a downward shock to each
+regulatory risk factor.]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -37,6 +45,7 @@
 <Attribute name="Curvature valuation difference" id="5C3EAC37-A82D-C65C-55D2-FD482BB92875">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:19:53 UTC</createdTime>
+<comment><![CDATA[curvature recorded as a difference between the normal valuation and  a revaluation after a small  increase OR decrease  in an underyling risk factor, this is an amount interprted in the curency of record, e.g. 100 dollars. We only use carvature for non linear instruments (e.g. options)]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -52,6 +61,7 @@
 <Attribute name="Shock direction" id="B1BAAD61-8F23-F273-8C31-5A7B5433112F">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:20:49 UTC</createdTime>
+<comment><![CDATA[The direction of the change in uderlying (up or down), for each non -linear position we will have an upshift and a downshift measure recorded]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -67,6 +77,7 @@
 <Attribute name="Curvature risk weight" id="105922CC-ED5A-7239-F661-2CE80F67712E">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:21:47 UTC</createdTime>
+<comment><![CDATA[The weight associated with the curvature.]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
