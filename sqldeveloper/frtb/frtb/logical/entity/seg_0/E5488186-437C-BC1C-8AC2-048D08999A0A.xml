@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="E5488186-437C-BC1C-8AC2-048D08999A0A" name="Commodity risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-27 11:05:47 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of a commodity based  instrument ]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -23,6 +24,7 @@
 <Attribute name="Commodity type" id="41D094AE-CB6D-8185-8855-6D21A8F9D77C">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 06:14:13 UTC</createdTime>
+<commentInRDBMS><![CDATA[The type of commodity, taken from Commodity Type Domain]]></commentInRDBMS>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -38,6 +40,7 @@
 <Attribute name="Delivery location" id="34DBA1DF-E5A2-07F8-8478-C962E4ADBF61">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:40:09 UTC</createdTime>
+<commentInRDBMS><![CDATA[The delivery location related to the commodity Risk factor, typically the deliery location of a deliverable commodity future.]]></commentInRDBMS>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

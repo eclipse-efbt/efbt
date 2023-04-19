@@ -2,6 +2,8 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="E7C4E383-AABB-082F-EAE7-A59D01E27340" name="Risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-27 11:00:24 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of an instrument (eg an exchange rate
+or interest rate).]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -20,6 +22,7 @@
 <Attribute name="Risk factor Identifier" id="6F905B6C-EC99-1422-CBA1-C8E591102FAE">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-10 08:44:42 UTC</createdTime>
+<comment><![CDATA[unique identifier of a Risk Factor]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

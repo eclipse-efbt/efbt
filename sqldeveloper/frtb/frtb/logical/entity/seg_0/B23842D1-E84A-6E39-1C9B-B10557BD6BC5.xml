@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B23842D1-E84A-6E39-1C9B-B10557BD6BC5" name="Securitisation">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:45:04 UTC</createdTime>
+<comment><![CDATA[A securitisation Issued]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -21,6 +22,7 @@
 <Attribute name="Securitisation sector" id="FB497CE4-4809-1BC4-316A-6038C331240B">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:45:44 UTC</createdTime>
+<comment><![CDATA[The sector to which the securitisation is related]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

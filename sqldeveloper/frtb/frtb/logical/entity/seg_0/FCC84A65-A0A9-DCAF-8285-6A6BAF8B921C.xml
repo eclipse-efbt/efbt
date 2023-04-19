@@ -2,6 +2,8 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="FCC84A65-A0A9-DCAF-8285-6A6BAF8B921C" name="FX risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-03-27 11:20:08 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of an FX based instrument i.e. an exchange rate
+or interest rate]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -22,6 +24,7 @@
 <Attribute name="ccy1" id="1436AD10-075E-7747-A4F0-16924D5282AF">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:39:28 UTC</createdTime>
+<commentInRDBMS><![CDATA[first currency in an exchange rate pair]]></commentInRDBMS>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -37,6 +40,7 @@
 <Attribute name="ccy2" id="CEA079F2-E011-E332-677A-8E2446896C08">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:39:42 UTC</createdTime>
+<commentInRDBMS><![CDATA[second  currency in an exchange rate pair]]></commentInRDBMS>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

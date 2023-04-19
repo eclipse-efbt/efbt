@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8ABC1D49-C1B4-877C-ED2B-EBC1BFA1363B" name="Securitisation non CTP risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:58:04 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of an securitisation based   instrument with credit spread risk, not traded in a correlation tradin portfolio .This will be a credit  risk spread curve related to an organisation]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -22,6 +23,7 @@
 <Attribute name="Tranche name" id="8102EC40-CC02-20E6-C2D4-D888711E368D">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:59:42 UTC</createdTime>
+<commentInRDBMS><![CDATA[The related Tranch of the securitisation]]></commentInRDBMS>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -37,6 +39,7 @@
 <Attribute name="Issue Identifier" id="DF45395F-D359-D5C5-A570-953684C5504D">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-17 04:07:05 UTC</createdTime>
+<commentInRDBMS><![CDATA[The ID of the securitisation issue]]></commentInRDBMS>
 <generatorID>609E646F-44F1-8B17-8BD3-D4B7E0B8E361</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
