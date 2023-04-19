@@ -2,6 +2,13 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="47A941C3-2E4D-07A4-14B2-F4AFB696D126" name="Vega sensitivity">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:11:19 UTC</createdTime>
+<comment><![CDATA[bcbs d457 
+10.13 Sensitivity: a bank’s estimate of the change in value of an instrument due to a small change in
+one of its underlying risk factors. Delta and vega risks are sensitivities.
+
+10.15 Vega risk: the potential loss resulting from the change in value of a derivative due to a change in
+the implied volatility of its underlying.
+]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -23,6 +30,7 @@
 <Attribute name="Currency of record" id="AAE0595B-9931-FFBE-745C-7F4816A6FBAA">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:15:26 UTC</createdTime>
+<comment><![CDATA[The currency of Record]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -38,6 +46,7 @@
 <Attribute name="option maturity" id="C78476ED-23B6-819D-275B-51A406887D78">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:15:42 UTC</createdTime>
+<comment><![CDATA[THe option maturity to theich this sensitivity relates]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -53,6 +62,7 @@
 <Attribute name="underlying residual maturity" id="4F905639-BB92-E626-3F22-F7B2CE64E33A">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:16:16 UTC</createdTime>
+<comment><![CDATA[Where required the underlying residual maturity to which the sensitivity is wwa created. Required when we consider that the sensitivity came from a change in a a volatility surface]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -68,6 +78,7 @@
 <Attribute name="Vega sensitivity" id="553ABB04-6220-A556-90E9-32E2488FBDC1">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 09:17:00 UTC</createdTime>
+<comment><![CDATA[The sensitivity, as an amount (e.g. 100 dollars)]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="125F0220-6287-45CE-9C1C-80F29B5D7A31" name="Securitisation CTP risk factor ">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:01:16 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of an securitisation based   instrument with credit spread risk,traded in a correlation tradin portfolio]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B38A778B-0463-9C7D-3502-F4091E4E0384" name="GIRR risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:47:52 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of an interest rate based instrument, this will be an interest rate related to a particular yeild curve for a currency (like USD 3 month Libor ) if the curve is a basis curve it can have 2 associated currencies.]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -22,6 +23,7 @@
 <Attribute name="GIRR risk factor type" id="0A77E337-549A-27A5-3B08-F70824F6D7EB">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:48:48 UTC</createdTime>
+<comment><![CDATA[THe type of interest rate risk factor. Can be Yeild, Basis or Inflation]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -37,6 +39,7 @@
 <Attribute name="Main currency" id="6CB45D8D-6EFF-1928-F265-999371B2D27A">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:49:09 UTC</createdTime>
+<comment><![CDATA[The curves main currency]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -52,6 +55,7 @@
 <Attribute name="Second currency" id="A58B61ED-C746-B60E-94B4-422E863E40B5">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:49:42 UTC</createdTime>
+<comment><![CDATA[The second currency of the curve if it as a basis curve]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

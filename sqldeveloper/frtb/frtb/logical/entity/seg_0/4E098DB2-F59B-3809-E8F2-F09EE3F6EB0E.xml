@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4E098DB2-F59B-3809-E8F2-F09EE3F6EB0E" name="Equity issue">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:44:19 UTC</createdTime>
+<comment><![CDATA[An Equity Issue ]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>

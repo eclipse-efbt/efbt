@@ -2,8 +2,10 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="58CA352E-DE50-CD54-EECC-B9D98C76ADE6" name="Security issue">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:05:53 UTC</createdTime>
+<comment><![CDATA[A security Issue, typically this migth have an ISIN]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
 <item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
@@ -19,8 +21,10 @@
 <Attribute name="Ratings grade" id="5157082B-7A37-50FA-C91E-90EB65674275">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:06:28 UTC</createdTime>
+<comment><![CDATA[The ratings grade of the security issue if  it has one]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
 <item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
@@ -33,8 +37,10 @@
 <Attribute name="Issue Identifier" id="D59D2351-11DE-5835-5579-2B664C07C628">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:07:03 UTC</createdTime>
+<comment><![CDATA[the issue identifier]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
 <item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
@@ -46,9 +52,11 @@
 <Attribute name="Organisation identifier" id="4D8DF761-26E3-BA2A-7140-56D6AD444CDD">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:54:42 UTC</createdTime>
+<comment><![CDATA[the  organisation that issued the security]]></comment>
 <generatorID>8D535C8F-2910-B878-51D6-91AC6852B8AC</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
 <item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>
@@ -66,6 +74,7 @@
 <createdTime>2022-04-16 06:36:45 UTC</createdTime>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
 <item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
 <item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
 </engineerTo>

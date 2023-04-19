@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A4E1F026-BF8E-548C-4A9D-C0B863F89F47" name="Risk measure">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-16 05:52:50 UTC</createdTime>
+<comment><![CDATA[A measured risk of a position against a particular risk factor]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -20,6 +21,7 @@
 <Attribute name="Risk measure identifier" id="2CEEE7DA-CBD4-26D2-1EF9-EC7DD4E1E251">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-16 05:54:02 UTC</createdTime>
+<comment><![CDATA[The risk measure identifier]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -34,6 +36,7 @@
 <Attribute name="Risk factor Identifier" id="4A5E6818-D579-ADEC-3C56-7425F98DB037">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-16 06:12:32 UTC</createdTime>
+<comment><![CDATA[The risk factor we are measuring risk against]]></comment>
 <generatorID>61F68422-DB16-E699-396E-7F7E05929587</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
@@ -51,6 +54,7 @@
 <Attribute name="Position identifier" id="F7A033E7-52FB-25CB-1289-A5AED88A0247">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-16 06:13:10 UTC</createdTime>
+<comment><![CDATA[The position we are measuring risk for.]]></comment>
 <generatorID>C5D7EE96-E799-F6F8-6B9D-E05B4B34EE4A</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>

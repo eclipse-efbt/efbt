@@ -2,6 +2,7 @@
 <Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="41723CFA-4325-D82E-7C07-BBF4BEA5B19D" name="CSR non securitisation risk factor">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:51:31 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of an non-securitisation instrument with credit spread risk i, this will be a credit  risk spread curve related to an tranch of a securitisation]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -22,6 +23,7 @@
 <Attribute name="CSR curve type" id="0A3B6592-CD7C-AB86-7DAE-AA430519D938">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:53:52 UTC</createdTime>
+<comment><![CDATA[The type of Curve (CDS or BOND)]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -37,6 +39,7 @@
 <Attribute name="CSR credit quality" id="4A855998-5B1B-F6B7-9A7F-F5A2D53D0A2F">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 07:54:11 UTC</createdTime>
+<comment><![CDATA[The rating grade to which the credit spread risk curve realtes]]></comment>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
 <item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
@@ -52,6 +55,7 @@
 <Attribute name="Organisation identifier" id="3E2AAB99-1910-8B42-E304-EE2BE4544F2C">
 <createdBy>Neil</createdBy>
 <createdTime>2022-04-14 08:57:54 UTC</createdTime>
+<comment><![CDATA[The realted organisation]]></comment>
 <generatorID>F4967460-7822-C4DB-CBDD-8D936D400EDC</generatorID>
 <ownerDesignName>frtb</ownerDesignName>
 <engineerTo>
