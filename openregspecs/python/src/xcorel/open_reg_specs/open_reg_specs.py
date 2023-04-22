@@ -401,13 +401,18 @@ class InputFile(EObject, metaclass=MetaEClass):
 
 
 @abstract
-class XModelElement(EObject, metaclass=MetaEClass):
+class EModelElement(EObject, metaclass=MetaEClass):
 
-    def __init__(self):
+    eAnnotations = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, eAnnotations=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
+
+        if eAnnotations is not None:
+            self.eAnnotations = eAnnotations
 
 
 class VTLEnrichedCube(EObject, metaclass=MetaEClass):
@@ -883,7 +888,7 @@ class WorkflowModule(Module):
 
 
 @abstract
-class XNamedElement(XModelElement):
+class ENamedElement(EModelElement):
 
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
@@ -895,16 +900,28 @@ class XNamedElement(XModelElement):
             self.name = name
 
 
-class XPackage(Module):
+class EPackage(Module):
 
-    classifiers = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    eClassifiers = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, classifiers=None, **kwargs):
+    def __init__(self, *, eClassifiers=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if classifiers:
-            self.classifiers.extend(classifiers)
+        if eClassifiers:
+            self.eClassifiers.extend(eClassifiers)
+
+
+class EAnnotation(EModelElement):
+
+    contents = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, contents=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if contents is not None:
+            self.contents = contents
 
 
 class VTLModule(Module):
@@ -1070,7 +1087,7 @@ class SequenceFlow(FlowElement):
 
 
 @abstract
-class XClassifier(XNamedElement):
+class EClassifier(ENamedElement):
 
     package = EReference(ordered=True, unique=True, containment=False,
                          derived=False, transient=True)
@@ -1083,13 +1100,12 @@ class XClassifier(XNamedElement):
             self.package = package
 
 
-class XEnumLiteral(XNamedElement):
+class EEnumLiteral(ENamedElement):
 
     value = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     literal = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    enum = EReference(ordered=True, unique=True, containment=False, derived=False, transient=True)
 
-    def __init__(self, *, value=None, literal=None, enum=None, **kwargs):
+    def __init__(self, *, value=None, literal=None, **kwargs):
 
         super().__init__(**kwargs)
 
@@ -1099,19 +1115,15 @@ class XEnumLiteral(XNamedElement):
         if literal is not None:
             self.literal = literal
 
-        if enum is not None:
-            self.enum = enum
-
 
 @abstract
-class XTypedElement(XNamedElement):
+class ETypedElement(ENamedElement):
 
-    upperBound = EAttribute(eType=EInt, unique=True, derived=False,
-                            changeable=True, default_value=1)
+    upperBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     lowerBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
-    type = EReference(ordered=True, unique=True, containment=False, derived=False)
+    eType = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, type=None, upperBound=None, lowerBound=None, **kwargs):
+    def __init__(self, *, eType=None, upperBound=None, lowerBound=None, **kwargs):
 
         super().__init__(**kwargs)
 
@@ -1121,8 +1133,8 @@ class XTypedElement(XNamedElement):
         if lowerBound is not None:
             self.lowerBound = lowerBound
 
-        if type is not None:
-            self.type = type
+        if eType is not None:
+            self.eType = eType
 
 
 @abstract
@@ -1141,27 +1153,32 @@ class Gateway(FlowNode):
         super().__init__(**kwargs)
 
 
-class XClass(XClassifier):
+class EClass(EClassifier):
 
     abstract = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    members = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    superTypes = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+    eSuperTypes = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+    eStructuralFeatures = EReference(ordered=True, unique=True,
+                                     containment=True, derived=False, upper=-1)
+    eOperations = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, abstract=None, members=None, superTypes=None, **kwargs):
+    def __init__(self, *, abstract=None, eSuperTypes=None, eStructuralFeatures=None, eOperations=None, **kwargs):
 
         super().__init__(**kwargs)
 
         if abstract is not None:
             self.abstract = abstract
 
-        if members:
-            self.members.extend(members)
+        if eSuperTypes:
+            self.eSuperTypes.extend(eSuperTypes)
 
-        if superTypes:
-            self.superTypes.extend(superTypes)
+        if eStructuralFeatures:
+            self.eStructuralFeatures.extend(eStructuralFeatures)
+
+        if eOperations:
+            self.eOperations.extend(eOperations)
 
 
-class XDataType(XClassifier):
+class EDataType(EClassifier):
 
     industryName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
@@ -1173,18 +1190,24 @@ class XDataType(XClassifier):
             self.industryName = industryName
 
 
-@abstract
-class XMember(XTypedElement):
+class EOperation(ETypedElement):
 
-    containingClass = EReference(ordered=True, unique=True,
-                                 containment=False, derived=False, transient=True)
+    body = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
-    def __init__(self, *, containingClass=None, **kwargs):
+    def __init__(self, *, body=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if containingClass is not None:
-            self.containingClass = containingClass
+        if body is not None:
+            self.body = body
+
+
+@abstract
+class EStructuralFeature(ETypedElement):
+
+    def __init__(self, **kwargs):
+
+        super().__init__(**kwargs)
 
 
 class Task(Activity):
@@ -1215,36 +1238,48 @@ class ParallelGateway(Gateway):
         super().__init__(**kwargs)
 
 
-class XEnum(XDataType):
+class EAttribute(EStructuralFeature):
 
-    literals = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    iD = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
+    eAttributeType = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, literals=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if literals:
-            self.literals.extend(literals)
-
-
-class XOperation(XMember):
-
-    body = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, body=None, **kwargs):
+    def __init__(self, *, iD=None, eAttributeType=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if body is not None:
-            self.body = body
+        if iD is not None:
+            self.iD = iD
+
+        if eAttributeType is not None:
+            self.eAttributeType = eAttributeType
 
 
-@abstract
-class XStructuralFeature(XMember):
+class EEnum(EDataType):
 
-    def __init__(self, **kwargs):
+    eLiterals = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, eLiterals=None, **kwargs):
 
         super().__init__(**kwargs)
+
+        if eLiterals:
+            self.eLiterals.extend(eLiterals)
+
+
+class EReference(EStructuralFeature):
+
+    containment = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
+    eReferenceType = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, containment=None, eReferenceType=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if containment is not None:
+            self.containment = containment
+
+        if eReferenceType is not None:
+            self.eReferenceType = eReferenceType
 
 
 class ServiceTask(Task):
@@ -1315,31 +1350,3 @@ class UserTask(Task):
 
         if entity is not None:
             self.entity = entity
-
-
-class XAttribute(XStructuralFeature):
-
-    defaultValueLiteral = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    iD = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, defaultValueLiteral=None, iD=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if defaultValueLiteral is not None:
-            self.defaultValueLiteral = defaultValueLiteral
-
-        if iD is not None:
-            self.iD = iD
-
-
-class XReference(XStructuralFeature):
-
-    containment = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, containment=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if containment is not None:
-            self.containment = containment

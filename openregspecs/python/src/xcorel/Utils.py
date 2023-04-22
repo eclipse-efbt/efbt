@@ -107,7 +107,7 @@ class Utils(object):
         '''
         Checks if a superclass contains the attribute
         '''
-        attributes = theSuperClass.members
+        attributes = theSuperClass.eStructuralFeatures
         contains = False;
         for attribute2 in attributes:
             if (attribute2.name == attribute.name):
@@ -140,8 +140,8 @@ class Utils(object):
         counter = 0;
         # do this for relationship attributes only.
         for feature in features:
-            if ( isinstance(feature,XReference)):
-                featureType = feature.type            
+            if ( isinstance(feature,EReference)):
+                featureType = feature.eType            
                 if (featureType == targetClass):
                     counter = counter+1
             

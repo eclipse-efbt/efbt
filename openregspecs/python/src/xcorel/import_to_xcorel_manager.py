@@ -36,8 +36,8 @@ if __name__ == '__main__':
     persistToXCoreL = True
     context.persistVTLComments=True
     context.useSubDomains = False
-    context.fileDirectory = '/workspaces/efbt/openregspecs/python/resourcesfinrep28'
-    context.outputDirectory = '/workspaces/efbt/openregspecs/python/resultsfinrep28'
+    context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\openregspecs\\python\\resourcesfinrep28'
+    context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\openregspecs\\python\\resultsfinrep28'
     context.addExecutableStubs = True
     context.addLogicPackages = True
     

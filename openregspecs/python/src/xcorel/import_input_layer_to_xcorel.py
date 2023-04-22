@@ -5,7 +5,7 @@
 # which accompanies this distribution, and is available at
 # https://www.eclipse.org/legal/epl-2.0/
 #
-# SPDX-License-Identifier: EPL-2.0
+# SPDE-License-Identifier: EPL-2.0
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
@@ -50,8 +50,8 @@ class InputLayerImport(object):
         
         
         headerSkipped = False
-        # Load all the entities from the csv file, make an XClass per entity,
-        # and add the XClass to the package
+        # Load all the entities from the csv file, make an EClass per entity,
+        # and add the EClass to the package
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -64,50 +64,50 @@ class InputLayerImport(object):
                     objectID = row[1];
                     
                     # assume that SQLDve gives valid IDS fro table names according 
-                    # to the validity rules of XCoreL
+                    # to the validity rules of ECoreL
                     alteredClassName = Utils.makeValidID(className);
                    
                     if(alteredClassName.endswith("_derived")):
-                        xclass = XClass(name=alteredClassName)
-                        xclassTable = XClass(name=alteredClassName+"_DerivedTable")
+                        xclass = EClass(name=alteredClassName)
+                        xclassTable = EClass(name=alteredClassName+"_DerivedTable")
                         xclassTable.containedEntityType = xclass
-                        containmentReference  = XReference()
+                        containmentReference  = EReference()
                         containmentReference.name=xclass.name+"s"
-                        containmentReference.type=xclass
+                        containmentReference.eType=xclass
                         containmentReference.upperBound = -1
                         containmentReference.lowerBound=0
                         containmentReference.containment= True
-                        xclassTable.members.append(containmentReference)
-                        xclassTableOperation = XOperation()
+                        xclassTable.eOperations.append(containmentReference)
+                        xclassTableOperation = EOperation()
                         xclassTableOperation.name=xclass.name+"s"
-                        xclassTableOperation.type=xclass
+                        xclassTableOperation.eType=xclass
                         xclassTableOperation.upperBound = -1
                         xclassTableOperation.lowerBound=0
-                        xclassTable.members.append(xclassTableOperation)
-                        context.inputLayerEntitiesPackage.classifiers.extend([xclass])
-                        context.inputLayerEntitiesPackage.classifiers.extend([xclassTable])
+                        xclassTable.eOperations.append(xclassTableOperation)
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclassTable])
                     elif(className.startswith("OUTPUT_LAYER_")):
-                        xclass = XClass(name=alteredClassName)
+                        xclass = EClass(name=alteredClassName)
                         
-                        context.inputLayerEntitiesPackage.classifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
                       
                     else:
-                        xclass = XClass(name=alteredClassName)
+                        xclass = EClass(name=alteredClassName)
                         # of engineering type is single table, as i should be for all members of a type
                         # heirarchy, and num_suptype is blanck, then this means that this class is a root
                         # of a type heirarchy....we will set such classes to be abstract.
-                        xclassTable = XClass(name=alteredClassName+"_BaseTable")
-                        containmentReference  = XReference()
+                        xclassTable = EClass(name=alteredClassName+"_BaseTable")
+                        containmentReference  = EReference()
                         containmentReference.name=xclass.name+"s"
-                        containmentReference.type=xclass
+                        containmentReference.eType=xclass
                         containmentReference.upperBound = -1
                         containmentReference.lowerBound=0
                         containmentReference.containment= True
                         xclassTable.members.append(containmentReference)
-                        context.inputLayerEntitiesPackage.classifiers.extend([xclass])
-                        context.inputLayerEntitiesPackage.classifiers.extend([xclassTable])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
+                        context.inputLayerEntitiesPackage.eClassifiers.extend([xclassTable])
         
-                    # maintain a map a objectIDs to XClasses
+                    # maintain a map a objectIDs to EClasses
                     context.classesMap[objectID]=xclass
                     context.tableMap[xclass]=xclassTable
          
@@ -120,7 +120,7 @@ class InputLayerImport(object):
         fileLocation = context.fileDirectory + os.sep + "DM_Domains.csv"
         headerSkipped = False
         counter = 0
-        # Create an XEnum for each domain, and add it to the XPackage
+        # Create an EEnum for each domain, and add it to the EPackage
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -132,11 +132,11 @@ class InputLayerImport(object):
                     enumName = row[1]
                     adaptedEnumName = Utils.makeValidID(enumName)+"_domain"
                     if(not Utils.inEnumBlackList(adaptedEnumName)):
-                        theEnum = XEnum()
+                        theEnum = EEnum()
                         theEnum.name = adaptedEnumName
-                        #maintain a map of enum IDS to XEnum objects
+                        #maintain a map of enum IDS to EEnum objects
                         context.enumMap[enumID] = theEnum
-                        context.inputLayerEnumsPackage.classifiers.extend([theEnum])
+                        context.inputLayerEnumsPackage.eClassifiers.extend([theEnum])
                         
     def addILLiteralsToEnums(self,context):
         '''
@@ -166,7 +166,7 @@ class InputLayerImport(object):
                             newAdaptedValue = Utils.specialCases(theEnum,newAdaptedValue)
                             newAdaptedName = Utils.uniqueName(theEnum,adaptedEnumName)
                             
-                            enumLiteral = XEnumLiteral()
+                            enumLiteral = EEnumLiteral()
                             enumLiteral.name =  newAdaptedValue
                             enumLiteral.literal = newAdaptedName
                             enumLiteral.value = counter
@@ -226,7 +226,7 @@ class InputLayerImport(object):
     def addIL_PK_AttributesToClasses(self,context):
         fileLocation = context.fileDirectory + os.sep + "DM_Columns.csv"
         headerSkipped = False
-        # For each attribute add an XAttribute to the correct XClass representing the Entity
+        # For each attribute add an EAttribute to the correct EClass representing the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
@@ -260,73 +260,73 @@ class InputLayerImport(object):
                             enumID = row[13]
                             theEnum = context.enumMap[enumID]
                             
-                            attribute = XAttribute()
+                            attribute = EAttribute()
                             
                             attribute.lowerBound=0
                             attribute.upperBound=1
                             if(theEnum.name == "String"):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xString
+                                attribute.eType = context.xString
                             elif(theEnum.name.startswith("String_")):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xString
+                                attribute.eType = context.xString
                             elif(theEnum.name == "Number"):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xDouble
+                                attribute.eType = context.xDouble
                             elif(theEnum.name.startswith("Real_")):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xDouble
+                                attribute.eType = context.xDouble
                             elif(theEnum.name.startswith("Monetary")):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xInt
+                                attribute.eType = context.xInt
                             elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                 attribute.name = theAttributeName
-                                attribute.type = context.xInt
+                                attribute.eType = context.xInt
                             elif(theEnum.name.startswith("Non_negative_integers")): 
                                 attribute.name = theAttributeName
-                                attribute.type = context.xInt
+                                attribute.eType = context.xInt
                             elif(theEnum.name.startswith("All_possible_dates")):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xDate
+                                attribute.eType = context.xDate
                                 
                             # This is a common domain used for String identifiers in BIRD in SQLDeveloper
                             
                             else:
                                 attribute.name = theAttributeName
-                                attribute.type = theEnum  
+                                attribute.eType = theEnum  
                             
                             if classIsDerived:
-                                operation = XOperation()
+                                operation = EOperation()
                                 operation.lowerBound=0
                                 operation.upperBound=1
                                 if(theEnum.name == "String"):
                                     operation.name = theAttributeName
-                                    operation.type = context.xString
+                                    operation.eType = context.xString
                                 elif(theEnum.name.startswith("String_")):
                                     operation.name = theAttributeName
-                                    operation.type = context.xString
+                                    operation.eType = context.xString
                                 elif(theEnum.name == "Number"):
                                     operation.name = theAttributeName
-                                    operation.type = context.xDouble
+                                    operation.eType = context.xDouble
                                 
                                 elif(theEnum.name.startswith("Real_")):
                                     operation.name = theAttributeName
-                                    operation.type = context.xDouble
+                                    operation.eType = context.xDouble
                                 elif(theEnum.name.startswith("Monetary")): 
                                     operation.name = theAttributeName
-                                    operation.type = context.xInt
+                                    operation.eType = context.xInt
                                 elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                     operation.name = theAttributeName
-                                    operation.type = context.xInt
+                                    operation.eType = context.xInt
                                 elif(theEnum.name.startswith("Non_negative_integers")): 
                                     operation.name = theAttributeName
-                                    operation.type = context.xInt
+                                    operation.eType = context.xInt
                                 elif(theEnum.name.startswith("All_possible_dates")):   
                                     operation.name = theAttributeName
-                                    operation.type = context.xDate  
+                                    operation.eType = context.xDate  
                                 else:
                                     operation.name = theAttributeName
-                                    operation.type = theEnum  
+                                    operation.eType = theEnum  
                                           
     
                         if (attributeKind == "Logical Type"):
@@ -334,18 +334,18 @@ class InputLayerImport(object):
                             dataTypeID = row[14]
                             try:
                                 datatype = context.datatypeMap[dataTypeID]
-                                attribute = XAttribute()
+                                attribute = EAttribute()
                                 attribute.lowerBound=0
                                 attribute.upperBound=1
                                 attribute.name =amendedAttributeName
-                                attribute.type = Utils.getEcoreDataTypeForDataType(self)
+                                attribute.eType = Utils.getEcoreDataTypeForDataType(self)
                                 
                                 if classIsDerived:
-                                    operation = XOperation()
+                                    operation = EOperation()
                                     operation.lowerBound=0
                                     operation.upperBound=1
                                     operation.name =amendedAttributeName
-                                    operation.type = Utils.getEcoreDataTypeForDataType(self)
+                                    operation.eType = Utils.getEcoreDataTypeForDataType(self)
                                 
                             except KeyError:
                                 print("missing datatype: ")
@@ -359,7 +359,7 @@ class InputLayerImport(object):
                             InputLayerImport.addCompositePKIFMissing(self,context,theClass)
                             theClass.members.extend([attribute])
                             if classIsDerived:
-                                theClass.members.extend([operation])
+                                theClass.eOperations.extend([operation])
     
                         except:
                             print( "missing class2: " )
@@ -371,16 +371,16 @@ class InputLayerImport(object):
     def addCompositePKIFMissing(self,context,theClass):
         pkName = theClass.name + "_PK"
         PKExists = False
-        for member in theClass.members:
+        for member in theClass.eStructuralFeatures:
             if member.name == pkName:
                PKExists = True 
                
         if not(PKExists):
-            attribute = XAttribute()
+            attribute = EAttribute()
             attribute.name=pkName
-            attribute.type = context.xString
+            attribute.eType = context.xString
             attribute.iD = True
-            theClass.members.append(attribute)
+            theClass.eStructuralFeatures.append(attribute)
             
             
         
@@ -393,7 +393,7 @@ class InputLayerImport(object):
             
         fileLocation = context.fileDirectory + os.sep + "DM_Columns.csv"
         headerSkipped = False
-        # For each attribute add an XAttribute to the correct XClass representing the Entity
+        # For each attribute add an EAttribute to the correct EClass representing the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
@@ -427,73 +427,73 @@ class InputLayerImport(object):
                             enumID = row[13]
                             theEnum = context.enumMap[enumID]
                             
-                            attribute = XAttribute()
+                            attribute = EAttribute()
                             
                             attribute.lowerBound=0
                             attribute.upperBound=1
                             if(theEnum.name == "String"):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xString
+                                attribute.eType = context.xString
                             elif(theEnum.name.startswith("String_")):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xString
+                                attribute.eType = context.xString
                             elif(theEnum.name == "Number"):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xDouble
+                                attribute.eType = context.xDouble
                             elif(theEnum.name.startswith("Real_")):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xDouble
+                                attribute.eType = context.xDouble
                             elif(theEnum.name.startswith("Monetary")):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xInt
+                                attribute.eType = context.xInt
                             elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                 attribute.name = theAttributeName
-                                attribute.type = context.xInt
+                                attribute.eType = context.xInt
                             elif(theEnum.name.startswith("Non_negative_integers")): 
                                 attribute.name = theAttributeName
-                                attribute.type = context.xInt
+                                attribute.eType = context.xInt
                             elif(theEnum.name.startswith("All_possible_dates")):
                                 attribute.name = theAttributeName
-                                attribute.type = context.xDate
+                                attribute.eType = context.xDate
                                 
                             # This is a common domain used for String identifiers in BIRD in SQLDeveloper
                             
                             else:
                                 attribute.name = theAttributeName
-                                attribute.type = theEnum  
+                                attribute.eType = theEnum  
                             
                             if classIsDerived:
-                                operation = XOperation()
+                                operation = EOperation()
                                 operation.lowerBound=0
                                 operation.upperBound=1
                                 if(theEnum.name == "String"):
                                     operation.name = theAttributeName
-                                    operation.type = context.xString
+                                    operation.eType = context.xString
                                 elif(theEnum.name.startswith("String_")):
                                     operation.name = theAttributeName
-                                    operation.type = context.xString
+                                    operation.eType = context.xString
                                 elif(theEnum.name == "Number"):
                                     operation.name = theAttributeName
-                                    operation.type = context.xDouble
+                                    operation.eType = context.xDouble
                                 
                                 elif(theEnum.name.startswith("Real_")):
                                     operation.name = theAttributeName
-                                    operation.type = context.xDouble
+                                    operation.eType = context.xDouble
                                 elif(theEnum.name.startswith("Monetary")): 
                                     operation.name = theAttributeName
-                                    operation.type = context.xInt
+                                    operation.eType = context.xInt
                                 elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                     operation.name = theAttributeName
-                                    operation.type = context.xInt
+                                    operation.eType = context.xInt
                                 elif(theEnum.name.startswith("Non_negative_integers")): 
                                     operation.name = theAttributeName
-                                    operation.type = context.xInt
+                                    operation.eType = context.xInt
                                 elif(theEnum.name.startswith("All_possible_dates")):   
                                     operation.name = theAttributeName
-                                    operation.type = context.xDate  
+                                    operation.eType = context.xDate  
                                 else:
                                     operation.name = theAttributeName
-                                    operation.type = theEnum  
+                                    operation.eType = theEnum  
                                           
     
                         if (attributeKind == "Logical Type"):
@@ -501,18 +501,18 @@ class InputLayerImport(object):
                             dataTypeID = row[14]
                             try:
                                 datatype = context.datatypeMap[dataTypeID]
-                                attribute = XAttribute()
+                                attribute = EAttribute()
                                 attribute.lowerBound=0
                                 attribute.upperBound=1
                                 attribute.name =amendedAttributeName
-                                attribute.type = Utils.getEcoreDataTypeForDataType(self)
+                                attribute.eType = Utils.getEcoreDataTypeForDataType(self)
                                 
                                 if classIsDerived:
-                                    operation = XOperation()
+                                    operation = EOperation()
                                     operation.lowerBound=0
                                     operation.upperBound=1
                                     operation.name =amendedAttributeName
-                                    operation.type = Utils.getEcoreDataTypeForDataType(self)
+                                    operation.eType = Utils.getEcoreDataTypeForDataType(self)
                                 
                             except KeyError:
                                 print("missing datatype: ")
@@ -523,9 +523,9 @@ class InputLayerImport(object):
                         try:
     
                             theClass = context.classesMap[classID]
-                            theClass.members.extend([attribute])
+                            theClass.eStructuralFeatures.extend([attribute])
                             if classIsDerived:
-                                theClass.members.extend([operation])
+                                theClass.eOperations.extend([operation])
     
                         except:
                             print( "missing class2: " )
@@ -595,9 +595,9 @@ class InputLayerImport(object):
                     if (target_Optional.strip() == "Y"):
                         if (sourceTo_Target_Cardinality.strip() == "*"):
                             referenceName = referenceName + "s"
-                            eReference  = XReference()
+                            eReference  = EReference()
                             eReference.name=referenceName
-                            eReference.type=targetClass
+                            eReference.eType=targetClass
                             #upper bound of -1 means there is no upper bounds, so represents an open list of reference
                             eReference.upperBound = -1
                             eReference.lowerBound=0
@@ -607,26 +607,26 @@ class InputLayerImport(object):
                                 theTargetTable = context.tableMap[targetClass]
                                 if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                    
-                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference  = EReference()
                                     sourceTablesReference.name="sourceTable1"
-                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
                                     sourceTablesReference.lowerBound=0
                                     sourceTablesReference.containment= False
-                                    theSourceTable.members.append(sourceTablesReference)
+                                    theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                                 else:
                                    
-                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference  = EReference()
                                     sourceTablesReference.name="sourceTable2"
-                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
                                     sourceTablesReference.lowerBound=0
                                     sourceTablesReference.containment= False
-                                    theSourceTable.members.append(sourceTablesReference)
+                                    theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                         else:
-                            eReference  = XReference()
+                            eReference  = EReference()
                             eReference.name=referenceName
-                            eReference.type=targetClass
+                            eReference.eType=targetClass
                             eReference.upperBound = 1
                             eReference.lowerBound=0
                             eReference.containment= False
@@ -635,28 +635,28 @@ class InputLayerImport(object):
                                 theTargetTable = context.tableMap[targetClass]
                                 if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                     
-                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference  = EReference()
                                     sourceTablesReference.name="sourceTable1"
-                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
                                     sourceTablesReference.lowerBound=0
                                     sourceTablesReference.containment= False
-                                    theSourceTable.members.append(sourceTablesReference)
+                                    theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                                 else:
                                     
-                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference  = EReference()
                                     sourceTablesReference.name="sourceTable2"
-                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
                                     sourceTablesReference.lowerBound=0
                                     sourceTablesReference.containment= False
-                                    theSourceTable.members.append(sourceTablesReference)                 
+                                    theSourceTable.eStructuralFeatures.append(sourceTablesReference)                 
                     else:
                         if (sourceTo_Target_Cardinality.strip() == "*"):
                             referenceName = referenceName + "s"                       
-                            eReference  = XReference()
+                            eReference  = EReference()
                             eReference.name=referenceName
-                            eReference.type=targetClass
+                            eReference.eType=targetClass
                             eReference.upperBound = -1
                             eReference.lowerBound=1
                             eReference.containment= False
@@ -666,20 +666,20 @@ class InputLayerImport(object):
                                 theTargetTable = context.tableMap[targetClass]
                                 if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                     
-                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference  = EReference()
                                     sourceTablesReference.name="sourceTable1"
-                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
                                     sourceTablesReference.lowerBound=0
                                     sourceTablesReference.containment= False
-                                    theSourceTable.members.append(sourceTablesReference)
+                                    theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                                 else:
-                                    sourceTablesReference = XReference("sourceTable2", theTargetTable, upper=-1, lower=0, containment=False)
-                                    theSourceTable.members.append(sourceTablesReference)                       
+                                    sourceTablesReference = EReference("sourceTable2", theTargetTable, upper=-1, lower=0, containment=False)
+                                    theSourceTable.eStructuralFeatures.append(sourceTablesReference)                       
                         else:      
-                            eReference  = XReference()
+                            eReference  = EReference()
                             eReference.name=referenceName
-                            eReference.type=targetClass
+                            eReference.eType=targetClass
                             eReference.upperBound = 1
                             eReference.lowerBound=1
                             eReference.containment= False
@@ -688,24 +688,24 @@ class InputLayerImport(object):
                                 theTargetTable = context.tableMap[targetClass]
                                 if not(Utils.hasMemberCalled( theSourceTable, "sourceTable1")):
                                     
-                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference  = EReference()
                                     sourceTablesReference.name="sourceTable1"
-                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
                                     sourceTablesReference.lowerBound=0
                                     sourceTablesReference.containment= False
-                                    theSourceTable.members.append(sourceTablesReference)
+                                    theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                                 else:
                                     
-                                    sourceTablesReference  = XReference()
+                                    sourceTablesReference  = EReference()
                                     sourceTablesReference.name="sourceTable2"
-                                    sourceTablesReference.type=theTargetTable
+                                    sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
                                     sourceTablesReference.lowerBound=0
                                     sourceTablesReference.containment= False
-                                    theSourceTable.members.append(sourceTablesReference)
+                                    theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                     if (not (theClass is None) ) :                 
-                        theClass.members.append(eReference)
+                        theClass.eStructuralFeatures.append(eReference)
                         
     
             

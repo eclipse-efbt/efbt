@@ -14,28 +14,28 @@ from open_reg_specs import *
 
 class Context(object):
     # we create the main 5 'primitive' data types
-    xString = XDataType()
+    xString = EDataType()
     xString.name = "String"
     
-    xDouble = XDataType()
+    xDouble = EDataType()
     xDouble.name = "double"
     
-    xInt = XDataType()
+    xInt = EDataType()
     xInt.name = "int"
     
-    xDate = XDataType()
+    xDate = EDataType()
     xDate.name = "Date"
     
-    xBoolean = XDataType()
+    xBoolean = EDataType()
     xBoolean.name = "boolean"
 
     moduleList = ModuleList()
     
-    typesPackage = XPackage(name='types')
-    inputLayerEnumsPackage = XPackage(name='input_layer_enums')
-    outputLayerEnumsPackage = XPackage(name='output_layer_enums')
-    inputLayerEntitiesPackage = XPackage(name='input_layer_entities')
-    outputLayerEntitiesPackage = XPackage(name='output_layer_entities')
+    typesPackage = EPackage(name='types')
+    inputLayerEnumsPackage = EPackage(name='input_layer_enums')
+    outputLayerEnumsPackage = EPackage(name='output_layer_enums')
+    inputLayerEntitiesPackage = EPackage(name='input_layer_entities')
+    outputLayerEntitiesPackage = EPackage(name='output_layer_entities')
     
     logicPackages = []
     # classesMap keeps a reference between ldm ID's for classes and
@@ -45,7 +45,7 @@ class Context(object):
     # the list of these calsses that we call tables
     tableMap = {}
     # A map between the LDM names for primitive types types, and
-    # our standard primitive types such as XString  
+    # our standard primitive types such as EString  
     datatypeMap = {}
     # For the reference output layers we record a map between variables 
     # and domains
@@ -101,10 +101,10 @@ class Context(object):
     def __init__(self):
         
 
-        self.typesPackage.classifiers.append(self.xString)
-        self.typesPackage.classifiers.append(self.xDouble)
-        self.typesPackage.classifiers.append(self.xInt)
-        self.moduleList.modules.append(self.typesPackage)
+        self.eTypesPackage.eClassifiers.append(self.xString)
+        self.eTypesPackage.eClassifiers.append(self.xDouble)
+        self.eTypesPackage.eClassifiers.append(self.xInt)
+        self.moduleList.modules.append(self.eTypesPackage)
         self.moduleList.modules.append(self.inputLayerEnumsPackage)
         self.moduleList.modules.append(self.outputLayerEnumsPackage)
         self.moduleList.modules.append(self.inputLayerEntitiesPackage)

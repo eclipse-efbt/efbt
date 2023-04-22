@@ -7,7 +7,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="View">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="ecore:EClass Xcore.ecore#//XClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="ecore:EClass ecore_lite.ecore#//EClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayerSQL" upperBound="-1"
         eType="#//LayerSQL" containment="true"/>
   </eClassifiers>
@@ -19,13 +19,13 @@
         eType="#//WhereClause" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="ecore:EClass Xcore.ecore#//XOperation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="ecore:EClass ecore_lite.ecore#//EOperation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnMemberAs" eSuperTypes="#//SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass Xcore.ecore#//XEnumLiteral"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass ecore_lite.ecore#//EEnumLiteral"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnAttributeAs" eSuperTypes="#//SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass Xcore.ecore#//XMember"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ecore_lite.ecore#//EAttribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectValueAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -36,9 +36,9 @@
     <eLiterals name="greater_than"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WhereClause">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute1" eType="ecore:EClass Xcore.ecore#//XAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute1" eType="ecore:EClass ecore_lite.ecore#//EAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparitor" eType="#//Comparitor"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass Xcore.ecore#//XEnumLiteral"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass ecore_lite.ecore#//EEnumLiteral"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ViewModule" eSuperTypes="module_management.ecore#//Module">

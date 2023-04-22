@@ -5,7 +5,7 @@
 # which accompanies this distribution, and is available at
 # https://www.eclipse.org/legal/epl-2.0/
 #
-# SPDX-License-Identifier: EPL-2.0
+# SPDE-License-Identifier: EPL-2.0
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
@@ -53,8 +53,8 @@ class ImportFinrepVTL(object):
         fileLocation = context.fileDirectory + os.sep + "transformation_scheme.csv"
 
         headerSkipped = False
-        # Load all the entities from the csv file, make an XClass per entity,
-        # and add the XClass to the package
+        # Load all the entities from the csv file, make an EClass per entity,
+        # and add the EClass to the package
         with open(fileLocation,encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -76,8 +76,8 @@ class ImportFinrepVTL(object):
         fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
         headerSkipped = False
-        # Load all the entities from the csv file, make an XClass per entity,
-        # and add the XClass to the package
+        # Load all the entities from the csv file, make an EClass per entity,
+        # and add the EClass to the package
         with open(fileLocation,encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -169,15 +169,15 @@ class ImportFinrepVTL(object):
         #print("findEntity")
         #print(outputLayerName)
         #print("outputLayerName")
-        for theEntity in context.inputLayerEntitiesPackage.classifiers:
-            if isinstance(theEntity, XClass):
+        for theEntity in context.inputLayerEntitiesPackage.eClassifiers:
+            if isinstance(theEntity, EClass):
                 #print("rol.name")
                 #print(rol.name)
                 if theEntity.name == outputLayerName:
                     return theEntity
                 
-        for theEntity in context.outputLayerEntitiesPackage.classifiers:
-            if isinstance(theEntity, XClass):
+        for theEntity in context.outputLayerEntitiesPackage.eClassifiers:
+            if isinstance(theEntity, EClass):
                 #print("rol.name")
                 #print(rol.name)
                 if theEntity.name == outputLayerName:
@@ -203,8 +203,8 @@ class ImportFinrepVTL(object):
         fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
         headerSkipped = False
-        # Load all the entities from the csv file, make an XClass per entity,
-        # and add the XClass to the package
+        # Load all the entities from the csv file, make an EClass per entity,
+        # and add the EClass to the package
         with open(fileLocation,encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -304,8 +304,8 @@ class ImportFinrepVTL(object):
         
         
         headerSkipped = False
-        # Load all the entities from the csv file, make an XClass per entity,
-        # and add the XClass to the package
+        # Load all the entities from the csv file, make an EClass per entity,
+        # and add the EClass to the package
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -386,8 +386,8 @@ class ImportFinrepVTL(object):
 
         outputLayer = layerSQL.selectionLayer.generatedEntity
         if not (outputLayer is None):
-            for member in outputLayer.members:
-                if isinstance(member, XOperation):     
+            for member in outputLayer.eOperations:
+                if isinstance(member, EOperation):     
                     selectColumn  = SelectColumnAttributeAs ( )
                     selectColumn.asAttribute = member
                     layerSQL.columns.extend([selectColumn])
@@ -399,8 +399,8 @@ class ImportFinrepVTL(object):
 
         
         headerSkipped = False
-        # Load all the entities from the csv file, make an XClass per entity,
-        # and add the XClass to the package
+        # Load all the entities from the csv file, make an EClass per entity,
+        # and add the EClass to the package
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:

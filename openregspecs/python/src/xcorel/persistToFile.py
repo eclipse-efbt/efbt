@@ -27,7 +27,7 @@ class PersistToFile:
         PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"xcorel",context.outputLayerEnumsPackage)
         PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"xcorel")
         PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"xcorel")
-        PersistToFile.persistTypesModel(self,context,context.typesPackage,"xcorel")
+        PersistToFile.persistTypesModel(self,context,context.eTypesPackage,"xcorel")
         PersistToFile.persistWorkflow(self,context)
         PersistToFile.persistGenerationTransformations(self,context)
         for package in context.logicPackages:
@@ -45,8 +45,8 @@ class PersistToFile:
                 f.write("\t\t import " + importString + ".*\r")  
         if extension == "xcorel":
             f.write("\t\t import types.*\r")    
-        for classifier in  thePackage.classifiers:
-            if isinstance(classifier,XClass):
+        for classifier in  thePackage.eClassifiers:
+            if isinstance(classifier,EClass):
                 f.write("\t\t\t")
                 if classifier.abstract==True:
                     f.write("abstract ")
@@ -54,15 +54,15 @@ class PersistToFile:
                 if (hasattr(classifier, "superTypes")  and len(classifier.superTypes) > 0):
                     f.write(" extends " +  classifier.superTypes[0].name) 
                 f.write( " {\r")
-                for member in classifier.members:
+                for member in classifier.eStructuralFeatures:
                     
-                    if isinstance(member, XReference):
+                    if isinstance(member, EReference):
                         if (member.containment):
                             f.write("\t\t\t\tcontains "  )
                         else:
                             f.write("\t\t\t\trefers "  )
                         
-                        f.write(member.type.name + " " )
+                        f.write(member.eType.name + " " )
                         if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                             f.write(" ")
                         else:
@@ -70,21 +70,21 @@ class PersistToFile:
                     
                         f.write(member.name)
                         f.write(" \r"  )
-                    elif isinstance(member, XAttribute):
+                    elif isinstance(member, EAttribute):
                         f.write("\t\t\t\t")
                         if member.iD:
                            f.write("id ")
                         
-                        if (member.type.name == "String"):
+                        if (member.eType.name == "String"):
                             f.write( "String  " )
-                        elif (member.type.name == "Double"):
+                        elif (member.eType.name == "Double"):
                             f.write( "double  " )
-                        elif (member.type.name == "Integer"):
+                        elif (member.eType.name == "Integer"):
                             f.write( "int  " )
-                        elif (member.type.name == "Date"):
+                        elif (member.eType.name == "Date"):
                             f.write( "Date  " )
                         else:   
-                            f.write(member.type.name + " " )
+                            f.write(member.eType.name + " " )
                                 
                             
                             
@@ -95,11 +95,12 @@ class PersistToFile:
                     
                         f.write(member.name)
                         f.write(" \r"  )
-
-                    elif isinstance(member, XOperation):
+                    
+                for member in classifier.eOperations:
+                    if isinstance(member, EOperation):
                             f.write("\t\t\t\top ")
                             
-                            f.write(member.type.name + " " )
+                            f.write(member.eType.name + " " )
                             if ( (member.lowerBound == 0) and (member.upperBound == 1)):
                                 f.write(" ")
                             else:
@@ -139,9 +140,9 @@ class PersistToFile:
             
         f = open(context.outputDirectory + os.sep + thePackage.name  +'.' +extension, "a",  encoding='utf-8')
         f.write("\t\t package " + thePackage.name + "\r")    
-        for classifier in  thePackage.classifiers:
+        for classifier in  thePackage.eClassifiers:
             
-            if isinstance(classifier,XEnum):
+            if isinstance(classifier,EEnum):
                 f.write("\t\t\tenum " + classifier.name)
                 
                 f.write(" { ")  

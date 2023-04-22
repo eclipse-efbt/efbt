@@ -198,50 +198,53 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WorkflowModule/scenarioTags"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//WorkflowModule/subProcess"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XAttribute">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XAttribute/defaultValueLiteral"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XAttribute/iD"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EAttribute/iD"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EAttribute/eAttributeType"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XClass">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XClass/abstract"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XClass/members"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XClass/superTypes"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EClass">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EClass/abstract"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EClass/eSuperTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EClass/eStructuralFeatures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EClass/eOperations"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//XClassifier">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XClassifier/package"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//EClassifier">
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EClassifier/package"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XDataType">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XDataType/industryName"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EDataType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EDataType/industryName"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XEnum">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XEnum/literals"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EEnum">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EEnum/eLiterals"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XEnumLiteral">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XEnumLiteral/value"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XEnumLiteral/literal"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XEnumLiteral/enum"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EEnumLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EEnumLiteral/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EEnumLiteral/literal"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//XMember">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XMember/containingClass"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//EModelElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EModelElement/eAnnotations"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//XModelElement"/>
-    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//XNamedElement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XNamedElement/name"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//ENamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ENamedElement/name"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XOperation">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XOperation/body"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EOperation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EOperation/body"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XPackage">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XPackage/classifiers"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EPackage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EPackage/eClassifiers"/>
     </genClasses>
-    <genClasses ecoreClass="open_reg_specs.ecore#//XReference">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XReference/containment"/>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EReference/containment"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//EReference/eReferenceType"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//XStructuralFeature"/>
-    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//XTypedElement">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//XTypedElement/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XTypedElement/upperBound"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//XTypedElement/lowerBound"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//EStructuralFeature"/>
+    <genClasses image="false" ecoreClass="open_reg_specs.ecore#//ETypedElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//ETypedElement/eType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ETypedElement/upperBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//ETypedElement/lowerBound"/>
+    </genClasses>
+    <genClasses ecoreClass="open_reg_specs.ecore#//EAnnotation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute open_reg_specs.ecore#//EAnnotation/contents"/>
     </genClasses>
     <genClasses ecoreClass="open_reg_specs.ecore#//VTLEnrichedCube">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference open_reg_specs.ecore#//VTLEnrichedCube/transformations"/>

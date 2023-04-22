@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * https://www.eclipse.org/legal/epl-2.0/
  *
- * SPDX-License-Identifier: EPL-2.0
+ * SPDE-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Neil Mackenzie - initial API and implementation
@@ -18,14 +18,14 @@ import "http://www.eclipse.org/efbt/open_reg_specs" as open_reg_specs
 
 
 Module returns open_reg_specs::Module:
-	Module_Impl | RequirementsModule | TagGroup | ViewModule | TestModule | WorkflowModule | XPackage;
+	Module_Impl | RequirementsModule | TagGroup | ViewModule | TestModule | WorkflowModule | EPackage;
 	
-XClassifier returns open_reg_specs::XClassifier:
-	XClass | XDataType_Impl | XEnum ;
+EClassifier returns open_reg_specs::EClassifier:
+	EClass | EDataType_Impl | EEnum ;
 
 
-XMember returns open_reg_specs::XMember:
-	XAttribute | XOperation | XReference;
+EStructuralFeature returns open_reg_specs::EStructuralFeature:
+	EAttribute | EReference;
 
 
 
@@ -68,7 +68,7 @@ Scenario returns open_reg_specs::Scenario:
 	name=ID
 	'{'
 		('description' description=EString)?
-		('requiredAttributes' '(' requiredAttributes+=[open_reg_specs::XMember|QualifiedName] ( "," requiredAttributes+=[open_reg_specs::XMember|QualifiedName])* ')' )?
+		('requiredAttributes' '(' requiredAttributes+=[open_reg_specs::EAttribute|QualifiedName] ( "," requiredAttributes+=[open_reg_specs::EAttribute|QualifiedName])* ')' )?
 		('data_constraints' data_constraints=DataConstraint)?
 	'}';
 	
@@ -80,7 +80,7 @@ SelectionLayer returns open_reg_specs::SelectionLayer:
 	'SelectionLayer'
 	name=ID
 	'{'
-		('generatedEntity' generatedEntity=[open_reg_specs::XClass|QualifiedName])?
+		('generatedEntity' generatedEntity=[open_reg_specs::EClass|QualifiedName])?
 	'}';
 
 
@@ -132,10 +132,11 @@ TestModule returns open_reg_specs::TestModule:
 
 
 
-XAttribute returns open_reg_specs::XAttribute:
-	{open_reg_specs::XAttribute}
+EAttribute returns open_reg_specs::EAttribute:
+	{open_reg_specs::EAttribute}
 	(iD?='id')?
-	type=[open_reg_specs::XClassifier|QualifiedName] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
+	eType=[open_reg_specs::EClassifier|QualifiedName] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
+	eAttributeType=[open_reg_specs::EDataType|QualifiedName] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
 	name=ID 
 	;
 
@@ -143,57 +144,58 @@ DataConstraint returns open_reg_specs::DataConstraint:
 	{open_reg_specs::DataConstraint}
 	'conditional'
 
-		( attr1=[open_reg_specs::XAttribute|QualifiedName])?
+		( attr1=[open_reg_specs::EAttribute|QualifiedName])?
 		( comparison=AttrComparison)?
-		('member' member=[open_reg_specs::XEnumLiteral|QualifiedName])?
+		('member' member=[open_reg_specs::EEnumLiteral|QualifiedName])?
 		('value' value=EString)?
 	;
 
 
-XClass returns open_reg_specs::XClass:
-	{open_reg_specs::XClass}
+EClass returns open_reg_specs::EClass:
+	{open_reg_specs::EClass}
 	((abstract?='abstract'? 'class') ) name = ID
-	('extends' superTypes+=[open_reg_specs::XClass|QualifiedName] (',' superTypes+=[open_reg_specs::XClass|QualifiedName])*)?
+	('extends' eSuperTypes+=[open_reg_specs::EClass|QualifiedName] (',' eSuperTypes+=[open_reg_specs::EClass|QualifiedName])*)?
 	'{'
-	   (members+=XMember)*
+	   (eStructuralFeatures+=EStructuralFeature)*
+	   (eOperations+=EOperation)*
 	'}'
 	;
 
-XDataType_Impl returns open_reg_specs::XDataType:
-	{open_reg_specs::XDataType}
+EDataType_Impl returns open_reg_specs::EDataType:
+	{open_reg_specs::EDataType}
 	'type' name = ID
 	'wraps' industryName = ID
 	
 	;
 
-XEnum returns open_reg_specs::XEnum:
-	{open_reg_specs::XEnum}
+EEnum returns open_reg_specs::EEnum:
+	{open_reg_specs::EEnum}
 	'enum' name = ID
 	'{'
-	  (literals+=XEnumLiteral ((',')? literals+=XEnumLiteral)*)?
+	  (literals+=EEnumLiteral ((',')? literals+=EEnumLiteral)*)?
 	'}';
 
-XOperation returns open_reg_specs::XOperation:
-	{open_reg_specs::XOperation}
+EOperation returns open_reg_specs::EOperation:
+	{open_reg_specs::EOperation}
 	'op'
-	type=[open_reg_specs::XClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+	eType=[open_reg_specs::EClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	'()'
 	'{'(body=EString)?'}'
 	;
 
-XReference returns open_reg_specs::XReference:
-	{open_reg_specs::XReference}
+EReference returns open_reg_specs::EReference:
+	{open_reg_specs::EReference}
 	((containment?='contains' ) |
 	 ('refers') 
 	)
-	type=[open_reg_specs::XClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+	eType=[open_reg_specs::EClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	;
 
 
-XEnumLiteral returns open_reg_specs::XEnumLiteral:
-	{open_reg_specs::XEnumLiteral}
+EEnumLiteral returns open_reg_specs::EEnumLiteral:
+	{open_reg_specs::EEnumLiteral}
 	name=ID
     ('as' literal=STRING)?
     ('=' value=EInt)?
@@ -278,10 +280,10 @@ ServiceTask returns open_reg_specs::ServiceTask:
 		
 		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
 		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('enrichedAttribute' enrichedAttribute=[open_reg_specs::XOperation|QualifiedName])?
-		('secondAttribute' secondAttribute=[open_reg_specs::XAttribute|QualifiedName])?
-		('requiredAttributesForScenarioChoice' '(' requiredAttributesForScenarioChoice+=[open_reg_specs::XMember|QualifiedName] ( "," requiredAttributesForScenarioChoice+=[open_reg_specs::XMember|QualifiedName])* ')' )?
-		('requiredAttributesForEntityCreation' '(' requiredAttributesForEntityCreation+=[open_reg_specs::XMember|QualifiedName] ( "," requiredAttributesForEntityCreation+=[open_reg_specs::XMember|QualifiedName])* ')' )?
+		('enrichedAttribute' enrichedAttribute=[open_reg_specs::EOperation|QualifiedName])?
+		('secondAttribute' secondAttribute=[open_reg_specs::EAttribute|QualifiedName])?
+		('requiredAttributesForScenarioChoice' '(' requiredAttributesForScenarioChoice+=[open_reg_specs::EAttribute|QualifiedName] ( "," requiredAttributesForScenarioChoice+=[open_reg_specs::EAttribute|QualifiedName])* ')' )?
+		('requiredAttributesForEntityCreation' '(' requiredAttributesForEntityCreation+=[open_reg_specs::EAttribute|QualifiedName] ( "," requiredAttributesForEntityCreation+=[open_reg_specs::EAttribute|QualifiedName])* ')' )?
 		('scenarios' '{' scenarios+=Scenario ( "," scenarios+=Scenario)* '}' )?
 		('description' description=EString)?
 	'}';
@@ -305,7 +307,7 @@ ScriptTask returns open_reg_specs::ScriptTask:
 	name=ID
 		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
 		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('outputLayer' outputLayer=[open_reg_specs::XClass|QualifiedName])?
+		('outputLayer' outputLayer=[open_reg_specs::EClass|QualifiedName])?
 		('selectionLayers' '{' selectionLayers+=SelectionLayer ( "," selectionLayers+=SelectionLayer)* '}' )?
 		('description' description=EString)?
 ;
@@ -318,7 +320,7 @@ UserTask returns open_reg_specs::UserTask:
 
 		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
 		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('entity' entity=[open_reg_specs::XClass|QualifiedName])?
+		('entity' entity=[open_reg_specs::EClass|QualifiedName])?
 		('description' description=EString)?
 ;
 
@@ -430,12 +432,12 @@ RequirementsSectionText returns open_reg_specs::RequirementsSectionText:
 		('text' text=EString)?
 	'}';
 
-XPackage returns open_reg_specs::XPackage:
-	{open_reg_specs::XPackage}
+EPackage returns open_reg_specs::EPackage:
+	{open_reg_specs::EPackage}
 	'package'
 	name = QualifiedName
 	(imports += Import)*
-	(classifiers += XClassifier)*
+	(eClassifiers += EClassifier)*
 	;
 
 LayerSQL returns open_reg_specs::LayerSQL:
@@ -452,7 +454,7 @@ View returns open_reg_specs::View:
 	'View'
 	name=ID
 	'{'
-		('outputLayer' outputLayer=[open_reg_specs::XClass|QualifiedName])?
+		('outputLayer' outputLayer=[open_reg_specs::EClass|QualifiedName])?
 		(selectionLayerSQL+=LayerSQL (selectionLayerSQL+=LayerSQL)*  )?
 	'}';
 
@@ -462,9 +464,9 @@ WhereClause returns open_reg_specs::WhereClause:
 	{open_reg_specs::WhereClause}
 	'where'
 
-		( attribute1=[open_reg_specs::XAttribute|QualifiedName])?
+		( attribute1=[open_reg_specs::EAttribute|QualifiedName])?
 		( comparitor=Comparitor)?
-		('member' member=[open_reg_specs::XEnumLiteral|QualifiedName])?
+		('member' member=[open_reg_specs::EEnumLiteral|QualifiedName])?
 		('value' value=EString)?
 ;
 
@@ -474,22 +476,22 @@ WhereClause returns open_reg_specs::WhereClause:
 SelectColumnMemberAs returns open_reg_specs::SelectColumnMemberAs:
 	{open_reg_specs::SelectColumnMemberAs}
 	'SelectMember'
-		( memberAsConstant=[open_reg_specs::XEnumLiteral|QualifiedName])?
-		('as' asAttribute=[open_reg_specs::XOperation|QualifiedName])?
+		( memberAsConstant=[open_reg_specs::EEnumLiteral|QualifiedName])?
+		('as' asAttribute=[open_reg_specs::EOperation|QualifiedName])?
 		;
 	
 SelectColumnAttributeAs returns open_reg_specs::SelectColumnAttributeAs:
 	{open_reg_specs::SelectColumnAttributeAs}
 	'SelectAttribute'
-		( attribute=[open_reg_specs::XAttribute|QualifiedName])?
-		('as' asAttribute=[open_reg_specs::XOperation|QualifiedName])?
+		( attribute=[open_reg_specs::EAttribute|QualifiedName])?
+		('as' asAttribute=[open_reg_specs::EOperation|QualifiedName])?
 	;
 	
 SelectValueAs returns open_reg_specs::SelectValueAs:
 	{open_reg_specs::SelectValueAs}
 	'SelectValue'
 		( value=EString)?
-		('as' asAttribute=[open_reg_specs::XOperation|QualifiedName])?
+		('as' asAttribute=[open_reg_specs::EOperation|QualifiedName])?
 	;
 
 enum Comparitor returns open_reg_specs::Comparitor:
@@ -510,7 +512,7 @@ InputFile returns open_reg_specs::InputFile:
 	'InputFile'
 	'{'
 		('fileName' fileName=EString)?
-		('entity' entity=[open_reg_specs::XClass|QualifiedName])?
+		('entity' entity=[open_reg_specs::EClass|QualifiedName])?
 	'}';
 
 TestScope_Impl returns open_reg_specs::TestScope:
