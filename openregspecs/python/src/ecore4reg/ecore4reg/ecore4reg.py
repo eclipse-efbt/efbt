@@ -902,11 +902,19 @@ class ELNamedElement(ELModelElement):
 
 class ELPackage(Module):
 
+    nsURI = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    nsPrefix = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     eClassifiers = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, eClassifiers=None, **kwargs):
+    def __init__(self, *, eClassifiers=None, nsURI=None, nsPrefix=None, **kwargs):
 
         super().__init__(**kwargs)
+
+        if nsURI is not None:
+            self.nsURI = nsURI
+
+        if nsPrefix is not None:
+            self.nsPrefix = nsPrefix
 
         if eClassifiers:
             self.eClassifiers.extend(eClassifiers)

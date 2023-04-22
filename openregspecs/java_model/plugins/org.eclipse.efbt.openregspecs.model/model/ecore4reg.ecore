@@ -434,6 +434,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="ELPackage" eSuperTypes="#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="eClassifiers" upperBound="-1"
         eType="#//ELClassifier" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nsURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nsPrefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ELReference" eSuperTypes="#//ELStructuralFeature">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="containment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>

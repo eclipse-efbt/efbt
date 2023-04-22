@@ -286,33 +286,42 @@ class LDMImport(object):
                             if(theEnum.name == "String"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xString
+                                attribute.eAttributeType = context.xString
                             elif(theEnum.name.startswith("String_")):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xString
+                                attribute.eAttributeType = context.xString
                             elif(theEnum.name == "Number"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDouble
+                                attribute.eAttributeType = context.xDouble
                             elif(theEnum.name.startswith("Real_")):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDouble
+                                attribute.eAttributeType = context.xDouble
                             elif(theEnum.name.startswith("Monetary")):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
+                                attribute.eAttributeType = context.xInt
                             elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
+                                attribute.eAttributeType = context.xInt
                             elif(theEnum.name.startswith("Non_negative_integers")): 
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
+                                attribute.eAttributeType = context.xInt
                             elif(theEnum.name.startswith("All_possible_dates")):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDate
+                                attribute.eAttributeType = context.xDate
                                 
                             # This is a common domain used for String identifiers in BIRD in SQLDeveloper
                             
                             else:
                                 attribute.name = theAttributeName
-                                attribute.eType = theEnum  
+                                attribute.eType = theEnum 
+                                attribute.eAttributeType = eAttributeType
                             
                             if classIsDerived:
                                 operation = ELOperation()
@@ -358,6 +367,8 @@ class LDMImport(object):
                                 attribute.upperBound=1
                                 attribute.name =amendedAttributeName
                                 attribute.eType = Utils.getEcoreDataTypeForDataType(self)
+                                attribute.eAttributeType = Utils.getEcoreDataTypeForDataType(self)
+                                
                                 
                                 if classIsDerived:
                                     operation = ELOperation()

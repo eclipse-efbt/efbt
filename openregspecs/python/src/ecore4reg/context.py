@@ -11,6 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 from ecore4reg import *
+from pyecore.ecore import *
 
 class Context(object):
     # we create the main 5 'primitive' data types
@@ -32,11 +33,17 @@ class Context(object):
     moduleList = ModuleList()
     
     typesPackage = ELPackage(name='types')
-    inputLayerEnumsPackage = ELPackage(name='input_layer_enums')
-    outputLayerEnumsPackage = ELPackage(name='output_layer_enums')
-    inputLayerEntitiesPackage = ELPackage(name='input_layer_entities')
-    outputLayerEntitiesPackage = ELPackage(name='output_layer_entities')
+    inputLayerEnumsPackage = ELPackage(name='input_layer_enums', nsURI='http://www.eclipse.org/bird/input_layer_enums', nsPrefix='input_layer_enums')
+    outputLayerEnumsPackage = ELPackage(name='output_layer_enums', nsURI='http://www.eclipse.org/bird/output_layer_enums', nsPrefix='output_layer_enums')
+    inputLayerEntitiesPackage = ELPackage(name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
+    outputLayerEntitiesPackage = ELPackage(name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
     
+    inputLayerEnumsEcorePackage = EPackage(name='input_layer_enums', nsURI='http://www.eclipse.org/bird/input_layer_enums', nsPrefix='input_layer_enums')
+    outputLayerEnumsEcorePackage = EPackage(name='output_layer_enums', nsURI='http://www.eclipse.org/bird/output_layer_enums', nsPrefix='output_layer_enums')
+    inputLayerEntitiesEcorePackage = EPackage(name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
+    outputLayerEntitiesEcorePackage = EPackage(name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
+    
+
     logicPackages = []
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance

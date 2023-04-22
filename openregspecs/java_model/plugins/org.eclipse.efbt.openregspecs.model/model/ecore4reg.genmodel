@@ -232,6 +232,8 @@
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELPackage">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ELPackage/eClassifiers"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELPackage/nsURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELPackage/nsPrefix"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELReference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELReference/containment"/>

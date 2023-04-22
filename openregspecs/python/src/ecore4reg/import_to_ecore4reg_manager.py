@@ -25,6 +25,7 @@ from import_input_layer_to_ecore4reg import InputLayerImport
 from import_output_layer_to_ecore4reg import ROLImport
 from import_finrep_vtl import ImportFinrepVTL
 from persistToFile import PersistToFile 
+from ecore4regToEcoreConverter  import Ecore4regToEcoreConverter
 
 if __name__ == '__main__':
     context = Context()
@@ -50,7 +51,10 @@ if __name__ == '__main__':
     if importFinrepVTL:
         ImportFinrepVTL().doImport(context)
         
+    Ecore4regToEcoreConverter().convertPackagesInContext(context)
+        
     persister = PersistToFile()
     persister.saveModelAsXMIFile(context)
-    persister.saveModelAsXCoreLFile(context)
+    persister.saveModelAsEcore4RegFile(context)
+    persister.saveModelAsEcoreFile(context)
  

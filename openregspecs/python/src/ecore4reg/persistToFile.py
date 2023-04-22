@@ -21,7 +21,7 @@ from collections import Counter
 import os
 
 class PersistToFile:
-    def saveModelAsXCoreLFile(self,context ):
+    def saveModelAsEcore4RegFile(self,context ):
         
         PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"ecore4reg",context.inputLayerEnumsPackage)
         PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"ecore4reg",context.outputLayerEnumsPackage)
@@ -309,5 +309,24 @@ class PersistToFile:
             f.write(PersistToFile.getVTLTextForView(self,context,view))
             f.close()
             
+    def saveModelAsEcoreFile(self,context):
+        '''
+         save model as an xmi file representing an object tree.
+        '''
+        rset2 = ResourceSet()
+
+        inputLayerEnums_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "input_layer_enums.ecore"))  # This will create an XMI resource
+        inputLayerEnums_resource2.append(context.inputLayerEnumsEcorePackage)  # we add the EPackage instance in the resource
+        inputLayerEnums_resource2.save()
+        outputLayerEnums_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "output_layer_enums.ecore"))  # This will create an XMI resource
+        outputLayerEnums_resource2.append(context.outputLayerEnumsEcorePackage)  # we add the EPackage instance in the resource
+        outputLayerEnums_resource2.save()
+        inputLayerEntities_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "input_layer_entities.ecore"))  # This will create an XMI resource
+        inputLayerEntities_resource2.append(context.inputLayerEntitiesEcorePackage)  # we add the EPackage instance in the resource
+        inputLayerEntities_resource2.save()
+        outputLayerEntities_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "output_layer_entities.ecore"))  # This will create an XMI resource
+        outputLayerEntities_resource2.append(context.outputLayerEntitiesEcorePackage)  # we add the EPackage instance in the resource
+        outputLayerEntities_resource2.save()
+        
     def removeCommentChars(self, theString):
         return theString.replace("/**", "").replace("/*", "").replace("*/", "")

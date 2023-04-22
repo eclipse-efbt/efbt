@@ -31,14 +31,14 @@ class PersistToFile:
             
         #PersistToFile.persistTypesModel(self,context,context.typesPackage,"xcore")
         
-        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"xcorel",context.inputLayerEnumsPackage)
-        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"xcorel",context.outputLayerEnumsPackage)
-        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"xcorel")
-        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"xcorel")
-        PersistToFile.persistTypesModel(self,context,context.typesPackage,"xcorel")
+        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"ecore4reg",context.inputLayerEnumsPackage)
+        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"ecore4reg",context.outputLayerEnumsPackage)
+        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"ecore4reg")
+        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"ecore4reg")
+        PersistToFile.persistTypesModel(self,context,context.typesPackage,"ecore4reg")
         
         for package in context.logicPackages:
-            PersistToFile.persistEntityModel(self,context,package,"xcorel",context.outputLayerEnumsPackage)
+            PersistToFile.persistEntityModel(self,context,package,"ecore4reg",context.outputLayerEnumsPackage)
         
         
         
@@ -50,7 +50,7 @@ class PersistToFile:
         if thePackage ==context.outputLayerEntitiesPackage: 
             for importString in context.importLogicStrings:
                 f.write("\t\t import " + importString + ".*\r")      
-        if extension == "xcorel":
+        if extension == "ecore4reg":
             f.write("\t\t import types.*\r")    
         for classifier in  thePackage.eClassifiers:
             if isinstance(classifier,EClass):
@@ -121,9 +121,9 @@ class PersistToFile:
                     else:
                         f.write("[" + str(operation.lowerBound) + ".." +str(operation.upperBound) + "] ")
                     f.write(operation.name)
-                    if extension == "xcorel" and context.addExecutableStubs:
-                        if hasattr(operation, "xcorelText"):
-                            f.write("() {\n\t\t\"" + operation.xcorelText + "\"\n\t\t}")
+                    if extension == "ecore4reg" and context.addExecutableStubs:
+                        if hasattr(operation, "ecore4regText"):
+                            f.write("() {\n\t\t\"" + operation.ecore4regText + "\"\n\t\t}")
                         else:
                             f.write("() {}")
                     else:
@@ -143,7 +143,7 @@ class PersistToFile:
         f.write("\t\t\ttype double wraps Double\r")
         f.write("\t\t\ttype String wraps String\r")
         f.write("\t\t\ttype int wraps Integer\r") 
-        if extension == "xcorel":
+        if extension == "ecore4reg":
             f.write("\t\t\ttype Date wraps Date\r")
         else:
             f.write("\t\t\ttype Date wraps java.util.Date\r")  
