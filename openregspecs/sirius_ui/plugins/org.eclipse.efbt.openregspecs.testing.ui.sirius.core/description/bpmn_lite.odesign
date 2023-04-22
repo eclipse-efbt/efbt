@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:filter="http://www.eclipse.org/sirius/diagram/description/filter/1.1.0" xmlns:properties="http://www.eclipse.org/sirius/properties/1.0.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" xmlns:tool_1="http://www.eclipse.org/sirius/description/tool/1.1.0" name="bpmn_lite" version="12.0.0.2017041100">
-  <ownedViewpoints name="Process" label="bpmn_lite - Process" modelFileExtension="xcorel">
+  <ownedViewpoints name="Process" label="bpmn_lite - Process" modelFileExtension="ecore4reg">
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="SubProcessDiagram" titleExpression="aql:self.name" domainClass="SubProcess" enablePopupBars="true">
       <metamodel href="platform:/../../../org.eclipse.efbt.openregspecs.model/model/open_reg_specs.ecore#/"/>
       <filters xsi:type="filter:CompositeFilterDescription" name="FitlerOnVisibility">

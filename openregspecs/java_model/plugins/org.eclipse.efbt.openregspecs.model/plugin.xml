@@ -23,11 +23,11 @@
 
 
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated open_reg_specs -->
+      <!-- @generated ecore4reg -->
       <package
-            uri="http://www.eclipse.org/efbt/open_reg_specs"
-            class="org.eclipse.efbt.openregspecs.model.open_reg_specs.Open_reg_specsPackage"
-            genModel="model/open_reg_specs.genmodel"/>
+            uri="http://www.eclipse.org/efbt/ecore4reg"
+            class="org.eclipse.efbt.openregspecs.model.ecore4reg.Ecore4regPackage"
+            genModel="model/ecore4reg.genmodel"/>
    </extension>
 
 

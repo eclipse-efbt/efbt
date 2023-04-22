@@ -24,12 +24,12 @@ Workflow {
         platformUri = "${rootPath}"
         scanClassPath = true
        // registerGeneratedEPackage = "org.eclipse.efbt.bird.bird_model.Bird_modelPackage"
-        registerGenModelFile = "platform:/resource/org.eclipse.efbt.openregspecs.model/model/open_reg_specs.genmodel"
+        registerGenModelFile = "platform:/resource/org.eclipse.efbt.openregspecs.model/model/ecore4reg.genmodel"
     }
     
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
 		
-		genModel = "platform:/resource/org.eclipse.efbt.openregspecs.model/model/open_reg_specs.genmodel"
+		genModel = "platform:/resource/org.eclipse.efbt.openregspecs.model/model/ecore4reg.genmodel"
 		srcPath = "platform:/resource/org.eclipse.efbt.openregspecs.model/src"
 		}
 	

@@ -16,7 +16,7 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from open_reg_specs import *
+from ecore4reg import *
 import csv
 from Utils import Utils 
 from context import Context
@@ -49,8 +49,8 @@ class LDMImport(object):
         
         
         headerSkipped = False
-        # Load all the entities from the csv file, make an EClass per entity,
-        # and add the EClass to the package
+        # Load all the entities from the csv file, make an ELClass per entity,
+        # and add the ELClass to the package
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -66,17 +66,17 @@ class LDMImport(object):
                     
                     alteredClassName = Utils.makeValidID(className);  
                     if(alteredClassName.endswith("_derived")):
-                        xclass = EClass(name=alteredClassName)
-                        xclassTable = EClass(name=alteredClassName+"_DerivedTable")
+                        xclass = ELClass(name=alteredClassName)
+                        xclassTable = ELClass(name=alteredClassName+"_DerivedTable")
                         xclassTable.containedEntityType = xclass
-                        containmentReference  = EReference()
+                        containmentReference  = ELReference()
                         containmentReference.name=xclass.name+"s"
                         containmentReference.eType=xclass
                         containmentReference.upperBound = -1
                         containmentReference.lowerBound=0
                         containmentReference.containment= True
                         xclassTable.eStructuralFeatures.append(containmentReference)
-                        xclassTableOperation = EOperation()
+                        xclassTableOperation = ELOperation()
                         xclassTableOperation.name=xclass.name+"s"
                         xclassTableOperation.eType=xclass
                         xclassTableOperation.upperBound = -1
@@ -85,19 +85,19 @@ class LDMImport(object):
                         context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
                         context.inputLayerEntitiesPackage.eClassifiers.extend([xclassTable])
                     elif(className.startswith("OUTPUT_LAYER_")):
-                        xclass = EClass(name=alteredClassName)
+                        xclass = ELClass(name=alteredClassName)
                         
                         context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
                       
                     else:
-                        xclass = EClass(name=alteredClassName)
+                        xclass = ELClass(name=alteredClassName)
                         # of engineering type is single table, as i should be for all members of a type
                         # heirarchy, and num_suptype is blanck, then this means that this class is a root
                         # of a type heirarchy....we will set such classes to be abstract.
                         if((engineering_type == "Single Table") and (Num_SuperTypeEntity_ID=="")   )    :
                             xclass.abstract=True
-                        xclassTable = EClass(name=alteredClassName+"_BaseTable")
-                        containmentReference  = EReference()
+                        xclassTable = ELClass(name=alteredClassName+"_BaseTable")
+                        containmentReference  = ELReference()
                         containmentReference.name=xclass.name+"s"
                         containmentReference.eType=xclass
                         containmentReference.upperBound = -1
@@ -107,7 +107,7 @@ class LDMImport(object):
                         context.inputLayerEntitiesPackage.eClassifiers.extend([xclass])
                         context.inputLayerEntitiesPackage.eClassifiers.extend([xclassTable])
         
-                    # maintain a map a objectIDs to EClasses
+                    # maintain a map a objectIDs to ELClasses
                     context.classesMap[objectID]=xclass
                     context.tableMap[xclass]=xclassTable
          
@@ -115,7 +115,7 @@ class LDMImport(object):
         fileLocation = context.fileDirectory + os.sep + "DM_Entities.csv"
         headerSkipped = False
         
-        # Where an nxtity has a superclass, set the superclass on the EClass
+        # Where an nxtity has a superclass, set the superclass on the ELClass
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -138,7 +138,7 @@ class LDMImport(object):
         fileLocation = context.fileDirectory + os.sep + "DM_Domains.csv"
         headerSkipped = False
         counter = 0
-        # Create an EEnum for each domain, and add it to the EPackage
+        # Create an ELEnum for each domain, and add it to the ELPackage
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -150,9 +150,9 @@ class LDMImport(object):
                     enumName = row[1]
                     adaptedEnumName = Utils.makeValidID(enumName)+"_domain"
                     if(not Utils.inEnumBlackList(self,adaptedEnumName)):
-                        theEnum = EEnum()
+                        theEnum = ELEnum()
                         theEnum.name = adaptedEnumName
-                        #maintain a map of enum IDS to EEnum objects
+                        #maintain a map of enum IDS to ELEnum objects
                         context.enumMap[enumID] = theEnum
                         context.inputLayerEnumsPackage.eClassifiers.extend([theEnum])
                         
@@ -182,11 +182,11 @@ class LDMImport(object):
                             theEnum = context.enumMap[enumID]
                             newAdaptedValue = Utils.uniqueValue(self,theEnum,adaptedValue)
                             newAdaptedName = Utils.uniqueName(self,theEnum,adaptedEnumName)
-                            enumLiteral = EEnumLiteral()
+                            enumLiteral = ELEnumLiteral()
                             enumLiteral.name =  newAdaptedValue
                             enumLiteral.literal = newAdaptedName
                             enumLiteral.value = counter
-                            theEnum.literals.extend([enumLiteral])
+                            theEnum.eLiterals.extend([enumLiteral])
                                 
                         except KeyError:
                             print( "missing domain: " + enumID )
@@ -245,7 +245,7 @@ class LDMImport(object):
             
         fileLocation = context.fileDirectory + os.sep + "DM_Attributes.csv"
         headerSkipped = False
-        # For each attribute add an EAttribute to the correct EClass representing the Entity
+        # For each attribute add an ELAttribute to the correct ELClass representing the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
@@ -277,7 +277,7 @@ class LDMImport(object):
                             enumID = row[12]
                             theEnum = context.enumMap[enumID]
                             
-                            attribute = EAttribute()
+                            attribute = ELAttribute()
                             if(primary_key_or_not == "P"):
                                 attribute.iD = True
                                 
@@ -315,7 +315,7 @@ class LDMImport(object):
                                 attribute.eType = theEnum  
                             
                             if classIsDerived:
-                                operation = EOperation()
+                                operation = ELOperation()
                                 operation.lowerBound=0
                                 operation.upperBound=1
                                 if(theEnum.name == "String"):
@@ -353,14 +353,14 @@ class LDMImport(object):
                             dataTypeID = row[14]
                             try:
                                 datatype = context.datatypeMap[dataTypeID]
-                                attribute = EAttribute()
+                                attribute = ELAttribute()
                                 attribute.lowerBound=0
                                 attribute.upperBound=1
                                 attribute.name =amendedAttributeName
                                 attribute.eType = Utils.getEcoreDataTypeForDataType(self)
                                 
                                 if classIsDerived:
-                                    operation = EOperation()
+                                    operation = ELOperation()
                                     operation.lowerBound=0
                                     operation.upperBound=1
                                     operation.name =amendedAttributeName
@@ -447,7 +447,7 @@ class LDMImport(object):
                     if (target_Optional.strip() == "Y"):
                         if (sourceTo_Target_Cardinality.strip() == "*"):
                             referenceName = referenceName + "s"
-                            eReference  = EReference()
+                            eReference  = ELReference()
                             eReference.name=referenceName
                             eReference.eType=targetClass
                             #upper bound of -1 means there is no upper bounds, so represents an open list of reference
@@ -459,7 +459,7 @@ class LDMImport(object):
                                 theTargetTable = context.tableMap[targetClass]
                                 if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
                                    
-                                    sourceTablesReference  = EReference()
+                                    sourceTablesReference  = ELReference()
                                     sourceTablesReference.name="sourceTable1"
                                     sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
@@ -468,7 +468,7 @@ class LDMImport(object):
                                     theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                                 else:
                                    
-                                    sourceTablesReference  = EReference()
+                                    sourceTablesReference  = ELReference()
                                     sourceTablesReference.name="sourceTable2"
                                     sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
@@ -476,7 +476,7 @@ class LDMImport(object):
                                     sourceTablesReference.containment= False
                                     theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                         else:
-                            eReference  = EReference()
+                            eReference  = ELReference()
                             eReference.name=referenceName
                             eReference.eType=targetClass
                             eReference.upperBound = 1
@@ -487,7 +487,7 @@ class LDMImport(object):
                                 theTargetTable = context.tableMap[targetClass]
                                 if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
                                     
-                                    sourceTablesReference  = EReference()
+                                    sourceTablesReference  = ELReference()
                                     sourceTablesReference.name="sourceTable1"
                                     sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
@@ -496,7 +496,7 @@ class LDMImport(object):
                                     theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                                 else:
                                     
-                                    sourceTablesReference  = EReference()
+                                    sourceTablesReference  = ELReference()
                                     sourceTablesReference.name="sourceTable2"
                                     sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
@@ -506,7 +506,7 @@ class LDMImport(object):
                     else:
                         if (sourceTo_Target_Cardinality.strip() == "*"):
                             referenceName = referenceName + "s"                       
-                            eReference  = EReference()
+                            eReference  = ELReference()
                             eReference.name=referenceName
                             eReference.eType=targetClass
                             eReference.upperBound = -1
@@ -518,7 +518,7 @@ class LDMImport(object):
                                 theTargetTable = context.tableMap[targetClass]
                                 if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
                                     
-                                    sourceTablesReference  = EReference()
+                                    sourceTablesReference  = ELReference()
                                     sourceTablesReference.name="sourceTable1"
                                     sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
@@ -526,10 +526,10 @@ class LDMImport(object):
                                     sourceTablesReference.containment= False
                                     theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                                 else:
-                                    sourceTablesReference = EReference("sourceTable2", theTargetTable, upper=-1, lower=0, containment=False)
+                                    sourceTablesReference = ELReference("sourceTable2", theTargetTable, upper=-1, lower=0, containment=False)
                                     theSourceTable.eStructuralFeatures.append(sourceTablesReference)                       
                         else:      
-                            eReference  = EReference()
+                            eReference  = ELReference()
                             eReference.name=referenceName
                             eReference.eType=targetClass
                             eReference.upperBound = 1
@@ -540,7 +540,7 @@ class LDMImport(object):
                                 theTargetTable = context.tableMap[targetClass]
                                 if not(Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
                                     
-                                    sourceTablesReference  = EReference()
+                                    sourceTablesReference  = ELReference()
                                     sourceTablesReference.name="sourceTable1"
                                     sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1
@@ -549,7 +549,7 @@ class LDMImport(object):
                                     theSourceTable.eStructuralFeatures.append(sourceTablesReference)
                                 else:
                                     
-                                    sourceTablesReference  = EReference()
+                                    sourceTablesReference  = ELReference()
                                     sourceTablesReference.name="sourceTable2"
                                     sourceTablesReference.eType=theTargetTable
                                     sourceTablesReference.upperBound = -1

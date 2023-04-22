@@ -14,188 +14,187 @@
 grammar org.eclipse.efbt.openregspecs.dsl.OpenRegSpecs with org.eclipse.xtext.common.Terminals
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
-import "http://www.eclipse.org/efbt/open_reg_specs" as open_reg_specs
+import "http://www.eclipse.org/efbt/ecore4reg" as ecore4reg
 
 
-Module returns open_reg_specs::Module:
-	Module_Impl | RequirementsModule | TagGroup | ViewModule | TestModule | WorkflowModule | EPackage;
+Module returns ecore4reg::Module:
+	Module_Impl | RequirementsModule | TagGroup | ViewModule | TestModule | WorkflowModule | ELPackage;
 	
-EClassifier returns open_reg_specs::EClassifier:
-	EClass | EDataType_Impl | EEnum ;
+ELClassifier returns ecore4reg::ELClassifier:
+	ELClass | ELDataType_Impl | ELEnum ;
 
 
-EStructuralFeature returns open_reg_specs::EStructuralFeature:
-	EAttribute | EReference;
+ELStructuralFeature returns ecore4reg::ELStructuralFeature:
+	ELAttribute | ELReference;
 
 
 
-FlowNode returns open_reg_specs::FlowNode:
+FlowNode returns ecore4reg::FlowNode:
 	Task_Impl | ExclusiveGateway | InclusiveGateway | ParallelGateway | ServiceTask | SubProcess | ScriptTask | UserTask;
 
-FlowElement returns open_reg_specs::FlowElement:
+FlowElement returns ecore4reg::FlowElement:
 	SequenceFlow | Task_Impl | ExclusiveGateway | InclusiveGateway | ParallelGateway | ServiceTask | SubProcess | ScriptTask | UserTask;
 
 
-RequirementsSection returns open_reg_specs::RequirementsSection:
+RequirementsSection returns ecore4reg::RequirementsSection:
 	RequirementsSectionImage | RequirementsSectionLinkWithText | RequirementsSectionText | TitledRequirementsSection;
 
 
 
-Tag returns open_reg_specs::Tag:
+Tag returns ecore4reg::Tag:
 	Tag_Impl | ActivityTag | ScenarioTag;
 
 
 
-Activity returns open_reg_specs::Activity:
+Activity returns ecore4reg::Activity:
 	Task_Impl | ServiceTask | SubProcess | ScriptTask | UserTask;
 
 
 
-SelectColumn returns open_reg_specs::SelectColumn:
+SelectColumn returns ecore4reg::SelectColumn:
 	 SelectColumnMemberAs | SelectColumnAttributeAs | SelectValueAs;
 
 
-TestScope returns open_reg_specs::TestScope:
+TestScope returns ecore4reg::TestScope:
 	TestScope_Impl  | UnitTestScope | E2ETestScope_Impl;
 
 EString returns ecore::EString:
 	STRING ;
 
-Scenario returns open_reg_specs::Scenario:
-	{open_reg_specs::Scenario}
+Scenario returns ecore4reg::Scenario:
+	{ecore4reg::Scenario}
 	(invisible?='invisible')?
 	'Scenario'
 	name=ID
 	'{'
 		('description' description=EString)?
-		('requiredAttributes' '(' requiredAttributes+=[open_reg_specs::EAttribute|QualifiedName] ( "," requiredAttributes+=[open_reg_specs::EAttribute|QualifiedName])* ')' )?
+		('requiredAttributes' '(' requiredAttributes+=[ecore4reg::ELAttribute|QualifiedName] ( "," requiredAttributes+=[ecore4reg::ELAttribute|QualifiedName])* ')' )?
 		('data_constraints' data_constraints=DataConstraint)?
 	'}';
 	
 	
 
-SelectionLayer returns open_reg_specs::SelectionLayer:
-	{open_reg_specs::SelectionLayer}
+SelectionLayer returns ecore4reg::SelectionLayer:
+	{ecore4reg::SelectionLayer}
 	(invisible?='invisible')?
 	'SelectionLayer'
 	name=ID
 	'{'
-		('generatedEntity' generatedEntity=[open_reg_specs::EClass|QualifiedName])?
+		('generatedEntity' generatedEntity=[ecore4reg::ELClass|QualifiedName])?
 	'}';
 
 
 
-RequirementsModule returns open_reg_specs::RequirementsModule:
-	{open_reg_specs::RequirementsModule}
+RequirementsModule returns ecore4reg::RequirementsModule:
+	{ecore4reg::RequirementsModule}
 	'RequirementsModule'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
+		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
 		('rules' '{' rules+=TitledRequirementsSection ( "," rules+=TitledRequirementsSection)* '}' )?		
 		('allowedtypes' allowedtypes=AllowedTypes)?
 	'}';
 
 
 
-WorkflowModule returns open_reg_specs::WorkflowModule:
-	{open_reg_specs::WorkflowModule}
+WorkflowModule returns ecore4reg::WorkflowModule:
+	{ecore4reg::WorkflowModule}
 	'WorkflowModule'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
+		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
 		('taskTags' '{' taskTags+=ActivityTag ( "," taskTags+=ActivityTag)* '}' )?
 		('scenarioTags' '{' scenarioTags+=ScenarioTag ( "," scenarioTags+=ScenarioTag)* '}' )?
 		('subProcess' '{' subProcess+=SubProcess ( "," subProcess+=SubProcess)* '}' )?
 	'}';
 
-ViewModule returns open_reg_specs::ViewModule:
-	{open_reg_specs::ViewModule}
+ViewModule returns ecore4reg::ViewModule:
+	{ecore4reg::ViewModule}
 	'ViewModule'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
+		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
 		('views' '{' views+=View ( "," views+=View)* '}' )?
 	'}';
 
-TestModule returns open_reg_specs::TestModule:
-	{open_reg_specs::TestModule}
+TestModule returns ecore4reg::TestModule:
+	{ecore4reg::TestModule}
 	'TestModule'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
+		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
 		('tests' '{' tests+=Test ( "," tests+=Test)* '}' )?
 	'}';
 
 
 
-EAttribute returns open_reg_specs::EAttribute:
-	{open_reg_specs::EAttribute}
+ELAttribute returns ecore4reg::ELAttribute:
+	{ecore4reg::ELAttribute}
 	(iD?='id')?
-	eType=[open_reg_specs::EClassifier|QualifiedName] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
-	eAttributeType=[open_reg_specs::EDataType|QualifiedName] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
+	eAttributeType=[ecore4reg::ELDataType|QualifiedName] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
 	name=ID 
 	;
 
-DataConstraint returns open_reg_specs::DataConstraint:
-	{open_reg_specs::DataConstraint}
+DataConstraint returns ecore4reg::DataConstraint:
+	{ecore4reg::DataConstraint}
 	'conditional'
 
-		( attr1=[open_reg_specs::EAttribute|QualifiedName])?
+		( attr1=[ecore4reg::ELAttribute|QualifiedName])?
 		( comparison=AttrComparison)?
-		('member' member=[open_reg_specs::EEnumLiteral|QualifiedName])?
+		('member' member=[ecore4reg::ELEnumLiteral|QualifiedName])?
 		('value' value=EString)?
 	;
 
 
-EClass returns open_reg_specs::EClass:
-	{open_reg_specs::EClass}
+ELClass returns ecore4reg::ELClass:
+	{ecore4reg::ELClass}
 	((abstract?='abstract'? 'class') ) name = ID
-	('extends' eSuperTypes+=[open_reg_specs::EClass|QualifiedName] (',' eSuperTypes+=[open_reg_specs::EClass|QualifiedName])*)?
+	('extends' eSuperTypes+=[ecore4reg::ELClass|QualifiedName] (',' eSuperTypes+=[ecore4reg::ELClass|QualifiedName])*)?
 	'{'
-	   (eStructuralFeatures+=EStructuralFeature)*
-	   (eOperations+=EOperation)*
+	   (eStructuralFeatures+=ELStructuralFeature)*
+	   (eOperations+=ELOperation)*
 	'}'
 	;
 
-EDataType_Impl returns open_reg_specs::EDataType:
-	{open_reg_specs::EDataType}
+ELDataType_Impl returns ecore4reg::ELDataType:
+	{ecore4reg::ELDataType}
 	'type' name = ID
 	'wraps' industryName = ID
 	
 	;
 
-EEnum returns open_reg_specs::EEnum:
-	{open_reg_specs::EEnum}
+ELEnum returns ecore4reg::ELEnum:
+	{ecore4reg::ELEnum}
 	'enum' name = ID
 	'{'
-	  (literals+=EEnumLiteral ((',')? literals+=EEnumLiteral)*)?
+	  (eLiterals+=ELEnumLiteral ((',')? eLiterals+=ELEnumLiteral)*)?
 	'}';
 
-EOperation returns open_reg_specs::EOperation:
-	{open_reg_specs::EOperation}
+ELOperation returns ecore4reg::ELOperation:
+	{ecore4reg::ELOperation}
 	'op'
-	eType=[open_reg_specs::EClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+	eType=[ecore4reg::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	'()'
 	'{'(body=EString)?'}'
 	;
 
-EReference returns open_reg_specs::EReference:
-	{open_reg_specs::EReference}
+ELReference returns ecore4reg::ELReference:
+	{ecore4reg::ELReference}
 	((containment?='contains' ) |
 	 ('refers') 
 	)
-	eType=[open_reg_specs::EClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+	eType=[ecore4reg::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
 	;
 
 
-EEnumLiteral returns open_reg_specs::EEnumLiteral:
-	{open_reg_specs::EEnumLiteral}
+ELEnumLiteral returns ecore4reg::ELEnumLiteral:
+	{ecore4reg::ELEnumLiteral}
 	name=ID
     ('as' literal=STRING)?
     ('=' value=EInt)?
@@ -208,8 +207,8 @@ EInt returns ecore::EInt:
 QualifiedName:
 	ID ('.' ID)*;
 	
-Import returns open_reg_specs::Import:
-	{open_reg_specs::Import}
+Import returns ecore4reg::Import:
+	{ecore4reg::Import}
         'import' importedNamespace=QualifiedNameWithWildcard;
 
 
@@ -217,110 +216,110 @@ QualifiedNameWithWildcard :
 	QualifiedName '.*'?;
 	
 
-enum AttrComparison returns open_reg_specs::AttrComparison:
+enum AttrComparison returns ecore4reg::AttrComparison:
 				equals = 'equals' | less_than = 'less_than' | greater_than = 'greater_than' | not_equals = 'not_equals';
 
-SequenceFlow returns open_reg_specs::SequenceFlow:
-	{open_reg_specs::SequenceFlow}
+SequenceFlow returns ecore4reg::SequenceFlow:
+	{ecore4reg::SequenceFlow}
 	(invisible?='invisible')?
 	'SequenceFlow'
 	name=ID
-		('from' sourceRef=[open_reg_specs::FlowNode|QualifiedName])?
-		('to' targetRef=[open_reg_specs::FlowNode|QualifiedName])?
+		('from' sourceRef=[ecore4reg::FlowNode|QualifiedName])?
+		('to' targetRef=[ecore4reg::FlowNode|QualifiedName])?
 		('description' description=EString)?
 	;
 
-Task_Impl returns open_reg_specs::Task:
-	{open_reg_specs::Task}
+Task_Impl returns ecore4reg::Task:
+	{ecore4reg::Task}
 	(invisible?='invisible')?
 	'Task'
 	name=ID
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('outgoing' '(' outgoing+=[ecore4reg::SequenceFlow|QualifiedName] ( "," outgoing+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[ecore4reg::SequenceFlow|QualifiedName] ( "," incoming+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
 		('description' description=EString)?
 	;
 	
-ExclusiveGateway returns open_reg_specs::ExclusiveGateway:
-	{open_reg_specs::ExclusiveGateway}
+ExclusiveGateway returns ecore4reg::ExclusiveGateway:
+	{ecore4reg::ExclusiveGateway}
 	(invisible?='invisible')?
 	'ExclusiveGateway'
 	name=ID
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('outgoing' '(' outgoing+=[ecore4reg::SequenceFlow|QualifiedName] ( "," outgoing+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[ecore4reg::SequenceFlow|QualifiedName] ( "," incoming+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
 		('description' description=EString)?
 ;
 
-InclusiveGateway returns open_reg_specs::InclusiveGateway:
-	{open_reg_specs::InclusiveGateway}
+InclusiveGateway returns ecore4reg::InclusiveGateway:
+	{ecore4reg::InclusiveGateway}
 	(invisible?='invisible')?
 	'InclusiveGateway'
 	name=ID
-	('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-	('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+	('outgoing' '(' outgoing+=[ecore4reg::SequenceFlow|QualifiedName] ( "," outgoing+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+	('incoming' '(' incoming+=[ecore4reg::SequenceFlow|QualifiedName] ( "," incoming+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
 	('description' description=EString)?
 ;
 
-ParallelGateway returns open_reg_specs::ParallelGateway:
-	{open_reg_specs::ParallelGateway}
+ParallelGateway returns ecore4reg::ParallelGateway:
+	{ecore4reg::ParallelGateway}
 	(invisible?='invisible')?
 	'ParallelGateway'
 	name=ID
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('outgoing' '(' outgoing+=[ecore4reg::SequenceFlow|QualifiedName] ( "," outgoing+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[ecore4reg::SequenceFlow|QualifiedName] ( "," incoming+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
 		('description' description=EString)?
 
 ;
 
-ServiceTask returns open_reg_specs::ServiceTask:
-	{open_reg_specs::ServiceTask}
+ServiceTask returns ecore4reg::ServiceTask:
+	{ecore4reg::ServiceTask}
 	(invisible?='invisible')?
 	'ServiceTask'
 	name=ID
 		
 		
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('enrichedAttribute' enrichedAttribute=[open_reg_specs::EOperation|QualifiedName])?
-		('secondAttribute' secondAttribute=[open_reg_specs::EAttribute|QualifiedName])?
-		('requiredAttributesForScenarioChoice' '(' requiredAttributesForScenarioChoice+=[open_reg_specs::EAttribute|QualifiedName] ( "," requiredAttributesForScenarioChoice+=[open_reg_specs::EAttribute|QualifiedName])* ')' )?
-		('requiredAttributesForEntityCreation' '(' requiredAttributesForEntityCreation+=[open_reg_specs::EAttribute|QualifiedName] ( "," requiredAttributesForEntityCreation+=[open_reg_specs::EAttribute|QualifiedName])* ')' )?
+		('outgoing' '(' outgoing+=[ecore4reg::SequenceFlow|QualifiedName] ( "," outgoing+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[ecore4reg::SequenceFlow|QualifiedName] ( "," incoming+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('enrichedAttribute' enrichedAttribute=[ecore4reg::ELOperation|QualifiedName])?
+		('secondAttribute' secondAttribute=[ecore4reg::ELAttribute|QualifiedName])?
+		('requiredAttributesForScenarioChoice' '(' requiredAttributesForScenarioChoice+=[ecore4reg::ELAttribute|QualifiedName] ( "," requiredAttributesForScenarioChoice+=[ecore4reg::ELAttribute|QualifiedName])* ')' )?
+		('requiredAttributesForEntityCreation' '(' requiredAttributesForEntityCreation+=[ecore4reg::ELAttribute|QualifiedName] ( "," requiredAttributesForEntityCreation+=[ecore4reg::ELAttribute|QualifiedName])* ')' )?
 		('scenarios' '{' scenarios+=Scenario ( "," scenarios+=Scenario)* '}' )?
 		('description' description=EString)?
 	'}';
 	
 	
-SubProcess returns open_reg_specs::SubProcess:
-	{open_reg_specs::SubProcess}
+SubProcess returns ecore4reg::SubProcess:
+	{ecore4reg::SubProcess}
 	(invisible?='invisible')?
 	'SubProcess'
 	name=ID
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
+		('outgoing' '(' outgoing+=[ecore4reg::SequenceFlow|QualifiedName] ( "," outgoing+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[ecore4reg::SequenceFlow|QualifiedName] ( "," incoming+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
 		('flowElements' '{' flowElements+=FlowElement ( "," flowElements+=FlowElement)* '}' )?
 		('description' description=EString)?
 		;
 	
-ScriptTask returns open_reg_specs::ScriptTask:
-	{open_reg_specs::ScriptTask}
+ScriptTask returns ecore4reg::ScriptTask:
+	{ecore4reg::ScriptTask}
 	(invisible?='invisible')?
 	'ScriptTask'
 	name=ID
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('outputLayer' outputLayer=[open_reg_specs::EClass|QualifiedName])?
+		('outgoing' '(' outgoing+=[ecore4reg::SequenceFlow|QualifiedName] ( "," outgoing+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[ecore4reg::SequenceFlow|QualifiedName] ( "," incoming+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('outputLayer' outputLayer=[ecore4reg::ELClass|QualifiedName])?
 		('selectionLayers' '{' selectionLayers+=SelectionLayer ( "," selectionLayers+=SelectionLayer)* '}' )?
 		('description' description=EString)?
 ;
 
-UserTask returns open_reg_specs::UserTask:
-	{open_reg_specs::UserTask}
+UserTask returns ecore4reg::UserTask:
+	{ecore4reg::UserTask}
 	(invisible?='invisible')?
 	'UserTask'
 	name=ID
 
-		('outgoing' '(' outgoing+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," outgoing+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('incoming' '(' incoming+=[open_reg_specs::SequenceFlow|QualifiedName] ( "," incoming+=[open_reg_specs::SequenceFlow|QualifiedName])* ')' )?
-		('entity' entity=[open_reg_specs::EClass|QualifiedName])?
+		('outgoing' '(' outgoing+=[ecore4reg::SequenceFlow|QualifiedName] ( "," outgoing+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('incoming' '(' incoming+=[ecore4reg::SequenceFlow|QualifiedName] ( "," incoming+=[ecore4reg::SequenceFlow|QualifiedName])* ')' )?
+		('entity' entity=[ecore4reg::ELClass|QualifiedName])?
 		('description' description=EString)?
 ;
 
@@ -328,20 +327,20 @@ UserTask returns open_reg_specs::UserTask:
 
 
 
-TitledRequirementsSection returns open_reg_specs::TitledRequirementsSection:
+TitledRequirementsSection returns ecore4reg::TitledRequirementsSection:
 	'TitledRequirementsSection'
 	name=ID
 	'{'
 		('title' title=EString)?
-		('referencingSections' referencingSections=[open_reg_specs::RequirementsSectionLinkWithText|QualifiedName])?
-		'requirementsType' requirementsType=[open_reg_specs::RequirementType|QualifiedName]
+		('referencingSections' referencingSections=[ecore4reg::RequirementsSectionLinkWithText|QualifiedName])?
+		'requirementsType' requirementsType=[ecore4reg::RequirementType|QualifiedName]
 		('sections' '{' sections+=RequirementsSection ( "," sections+=RequirementsSection)* '}' )?
 	'}';
 	
 
 
-AllowedTypes returns open_reg_specs::AllowedTypes:
-	{open_reg_specs::AllowedTypes}
+AllowedTypes returns ecore4reg::AllowedTypes:
+	{ecore4reg::AllowedTypes}
 	'AllowedTypes'
 	'{'
 		('allowedTypes' '{' allowedTypes+=RequirementType ( "," allowedTypes+=RequirementType)* '}' )?
@@ -349,74 +348,74 @@ AllowedTypes returns open_reg_specs::AllowedTypes:
 
 
 
-Module_Impl returns open_reg_specs::Module:
-	{open_reg_specs::Module}
+Module_Impl returns ecore4reg::Module:
+	{ecore4reg::Module}
 	'Module'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
+		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
 		
 	'}';
 
-TagGroup returns open_reg_specs::TagGroup:
-	{open_reg_specs::TagGroup}
+TagGroup returns ecore4reg::TagGroup:
+	{ecore4reg::TagGroup}
 	'TagGroup'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[open_reg_specs::Module|QualifiedName])*
+		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
 		('tags' '{' tags+=Tag ( "," tags+=Tag)* '}' )?
 	'}';
 
 
-Tag_Impl returns open_reg_specs::Tag:
-	{open_reg_specs::Tag}
+Tag_Impl returns ecore4reg::Tag:
+	{ecore4reg::Tag}
 	'Tag'
 	name=ID
 	'{'
 		('displayName' displayName=EString)?
-		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName])* ')' )?
+		('requirements' '(' requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName] ( "," requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName])* ')' )?
 	'}';
 
-ActivityTag returns open_reg_specs::ActivityTag:
-	{open_reg_specs::ActivityTag}
+ActivityTag returns ecore4reg::ActivityTag:
+	{ecore4reg::ActivityTag}
 	'ActivityTag'
 	name=ID
 	'{'
 		('displayName' displayName=EString)?
-		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName])* ')' )?
-		('activity' activity=[open_reg_specs::Activity|QualifiedName])?
+		('requirements' '(' requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName] ( "," requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName])* ')' )?
+		('activity' activity=[ecore4reg::Activity|QualifiedName])?
 	'}';
 
-ScenarioTag returns open_reg_specs::ScenarioTag:
-	{open_reg_specs::ScenarioTag}
+ScenarioTag returns ecore4reg::ScenarioTag:
+	{ecore4reg::ScenarioTag}
 	'ScenarioTag'
 	name=ID
 	'{'
 		('displayName' displayName=EString)?
-		('requirements' '(' requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName] ( "," requirements+=[open_reg_specs::TitledRequirementsSection|QualifiedName])* ')' )?
-		('scenario' scenario=[open_reg_specs::Scenario|QualifiedName])?
+		('requirements' '(' requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName] ( "," requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName])* ')' )?
+		('scenario' scenario=[ecore4reg::Scenario|QualifiedName])?
 	'}';
 
 
-RequirementsSectionLinkWithText returns open_reg_specs::RequirementsSectionLinkWithText:
-	{open_reg_specs::RequirementsSectionLinkWithText}
+RequirementsSectionLinkWithText returns ecore4reg::RequirementsSectionLinkWithText:
+	{ecore4reg::RequirementsSectionLinkWithText}
 	'RequirementsSectionLinkWithText'
 	name=ID
 	'{'
 		('linkText' linkText=EString)?
 		('subsection' subsection=EString)?
-		('linkedRuleSection' linkedRuleSection=[open_reg_specs::TitledRequirementsSection|QualifiedName])?
+		('linkedRuleSection' linkedRuleSection=[ecore4reg::TitledRequirementsSection|QualifiedName])?
 	'}';
 
-RequirementType returns open_reg_specs::RequirementType:
-	{open_reg_specs::RequirementType}
+RequirementType returns ecore4reg::RequirementType:
+	{ecore4reg::RequirementType}
 	'RequirementType'
 	name=ID;
 
-RequirementsSectionImage returns open_reg_specs::RequirementsSectionImage:
-	{open_reg_specs::RequirementsSectionImage}
+RequirementsSectionImage returns ecore4reg::RequirementsSectionImage:
+	{ecore4reg::RequirementsSectionImage}
 	'RequirementsSectionImage'
 	name=ID
 	'{'
@@ -424,81 +423,81 @@ RequirementsSectionImage returns open_reg_specs::RequirementsSectionImage:
 		('uri' uri=EString)?
 	'}';
 
-RequirementsSectionText returns open_reg_specs::RequirementsSectionText:
-	{open_reg_specs::RequirementsSectionText}
+RequirementsSectionText returns ecore4reg::RequirementsSectionText:
+	{ecore4reg::RequirementsSectionText}
 	'RequirementsSectionText'
 	name=ID
 	'{'
 		('text' text=EString)?
 	'}';
 
-EPackage returns open_reg_specs::EPackage:
-	{open_reg_specs::EPackage}
+ELPackage returns ecore4reg::ELPackage:
+	{ecore4reg::ELPackage}
 	'package'
 	name = QualifiedName
 	(imports += Import)*
-	(eClassifiers += EClassifier)*
+	(eClassifiers += ELClassifier)*
 	;
 
-LayerSQL returns open_reg_specs::LayerSQL:
-	{open_reg_specs::LayerSQL}
+LayerSQL returns ecore4reg::LayerSQL:
+	{ecore4reg::LayerSQL}
 	'LayerSQL'
 	'{'
-		('selectionLayer' selectionLayer=[open_reg_specs::SelectionLayer|QualifiedName])?
+		('selectionLayer' selectionLayer=[ecore4reg::SelectionLayer|QualifiedName])?
 		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
 		( whereClause+=WhereClause ( whereClause+=WhereClause)*  )?
 	'}';
 
-View returns open_reg_specs::View:
-	{open_reg_specs::View}
+View returns ecore4reg::View:
+	{ecore4reg::View}
 	'View'
 	name=ID
 	'{'
-		('outputLayer' outputLayer=[open_reg_specs::EClass|QualifiedName])?
+		('outputLayer' outputLayer=[ecore4reg::ELClass|QualifiedName])?
 		(selectionLayerSQL+=LayerSQL (selectionLayerSQL+=LayerSQL)*  )?
 	'}';
 
 	
 	
-WhereClause returns open_reg_specs::WhereClause:
-	{open_reg_specs::WhereClause}
+WhereClause returns ecore4reg::WhereClause:
+	{ecore4reg::WhereClause}
 	'where'
 
-		( attribute1=[open_reg_specs::EAttribute|QualifiedName])?
+		( attribute1=[ecore4reg::ELAttribute|QualifiedName])?
 		( comparitor=Comparitor)?
-		('member' member=[open_reg_specs::EEnumLiteral|QualifiedName])?
+		('member' member=[ecore4reg::ELEnumLiteral|QualifiedName])?
 		('value' value=EString)?
 ;
 
 
 	
 	
-SelectColumnMemberAs returns open_reg_specs::SelectColumnMemberAs:
-	{open_reg_specs::SelectColumnMemberAs}
+SelectColumnMemberAs returns ecore4reg::SelectColumnMemberAs:
+	{ecore4reg::SelectColumnMemberAs}
 	'SelectMember'
-		( memberAsConstant=[open_reg_specs::EEnumLiteral|QualifiedName])?
-		('as' asAttribute=[open_reg_specs::EOperation|QualifiedName])?
+		( memberAsConstant=[ecore4reg::ELEnumLiteral|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
 		;
 	
-SelectColumnAttributeAs returns open_reg_specs::SelectColumnAttributeAs:
-	{open_reg_specs::SelectColumnAttributeAs}
+SelectColumnAttributeAs returns ecore4reg::SelectColumnAttributeAs:
+	{ecore4reg::SelectColumnAttributeAs}
 	'SelectAttribute'
-		( attribute=[open_reg_specs::EAttribute|QualifiedName])?
-		('as' asAttribute=[open_reg_specs::EOperation|QualifiedName])?
+		( attribute=[ecore4reg::ELAttribute|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
 	;
 	
-SelectValueAs returns open_reg_specs::SelectValueAs:
-	{open_reg_specs::SelectValueAs}
+SelectValueAs returns ecore4reg::SelectValueAs:
+	{ecore4reg::SelectValueAs}
 	'SelectValue'
 		( value=EString)?
-		('as' asAttribute=[open_reg_specs::EOperation|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
 	;
 
-enum Comparitor returns open_reg_specs::Comparitor:
+enum Comparitor returns ecore4reg::Comparitor:
 				less_than = 'less_than' | equals = 'equals' | greater_than = 'greater_than';
 
-Test returns open_reg_specs::Test:
-	{open_reg_specs::Test}
+Test returns ecore4reg::Test:
+	{ecore4reg::Test}
 	'Test'
 	name=ID
 	'{'
@@ -507,35 +506,35 @@ Test returns open_reg_specs::Test:
 		('scope' scope=TestScope)?
 	'}';
 
-InputFile returns open_reg_specs::InputFile:
-	{open_reg_specs::InputFile}
+InputFile returns ecore4reg::InputFile:
+	{ecore4reg::InputFile}
 	'InputFile'
 	'{'
 		('fileName' fileName=EString)?
-		('entity' entity=[open_reg_specs::EClass|QualifiedName])?
+		('entity' entity=[ecore4reg::ELClass|QualifiedName])?
 	'}';
 
-TestScope_Impl returns open_reg_specs::TestScope:
-	{open_reg_specs::TestScope}
+TestScope_Impl returns ecore4reg::TestScope:
+	{ecore4reg::TestScope}
 	'TestScope'
 	name=ID;
 
-UnitTestScope returns open_reg_specs::UnitTestScope:
-	{open_reg_specs::UnitTestScope}
+UnitTestScope returns ecore4reg::UnitTestScope:
+	{ecore4reg::UnitTestScope}
 	'UnitTestScope'
 	name=ID
 	'{'
-		('scenarios' scenarios=[open_reg_specs::Scenario|QualifiedName])?
+		('scenarios' scenarios=[ecore4reg::Scenario|QualifiedName])?
 	'}';
 
-E2ETestScope_Impl returns open_reg_specs::E2ETestScope:
-	{open_reg_specs::E2ETestScope}
+E2ETestScope_Impl returns ecore4reg::E2ETestScope:
+	{ecore4reg::E2ETestScope}
 	'E2ETestScope'
 	name=ID
 	'{'
-		('scenarios' '(' scenarios+=[open_reg_specs::Scenario|QualifiedName] ( "," scenarios+=[open_reg_specs::Scenario|QualifiedName])* ')' )?
-		('layer' layer=[open_reg_specs::SelectionLayer|QualifiedName])?
-		('scriptTask' scriptTask=[open_reg_specs::ScriptTask|QualifiedName])?
+		('scenarios' '(' scenarios+=[ecore4reg::Scenario|QualifiedName] ( "," scenarios+=[ecore4reg::Scenario|QualifiedName])* ')' )?
+		('layer' layer=[ecore4reg::SelectionLayer|QualifiedName])?
+		('scriptTask' scriptTask=[ecore4reg::ScriptTask|QualifiedName])?
 	'}';
 
 	

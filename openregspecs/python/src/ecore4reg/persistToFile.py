@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from open_reg_specs import *
+from ecore4reg import *
 from pyecore.resources import ResourceSet, URI
 from pyecore.ecore import *
 from pyecore.resources.xmi import XMIResource
@@ -23,15 +23,15 @@ import os
 class PersistToFile:
     def saveModelAsXCoreLFile(self,context ):
         
-        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"xcorel",context.inputLayerEnumsPackage)
-        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"xcorel",context.outputLayerEnumsPackage)
-        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"xcorel")
-        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"xcorel")
-        PersistToFile.persistTypesModel(self,context,context.eTypesPackage,"xcorel")
+        PersistToFile.persistEntityModel(self,context,context.inputLayerEntitiesPackage,"ecore4reg",context.inputLayerEnumsPackage)
+        PersistToFile.persistEntityModel(self,context,context.outputLayerEntitiesPackage,"ecore4reg",context.outputLayerEnumsPackage)
+        PersistToFile.persistEnumModel(self,context,context.inputLayerEnumsPackage,"ecore4reg")
+        PersistToFile.persistEnumModel(self,context,context.outputLayerEnumsPackage,"ecore4reg")
+        PersistToFile.persistTypesModel(self,context,context.typesPackage,"ecore4reg")
         PersistToFile.persistWorkflow(self,context)
         PersistToFile.persistGenerationTransformations(self,context)
         for package in context.logicPackages:
-            PersistToFile.persistEntityModel(self,context,package,"xcorel",context.outputLayerEnumsPackage)
+            PersistToFile.persistEntityModel(self,context,package,"ecore4reg",context.outputLayerEnumsPackage)
         
    
         
@@ -43,10 +43,10 @@ class PersistToFile:
         if thePackage ==context.outputLayerEntitiesPackage: 
             for importString in context.importLogicStrings:
                 f.write("\t\t import " + importString + ".*\r")  
-        if extension == "xcorel":
+        if extension == "ecore4reg":
             f.write("\t\t import types.*\r")    
         for classifier in  thePackage.eClassifiers:
-            if isinstance(classifier,EClass):
+            if isinstance(classifier,ELClass):
                 f.write("\t\t\t")
                 if classifier.abstract==True:
                     f.write("abstract ")
@@ -56,7 +56,7 @@ class PersistToFile:
                 f.write( " {\r")
                 for member in classifier.eStructuralFeatures:
                     
-                    if isinstance(member, EReference):
+                    if isinstance(member, ELReference):
                         if (member.containment):
                             f.write("\t\t\t\tcontains "  )
                         else:
@@ -70,7 +70,7 @@ class PersistToFile:
                     
                         f.write(member.name)
                         f.write(" \r"  )
-                    elif isinstance(member, EAttribute):
+                    elif isinstance(member, ELAttribute):
                         f.write("\t\t\t\t")
                         if member.iD:
                            f.write("id ")
@@ -97,7 +97,7 @@ class PersistToFile:
                         f.write(" \r"  )
                     
                 for member in classifier.eOperations:
-                    if isinstance(member, EOperation):
+                    if isinstance(member, ELOperation):
                             f.write("\t\t\t\top ")
                             
                             f.write(member.eType.name + " " )
@@ -107,9 +107,9 @@ class PersistToFile:
                                 f.write("[" + str(member.lowerBound) + ".." +str(member.upperBound) + "] ")
                      
                             f.write(member.name)
-                            if extension == "xcorel" and context.addExecutableStubs:
-                                if hasattr(member, "xcorelText"):
-                                    f.write("() {\n\t\t\t\t\t\"" + member.xcorelText + "\"\n\t\t\t\t\t}")
+                            if extension == "ecore4reg" and context.addExecutableStubs:
+                                if hasattr(member, "ecore4regText"):
+                                    f.write("() {\n\t\t\t\t\t\"" + member.ecore4regText + "\"\n\t\t\t\t\t}")
                                 else:
                                     f.write("() {}")
                             else:
@@ -129,7 +129,7 @@ class PersistToFile:
         f.write("\t\t\ttype double wraps double\r")
         f.write("\t\t\ttype String wraps String\r")
         f.write("\t\t\ttype int wraps int\r") 
-        if extension == "xcorel":
+        if extension == "ecore4reg":
             f.write("\t\t\ttype Date wraps Date\r")
         else:
             f.write("\t\t\ttype Date wraps java.util.Date\r")
@@ -142,13 +142,13 @@ class PersistToFile:
         f.write("\t\t package " + thePackage.name + "\r")    
         for classifier in  thePackage.eClassifiers:
             
-            if isinstance(classifier,EEnum):
+            if isinstance(classifier,ELEnum):
                 f.write("\t\t\tenum " + classifier.name)
                 
                 f.write(" { ")  
                 counter = 0
                 splitcount = 1
-                for theLiteral in classifier.literals:
+                for theLiteral in classifier.eLiterals:
                     counter=counter+1
                     
                     if counter < 100:
@@ -241,7 +241,7 @@ class PersistToFile:
         resource.save()
         
     def persistWorkflow(self,context):
-        f = open(context.outputDirectory+ os.sep + 'workflow.xcorel', "a",  encoding='utf-8')
+        f = open(context.outputDirectory+ os.sep + 'workflow.ecore4reg', "a",  encoding='utf-8')
         f.write("WorkflowModule " + context.workflowModule.name + "\r{\r")
         f.write("\t\tsubProcess {\r")    
         for process in  context.workflowModule.subProcess:
@@ -291,7 +291,7 @@ class PersistToFile:
         views = context.viewModule.views
 
         for view in views:
-            f = open(context.outputDirectory + os.sep + view.name + '_view.xcorel', "a",  encoding='utf-8')
+            f = open(context.outputDirectory + os.sep + view.name + '_view.ecore4reg', "a",  encoding='utf-8')
             f.write("ViewModule " + view.name + "_viewModule\r{\r")
             f.write("\tviews " + "{\r")
             f.write("\t\tView " + view.name + "_view {\r")

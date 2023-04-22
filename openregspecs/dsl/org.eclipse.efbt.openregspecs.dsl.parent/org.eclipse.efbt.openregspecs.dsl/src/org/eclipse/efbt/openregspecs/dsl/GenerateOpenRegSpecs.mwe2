@@ -44,8 +44,8 @@ Workflow {
 		}
 		language = StandardLanguage {
 			name = "org.eclipse.efbt.openregspecs.dsl.OpenRegSpecs"
-			fileExtensions = "xcorel"
-			referencedResource = "platform:/resource/org.eclipse.efbt.openregspecs.model/model/open_reg_specs.genmodel"
+			fileExtensions = "ecore4reg"
+			referencedResource = "platform:/resource/org.eclipse.efbt.openregspecs.model/model/ecore4reg.genmodel"
 			
 			fragment = ecore2xtext.Ecore2XtextValueConverterServiceFragment2 auto-inject {}
 

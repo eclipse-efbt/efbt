@@ -10,32 +10,32 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from open_reg_specs import *
+from ecore4reg import *
 
 class Context(object):
     # we create the main 5 'primitive' data types
-    xString = EDataType()
+    xString = ELDataType()
     xString.name = "String"
     
-    xDouble = EDataType()
+    xDouble = ELDataType()
     xDouble.name = "double"
     
-    xInt = EDataType()
+    xInt = ELDataType()
     xInt.name = "int"
     
-    xDate = EDataType()
+    xDate = ELDataType()
     xDate.name = "Date"
     
-    xBoolean = EDataType()
+    xBoolean = ELDataType()
     xBoolean.name = "boolean"
 
     moduleList = ModuleList()
     
-    typesPackage = EPackage(name='types')
-    inputLayerEnumsPackage = EPackage(name='input_layer_enums')
-    outputLayerEnumsPackage = EPackage(name='output_layer_enums')
-    inputLayerEntitiesPackage = EPackage(name='input_layer_entities')
-    outputLayerEntitiesPackage = EPackage(name='output_layer_entities')
+    typesPackage = ELPackage(name='types')
+    inputLayerEnumsPackage = ELPackage(name='input_layer_enums')
+    outputLayerEnumsPackage = ELPackage(name='output_layer_enums')
+    inputLayerEntitiesPackage = ELPackage(name='input_layer_entities')
+    outputLayerEntitiesPackage = ELPackage(name='output_layer_entities')
     
     logicPackages = []
     # classesMap keeps a reference between ldm ID's for classes and
@@ -101,10 +101,10 @@ class Context(object):
     def __init__(self):
         
 
-        self.eTypesPackage.eClassifiers.append(self.xString)
-        self.eTypesPackage.eClassifiers.append(self.xDouble)
-        self.eTypesPackage.eClassifiers.append(self.xInt)
-        self.moduleList.modules.append(self.eTypesPackage)
+        self.typesPackage.eClassifiers.append(self.xString)
+        self.typesPackage.eClassifiers.append(self.xDouble)
+        self.typesPackage.eClassifiers.append(self.xInt)
+        self.moduleList.modules.append(self.typesPackage)
         self.moduleList.modules.append(self.inputLayerEnumsPackage)
         self.moduleList.modules.append(self.outputLayerEnumsPackage)
         self.moduleList.modules.append(self.inputLayerEntitiesPackage)

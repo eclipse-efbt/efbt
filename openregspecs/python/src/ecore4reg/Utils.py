@@ -16,7 +16,7 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from open_reg_specs import *
+from ecore4reg import *
 from pyecore.resources import ResourceSet, URI
 from pyecore.ecore import *
 from pyecore.resources.xmi import XMIResource
@@ -36,7 +36,7 @@ class Utils(object):
             if that exists then _x4 etc.
         '''
         newAdaptedValue = adaptedValue
-        if Utils.containsLiteral(theEnum.literals, adaptedValue ):
+        if Utils.containsLiteral(theEnum.eLiterals, adaptedValue ):
             newAdaptedValue = adaptedValue +"_x2"
         counter = 1
         finished = False
@@ -51,7 +51,7 @@ class Utils(object):
         limit = 32
         while ((counter < limit) and not(finished)):
             counter = counter + 1
-            if Utils.containsLiteral(theEnum.literals, adaptedValue +"_x" + str(counter)):
+            if Utils.containsLiteral(theEnum.eLiterals, adaptedValue +"_x" + str(counter)):
                 newAdaptedValue = adaptedValue +"_x"+ str(counter+1)
             else:
                 finished = True
@@ -69,12 +69,12 @@ class Utils(object):
         counter = 1
         finished = False
         limit = 32
-        if Utils.containsName(theEnum.literals, enumUsedName ):
+        if Utils.containsName(theEnum.eLiterals, enumUsedName ):
                 newAdaptedName = enumUsedName +"_x2"
                 
         while ((counter < limit) and not(finished)):
             counter = counter + 1
-            if Utils.containsName(theEnum.literals, enumUsedName +"_x" + str(counter)):
+            if Utils.containsName(theEnum.eLiterals, enumUsedName +"_x" + str(counter)):
                 newAdaptedName = enumUsedName +"_x"+ str(counter+1)
             else:
                 finished = True 
@@ -97,8 +97,8 @@ class Utils(object):
         '''
         rset = ResourceSet()
 
-        resource = rset.create_resource(URI(context.outputDirectory + 'IL.xcorel'))  # This will create an XMI resource
-        resource.append(context.xcorelPackage)
+        resource = rset.create_resource(URI(context.outputDirectory + 'IL.ecore4reg'))  # This will create an XMI resource
+        resource.append(context.ecore4regPackage)
         resource.save()
     
    
@@ -136,11 +136,11 @@ class Utils(object):
         It is possible that one class might have 2 different relationships 
         to the same class.
         '''
-        features = sourceClass.members
+        features = sourceClass.eStructuralFeatures
         counter = 0;
         # do this for relationship attributes only.
         for feature in features:
-            if ( isinstance(feature,EReference)):
+            if ( isinstance(feature,ELReference)):
                 featureType = feature.eType            
                 if (featureType == targetClass):
                     counter = counter+1

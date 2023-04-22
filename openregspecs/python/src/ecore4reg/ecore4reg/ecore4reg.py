@@ -1,12 +1,12 @@
-"""Definition of meta model 'open_reg_specs'."""
+"""Definition of meta model 'ecore4reg'."""
 from functools import partial
 import pyecore.ecore as Ecore
 from pyecore.ecore import *
 
 
-name = 'open_reg_specs'
-nsURI = 'http://www.eclipse.org/efbt/open_reg_specs'
-nsPrefix = 'open_reg_specs'
+name = 'ecore4reg'
+nsURI = 'http://www.eclipse.org/efbt/ecore4reg'
+nsPrefix = 'ecore4reg'
 
 eClass = EPackage(name=name, nsURI=nsURI, nsPrefix=nsPrefix)
 
@@ -401,7 +401,7 @@ class InputFile(EObject, metaclass=MetaEClass):
 
 
 @abstract
-class EModelElement(EObject, metaclass=MetaEClass):
+class ELModelElement(EObject, metaclass=MetaEClass):
 
     eAnnotations = EReference(ordered=True, unique=True, containment=True, derived=False)
 
@@ -888,7 +888,7 @@ class WorkflowModule(Module):
 
 
 @abstract
-class ENamedElement(EModelElement):
+class ELNamedElement(ELModelElement):
 
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
@@ -900,7 +900,7 @@ class ENamedElement(EModelElement):
             self.name = name
 
 
-class EPackage(Module):
+class ELPackage(Module):
 
     eClassifiers = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
@@ -912,7 +912,7 @@ class EPackage(Module):
             self.eClassifiers.extend(eClassifiers)
 
 
-class EAnnotation(EModelElement):
+class ELAnnotation(ELModelElement):
 
     contents = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
@@ -1087,7 +1087,7 @@ class SequenceFlow(FlowElement):
 
 
 @abstract
-class EClassifier(ENamedElement):
+class ELClassifier(ELNamedElement):
 
     package = EReference(ordered=True, unique=True, containment=False,
                          derived=False, transient=True)
@@ -1100,7 +1100,7 @@ class EClassifier(ENamedElement):
             self.package = package
 
 
-class EEnumLiteral(ENamedElement):
+class ELEnumLiteral(ELNamedElement):
 
     value = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     literal = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
@@ -1117,7 +1117,7 @@ class EEnumLiteral(ENamedElement):
 
 
 @abstract
-class ETypedElement(ENamedElement):
+class ELTypedElement(ELNamedElement):
 
     upperBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     lowerBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
@@ -1153,7 +1153,7 @@ class Gateway(FlowNode):
         super().__init__(**kwargs)
 
 
-class EClass(EClassifier):
+class ELClass(ELClassifier):
 
     abstract = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     eSuperTypes = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
@@ -1178,7 +1178,7 @@ class EClass(EClassifier):
             self.eOperations.extend(eOperations)
 
 
-class EDataType(EClassifier):
+class ELDataType(ELClassifier):
 
     industryName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
@@ -1190,7 +1190,7 @@ class EDataType(EClassifier):
             self.industryName = industryName
 
 
-class EOperation(ETypedElement):
+class ELOperation(ELTypedElement):
 
     body = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
@@ -1203,7 +1203,7 @@ class EOperation(ETypedElement):
 
 
 @abstract
-class EStructuralFeature(ETypedElement):
+class ELStructuralFeature(ELTypedElement):
 
     def __init__(self, **kwargs):
 
@@ -1238,7 +1238,7 @@ class ParallelGateway(Gateway):
         super().__init__(**kwargs)
 
 
-class EAttribute(EStructuralFeature):
+class ELAttribute(ELStructuralFeature):
 
     iD = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     eAttributeType = EReference(ordered=True, unique=True, containment=False, derived=False)
@@ -1254,7 +1254,7 @@ class EAttribute(EStructuralFeature):
             self.eAttributeType = eAttributeType
 
 
-class EEnum(EDataType):
+class ELEnum(ELDataType):
 
     eLiterals = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
@@ -1266,7 +1266,7 @@ class EEnum(EDataType):
             self.eLiterals.extend(eLiterals)
 
 
-class EReference(EStructuralFeature):
+class ELReference(ELStructuralFeature):
 
     containment = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     eReferenceType = EReference(ordered=True, unique=True, containment=False, derived=False)

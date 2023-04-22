@@ -16,7 +16,7 @@ Created on 22 Jan 2022
 @author: Neil
 '''
 import csv
-from open_reg_specs import *
+from ecore4reg import *
 from pickle import TRUE
 import os
 
@@ -53,8 +53,8 @@ class ImportFinrepVTL(object):
         fileLocation = context.fileDirectory + os.sep + "transformation_scheme.csv"
 
         headerSkipped = False
-        # Load all the entities from the csv file, make an EClass per entity,
-        # and add the EClass to the package
+        # Load all the entities from the csv file, make an ELClass per entity,
+        # and add the ELClass to the package
         with open(fileLocation,encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -76,8 +76,8 @@ class ImportFinrepVTL(object):
         fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
         headerSkipped = False
-        # Load all the entities from the csv file, make an EClass per entity,
-        # and add the EClass to the package
+        # Load all the entities from the csv file, make an ELClass per entity,
+        # and add the ELClass to the package
         with open(fileLocation,encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -170,14 +170,14 @@ class ImportFinrepVTL(object):
         #print(outputLayerName)
         #print("outputLayerName")
         for theEntity in context.inputLayerEntitiesPackage.eClassifiers:
-            if isinstance(theEntity, EClass):
+            if isinstance(theEntity, ELClass):
                 #print("rol.name")
                 #print(rol.name)
                 if theEntity.name == outputLayerName:
                     return theEntity
                 
         for theEntity in context.outputLayerEntitiesPackage.eClassifiers:
-            if isinstance(theEntity, EClass):
+            if isinstance(theEntity, ELClass):
                 #print("rol.name")
                 #print(rol.name)
                 if theEntity.name == outputLayerName:
@@ -203,8 +203,8 @@ class ImportFinrepVTL(object):
         fileLocation = context.fileDirectory + os.sep + "transformations.csv"
 
         headerSkipped = False
-        # Load all the entities from the csv file, make an EClass per entity,
-        # and add the EClass to the package
+        # Load all the entities from the csv file, make an ELClass per entity,
+        # and add the ELClass to the package
         with open(fileLocation,encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -304,8 +304,8 @@ class ImportFinrepVTL(object):
         
         
         headerSkipped = False
-        # Load all the entities from the csv file, make an EClass per entity,
-        # and add the EClass to the package
+        # Load all the entities from the csv file, make an ELClass per entity,
+        # and add the ELClass to the package
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -387,7 +387,7 @@ class ImportFinrepVTL(object):
         outputLayer = layerSQL.selectionLayer.generatedEntity
         if not (outputLayer is None):
             for member in outputLayer.eOperations:
-                if isinstance(member, EOperation):     
+                if isinstance(member, ELOperation):     
                     selectColumn  = SelectColumnAttributeAs ( )
                     selectColumn.asAttribute = member
                     layerSQL.columns.extend([selectColumn])
@@ -399,8 +399,8 @@ class ImportFinrepVTL(object):
 
         
         headerSkipped = False
-        # Load all the entities from the csv file, make an EClass per entity,
-        # and add the EClass to the package
+        # Load all the entities from the csv file, make an ELClass per entity,
+        # and add the ELClass to the package
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:

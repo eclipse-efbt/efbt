@@ -8,9 +8,9 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: org.eclipse.efbt.openregspecs.model.open_reg_specs,
- org.eclipse.efbt.openregspecs.model.open_reg_specs.impl,
- org.eclipse.efbt.openregspecs.model.open_reg_specs.util
+Export-Package: org.eclipse.efbt.openregspecs.model.ecore4reg,
+ org.eclipse.efbt.openregspecs.model.ecore4reg.impl,
+ org.eclipse.efbt.openregspecs.model.ecore4reg.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport

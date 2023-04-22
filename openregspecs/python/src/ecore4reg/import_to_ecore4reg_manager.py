@@ -16,13 +16,13 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from open_reg_specs import *
+from ecore4reg import *
 
 from context import Context
 
-from import_ldm_to_xcorel import LDMImport
-from import_input_layer_to_xcorel import InputLayerImport
-from import_output_layer_to_xcorel import ROLImport
+from import_ldm_to_ecore4reg import LDMImport
+from import_input_layer_to_ecore4reg import InputLayerImport
+from import_output_layer_to_ecore4reg import ROLImport
 from import_finrep_vtl import ImportFinrepVTL
 from persistToFile import PersistToFile 
 
