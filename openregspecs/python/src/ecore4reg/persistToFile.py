@@ -159,7 +159,7 @@ class PersistToFile:
                         f.write(" }\r")
                         f.write("\t\t\tenum " + classifier.name + "_" + str(splitcount))
                         f.write(" { ")  
-                        print("splitting enum " + classifier.name)
+
                     
                 f.write(" }\r")
             
@@ -328,5 +328,20 @@ class PersistToFile:
         outputLayerEntities_resource2.append(context.outputLayerEntitiesEcorePackage)  # we add the EPackage instance in the resource
         outputLayerEntities_resource2.save()
         
+        PersistToFile.hotFix(self,context.outputDirectory + os.sep + "input_layer_enums.ecore")
+        PersistToFile.hotFix(self,context.outputDirectory + os.sep + "output_layer_enums.ecore")
+        PersistToFile.hotFix(self,context.outputDirectory + os.sep + "input_layer_entities.ecore")
+        PersistToFile.hotFix(self,context.outputDirectory + os.sep + "output_layer_entities.ecore")
+        
+    def hotFix(self,fileName):
+        f = open(fileName, "r")
+        text = f.read()
+        amendedText = text.replace('ecore4reg:EEnum','ecore:EEnum')
+        f.close()
+        f1 = open(fileName, "w")
+        f1.write(amendedText)
+        f.close()
+        
+    
     def removeCommentChars(self, theString):
         return theString.replace("/**", "").replace("/*", "").replace("*/", "")

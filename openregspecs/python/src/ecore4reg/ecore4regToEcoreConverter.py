@@ -26,12 +26,12 @@ from context import Context
 class Ecore4regToEcoreConverter(object):
     
     def convertPackagesInContext(self,context):
-        context.inputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(self,context.inputLayerEnumsPackage)
-        context.outputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(self,context.outputLayerEnumsPackage)
-        context.inputLayerEntitiesEcorePackage = Ecore4regToEcoreConverter.convert(self,context.inputLayerEntitiesPackage)
-        context.outputLayerEntitiesEcorePackage = Ecore4regToEcoreConverter.convert(self,context.outputLayerEntitiesPackage)
+        context.inputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(self,context.inputLayerEnumsPackage,context)
+        context.outputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(self,context.outputLayerEnumsPackage,context)
+        context.inputLayerEntitiesEcorePackage = Ecore4regToEcoreConverter.convert(self,context.inputLayerEntitiesPackage,context)
+        context.outputLayerEntitiesEcorePackage = Ecore4regToEcoreConverter.convert(self,context.outputLayerEntitiesPackage,context)
         
-    def convert(self,elPackage):
+    def convert(self,elPackage,context):
         ecorePackage = EPackage(name=elPackage.name, nsURI=elPackage.nsURI, nsPrefix=elPackage.nsPrefix)
         for classifier in elPackage.eClassifiers:
             if isinstance(classifier,ELEnum):
@@ -58,8 +58,10 @@ class Ecore4regToEcoreConverter(object):
                         print("structuralFeature.name")
                         print(structuralFeature.name)
                         typeName = structuralFeature.eAttributeType.name
+                        print("typeName")
+                        print(typeName)
                         if isinstance(structuralFeature.eAttributeType,ELEnum):
-                            eEnum = Ecore4regToEcoreConverter.findEnum(self,typeName,ecorePackage)
+                            eEnum = Ecore4regToEcoreConverter.findEnum(self,typeName,ecorePackage,context)
                             eAttribute.eAttributeType = eEnum
                             eAttribute.eType = eEnum
                         elif typeName == 'double':
@@ -79,9 +81,10 @@ class Ecore4regToEcoreConverter(object):
                         eReference=EReference(name=structuralFeature.name)
                         eReference.upperBound = structuralFeature.upperBound
                         eReference.lowerBound = structuralFeature.lowerBound
+                        eReference.containment = structuralFeature.containment
                         eClass.eStructuralFeatures.append(eReference)
                         typeName = structuralFeature.eType.name
-                        eReference.typeName = eReference 
+                        eReference.typeName = typeName 
                         
                 for operation in classifier.eOperations:
                     eOperation = EOperation(name = operation.name) 
@@ -130,12 +133,20 @@ class Ecore4regToEcoreConverter(object):
         return returnEClass
                 
     
-    def findEnum(self,typeName,ecorePackage):
+    def findEnum(self,typeName,ecorePackage,context):
         returnEnum = None
-        for classifier in ecorePackage.eClassifiers:
-            if isinstance(classifier,EEnum):
-                if classifier.name == typeName:
-                    returnEnum = classifier
+        
+        if ecorePackage.name == 'input_layer_entities':
+            for classifier in context.inputLayerEnumsEcorePackage.eClassifiers:
+                if isinstance(classifier,EEnum):
+                    if classifier.name == typeName:
+                        returnEnum = classifier
+                        
+        if ecorePackage.name == 'output_layer_entities':
+            for classifier in context.outputLayerEnumsEcorePackage.eClassifiers:
+                if isinstance(classifier,EEnum):
+                    if classifier.name == typeName:
+                        returnEnum = classifier
                     
         #if returnEnum == None:
         #    returnEnum = EEnum(name=typeName)
