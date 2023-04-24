@@ -24,11 +24,5 @@
    <feature id="org.eclipse.efbt.ecore4reg.examples.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.xcorelite.dsl.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.xcorelite.model.feature">
-      <category name="efbt"/>
-   </feature>
    <category-def name="efbt" label="Complete EFBT Repository"/>
 </site>
