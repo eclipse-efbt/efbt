@@ -10,17 +10,13 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from ecore4reg import *
-from pyecore.resources import ResourceSet, URI
-from pyecore.ecore import *
-from pyecore.resources.xmi import XMIResource
-from pyecore.resources.xmi import XMIOptions
-from Utils import Utils
-from context import Context
-from collections import Counter
 import os
-from pyecore.resources import ResourceSet
+from pyecore.resources import ResourceSet, URI
 from pyecore.resources.json import JsonResource
+from Utils import Utils
+
+
+from ecore4reg import ELAttribute, ELClass, ELEnum, ELOperation, ELReference, ScriptTask
 
 
 class PersistToFile:
@@ -29,11 +25,16 @@ class PersistToFile:
     '''
 
     def saveModelAsEcore4RegFile(self, context):
+        '''
+        Documentation for saveModelAsEcore4RegFile
+        '''
 
         PersistToFile.persistEntityModel(
-            self, context, context.inputLayerEntitiesPackage, "ecore4reg", context.inputLayerEnumsPackage)
+            self, context, context.inputLayerEntitiesPackage,
+            "ecore4reg", context.inputLayerEnumsPackage)
         PersistToFile.persistEntityModel(
-            self, context, context.outputLayerEntitiesPackage, "ecore4reg", context.outputLayerEnumsPackage)
+            self, context, context.outputLayerEntitiesPackage,
+            "ecore4reg", context.outputLayerEnumsPackage)
         PersistToFile.persistEnumModel(
             self, context, context.inputLayerEnumsPackage, "ecore4reg")
         PersistToFile.persistEnumModel(
@@ -63,7 +64,7 @@ class PersistToFile:
         for classifier in thePackage.eClassifiers:
             if isinstance(classifier, ELClass):
                 f.write("\t\t\t")
-                if classifier.abstract == True:
+                if classifier.abstract:
                     f.write("abstract ")
                 f.write("class " + classifier.name)
                 if (hasattr(classifier, "superTypes") and len(classifier.superTypes) > 0):
@@ -72,7 +73,7 @@ class PersistToFile:
                 for member in classifier.eStructuralFeatures:
 
                     if isinstance(member, ELReference):
-                        if (member.containment):
+                        if member.containment:
                             f.write("\t\t\t\tcontains ")
                         else:
                             f.write("\t\t\t\trefers ")
@@ -91,13 +92,13 @@ class PersistToFile:
                         if member.iD:
                             f.write("id ")
 
-                        if (member.eType.name == "String"):
+                        if member.eType.name == "String":
                             f.write("String  ")
-                        elif (member.eType.name == "Double"):
+                        elif member.eType.name == "Double":
                             f.write("double  ")
-                        elif (member.eType.name == "Integer"):
+                        elif member.eType.name == "Integer":
                             f.write("int  ")
-                        elif (member.eType.name == "Date"):
+                        elif member.eType.name == "Date":
                             f.write("Date  ")
                         else:
                             f.write(member.eType.name + " ")
@@ -222,7 +223,7 @@ class PersistToFile:
 
             output = output + "/** assocated enriched layer in VTL \r"
             enrichedLayer = intermediateLayer.dependant_enriched_cubes
-            if not (enrichedLayer is None):
+            if not enrichedLayer is None:
                 output = output + "enriched Layer :" + enrichedLayer.name + "\r"
                 output = output + "enriched Layer transformations:\r"
                 for exp in enrichedLayer.transformations:
@@ -260,7 +261,7 @@ class PersistToFile:
         '''
         counter = 0
         for layer in element.selectionLayers:
-            if not (layer.name is None):
+            if not layer.name is None:
                 counter = counter + 1
         return counter
 
@@ -286,27 +287,32 @@ class PersistToFile:
         rset2.resource_factory['json'] = JsonResource
 
         inputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "types.json"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "types.json"))
+        # This will create an JSON resource
         # we add the EPackage instance in the resource
         inputLayerEnums_resource2.append(context.typesPackage)
         inputLayerEnums_resource2.save()
         inputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "input_layer_enums.json"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "input_layer_enums.json"))
+        # This will create an JSON resource
         # we add the EPackage instance in the resource
         inputLayerEnums_resource2.append(context.inputLayerEnumsPackage)
         inputLayerEnums_resource2.save()
         outputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "output_layer_enums.json"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "output_layer_enums.json"))
+        # This will create an JSON resource
         # we add the EPackage instance in the resource
         outputLayerEnums_resource2.append(context.outputLayerEnumsPackage)
         outputLayerEnums_resource2.save()
         inputLayerEntities_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "input_layer_entities.json"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "input_layer_entities.json"))
+        # This will create an JSON resource
         # we add the EPackage instance in the resource
         inputLayerEntities_resource2.append(context.inputLayerEntitiesPackage)
         inputLayerEntities_resource2.save()
         outputLayerEntities_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "output_layer_entities.json"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "output_layer_entities.json"))
+        # This will create an JSON resource
         # we add the EPackage instance in the resource
         outputLayerEntities_resource2.append(
             context.outputLayerEntitiesPackage)
@@ -326,7 +332,7 @@ class PersistToFile:
             f.write("\t\t\t\tParallelGateway gw1 outgoing (")
             counter = 0
             for element in process.flowElements:
-                if not (counter == 0):
+                if counter != 0:
                     f.write(",")
                 counter = counter + 1
                 f.write("sf" + str(counter))
@@ -344,7 +350,7 @@ class PersistToFile:
                         f.write("\r\t\t\t\t\tselectionLayers {\r")
                         for layer in element.selectionLayers:
                             if not (layer.name is None):
-                                if not (counter2 == 0):
+                                if counter2 != 0:
                                     f.write(",")
                                 f.write("\r\t\t\t\t\t\tSelectionLayer " + Utils.makeValidID(str(layer.name)) +
                                         "{generatedEntity output_layer_entities." + layer.generatedEntity.name + " }")
@@ -378,7 +384,7 @@ class PersistToFile:
             f.write("\tviews " + "{\r")
             f.write("\t\tView " + view.name + "_view {\r")
             for layer in view.selectionLayerSQL:
-                if not (layer.selectionLayer.name is None):
+                if not layer.selectionLayer.name is None:
                     f.write("\t\t\tLayerSQL {\r")
                     f.write("selectionLayer finrepWorkflow.finrepReports.task_" + view.name[5:len(
                         view.name)] + "." + Utils.makeValidID(str(layer.selectionLayer.name)) + "\r")
@@ -401,23 +407,27 @@ class PersistToFile:
         rset2 = ResourceSet()
 
         inputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "input_layer_enums.ecore"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "input_layer_enums.ecore"))
+        # This will create an XMI resource
         # we add the EPackage instance in the resource
         inputLayerEnums_resource2.append(context.inputLayerEnumsEcorePackage)
         inputLayerEnums_resource2.save()
         outputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "output_layer_enums.ecore"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "output_layer_enums.ecore"))
+        # This will create an XMI resource
         # we add the EPackage instance in the resource
         outputLayerEnums_resource2.append(context.outputLayerEnumsEcorePackage)
         outputLayerEnums_resource2.save()
         inputLayerEntities_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "input_layer_entities.ecore"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "input_layer_entities.ecore"))
+        # This will create an XMI resource
         # we add the EPackage instance in the resource
         inputLayerEntities_resource2.append(
             context.inputLayerEntitiesEcorePackage)
         inputLayerEntities_resource2.save()
         outputLayerEntities_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + "output_layer_entities.ecore"))  # This will create an XMI resource
+            context.outputDirectory + os.sep + "output_layer_entities.ecore"))
+        # This will create an XMI resource
         # we add the EPackage instance in the resource
         outputLayerEntities_resource2.append(
             context.outputLayerEntitiesEcorePackage)
@@ -436,11 +446,11 @@ class PersistToFile:
         '''
         Documentation for hotFix
         '''
-        f = open(fileName, "r")
+        f = open(fileName, "r",encoding='utf-8')
         text = f.read()
         amendedText = text.replace('ecore4reg:EEnum', 'ecore:EEnum')
         f.close()
-        f1 = open(fileName, "w")
+        f1 = open(fileName, "w",encoding='utf-8')
         f1.write(amendedText)
         f.close()
 

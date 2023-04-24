@@ -16,9 +16,11 @@ Created on 22 Jan 2022
 @author: Neil
 '''
 import csv
-from ecore4reg import *
+
 
 import os
+
+from ecore4reg import SubProcess,ELClass, ELOperation, EntityToVTLIntermediateLayerLink, EntityToVTLIntermediateLayerLinkModule, LayerSQL, ScriptTask, SelectColumnAttributeAs, SelectionLayer, VTLForOutputLayerAndIntermediateLayerCombination, VTLForSelectionLayer, VTLForSelectionLayerModule, VTLForView, VTLForViewModule, VTLGeneratedIntermediateLayer, VTLGeneratedIntermediateLayerModule, VTLGeneratedOutputlayer, VTLGeneratedOutputlayerModule, VTLScheme, VTLSchemesModule, VTLTransformation, View
 
 
 class ImportFinrepVTL(object):
@@ -54,7 +56,7 @@ class ImportFinrepVTL(object):
             name="VTLGeneratedOutputLayers")
         vtlModule.VTLGeneratedIntermediateLayers = VTLGeneratedIntermediateLayerModule(
             name="VTLGeneratedIntermediateLayers")
-        vtlModule.VTLEnrichedLayers = VTLGeneratedIntermediateLayerModule(
+        vtlModule.VTLEnrichedLayers = VTLGeneratedIntermediateLayer(
             name="VTLEnrichedLayers")
         vtlModule.VTLForSelectionLayers = VTLForSelectionLayerModule(
             name="VTLForSelectionLayers")
@@ -293,7 +295,7 @@ class ImportFinrepVTL(object):
                 if intermediateLayerName == scheme.scheme_id:
                     theIntermediateLayer = enrichedLayer
 
-            if theIntermediateLayer == None:
+            if theIntermediateLayer is None:
                 theIntermediateLayer = VTLGeneratedIntermediateLayer(
                     name=scheme.scheme_id)
                 theIntermediateLayer.isEnrichment = True
@@ -317,7 +319,7 @@ class ImportFinrepVTL(object):
                 if intermediateLayerName == expressionLHS:
                     theIntermediateLayer = intermediateLayer
 
-            if theIntermediateLayer == None:
+            if theIntermediateLayer is None:
                 theIntermediateLayer = VTLGeneratedIntermediateLayer(
                     name=expressionLHS)
                 theIntermediateLayer.isEnrichment = False
@@ -406,7 +408,6 @@ class ImportFinrepVTL(object):
                     self, context, intermediateLayer)
                 if not (link is None):
                     input_layer = link.entity
-                    sqlfilter = link.filter
                     selectionLayer = SelectionLayer()
                     if input_layer is not None:
                         selectionLayer.name = view.outputLayer.name + \

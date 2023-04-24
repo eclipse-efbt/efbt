@@ -10,39 +10,52 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from ecore4reg import *
-from pyecore.ecore import *
+
+from pyecore.ecore import EPackage
+from ecore4reg import ELDataType, ELPackage, ModuleList, ViewModule, VTLModule, WorkflowModule
+
 
 class Context(object):
+    '''
+    Documentation for Context
+    '''
+
     # we create the main 5 'primitive' data types
     xString = ELDataType()
     xString.name = "String"
-    
+
     xDouble = ELDataType()
     xDouble.name = "double"
-    
+
     xInt = ELDataType()
     xInt.name = "int"
-    
+
     xDate = ELDataType()
     xDate.name = "Date"
-    
+
     xBoolean = ELDataType()
     xBoolean.name = "boolean"
 
     moduleList = ModuleList()
-    
+
     typesPackage = ELPackage(name='types')
-    inputLayerEnumsPackage = ELPackage(name='input_layer_enums', nsURI='http://www.eclipse.org/bird/input_layer_enums', nsPrefix='input_layer_enums')
-    outputLayerEnumsPackage = ELPackage(name='output_layer_enums', nsURI='http://www.eclipse.org/bird/output_layer_enums', nsPrefix='output_layer_enums')
-    inputLayerEntitiesPackage = ELPackage(name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
-    outputLayerEntitiesPackage = ELPackage(name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
-    
-    inputLayerEnumsEcorePackage = EPackage(name='input_layer_enums', nsURI='http://www.eclipse.org/bird/input_layer_enums', nsPrefix='input_layer_enums')
-    outputLayerEnumsEcorePackage = EPackage(name='output_layer_enums', nsURI='http://www.eclipse.org/bird/output_layer_enums', nsPrefix='output_layer_enums')
-    inputLayerEntitiesEcorePackage = EPackage(name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
-    outputLayerEntitiesEcorePackage = EPackage(name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
-    
+    inputLayerEnumsPackage = ELPackage(
+        name='input_layer_enums', nsURI='http://www.eclipse.org/bird/input_layer_enums', nsPrefix='input_layer_enums')
+    outputLayerEnumsPackage = ELPackage(
+        name='output_layer_enums', nsURI='http://www.eclipse.org/bird/output_layer_enums', nsPrefix='output_layer_enums')
+    inputLayerEntitiesPackage = ELPackage(
+        name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
+    outputLayerEntitiesPackage = ELPackage(
+        name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
+
+    inputLayerEnumsEcorePackage = EPackage(
+        name='input_layer_enums', nsURI='http://www.eclipse.org/bird/input_layer_enums', nsPrefix='input_layer_enums')
+    outputLayerEnumsEcorePackage = EPackage(
+        name='output_layer_enums', nsURI='http://www.eclipse.org/bird/output_layer_enums', nsPrefix='output_layer_enums')
+    inputLayerEntitiesEcorePackage = EPackage(
+        name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
+    outputLayerEntitiesEcorePackage = EPackage(
+        name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
 
     logicPackages = []
     # classesMap keeps a reference between ldm ID's for classes and
@@ -52,25 +65,25 @@ class Context(object):
     # the list of these calsses that we call tables
     tableMap = {}
     # A map between the LDM names for primitive types types, and
-    # our standard primitive types such as EString  
+    # our standard primitive types such as EString
     datatypeMap = {}
-    # For the reference output layers we record a map between variables 
+    # For the reference output layers we record a map between variables
     # and domains
     variableToDomainMap = {}
     variableToLongNamesMap = {}
-    # For the reference output layers we record a map between domains 
+    # For the reference output layers we record a map between domains
     # and domain names
     domainToDomainNameMap = {}
-    # For the reference output layers we record a map between members ids  
+    # For the reference output layers we record a map between members ids
     # andtheir containing domains
     memberIDToDomainMap = {}
-    # For the reference output layers we record a map between members ids  
+    # For the reference output layers we record a map between members ids
     # and their names
     memberIDToMemberNameMap = {}
-    # For the reference output layers we record a map between members ids  
+    # For the reference output layers we record a map between members ids
     # and their codes
     memberIDToMemberCodeMap = {}
-    
+
     FKtoMandatoryMap = {}
     FKToColumnMap = {}
     # we record a list of missing domains
@@ -82,31 +95,30 @@ class Context(object):
     fileDirectory = ""
     # the directory where we save our outputs.
     outputDirectory = ""
-    
+
     viewModule = ViewModule(name='generations')
-    
+
     workflowModule = WorkflowModule(name='finrepWorkflow')
-    
-    vtlModule = VTLModule(name = "vtl")
+
+    vtlModule = VTLModule(name="vtl")
     moduleList = ModuleList()
 
     persistVTLComments = True
-    
+
     useSubDomains = False
-    
+
     subDomainToMemberListMap = {}
     subDomainIDToDomainID = {}
-    
+
     addExecutableStubs = False
     addLogicPackages = False
-    
-    useVariableLongName=True
+
+    useVariableLongName = True
     importLogicStrings = []
-    
+
     variableSetToVariableMap = {}
-    
+
     def __init__(self):
-        
 
         self.typesPackage.eClassifiers.append(self.xString)
         self.typesPackage.eClassifiers.append(self.xDouble)
@@ -119,6 +131,3 @@ class Context(object):
         self.moduleList.modules.append(self.viewModule)
         self.moduleList.modules.append(self.workflowModule)
         self.moduleList.modules.append(self.vtlModule)
-        
-        
-        

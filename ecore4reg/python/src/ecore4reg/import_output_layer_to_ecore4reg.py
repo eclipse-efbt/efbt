@@ -17,11 +17,9 @@ Created on 22 Jan 2022
 @author: Neil
 '''
 import os
-from ecore4reg import *
 import csv
 from Utils import Utils
-from context import Context
-
+from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
 
 class ROLImport(object):
     '''
@@ -58,7 +56,7 @@ class ROLImport(object):
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
 
@@ -122,7 +120,7 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     valid_to = row[4]
@@ -137,7 +135,7 @@ class ROLImport(object):
                             variableList = []
                             context.variableSetToVariableMap[variableSet] = variableList
 
-                        if not (variableID in variableList):
+                        if not variableID in variableList:
                             variableList.append(variableID)
 
     def createVariableToDomainMap(self, context):
@@ -155,7 +153,7 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     variableName = row[6]
@@ -175,7 +173,7 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     domainID = row[0]
@@ -194,7 +192,7 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     memberID = row[4]
@@ -207,7 +205,8 @@ class ROLImport(object):
                         memberName = memberID
                     domainId = row[2]
 
-                    # if there is no domain ID this suggests a falty row in the csv due to return statements in fields
+                    # if there is no domain ID this suggests a faulty 
+                    # row in the csv due to return statements in fields
                     if not (domainId is None) and not (domainId == ""):
                         context.memberIDToDomainMap[memberID] = domainId
                         context.memberIDToMemberNameMap[memberID] = memberName
@@ -224,7 +223,7 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     domain_id = row[2]
@@ -242,7 +241,7 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     member_id = row[0]
@@ -256,7 +255,7 @@ class ROLImport(object):
                             memberList = []
                             context.subDomainToMemberListMap[subdomain_id] = memberList
 
-                        if not (member_id in memberList):
+                        if not member_id in memberList:
                             memberList.append(member_id)
 
     def addROLEnumsAndLiteralsToPackage(self, context):
@@ -273,7 +272,7 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
 
@@ -294,7 +293,7 @@ class ROLImport(object):
                             print("missing domainID: ")
                             print(domainID)
                             print(classID)
-                            if not (domainID in context.missingDomains):
+                            if not domainID in context.missingDomains:
                                 context.missingDomains.append(domainID)
                     except:
                         print("missing ROL class2: ")
@@ -341,11 +340,10 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
 
-                    variable = row[2]
                     subDomainID = row[10]
                     classID = row[1]
 
@@ -361,7 +359,7 @@ class ROLImport(object):
                         theEnum = Utils.findROLEnum(
                             amendedDomainName, context.enumMap)
                         if theEnum is None:
-                            if not ((amendedDomainName == "String") or (amendedDomainName == "Date")):
+                            if not (amendedDomainName == "String") or (amendedDomainName == "Date"):
                                 theEnum = ELEnum()
                                 theEnum.name = amendedDomainName
                                 # maintain a map of enum IDS to ELEnum objects
@@ -407,7 +405,7 @@ class ROLImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     theAttributeName1 = row[11]
@@ -417,9 +415,9 @@ class ROLImport(object):
                     variableSet = row[12]
                     classID = row[1]
                     attributeList = [theAttributeName1]
-                    if (theAttributeName1 == "MTRCS"):
+                    if theAttributeName1 == "MTRCS":
                         attributeList = context.variableSetToVariableMap[variableSet]
-                    if (theAttributeName1 == "OBSERVATION_VALUE"):
+                    if theAttributeName1 == "OBSERVATION_VALUE":
                         attributeList = []
                     for attributeName in attributeList:
                         try:
@@ -463,47 +461,47 @@ class ROLImport(object):
                                     operation = ELOperation()
                                     operation.lowerBound = 0
                                     operation.upperBound = 1
-                                    if (theEnum.name == "String"):
+                                    if theEnum.name == "String":
                                         operation.name = theAttributeName
                                         operation.eType = context.xString
-                                    elif (theEnum.name.startswith("String_")):
+                                    elif theEnum.name.startswith("String_"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xString
-                                    elif (theEnum.name == "STRNG_domain"):
+                                    elif theEnum.name == "STRNG_domain":
                                         operation.name = theAttributeName
                                         operation.eType = context.xString
-                                    elif (theEnum.name == "EBA_String_domain"):
+                                    elif theEnum.name == "EBA_String_domain":
                                         operation.name = theAttributeName
                                         operation.eType = context.xString
-                                    elif (theEnum.name == "DT_domain"):
+                                    elif theEnum.name == "DT_domain":
                                         operation.name = theAttributeName
                                         operation.eType = context.xDate
-                                    elif (theEnum.name == "Number"):
+                                    elif theEnum.name == "Number":
                                         operation.name = theAttributeName
                                         operation.eType = context.xDouble
 
-                                    elif (theEnum.name.startswith("Real_")):
+                                    elif theEnum.name.startswith("Real_"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xDouble
-                                    elif (theEnum.name.startswith("RL_domain")):
+                                    elif theEnum.name.startswith("RL_domain"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xDouble
-                                    elif (theEnum.name.startswith("Monetary")):
+                                    elif theEnum.name.startswith("Monetary"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xInt
-                                    elif (theEnum.name.startswith("MNTRY")):
+                                    elif theEnum.name.startswith("MNTRY"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xInt
-                                    elif (theEnum.name.startswith("BLN")):
+                                    elif theEnum.name.startswith("BLN"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xBoolean
-                                    elif (theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")):
+                                    elif theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xInt
-                                    elif (theEnum.name.startswith("Non_negative_integers")):
+                                    elif theEnum.name.startswith("Non_negative_integers"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xInt
-                                    elif (theEnum.name.startswith("All_possible_dates")):
+                                    elif theEnum.name.startswith("All_possible_dates"):
                                         operation.name = theAttributeName
                                         operation.eType = context.xDate
                                     else:
@@ -524,7 +522,7 @@ class ROLImport(object):
                                 print("XXXXX missing domainID: ")
                                 print(domainID)
                                 print(classID)
-                                if not (domainID in context.missingDomains):
+                                if not domainID in context.missingDomains:
                                     context.missingDomains.append(domainID)
                         except:
                             print("XX missing ROL class1: ")

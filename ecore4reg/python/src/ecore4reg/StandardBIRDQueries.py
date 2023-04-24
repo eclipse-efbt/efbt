@@ -10,13 +10,16 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from pyecore.resources import ResourceSet, URI
-from pyecore import *
-from pyecore.ecore import *
 import os
+from pyecore.resources import ResourceSet, URI
+from pyecore.ecore import EEnum
+
 
 
 class StandardBIRDQueries(object):
+    '''
+    Documentation for StandardBIRDQueries
+    '''
 
     inputLayerEnumsModel = None
     inputLayerEntitiesModel = None
@@ -25,6 +28,9 @@ class StandardBIRDQueries(object):
     typesModel = None
 
     def query1(self, fileDirectory):
+        '''
+        Documentation for query1
+        '''
         rset = ResourceSet()
 
         inputLayerEnums_resource = rset.get_resource(
@@ -82,22 +88,26 @@ class StandardBIRDQueries(object):
         # StandardBIRDQueries.createInputLayerToOutputLayerMatches(self,fileDirectory)
         rset2 = ResourceSet()
         inputLayerEnums_resource2 = rset2.create_resource(URI(
-            fileDirectory + os.sep + "inputLayerEnums2.ecore"))  # This will create an XMI resource
+            fileDirectory + os.sep + "inputLayerEnums2.ecore"))  
+        # This will create an XMI resource
         # we add the EPackage instance in the resource
         inputLayerEnums_resource2.append(self.inputLayerEnumsModel)
         inputLayerEnums_resource2.save()
         outputLayerEnums_resource2 = rset2.create_resource(URI(
-            fileDirectory + os.sep + "outputLayerEnums2.ecore"))  # This will create an XMI resource
+            fileDirectory + os.sep + "outputLayerEnums2.ecore"))  
+        # This will create an XMI resource
         # we add the EPackage instance in the resource
         outputLayerEnums_resource2.append(self.outputLayerEnumsModel)
         outputLayerEnums_resource2.save()
         inputLayerEntities_resource2 = rset2.create_resource(URI(
-            fileDirectory + os.sep + "inputLayerEntities2.ecore"))  # This will create an XMI resource
+            fileDirectory + os.sep + "inputLayerEntities2.ecore"))
+        # This will create an XMI resource
         # we add the EPackage instance in the resource
         inputLayerEntities_resource2.append(self.inputLayerEntitiesModel)
         inputLayerEntities_resource2.save()
         outputLayerEntities_resource2 = rset2.create_resource(URI(
-            fileDirectory + os.sep + "outputLayerEntities2.ecore"))  # This will create an XMI resource
+            fileDirectory + os.sep + "outputLayerEntities2.ecore"))
+        # This will create an XMI resource
         # we add the EPackage instance in the resource
         outputLayerEntities_resource2.append(self.outputLayerEntitiesModel)
         outputLayerEntities_resource2.save()

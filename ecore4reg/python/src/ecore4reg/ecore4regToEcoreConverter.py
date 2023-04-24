@@ -17,11 +17,8 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
+from pyecore.ecore import EInt, EDouble, EDate, EString, EBoolean, EPackage, EEnum, EEnumLiteral, EClass, EAttribute, EReference, EOperation
 from ecore4reg import ELClass, ELAttribute, ELReference, ELEnum
-from pyecore.ecore import *
-
-from context import Context
-
 
 class Ecore4regToEcoreConverter(object):
     '''
@@ -30,7 +27,7 @@ class Ecore4regToEcoreConverter(object):
 
     def convertPackagesInContext(self, context):
         '''
-        
+        Documentation for convertPackagesInContext
         '''
         context.inputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(
             self, context.inputLayerEnumsPackage, context)

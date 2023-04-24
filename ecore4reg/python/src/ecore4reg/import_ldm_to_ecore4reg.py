@@ -10,20 +10,16 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from pickle import TRUE
-'''
-Created on 22 Jan 2022
-
-@author: Neil
-'''
-from ecore4reg import *
+import os
 import csv
 from Utils import Utils
-from context import Context
-import os
 
+from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
 
 class LDMImport(object):
+    '''
+    Documentation for LDMImport
+    '''
 
     def doImport(self, context):
         '''
@@ -52,7 +48,7 @@ class LDMImport(object):
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
 
@@ -62,7 +58,7 @@ class LDMImport(object):
                     Num_SuperTypeEntity_ID = row[26]
 
                     alteredClassName = Utils.makeValidID(className)
-                    if (alteredClassName.endswith("_derived")):
+                    if alteredClassName.endswith("_derived"):
                         xclass = ELClass(name=alteredClassName)
                         xclassTable = ELClass(
                             name=alteredClassName+"_DerivedTable")
@@ -93,10 +89,13 @@ class LDMImport(object):
 
                     else:
                         xclass = ELClass(name=alteredClassName)
-                        # of engineering type is single table, as i should be for all members of a type
-                        # heirarchy, and num_suptype is blanck, then this means that this class is a root
-                        # of a type heirarchy....we will set such classes to be abstract.
-                        if ((engineering_type == "Single Table") and (Num_SuperTypeEntity_ID == "")):
+                        # of engineering type is single table, as i should be 
+                        # for all members of a type
+                        # heirarchy, and num_suptype is blank,
+                        # then this means that this class is a root
+                        # of a type heirarchy....we will set such classes
+                        #  to be abstract.
+                        if (engineering_type == "Single Table") and (Num_SuperTypeEntity_ID == ""):
                             xclass.abstract = True
                         xclassTable = ELClass(
                             name=alteredClassName+"_BaseTable")
@@ -129,12 +128,12 @@ class LDMImport(object):
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     classID = row[1]
                     superclassID = row[25]
-                    if (not (len(superclassID.strip()) == 0)):
+                    if not (len(superclassID.strip()) == 0):
                         theclass = context.classesMap[classID]
                         superclass = context.classesMap[superclassID]
                         theclass.superTypes.extend([superclass])
@@ -150,14 +149,14 @@ class LDMImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     counter = counter+1
                     enumID = row[0]
                     enumName = row[1]
                     adaptedEnumName = Utils.makeValidID(enumName)+"_domain"
-                    if (not Utils.inEnumBlackList(self, adaptedEnumName)):
+                    if not Utils.inEnumBlackList( adaptedEnumName):
                         theEnum = ELEnum()
                         theEnum.name = adaptedEnumName
                         # maintain a map of enum IDS to ELEnum objects
@@ -176,23 +175,23 @@ class LDMImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     try:
                         counter = counter+1
                         enumID = row[0]
-                        enumUsedName = Utils.makeValidID(self, row[3])
+                        enumUsedName = Utils.makeValidID( row[3])
                         # enumName = row[5]
-                        adaptedEnumName = Utils.makeValidID(self, enumUsedName)
+                        adaptedEnumName = Utils.makeValidID( enumUsedName)
                         value = row[4]
-                        adaptedValue = Utils.makeValidID(self, value)
+                        adaptedValue = Utils.makeValidID( value)
                         try:
                             theEnum = context.enumMap[enumID]
                             newAdaptedValue = Utils.uniqueValue(
-                                self, theEnum, adaptedValue)
+                                 theEnum, adaptedValue)
                             newAdaptedName = Utils.uniqueName(
-                                self, theEnum, adaptedEnumName)
+                                 theEnum, adaptedEnumName)
                             enumLiteral = ELEnumLiteral()
                             enumLiteral.name = newAdaptedValue
                             enumLiteral.literal = newAdaptedName
@@ -219,36 +218,36 @@ class LDMImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     rdbms_Type = row[3]
                     rdbms_Version = row[4]
                     dataTypeID = row[0]
-                    if ((rdbms_Type.strip() == "Oracle Database") and (rdbms_Version.strip() == "12cR2")):
+                    if (rdbms_Type.strip() == "Oracle Database") and (rdbms_Version.strip() == "12cR2"):
                         native_type = row[2]
 
-                        if (native_type.strip() == "VARCHAR"):
+                        if native_type.strip() == "VARCHAR":
 
                             context.datatypeMap[dataTypeID] = context.xString
 
-                        if (native_type.strip() == "VARCHAR2"):
+                        if native_type.strip() == "VARCHAR2":
 
                             context.datatypeMap[dataTypeID] = context.xString
 
-                        if (native_type.strip() == "INTEGER"):
+                        if native_type.strip() == "INTEGER":
 
                             context.datatypeMap[dataTypeID] = context.xInt
 
-                        if (native_type.strip() == "DATE"):
+                        if native_type.strip() == "DATE":
 
                             context.datatypeMap[dataTypeID] = context.xDate
 
-                        if (native_type.strip() == "NUMBER"):
+                        if native_type.strip() == "NUMBER":
 
                             context.datatypeMap[dataTypeID] = context.xDouble
 
-                        if (native_type.strip() == "UNKNOWN"):
+                        if native_type.strip() == "UNKNOWN":
 
                             context.datatypeMap[dataTypeID] = context.xString
 
@@ -267,12 +266,12 @@ class LDMImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     attributeName = row[0]
                     amendedAttributeName = Utils.makeValidID(
-                        self, attributeName)
+                         attributeName)
                     attributeKind = row[7]
 
                     classID = row[4]
@@ -281,7 +280,7 @@ class LDMImport(object):
                     theClass = context.classesMap[classID]
 
                     classIsDerived = False
-                    if (theClass.name.endswith("_derived")):
+                    if theClass.name.endswith("_derived"):
                         classIsDerived = True
 
                     theAttributeName = amendedAttributeName
@@ -289,45 +288,45 @@ class LDMImport(object):
                     # we only add attributes here if they are not representing a relationship
                     if relationID == "":
 
-                        if (attributeKind == "Domain"):
+                        if attributeKind == "Domain":
                             enumID = row[12]
                             theEnum = context.enumMap[enumID]
 
                             attribute = ELAttribute()
-                            if (primary_key_or_not == "P"):
+                            if primary_key_or_not == "P":
                                 attribute.iD = True
 
                             attribute.lowerBound = 0
                             attribute.upperBound = 1
-                            if (theEnum.name == "String"):
+                            if theEnum.name == "String":
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xString
                                 attribute.eAttributeType = context.xString
-                            elif (theEnum.name.startswith("String_")):
+                            elif theEnum.name.startswith("String_"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xString
                                 attribute.eAttributeType = context.xString
-                            elif (theEnum.name == "Number"):
+                            elif theEnum.name == "Number":
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDouble
                                 attribute.eAttributeType = context.xDouble
-                            elif (theEnum.name.startswith("Real_")):
+                            elif theEnum.name.startswith("Real_"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDouble
                                 attribute.eAttributeType = context.xDouble
-                            elif (theEnum.name.startswith("Monetary")):
+                            elif theEnum.name.startswith("Monetary"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
                                 attribute.eAttributeType = context.xInt
-                            elif (theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")):
+                            elif theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
                                 attribute.eAttributeType = context.xInt
-                            elif (theEnum.name.startswith("Non_negative_integers")):
+                            elif theEnum.name.startswith("Non_negative_integers"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
                                 attribute.eAttributeType = context.xInt
-                            elif (theEnum.name.startswith("All_possible_dates")):
+                            elif theEnum.name.startswith("All_possible_dates"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDate
                                 attribute.eAttributeType = context.xDate
@@ -337,35 +336,35 @@ class LDMImport(object):
                             else:
                                 attribute.name = theAttributeName
                                 attribute.eType = theEnum
-                                attribute.eAttributeType = eAttributeType
+                                attribute.eAttributeType = theEnum
 
                             if classIsDerived:
                                 operation = ELOperation()
                                 operation.lowerBound = 0
                                 operation.upperBound = 1
-                                if (theEnum.name == "String"):
+                                if theEnum.name == "String":
                                     operation.name = theAttributeName
                                     operation.eType = context.xString
-                                elif (theEnum.name.startswith("String_")):
+                                elif theEnum.name.startswith("String_"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xString
-                                elif (theEnum.name == "Number"):
+                                elif theEnum.name == "Number":
                                     operation.name = theAttributeName
                                     operation.eType = context.xDouble
 
-                                elif (theEnum.name.startswith("Real_")):
+                                elif theEnum.name.startswith("Real_"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xDouble
-                                elif (theEnum.name.startswith("Monetary")):
+                                elif theEnum.name.startswith("Monetary"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xInt
-                                elif (theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")):
+                                elif theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xInt
-                                elif (theEnum.name.startswith("Non_negative_integers")):
+                                elif theEnum.name.startswith("Non_negative_integers"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xInt
-                                elif (theEnum.name.startswith("All_possible_dates")):
+                                elif theEnum.name.startswith("All_possible_dates"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xDate
                                 else:
@@ -376,7 +375,7 @@ class LDMImport(object):
                             print("Logical Type")
                             dataTypeID = row[14]
                             try:
-                                datatype = context.datatypeMap[dataTypeID]
+
                                 attribute = ELAttribute()
                                 attribute.lowerBound = 0
                                 attribute.upperBound = 1
@@ -417,12 +416,12 @@ class LDMImport(object):
         for theClass in context.classesMap.values():
             if len(theClass.superTypes) > 0:
                 superclass = theClass.superTypes[0]
-                if (superclass):
+                if superclass:
 
                     attributes = theClass.eStructuralFeatures
                     attributesToDelete = []
                     for theAttribute in attributes:
-                        if Utils.superclassContainsFeature(self, superclass, theAttribute):
+                        if Utils.superclassContainsFeature( superclass, theAttribute):
                             attributesToDelete.append(theAttribute)
 
                     for theAttribute in attributesToDelete:
@@ -440,21 +439,17 @@ class LDMImport(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
+                if not headerSkipped:
                     headerSkipped = True
                 else:
                     sourceID = row[16]
                     targetID = row[18]
                     sourceTo_Target_Cardinality = row[10]
-
                     targetClassName = row[7]
-
                     target_Optional = row[13]
-                    attributeKind = row[7].strip()
-                    referenceID = row[4].strip()
 
                     referenceName = "the" + \
-                        Utils.makeValidID(self, targetClassName)
+                        Utils.makeValidID(targetClassName)
 
                     try:
                         theClass = context.classesMap[sourceID]
@@ -467,26 +462,27 @@ class LDMImport(object):
                         print("missing target class: " + targetID)
 
                     numOfRelations = Utils.numberofRelationShipsToThisClass(
-                        self, theClass, targetClass)
-                    if (numOfRelations > 0):
+                        theClass, targetClass)
+                    if numOfRelations > 0:
                         print("numOfRelations")
                         print(numOfRelations)
                         referenceName = referenceName + str(numOfRelations)
-                    relationalAttribute = None
-                    if (target_Optional.strip() == "Y"):
-                        if (sourceTo_Target_Cardinality.strip() == "*"):
+
+                    if target_Optional.strip() == "Y":
+                        if sourceTo_Target_Cardinality.strip() == "*":
                             referenceName = referenceName + "s"
                             eReference = ELReference()
                             eReference.name = referenceName
                             eReference.eType = targetClass
-                            # upper bound of -1 means there is no upper bounds, so represents an open list of reference
+                            # upper bound of -1 means there is no upper bounds, 
+                            # so represents an open list of reference
                             eReference.upperBound = -1
                             eReference.lowerBound = 0
                             eReference.containment = False
-                            if (theClass.name.endswith("_derived")):
+                            if theClass.name.endswith("_derived"):
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not (Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not Utils.hasMemberCalled( theSourceTable, "sourceTable1"):
 
                                     sourceTablesReference = ELReference()
                                     sourceTablesReference.name = "sourceTable1"
@@ -513,10 +509,10 @@ class LDMImport(object):
                             eReference.upperBound = 1
                             eReference.lowerBound = 0
                             eReference.containment = False
-                            if (theClass.name.endswith("_derived")):
+                            if theClass.name.endswith("_derived"):
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not (Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not Utils.hasMemberCalled(theSourceTable, "sourceTable1"):
 
                                     sourceTablesReference = ELReference()
                                     sourceTablesReference.name = "sourceTable1"
@@ -537,7 +533,7 @@ class LDMImport(object):
                                     theSourceTable.eStructuralFeatures.append(
                                         sourceTablesReference)
                     else:
-                        if (sourceTo_Target_Cardinality.strip() == "*"):
+                        if sourceTo_Target_Cardinality.strip() == "*":
                             referenceName = referenceName + "s"
                             eReference = ELReference()
                             eReference.name = referenceName
@@ -545,11 +541,11 @@ class LDMImport(object):
                             eReference.upperBound = -1
                             eReference.lowerBound = 1
                             eReference.containment = False
-                            if (theClass.name.endswith("_derived")):
+                            if theClass.name.endswith("_derived"):
 
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not (Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not Utils.hasMemberCalled(theSourceTable, "sourceTable1"):
 
                                     sourceTablesReference = ELReference()
                                     sourceTablesReference.name = "sourceTable1"
@@ -571,10 +567,10 @@ class LDMImport(object):
                             eReference.upperBound = 1
                             eReference.lowerBound = 1
                             eReference.containment = False
-                            if (theClass.name.endswith("_derived")):
+                            if theClass.name.endswith("_derived"):
                                 theSourceTable = context.tableMap[theClass]
                                 theTargetTable = context.tableMap[targetClass]
-                                if not (Utils.hasMemberCalled(self, theSourceTable, "sourceTable1")):
+                                if not (Utils.hasMemberCalled(theSourceTable, "sourceTable1")):
 
                                     sourceTablesReference = ELReference()
                                     sourceTablesReference.name = "sourceTable1"
@@ -594,5 +590,5 @@ class LDMImport(object):
                                     sourceTablesReference.containment = False
                                     theSourceTable.eStructuralFeatures.append(
                                         sourceTablesReference)
-                    if (not (theClass is None)):
+                    if not (theClass is None):
                         theClass.eStructuralFeatures.append(eReference)

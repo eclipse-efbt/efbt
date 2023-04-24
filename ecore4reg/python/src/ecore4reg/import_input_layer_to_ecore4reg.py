@@ -15,15 +15,18 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from ecore4reg import *
-from pyecore.ecore import *
+
 import csv
 from Utils import Utils
-from context import Context
 import os
+
+from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
 
 
 class InputLayerImport(object):
+    '''
+    Documentation for InputLayerImport
+    '''
 
     def doImport(self, context):
         '''
@@ -187,6 +190,9 @@ class InputLayerImport(object):
                         print(counter)
 
     def createILTypesMap(self, context):
+        '''
+        for each type in the IL, create a map of typeID to type name
+        '''
         # for each logicalDatatype for orcle 12c, make a Datatype if we have an
         # equivalent
 

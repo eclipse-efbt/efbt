@@ -15,7 +15,7 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from ecore4reg import *
+
 
 from context import Context
 
