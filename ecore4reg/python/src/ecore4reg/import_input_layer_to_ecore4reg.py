@@ -171,7 +171,7 @@ class InputLayerImport(object):
                             newAdaptedValue = Utils.uniqueValue(
                                 theEnum, adaptedValue)
                             newAdaptedValue = Utils.specialCases(
-                                theEnum, newAdaptedValue, counter)
+                                newAdaptedValue, counter)
                             newAdaptedName = Utils.uniqueName(
                                 theEnum, adaptedEnumName)
 

@@ -31,12 +31,12 @@ if __name__ == '__main__':
     importLDM = False
     importIL = True
     importROL = True
-    importFinrepVTL = False
+    importFinrepVTL = True
     persistToXCoreL = True
     context.persistVTLComments = True
     context.useSubDomains = False
-    context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\ecore4reg\\python\\resources'
-    context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\ecore4reg\\python\\results'
+    context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.outputDirectory = '/workspaces/efbt/ecore4reg/python/results'
     context.addExecutableStubs = True
     context.addLogicPackages = True
 

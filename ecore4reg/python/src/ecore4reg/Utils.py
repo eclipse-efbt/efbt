@@ -20,7 +20,7 @@ Created on 22 Jan 2022
 import unidecode
 from pyecore.resources import ResourceSet, URI
 
-from ecore4reg.python.src.ecore4reg.ecore4reg.ecore4reg import ELReference
+from ecore4reg import ELReference
 
 
 class Utils(object):
@@ -264,7 +264,7 @@ class Utils(object):
         return returnVal
 
     @classmethod
-    def specialCases(cls, theEnum, newAdaptedValue, counter):
+    def specialCases(cls, newAdaptedValue, counter):
         '''
         Deals with special cases where we need to adapt the name of the enum
         '''

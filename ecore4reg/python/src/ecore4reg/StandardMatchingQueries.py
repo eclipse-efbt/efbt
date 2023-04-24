@@ -375,9 +375,9 @@ class StandardMatchingQueries(object):
 
 
 if __name__ == '__main__':
-    
-    fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\ecore4reg\\python\\results'
-    inScopeFileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\ecore4reg\\python\\resources'
+
+    fileDirectory = '/workspaces/efbt/ecore4reg/python/results'
+    inScopeFileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
 
     standardMatchingQueries = StandardMatchingQueries()
     standardMatchingQueries.createVariableNameToCodeMap()

@@ -114,6 +114,6 @@ class StandardBIRDQueries(object):
 
 
 if __name__ == '__main__':
-    fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\ecore4reg\\python\\results'
+    fileDirectory = '/workspaces/efbt/ecore4reg/python/results'
     standardBIRDQueries = StandardBIRDQueries()
     standardBIRDQueries.query1(fileDirectory)
