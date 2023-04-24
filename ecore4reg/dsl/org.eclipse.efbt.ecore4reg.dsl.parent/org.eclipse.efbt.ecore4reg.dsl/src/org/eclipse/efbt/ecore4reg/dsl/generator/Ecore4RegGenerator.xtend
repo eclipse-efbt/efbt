@@ -20,7 +20,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage
  * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
-class ecore4regGenerator extends AbstractGenerator {
+class Ecore4RegGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		System.out.println("resource = " + resource)
