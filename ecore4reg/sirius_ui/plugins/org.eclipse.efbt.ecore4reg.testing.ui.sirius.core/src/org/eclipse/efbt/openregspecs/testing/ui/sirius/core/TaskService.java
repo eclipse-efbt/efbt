@@ -12,15 +12,15 @@
  *******************************************************************************/
 package org.eclipse.efbt.ecore4reg.testing.ui.sirius.core;
 
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.Activity;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.ActivityTag;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.Scenario;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.ScenarioTag;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.ScriptTask;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.ServiceTask;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.Task;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.UserTask;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.XAttribute;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Activity;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ActivityTag;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Scenario;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ScenarioTag;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ScriptTask;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ServiceTask;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Task;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.UserTask;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.XAttribute;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;

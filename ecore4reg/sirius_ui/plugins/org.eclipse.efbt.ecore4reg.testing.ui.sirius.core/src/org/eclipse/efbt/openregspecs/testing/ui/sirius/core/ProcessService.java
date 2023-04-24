@@ -12,15 +12,15 @@
  *******************************************************************************/
 package org.eclipse.efbt.ecore4reg.testing.ui.sirius.core;
 
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.Open_reg_specsFactory;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.ExclusiveGateway;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.FlowElement;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.FlowElementsContainer;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.FlowNode;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.InclusiveGateway;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.ParallelGateway;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.SubProcess;
-import org.eclipse.efbt.ecore4reg.model.open_reg_specs.Task;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regFactory;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ExclusiveGateway;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.FlowElement;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.FlowElementsContainer;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.FlowNode;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.InclusiveGateway;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ParallelGateway;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.SubProcess;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Task;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
@@ -69,19 +69,19 @@ public class ProcessService {
 	private FlowNode createElement(String typeToCreate) {
 		FlowNode result = null;
 		if ("Task".equals(typeToCreate)) {
-			result = Open_reg_specsFactory.eINSTANCE.createTask();
+			result = Ecore4regFactory.eINSTANCE.createTask();
 		}  else if ("ServiceTask".equals(typeToCreate)) {
-			result = Open_reg_specsFactory.eINSTANCE.createServiceTask();
+			result = Ecore4regFactory.eINSTANCE.createServiceTask();
 		}  else if ("ScriptTask".equals(typeToCreate)) {
-			result = Open_reg_specsFactory.eINSTANCE.createScriptTask();
+			result = Ecore4regFactory.eINSTANCE.createScriptTask();
 		} else if ("UserTask".equals(typeToCreate)) {
-			result = Open_reg_specsFactory.eINSTANCE.createUserTask();
+			result = Ecore4regFactory.eINSTANCE.createUserTask();
 		}else if ("ParallelGateway".equals(typeToCreate)) {
-			result = Open_reg_specsFactory.eINSTANCE.createParallelGateway();
+			result = Ecore4regFactory.eINSTANCE.createParallelGateway();
 		} else if ("ExclusiveGateway".equals(typeToCreate)) {
-			result = Open_reg_specsFactory.eINSTANCE.createExclusiveGateway();
+			result = Ecore4regFactory.eINSTANCE.createExclusiveGateway();
 		} else if ("InclusiveGateway".equals(typeToCreate)) {
-			result = Open_reg_specsFactory.eINSTANCE.createInclusiveGateway();
+			result = Ecore4regFactory.eINSTANCE.createInclusiveGateway();
 		} 
 		return result;
 	}
