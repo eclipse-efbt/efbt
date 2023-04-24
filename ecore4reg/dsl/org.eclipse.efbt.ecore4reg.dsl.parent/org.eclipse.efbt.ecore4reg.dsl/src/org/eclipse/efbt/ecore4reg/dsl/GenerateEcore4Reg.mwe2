@@ -10,7 +10,7 @@
  * Contributors:
  *    Neil Mackenzie - initial API and implementation
  *******************************************************************************/
-module org.eclipse.efbt.ecore4reg.dsl.Generateecore4reg
+module org.eclipse.efbt.ecore4reg.dsl.GenerateEcore4Reg
 
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
@@ -43,7 +43,7 @@ Workflow {
 			}
 		}
 		language = StandardLanguage {
-			name = "org.eclipse.efbt.ecore4reg.dsl.ecore4reg"
+			name = "org.eclipse.efbt.ecore4reg.dsl.Ecore4Reg"
 			fileExtensions = "ecore4reg"
 			referencedResource = "platform:/resource/org.eclipse.efbt.ecore4reg.model/model/ecore4reg.genmodel"
 			
