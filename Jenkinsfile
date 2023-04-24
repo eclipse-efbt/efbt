@@ -8,10 +8,10 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''                                     
-                    cd ecore4reg/java_model
+                    cd ecore4reg/eclipse_model
 					mvn install
 					cd ../..
-					cd ecore4reg/examples
+					cd ecore4reg/eclipse_examples
 					mvn install
 					cd ../..
 					cd ecore4reg/dsl/org.eclipse.efbt.ecore4reg.dsl.parent

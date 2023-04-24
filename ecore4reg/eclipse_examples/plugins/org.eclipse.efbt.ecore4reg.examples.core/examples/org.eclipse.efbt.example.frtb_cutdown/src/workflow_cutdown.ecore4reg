@@ -1,0 +1,119 @@
+WorkflowModule  frtb_workflow_module    
+		{
+			/**  "Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation */
+ 	
+			annotation "dependency" as CRRRuleBook
+			annotation "dependency" as input_layer_entities 
+			annotation "dependency" as output_layer_entities
+			
+			 
+			
+			taskTags
+			{ ActivityTag tenorTag 
+				{displayName "tenorTag"  
+					requirements (  
+					CRRRuleBook.Title_IV.Title_IV_Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_a ,
+					CRRRuleBook.Title_IV.Title_IV_Chapter_1_General_Provisions.Article_325.Artice_325_1.Article_325_1_b
+					)
+				 activity  frtb.Derivation.PreNetting.DeltaNetting.Tenor
+				}
+			}   
+			subProcess { 
+			SubProcess frtb flowElements {  
+				InclusiveGateway gateway1 outgoing ( sf2 , sf3 , sf1 ) , 
+				SubProcess Read_Data incoming ( sf1 ) flowElements { 
+					ParallelGateway gw2 outgoing ( sf5 , sf6 ,  sf8 ) , 
+
+					UserTask GIRR_risk_factor incoming ( sf5 ) entity input_layer_entities.GIRR_risk_factor , 
+					UserTask Delta_sensitivity incoming ( sf6 ) entity input_layer_entities.Delta_sensitivity, 
+
+					UserTask Security_or_exchange_tradable_derivative_position incoming ( sf8 ) entity input_layer_entities.Security_or_exchange_tradable_derivative_position , 
+
+
+					SequenceFlow sf5 from gw2 to GIRR_risk_factor , 
+					SequenceFlow sf6 from gw2 to Delta_sensitivity , 
+					SequenceFlow sf8 from gw2 to Security_or_exchange_tradable_derivative_position
+
+				} , 
+				SubProcess Derivation incoming ( sf2 ) flowElements {
+					InclusiveGateway gw3 outgoing ( sf10 , sf11 ) , 
+					SubProcess PreNetting incoming ( sf10 ) flowElements { 
+						ParallelGateway gw4 outgoing ( sf12 ) , 
+						SubProcess DeltaNetting incoming ( sf12 ) flowElements { 
+							InclusiveGateway gw8 outgoing ( sf226, sf27 , sf28 ) ,
+							ServiceTask Netted_delta_sensitivities_identifier incoming ( sf226 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities_identifier
+								} , 
+							ServiceTask Tenor incoming ( sf27 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.tenor
+							scenarios {
+									Scenario  primary_scenario {
+										requiredAttributes ( 
+											input_layer_entities.Delta_sensitivity.Tenor
+											)    
+										data_constraints conditional 
+										input_layer_entities.GIRR_risk_factor.GIRR_risk_factor_type not_equals member  input_layer_enums.GIRR_risk_factor_type.Inflation },
+										
+										Scenario inflation_risk_factor  {
+											
+										data_constraints conditional 
+										 input_layer_entities.GIRR_risk_factor.GIRR_risk_factor_type equals member  input_layer_enums.GIRR_risk_factor_type.Inflation
+										
+										
+										}
+						} }, ServiceTask Netted_delta_sensitivities incoming ( sf28 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities
+						scenarios { 
+							 	Scenario Netted_delta_sensitivities_primary_sceanrio {
+							 		requiredAttributes (
+											input_layer_entities.Delta_sensitivity.Delta_sensitivity)   
+							 		} 
+						 
+				} } , 
+				SequenceFlow sf226 from gw8 to Netted_delta_sensitivities_identifier , 
+				SequenceFlow sf27 from gw8 to Tenor , 
+				SequenceFlow sf28 from gw8 to Netted_delta_sensitivities } , 
+				SequenceFlow sf12 from gw4 to DeltaNetting  } , 
+				SubProcess RiskClassProcessing incoming ( sf11 ) flowElements { 
+					ParallelGateway gw5 outgoing ( sf14  ) , 
+					SubProcess DeltaAndCurvatureProcesssing incoming ( sf14 ) flowElements { 
+						InclusiveGateway gw6 outgoing ( sf16  ) , 
+						SubProcess DeltaProcessing incoming ( sf16 ) flowElements { 
+							InclusiveGateway gw7 outgoing ( sf18 , sf19 ) , 
+							SubProcess AssignDeltaBucket incoming ( sf18 ) flowElements {  
+								ServiceTask Bucket_identifier enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.bucket_id
+								} 
+								} ,
+								SubProcess AssignDeltaWeighting incoming ( sf19 ) flowElements { 
+									InclusiveGateway gw9 outgoing ( sf30 , sf31 , sf37 ) , 
+									ServiceTask GIRR_delta_risk_weight incoming ( sf30 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.GIRR_delta_risk_weight
+								} , ServiceTask Weighted_GIRR_delta_sensitivity incoming ( sf31 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.weighted_GIRR_delta_sensitivity
+								} , ServiceTask Weighted_GIRR_delta_sensitivity_squared incoming ( sf37 ) enrichedAttribute input_layer_entities.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.weighted_GIRR_delta_sensitivity_squared } , 
+									SequenceFlow sf30 from gw9 to GIRR_delta_risk_weight , 
+									SequenceFlow sf31 from gw9 to Weighted_GIRR_delta_sensitivity , 
+									SequenceFlow sf37 from gw9 to Weighted_GIRR_delta_sensitivity_squared } , 
+									SequenceFlow sf18 from gw7 to AssignDeltaBucket , 
+									SequenceFlow sf19 from gw7 to AssignDeltaWeighting  } 
+								 , SequenceFlow sf16 from gw6 to DeltaProcessing  } , 
+			 
+ SequenceFlow sf14 from gw5 to DeltaAndCurvatureProcesssing } , 
+SequenceFlow sf10 from gw3 to PreNetting ,
+ SequenceFlow sf11 from gw3 to RiskClassProcessing } , 
+ SubProcess Report_Generation incoming ( sf3 ) flowElements { 
+ 	ParallelGateway gw80 outgoing ( sf80 ) , 
+ 	ScriptTask FRTB_C91 incoming ( sf80 ) 
+ 	selectionLayers { 
+ 		SelectionLayer GIRR_LongDeltaSensitivity_Layer {generatedEntity output_layer_entities.C91_REF_OutputItem } ,
+ 		SelectionLayer GIRR_ShortDeltaSensitivity_Layer { generatedEntity output_layer_entities.C91_REF_OutputItem },
+ 		SelectionLayer GIRR_Net_Sensitivity_Layer { generatedEntity output_layer_entities.C91_REF_OutputItem },
+ 		SelectionLayer GIRR_Delta_Risk_Layer { generatedEntity output_layer_entities.C91_REF_OutputItem }
+ 		
+ 	} , 
+ 	SequenceFlow sf80 from gw80 to FRTB_C91 
+ } , 
+ SequenceFlow sf1 from gateway1 to Read_Data , 
+ SequenceFlow sf2 from gateway1 to Derivation , 
+ SequenceFlow sf3 from gateway1 to Report_Generation } } }  
