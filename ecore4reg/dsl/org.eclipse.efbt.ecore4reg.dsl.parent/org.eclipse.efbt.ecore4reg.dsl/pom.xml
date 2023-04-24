@@ -39,7 +39,7 @@
 				<configuration>
 					<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
 					<arguments>
-						<argument>/${project.basedir}/src/org/eclipse/efbt/ecore4reg/dsl/Generateecore4reg.mwe2</argument>
+						<argument>/${project.basedir}/src/org/eclipse/efbt/ecore4reg/dsl/GenerateEcore4Reg.mwe2</argument>
 						<argument>-p</argument>
 						<argument>rootPath=/${project.basedir}/..</argument>
 					</arguments>
