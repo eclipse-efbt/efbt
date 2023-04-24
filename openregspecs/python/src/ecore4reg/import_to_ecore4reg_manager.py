@@ -32,13 +32,12 @@ if __name__ == '__main__':
     importLDM = False
     importIL=True
     importROL=True
-    importFinrepVTL=True
-    persistToXML = True
+    importFinrepVTL=False
     persistToXCoreL = True
     context.persistVTLComments=True
     context.useSubDomains = False
-    context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\openregspecs\\python\\resourcesfinrep28'
-    context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\openregspecs\\python\\resultsfinrep28'
+    context.fileDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\ecore4reg\\python\\resources'
+    context.outputDirectory = 'C:\\Users\\LENOVO\\freebirdtools-develop-mar23\\git\\efbt\\ecore4reg\\python\\results'
     context.addExecutableStubs = True
     context.addLogicPackages = True
     
@@ -53,8 +52,15 @@ if __name__ == '__main__':
         
     Ecore4regToEcoreConverter().convertPackagesInContext(context)
         
+    
     persister = PersistToFile()
-    persister.saveModelAsXMIFile(context)
-    persister.saveModelAsEcore4RegFile(context)
     persister.saveModelAsEcoreFile(context)
+    persister.saveModelAsEcore4RegFile(context)
+   
+    if importFinrepVTL:
+        persister.saveModelAsXMIFile(context)
+    else:
+        persister.saveModelAsJSONFiles(context)
+    
+    
  

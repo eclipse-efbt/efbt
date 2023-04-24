@@ -19,6 +19,8 @@ from Utils import Utils
 from context import Context
 from collections import Counter
 import os
+from pyecore.resources import ResourceSet
+from pyecore.resources.json import JsonResource
 
 class PersistToFile:
     def saveModelAsEcore4RegFile(self,context ):
@@ -239,6 +241,32 @@ class PersistToFile:
         resource = rset.create_resource(URI(context.outputDirectory + os.sep + 'VTL.xmi'))  # This will create an XMI resource
         resource.append(context.moduleList)
         resource.save()
+        
+    def saveModelAsJSONFiles(self,context):
+        '''
+         save model as an json file representing an object tree.
+        '''
+
+        rset2 = ResourceSet()  # We have a resource set
+        rset2.resource_factory['json'] = JsonResource  # we register the factory for '.json' extensions
+
+
+        inputLayerEnums_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "types.json"))  # This will create an XMI resource
+        inputLayerEnums_resource2.append(context.typesPackage)  # we add the EPackage instance in the resource
+        inputLayerEnums_resource2.save()
+        inputLayerEnums_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "input_layer_enums.json"))  # This will create an XMI resource
+        inputLayerEnums_resource2.append(context.inputLayerEnumsPackage)  # we add the EPackage instance in the resource
+        inputLayerEnums_resource2.save()
+        outputLayerEnums_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "output_layer_enums.json"))  # This will create an XMI resource
+        outputLayerEnums_resource2.append(context.outputLayerEnumsPackage)  # we add the EPackage instance in the resource
+        outputLayerEnums_resource2.save()
+        inputLayerEntities_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "input_layer_entities.json"))  # This will create an XMI resource
+        inputLayerEntities_resource2.append(context.inputLayerEntitiesPackage)  # we add the EPackage instance in the resource
+        inputLayerEntities_resource2.save()
+        outputLayerEntities_resource2 = rset2.create_resource(URI(context.outputDirectory + os.sep + "output_layer_entities.json"))  # This will create an XMI resource
+        outputLayerEntities_resource2.append(context.outputLayerEntitiesPackage)  # we add the EPackage instance in the resource
+        outputLayerEntities_resource2.save()
+        
         
     def persistWorkflow(self,context):
         f = open(context.outputDirectory+ os.sep + 'workflow.ecore4reg', "a",  encoding='utf-8')

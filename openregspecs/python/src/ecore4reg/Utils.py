@@ -266,11 +266,11 @@ class Utils(object):
         return returnVal
     
     @classmethod
-    def specialCases(cls,theEnum,newAdaptedValue):
+    def specialCases(cls,theEnum,newAdaptedValue,counter):
         returnVal = newAdaptedValue
         if (newAdaptedValue == "A_S"):
            returnVal = "A_S_dup"
         if (newAdaptedValue == "s_p_"):
-           returnVal = "s_p_dup"
+           returnVal = "s_p_dup" + str(counter)
         return returnVal
   

@@ -55,10 +55,9 @@ class Ecore4regToEcoreConverter(object):
                         eAttribute = EAttribute(name=structuralFeature.name)
                         eAttribute.upperBound = structuralFeature.upperBound
                         eAttribute.lowerBound = structuralFeature.lowerBound
-                        print("structuralFeature.name")
+                        print(eAttribute.upperBound)
                         print(structuralFeature.name)
                         typeName = structuralFeature.eAttributeType.name
-                        print("typeName")
                         print(typeName)
                         if isinstance(structuralFeature.eAttributeType,ELEnum):
                             eEnum = Ecore4regToEcoreConverter.findEnum(self,typeName,ecorePackage,context)
@@ -109,7 +108,7 @@ class Ecore4regToEcoreConverter(object):
                 for operation in classifier.eOperations:
                     theClass = Ecore4regToEcoreConverter.findEClass(self,operation.typeName,ecorePackage)
                     if not (theClass is None):
-                        operation.eType = theClass
+                        operation.eType = theClass                    
                     elif operation.typeName == 'double':
                             operation.eType = EDouble
                     elif operation.typeName == 'String':
@@ -120,6 +119,10 @@ class Ecore4regToEcoreConverter(object):
                         operation.eType = EDate
                     elif operation.typeName == 'boolean':
                         operation.eType = EBoolean
+                    else:
+                        eEnum = Ecore4regToEcoreConverter.findEnum(self,operation.typeName,ecorePackage,context)
+                        operation.eType = eEnum
+                        
 
         return ecorePackage
     

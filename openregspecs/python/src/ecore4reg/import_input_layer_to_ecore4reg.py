@@ -163,7 +163,7 @@ class InputLayerImport(object):
                         try:
                             theEnum = context.enumMap[enumID]
                             newAdaptedValue = Utils.uniqueValue(theEnum,adaptedValue)
-                            newAdaptedValue = Utils.specialCases(theEnum,newAdaptedValue)
+                            newAdaptedValue = Utils.specialCases(theEnum,newAdaptedValue,counter)
                             newAdaptedName = Utils.uniqueName(theEnum,adaptedEnumName)
                             
                             enumLiteral = ELEnumLiteral()
@@ -268,34 +268,50 @@ class InputLayerImport(object):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xString
                                 attribute.eAttributeType = context.xString
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif(theEnum.name.startswith("String_")):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xString
                                 attribute.eAttributeType = context.xString
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif(theEnum.name == "Number"):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDouble
                                 attribute.eAttributeType = context.xDouble
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif(theEnum.name.startswith("Real_")):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDouble
                                 attribute.eAttributeType = context.xDouble
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif(theEnum.name.startswith("Monetary")):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
                                 attribute.eAttributeType = context.xInt
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
                                 attribute.eAttributeType = context.xInt
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif(theEnum.name.startswith("Non_negative_integers")): 
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xInt
                                 attribute.eAttributeType = context.xInt
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif(theEnum.name.startswith("All_possible_dates")):
                                 attribute.name = theAttributeName
                                 attribute.eType = context.xDate
                                 attribute.eAttributeType = context.xDate
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                                 
                             # This is a common domain used for String identifiers in BIRD in SQLDeveloper
                             
@@ -303,6 +319,8 @@ class InputLayerImport(object):
                                 attribute.name = theAttributeName
                                 attribute.eType = theEnum  
                                 attribute.eAttributeType = theEnum
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             
                             if classIsDerived:
                                 operation = ELOperation()
@@ -311,31 +329,49 @@ class InputLayerImport(object):
                                 if(theEnum.name == "String"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xString
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                 elif(theEnum.name.startswith("String_")):
                                     operation.name = theAttributeName
                                     operation.eType = context.xString
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                 elif(theEnum.name == "Number"):
                                     operation.name = theAttributeName
                                     operation.eType = context.xDouble
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                 
                                 elif(theEnum.name.startswith("Real_")):
                                     operation.name = theAttributeName
                                     operation.eType = context.xDouble
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                 elif(theEnum.name.startswith("Monetary")): 
                                     operation.name = theAttributeName
                                     operation.eType = context.xInt
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                 elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                     operation.name = theAttributeName
                                     operation.eType = context.xInt
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                 elif(theEnum.name.startswith("Non_negative_integers")): 
                                     operation.name = theAttributeName
                                     operation.eType = context.xInt
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                 elif(theEnum.name.startswith("All_possible_dates")):   
                                     operation.name = theAttributeName
                                     operation.eType = context.xDate  
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                 else:
                                     operation.name = theAttributeName
                                     operation.eType = theEnum  
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
                                           
     
                         if (attributeKind == "Logical Type"):
@@ -391,11 +427,11 @@ class InputLayerImport(object):
             attribute.eType = context.xString
             attribute.eAttributeType = context.xString
             attribute.iD = True
+            attribute.lowerBound=0
+            attribute.upperBound=1
             theClass.eStructuralFeatures.append(attribute)
             
-            
-        
-            
+
     def addILAttributesToClasses(self,context):
         '''
         For each attribute on an entity of the IL, add an attribute
