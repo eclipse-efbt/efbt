@@ -8,16 +8,16 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''                                     
-                    cd openregspecs/java_model
+                    cd ecore4reg/java_model
 					mvn install
 					cd ../..
-					cd openregspecs/java_examples
+					cd ecore4reg/java_examples
 					mvn install
 					cd ../..
-					cd openregspecs/dsl/org.eclipse.efbt.openregspecs.dsl.parent
+					cd ecore4reg/dsl/org.eclipse.efbt.ecore4reg.dsl.parent
 					mvn install
 					cd ../../..  		
-					cd openregspecs/sirius_ui
+					cd ecore4reg/sirius_ui
 					mvn install
 					cd ../..
 					cd XCoreLite/model
