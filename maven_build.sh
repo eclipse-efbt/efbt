@@ -1,7 +1,7 @@
 cd ecore4reg/java_model
 mvn install
 cd ../..
-cd ecore4reg/java_examples
+cd ecore4reg/examples
 mvn install
 cd ../..
 cd ecore4reg/dsl/org.eclipse.efbt.ecore4reg.dsl.parent
