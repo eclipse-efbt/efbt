@@ -19,6 +19,17 @@ class Context(object):
     '''
     Documentation for Context
     '''
+    # variables to configure the behaviour
+
+    persistVTLComments = True
+    useSubDomains = False
+    useVariableLongName = True
+    persistToEcore4Reg = True
+    inScopeFileDirectory = ""
+    # the directory where we get our input files
+    fileDirectory = ""
+    # the directory where we save our outputs.
+    outputDirectory = ""
 
     # we create the main 5 'primitive' data types
     xString = ELDataType()
@@ -36,28 +47,46 @@ class Context(object):
     xBoolean = ELDataType()
     xBoolean.name = "boolean"
 
+    #create the moduleList to hold all the modules
     moduleList = ModuleList()
 
+    # create  Ecore4Reg  packages
     typesPackage = ELPackage(name='types')
     inputLayerEnumsPackage = ELPackage(
-        name='input_layer_enums', nsURI='http://www.eclipse.org/bird/input_layer_enums', nsPrefix='input_layer_enums')
+        name='input_layer_enums',
+        nsURI='http://www.eclipse.org/bird/input_layer_enums',
+        nsPrefix='input_layer_enums')
     outputLayerEnumsPackage = ELPackage(
-        name='output_layer_enums', nsURI='http://www.eclipse.org/bird/output_layer_enums', nsPrefix='output_layer_enums')
+        name='output_layer_enums',
+        nsURI='http://www.eclipse.org/bird/output_layer_enums',
+        nsPrefix='output_layer_enums')
     inputLayerEntitiesPackage = ELPackage(
-        name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
+        name='input_layer_entities',
+        nsURI='http://www.eclipse.org/bird/input_layer_entities',
+        nsPrefix='input_layer_entities')
     outputLayerEntitiesPackage = ELPackage(
-        name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
-
+        name='output_layer_entities',
+        nsURI='http://www.eclipse.org/bird/output_layer_entities',
+        nsPrefix='output_layer_entities')
+    
+    # create  Ecore packages
     inputLayerEnumsEcorePackage = EPackage(
-        name='input_layer_enums', nsURI='http://www.eclipse.org/bird/input_layer_enums', nsPrefix='input_layer_enums')
+        name='input_layer_enums',
+        nsURI='http://www.eclipse.org/bird/input_layer_enums',
+        nsPrefix='input_layer_enums')
     outputLayerEnumsEcorePackage = EPackage(
-        name='output_layer_enums', nsURI='http://www.eclipse.org/bird/output_layer_enums', nsPrefix='output_layer_enums')
+        name='output_layer_enums',
+        nsURI='http://www.eclipse.org/bird/output_layer_enums',
+        nsPrefix='output_layer_enums')
     inputLayerEntitiesEcorePackage = EPackage(
-        name='input_layer_entities', nsURI='http://www.eclipse.org/bird/input_layer_entities', nsPrefix='input_layer_entities')
+        name='input_layer_entities',
+        nsURI='http://www.eclipse.org/bird/input_layer_entities',
+        nsPrefix='input_layer_entities')
     outputLayerEntitiesEcorePackage = EPackage(
-        name='output_layer_entities', nsURI='http://www.eclipse.org/bird/output_layer_entities', nsPrefix='output_layer_entities')
+        name='output_layer_entities',
+        nsURI='http://www.eclipse.org/bird/output_layer_entities',
+        nsPrefix='output_layer_entities')
 
-    logicPackages = []
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classesMap = {}
@@ -91,10 +120,7 @@ class Context(object):
     # enumMap keeps a reference between ldm ID's for domains and
     # the enum instance
     enumMap = {}
-    # the directory where we get our input files
-    fileDirectory = ""
-    # the directory where we save our outputs.
-    outputDirectory = ""
+    
 
     viewModule = ViewModule(name='generations')
 
@@ -103,17 +129,12 @@ class Context(object):
     vtlModule = VTLModule(name="vtl")
     moduleList = ModuleList()
 
-    persistVTLComments = True
-
-    useSubDomains = False
-
     subDomainToMemberListMap = {}
     subDomainIDToDomainID = {}
 
-    addExecutableStubs = False
-    addLogicPackages = False
+    
 
-    useVariableLongName = True
+    
     importLogicStrings = []
 
     variableSetToVariableMap = {}

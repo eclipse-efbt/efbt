@@ -56,7 +56,7 @@ class ImportFinrepVTL(object):
             name="VTLGeneratedOutputLayers")
         vtlModule.VTLGeneratedIntermediateLayers = VTLGeneratedIntermediateLayerModule(
             name="VTLGeneratedIntermediateLayers")
-        vtlModule.VTLEnrichedLayers = VTLGeneratedIntermediateLayer(
+        vtlModule.VTLEnrichedLayers = VTLGeneratedIntermediateLayerModule(
             name="VTLEnrichedLayers")
         vtlModule.VTLForSelectionLayers = VTLForSelectionLayerModule(
             name="VTLForSelectionLayers")

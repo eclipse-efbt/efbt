@@ -18,7 +18,7 @@ Created on 22 Jan 2022
 '''
 import os
 import csv
-from Utils import Utils
+from utils import Utils
 from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
 
 class ROLImport(object):

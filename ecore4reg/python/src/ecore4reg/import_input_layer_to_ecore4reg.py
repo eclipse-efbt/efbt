@@ -17,7 +17,7 @@ Created on 22 Jan 2022
 '''
 
 import csv
-from Utils import Utils
+from utils import Utils
 import os
 
 from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
