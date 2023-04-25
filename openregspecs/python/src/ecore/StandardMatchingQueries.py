@@ -103,7 +103,7 @@ class StandardMatchingQueries(object):
                                 self.uniqueTupleList.append(tuple)
                         else:
                             relatedInputLayerAttributes = StandardMatchingQueries.getRelatedInputLayerAttributes(self,attributeName,attributeType)
-                        
+                            
                             if  len(relatedInputLayerAttributes) > 0:
                                 for relatedInputLayerAttribute in relatedInputLayerAttributes:
                                     print(relatedInputLayerAttribute)
@@ -112,6 +112,8 @@ class StandardMatchingQueries(object):
                                     print("relatedInputLayerDomain")
                                     print(relatedInputLayerDomain)
                                     attributeMatchType = relatedInputLayerAttribute.matchType
+                                    if attributeMatchType == "LAST_RESORT":
+                                        xyz = 2
                                     if(hasattr( relatedInputLayerAttribute, "subStringGuess")):
                                        subStringGuess = "SUBSTRING"
                                        
@@ -233,6 +235,30 @@ class StandardMatchingQueries(object):
                         returnLiteral.matchType ="REVERSE_SUBSTRING"
                     
         return returnLiteral
+    
+    def getRelatedInputLayerLiteral2(self,literal,relatedInputLayerDomain):
+        returnLiteral = None
+        if(hasattr(relatedInputLayerDomain, "eLiterals")):
+            for theLiteral in relatedInputLayerDomain.eLiterals:
+                if theLiteral.name.lower() == literal.name.lower():
+                    returnLiteral = theLiteral
+                    theLiteral.matchType2 ="EXACT"
+                    
+            if returnLiteral is None:
+                for theLiteral in relatedInputLayerDomain.eLiterals:
+                    if literal.name.lower() == theLiteral.name.lower()[0:len(literal.name)]:
+                        returnLiteral = theLiteral
+                        returnLiteral.matchType2 ="STARTSWITH"
+                        
+            if returnLiteral is None:
+                for theLiteral in relatedInputLayerDomain.eLiterals:
+                    if theLiteral.name.lower() in  literal.name.lower():
+                        returnLiteral = theLiteral
+                        returnLiteral.matchType2 ="SUPERSTRING"
+                        
+            
+                    
+        return returnLiteral
         
     def getRelatedInputLayerAttributes(self,theAttributeName,attributeType):
         classifiers = self.inputLayerEntitiesModel.eClassifiers
@@ -254,11 +280,42 @@ class StandardMatchingQueries(object):
                     attribute.matchType = "REVERSE_SUBSTRING"
                     returnAttributes.append(attribute)
                 
-                    
-                
+        if len(returnAttributes) == 0:
+            lastResortMatchingAttribute =  StandardMatchingQueries.lastResortMatch(self,theAttributeName,attributeType) 
+            if not(lastResortMatchingAttribute is None):
+                lastResortMatchingAttribute.matchType = "LAST_RESORT"
+                returnAttributes.append(lastResortMatchingAttribute)
         return returnAttributes
                     
-
+    def lastResortMatch(self,theAttributeName,inputLayerAttributeType):
+        
+        classifiers = self.inputLayerEntitiesModel.eClassifiers
+        bestAttribute = None
+        bestAttributesMemberMatchingCount = 1;
+        for classifier in classifiers:
+            attributes = classifier.eAttributes
+            for attribute in attributes:
+                attributeType = attribute.eType 
+                memberMatchCount = 0
+                
+                if hasattr(attributeType, "eLiterals"):
+                    for literal in attributeType.eLiterals:
+                        literalName = literal.name
+                        literalMatchType = "NONE"
+                        relatedLiteral = StandardMatchingQueries.getRelatedInputLayerLiteral2(self,literal,inputLayerAttributeType)
+                        relatedLiteralName = "None"
+                        if not (relatedLiteral is None):
+                            if memberMatchCount > 0:
+                                abdc = 0
+                            memberMatchCount = memberMatchCount +1
+                            relatedLiteralName = relatedLiteral.name
+                            literalMatchType = relatedLiteral.matchType2
+                    if memberMatchCount > bestAttributesMemberMatchingCount:
+                        bestAttribute = attribute
+                        bestAttributesMemberMatchingCount = memberMatchCount
+                        
+        return bestAttribute
+                    
         
     def getOutputLayers(self): 
         classifiers = self.outputLayerEntitiesModel.eClassifiers
