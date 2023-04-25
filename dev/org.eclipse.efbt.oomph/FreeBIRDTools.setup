@@ -92,29 +92,29 @@
       xsi:type="setup.workingsets:WorkingSetTask"
       id="efbt_working_sets">
     <workingSet
-        name="openregspecs_model"
-        id="openregspecs_model">
+        name="ecore4reg_model"
+        id="ecore4reg_model">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.model.*"/>
+            pattern=".*\.eclipse.efbt.ecore4reg.model.*"/>
         <operand
             xsi:type="predicates:NotPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.openregspecs.model.core_model*"/>
+              pattern=".*\.eclipse.efbt.ecore4reg.model.core_model*"/>
         </operand>
       </predicate>
     </workingSet>
     <workingSet
-        name="openregspecs_dsl"
-        id="openregspecs_dsl">
+        name="ecore4reg_dsl"
+        id="ecore4reg_dsl">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.dsl.*"/>
+            pattern=".*\.eclipse.efbt.ecore4reg.dsl.*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -124,7 +124,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.model.core_model*"/>
+            pattern=".*\.eclipse.efbt.ecore4reg.model.core_model*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -136,7 +136,7 @@
             xsi:type="predicates:OrPredicate">
           <operand
               xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.openregspecs.examples.*"/>
+              pattern=".*\.eclipse.efbt.ecore4reg.examples.*"/>
           <operand
               xsi:type="predicates:NamePredicate"
               pattern=".*\.eclipse.efbt.examples.*"/>
@@ -150,7 +150,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.python*"/>
+            pattern=".*\.eclipse.efbt.ecore4reg.python*"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -190,10 +190,10 @@
           xsi:type="predicates:OrPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.sirius_ui.*"/>
+            pattern=".*\.eclipse.efbt.ecore4reg.sirius_ui.*"/>
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.openregspecs.testing.ui.sirius.*"/>
+            pattern=".*\.eclipse.efbt.ecore4reg.testing.ui.sirius.*"/>
       </predicate>
     </workingSet>
     <workingSet

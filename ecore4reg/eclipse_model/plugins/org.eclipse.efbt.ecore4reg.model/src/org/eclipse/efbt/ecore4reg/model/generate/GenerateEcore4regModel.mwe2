@@ -1,0 +1,37 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Bird Software Solutions Ltd
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Neil Mackenzie - initial API and implementation
+ *******************************************************************************/
+module org.eclipse.efbt.ecore4reg.model.generate
+
+import org.eclipse.xtext.xtext.generator.*
+import org.eclipse.xtext.xtext.generator.model.project.*
+
+var rootPath = ".."
+
+Workflow {
+	
+	
+	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
+        platformUri = "${rootPath}"
+        scanClassPath = true
+       // registerGeneratedEPackage = "org.eclipse.efbt.bird.bird_model.Bird_modelPackage"
+        registerGenModelFile = "platform:/resource/org.eclipse.efbt.ecore4reg.model/model/ecore4reg.genmodel"
+    }
+    
+	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
+		
+		genModel = "platform:/resource/org.eclipse.efbt.ecore4reg.model/model/ecore4reg.genmodel"
+		srcPath = "platform:/resource/org.eclipse.efbt.ecore4reg.model/src"
+		}
+	
+	
+		}

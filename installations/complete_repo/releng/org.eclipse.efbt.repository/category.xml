@@ -12,22 +12,16 @@
        Neil Mackenzie - initial API and implementation
  -->
 <site>
-   <feature id="org.eclipse.efbt.openregspecs.model.feature">
+   <feature id="org.eclipse.efbt.ecore4reg.model.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.openregspecs.sirius_ui.feature">
+   <feature id="org.eclipse.efbt.ecore4reg.sirius_ui.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.openregspecs.dsl.feature">
+   <feature id="org.eclipse.efbt.ecore4reg.dsl.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.openregspecs.examples.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.xcorelite.dsl.feature">
-      <category name="efbt"/>
-   </feature>
-   <feature id="org.eclipse.efbt.xcorelite.model.feature">
+   <feature id="org.eclipse.efbt.ecore4reg.examples.feature">
       <category name="efbt"/>
    </feature>
    <category-def name="efbt" label="Complete EFBT Repository"/>

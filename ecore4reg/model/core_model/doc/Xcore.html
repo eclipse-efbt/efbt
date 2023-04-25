@@ -1,0 +1,476 @@
+<!-- This file was created using the HTML documentation generator. -->
+<!-- Creation date: Wed Oct 05 05:39:34 BST 2022-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+      	<title>Metamodel Documentation (platform:/resource/org.eclipse.efbt.ecore4reg.model.core_model/Xcore.ecore)</title>
+    	<script type="text/javascript">
+//<![CDATA[				    	
+// TOC script based on code taken from http://www.quirksmode.org/dom/toc.html
+function makeTOC() {
+	
+	var toc = document.createElement('div')				
+	toc.id = "toc";
+	toc.innerHTML = "Table of Contents"				
+	document.body.appendChild(toc);
+				
+	var innertocDiv = createTOC()				
+	toc.appendChild(innertocDiv);
+}
+
+
+function createTOC() {
+	var y = document.createElement('div');
+	y.id = 'innertoc';
+	//var a = y.appendChild(document.createElement('span'));
+	//a.onclick = showhideTOC;
+	//a.id = 'contentheader';
+	//a.innerHTML = 'Show Table of Contents';
+	var z = y.appendChild(document.createElement('div'));
+	//z.onclick = showhideTOC;
+	var toBeTOCced = getElementsByTagNames('h1,h2,h3');
+	if (toBeTOCced.length < 2) return false;
+	var hCount = 0;
+	var hhCount = 0;
+	var hhhCount = 0;
+	for (var i=0;i<toBeTOCced.length;i++) {
+	var tmp = document.createElement('a');
+	tmp.className = 'page';
+	var text;
+	var textPre;
+	if (toBeTOCced[i].nodeName == 'h2'){
+		tmp.className += ' indent';
+		textPre = hCount + "."+ ++hhCount + ". "; 
+	}
+	else if (toBeTOCced[i].nodeName == 'h3'){
+		tmp.className += ' extraindent';
+		textPre = hCount + "."+ hhCount + "."+ ++hhhCount +". "; 
+	}
+	else {
+		textPre = ++hCount + ". "; 
+		hhCount = 0;
+		hhhCount = 0;
+	}
+	text = textPre + toBeTOCced[i].textContent;
+	toBeTOCced[i].innerHTML = textPre + toBeTOCced[i].innerHTML;
+	
+	tmp.innerHTML = text; 
+	z.appendChild(tmp);
+	var headerId = toBeTOCced[i].id || 'link' + i;
+	tmp.href = '#' + headerId;
+	toBeTOCced[i].id = headerId;
+	}
+	return y;
+}
+
+function getElementsByTagNames(list,obj) {
+	if (!obj) var obj = document;
+	var tagNames = list.split(',');
+	var resultArray = new Array();
+	for (var i=0;i<tagNames.length;i++) {
+		var tags = obj.getElementsByTagName(tagNames[i]);
+		for (var j=0;j<tags.length;j++) {
+			resultArray.push(tags[j]);
+		}
+	}
+	var testNode = resultArray[0];
+	if (!testNode) return [];
+	if (testNode.sourceIndex) {
+		resultArray.sort(function (a,b) {
+				return a.sourceIndex - b.sourceIndex;
+		});
+	}
+	else if (testNode.compareDocumentPosition) {
+		resultArray.sort(function (a,b) {
+				return 3 - (a.compareDocumentPosition(b) & 6);
+		});
+	}
+	return resultArray;
+}
+	    	
+//]]>				    	
+	    	</script>
+	    	<link rel="stylesheet" type="text/css" href="https://raw.github.com/necolas/normalize.css/master/normalize.css" /> 
+	    	<style>
+#toc {
+	position: fixed;
+	  right: 0;
+	  top: 0;
+	  background-color:#eee;
+	  overflow: scroll;
+	  border: 1px dashed;
+}
+
+#toc #innertoc { 
+	display: none;
+	height: 500px;
+} /* Hide the full TOC by default */
+
+#toc:hover #innertoc{
+	display: block; /* Show it on hover */
+}
+	td {
+	border: 1px solid;
+	}
+	.page{
+	display:table-row;
+	}
+	.indent {
+	text-indent:12pt;
+	}
+	.extraindent {
+	text-indent:14pt;
+	}
+
+	    	</style>
+	    	<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body onload="makeTOC();">
+<h1 id="xcore"><a href="#xcore"><span class="packageName">xcore</span> package</a></h1>
+
+<div class="">EPackage properties:</div>
+<div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">xcore</span></div>
+<div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.eclipse.org/emf/2011/Xcore</span></div>
+<h2 id="xcoreXAttribute"><a href="#xcoreXAttribute"><a href="#xcoreXAttribute">XAttribute</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#xcoreXStructuralFeature">XStructuralFeature</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXAttribute.defaultValueLiteral" class="teletype">defaultValueLiteral</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr><tr>	<td><div id="xcoreXAttribute.iD" class="teletype">iD</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBoolean</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XAttribute.attr"></a>
+<h2 id="xcoreXClass"><a href="#xcoreXClass"><a href="#xcoreXClass">XClass</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#xcoreXClassifier">XClassifier</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXClass.abstract" class="teletype">abstract</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBoolean</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XClass.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXClass.members" class="teletype">members</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXMember">XMember</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+<div class="keyValue"><span class="label">Op: </span><span class="teletype">containingClass</span></div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="xcoreXClass.superTypes" class="teletype">superTypes</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClass">XClass</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Unsettable</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#xcore.XClass.ref"></a>
+<h2 id="xcoreXClassifier"><a href="#xcoreXClassifier"><a href="#xcoreXClassifier">XClassifier</a></a></h2>
+
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><h4><b>Supertype:</b><a href="#xcoreXNamedElement">XNamedElement</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXClassifier.package" class="teletype">package</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXPackage">XPackage</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Non-changeable</div>
+<div class="label">Transient</div>
+<div class="label">Container</div>
+<div class="keyValue"><span class="label">Op: </span><span class="teletype">classifiers</span></div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#xcore.XClassifier.ref"></a>
+<h2 id="xcoreXDataType"><a href="#xcoreXDataType"><a href="#xcoreXDataType">XDataType</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#xcoreXClassifier">XClassifier</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXDataType.industryName" class="teletype">industryName</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XDataType.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXDataType.convertBody" class="teletype">convertBody</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><div class="alert">MISSING TYPE elem!</div></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="xcoreXDataType.createBody" class="teletype">createBody</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><div class="alert">MISSING TYPE elem!</div></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#xcore.XDataType.ref"></a>
+<h2 id="xcoreXEnum"><a href="#xcoreXEnum"><a href="#xcoreXEnum">XEnum</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#xcoreXDataType">XDataType</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXEnum.literals" class="teletype">literals</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXEnumLiteral">XEnumLiteral</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+<div class="keyValue"><span class="label">Op: </span><span class="teletype">enum</span></div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#xcore.XEnum.ref"></a>
+<h2 id="xcoreXEnumLiteral"><a href="#xcoreXEnumLiteral"><a href="#xcoreXEnumLiteral">XEnumLiteral</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#xcoreXNamedElement">XNamedElement</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXEnumLiteral.literal" class="teletype">literal</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr><tr>	<td><div id="xcoreXEnumLiteral.value" class="teletype">value</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EInt</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XEnumLiteral.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXEnumLiteral.enum" class="teletype">enum</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXEnum">XEnum</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Non-changeable</div>
+<div class="label">Transient</div>
+<div class="label">Container</div>
+<div class="keyValue"><span class="label">Op: </span><span class="teletype">literals</span></div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#xcore.XEnumLiteral.ref"></a>
+<h2 id="xcoreXMember"><a href="#xcoreXMember"><a href="#xcoreXMember">XMember</a></a></h2>
+
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><h4><b>Supertype:</b><a href="#xcoreXTypedElement">XTypedElement</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXMember.containingClass" class="teletype">containingClass</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClass">XClass</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Non-changeable</div>
+<div class="label">Transient</div>
+<div class="label">Container</div>
+<div class="keyValue"><span class="label">Op: </span><span class="teletype">members</span></div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#xcore.XMember.ref"></a>
+<h2 id="xcoreXModelElement"><a href="#xcoreXModelElement"><a href="#xcoreXModelElement">XModelElement</a></a></h2>
+
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><h2 id="xcoreXNamedElement"><a href="#xcoreXNamedElement"><a href="#xcoreXNamedElement">XNamedElement</a></a></h2>
+
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><h4><b>Supertype:</b><a href="#xcoreXModelElement">XModelElement</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXNamedElement.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XNamedElement.attr"></a>
+<h2 id="xcoreXOperation"><a href="#xcoreXOperation"><a href="#xcoreXOperation">XOperation</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#xcoreXMember">XMember</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXOperation.body" class="teletype">body</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XOperation.attr"></a>
+<h2 id="xcoreXPackage"><a href="#xcoreXPackage"><a href="#xcoreXPackage">XPackage</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXPackage.classifiers" class="teletype">classifiers</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClassifier">XClassifier</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+<div class="keyValue"><span class="label">Op: </span><span class="teletype">package</span></div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#xcore.XPackage.ref"></a>
+<h2 id="xcoreXReference"><a href="#xcoreXReference"><a href="#xcoreXReference">XReference</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#xcoreXStructuralFeature">XStructuralFeature</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXReference.containment" class="teletype">containment</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBoolean</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XReference.attr"></a>
+<h2 id="xcoreXStructuralFeature"><a href="#xcoreXStructuralFeature"><a href="#xcoreXStructuralFeature">XStructuralFeature</a></a></h2>
+
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><h4><b>Supertype:</b><a href="#xcoreXMember">XMember</a></h4><h2 id="xcoreXTypedElement"><a href="#xcoreXTypedElement"><a href="#xcoreXTypedElement">XTypedElement</a></a></h2>
+
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><h4><b>Supertype:</b><a href="#xcoreXNamedElement">XNamedElement</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXTypedElement.lowerBound" class="teletype">lowerBound</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EInt</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr><tr>	<td><div id="xcoreXTypedElement.upperBound" class="teletype">upperBound</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EInt</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#xcore.XTypedElement.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="xcoreXTypedElement.type" class="teletype">type</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClassifier">XClassifier</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Unsettable</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#xcore.XTypedElement.ref"></a>
+</body>
+</html>
