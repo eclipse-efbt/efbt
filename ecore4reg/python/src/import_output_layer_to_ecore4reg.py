@@ -66,8 +66,7 @@ class ROLImport(object):
                     cube_type = row[3]
                     valid_to = row[11]
                     framework = row[5]
-                    print("objectID")
-                    print(objectID)
+
 
                     if ((framework == "FINREP_REF") and (cube_type == "RC") and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999"))):
 
@@ -100,8 +99,6 @@ class ROLImport(object):
                                                                                xclassTable])
 
                         # maintain a map a objectIDs to ELClasses
-                        print("objectID")
-                        print(objectID)
                         context.classesMap[objectID] = xclass
                         context.tableMap[xclass] = xclassTable
 
@@ -196,8 +193,6 @@ class ROLImport(object):
                     headerSkipped = True
                 else:
                     memberID = row[4]
-                    print("memberid")
-                    print(memberID)
                     # domainName = Utils.makeValidID(row[3])
                     memberCode = row[0]
                     memberName = row[5]
@@ -296,12 +291,7 @@ class ROLImport(object):
                                 amendedDomainName = Utils.makeValidID(domainID)
                                 theEnum = Utils.findROLEnum(
                                     amendedDomainName+"_domain", context.enumMap)
-                                if theEnum is not None:
-                                    print("not missing domainID: ")
-                                else:
-                                    print("missing domainID: ")
-                                    print(domainID)
-                                    print(classID)
+                                if theEnum is None:
                                     if not domainID in context.missingDomains:
                                         context.missingDomains.append(domainID)
                             except:

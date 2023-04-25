@@ -372,7 +372,6 @@ class LDMImport(object):
                                     operation.eType = theEnum
 
                         if (attributeKind == "Logical Type"):
-                            print("Logical Type")
                             dataTypeID = row[14]
                             try:
 
@@ -426,9 +425,7 @@ class LDMImport(object):
 
                     for theAttribute in attributesToDelete:
                         theClass.eStructuralFeatures.remove(theAttribute)
-                        print(
-                            "removed attribute or reference since it exists in the superclass")
-                        print(theAttribute.name)
+
 
     def addLDMRelationshipsBetweenClasses(self, context):
         '''
@@ -464,8 +461,6 @@ class LDMImport(object):
                     numOfRelations = Utils.numberofRelationShipsToThisClass(
                         theClass, targetClass)
                     if numOfRelations > 0:
-                        print("numOfRelations")
-                        print(numOfRelations)
                         referenceName = referenceName + str(numOfRelations)
 
                     if target_Optional.strip() == "Y":

@@ -168,8 +168,7 @@ class ImportFinrepVTL(object):
                     if "union" in expression:
                         indexOfExpressionOpenBracket = expression.find('(')
                         indexOfExpressionClosedBracket = expression.find(')')
-                        print(indexOfExpressionOpenBracket)
-                        print(indexOfExpressionClosedBracket)
+
                         vtl_layer_list = expression[indexOfExpressionOpenBracket +
                                                     1:indexOfExpressionClosedBracket].split(',')
                         for vtl_layer in vtl_layer_list:
@@ -216,11 +215,9 @@ class ImportFinrepVTL(object):
         Doc for findIntermediateLayer
         '''
 
-        # print("layerName")
-        # print(layerName)
+
         for layer in context.vtlModule.VTLGeneratedIntermediateLayers.vTLGeneratedIntermediateLayers:
-            # print(layer.transformations.scheme_id)
-            # print("layer.transformations.scheme_id")
+
             if layer.name == layerName:
                 return layer
 
@@ -246,13 +243,11 @@ class ImportFinrepVTL(object):
                     scheme = row[7]
                     if scheme.startswith("G_F") and scheme.endswith("_FINREP_1"):
                         if "union" in expression:
-                            # print("expression")
-                            # print(expression)
+
                             indexOfExpressionOpenBracket = expression.find('(')
                             indexOfExpressionClosedBracket = expression.find(
                                 ')')
-                            # print(indexOfExpressionOpenBracket)
-                            # print(indexOfExpressionClosedBracket)
+
                             vtl_layer_list = expression[indexOfExpressionOpenBracket:indexOfExpressionClosedBracket].split(
                                 ',')
 
@@ -346,8 +341,6 @@ class ImportFinrepVTL(object):
         '''
         indexOfSchemeEnd = scheme_id.find('_FINREP')
         enrichedCube = "P_" + scheme_id[0:indexOfSchemeEnd] + "_E_1"
-        print("enrichedCube")
-        print(enrichedCube)
 
         returnLayer = None
         for enrichedLayer in context.vtlModule.VTLEnrichedLayers.vTLGeneratedIntermediateLayers:
@@ -388,12 +381,10 @@ class ImportFinrepVTL(object):
         Doc for addLayers
         '''
 
-        # print("view.name")
-        # print(view.name[5:len(view.name)] )
+
         rolVTL = ImportFinrepVTL.findOutputLayerVTL(
             self, context, view.name[5:len(view.name)] + "_REF_OutputItem")
-        # print("rolVTL")
-        # print(rolVTL)
+
         if not (rolVTL is None):
             view.outputLayer = rolVTL.outputLayer
             viewVTL = VTLForView(name="vtl_" + view.name)
@@ -430,12 +421,9 @@ class ImportFinrepVTL(object):
         '''
         Doc for findOutputLayerVTL
         '''
-        # print("outputLayerName")
-        # print(outputLayerName)
+
         for rol in context.vtlModule.VTLGeneratedOutputLayers.vTLGeneratedOutputlayerModules:
             if not (rol.outputLayer is None):
-                # print("rol.outputLayer.name")
-                # print(rol.outputLayer.name)
                 a = 0
             if not (rol.outputLayer is None) and (rol.outputLayer.name == outputLayerName):
                 return rol
@@ -444,8 +432,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for findEntityIntermediateLayerLink
         '''
-        # print("intermediateLayer")
-        # print(intermediateLayer)
+
         for link in context.vtlModule.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks:
             if link.VTLIntermediateLayer == intermediateLayer:
                 return link

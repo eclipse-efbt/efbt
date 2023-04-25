@@ -77,20 +77,13 @@ class StandardMatchingQueries(object):
         csvStrings.append(headerString)
         for outputLayer in outputLayers:
             outputLayerName = outputLayer.name
-            print("outputLayerName")
-            print(outputLayerName)
             if StandardMatchingQueries.isReportInScope(self, outputLayerName, context):
                 for attribute in outputLayer.eOperations:
                     attributeName = attribute.name
-                    print("attributeName")
-                    print(attributeName)
                     attributeType = attribute.eType
                     atributeTypeName = attributeType.name
 
-                    print(attributeName)
                     if not (StandardMatchingQueries.inExcludedList(self, attributeName)):
-                        print("atributeTypeName")
-                        print(atributeTypeName)
                         domainName = None
                         try:
                             indexOfISSUBDMAOINOF = atributeTypeName.index(
@@ -99,8 +92,6 @@ class StandardMatchingQueries(object):
                             domainName = atributeTypeName[indexOfISSUBDMAOINOF + 15:length]
                         except:
                             domainName = atributeTypeName
-                        print("domainName")
-                        print(domainName)
 
                         if (attributeName in self.derivableList):
                             csvTextString = outputLayerName + "," + attributeName + "," + \
@@ -120,11 +111,7 @@ class StandardMatchingQueries(object):
 
                             if len(relatedInputLayerAttributes) > 0:
                                 for relatedInputLayerAttribute in relatedInputLayerAttributes:
-                                    print(relatedInputLayerAttribute)
-                                    print("relatedInputLayerAttribute")
                                     relatedInputLayerDomain = relatedInputLayerAttribute.eType
-                                    print("relatedInputLayerDomain")
-                                    print(relatedInputLayerDomain)
                                     attributeMatchType = relatedInputLayerAttribute.matchType
                                     if (hasattr(relatedInputLayerAttribute, "subStringGuess")):
                                         subStringGuess = "SUBSTRING"
@@ -375,11 +362,8 @@ class StandardMatchingQueries(object):
         cutClassName = classname
 
         try:
-            print("classname")
-            print(classname)
+
             theindex = classname.index('_REF_OutputItem')
-            print("theindex")
-            print(theindex)
             cutClassName = classname[0:theindex]
         except:
             print("hit exception")
@@ -399,8 +383,6 @@ class StandardMatchingQueries(object):
                     if reportTemplate == cutClassName:
                         return True
 
-        print("report Is Out Of Scope")
-        print(classname)
         return False
 
     def createVariableNameToCodeMap(self,context):
