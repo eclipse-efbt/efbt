@@ -7,7 +7,7 @@ rm -rf ecore4reg/python/resultsfinrep28/ecore4reg/*
 rm -rf ecore4reg/python/resultsfinrep28/json/*
 rm -rf ecore4reg/python/resultsfinrep28/xmi/*
 
-cd ecore4reg/python/src/ecore4reg/
+cd ecore4reg/python/src/
 pip install pyecore
 pip install unidecode
 python create_transformations_with_xmi.py
