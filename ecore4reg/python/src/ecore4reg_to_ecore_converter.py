@@ -67,10 +67,8 @@ class Ecore4regToEcoreConverter(object):
                         eAttribute = EAttribute(name=structuralFeature.name)
                         eAttribute.upperBound = structuralFeature.upperBound
                         eAttribute.lowerBound = structuralFeature.lowerBound
-                        print(eAttribute.upperBound)
-                        print(structuralFeature.name)
                         typeName = structuralFeature.eAttributeType.name
-                        print(typeName)
+
                         if isinstance(structuralFeature.eAttributeType, ELEnum):
                             eEnum = Ecore4regToEcoreConverter.findEnum(
                                 self, typeName, ecorePackage, context)

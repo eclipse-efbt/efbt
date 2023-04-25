@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     context.persistToEcore4Reg = True
     context.persistVTLComments = True
-    context.useSubDomains = True
+    context.useSubDomains = False
     context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resourcesfinrep28'
     context.outputDirectory = '/workspaces/efbt/ecore4reg/python/resultsfinrep28'
 
