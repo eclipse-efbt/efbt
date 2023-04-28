@@ -26,8 +26,8 @@ if __name__ == '__main__':
     context = Context()
     context.persistToEcore4Reg = True
     context.useSubDomains = True
-    context.fileDirectory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resources'
-    context.outputDirectory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\results'
+    context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.outputDirectory = '/workspaces/efbt/ecore4reg/python/results'
     InputLayerImport().doImport(context)
     ROLImport().doImport(context)
     Ecore4regToEcoreConverter().convertPackagesInContext(context)
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     persister.saveModelAsEcore4RegFile(context)
     persister.saveModelAsJSONFiles(context)
 
-    context.inScopeFileDirectory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resources'
+    context.inScopeFileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
     standardMatchingQueries = StandardMatchingQueries()
     standardMatchingQueries.createVariableNameToCodeMap(context)
     standardMatchingQueries.createDerivableList(context)

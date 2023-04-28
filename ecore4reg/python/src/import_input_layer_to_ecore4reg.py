@@ -415,7 +415,7 @@ class InputLayerImport(object):
                             theClass = context.classesMap[classID]
                             InputLayerImport.addCompositePKIFMissing(
                                 self, context, theClass)
-                            theClass.members.extend([attribute])
+                            theClass.eStructuralFeatures.extend([attribute])
                             if classIsDerived:
                                 theClass.eOperations.extend([operation])
 
