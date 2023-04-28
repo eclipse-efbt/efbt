@@ -68,6 +68,8 @@ class Ecore4regToEcoreConverter(object):
                         eAttribute.upperBound = structuralFeature.upperBound
                         eAttribute.lowerBound = structuralFeature.lowerBound
                         typeName = structuralFeature.eAttributeType.name
+                        if structuralFeature.iD:
+                            eAttribute.iD = True
 
                         if isinstance(structuralFeature.eAttributeType, ELEnum):
                             eEnum = Ecore4regToEcoreConverter.findEnum(
