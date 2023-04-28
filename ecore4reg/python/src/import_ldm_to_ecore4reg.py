@@ -136,7 +136,7 @@ class LDMImport(object):
                     if not (len(superclassID.strip()) == 0):
                         theclass = context.classesMap[classID]
                         superclass = context.classesMap[superclassID]
-                        theclass.superTypes.extend([superclass])
+                        theclass.eSuperTypes.extend([superclass])
 
     def addLDMEnumsToPackage(self, context):
         '''
@@ -153,6 +153,7 @@ class LDMImport(object):
                     headerSkipped = True
                 else:
                     counter = counter+1
+                    print(counter)
                     enumID = row[0]
                     enumName = row[1]
                     adaptedEnumName = Utils.makeValidID(enumName)+"_domain"
@@ -180,6 +181,7 @@ class LDMImport(object):
                 else:
                     try:
                         counter = counter+1
+                        print(counter)
                         enumID = row[0]
                         enumUsedName = Utils.makeValidID( row[3])
                         # enumName = row[5]
@@ -413,8 +415,8 @@ class LDMImport(object):
         then we delete it in the subclass
         '''
         for theClass in context.classesMap.values():
-            if len(theClass.superTypes) > 0:
-                superclass = theClass.superTypes[0]
+            if len(theClass.eSuperTypes) > 0:
+                superclass = theClass.eSuperTypes[0]
                 if superclass:
 
                     attributes = theClass.eStructuralFeatures
