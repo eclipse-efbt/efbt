@@ -263,17 +263,20 @@ class StandardMatchingQueries(object):
         for classifier in classifiers:
             attributes = classifier.eAttributes
             for attribute in attributes:
-                attributeName = attribute.name.lower()
+                # we do not match for id fields that  we created to reflect 
+                # a composite key
+                if not (attribute.iD and attribute.name.endswith('_PK')):
+                    attributeName = attribute.name.lower()
 
-                if (theAttributeName.lower() == attributeName):
-                    attribute.matchType = "EXACT"
-                    returnAttributes.append(attribute)
-                elif theAttributeName.lower() in attributeName:
-                    attribute.matchType = "SUBSTRING"
-                    returnAttributes.append(attribute)
-                elif attributeName in theAttributeName.lower():
-                    attribute.matchType = "REVERSE_SUBSTRING"
-                    returnAttributes.append(attribute)
+                    if theAttributeName.lower() == attributeName:
+                        attribute.matchType = "EXACT"
+                        returnAttributes.append(attribute)
+                    elif theAttributeName.lower() in attributeName:
+                        attribute.matchType = "SUBSTRING"
+                        returnAttributes.append(attribute)
+                    elif attributeName in theAttributeName.lower():
+                        attribute.matchType = "REVERSE_SUBSTRING"
+                        returnAttributes.append(attribute)
         
         if len(returnAttributes) == 0:
             lastResortMatchingAttribute =  StandardMatchingQueries.lastResortMatch(self,theAttributeName,attributeType) 
