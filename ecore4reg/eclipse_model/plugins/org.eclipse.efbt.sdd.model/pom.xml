@@ -18,7 +18,7 @@
 		<artifactId>org.eclipse.efbt.ecore4reg.model.parent</artifactId>
 		<version>1.1.0-SNAPSHOT</version>  <relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>org.eclipse.efbt.ecore4reg.model</artifactId>
+	<artifactId>org.eclipse.efbt.sdd.model</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<build>
@@ -39,7 +39,7 @@
 				<configuration>
 					<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
 					<arguments>
-						<argument>/${project.basedir}/src/org/eclipse/efbt/ecore4reg/model/generate/GenerateEcore4regModel.mwe2</argument>
+						<argument>/${project.basedir}/src/org/eclipse/efbt/sdd/model/generate/GenerateSDDModel.mwe2</argument>
 						<argument>-p</argument>
 						<argument>rootPath=/${project.basedir}/..</argument>
 					</arguments>
@@ -89,7 +89,7 @@
 				<configuration>
 					<filesets combine.children="append">
 						<fileset>
-							<directory>${basedir}/../org.eclipse.efbt.ecore4reg.model/src/</directory>
+							<directory>${basedir}/../org.eclipse.efbt.sdd.model/src/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>
