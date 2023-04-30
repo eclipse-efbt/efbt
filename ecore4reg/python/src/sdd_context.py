@@ -12,7 +12,7 @@
 #
 
 from pyecore.ecore import EPackage
-from ecore4reg import ELDataType, ELPackage, ModuleList, ViewModule, VTLModule, WorkflowModule
+from sdd_model import *
 
 
 class SDDContext(object):
@@ -33,19 +33,19 @@ class SDDContext(object):
     # The domains
     domains = DomainModule(name = 'domainsModule')
     #The variables
-    variables = VaraibleModule(name = 'variablesModule')
+    variables = VariableModule(name = 'variablesModule')
     #The members
     members = MemberModule(name = 'memberModule')
     #The subdomains
     subdomains = SubDomainModule(name = 'subdomainsModule')
     #The subdomain enumerations
-    combinationsModules[]
+    combinationsModules = []
     #The cubesModule
     cubesModule = CubeModule(name = 'cubesModule')
     #The cubeStructuresModule
     cubeStructuresModule = CubeModule(name = 'cubeStructuresModule')
     #The cubeStructureItemsModule
-    cubeStructureItemsModule CubeModule(name = 'cubeStructureItemsModule')
+    cubeStructureItemsModule = CubeModule(name = 'cubeStructureItemsModule')
     #The cubeMappingModule
     cubeMappingModule = CubeMappingModule(name = 'cubeMappingModule')
     #The mappingDefinitionModule
