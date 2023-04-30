@@ -26,7 +26,36 @@ class SDDContext(object):
     file_directory = ""
     # the directory where we save our outputs.
     output_directory = ""
+    
+    
 
+    
+    # The domains
+    domains = DomainModule(name = 'domainsModule')
+    #The variables
+    variables = VaraibleModule(name = 'variablesModule')
+    #The members
+    members = MemberModule(name = 'memberModule')
+    #The subdomains
+    subdomains = SubDomainModule(name = 'subdomainsModule')
+    #The subdomain enumerations
+    combinationsModules[]
+    #The cubesModule
+    cubesModule = CubeModule(name = 'cubesModule')
+    #The cubeStructuresModule
+    cubeStructuresModule = CubeModule(name = 'cubeStructuresModule')
+    #The cubeStructureItemsModule
+    cubeStructureItemsModule CubeModule(name = 'cubeStructureItemsModule')
+    #The cubeMappingModule
+    cubeMappingModule = CubeMappingModule(name = 'cubeMappingModule')
+    #The mappingDefinitionModule
+    mappingDefinitionModule = MappingDefinitionModule(name = 'mappingDefinitionModule')
+    #The memberMappingModule
+    memberMappingModule = MemberMappingModule(name = 'memberMappingModule')
+    #The variableMappingModule
+    variableMappingModule = VariableMappingModule(name = 'variableMappingModule')
+    #The birdModel
+    birdModel = SMCubesCoreModel(name = 'SMCubesCoreModel')
 
     variableToDomainMap = {}
     variableToLongNamesMap = {}
