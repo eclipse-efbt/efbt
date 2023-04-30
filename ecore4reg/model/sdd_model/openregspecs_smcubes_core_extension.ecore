@@ -8,7 +8,7 @@
   <eAnnotations source="license">
     <details key="license" value="Copyright (c) 2020 Bird Software Solutions Ltd&#xA; All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html&#xA;&#xA;SPDX-License-Identifier: EPL-2.0 &#xA;&#xA; Contributors:&#xA; Neil Mackenzie - initial API and implementation&#xD;"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="DomainModule" eSuperTypes="../module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="DomainModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module storing a list of Domains"/>
     </eAnnotations>
@@ -27,7 +27,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MemberHierarchyModule" eSuperTypes="../module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="MemberHierarchyModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module storing a list of MemberHierarchies and MemberHierarchiesNodes"/>
     </eAnnotations>
@@ -56,7 +56,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MemberModule" eSuperTypes="../module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="MemberModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module storing a list of Members"/>
     </eAnnotations>
@@ -75,7 +75,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VariableModule" eSuperTypes="../module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="VariableModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Module containing a list of variables"/>
     </eAnnotations>
@@ -94,11 +94,11 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SubDomainModule" eSuperTypes="../module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="SubDomainModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subdomains" upperBound="-1"
         eType="ecore:EClass core.ecore#//SUBDOMAIN" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SMCubesCoreModel" eSuperTypes="../module_management.ecore#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesCoreModel" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="variableModules" upperBound="-1"
         eType="#//VariableModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="domainModules" upperBound="-1"

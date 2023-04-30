@@ -25,9 +25,9 @@
         upperBound="-1" eType="#//SequenceFlow" eOpposite="#//SequenceFlow/targetRef"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DataConstraint">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attr1" eType="ecore:EClass ecore_lite.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attr1" eType="ecore:EClass ecore_lite.ecore#//ELAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparison" eType="#//AttrComparison"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass ecore_lite.ecore#//EEnumLiteral"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="ecore:EClass ecore_lite.ecore#//ELEnumLiteral"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="AttrComparison">
@@ -49,24 +49,24 @@
   <eClassifiers xsi:type="ecore:EClass" name="InclusiveGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParallelGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="ServiceTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="ecore:EClass ecore_lite.ecore#//EOperation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="ecore:EClass ecore_lite.ecore#//ELOperation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
         eType="#//Scenario" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="secondAttribute" eType="ecore:EClass ecore_lite.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secondAttribute" eType="ecore:EClass ecore_lite.ecore#//ELAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributesForScenarioChoice"
-        upperBound="-1" eType="ecore:EClass ecore_lite.ecore#//EAttribute"/>
+        upperBound="-1" eType="ecore:EClass ecore_lite.ecore#//ELAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityCreationTask" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributesForEntityCreation"
-        upperBound="-1" eType="ecore:EClass ecore_lite.ecore#//EAttribute"/>
+        upperBound="-1" eType="ecore:EClass ecore_lite.ecore#//ELAttribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
     <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayers" upperBound="-1"
         eType="#//SelectionLayer" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="ecore:EClass ecore_lite.ecore#//EClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="ecore:EClass ecore_lite.ecore#//ELClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UserTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass ecore_lite.ecore#//EClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="ecore:EClass ecore_lite.ecore#//ELClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ActivityTag" eSuperTypes="requirements_text.ecore#//Tag">
     <eStructuralFeatures xsi:type="ecore:EReference" name="activity" eType="#//Activity"/>
@@ -100,7 +100,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributes" upperBound="-1"
-        eType="ecore:EClass ecore_lite.ecore#//EAttribute"/>
+        eType="ecore:EClass ecore_lite.ecore#//ELAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="data_constraints" eType="#//DataConstraint"
         containment="true"/>
   </eClassifiers>

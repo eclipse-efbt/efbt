@@ -10,7 +10,7 @@
  * Contributors:
  *    Neil Mackenzie - initial API and implementation
  *******************************************************************************/
-package org.eclipse.efbt.controller.smcubes.component.importexport.impl;
+package ecore4reg.model.sdd_model;
 
 
 import java.io.FileWriter;
