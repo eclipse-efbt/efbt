@@ -24,13 +24,13 @@ from standard_matching_queries import StandardMatchingQueries
 
 if __name__ == '__main__':
     context = Context()
-    context.persistToEcore4Reg = True
-    context.useSubDomains = True
-    context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
-    context.outputDirectory = '/workspaces/efbt/ecore4reg/python/results'
-    InputLayerImport().doImport(context)
+    context.persist_to_ecore4reg = True
+    context.use_subdomains = True
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
+    InputLayerImport().do_import(context)
     ROLImport().doImport(context)
-    Ecore4regToEcoreConverter().convertPackagesInContext(context)
+    Ecore4regToEcoreConverter().convert_packages_in_ontext(context)
     persister = PersistToFile()
     persister.saveModelAsEcoreFile(context)
     persister.saveModelAsEcore4RegFile(context)

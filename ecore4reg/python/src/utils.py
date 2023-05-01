@@ -248,7 +248,7 @@ class Utils(object):
         '''
         returns the ecore data type for a data type
         '''
-        return context.xString
+        return context.e_string
 
     @classmethod
     def findROLEnum(cls, enumName, enumMap):

@@ -25,17 +25,17 @@ from ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 if __name__ == '__main__':
     context = Context()
 
-    context.persistToEcore4Reg = True
-    context.persistVTLComments = True
-    context.useSubDomains = False
-    context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resourcesfinrep28'
-    context.outputDirectory = '/workspaces/efbt/ecore4reg/python/resultsfinrep28'
+    context.persist_to_ecore4reg = True
+    context.persist_vtl_comments = True
+    context.use_subdomains = False
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resourcesfinrep28'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/resultsfinrep28'
 
-    InputLayerImport().doImport(context)
+    InputLayerImport().do_import(context)
     ROLImport().doImport(context)
-    ImportFinrepVTL().doImport(context)
+    ImportFinrepVTL().do_import(context)
 
-    Ecore4regToEcoreConverter().convertPackagesInContext(context)
+    Ecore4regToEcoreConverter().convert_packages_in_ontext(context)
 
     persister = PersistToFile()
     persister.saveModelAsEcoreFile(context)

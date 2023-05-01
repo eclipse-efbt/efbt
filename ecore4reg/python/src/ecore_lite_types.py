@@ -10,20 +10,26 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
+from ecore4reg import ELDataType
+
 
 class EcoreLiteTypes(object):
-   # we create the main 5 'primitive' data types
-    xString = ELDataType()
-    xString.name = "String"
+    '''
+    Set up the main types for ecore lite
+    '''
+    # we create the main 5 'primitive' data types
 
-    xDouble = ELDataType()
-    xDouble.name = "double"
+    e_string = ELDataType()
+    e_string.name = "String"
 
-    xInt = ELDataType()
-    xInt.name = "int"
+    e_double = ELDataType()
+    e_double.name = "double"
 
-    xDate = ELDataType()
-    xDate.name = "Date"
+    e_int = ELDataType()
+    e_int.name = "int"
 
-    xBoolean = ELDataType()
-    xBoolean.name = "boolean"
+    e_date = ELDataType()
+    e_date.name = "Date"
+
+    e_boolean = ELDataType()
+    e_boolean.name = "boolean"

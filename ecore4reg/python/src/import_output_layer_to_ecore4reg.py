@@ -30,39 +30,39 @@ class ROLImport(object):
         '''
         import the items from the Output layer csv files
         '''
-        ROLImport.addROLClassesToPackage(self, context)
-        ROLImport.createVariableSetToVariableMap(self, context)
-        ROLImport.createVariableToDomainMap(self, context)
-        ROLImport.createDomainToDomainNameMap(self, context)
-        ROLImport.createMemberMaps(self, context)
+        ROLImport.add_rol_classes_to_package(self, context)
+        ROLImport.create_variable_set_to_variable_map(self, context)
+        ROLImport.create_variable_to_domain_map(self, context)
+        ROLImport.create_domain_to_domain_name_map(self, context)
+        ROLImport.create_member_maps(self, context)
         if context.useSubDomains:
-            ROLImport.createSubDomainToDomainMap(self, context)
-            ROLImport.createSubDomainToMemberMaps(self, context)
-            ROLImport.addROLEnumsAndLiteralsToPackageUsingSubDomains(
+            ROLImport.create_subdomain_to_domain_map(self, context)
+            ROLImport.create_subdomain_to_member_maps(self, context)
+            ROLImport.add_rol_enums_and_literals_to_package_using_subdomains(
                 self, context)
         else:
-            ROLImport.addROLEnumsAndLiteralsToPackage(self, context)
-        ROLImport.addROLAttributesToClasses(self, context)
+            ROLImport.add_rol_enums_and_literals_to_package(self, context)
+        ROLImport.add_rol_attributes_to_classes(self, context)
 
-    def addROLClassesToPackage(self, context):
+    def add_rol_classes_to_package(self, context):
         '''
         Add the ROL classes to the package
         '''
-        fileLocation = context.fileDirectory + os.sep + "cube.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "cube.csv"
+        header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity,
         # and add the ELClass to the package
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
 
-                    className = row[0]
-                    alteredClassName = Utils.makeValidID(className)
-                    objectID = row[1]
+                    class_name = row[0]
+                    altered_class_name = Utils.makeValidID(class_name)
+                    object_id = row[1]
                     cube_type = row[3]
                     valid_to = row[11]
                     framework = row[5]
@@ -70,174 +70,174 @@ class ROLImport(object):
 
                     if ((framework == "FINREP_REF") and (cube_type == "RC") and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999"))):
 
-                        alteredClassName = Utils.makeValidID(className)
+                        altered_class_name = Utils.makeValidID(class_name)
 
-                        xclass = ELClass(name=alteredClassName+"_OutputItem")
+                        eclass = ELClass(name=altered_class_name+"_OutputItem")
 
-                        xclassTable = ELClass(
-                            name=alteredClassName+"_OutputTable")
-                        xclassTable.containedEntityType = xclass
-                        containmentReference = ELReference()
-                        containmentReference.name = xclass.name+"s"
-                        containmentReference.eType = xclass
-                        containmentReference.upperBound = -1
-                        containmentReference.lowerBound = 0
-                        containmentReference.containment = True
-                        xclassTable.eStructuralFeatures.append(
-                            containmentReference)
-                        xclassTableOperation = ELOperation()
-                        xclassTableOperation.name = xclass.name+"s"
-                        xclassTableOperation.eType = xclass
-                        xclassTableOperation.upperBound = -1
-                        xclassTableOperation.lowerBound = 0
+                        eclass_table = ELClass(
+                            name=altered_class_name+"_OutputTable")
+                        eclass_table.containedEntityType = eclass
+                        containment_reference = ELReference()
+                        containment_reference.name = eclass.name+"s"
+                        containment_reference.eType = eclass
+                        containment_reference.upperBound = -1
+                        containment_reference.lowerBound = 0
+                        containment_reference.containment = True
+                        eclass_table.eStructuralFeatures.append(
+                            containment_reference)
+                        xclass_table_peration = ELOperation()
+                        xclass_table_peration.name = eclass.name+"s"
+                        xclass_table_peration.eType = eclass
+                        xclass_table_peration.upperBound = -1
+                        xclass_table_peration.lowerBound = 0
 
-                        xclassTable.eOperations.append(xclassTableOperation)
+                        eclass_table.eOperations.append(xclass_table_peration)
 
                         context.outputLayerEntitiesPackage.eClassifiers.extend([
-                                                                               xclass])
+                                                                               eclass])
                         context.outputLayerEntitiesPackage.eClassifiers.extend([
-                                                                               xclassTable])
+                                                                               eclass_table])
 
                         # maintain a map a objectIDs to ELClasses
-                        context.classesMap[objectID] = xclass
-                        context.tableMap[xclass] = xclassTable
+                        context.classesMap[object_id] = eclass
+                        context.tableMap[eclass] = eclass_table
 
-    def createVariableSetToVariableMap(self, context):
+    def create_variable_set_to_variable_map(self, context):
         '''
         Create a map of variable sets to variables
         '''
 
         # Make a variable to Domain Map
-        fileLocation = context.fileDirectory + os.sep + "variable_set_enumeration.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "variable_set_enumeration.csv"
+        header_skipped = False
         # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     valid_to = row[4]
-                    variableID = row[5]
-                    variableSet = row[6]
+                    variable_id = row[5]
+                    variable_set = row[6]
 
                     if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
-                        variableList = None
+                        variable_list = None
                         try:
-                            variableList = context.variableSetToVariableMap[variableSet]
+                            variable_list = context.variableSetToVariableMap[variable_set]
                         except:
-                            variableList = []
-                            context.variableSetToVariableMap[variableSet] = variableList
+                            variable_list = []
+                            context.variableSetToVariableMap[variable_set] = variable_list
 
-                        if not variableID in variableList:
-                            variableList.append(variableID)
+                        if not variable_id in variable_list:
+                            variable_list.append(variable_id)
 
-    def createVariableToDomainMap(self, context):
+    def create_variable_to_domain_map(self, context):
         '''
         Create a map of variables to domains
         '''
 
         # Make a variable to Domain Map
-        fileLocation = context.fileDirectory + os.sep + "variable.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "variable.csv"
+        header_skipped = False
         # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
-                    variableName = row[6]
-                    longName = row[4]
+                    variable_name = row[6]
+                    long_name = row[4]
                     # domainName = Utils.makeValidID(row[3])
                     domain = row[2]
-                    context.variableToDomainMap[variableName] = domain
-                    context.variableToLongNamesMap[variableName] = longName
+                    context.variableToDomainMap[variable_name] = domain
+                    context.variableToLongNamesMap[variable_name] = long_name
 
-    def createDomainToDomainNameMap(self, context):
+    def create_domain_to_domain_name_map(self, context):
         '''
          Make a domain  to Domain Name Map
         '''
-        fileLocation = context.fileDirectory + os.sep + "domain.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "domain.csv"
+        header_skipped = False
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     domainID = row[0]
                     # domainName = Utils.makeValidID(row[3])
                     domainName = row[8]
                     context.domainToDomainNameMap[domainID] = domainName
 
-    def createMemberMaps(self, context):
+    def create_member_maps(self, context):
         '''
             Make a domain  to Domain Name Map
         '''
         # Make a domain  to Domain Name Map
-        fileLocation = context.fileDirectory + os.sep + "member.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "member.csv"
+        header_skipped = False
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
-                    memberID = row[4]
+                    member_id = row[4]
                     # domainName = Utils.makeValidID(row[3])
-                    memberCode = row[0]
-                    memberName = row[5]
-                    if (memberName is None) or (memberName == ""):
-                        memberName = memberID
-                    domainId = row[2]
+                    member_code = row[0]
+                    member_name = row[5]
+                    if (member_name is None) or (member_name == ""):
+                        member_name = member_id
+                    domain_id = row[2]
 
                     # if there is no domain ID this suggests a faulty 
                     # row in the csv due to return statements in fields
-                    if not (domainId is None) and not (domainId == ""):
-                        context.memberIDToDomainMap[memberID] = domainId
-                        context.memberIDToMemberNameMap[memberID] = memberName
-                        context.memberIDToMemberCodeMap[memberID] = memberCode
+                    if not (domain_id is None) and not (domain_id == ""):
+                        context.memberIDToDomainMap[member_id] = domain_id
+                        context.memberIDToMemberNameMap[member_id] = member_name
+                        context.memberIDToMemberCodeMap[member_id] = member_code
 
-    def createSubDomainToDomainMap(self, context):
+    def create_subdomain_to_domain_map(self, context):
         '''
             Make a domain  to Domain Name Map
         '''
-        fileLocation = context.fileDirectory + os.sep + "subdomain.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "subdomain.csv"
+        header_skipped = False
         # for each subdomain createw a lsit
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     domain_id = row[2]
                     subdomain_id = row[8]
                     context.subDomainIDToDomainID[subdomain_id] = domain_id
 
-    def createSubDomainToMemberMaps(self, context):
+    def create_subdomain_to_member_maps(self, context):
         '''
             Make a domain  to Domain Name Map
         '''
-        fileLocation = context.fileDirectory + os.sep + "subdomain_enumeration.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "subdomain_enumeration.csv"
+        header_skipped = False
         # for each subdomain createw a lsit
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     member_id = row[0]
                     subdomain_id = row[2]
@@ -253,22 +253,22 @@ class ROLImport(object):
                         if not member_id in memberList:
                             memberList.append(member_id)
 
-    def addROLEnumsAndLiteralsToPackage(self, context):
+    def add_rol_enums_and_literals_to_package(self, context):
         '''
         Add the ROLEnums and Literals to the package
         '''
 
-        fileLocation = context.fileDirectory + os.sep + "cube_structure_item.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "cube_structure_item.csv"
+        header_skipped = False
         # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
 
                     variable = row[2]
@@ -276,24 +276,24 @@ class ROLImport(object):
                     variableSet = row[12]
 
                     try: 
-                        theClass = context.classesMap[classID]
+                        the_class = context.classesMap[classID]
                         attributeList = [variable]
                         if (variable=="MTRCS"):
                             attributeList = context.variableSetToVariableMap[variableSet]
                         if (variable == "VALUE_DECIMAL"):
                             attributeList = []
                             
-                        for attributeName in attributeList:
+                        for attribute_name in attributeList:
                             try: 
 
-                                domainID = context.variableToDomainMap[variable]
+                                domain_id = context.variableToDomainMap[variable]
                                 # domain_ID_Name = context.domainToDomainNameMap[domainID]
-                                amendedDomainName = Utils.makeValidID(domainID)
-                                theEnum = Utils.findROLEnum(
-                                    amendedDomainName+"_domain", context.enumMap)
-                                if theEnum is None:
-                                    if not domainID in context.missingDomains:
-                                        context.missingDomains.append(domainID)
+                                amended_domain_name = Utils.makeValidID(domain_id)
+                                the_enum = Utils.findROLEnum(
+                                    amended_domain_name+"_domain", context.enumMap)
+                                if the_enum is None:
+                                    if not domain_id in context.missingDomains:
+                                        context.missingDomains.append(domain_id)
                             except:
                                 print("missing ROL class2: ")
                                 print(classID)
@@ -301,267 +301,268 @@ class ROLImport(object):
                                 print( "missing ROL class2: " )
                                 print(classID)
 
-        for theDomain in context.missingDomains:
+        for the_domain in context.missingDomains:
 
             # domain_ID_Name = context.domainToDomainNameMap[theDomain]
-            amendedDomainName = Utils.makeValidID(theDomain) + "_domain"
-            if not ((amendedDomainName == "String") or (amendedDomainName == "Date")):
-                theEnum = ELEnum()
-                theEnum.name = amendedDomainName
+            amended_domain_name = Utils.makeValidID(the_domain) + "_domain"
+            if not ((amended_domain_name == "String") or (amended_domain_name == "Date")):
+                the_enum = ELEnum()
+                the_enum.name = amended_domain_name
                 # maintain a map of enum IDS to ELEnum objects
-                context.enumMap[amendedDomainName] = theEnum
-                context.outputLayerEnumsPackage.eClassifiers.extend([theEnum])
-                theDomainMembers = Utils.getMembersOfTheDomain(
-                    theDomain, context.memberIDToDomainMap)
+                context.enumMap[amended_domain_name] = the_enum
+                context.outputLayerEnumsPackage.eClassifiers.extend([the_enum])
+                the_domain_members = Utils.getMembersOfTheDomain(
+                    the_domain, context.memberIDToDomainMap)
                 counter1 = 0
-                for member in theDomainMembers:
-                    enumLiteral = ELEnumLiteral()
-                    enumUsedName = Utils.makeValidID(
+                for member in the_domain_members:
+                    enum_literal = ELEnumLiteral()
+                    enum_used_name = Utils.makeValidID(
                         context.memberIDToMemberCodeMap[member])
-                    adaptedValue = Utils.makeValidID(
+                    adapted_value = Utils.makeValidID(
                         context.memberIDToMemberNameMap[member])
-                    newAdaptedValue = Utils.uniqueValue(theEnum, adaptedValue)
-                    newAdaptedName = Utils.uniqueName(theEnum, enumUsedName)
+                    new_adapted_value = Utils.uniqueValue(the_enum, adapted_value)
+                    new_adapted_name = Utils.uniqueName(the_enum, enum_used_name)
 
-                    enumLiteral.name = newAdaptedValue
-                    enumLiteral.literal = newAdaptedName
+                    enum_literal.name = new_adapted_value
+                    enum_literal.literal = new_adapted_name
                     counter1 = counter1 + 1
-                    enumLiteral.value = counter1
-                    theEnum.eLiterals.extend([enumLiteral])
+                    enum_literal.value = counter1
+                    the_enum.eLiterals.extend([enum_literal])
 
-    def addROLEnumsAndLiteralsToPackageUsingSubDomains(self, context):
+    def add_rol_enums_and_literals_to_package_using_subdomains(self, context):
         '''
         Add the ROLEnums and Literals to the package
         '''
-        fileLocation = context.fileDirectory + os.sep + "cube_structure_item.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "cube_structure_item.csv"
+        header_skipped = False
         # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
-                        headerSkipped = True
+                if (not header_skipped):
+                        header_skipped = True
                 else:
                     
                     variable = row[2]
-                    subDomainID = row[10 ]
-                    classID = row[1]
-                    specificMember = row[7 ]
-                    variableSet = row[12]
+                    subdomain_id = row[10 ]
+                    class_id = row[1]
+                    specific_member = row[7 ]
+                    variable_set = row[12]
                     try:
-                        cubeName = context.classesMap[classID]
-                        attributeList = [variable]
+                        cube_name = context.classesMap[class_id]
+                        attribute_list = [variable]
                         if (variable=="MTRCS"):
-                            attributeList = context.variableSetToVariableMap[variableSet]
+                            attribute_list = context.variableSetToVariableMap[variable_set]
                         if (variable == "VALUE_DECIMAL"):
-                            attributeList = []
+                            attribute_list = []
                             
-                        for attributeName in attributeList:
+                        for attribute_name in attribute_list:
                         
                             print("cubeName")
-                            print(cubeName)
-                            domainID = None
+                            print(cube_name)
+                            domain_id = None
                             # deal with the case where we have no subdomain but have a specific member
                             if (variable=="MTRCS"):
-                                domainID = context.variableToDomainMap[attributeName]
-                                amendedDomainName = domainID
-                            elif ((subDomainID == "") or (subDomainID == None)) and (len(specificMember) > 0):
-                                domainID = context.variableToDomainMap[attributeName]
+                                domain_id = context.variableToDomainMap[attribute_name]
+                                amended_domain_name = domain_id
+                            elif ((subdomain_id == "") or (subdomain_id == None)) and (len(specific_member) > 0):
+                                domain_id = context.variableToDomainMap[attribute_name]
+                                # where is domain_ID_Name defined? is this a bug
                                 if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
-                                    amendedDomainName = domain_ID_Name
+                                    amended_domain_name = domain_ID_Name
                                 else:
-                                    amendedDomainName = Utils.makeValidID(subDomainID + "_ISMEMBER_" + specificMember)
+                                    amended_domain_name = Utils.makeValidID(subdomain_id + "_ISMEMBER_" + specific_member)
                             else:
-                                domainID = context.subDomainIDToDomainID[subDomainID]
-                                domain_ID_Name = context.domainToDomainNameMap[domainID]
+                                domain_id = context.subDomainIDToDomainID[subdomain_id]
+                                domain_ID_Name = context.domainToDomainNameMap[domain_id]
                                 if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
-                                    amendedDomainName = domain_ID_Name
+                                    amended_domain_name = domain_ID_Name
                                 else:
-                                    amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                                    amended_domain_name = Utils.makeValidID(subdomain_id + "_ISSUBDOMAINOF_" + domain_ID_Name)
                                  
                             try: 
         
-                                theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
-                                if theEnum is None:
-                                    if not( (amendedDomainName == "String") or (amendedDomainName == "Date")  ):
-                                        theEnum = ELEnum()
-                                        theEnum.name = amendedDomainName 
+                                the_enum =  Utils.findROLEnum(amended_domain_name,context.enumMap)
+                                if the_enum is None:
+                                    if not( (amended_domain_name == "String") or (amended_domain_name == "Date")  ):
+                                        the_enum = ELEnum()
+                                        the_enum.name = amended_domain_name 
                                         #maintain a map of enum IDS to XEnum objects
-                                        context.enumMap[amendedDomainName] = theEnum
-                                        context.outputLayerEnumsPackage.eClassifiers.extend([theEnum])
-                                        theDomainMembers= None
+                                        context.enumMap[amended_domain_name] = the_enum
+                                        context.outputLayerEnumsPackage.eClassifiers.extend([the_enum])
+                                        the_domain_members= None
                                         if (variable=="MTRCS"):
-                                            theDomainMembers=[]
-                                        elif ((subDomainID == "") or (subDomainID == None)) and (len(specificMember) > 0):
-                                            theDomainMembers=[specificMember]
+                                            the_domain_members=[]
+                                        elif ((subdomain_id == "") or (subdomain_id == None)) and (len(specific_member) > 0):
+                                            the_domain_members=[specific_member]
                                         else:
-                                            theDomainMembers= context.subDomainToMemberListMap[subDomainID]
+                                            the_domain_members= context.subDomainToMemberListMap[subdomain_id]
                                         counter1 = 0
-                                        for member in theDomainMembers:
-                                            enumLiteral = ELEnumLiteral()
-                                            enumUsedName = Utils.makeValidID(context.memberIDToMemberCodeMap[member])
-                                            adaptedValue = Utils.makeValidID(context.memberIDToMemberNameMap[member])
-                                            newAdaptedValue = Utils.uniqueValue( theEnum, adaptedValue)
-                                            newAdaptedName = Utils.uniqueName( theEnum, enumUsedName)
+                                        for member in the_domain_members:
+                                            enum_literal = ELEnumLiteral()
+                                            enum_used_name = Utils.makeValidID(context.memberIDToMemberCodeMap[member])
+                                            adapted_value = Utils.makeValidID(context.memberIDToMemberNameMap[member])
+                                            new_adapted_value = Utils.uniqueValue( the_enum, adapted_value)
+                                            new_adapted_name = Utils.uniqueName( the_enum, enum_used_name)
                         
-                                            enumLiteral.name =  newAdaptedValue
-                                            enumLiteral.literal = newAdaptedName
+                                            enum_literal.name =  new_adapted_value
+                                            enum_literal.literal = new_adapted_name
                                             counter1 = counter1 + 1
-                                            enumLiteral.value = counter1
-                                            theEnum.eLiterals.extend([enumLiteral]) 
+                                            enum_literal.value = counter1
+                                            the_enum.eLiterals.extend([enum_literal]) 
                                     else:
-                                        theEnum = ELEnum()
-                                        theEnum.name = amendedDomainName 
-                                        context.enumMap[amendedDomainName] = theEnum
+                                        the_enum = ELEnum()
+                                        the_enum.name = amended_domain_name 
+                                        context.enumMap[amended_domain_name] = the_enum
                                           
                                     
                             except:
                                     print( "missing ROL class2: " )
-                                    print(classID)
+                                    print(class_id)
                     except:
                                 print( "class not in list: " )
-                                print(classID)    
+                                print(class_id)    
                             
-    def addROLAttributesToClasses(self, context):
+    def add_rol_attributes_to_classes(self, context):
         '''
         For each attribute add an Xattribute to the correct ELClass represtnting the Entity
         the attribute should have the correct type, which may be a specific
         enumeration
         '''
-        fileLocation = context.fileDirectory + os.sep + "cube_structure_item.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "cube_structure_item.csv"
+        header_skipped = False
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                        headerSkipped = True
+                if not header_skipped:
+                        header_skipped = True
                 else:
-                    theAttributeName1 = row[11 ]
-                    longName=None
+                    the_attribute_name1 = row[11 ]
+                    long_name=None
                     
                     variable = row[2 ]
-                    subDomainID = row[10 ]
-                    classID = row[1 ]
-                    specificMember = row[7 ]
-                    variableSet = row[12]
+                    subdomain_id = row[10 ]
+                    class_id = row[1 ]
+                    specific_member = row[7 ]
+                    variable_set = row[12]
                     
                     try:
-                        theClass = context.classesMap[classID]
-                        attributeList = [theAttributeName1]
-                        if (theAttributeName1=="MTRCS"):
-                            attributeList = context.variableSetToVariableMap[variableSet]
-                        if (theAttributeName1 == "VALUE_DECIMAL"):
-                            attributeList = []
-                        for attributeName in attributeList: 
+                        the_class = context.classesMap[class_id]
+                        attribute_list = [the_attribute_name1]
+                        if (the_attribute_name1=="MTRCS"):
+                            attribute_list = context.variableSetToVariableMap[variable_set]
+                        if (the_attribute_name1 == "VALUE_DECIMAL"):
+                            attribute_list = []
+                        for attribute_name in attribute_list: 
                         
                             try: 
                                 try:
-                                    longName = context.variableToLongNamesMap[attributeName]
+                                    long_name = context.variableToLongNamesMap[attribute_name]
                                 except:
-                                    longName = attributeName
-                                amendedAttributeName = Utils.makeValidID(attributeName)
-                                amendedAttributeLongName = Utils.makeValidID(longName)
+                                    long_name = attribute_name
+                                amended_attribute_name = Utils.makeValidID(attribute_name)
+                                amended_attribute_long_name = Utils.makeValidID(long_name)
                                 
-                                theClass = context.classesMap[classID]
+                                the_class = context.classesMap[class_id]
                                 
-                                classIsDerived = True
+                                class_is_derived = True
                                 
                                 if(context.useVariableLongName):   
-                                    theAttributeName = amendedAttributeLongName 
+                                    the_attribute_name = amended_attribute_long_name 
                                 else:
-                                    theAttributeName = amendedAttributeName
+                                    the_attribute_name = amended_attribute_name
                                 
-                                amendedDomainName = None
-                                if (theAttributeName1=="MTRCS"):
-                                    domainID = context.variableToDomainMap[attributeName]
-                                    amendedDomainName = Utils.makeValidID(domainID)
+                                amended_domain_name = None
+                                if (the_attribute_name1=="MTRCS"):
+                                    domain_id = context.variableToDomainMap[attribute_name]
+                                    amended_domain_name = Utils.makeValidID(domain_id)
                                 else:   
                                     if context.useSubDomains:
-                                        if ((subDomainID == "") or (subDomainID == None)) and (len(specificMember) > 0):
-                                            domainID = context.variableToDomainMap[variable]
+                                        if ((subdomain_id == "") or (subdomain_id == None)) and (len(specific_member) > 0):
+                                            domain_id = context.variableToDomainMap[variable]
                                             if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
-                                                amendedDomainName = domain_ID_Name
+                                                amended_domain_name = domain_ID_Name
                                             else:
-                                                amendedDomainName = Utils.makeValidID(subDomainID + "_ISMEMBER_" + specificMember)
+                                                amended_domain_name = Utils.makeValidID(subdomain_id + "_ISMEMBER_" + specific_member)
                     
                                         else:
-                                            domainID = context.subDomainIDToDomainID[subDomainID]
-                                            domain_ID_Name = context.domainToDomainNameMap[domainID]
+                                            domain_id = context.subDomainIDToDomainID[subdomain_id]
+                                            domain_ID_Name = context.domainToDomainNameMap[domain_id]
                                             if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
-                                                amendedDomainName = domain_ID_Name
+                                                amended_domain_name = domain_ID_Name
                                             else:
-                                                amendedDomainName = Utils.makeValidID(subDomainID + "_ISSUBDOMAINOF_" + domain_ID_Name)
+                                                amended_domain_name = Utils.makeValidID(subdomain_id + "_ISSUBDOMAINOF_" + domain_ID_Name)
                                              
                                     else:
-                                        domainID = context.variableToDomainMap[variable]
-                                        amendedDomainName = Utils.makeValidID(domainID+"_domain")
+                                        domain_id = context.variableToDomainMap[variable]
+                                        amended_domain_name = Utils.makeValidID(domain_id+"_domain")
                                 #domain_ID_Name = context.domainToDomainNameMap[domainID]
                               
-                                theEnum =  Utils.findROLEnum(amendedDomainName,context.enumMap)
-                                if  theEnum is not None:                     
+                                the_enum =  Utils.findROLEnum(amended_domain_name,context.enumMap)
+                                if  the_enum is not None:                     
                                     
-                                    if classIsDerived:
+                                    if class_is_derived:
                                         operation = ELOperation()
                                         operation.lowerBound=0
                                         operation.upperBound=1
-                                        if(theEnum.name == "String"):
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xString
-                                        elif(theEnum.name == "Date"):
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xDate
-                                        elif(theEnum.name.startswith("String_")):
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xString
-                                        elif(theEnum.name == "STRNG_domain"):
-                                                operation.name = theAttributeName
-                                                operation.eType = context.xString
-                                        elif(theEnum.name == "EBA_String_domain"):
-                                                operation.name = theAttributeName
-                                                operation.eType = context.xString
-                                        elif(theEnum.name == "DT_domain"):
-                                                operation.name = theAttributeName
-                                                operation.eType = context.xDate
-                                        elif(theEnum.name == "Number"):
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xDouble
+                                        if(the_enum.name == "String"):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_string
+                                        elif(the_enum.name == "Date"):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_date
+                                        elif(the_enum.name.startswith("String_")):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_string
+                                        elif(the_enum.name == "STRNG_domain"):
+                                                operation.name = the_attribute_name
+                                                operation.eType = context.e_string
+                                        elif(the_enum.name == "EBA_String_domain"):
+                                                operation.name = the_attribute_name
+                                                operation.eType = context.e_string
+                                        elif(the_enum.name == "DT_domain"):
+                                                operation.name = the_attribute_name
+                                                operation.eType = context.e_date
+                                        elif(the_enum.name == "Number"):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_double
                                         
-                                        elif(theEnum.name.startswith("Real_")):
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xDouble
-                                        elif(theEnum.name.startswith("Monetary")): 
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xInt
-                                        elif(theEnum.name.startswith("MNTRY")): 
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xInt
-                                        elif(theEnum.name.startswith("Monetary_domain")): 
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xInt
-                                        elif(theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xInt
-                                        elif(theEnum.name.startswith("Non_negative_integers")): 
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xInt
-                                        elif(theEnum.name.startswith("All_possible_dates")):   
-                                            operation.name = theAttributeName
-                                            operation.eType = context.xDate  
+                                        elif(the_enum.name.startswith("Real_")):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_double
+                                        elif(the_enum.name.startswith("Monetary")): 
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_int
+                                        elif(the_enum.name.startswith("MNTRY")): 
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_int
+                                        elif(the_enum.name.startswith("Monetary_domain")): 
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_int
+                                        elif(the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_int
+                                        elif(the_enum.name.startswith("Non_negative_integers")): 
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_int
+                                        elif(the_enum.name.startswith("All_possible_dates")):   
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_date  
                                         else:
-                                            operation.name = theAttributeName
-                                            operation.eType = theEnum  
+                                            operation.name = the_attribute_name
+                                            operation.eType = the_enum  
                                         
                 
                                     try:
                     
-                                        theClass = context.classesMap[classID]
+                                        the_class = context.classesMap[class_id]
                                         
-                                        if classIsDerived:
-                                            theClass.eOperations.extend([operation])
+                                        if class_is_derived:
+                                            the_class.eOperations.extend([operation])
                     
                                     except:
                                         print( "missing class2: " )
@@ -569,13 +570,13 @@ class ROLImport(object):
                                     
                                 else:
                                     print( "XXXXX missing domainID: " )
-                                    print(domainID)
-                                    print(classID)
-                                    if not(domainID in context.missingDomains):
-                                        context.missingDomains.append(domainID)
+                                    print(domain_id)
+                                    print(class_id)
+                                    if not(domain_id in context.missingDomains):
+                                        context.missingDomains.append(domain_id)
                             except:
                                     print( "XX missing ROL class1: " )
-                                    print(classID) 
+                                    print(class_id) 
                     except:
                         print("XX missing ROL class1: ")
-                        print(classID)
+                        print(class_id)

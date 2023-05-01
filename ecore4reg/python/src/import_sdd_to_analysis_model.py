@@ -39,13 +39,13 @@ class ImportSDD(object):
         import all the domains
         '''
         fileLocation = context.file_directory + os.sep + "domain.csv"
-        headerSkipped = False
+        header_skipped = False
 
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     code = row[0]
                     data_type = row[1]
@@ -104,13 +104,13 @@ class ImportSDD(object):
         import all the members
         '''
         fileLocation = context.file_directory + os.sep + "member.csv"
-        headerSkipped = False
+        header_skipped = False
 
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     code = row[0]
                     description = row[1]
@@ -131,13 +131,13 @@ class ImportSDD(object):
     def create_all_variables(self, context):
 
         fileLocation = context.file_directory + os.sep + "variable.csv"
-        headerSkipped = False
+        header_skipped = False
 
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     code = row[0]
                     description = row[1]
@@ -159,13 +159,13 @@ class ImportSDD(object):
     def create_all_subdomains(self, context):
 
         fileLocation = context.file_directory + os.sep + "subdomain.csv"
-        headerSkipped = False
+        header_skipped = False
 
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     code = row[0]
                     description = row[1]
@@ -187,13 +187,13 @@ class ImportSDD(object):
     def create_all_subdomainEnumerations(self, context):
 
         fileLocation = context.file_directory + os.sep + "subdomain_enumeration.csv"
-        headerSkipped = False
+        header_skipped = False
 
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     member_id = row[0]
                     subdomain_id = row[2]

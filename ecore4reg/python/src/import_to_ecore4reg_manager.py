@@ -24,7 +24,7 @@ from import_input_layer_to_ecore4reg import InputLayerImport
 from import_output_layer_to_ecore4reg import ROLImport
 from import_finrep_vtl import ImportFinrepVTL
 from persistToFile import PersistToFile
-from ecore4regToEcoreConverter import Ecore4regToEcoreConverter
+from ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 
 if __name__ == '__main__':
     context = Context()
@@ -33,23 +33,23 @@ if __name__ == '__main__':
     importROL = True
     importFinrepVTL = True
     persistToXCoreL = True
-    context.persistVTLComments = True
-    context.useSubDomains = False
-    context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
-    context.outputDirectory = '/workspaces/efbt/ecore4reg/python/results'
+    context.persist_vtl_comments = True
+    context.use_subdomains = False
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     context.addExecutableStubs = True
     context.addLogicPackages = True
 
     if importLDM:
-        LDMImport().doImport(context)
+        LDMImport().do_import(context)
     if importIL:
-        InputLayerImport().doImport(context)
+        InputLayerImport().do_import(context)
     if importROL:
         ROLImport().doImport(context)
     if importFinrepVTL:
-        ImportFinrepVTL().doImport(context)
+        ImportFinrepVTL().do_import(context)
 
-    Ecore4regToEcoreConverter().convertPackagesInContext(context)
+    Ecore4regToEcoreConverter().convert_packages_in_context(context)
 
     persister = PersistToFile()
     persister.saveModelAsEcoreFile(context)

@@ -372,15 +372,15 @@ class StandardMatchingQueries(object):
             print("hit exception")
             cutClassName = classname
 
-        headerSkipped = False
+        header_skipped = False
         # Load all the entities from the csv file, make an XClass per entity,
         # and add the XClass to the package
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
-                if (not headerSkipped):
-                    headerSkipped = True
+                if (not header_skipped):
+                    header_skipped = True
                 else:
                     reportTemplate = row[0]
                     if reportTemplate == cutClassName:
@@ -394,7 +394,7 @@ class StandardMatchingQueries(object):
         '''
         # Make a variable to Domain Map
         fileLocation = context.inScopeFileDirectory + os.sep + "variable.csv"
-        headerSkipped = False
+        header_skipped = False
         # or each attribute add an Xattribute to the correct XClass represtnting the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
@@ -402,8 +402,8 @@ class StandardMatchingQueries(object):
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if (not headerSkipped):
-                    headerSkipped = True
+                if (not header_skipped):
+                    header_skipped = True
                 else:
                     longName = row[4]
                     variableCode = row[0]
@@ -416,13 +416,13 @@ class StandardMatchingQueries(object):
         '''
         # Make a variable to Domain Map
         fileLocation = context.inScopeFileDirectory + os.sep + "derivable.csv"
-        headerSkipped = False
+        header_skipped = False
 
         with open(fileLocation,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     longName = row[1]
                     self.derivableList.append(longName)

@@ -14,285 +14,286 @@ import os
 import csv
 from utils import Utils
 
-from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
+from ecore4reg import ELAttribute, ELClass, ELEnum
+from ecore4reg import ELEnumLiteral, ELOperation, ELReference
 
 class LDMImport(object):
     '''
     Documentation for LDMImport
     '''
 
-    def doImport(self, context):
+    def do_import(self, context):
         '''
         import the items from the BIRD LDM csv files
         '''
-        LDMImport.addLDMClassesToPackage(self, context)
-        LDMImport.setLDMSuperClasses(self, context)
-        LDMImport.addLDMEnumsToPackage(self, context)
-        LDMImport.addLDMLiteralsToEnums(self, context)
-        LDMImport.createLDMTypesMap(self, context)
-        LDMImport.addLDMAttributesToClasses(self, context)
-        LDMImport.removeLDMAttributesAlreadyInSuperClass(self, context)
-        LDMImport.addLDMRelationshipsBetweenClasses(self, context)
+        LDMImport.add_ldm_classes_to_package(self, context)
+        LDMImport.set_ldm_super_classes(self, context)
+        LDMImport.add_ldm_enums_to_package(self, context)
+        LDMImport.add_ldm_literals_to_enums(self, context)
+        LDMImport.create_ldm_types_map(self, context)
+        LDMImport.add_ldm_attributes_to_classes(self, context)
+        LDMImport.remove_ldm_attributes_already_in_superclass(self, context)
+        LDMImport.add_ldm_relationships_between_classes(self, context)
 
-    def addLDMClassesToPackage(self, context):
+    def add_ldm_classes_to_package(self, context):
         '''
         for each entity in the LDM, create a class and add it to the package
         '''
 
-        fileLocation = context.fileDirectory + os.sep + "DM_Entities.csv"
+        file_location = context.fileDirectory + os.sep + "DM_Entities.csv"
 
-        headerSkipped = False
+        header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity,
         # and add the ELClass to the package
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
 
-                    className = row[0]
-                    objectID = row[1]
+                    class_name = row[0]
+                    object_id = row[1]
                     engineering_type = row[27]
-                    Num_SuperTypeEntity_ID = row[26]
+                    num_supertype_entity_id = row[26]
 
-                    alteredClassName = Utils.makeValidID(className)
-                    if alteredClassName.endswith("_derived"):
-                        xclass = ELClass(name=alteredClassName)
-                        xclassTable = ELClass(
-                            name=alteredClassName+"_DerivedTable")
-                        xclassTable.containedEntityType = xclass
-                        containmentReference = ELReference()
-                        containmentReference.name = xclass.name+"s"
-                        containmentReference.eType = xclass
-                        containmentReference.upperBound = -1
-                        containmentReference.lowerBound = 0
-                        containmentReference.containment = True
-                        xclassTable.eStructuralFeatures.append(
-                            containmentReference)
-                        xclassTableOperation = ELOperation()
-                        xclassTableOperation.name = xclass.name+"s"
-                        xclassTableOperation.eType = xclass
-                        xclassTableOperation.upperBound = -1
-                        xclassTableOperation.lowerBound = 0
-                        xclassTable.eOperations.append(xclassTableOperation)
+                    altered_class_name = Utils.makeValidID(class_name)
+                    if altered_class_name.endswith("_derived"):
+                        eclass = ELClass(name=altered_class_name)
+                        eclass_table = ELClass(
+                            name=altered_class_name+"_DerivedTable")
+                        eclass_table.containedEntityType = eclass
+                        containment_reference = ELReference()
+                        containment_reference.name = eclass.name+"s"
+                        containment_reference.eType = eclass
+                        containment_reference.upperBound = -1
+                        containment_reference.lowerBound = 0
+                        containment_reference.containment = True
+                        eclass_table.eStructuralFeatures.append(
+                            containment_reference)
+                        eclass_table_operation = ELOperation()
+                        eclass_table_operation.name = eclass.name+"s"
+                        eclass_table_operation.eType = eclass
+                        eclass_table_operation.upperBound = -1
+                        eclass_table_operation.lowerBound = 0
+                        eclass_table.eOperations.append(eclass_table_operation)
                         context.inputLayerEntitiesPackage.eClassifiers.extend([
-                                                                              xclass])
+                                                                              eclass])
                         context.inputLayerEntitiesPackage.eClassifiers.extend([
-                                                                              xclassTable])
-                    elif (className.startswith("OUTPUT_LAYER_")):
-                        xclass = ELClass(name=alteredClassName)
+                                                                              eclass_table])
+                    elif (class_name.startswith("OUTPUT_LAYER_")):
+                        eclass = ELClass(name=altered_class_name)
 
                         context.inputLayerEntitiesPackage.eClassifiers.extend([
-                                                                              xclass])
+                                                                              eclass])
 
                     else:
-                        xclass = ELClass(name=alteredClassName)
+                        eclass = ELClass(name=altered_class_name)
                         # of engineering type is single table, as i should be 
                         # for all members of a type
                         # heirarchy, and num_suptype is blank,
                         # then this means that this class is a root
                         # of a type heirarchy....we will set such classes
                         #  to be abstract.
-                        if (engineering_type == "Single Table") and (Num_SuperTypeEntity_ID == ""):
-                            xclass.abstract = True
-                        xclassTable = ELClass(
-                            name=alteredClassName+"_BaseTable")
-                        containmentReference = ELReference()
-                        containmentReference.name = xclass.name+"s"
-                        containmentReference.eType = xclass
-                        containmentReference.upperBound = -1
-                        containmentReference.lowerBound = 0
-                        containmentReference.containment = True
-                        xclassTable.eStructuralFeatures.append(
-                            containmentReference)
+                        if (engineering_type == "Single Table") and (num_supertype_entity_id == ""):
+                            eclass.abstract = True
+                        eclass_table = ELClass(
+                            name=altered_class_name+"_BaseTable")
+                        containment_reference = ELReference()
+                        containment_reference.name = eclass.name+"s"
+                        containment_reference.eType = eclass
+                        containment_reference.upperBound = -1
+                        containment_reference.lowerBound = 0
+                        containment_reference.containment = True
+                        eclass_table.eStructuralFeatures.append(
+                            containment_reference)
                         context.inputLayerEntitiesPackage.eClassifiers.extend([
-                                                                              xclass])
+                                                                              eclass])
                         context.inputLayerEntitiesPackage.eClassifiers.extend([
-                                                                              xclassTable])
+                                                                              eclass_table])
 
                     # maintain a map a objectIDs to ELClasses
-                    context.classesMap[objectID] = xclass
-                    context.tableMap[xclass] = xclassTable
+                    context.classesMap[object_id] = eclass
+                    context.tableMap[eclass] = eclass_table
 
-    def setLDMSuperClasses(self, context):
+    def set_ldm_super_classes(self, context):
         '''
         for each entity in the LDM, set the superclass of the class
         '''
-        fileLocation = context.fileDirectory + os.sep + "DM_Entities.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "DM_Entities.csv"
+        header_skipped = False
 
         # Where an nxtity has a superclass, set the superclass on the ELClass
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 # skip the first line which is the header.
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
-                    classID = row[1]
-                    superclassID = row[25]
-                    if not (len(superclassID.strip()) == 0):
-                        theclass = context.classesMap[classID]
-                        superclass = context.classesMap[superclassID]
+                    class_id = row[1]
+                    superclass_id = row[25]
+                    if not (len(superclass_id.strip()) == 0):
+                        theclass = context.classesMap[class_id]
+                        superclass = context.classesMap[superclass_id]
                         theclass.eSuperTypes.extend([superclass])
 
-    def addLDMEnumsToPackage(self, context):
+    def add_ldm_enums_to_package(self, context):
         '''
         for each domain in the LDM add an enum to the package
         '''
-        fileLocation = context.fileDirectory + os.sep + "DM_Domains.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "DM_Domains.csv"
+        header_skipped = False
         counter = 0
         # Create an ELEnum for each domain, and add it to the ELPackage
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     counter = counter+1
                     print(counter)
-                    enumID = row[0]
-                    enumName = row[1]
-                    adaptedEnumName = Utils.makeValidID(enumName)+"_domain"
-                    if not Utils.inEnumBlackList( adaptedEnumName):
-                        theEnum = ELEnum()
-                        theEnum.name = adaptedEnumName
+                    enum_id = row[0]
+                    enum_name = row[1]
+                    adapted_enum_name = Utils.makeValidID(enum_name)+"_domain"
+                    if not Utils.inEnumBlackList( adapted_enum_name):
+                        the_enum = ELEnum()
+                        the_enum.name = adapted_enum_name
                         # maintain a map of enum IDS to ELEnum objects
-                        context.enumMap[enumID] = theEnum
+                        context.enumMap[enum_id] = the_enum
                         context.inputLayerEnumsPackage.eClassifiers.extend([
-                                                                           theEnum])
+                                                                           the_enum])
 
-    def addLDMLiteralsToEnums(self, context):
+    def add_ldm_literals_to_enums(self, context):
         '''
         for each memebr of a domain the LDM, add a literal to the corresponding enum
         '''
-        fileLocation = context.fileDirectory + os.sep + "DM_Domain_AVT.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "DM_Domain_AVT.csv"
+        header_skipped = False
         counter = 0
         # Add the members of a domain as literals of the related Enum
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
                     try:
                         counter = counter+1
                         print(counter)
-                        enumID = row[0]
-                        enumUsedName = Utils.makeValidID( row[3])
+                        enum_id = row[0]
+                        enum_used_name = Utils.makeValidID( row[3])
                         # enumName = row[5]
-                        adaptedEnumName = Utils.makeValidID( enumUsedName)
+                        adapted_enum_name = Utils.makeValidID( enum_used_name)
                         value = row[4]
-                        adaptedValue = Utils.makeValidID( value)
+                        adapted_value = Utils.makeValidID( value)
                         try:
-                            theEnum = context.enumMap[enumID]
-                            newAdaptedValue = Utils.uniqueValue(
-                                 theEnum, adaptedValue)
-                            newAdaptedName = Utils.uniqueName(
-                                 theEnum, adaptedEnumName)
-                            enumLiteral = ELEnumLiteral()
-                            enumLiteral.name = newAdaptedValue
-                            enumLiteral.literal = newAdaptedName
-                            enumLiteral.value = counter
-                            theEnum.eLiterals.extend([enumLiteral])
+                            the_enum = context.enumMap[enum_id]
+                            new_adapted_value = Utils.uniqueValue(
+                                 the_enum, adapted_value)
+                            new_adapted_name = Utils.uniqueName(
+                                 the_enum, adapted_enum_name)
+                            enum_literal = ELEnumLiteral()
+                            enum_literal.name = new_adapted_value
+                            enum_literal.literal = new_adapted_name
+                            enum_literal.value = counter
+                            the_enum.eLiterals.extend([enum_literal])
 
                         except KeyError:
-                            print("missing domain: " + enumID)
+                            print("missing domain: " + enum_id)
 
                     except IndexError:
                         print(
                             "row in DM_Domain_AVT.csv skipped  due to improper formatting at row number")
                         print(counter)
 
-    def createLDMTypesMap(self, context):
+    def create_ldm_types_map(self, context):
         '''
         for each type in the LDM, create a type in the ELPackage
         '''
         # for each logicalDatatype for orcle 12c, make a Datatype if we have an
         # equivalent
 
-        fileLocation = context.fileDirectory + os.sep + "DM_Logical_To_Native.csv"
-        headerSkipped = False
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        file_location = context.fileDirectory + os.sep + "DM_Logical_To_Native.csv"
+        header_skipped = False
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
-                    rdbms_Type = row[3]
-                    rdbms_Version = row[4]
-                    dataTypeID = row[0]
-                    if (rdbms_Type.strip() == "Oracle Database") and (rdbms_Version.strip() == "12cR2"):
+                    rdbms_type = row[3]
+                    rdbms_version = row[4]
+                    datatype_id = row[0]
+                    if (rdbms_type.strip() == "Oracle Database") and (rdbms_version.strip() == "12cR2"):
                         native_type = row[2]
 
                         if native_type.strip() == "VARCHAR":
 
-                            context.datatypeMap[dataTypeID] = context.xString
+                            context.datatypeMap[datatype_id] = context.e_string
 
                         if native_type.strip() == "VARCHAR2":
 
-                            context.datatypeMap[dataTypeID] = context.xString
+                            context.datatypeMap[datatype_id] = context.e_string
 
                         if native_type.strip() == "INTEGER":
 
-                            context.datatypeMap[dataTypeID] = context.xInt
+                            context.datatypeMap[datatype_id] = context.e_int
 
                         if native_type.strip() == "DATE":
 
-                            context.datatypeMap[dataTypeID] = context.xDate
+                            context.datatypeMap[datatype_id] = context.e_date
 
                         if native_type.strip() == "NUMBER":
 
-                            context.datatypeMap[dataTypeID] = context.xDouble
+                            context.datatypeMap[datatype_id] = context.e_double
 
                         if native_type.strip() == "UNKNOWN":
 
-                            context.datatypeMap[dataTypeID] = context.xString
+                            context.datatypeMap[datatype_id] = context.e_string
 
-    def addLDMAttributesToClasses(self, context):
+    def add_ldm_attributes_to_classes(self, context):
         '''
         For each attribute on an entity of the LDM, add an attribute
         to the relevant class in the package
         '''
 
-        fileLocation = context.fileDirectory + os.sep + "DM_Attributes.csv"
-        headerSkipped = False
+        file_location = context.fileDirectory + os.sep + "DM_Attributes.csv"
+        header_skipped = False
         # For each attribute add an ELAttribute to the correct ELClass representing the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
-                    attributeName = row[0]
-                    amendedAttributeName = Utils.makeValidID(
-                         attributeName)
-                    attributeKind = row[7]
+                    attribute_name = row[0]
+                    amended_attribute_name = Utils.makeValidID(
+                         attribute_name)
+                    attribute_kind = row[7]
 
-                    classID = row[4]
-                    relationID = row[32]
+                    class_id = row[4]
+                    relation_id = row[32]
                     primary_key_or_not = row[35]
-                    theClass = context.classesMap[classID]
+                    the_class = context.classesMap[class_id]
 
-                    classIsDerived = False
-                    if theClass.name.endswith("_derived"):
-                        classIsDerived = True
+                    class_is_derived = False
+                    if the_class.name.endswith("_derived"):
+                        class_is_derived = True
 
-                    theAttributeName = amendedAttributeName
+                    the_attribute_name = amended_attribute_name
 
                     # we only add attributes here if they are not representing a relationship
-                    if relationID == "":
+                    if relation_id == "":
 
-                        if attributeKind == "Domain":
-                            enumID = row[12]
-                            theEnum = context.enumMap[enumID]
+                        if attribute_kind == "Domain":
+                            enum_id = row[12]
+                            the_enum = context.enumMap[enum_id]
 
                             attribute = ELAttribute()
                             if primary_key_or_not == "P":
@@ -300,292 +301,293 @@ class LDMImport(object):
 
                             attribute.lowerBound = 0
                             attribute.upperBound = 1
-                            if theEnum.name == "String":
-                                attribute.name = theAttributeName
-                                attribute.eType = context.xString
-                                attribute.eAttributeType = context.xString
-                            elif theEnum.name.startswith("String_"):
-                                attribute.name = theAttributeName
-                                attribute.eType = context.xString
-                                attribute.eAttributeType = context.xString
-                            elif theEnum.name == "Number":
-                                attribute.name = theAttributeName
-                                attribute.eType = context.xDouble
-                                attribute.eAttributeType = context.xDouble
-                            elif theEnum.name.startswith("Real_"):
-                                attribute.name = theAttributeName
-                                attribute.eType = context.xDouble
-                                attribute.eAttributeType = context.xDouble
-                            elif theEnum.name.startswith("Monetary"):
-                                attribute.name = theAttributeName
-                                attribute.eType = context.xInt
-                                attribute.eAttributeType = context.xInt
-                            elif theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
-                                attribute.name = theAttributeName
-                                attribute.eType = context.xInt
-                                attribute.eAttributeType = context.xInt
-                            elif theEnum.name.startswith("Non_negative_integers"):
-                                attribute.name = theAttributeName
-                                attribute.eType = context.xInt
-                                attribute.eAttributeType = context.xInt
-                            elif theEnum.name.startswith("All_possible_dates"):
-                                attribute.name = theAttributeName
-                                attribute.eType = context.xDate
-                                attribute.eAttributeType = context.xDate
+                            if the_enum.name == "String":
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_string
+                                attribute.eAttributeType = context.e_string
+                            elif the_enum.name.startswith("String_"):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_string
+                                attribute.eAttributeType = context.e_string
+                            elif the_enum.name == "Number":
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_double
+                                attribute.eAttributeType = context.e_double
+                            elif the_enum.name.startswith("Real_"):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_double
+                                attribute.eAttributeType = context.e_double
+                            elif the_enum.name.startswith("Monetary"):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
+                            elif the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
+                            elif the_enum.name.startswith("Non_negative_integers"):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
+                            elif the_enum.name.startswith("All_possible_dates"):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_date
+                                attribute.eAttributeType = context.e_date
 
-                            # This is a common domain used for String identifiers in BIRD in SQLDeveloper
+                            # This is a common domain used for String identifiers in BIRD
+                            # in SQLDeveloper
 
                             else:
-                                attribute.name = theAttributeName
-                                attribute.eType = theEnum
-                                attribute.eAttributeType = theEnum
+                                attribute.name = the_attribute_name
+                                attribute.eType = the_enum
+                                attribute.eAttributeType = the_enum
 
-                            if classIsDerived:
+                            if class_is_derived:
                                 operation = ELOperation()
                                 operation.lowerBound = 0
                                 operation.upperBound = 1
-                                if theEnum.name == "String":
-                                    operation.name = theAttributeName
-                                    operation.eType = context.xString
-                                elif theEnum.name.startswith("String_"):
-                                    operation.name = theAttributeName
-                                    operation.eType = context.xString
-                                elif theEnum.name == "Number":
-                                    operation.name = theAttributeName
-                                    operation.eType = context.xDouble
+                                if the_enum.name == "String":
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_string
+                                elif the_enum.name.startswith("String_"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_string
+                                elif the_enum.name == "Number":
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_double
 
-                                elif theEnum.name.startswith("Real_"):
-                                    operation.name = theAttributeName
-                                    operation.eType = context.xDouble
-                                elif theEnum.name.startswith("Monetary"):
-                                    operation.name = theAttributeName
-                                    operation.eType = context.xInt
-                                elif theEnum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
-                                    operation.name = theAttributeName
-                                    operation.eType = context.xInt
-                                elif theEnum.name.startswith("Non_negative_integers"):
-                                    operation.name = theAttributeName
-                                    operation.eType = context.xInt
-                                elif theEnum.name.startswith("All_possible_dates"):
-                                    operation.name = theAttributeName
-                                    operation.eType = context.xDate
+                                elif the_enum.name.startswith("Real_"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_double
+                                elif the_enum.name.startswith("Monetary"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                elif the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                elif the_enum.name.startswith("Non_negative_integers"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                elif the_enum.name.startswith("All_possible_dates"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_date
                                 else:
-                                    operation.name = theAttributeName
-                                    operation.eType = theEnum
+                                    operation.name = the_attribute_name
+                                    operation.eType = the_enum
 
-                        if (attributeKind == "Logical Type"):
-                            dataTypeID = row[14]
+                        if (attribute_kind == "Logical Type"):
+                            datatype_id = row[14]
                             try:
 
                                 attribute = ELAttribute()
                                 attribute.lowerBound = 0
                                 attribute.upperBound = 1
-                                attribute.name = amendedAttributeName
+                                attribute.name = amended_attribute_name
                                 attribute.eType = Utils.getEcoreDataTypeForDataType(
                                     self)
                                 attribute.eAttributeType = Utils.getEcoreDataTypeForDataType(
                                     self)
 
-                                if classIsDerived:
+                                if class_is_derived:
                                     operation = ELOperation()
                                     operation.lowerBound = 0
                                     operation.upperBound = 1
-                                    operation.name = amendedAttributeName
+                                    operation.name = amended_attribute_name
                                     operation.eType = Utils.getEcoreDataTypeForDataType(
                                         self)
 
                             except KeyError:
                                 print("missing datatype: ")
-                                print(dataTypeID)
+                                print(datatype_id)
 
                         try:
 
-                            theClass = context.classesMap[classID]
-                            theClass.eStructuralFeatures.extend([attribute])
-                            if classIsDerived:
-                                theClass.eOperations.extend([operation])
+                            the_class = context.classesMap[class_id]
+                            the_class.eStructuralFeatures.extend([attribute])
+                            if class_is_derived:
+                                the_class.eOperations.extend([operation])
 
                         except:
                             print("missing class2: ")
-                            print(classID)
+                            print(class_id)
 
-    def removeLDMAttributesAlreadyInSuperClass(self, context):
+    def remove_ldm_attributes_already_in_superclass(self, context):
         '''
         if we already have created an attribute in both a subclass and a superclass
         then we delete it in the subclass
         '''
-        for theClass in context.classesMap.values():
-            if len(theClass.eSuperTypes) > 0:
-                superclass = theClass.eSuperTypes[0]
+        for the_class in context.classesMap.values():
+            if len(the_class.eSuperTypes) > 0:
+                superclass = the_class.eSuperTypes[0]
                 if superclass:
 
-                    attributes = theClass.eStructuralFeatures
-                    attributesToDelete = []
-                    for theAttribute in attributes:
-                        if Utils.superclassContainsFeature( superclass, theAttribute):
-                            attributesToDelete.append(theAttribute)
+                    attributes = the_class.eStructuralFeatures
+                    attributes_to_delete = []
+                    for the_attribute in attributes:
+                        if Utils.superclassContainsFeature( superclass, the_attribute):
+                            attributes_to_delete.append(the_attribute)
 
-                    for theAttribute in attributesToDelete:
-                        theClass.eStructuralFeatures.remove(theAttribute)
+                    for the_attribute in attributes_to_delete:
+                        the_class.eStructuralFeatures.remove(the_attribute)
 
 
-    def addLDMRelationshipsBetweenClasses(self, context):
+    def add_ldm_relationships_between_classes(self, context):
         '''
         For each relationship in the LDM, add a reference between the relevant classes
         '''
-        fileLocation = context.fileDirectory + os.sep + "DM_Relations.csv"
-        headerSkipped = False
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        file_location = context.fileDirectory + os.sep + "DM_Relations.csv"
+        header_skipped = False
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
-                if not headerSkipped:
-                    headerSkipped = True
+                if not header_skipped:
+                    header_skipped = True
                 else:
-                    sourceID = row[16]
-                    targetID = row[18]
-                    sourceTo_Target_Cardinality = row[10]
-                    targetClassName = row[7]
-                    target_Optional = row[13]
+                    source_id = row[16]
+                    target_id = row[18]
+                    source_to_target_cardinality = row[10]
+                    target_class_name = row[7]
+                    target_optional = row[13]
 
-                    referenceName = "the" + \
-                        Utils.makeValidID(targetClassName)
-
-                    try:
-                        theClass = context.classesMap[sourceID]
-                    except KeyError:
-                        print("missing class1: " + sourceID)
+                    reference_name = "the" + \
+                        Utils.makeValidID(target_class_name)
 
                     try:
-                        targetClass = context.classesMap[targetID]
+                        the_class = context.classesMap[source_id]
                     except KeyError:
-                        print("missing target class: " + targetID)
+                        print("missing class1: " + source_id)
 
-                    numOfRelations = Utils.numberofRelationShipsToThisClass(
-                        theClass, targetClass)
-                    if numOfRelations > 0:
-                        referenceName = referenceName + str(numOfRelations)
+                    try:
+                        target_class = context.classesMap[target_id]
+                    except KeyError:
+                        print("missing target class: " + target_id)
 
-                    if target_Optional.strip() == "Y":
-                        if sourceTo_Target_Cardinality.strip() == "*":
-                            referenceName = referenceName + "s"
-                            eReference = ELReference()
-                            eReference.name = referenceName
-                            eReference.eType = targetClass
+                    num_of_relations = Utils.numberofRelationShipsToThisClass(
+                        the_class, target_class)
+                    if num_of_relations > 0:
+                        reference_name = reference_name + str(num_of_relations)
+
+                    if target_optional.strip() == "Y":
+                        if source_to_target_cardinality.strip() == "*":
+                            reference_name = reference_name + "s"
+                            ereference = ELReference()
+                            ereference.name = reference_name
+                            ereference.eType = target_class
                             # upper bound of -1 means there is no upper bounds, 
                             # so represents an open list of reference
-                            eReference.upperBound = -1
-                            eReference.lowerBound = 0
-                            eReference.containment = False
-                            if theClass.name.endswith("_derived"):
-                                theSourceTable = context.tableMap[theClass]
-                                theTargetTable = context.tableMap[targetClass]
-                                if not Utils.hasMemberCalled( theSourceTable, "sourceTable1"):
+                            ereference.upperBound = -1
+                            ereference.lowerBound = 0
+                            ereference.containment = False
+                            if the_class.name.endswith("_derived"):
+                                the_source_table = context.tableMap[the_class]
+                                the_target_table = context.tableMap[target_class]
+                                if not Utils.hasMemberCalled( the_source_table, "sourceTable1"):
 
-                                    sourceTablesReference = ELReference()
-                                    sourceTablesReference.name = "sourceTable1"
-                                    sourceTablesReference.eType = theTargetTable
-                                    sourceTablesReference.upperBound = -1
-                                    sourceTablesReference.lowerBound = 0
-                                    sourceTablesReference.containment = False
-                                    theSourceTable.eStructuralFeatures.append(
-                                        sourceTablesReference)
+                                    source_tables_reference = ELReference()
+                                    source_tables_reference.name = "sourceTable1"
+                                    source_tables_reference.eType = the_target_table
+                                    source_tables_reference.upperBound = -1
+                                    source_tables_reference.lowerBound = 0
+                                    source_tables_reference.containment = False
+                                    the_source_table.eStructuralFeatures.append(
+                                        source_tables_reference)
                                 else:
 
-                                    sourceTablesReference = ELReference()
-                                    sourceTablesReference.name = "sourceTable2"
-                                    sourceTablesReference.eType = theTargetTable
-                                    sourceTablesReference.upperBound = -1
-                                    sourceTablesReference.lowerBound = 0
-                                    sourceTablesReference.containment = False
-                                    theSourceTable.eStructuralFeatures.append(
-                                        sourceTablesReference)
+                                    source_tables_reference = ELReference()
+                                    source_tables_reference.name = "sourceTable2"
+                                    source_tables_reference.eType = the_target_table
+                                    source_tables_reference.upperBound = -1
+                                    source_tables_reference.lowerBound = 0
+                                    source_tables_reference.containment = False
+                                    the_source_table.eStructuralFeatures.append(
+                                        source_tables_reference)
                         else:
-                            eReference = ELReference()
-                            eReference.name = referenceName
-                            eReference.eType = targetClass
-                            eReference.upperBound = 1
-                            eReference.lowerBound = 0
-                            eReference.containment = False
-                            if theClass.name.endswith("_derived"):
-                                theSourceTable = context.tableMap[theClass]
-                                theTargetTable = context.tableMap[targetClass]
-                                if not Utils.hasMemberCalled(theSourceTable, "sourceTable1"):
+                            ereference = ELReference()
+                            ereference.name = reference_name
+                            ereference.eType = target_class
+                            ereference.upperBound = 1
+                            ereference.lowerBound = 0
+                            ereference.containment = False
+                            if the_class.name.endswith("_derived"):
+                                the_source_table = context.tableMap[the_class]
+                                the_target_table = context.tableMap[target_class]
+                                if not Utils.hasMemberCalled(the_source_table, "sourceTable1"):
 
-                                    sourceTablesReference = ELReference()
-                                    sourceTablesReference.name = "sourceTable1"
-                                    sourceTablesReference.eType = theTargetTable
-                                    sourceTablesReference.upperBound = -1
-                                    sourceTablesReference.lowerBound = 0
-                                    sourceTablesReference.containment = False
-                                    theSourceTable.eStructuralFeatures.append(
-                                        sourceTablesReference)
+                                    source_tables_reference = ELReference()
+                                    source_tables_reference.name = "sourceTable1"
+                                    source_tables_reference.eType = the_target_table
+                                    source_tables_reference.upperBound = -1
+                                    source_tables_reference.lowerBound = 0
+                                    source_tables_reference.containment = False
+                                    the_source_table.eStructuralFeatures.append(
+                                        source_tables_reference)
                                 else:
 
-                                    sourceTablesReference = ELReference()
-                                    sourceTablesReference.name = "sourceTable2"
-                                    sourceTablesReference.eType = theTargetTable
-                                    sourceTablesReference.upperBound = -1
-                                    sourceTablesReference.lowerBound = 0
-                                    sourceTablesReference.containment = False
-                                    theSourceTable.eStructuralFeatures.append(
-                                        sourceTablesReference)
+                                    source_tables_reference = ELReference()
+                                    source_tables_reference.name = "sourceTable2"
+                                    source_tables_reference.eType = the_target_table
+                                    source_tables_reference.upperBound = -1
+                                    source_tables_reference.lowerBound = 0
+                                    source_tables_reference.containment = False
+                                    the_source_table.eStructuralFeatures.append(
+                                        source_tables_reference)
                     else:
-                        if sourceTo_Target_Cardinality.strip() == "*":
-                            referenceName = referenceName + "s"
-                            eReference = ELReference()
-                            eReference.name = referenceName
-                            eReference.eType = targetClass
-                            eReference.upperBound = -1
-                            eReference.lowerBound = 1
-                            eReference.containment = False
-                            if theClass.name.endswith("_derived"):
+                        if source_to_target_cardinality.strip() == "*":
+                            reference_name = reference_name + "s"
+                            ereference = ELReference()
+                            ereference.name = reference_name
+                            ereference.eType = target_class
+                            ereference.upperBound = -1
+                            ereference.lowerBound = 1
+                            ereference.containment = False
+                            if the_class.name.endswith("_derived"):
 
-                                theSourceTable = context.tableMap[theClass]
-                                theTargetTable = context.tableMap[targetClass]
-                                if not Utils.hasMemberCalled(theSourceTable, "sourceTable1"):
+                                the_source_table = context.tableMap[the_class]
+                                the_target_table = context.tableMap[target_class]
+                                if not Utils.hasMemberCalled(the_source_table, "sourceTable1"):
 
-                                    sourceTablesReference = ELReference()
-                                    sourceTablesReference.name = "sourceTable1"
-                                    sourceTablesReference.eType = theTargetTable
-                                    sourceTablesReference.upperBound = -1
-                                    sourceTablesReference.lowerBound = 0
-                                    sourceTablesReference.containment = False
-                                    theSourceTable.eStructuralFeatures.append(
-                                        sourceTablesReference)
+                                    source_tables_reference = ELReference()
+                                    source_tables_reference.name = "sourceTable1"
+                                    source_tables_reference.eType = the_target_table
+                                    source_tables_reference.upperBound = -1
+                                    source_tables_reference.lowerBound = 0
+                                    source_tables_reference.containment = False
+                                    the_source_table.eStructuralFeatures.append(
+                                        source_tables_reference)
                                 else:
-                                    sourceTablesReference = ELReference(
-                                        "sourceTable2", theTargetTable, upper=-1, lower=0, containment=False)
-                                    theSourceTable.eStructuralFeatures.append(
-                                        sourceTablesReference)
+                                    source_tables_reference = ELReference(
+                                        "sourceTable2", the_target_table, upper=-1, lower=0, containment=False)
+                                    the_source_table.eStructuralFeatures.append(
+                                        source_tables_reference)
                         else:
-                            eReference = ELReference()
-                            eReference.name = referenceName
-                            eReference.eType = targetClass
-                            eReference.upperBound = 1
-                            eReference.lowerBound = 1
-                            eReference.containment = False
-                            if theClass.name.endswith("_derived"):
-                                theSourceTable = context.tableMap[theClass]
-                                theTargetTable = context.tableMap[targetClass]
-                                if not (Utils.hasMemberCalled(theSourceTable, "sourceTable1")):
+                            ereference = ELReference()
+                            ereference.name = reference_name
+                            ereference.eType = target_class
+                            ereference.upperBound = 1
+                            ereference.lowerBound = 1
+                            ereference.containment = False
+                            if the_class.name.endswith("_derived"):
+                                the_source_table = context.tableMap[the_class]
+                                the_target_table = context.tableMap[target_class]
+                                if not (Utils.hasMemberCalled(the_source_table, "sourceTable1")):
 
-                                    sourceTablesReference = ELReference()
-                                    sourceTablesReference.name = "sourceTable1"
-                                    sourceTablesReference.eType = theTargetTable
-                                    sourceTablesReference.upperBound = -1
-                                    sourceTablesReference.lowerBound = 0
-                                    sourceTablesReference.containment = False
-                                    theSourceTable.eStructuralFeatures.append(
-                                        sourceTablesReference)
+                                    source_tables_reference = ELReference()
+                                    source_tables_reference.name = "sourceTable1"
+                                    source_tables_reference.eType = the_target_table
+                                    source_tables_reference.upperBound = -1
+                                    source_tables_reference.lowerBound = 0
+                                    source_tables_reference.containment = False
+                                    the_source_table.eStructuralFeatures.append(
+                                        source_tables_reference)
                                 else:
 
-                                    sourceTablesReference = ELReference()
-                                    sourceTablesReference.name = "sourceTable2"
-                                    sourceTablesReference.eType = theTargetTable
-                                    sourceTablesReference.upperBound = -1
-                                    sourceTablesReference.lowerBound = 0
-                                    sourceTablesReference.containment = False
-                                    theSourceTable.eStructuralFeatures.append(
-                                        sourceTablesReference)
-                    if not (theClass is None):
-                        theClass.eStructuralFeatures.append(eReference)
+                                    source_tables_reference = ELReference()
+                                    source_tables_reference.name = "sourceTable2"
+                                    source_tables_reference.eType = the_target_table
+                                    source_tables_reference.upperBound = -1
+                                    source_tables_reference.lowerBound = 0
+                                    source_tables_reference.containment = False
+                                    the_source_table.eStructuralFeatures.append(
+                                        source_tables_reference)
+                    if not the_class is None:
+                        the_class.eStructuralFeatures.append(ereference)

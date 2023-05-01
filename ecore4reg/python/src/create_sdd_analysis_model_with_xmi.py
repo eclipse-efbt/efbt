@@ -17,16 +17,15 @@ Created on 25 April 2022
 from sdd_context import SDDContext
 
 from import_sdd_to_analysis_model import ImportSDD
-from persist_to_file import PersistToFile
 
 if __name__ == '__main__':
     sdd_context = SDDContext()
 
-    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources/sdd'
-    context.output_directory = '/workspaces/efbt/ecore4reg/python/results/sdd'
+    sdd_context.file_directory = '/workspaces/efbt/ecore4reg/python/resources/sdd'
+    sdd_context.output_directory = '/workspaces/efbt/ecore4reg/python/results/sdd'
 
-    ImportSDD().import_sdd(context)
+    ImportSDD().import_sdd(sdd_context)
 
-    Ecore4regToEcoreConverter().convertPackagesInContext(context)
-    persister = PersistToFile()
-    persister.save_analysis_model_as_xmi_files(context)
+    #Ecore4regToEcoreConverter().convertPackagesInContext(sdd_context)
+    #persister = PersistToFile()
+    #persister.save_analysis_model_as_xmi_files(sdd_context)
