@@ -60,7 +60,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for initialiseVTLModule
         '''
-        vtl_module = context.vtlModule
+        vtl_module = context.vtl_module
         vtl_module.VTLSchemes = VTLSchemesModule(name="VTLSchemes")
         vtl_module.VTLGeneratedOutputLayers = VTLGeneratedOutputlayerModule(
             name="VTLGeneratedOutputLayers")
@@ -78,7 +78,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for importFinrepEIL_to_ROLTransformationSchemes
         '''
-        file_location = context.fileDirectory + os.sep + "transformation_scheme.csv"
+        file_location = context.file_directory + os.sep + "transformation_scheme.csv"
 
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity,
@@ -96,14 +96,14 @@ class ImportFinrepVTL(object):
                     if (transformation_scheme_id.find('_FINREP') > 0 and phase == 'EIL_ROL') or (transformation_scheme_id.startswith('P_') and transformation_scheme_id.endswith('_E_1')):
                         vtl_scheme = VTLScheme()
                         vtl_scheme.scheme_id = transformation_scheme_id
-                        context.vtlModule.VTLSchemes.vTLSchemes.append(
+                        context.vtl_module.VTLSchemes.vTLSchemes.append(
                             vtl_scheme)
 
     def import_transformations(self, context):
         '''
         Doc for importTransformations
         '''
-        file_location = context.fileDirectory + os.sep + "transformations.csv"
+        file_location = context.file_directory + os.sep + "transformations.csv"
 
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity,
@@ -140,7 +140,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for schemesContains
         '''
-        for scheme in context.vtlModule.VTLSchemes.vTLSchemes:
+        for scheme in context.vtl_module.VTLSchemes.vTLSchemes:
             if scheme.scheme_id == scheme_id:
                 return True
         return False
@@ -149,7 +149,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for lookupScheme
         '''
-        for scheme in context.vtlModule.VTLSchemes.vTLSchemes:
+        for scheme in context.vtl_module.VTLSchemes.vTLSchemes:
             if scheme.scheme_id == scheme_id:
                 return scheme
         return None
@@ -158,7 +158,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for buildROLToIntermediateLayerLink
         '''
-        for scheme in context.vtlModule.VTLSchemes.vTLSchemes:
+        for scheme in context.vtl_module.VTLSchemes.vTLSchemes:
 
             if scheme.scheme_id.startswith("G_F") and scheme.scheme_id.endswith("_REF_UNFLDD_FINREP_1"):
 
@@ -171,7 +171,7 @@ class ImportFinrepVTL(object):
                 output_layer.outputLayer = ImportFinrepVTL.find_entity(
                     self, context, output_layer_name + "_REF_OutputItem")
 
-                context.vtlModule.VTLGeneratedOutputLayers.vTLGeneratedOutputlayerModules.append(
+                context.vtl_module.VTLGeneratedOutputLayers.vTLGeneratedOutputlayerModules.append(
                     output_layer)
                 for transformation in scheme.expressions:
                     expression = transformation.expression
@@ -208,12 +208,12 @@ class ImportFinrepVTL(object):
         '''
         Doc for findEntity
         '''
-        for the_entity in context.inputLayerEntitiesPackage.eClassifiers:
+        for the_entity in context.input_layer_entities_package.eClassifiers:
             if isinstance(the_entity, ELClass):
                 if the_entity.name == output_layer_name:
                     return the_entity
 
-        for the_entity in context.outputLayerEntitiesPackage.eClassifiers:
+        for the_entity in context.output_layer_entities_package.eClassifiers:
             if isinstance(the_entity, ELClass):
                 if the_entity.name == output_layer_name:
                     return the_entity
@@ -225,7 +225,7 @@ class ImportFinrepVTL(object):
         Doc for findIntermediateLayer
         '''
 
-        for layer in context.vtlModule.VTLGeneratedIntermediateLayers.vTLGeneratedIntermediateLayers:
+        for layer in context.vtl_module.VTLGeneratedIntermediateLayers.vTLGeneratedIntermediateLayers:
 
             if layer.name == layer_name:
                 return layer
@@ -236,7 +236,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for buildOutputLayerToVTLLayerMap
         '''
-        file_location = context.fileDirectory + os.sep + "transformations.csv"
+        file_location = context.file_directory + os.sep + "transformations.csv"
 
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity,
@@ -272,7 +272,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for buildListOfEnrichedLayers
         '''
-        for scheme in context.vtlModule.VTLSchemes.vTLSchemes:
+        for scheme in context.vtl_module.VTLSchemes.vTLSchemes:
 
             if (scheme.scheme_id.startswith("P_") and scheme.scheme_id.endswith("_E_1")):
                 ImportFinrepVTL.build_list_of_enriched_layers_for_scheme(
@@ -282,7 +282,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for buildListOfIntermediateFinrepLayers
         '''
-        for scheme in context.vtlModule.VTLSchemes.vTLSchemes:
+        for scheme in context.vtl_module.VTLSchemes.vTLSchemes:
 
             if not (scheme.scheme_id.startswith("G_F_")) and (not ((scheme.scheme_id.startswith("P_") and scheme.scheme_id.endswith("_E_1")))):
                 ImportFinrepVTL.build_list_of_intermediate_finrep_layers_for_scheme(
@@ -295,7 +295,7 @@ class ImportFinrepVTL(object):
         for transformation in scheme.expressions:
 
             the_intermediate_layer = None
-            for enriched_layer in context.vtlModule.VTLEnrichedLayers.vTLGeneratedIntermediateLayers:
+            for enriched_layer in context.vtl_module.VTLEnrichedLayers.vTLGeneratedIntermediateLayers:
                 intermediate_layer_name = enriched_layer.name
                 if intermediate_layer_name == scheme.scheme_id:
                     the_intermediate_layer = enriched_layer
@@ -304,7 +304,7 @@ class ImportFinrepVTL(object):
                 the_intermediate_layer = VTLGeneratedIntermediateLayer(
                     name=scheme.scheme_id)
                 the_intermediate_layer.isEnrichment = True
-                context.vtlModule.VTLEnrichedLayers.vTLGeneratedIntermediateLayers.append(
+                context.vtl_module.VTLEnrichedLayers.vTLGeneratedIntermediateLayers.append(
                     the_intermediate_layer)
 
             the_intermediate_layer.transformations.append(transformation)
@@ -319,7 +319,7 @@ class ImportFinrepVTL(object):
             expression_lhs = ImportFinrepVTL.strip_comment(
                 self, transformation_text[0:index_of_lhs_end])
             the_intermediate_layer = None
-            for intermediate_layer in context.vtlModule.VTLGeneratedIntermediateLayers.vTLGeneratedIntermediateLayers:
+            for intermediate_layer in context.vtl_module.VTLGeneratedIntermediateLayers.vTLGeneratedIntermediateLayers:
                 intermediate_layer_name = intermediate_layer.name
                 if intermediate_layer_name == expression_lhs:
                     the_intermediate_layer = intermediate_layer
@@ -330,7 +330,7 @@ class ImportFinrepVTL(object):
                 the_intermediate_layer.isEnrichment = False
                 the_intermediate_layer.dependant_enriched_cubes = ImportFinrepVTL.find_enriched_cube_for(
                     self, context, expression_lhs)
-                context.vtlModule.VTLGeneratedIntermediateLayers.vTLGeneratedIntermediateLayers.append(
+                context.vtl_module.VTLGeneratedIntermediateLayers.vTLGeneratedIntermediateLayers.append(
                     the_intermediate_layer)
 
             the_intermediate_layer.transformations.append(transformation)
@@ -353,7 +353,7 @@ class ImportFinrepVTL(object):
         enriched_cube = "P_" + scheme_id[0:index_of_scheme_end] + "_E_1"
 
         return_layer = None
-        for enriched_layer in context.vtlModule.VTLEnrichedLayers.vTLGeneratedIntermediateLayers:
+        for enriched_layer in context.vtl_module.VTLEnrichedLayers.vTLGeneratedIntermediateLayers:
 
             if enriched_layer.name == enriched_cube:
                 return_layer = enriched_layer
@@ -364,7 +364,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for addReports
         '''
-        file_location = context.fileDirectory + os.sep + "in_scope_reports.csv"
+        file_location = context.file_directory + os.sep + "in_scope_reports.csv"
 
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity,
@@ -378,7 +378,7 @@ class ImportFinrepVTL(object):
                 else:
                     report_template = row[0]
                     view = View(name="view_" + report_template)
-                    context.viewModule.views.append(view)
+                    context.view_module.views.append(view)
 
                     task = ScriptTask(name="task_" + report_template)
                     context.workflowModule.subProcess[0].flowElements.append(
@@ -398,7 +398,7 @@ class ImportFinrepVTL(object):
             view_vtl = VTLForView(name="vtl_" + view.name)
             view_vtl.view = view
             view_vtl.vtl = rol_vtl
-            context.vtlModule.VTLForViews.vTLForViews.append(view_vtl)
+            context.vtl_module.VTLForViews.vTLForViews.append(view_vtl)
 
             for intermediate_layer in rol_vtl.dependant_intermediate_layers:
 
@@ -419,7 +419,7 @@ class ImportFinrepVTL(object):
                     vtl_for_selection_layer.selectionLayer = layer_sql
                     vtl_for_selection_layer.outputLayer = rol_vtl
                     vtl_for_selection_layer.intermediateLayer = intermediate_layer
-                    context.vtlModule.VTLForSelectionLayers.vTLForSelectionLayers.append(
+                    context.vtl_module.VTLForSelectionLayers.vTLForSelectionLayers.append(
                         vtl_for_selection_layer)
 
                     view.selectionLayerSQL.extend([layer_sql])
@@ -430,7 +430,7 @@ class ImportFinrepVTL(object):
         Doc for findOutputLayerVTL
         '''
 
-        for rol in context.vtlModule.VTLGeneratedOutputLayers.vTLGeneratedOutputlayerModules:
+        for rol in context.vtl_module.VTLGeneratedOutputLayers.vTLGeneratedOutputlayerModules:
             if not (rol.outputLayer is None) and (rol.outputLayer.name == output_layer_name):
                 return rol
 
@@ -439,7 +439,7 @@ class ImportFinrepVTL(object):
         Doc for findEntityIntermediateLayerLink
         '''
 
-        for link in context.vtlModule.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks:
+        for link in context.vtl_module.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks:
             if link.VTLIntermediateLayer == intermediate_layer:
                 return link
 
@@ -460,7 +460,7 @@ class ImportFinrepVTL(object):
         '''
         Doc for buildIntermediateLayerToInputLayer
         '''
-        file_location = context.fileDirectory + os.sep + "VTL_layer_to_IL.csv"
+        file_location = context.file_directory + os.sep + "VTL_layer_to_IL.csv"
         # il_name = layerSQL.name
         # amended_il_name = "FINREP_REF_" + il_name + "_REF_FINREP 3.0"
 
@@ -485,5 +485,5 @@ class ImportFinrepVTL(object):
                         self, context, input_layer)
                     link.filter = filter1
                     link.filterName = filter_name
-                    context.vtlModule.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks.append(
+                    context.vtl_module.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks.append(
                         link)

@@ -32,13 +32,13 @@ if __name__ == '__main__':
     ROLImport().doImport(context)
     Ecore4regToEcoreConverter().convert_packages_in_ontext(context)
     persister = PersistToFile()
-    persister.saveModelAsEcoreFile(context)
-    persister.saveModelAsEcore4RegFile(context)
-    persister.saveModelAsJSONFiles(context)
+    persister.save_model_as_ecore_file(context)
+    persister.save_model_as_ecore4reg_file(context)
+    persister.save_model_as_json_files(context)
 
-    context.inScopeFileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.in_scope_file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     standardMatchingQueries = StandardMatchingQueries()
-    standardMatchingQueries.createVariableNameToCodeMap(context)
-    standardMatchingQueries.createDerivableList(context)
+    standardMatchingQueries.create_variable_name_to_code_map(context)
+    standardMatchingQueries.create_derivable_list(context)
     standardMatchingQueries.query1(context)
     

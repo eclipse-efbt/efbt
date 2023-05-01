@@ -28,7 +28,7 @@ class ImportSDD(object):
         ImportSDD.create_all_members(self, sdd_context)
         ImportSDD.create_all_variables(self, sdd_context)
         ImportSDD.create_all_subdomains(self, sdd_context)
-        ImportSDD.create_all_subdomainEnumerations(self, sdd_context)
+        ImportSDD.create_all_subdomain_enumerations(self, sdd_context)
         # ImportSDD.createVariableSetToVariableMap(self, context)
         # ImportSDD.createVariableToDomainMap(self, context)
         # ImportSDD.createDomainToDomainNameMap(self, context)
@@ -38,10 +38,10 @@ class ImportSDD(object):
         '''
         import all the domains
         '''
-        fileLocation = context.file_directory + os.sep + "domain.csv"
+        file_location = context.file_directory + os.sep + "domain.csv"
         header_skipped = False
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if not header_skipped:
@@ -53,13 +53,13 @@ class ImportSDD(object):
                     domain_id = row[3]
                     is_enumerated = row[5]
                     is_reference = row[6]
-                    # domainName = Utils.makeValidID(row[3])
+                    # domainName = Utils.make_valid_id(row[3])
                     domain_name = row[8]
-                    context.domainToDomainNameMap[domain_id] = domain_name
+                    context.domain_to_domain_name_map[domain_id] = domain_name
 
                     # creat the Domain abject and set its fields
                     domain = DOMAIN(
-                        name=ImportSDD.replaceDots(self, domain_id))
+                        name=ImportSDD.replace_dots(self, domain_id))
                     domain.code = code
 
                     # if (dataTypeString != null) {
@@ -85,7 +85,7 @@ class ImportSDD(object):
 					# }
 
                     domain.description = description
-                    domain.domain_id = ImportSDD.replaceDots(self, domain_id)
+                    domain.domain_id = ImportSDD.replace_dots(self, domain_id)
                     domain.displayName = domain_name
                     if is_enumerated:
                         domain.is_enumerated = True
@@ -118,8 +118,8 @@ class ImportSDD(object):
                     member_id = row[4]
                     member_name = row[5]
                     member = MEMBER(
-                        name=ImportSDD.replaceDots(self, member_id))
-                    member.member_id = ImportSDD.replaceDots(self, member_id)
+                        name=ImportSDD.replace_dots(self, member_id))
+                    member.member_id = ImportSDD.replace_dots(self, member_id)
                     member.code = code
                     member.description = description
                     member.displayName = member_name
@@ -129,6 +129,9 @@ class ImportSDD(object):
                     context.members.members.append(member)
 
     def create_all_variables(self, context):
+        '''
+        import all the variables
+        '''
 
         fileLocation = context.file_directory + os.sep + "variable.csv"
         header_skipped = False
@@ -145,9 +148,9 @@ class ImportSDD(object):
                     name = row[4]
                     variable_id = row[6]
                     variable = VARIABLE(
-                        name=ImportSDD.replaceDots(self, variable_id))
+                        name=ImportSDD.replace_dots(self, variable_id))
                     variable.code = code
-                    variable.variable_id = ImportSDD.replaceDots(
+                    variable.variable_id = ImportSDD.replace_dots(
                         self, variable_id)
                     variable.displayName = name
                     domain = ImportSDD.get_domain_with_id(self, context, domain_id)
@@ -157,6 +160,9 @@ class ImportSDD(object):
                     context.variables.variables.append(variable)
 
     def create_all_subdomains(self, context):
+        '''
+        import all the subdomains
+        '''
 
         fileLocation = context.file_directory + os.sep + "subdomain.csv"
         header_skipped = False
@@ -175,7 +181,7 @@ class ImportSDD(object):
 
                     subDomain = SUBDOMAIN()
                     subDomain.code = code
-                    subDomain.subdomain_id = ImportSDD.replaceDots(
+                    subDomain.subdomain_id = ImportSDD.replace_dots(
                         self, subdomain_id)
                     subDomain.displayName = name
                     subDomain.description = description
@@ -184,12 +190,15 @@ class ImportSDD(object):
                     subDomain.domain_id = domain
                     context.subdomains.subdomains.append(subDomain);
 
-    def create_all_subdomainEnumerations(self, context):
+    def create_all_subdomain_enumerations(self, context):
+        '''
+        import all the subdomain enumerations
+        '''
 
-        fileLocation = context.file_directory + os.sep + "subdomain_enumeration.csv"
+        file_location = context.file_directory + os.sep + "subdomain_enumeration.csv"
         header_skipped = False
 
-        with open(fileLocation,  encoding='utf-8') as csvfile:
+        with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if not header_skipped:
@@ -202,25 +211,37 @@ class ImportSDD(object):
         domain = subdomain.domain_id
         member = ImportSDD.get_member_with_id_and_domain(
             self, context, member_id, domain)
-        subDomainEnum = SUBDOMAIN_ENUMERATION()
-        subDomainEnum.member_id = member
-        subdomain.items.append(subDomainEnum)
+        subdomain_enum = SUBDOMAIN_ENUMERATION()
+        subdomain_enum.member_id = member
+        subdomain.items.append(subdomain_enum)
 
     def get_domain_with_id(self, context, domain_id_string):
+        '''
+        get the domain with the given id
+        '''
         for domain in context.domains.domains:
             if domain.domain_id == domain_id_string:
                 return domain
 
     def get_subdomain_with_id(self, context, subdomain_id_string):
+        '''
+        get the subdomain with the given id
+        '''
 
         for subdomain in context.subdomains.subdomains:
             if subdomain.subdomain_id == subdomain_id_string:
                 return subdomain
 
     def get_member_with_id_and_domain(self, context, member_id, domain):
+        '''
+        get the member with the given id and domain
+        '''
         for member in context.members.members:
             if (member_id == member.name) and (member.domain_id == domain):
                 return member
 
-    def replaceDots(self, text):
+    def replace_dots(self, text):
+        '''
+        replace dots with underscores
+        '''
         return text.replace('.', '_')

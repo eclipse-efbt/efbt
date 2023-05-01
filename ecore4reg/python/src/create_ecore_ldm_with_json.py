@@ -32,6 +32,6 @@ if __name__ == '__main__':
 
     Ecore4regToEcoreConverter().convert_packages_in_ontext(context)
     persister = PersistToFile()
-    persister.saveModelAsEcoreFile(context)
-    persister.saveModelAsEcore4RegFile(context)
-    persister.saveModelAsJSONFiles(context)
+    persister.save_model_as_ecore_file(context)
+    persister.save_model_as_ecore4reg_file(context)
+    persister.save_model_as_json_files(context)

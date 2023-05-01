@@ -29,7 +29,7 @@ class Utils(object):
     '''
 
     @classmethod
-    def uniqueValue(cls, theEnum, adaptedValue):
+    def unique_value(cls, the_enum, adapted_value):
         '''
             if the adapted value already exists in the enum then
             append it with _x2
@@ -37,9 +37,9 @@ class Utils(object):
             then append with_x3 instead
             if that exists then _x4 etc.
         '''
-        newAdaptedValue = adaptedValue
-        if Utils.containsLiteral(theEnum.eLiterals, adaptedValue):
-            newAdaptedValue = adaptedValue + "_x2"
+        new_adapted_value = adapted_value
+        if Utils.contains_literal(the_enum.eLiterals, adapted_value):
+            new_adapted_value = adapted_value + "_x2"
         counter = 1
         finished = False
         # within the bird data model there is re-use of the same id or name
@@ -53,66 +53,53 @@ class Utils(object):
         limit = 32
         while ((counter < limit) and not (finished)):
             counter = counter + 1
-            if Utils.containsLiteral(theEnum.eLiterals, adaptedValue + "_x" + str(counter)):
-                newAdaptedValue = adaptedValue + "_x" + str(counter+1)
+            if Utils.contains_literal(the_enum.eLiterals, adapted_value + "_x" + str(counter)):
+                new_adapted_value = adapted_value + "_x" + str(counter+1)
             else:
                 finished = True
 
-        return newAdaptedValue
+        return new_adapted_value
 
     @classmethod
-    def uniqueName(cls, theEnum, enumUsedName):
+    def unique_name(cls, the_enum, enum_used_name):
         '''
         if the adapted name already exists in the enum then append it with _x2
         if the that string appended with _x2 already exists, then append with_x3 instead
         if that exists then _x4 etc.
         '''
-        newAdaptedName = enumUsedName
+        new_adapted_name = enum_used_name
         counter = 1
         finished = False
         limit = 32
-        if Utils.containsName(theEnum.eLiterals, enumUsedName):
-            newAdaptedName = enumUsedName + "_x2"
+        if Utils.contains_name(the_enum.eLiterals, enum_used_name):
+            new_adapted_name = enum_used_name + "_x2"
 
-        while (counter < limit) and not (finished):
+        while (counter < limit) and not finished:
             counter = counter + 1
-            if Utils.containsName(theEnum.eLiterals, enumUsedName + "_x" + str(counter)):
-                newAdaptedName = enumUsedName + "_x" + str(counter+1)
+            if Utils.contains_name(the_enum.eLiterals, enum_used_name + "_x" + str(counter)):
+                new_adapted_name = enum_used_name + "_x" + str(counter+1)
             else:
                 finished = True
 
-        return newAdaptedName
+        return new_adapted_name
 
     @classmethod
-    def getMembersOfTheDomain(cls,  theDomain, memberIDToDomainMap):
+    def get_members_of_the_domain(cls,  the_domain, member_id_to_domain_map):
         '''
         return a list of members that belong to the domain
         '''
-        returnList = []
-        for key, value in memberIDToDomainMap.items():
-            if value == theDomain:
-                returnList.append(key)
-        return returnList
+        return_list = []
+        for key, value in member_id_to_domain_map.items():
+            if value == the_domain:
+                return_list.append(key)
+        return return_list
 
     @classmethod
-    def saveModelAsXMIFile(cls, context):
-        '''
-         save model as an xmi file representing an object tree.
-        '''
-        rset = ResourceSet()
-
-        # This will create an XMI resource
-        resource = rset.create_resource(
-            URI(context.outputDirectory + 'IL.ecore4reg'))
-        resource.append(context.ecore4regPackage)
-        resource.save()
-
-    @classmethod
-    def superclassContainsFeature(cls, theSuperClass, attribute):
+    def superclass_contains_feature(cls, the_superclass, attribute):
         '''
         Checks if a superclass contains the attribute
         '''
-        attributes = theSuperClass.eStructuralFeatures
+        attributes = the_superclass.eStructuralFeatures
         contains = False
         for attribute2 in attributes:
             if attribute2.name == attribute.name:
@@ -121,50 +108,50 @@ class Utils(object):
         return contains
 
     @classmethod
-    def hasMemberCalled(cls, theClass, memberName):
+    def has_member_called(cls, the_class, member_name):
         '''
         Checks if the class has a member with the name memberName
         '''
 
-        members = theClass.members
+        members = the_class.members
         contains = False
         for member in members:
-            if member.name == memberName:
+            if member.name == member_name:
                 contains = True
 
         return contains
 
     @classmethod
-    def numberofRelationShipsToThisClass(cls, sourceClass, targetClass):
+    def number_of_relationships_to_this_class(cls, source_class, target_class):
         '''
         Checks how many relationships there are between 2 classes
         It is possible that one class might have 2 different relationships 
         to the same class.
         '''
-        features = sourceClass.eStructuralFeatures
+        features = source_class.eStructuralFeatures
         counter = 0
         # do this for relationship attributes only.
         for feature in features:
             if isinstance(feature, ELReference):
-                featureType = feature.eType
-                if featureType == targetClass:
+                feature_type = feature.eType
+                if feature_type == target_class:
                     counter = counter+1
 
         return counter
 
     @classmethod
-    def makeValidID(cls, inputString):
+    def make_valid_id(cls, input_string):
         ''' 
         Tranlate text to be a valid id, without special characters, and following
-        the rules for valid id's in XCoreL
+        the rules for valid id's in Ecore4Reg
         '''
 
         # we do not allow id's to start with  number, if it does then we prepend with an underscore
-        if len(inputString) > 0:
-            if ((inputString[0] >= '0') and (inputString[0] <= '9')):
-                inputString = "_" + inputString
+        if len(input_string) > 0:
+            if ((input_string[0] >= '0') and (input_string[0] <= '9')):
+                input_string = "_" + input_string
         # we replace special characters not allowed in id's with an underscore
-        amendedInputString = inputString.replace('  ', ' ').replace(' ', '_').replace(')', '_').replace('(', '_') \
+        amended_input_string = input_string.replace('  ', ' ').replace(' ', '_').replace(')', '_').replace('(', '_') \
             .replace(',', '_').replace('\'', '_').replace('\n', '_').replace('\r', '_').replace('\'t', '_').replace('new', 'New') \
             .replace('\\', '_').replace('/', '_').replace('-', '_').replace(':', '_') \
             .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_gt') \
@@ -178,100 +165,100 @@ class Utils(object):
             .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
             .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_')
 
-        returnString = Utils.replaceAcutesGravesAndCircumflexes(
-            amendedInputString).replace('\'', '_')
+        return_string = Utils.replace_acutes_graves_and_circumflexes(
+            amended_input_string).replace('\'', '_')
 
-        if returnString == "op":
-            returnString = "_op"
-        return returnString
+        if return_string == "op":
+            return_string = "_op"
+        return return_string
 
     @classmethod
-    def replaceAcutesGravesAndCircumflexes(cls, theInputString):
+    def replace_acutes_graves_and_circumflexes(cls, the_input_string):
         '''
         We replace letters with acutes , graves, and circumflexes, with the basic letter.
         So for example "a acute" is replaced with "a"
         '''
-        return unidecode.unidecode(theInputString)
+        return unidecode.unidecode(the_input_string)
 
     @classmethod
-    def inEnumBlackList(cls, adaptedEnumName):
+    def in_enum_excluded_list(cls, adapted_enum_name):
         '''
         TODO not sure if we still need this, it was introduces to deal with
         problematic domains in the past.
         '''
-        if ((adaptedEnumName == "All_last_days_of_months___YYYY_MM") or
-            (adaptedEnumName == "All_last_days_of_quarters___YYYY_MM") or
-                (adaptedEnumName == "All_possible_dates_YYYY_MM_DD")):
+        if ((adapted_enum_name == "All_last_days_of_months___YYYY_MM") or
+            (adapted_enum_name == "All_last_days_of_quarters___YYYY_MM") or
+                (adapted_enum_name == "All_possible_dates_YYYY_MM_DD")):
 
-            print(" field in blacklist: " + adaptedEnumName)
+            print(" field in excludedlist: " + adapted_enum_name)
             return True
         else:
             return False
 
     @classmethod
-    def containsLiteral(cls, members, adaptedValue):
+    def contains_literal(cls, members, adapted_value):
         '''
         checks if an enum contains a particular literal
         '''
         contains = False
-        for eEnumLiteral in members:
-            if eEnumLiteral.name.lower() == adaptedValue.lower():
+        for e_enum_literal in members:
+            if e_enum_literal.name.lower() == adapted_value.lower():
                 contains = True
 
         return contains
 
     @classmethod
-    def containsName(cls, members, adaptedName):
+    def contains_name(cls, members, adapted_name):
         '''
         checks if an enum contains a particular name
         '''
         contains = False
-        for eEnumLiteral in members:
-            if (eEnumLiteral.literal.lower() == adaptedName.lower()):
+        for e_enum_literal in members:
+            if e_enum_literal.literal.lower() == adapted_name.lower():
                 contains = True
 
         return contains
 
     @classmethod
-    def getLiteralsForEnumeration(cls, domain, membersModule):
+    def get_literals_for_enumeration(cls, domain, members_module):
         '''
         returns the list of literals for an enumerations
         '''
-        returnMembersList = []
-        for member in membersModule.members:
+        return_members_list = []
+        for member in members_module.members:
             if member.domain_id == domain:
-                returnMembersList.append(member)
-        return returnMembersList
+                return_members_list.append(member)
+        return return_members_list
 
     @classmethod
-    def getEcoreDataTypeForDataType(cls, context):
+    def get_ecore_datatype_for_datatype(cls, context):
         '''
         returns the ecore data type for a data type
         '''
         return context.e_string
 
     @classmethod
-    def findROLEnum(cls, enumName, enumMap):
+    def find_rol_enum(cls, enum_name, enum_map):
         '''
         returns the enum for a reference output layer
         '''
 
-        returnVal = None
-        for key, value in enumMap.items():
-            if value.name.lower() == enumName.lower():
-                returnVal = value
+        return_val = None
+        for key, value in enum_map.items():
+            if value.name.lower() == enum_name.lower():
+                return_val = value
 
-        return returnVal
+        return return_val
 
     @classmethod
-    def specialCases(cls, newAdaptedValue, counter):
+    def special_cases(cls, new_adapted_value, counter):
         '''
         Deals with special cases where we need to adapt the name of the enum
         '''
 
-        returnVal = newAdaptedValue
-        if newAdaptedValue == "A_S":
-            returnVal = "A_S_dup"
-        if newAdaptedValue == "s_p_":
-            returnVal = "s_p_dup" + str(counter)
-        return returnVal
+        return_val = new_adapted_value
+        if new_adapted_value == "A_S":
+            return_val = "A_S_dup"
+        if new_adapted_value == "s_p_":
+            return_val = "s_p_dup" + str(counter)
+        return return_val

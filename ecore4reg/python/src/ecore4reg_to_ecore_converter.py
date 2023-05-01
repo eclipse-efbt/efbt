@@ -35,14 +35,14 @@ class Ecore4regToEcoreConverter(object):
         '''
         Documentation for convertPackagesInContext
         '''
-        context.inputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(
-            self, context.inputLayerEnumsPackage, context)
-        context.outputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(
-            self, context.outputLayerEnumsPackage, context)
-        context.inputLayerEntitiesEcorePackage = Ecore4regToEcoreConverter.convert(
-            self, context.inputLayerEntitiesPackage, context)
-        context.outputLayerEntitiesEcorePackage = Ecore4regToEcoreConverter.convert(
-            self, context.outputLayerEntitiesPackage, context)
+        context.input_layer_enums_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.input_layer_enums_package, context)
+        context.output_layer_enums_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.output_layer_enums_package, context)
+        context.input_layer_entities_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.input_layer_entities_package, context)
+        context.output_layer_entities_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.output_layer_entities_package, context)
 
     def convert(self, el_package, context):
         '''
@@ -166,13 +166,13 @@ class Ecore4regToEcoreConverter(object):
         return_enum = None
 
         if ecore_package.name == 'input_layer_entities':
-            for classifier in context.inputLayerEnumsEcorePackage.eClassifiers:
+            for classifier in context.input_layer_enums_ecore_package.eClassifiers:
                 if isinstance(classifier, EEnum):
                     if classifier.name == type_name:
                         return_enum = classifier
 
         if ecore_package.name == 'output_layer_entities':
-            for classifier in context.outputLayerEnumsEcorePackage.eClassifiers:
+            for classifier in context.output_layer_enums_ecore_package.eClassifiers:
                 if isinstance(classifier, EEnum):
                     if classifier.name == type_name:
                         return_enum = classifier

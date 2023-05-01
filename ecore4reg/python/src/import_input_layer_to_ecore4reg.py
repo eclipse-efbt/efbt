@@ -46,7 +46,7 @@ class InputLayerImport(object):
         for each entity in the IL, create a class and add it to the package
         '''
 
-        file_location = context.fileDirectory + os.sep + "DM_Tables.csv"
+        file_location = context.file_directory + os.sep + "DM_Tables.csv"
 
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity,
@@ -64,7 +64,7 @@ class InputLayerImport(object):
 
                     # assume that SQLDve gives valid IDS fro table names according
                     # to the validity rules of ECoreL
-                    altered_class_name = Utils.makeValidID(class_name)
+                    altered_class_name = Utils.make_valid_id(class_name)
 
                     if (altered_class_name.endswith("_derived")):
                         eclass = ELClass(name=altered_class_name)
@@ -84,14 +84,14 @@ class InputLayerImport(object):
                         eclass_table_operation.upperBound = -1
                         eclass_table_operation.lowerBound = 0
                         eclass_table.eOperations.append(eclass_table_operation)
-                        context.inputLayerEntitiesPackage.eClassifiers.extend([
+                        context.input_layer_entities_package.eClassifiers.extend([
                                                                               eclass])
-                        context.inputLayerEntitiesPackage.eClassifiers.extend([
+                        context.input_layer_entities_package.eClassifiers.extend([
                                                                               eclass_table])
                     elif class_name.startswith("OUTPUT_LAYER_"):
                         eclass = ELClass(name=altered_class_name)
 
-                        context.inputLayerEntitiesPackage.eClassifiers.extend([
+                        context.input_layer_entities_package.eClassifiers.extend([
                                                                               eclass])
 
                     else:
@@ -112,20 +112,20 @@ class InputLayerImport(object):
                         containment_reference.containment = True
                         eclass_table.eStructuralFeatures.append(
                             containment_reference)
-                        context.inputLayerEntitiesPackage.eClassifiers.extend([
+                        context.input_layer_entities_package.eClassifiers.extend([
                                                                               eclass])
-                        context.inputLayerEntitiesPackage.eClassifiers.extend([
+                        context.input_layer_entities_package.eClassifiers.extend([
                                                                               eclass_table])
 
                     # maintain a map a objectIDs to ELClasses
-                    context.classesMap[object_id] = eclass
-                    context.tableMap[eclass] = eclass_table
+                    context.classes_map[object_id] = eclass
+                    context.table_map[eclass] = eclass_table
 
     def add_il_enums_to_package(self, context):
         '''
         for each domain in the IL add an enum to the package
         '''
-        file_location = context.fileDirectory + os.sep + "DM_Domains.csv"
+        file_location = context.file_directory + os.sep + "DM_Domains.csv"
         header_skipped = False
         counter = 0
         # Create an ELEnum for each domain, and add it to the ELPackage
@@ -138,20 +138,20 @@ class InputLayerImport(object):
                     counter = counter+1
                     enum_id = row[0]
                     enum_name = row[1]
-                    adapted_enum_name = Utils.makeValidID(enum_name)+"_domain"
-                    if (not Utils.inEnumBlackList(adapted_enum_name)):
+                    adapted_enum_name = Utils.make_valid_id(enum_name)+"_domain"
+                    if (not Utils.in_enum_excluded_list(adapted_enum_name)):
                         the_enum = ELEnum()
                         the_enum.name = adapted_enum_name
                         # maintain a map of enum IDS to ELEnum objects
-                        context.enumMap[enum_id] = the_enum
-                        context.inputLayerEnumsPackage.eClassifiers.extend([
+                        context.enum_map[enum_id] = the_enum
+                        context.input_layer_enums_package.eClassifiers.extend([
                                                                            the_enum])
 
     def add_il_literals_to_enums(self, context):
         '''
         for each memebr of a domain the IL, add a literal to the corresponding enum
         '''
-        file_location = context.fileDirectory + os.sep + "DM_Domain_AVT.csv"
+        file_location = context.file_directory + os.sep + "DM_Domain_AVT.csv"
         header_skipped = False
         counter = 0
         # Add the members of a domain as literals of the related Enum
@@ -164,18 +164,18 @@ class InputLayerImport(object):
                     try:
                         counter = counter+1
                         enum_id = row[0]
-                        enum_used_name = Utils.makeValidID(row[3])
+                        enum_used_name = Utils.make_valid_id(row[3])
                         # enumName = row[5]
-                        adapted_enum_name = Utils.makeValidID(enum_used_name)
+                        adapted_enum_name = Utils.make_valid_id(enum_used_name)
                         value = row[4]
-                        adapted_value = Utils.makeValidID(value)
+                        adapted_value = Utils.make_valid_id(value)
                         try:
-                            the_enum = context.enumMap[enum_id]
-                            new_adapted_value = Utils.uniqueValue(
+                            the_enum = context.enum_map[enum_id]
+                            new_adapted_value = Utils.unique_value(
                                 the_enum, adapted_value)
-                            new_adapted_value = Utils.specialCases(
+                            new_adapted_value = Utils.special_cases(
                                 new_adapted_value, counter)
-                            new_adapted_name = Utils.uniqueName(
+                            new_adapted_name = Utils.unique_name(
                                 the_enum, adapted_enum_name)
 
                             enum_literal = ELEnumLiteral()
@@ -199,7 +199,7 @@ class InputLayerImport(object):
         # for each logicalDatatype for orcle 12c, make a Datatype if we have an
         # equivalent
 
-        file_location = context.fileDirectory + os.sep + "DM_Logical_To_Native.csv"
+        file_location = context.file_directory + os.sep + "DM_Logical_To_Native.csv"
         header_skipped = False
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -216,30 +216,30 @@ class InputLayerImport(object):
 
                         if (native_type.strip() == "VARCHAR"):
 
-                            context.datatypeMap[data_type_id] = context.e_string
+                            context.datatype_map[data_type_id] = context.e_string
 
                         if (native_type.strip() == "VARCHAR2"):
 
-                            context.datatypeMap[data_type_id] = context.e_string
+                            context.datatype_map[data_type_id] = context.e_string
 
                         if (native_type.strip() == "INTEGER"):
 
-                            context.datatypeMap[data_type_id] = context.e_int
+                            context.datatype_map[data_type_id] = context.e_int
 
                         if (native_type.strip() == "DATE"):
 
-                            context.datatypeMap[data_type_id] = context.e_date
+                            context.datatype_map[data_type_id] = context.e_date
 
                         if (native_type.strip() == "NUMBER"):
 
-                            context.datatypeMap[data_type_id] = context.e_double
+                            context.datatype_map[data_type_id] = context.e_double
 
                         if (native_type.strip() == "UNKNOWN"):
 
-                            context.datatypeMap[data_type_id] = context.e_string
+                            context.datatype_map[data_type_id] = context.e_string
 
     def add_il_pk_attributes_to_classes(self, context):
-        file_location = context.fileDirectory + os.sep + "DM_Columns.csv"
+        file_location = context.file_directory + os.sep + "DM_Columns.csv"
         header_skipped = False
         # For each attribute add an ELAttribute to the correct ELClass representing the Entity
         # the attribute should have the correct type, which may be a specific
@@ -253,14 +253,14 @@ class InputLayerImport(object):
                 else:
                     attribute_name = row[0]
                     attribute_id = row[1]
-                    amended_attribute_name = Utils.makeValidID(attribute_name)
+                    amended_attribute_name = Utils.make_valid_id(attribute_name)
                     mandatory = row[6]
                     attribute_kind = row[7]
 
                     class_id = row[4]
                     relationID = row[35]
                     primary_key_or_not = row[34]
-                    the_class = context.classesMap[class_id]
+                    the_class = context.classes_map[class_id]
 
                     class_is_derived = False
                     if (the_class.name.endswith("_derived")):
@@ -273,7 +273,7 @@ class InputLayerImport(object):
 
                         if (attribute_kind == "Domain"):
                             enum_id = row[13]
-                            the_enum = context.enumMap[enum_id]
+                            the_enum = context.enum_map[enum_id]
 
                             attribute = ELAttribute()
 
@@ -392,14 +392,14 @@ class InputLayerImport(object):
                             print("Logical Type")
                             data_type_id = row[14]
                             try:
-                                datatype = context.datatypeMap[data_type_id]
+                                datatype = context.datatype_map[data_type_id]
                                 attribute = ELAttribute()
                                 attribute.lowerBound = 0
                                 attribute.upperBound = 1
                                 attribute.name = amended_attribute_name
-                                attribute.eType = Utils.getEcoreDataTypeForDataType(
+                                attribute.eType = Utils.get_ecore_datatype_for_datatype(
                                     self)
-                                attribute.eAttributeType = Utils.getEcoreDataTypeForDataType(
+                                attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
                                     self)
 
                                 if class_is_derived:
@@ -407,7 +407,7 @@ class InputLayerImport(object):
                                     operation.lowerBound = 0
                                     operation.upperBound = 1
                                     operation.name = amended_attribute_name
-                                    operation.eType = Utils.getEcoreDataTypeForDataType(
+                                    operation.eType = Utils.get_ecore_datatype_for_datatype(
                                         self)
 
                             except KeyError:
@@ -416,7 +416,7 @@ class InputLayerImport(object):
 
                         try:
 
-                            the_class = context.classesMap[class_id]
+                            the_class = context.classes_map[class_id]
                             InputLayerImport.add_composite_pk_if_missing(
                                 self, context, the_class)
                             the_class.eStructuralFeatures.extend([attribute])
@@ -457,7 +457,7 @@ class InputLayerImport(object):
         to the relevant class in the package
         '''
 
-        file_location = context.fileDirectory + os.sep + "DM_Columns.csv"
+        file_location = context.file_directory + os.sep + "DM_Columns.csv"
         header_skipped = False
         # For each attribute add an ELAttribute to the correct ELClass representing the Entity
         # the attribute should have the correct type, which may be a specific
@@ -471,14 +471,14 @@ class InputLayerImport(object):
                 else:
                     attribute_name = row[0]
                     attribute_id = row[1]
-                    amended_attribute_name = Utils.makeValidID(attribute_name)
+                    amended_attribute_name = Utils.make_valid_id(attribute_name)
                     mandatory = row[6]
                     attribute_kind = row[7]
 
                     class_id = row[4]
                     relation_id = row[35]
                     primary_key_or_not = row[34]
-                    the_class = context.classesMap[class_id]
+                    the_class = context.classes_map[class_id]
 
                     class_is_derived = False
                     if (the_class.name.endswith("_derived")):
@@ -491,7 +491,7 @@ class InputLayerImport(object):
 
                         if (attribute_kind == "Domain"):
                             enum_id = row[13]
-                            the_enum = context.enumMap[enum_id]
+                            the_enum = context.enum_map[enum_id]
 
                             attribute = ELAttribute()
 
@@ -574,14 +574,14 @@ class InputLayerImport(object):
                             print("Logical Type")
                             data_type_id = row[14]
                             try:
-                                datatype = context.datatypeMap[data_type_id]
+                                datatype = context.datatype_map[data_type_id]
                                 attribute = ELAttribute()
                                 attribute.lowerBound = 0
                                 attribute.upperBound = 1
                                 attribute.name = amended_attribute_name
-                                attribute.eType = Utils.getEcoreDataTypeForDataType(
+                                attribute.eType = Utils.get_ecore_datatype_for_datatype(
                                     self)
-                                attribute.eAttributeType = Utils.getEcoreDataTypeForDataType(
+                                attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
                                     self)
 
                                 if class_is_derived:
@@ -589,7 +589,7 @@ class InputLayerImport(object):
                                     operation.lowerBound = 0
                                     operation.upperBound = 1
                                     operation.name = amended_attribute_name
-                                    operation.eType = Utils.getEcoreDataTypeForDataType(
+                                    operation.eType = Utils.get_ecore_datatype_for_datatype(
                                         self)
 
                             except KeyError:
@@ -598,7 +598,7 @@ class InputLayerImport(object):
 
                         try:
 
-                            the_class = context.classesMap[class_id]
+                            the_class = context.classes_map[class_id]
                             the_class.eStructuralFeatures.extend([attribute])
                             if class_is_derived:
                                 the_class.eOperations.extend([operation])
@@ -614,7 +614,7 @@ class InputLayerImport(object):
         '''
         Create a map of FK to column ID
         '''
-        file_location = context.fileDirectory + os.sep + "DM_Constr_Index_Columns.csv"
+        file_location = context.file_directory + os.sep + "DM_Constr_Index_Columns.csv"
         header_skipped = False
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -630,7 +630,7 @@ class InputLayerImport(object):
         '''
         For each relationship in the IL, add a reference between the relevant classes
         '''
-        file_location = context.fileDirectory + os.sep + "DM_ForeignKeys.csv"
+        file_location = context.file_directory + os.sep + "DM_ForeignKeys.csv"
         header_skipped = False
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -653,19 +653,19 @@ class InputLayerImport(object):
 
                     source_to_target_cardinality = "1"
 
-                    reference_name = "the" + Utils.makeValidID(target_class_name)
+                    reference_name = "the" + Utils.make_valid_id(target_class_name)
 
                     try:
-                        the_class = context.classesMap[source_id]
+                        the_class = context.classes_map[source_id]
                     except KeyError:
                         print("missing class1: " + source_id)
 
                     try:
-                        target_class = context.classesMap[target_id]
+                        target_class = context.classes_map[target_id]
                     except KeyError:
                         print("missing target class: " + target_id)
 
-                    num_of_relations = Utils.numberofRelationShipsToThisClass(
+                    num_of_relations = Utils.number_of_relationships_to_this_class(
                         the_class, target_class)
                     if (num_of_relations > 0):
                         print("numOfRelations")
@@ -683,9 +683,9 @@ class InputLayerImport(object):
                             e_reference.lowerBound = 0
                             e_reference.containment = False
                             if (the_class.name.endswith("_derived")):
-                                the_source_table = context.tableMap[the_class]
-                                the_target_table = context.tableMap[target_class]
-                                if not (Utils.hasMemberCalled(the_source_table, "sourceTable1")):
+                                the_source_table = context.table_map[the_class]
+                                the_target_table = context.table_map[target_class]
+                                if not (Utils.has_member_called(the_source_table, "sourceTable1")):
 
                                     source_tables_reference = ELReference()
                                     source_tables_reference.name = "sourceTable1"
@@ -713,9 +713,9 @@ class InputLayerImport(object):
                             e_reference.lowerBound = 0
                             e_reference.containment = False
                             if (the_class.name.endswith("_derived")):
-                                the_source_table = context.tableMap[the_class]
-                                the_target_table = context.tableMap[target_class]
-                                if not (Utils.hasMemberCalled(the_source_table, "sourceTable1")):
+                                the_source_table = context.table_map[the_class]
+                                the_target_table = context.table_map[target_class]
+                                if not (Utils.has_member_called(the_source_table, "sourceTable1")):
 
                                     source_tables_reference = ELReference()
                                     source_tables_reference.name = "sourceTable1"
@@ -746,9 +746,9 @@ class InputLayerImport(object):
                             e_reference.containment = False
                             if (the_class.name.endswith("_derived")):
 
-                                the_source_table = context.tableMap[the_class]
-                                the_target_table = context.tableMap[target_class]
-                                if not (Utils.hasMemberCalled(the_source_table, "sourceTable1")):
+                                the_source_table = context.table_map[the_class]
+                                the_target_table = context.table_map[target_class]
+                                if not (Utils.has_member_called(the_source_table, "sourceTable1")):
 
                                     source_tables_reference = ELReference()
                                     source_tables_reference.name = "sourceTable1"
@@ -771,9 +771,9 @@ class InputLayerImport(object):
                             e_reference.lowerBound = 1
                             e_reference.containment = False
                             if (the_class.name.endswith("_derived")):
-                                the_source_table = context.tableMap[the_class]
-                                the_target_table = context.tableMap[target_class]
-                                if not (Utils.hasMemberCalled(the_source_table, "sourceTable1")):
+                                the_source_table = context.table_map[the_class]
+                                the_target_table = context.table_map[target_class]
+                                if not (Utils.has_member_called(the_source_table, "sourceTable1")):
 
                                     source_tables_reference = ELReference()
                                     source_tables_reference.name = "sourceTable1"
