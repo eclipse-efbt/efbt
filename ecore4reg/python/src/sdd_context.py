@@ -61,7 +61,7 @@ class SDDContext(object):
     variableToLongNamesMap = {}
     # For the reference output layers we record a map between domains
     # and domain names
-    domainToDomainNameMap = {}
+    domain_to_domain_name_map = {}
     # For the reference output layers we record a map between members ids
     # andtheir containing domains
     memberIDToDomainMap = {}

@@ -23,15 +23,15 @@ from ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 if __name__ == '__main__':
     context = Context()
 
-    context.persistToEcore4Reg = True    
-    context.useSubDomains = False
-    context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
-    context.outputDirectory = '/workspaces/efbt/ecore4reg/python/results'
+    context.persist_to_ecore4reg = True
+    context.use_subdomains = False
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
 
-    LDMImport().doImport(context)
+    LDMImport().do_import(context)
 
-    Ecore4regToEcoreConverter().convertPackagesInContext(context)
+    Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()
-    persister.saveModelAsEcoreFile(context)
-    persister.saveModelAsEcore4RegFile(context)
-    persister.saveModelAsJSONFiles(context)
+    persister.save_model_as_ecore_file(context)
+    persister.save_model_as_ecore4reg_file(context)
+    persister.save_model_as_json_files(context)

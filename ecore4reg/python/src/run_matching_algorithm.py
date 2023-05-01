@@ -24,21 +24,21 @@ from standard_matching_queries import StandardMatchingQueries
 
 if __name__ == '__main__':
     context = Context()
-    context.persistToEcore4Reg = True
-    context.useSubDomains = True
-    context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
-    context.outputDirectory = '/workspaces/efbt/ecore4reg/python/results'
-    InputLayerImport().doImport(context)
+    context.persist_to_ecore4reg = True
+    context.use_subdomains = True
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
+    InputLayerImport().do_import(context)
     ROLImport().doImport(context)
-    Ecore4regToEcoreConverter().convertPackagesInContext(context)
+    Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()
-    persister.saveModelAsEcoreFile(context)
-    persister.saveModelAsEcore4RegFile(context)
-    persister.saveModelAsJSONFiles(context)
+    persister.save_model_as_ecore_file(context)
+    persister.save_model_as_ecore4reg_file(context)
+    persister.save_model_as_json_files(context)
 
-    context.inScopeFileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.in_scope_file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     standardMatchingQueries = StandardMatchingQueries()
-    standardMatchingQueries.createVariableNameToCodeMap(context)
-    standardMatchingQueries.createDerivableList(context)
+    standardMatchingQueries.create_variable_name_to_code_map(context)
+    standardMatchingQueries.create_derivable_list(context)
     standardMatchingQueries.query1(context)
     

@@ -16,46 +16,33 @@ Created on 22 Jan 2022
 @author: Neil
 '''
 
-
 from context import Context
 
-from import_ldm_to_ecore4reg import LDMImport
 from import_input_layer_to_ecore4reg import InputLayerImport
 from import_output_layer_to_ecore4reg import ROLImport
 from import_finrep_vtl import ImportFinrepVTL
-from persistToFile import PersistToFile
-from ecore4regToEcoreConverter import Ecore4regToEcoreConverter
+from persist_to_file import PersistToFile
+from ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 
 if __name__ == '__main__':
     context = Context()
-    importLDM = False
-    importIL = True
-    importROL = True
-    importFinrepVTL = True
-    persistToXCoreL = True
-    context.persistVTLComments = True
-    context.useSubDomains = False
-    context.fileDirectory = '/workspaces/efbt/ecore4reg/python/resources'
-    context.outputDirectory = '/workspaces/efbt/ecore4reg/python/results'
+ 
+    context.persist_vtl_comments = True
+    context.use_subdomains = False
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     context.addExecutableStubs = True
     context.addLogicPackages = True
 
-    if importLDM:
-        LDMImport().doImport(context)
-    if importIL:
-        InputLayerImport().doImport(context)
-    if importROL:
-        ROLImport().doImport(context)
-    if importFinrepVTL:
-        ImportFinrepVTL().doImport(context)
 
-    Ecore4regToEcoreConverter().convertPackagesInContext(context)
+    InputLayerImport().do_import(context)
+    ROLImport().doImport(context)
+    ImportFinrepVTL().do_import(context)
+
+    Ecore4regToEcoreConverter().convert_packages_in_context(context)
 
     persister = PersistToFile()
-    persister.saveModelAsEcoreFile(context)
-    persister.saveModelAsEcore4RegFile(context)
-
-    if importFinrepVTL:
-        persister.saveModelAsXMIFile(context)
-    else:
-        persister.saveModelAsJSONFiles(context)
+    persister.save_model_as_ecore_file(context)
+    persister.save_model_as_ecore4reg_file(context)
+    persister.save_model_as_xmi_file(context)
+    

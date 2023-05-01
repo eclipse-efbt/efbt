@@ -10,6 +10,10 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
+from ecore4reg import VTLModule
 
 class VTLContext(object):
-    vtlModule = VTLModule(name="vtl")
+    '''
+    Documentation for VTLContext
+    '''
+    vtl_module = VTLModule(name="vtl")

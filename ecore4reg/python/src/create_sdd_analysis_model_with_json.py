@@ -17,7 +17,7 @@ Created on 25 April 2022
 from sdd_context import SDDContext
 
 from import_sdd_to_analysis_model import ImportSDD
-from persist_to_file import PersistToFile
+
 
 if __name__ == '__main__':
     sdd_context = SDDContext()
