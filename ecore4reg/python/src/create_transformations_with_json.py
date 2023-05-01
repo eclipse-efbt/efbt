@@ -35,7 +35,7 @@ if __name__ == '__main__':
     ROLImport().doImport(context)
     ImportFinrepVTL().do_import(context)
 
-    Ecore4regToEcoreConverter().convert_packages_in_ontext(context)
+    Ecore4regToEcoreConverter().convert_packages_in_context(context)
 
     persister = PersistToFile()
     persister.save_model_as_ecore_file(context)

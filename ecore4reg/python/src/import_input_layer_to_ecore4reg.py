@@ -428,7 +428,7 @@ class InputLayerImport(object):
                             print(class_id)
                     else:
                         if mandatory == "Y":
-                            context.FKtoMandatoryMap[attribute_id] = "M"
+                            context.fk_to_mandatory_map[attribute_id] = "M"
 
     def add_composite_pk_if_missing(self, context, the_class):
         '''
@@ -608,7 +608,7 @@ class InputLayerImport(object):
                             print(class_id)
                     else:
                         if mandatory == "Y":
-                            context.FKtoMandatoryMap[attribute_id] = "M"
+                            context.fk_to_mandatory_map[attribute_id] = "M"
 
     def create_fk_to_column_map(self, context):
         '''
@@ -624,7 +624,7 @@ class InputLayerImport(object):
                 else:
                     fk_name = row[6]
                     columnID = row[2]
-                    context.FKToColumnMap[fk_name] = columnID
+                    context.fk_to_column_map[fk_name] = columnID
 
     def add_il_relationships_between_classes(self, context):
         '''
@@ -644,9 +644,9 @@ class InputLayerImport(object):
 
                     target_class_name = row[7]
 
-                    fk_columnn_id = context.FKToColumnMap[fk_id]
+                    fk_columnn_id = context.fk_to_column_map[fk_id]
 
-                    if fk_columnn_id in context.FKtoMandatoryMap:
+                    if fk_columnn_id in context.fk_to_mandatory_map:
                         target_optional = "N"
                     else:
                         target_optional = "Y"

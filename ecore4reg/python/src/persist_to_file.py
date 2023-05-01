@@ -40,7 +40,7 @@ class PersistToFile:
         PersistToFile.persist_enum_model(
             self, context, context.output_layer_enums_package, "ecore4reg")
         PersistToFile.persist_types_model(
-            self, context, context.typesPackage, "ecore4reg")
+            self, context, context.types_package, "ecore4reg")
         PersistToFile.persist_workflow(self, context)
         PersistToFile.persist_generation_transformations(self, context)
 
@@ -189,7 +189,7 @@ class PersistToFile:
         '''
 
         output = ""
-        if context.persistVTLComments:
+        if context.persist_vtl_comments:
             output = output + "/** VTL intermediate layer and report combination specific VTL \r"
             intermediate_layer = None
             for vtl in context.vtl_module.VTLForSelectionLayers.vTLForSelectionLayers:
@@ -239,7 +239,7 @@ class PersistToFile:
         Documentation for get_vtl_text_for_view
         '''
         output = ""
-        if context.persistVTLComments:
+        if context.persist_vtl_comments:
             output = output + "/** View specific VTL \r"
             for vtl in context.vtl_module.VTLForViews.vTLForViews:
                 if vtl.view == view:
@@ -267,7 +267,7 @@ class PersistToFile:
         # This will create an XMI resource
         resource = rset.create_resource(
             URI(context.output_directory + os.sep + 'xmi' + os.sep + 'VTL.xmi'))
-        resource.append(context.moduleList)
+        resource.append(context.module_list)
         resource.save()
 
     def save_model_as_json_files(self, context):
@@ -284,7 +284,7 @@ class PersistToFile:
             os.sep + "types.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        input_layer_enums_resource2.append(context.typesPackage)
+        input_layer_enums_resource2.append(context.types_package)
         input_layer_enums_resource2.save()
         input_layer_enums_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
@@ -324,9 +324,9 @@ class PersistToFile:
         f = open(context.output_directory + os.sep + 'ecore4reg' +
                  os.sep +
                  'workflow.ecore4reg', "a",  encoding='utf-8')
-        f.write("WorkflowModule " + context.workflowModule.name + "\r{\r")
+        f.write("WorkflowModule " + context.workflow_module.name + "\r{\r")
         f.write("\t\tsubProcess {\r")
-        for process in context.workflowModule.subProcess:
+        for process in context.workflow_module.subProcess:
             f.write("\t\t\t")
             f.write("SubProcess " + process.name + " flowElements {\r")
             f.write("\t\t\t\tParallelGateway gw1 outgoing (")

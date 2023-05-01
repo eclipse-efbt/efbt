@@ -90,7 +90,7 @@ class LDMImport(object):
 
                     else:
                         eclass = ELClass(name=altered_class_name)
-                        # of engineering type is single table, as i should be 
+                        # of engineering type is single table, as it should be
                         # for all members of a type
                         # heirarchy, and num_suptype is blank,
                         # then this means that this class is a root
@@ -154,7 +154,6 @@ class LDMImport(object):
                     header_skipped = True
                 else:
                     counter = counter+1
-                    print(counter)
                     enum_id = row[0]
                     enum_name = row[1]
                     adapted_enum_name = Utils.make_valid_id(enum_name)+"_domain"
@@ -182,7 +181,6 @@ class LDMImport(object):
                 else:
                     try:
                         counter = counter+1
-                        print(counter)
                         enum_id = row[0]
                         enum_used_name = Utils.make_valid_id( row[3])
                         # enumName = row[5]

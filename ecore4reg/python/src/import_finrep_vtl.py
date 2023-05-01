@@ -44,7 +44,7 @@ class ImportFinrepVTL(object):
         '''
         # ImportFinrepVTL.buildOutputLayerToVTLLayerMap(self,context)
         sub_process = SubProcess(name="finrepReports")
-        context.workflowModule.subProcess.extend([sub_process])
+        context.workflow_module.subProcess.extend([sub_process])
         # ImportFinrepVTL.addReports(self,context)
         ImportFinrepVTL.initialise_vtl_Module(self, context)
         ImportFinrepVTL.import_finrep_eil_to_rol_transformation_schemes(
@@ -381,7 +381,7 @@ class ImportFinrepVTL(object):
                     context.view_module.views.append(view)
 
                     task = ScriptTask(name="task_" + report_template)
-                    context.workflowModule.subProcess[0].flowElements.append(
+                    context.workflow_module.subProcess[0].flowElements.append(
                         task)
                     ImportFinrepVTL.add_layers(self, context, view, task)
 

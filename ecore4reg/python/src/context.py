@@ -60,7 +60,7 @@ class Context(object):
         name='output_layer_enums',
         nsURI='http://www.eclipse.org/bird/output_layer_enums',
         nsPrefix='output_layer_enums')
-    input_layer_entities_ackage = ELPackage(
+    input_layer_entities_package = ELPackage(
         name='input_layer_entities',
         nsURI='http://www.eclipse.org/bird/input_layer_entities',
         nsPrefix='input_layer_entities')
@@ -102,7 +102,7 @@ class Context(object):
     variable_to_long_names_map = {}
     # For the reference output layers we record a map between domains
     # and domain names
-    domainToDomainNameMap = {}
+    domain_to_domain_name_map = {}
     # For the reference output layers we record a map between members ids
     # andtheir containing domains
     member_id_to_domain_map = {}
@@ -128,8 +128,8 @@ class Context(object):
     vtl_module = VTLModule(name="vtl")
     module_list = ModuleList()
 
-    sub_domain_to_member_list_map = {}
-    sub_domain_id_to_domain_id = {}
+    subdomain_to_member_list_map = {}
+    subdomain_id_to_domain_id = {}
 
     importLogicStrings = []
 
@@ -143,7 +143,7 @@ class Context(object):
         self.module_list.modules.append(self.types_package)
         self.module_list.modules.append(self.input_layer_enums_package)
         self.module_list.modules.append(self.output_layer_enums_package)
-        self.module_list.modules.append(self.input_layer_entities_ackage)
+        self.module_list.modules.append(self.input_layer_entities_package)
         self.module_list.modules.append(self.output_layer_entities_package)
         self.module_list.modules.append(self.view_module)
         self.module_list.modules.append(self.workflow_module)

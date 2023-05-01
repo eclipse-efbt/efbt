@@ -30,7 +30,7 @@ if __name__ == '__main__':
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     InputLayerImport().do_import(context)
     ROLImport().doImport(context)
-    Ecore4regToEcoreConverter().convert_packages_in_ontext(context)
+    Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()
     persister.save_model_as_ecore_file(context)
     persister.save_model_as_ecore4reg_file(context)
