@@ -38,6 +38,7 @@
 	</properties>
 	<modules>
 		<module>plugins/org.eclipse.efbt.ecore4reg.model</module>
+		<module>plugins/org.eclipse.efbt.sdd.model</module>
 		<module>features/org.eclipse.efbt.ecore4reg.model.feature</module>
 		<module>releng/org.eclipse.efbt.ecore4reg.model.target</module>
 	</modules>

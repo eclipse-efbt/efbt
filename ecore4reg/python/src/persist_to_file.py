@@ -24,43 +24,42 @@ class PersistToFile:
     Documentation for PersistToFile
     '''
 
-    def saveModelAsEcore4RegFile(self, context):
+    def save_model_as_ecore4reg_file(self, context):
         '''
-        Documentation for saveModelAsEcore4RegFile
-        '''
-
-        PersistToFile.persistEntityModel(
-            self, context, context.inputLayerEntitiesPackage,
-            "ecore4reg", context.inputLayerEnumsPackage)
-        PersistToFile.persistEntityModel(
-            self, context, context.outputLayerEntitiesPackage,
-            "ecore4reg", context.outputLayerEnumsPackage)
-        PersistToFile.persistEnumModel(
-            self, context, context.inputLayerEnumsPackage, "ecore4reg")
-        PersistToFile.persistEnumModel(
-            self, context, context.outputLayerEnumsPackage, "ecore4reg")
-        PersistToFile.persistTypesModel(
-            self, context, context.typesPackage, "ecore4reg")
-        PersistToFile.persistWorkflow(self, context)
-        PersistToFile.persistGenerationTransformations(self, context)
-        
-
-    def persistEntityModel(self, context, thePackage, extension, importedPackage):
-        '''
-        Documentation for persistEntityModel
+        Documentation for save_model_as_ecore4reg_file
         '''
 
-        f = open(context.outputDirectory + os.sep + extension +
-                 os.sep + thePackage.name +'.' + extension,
-                   "a",  encoding='utf-8')
-        f.write("\t\t package " + thePackage.name + "\r")
-        f.write("\t\t import " + importedPackage.name + ".*\r")
-        if thePackage == context.outputLayerEntitiesPackage:
-            for importString in context.importLogicStrings:
-                f.write("\t\t import " + importString + ".*\r")
+        PersistToFile.persist_entity_model(
+            self, context, context.input_layer_entities_package,
+            "ecore4reg", context.input_layer_enums_package)
+        PersistToFile.persist_entity_model(
+            self, context, context.output_layer_entities_package,
+            "ecore4reg", context.output_layer_enums_package)
+        PersistToFile.persist_enum_model(
+            self, context, context.input_layer_enums_package, "ecore4reg")
+        PersistToFile.persist_enum_model(
+            self, context, context.output_layer_enums_package, "ecore4reg")
+        PersistToFile.persist_types_model(
+            self, context, context.types_package, "ecore4reg")
+        PersistToFile.persist_workflow(self, context)
+        PersistToFile.persist_generation_transformations(self, context)
+
+    def persist_entity_model(self, context, the_package, extension, imported_package):
+        '''
+        Documentation for persist_entity_model
+        '''
+
+        f = open(context.output_directory + os.sep + extension +
+                 os.sep + the_package.name + '.' + extension,
+                 "a",  encoding='utf-8')
+        f.write("\t\t package " + the_package.name + "\r")
+        f.write("\t\t import " + imported_package.name + ".*\r")
+        if the_package == context.output_layer_entities_package:
+            for import_string in context.importLogicStrings:
+                f.write("\t\t import " + import_string + ".*\r")
         if extension == "ecore4reg":
             f.write("\t\t import types.*\r")
-        for classifier in thePackage.eClassifiers:
+        for classifier in the_package.eClassifiers:
             if isinstance(classifier, ELClass):
                 f.write("\t\t\t")
                 if classifier.abstract:
@@ -131,14 +130,14 @@ class PersistToFile:
 
         f.close()
 
-    def persistTypesModel(self, context, thePackage, extension):
+    def persist_types_model(self, context, the_package, extension):
         '''
-        Documentation for persistTypesModel
+        Documentation for persist_types_model
         '''
-        f = open(context.outputDirectory + os.sep + extension +
-                 os.sep + thePackage.name +
+        f = open(context.output_directory + os.sep + extension +
+                 os.sep + the_package.name +
                  '.' + extension, "a",  encoding='utf-8')
-        f.write("\t\t package " + thePackage.name + "\r")
+        f.write("\t\t package " + the_package.name + "\r")
         f.write("\t\t\ttype double wraps double\r")
         f.write("\t\t\ttype String wraps String\r")
         f.write("\t\t\ttype int wraps int\r")
@@ -149,16 +148,16 @@ class PersistToFile:
         f.write("\t\t\ttype boolean wraps boolean\r")
         f.close()
 
-    def persistEnumModel(self, context, thePackage, extension):
+    def persist_enum_model(self, context, the_package, extension):
         '''
-        Documentation for persistEnumModel
+        Documentation for persist_enum_model
         '''
 
-        f = open(context.outputDirectory + os.sep + extension +
-                 os.sep + thePackage.name +
+        f = open(context.output_directory + os.sep + extension +
+                 os.sep + the_package.name +
                  '.' + extension, "a",  encoding='utf-8')
-        f.write("\t\t package " + thePackage.name + "\r")
-        for classifier in thePackage.eClassifiers:
+        f.write("\t\t package " + the_package.name + "\r")
+        for classifier in the_package.eClassifiers:
 
             if isinstance(classifier, ELEnum):
                 f.write("\t\t\tenum " + classifier.name)
@@ -166,12 +165,12 @@ class PersistToFile:
                 f.write(" { ")
                 counter = 0
                 splitcount = 1
-                for theLiteral in classifier.eLiterals:
+                for the_literal in classifier.eLiterals:
                     counter = counter+1
 
                     if counter < 100:
-                        f.write(" " + theLiteral.name + " as \"" +
-                                theLiteral.literal + "\" = " + str(theLiteral.value))
+                        f.write(" " + the_literal.name + " as \"" +
+                                the_literal.literal + "\" = " + str(the_literal.value))
                     else:
                         counter = 0
                         splitcount = splitcount+1
@@ -184,74 +183,74 @@ class PersistToFile:
 
         f.close()
 
-    def getVTLTextForLayer(self, context, layer):
+    def get_vtl_text_for_layer(self, context, layer):
         '''
-        Documentation for getVTLTextForLayer
+        Documentation for get_vtl_text_for_layer
         '''
 
         output = ""
-        if context.persistVTLComments:
+        if context.persist_vtl_comments:
             output = output + "/** VTL intermediate layer and report combination specific VTL \r"
-            intermediateLayer = None
-            for vtl in context.vtlModule.VTLForSelectionLayers.vTLForSelectionLayers:
+            intermediate_layer = None
+            for vtl in context.vtl_module.VTLForSelectionLayers.vTLForSelectionLayers:
                 if vtl.selectionLayer == layer:
-                    intermediateLayer = vtl.intermediateLayer
+                    intermediate_layer = vtl.intermediateLayer
                     for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
                         if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.selectionLayer.generatedEntity):
                             for trans in combo.transformations:
                                 output = output + \
-                                    PersistToFile.removeCommentChars(
+                                    PersistToFile.remove_comment_chars(
                                         self, trans.expression) + "\r"
             output = output + "*/\r\r"
 
             output = output + "/** VTL intermediate layer specific VTL \r"
-            intermediateLayer = None
-            for vtl in context.vtlModule.VTLForSelectionLayers.vTLForSelectionLayers:
+            intermediate_layer = None
+            for vtl in context.vtl_module.VTLForSelectionLayers.vTLForSelectionLayers:
                 if vtl.selectionLayer == layer:
-                    intermediateLayer = vtl.intermediateLayer
-                    for trans in intermediateLayer.transformations:
+                    intermediate_layer = vtl.intermediateLayer
+                    for trans in intermediate_layer.transformations:
                         output = output + \
-                            PersistToFile.removeCommentChars(
+                            PersistToFile.remove_comment_chars(
                                 self, trans.expression) + "\r"
             output = output + "*/\r\r"
 
             output = output + "/** assocated enriched layer in VTL \r"
-            enrichedLayer = intermediateLayer.dependant_enriched_cubes
-            if not enrichedLayer is None:
-                output = output + "enriched Layer :" + enrichedLayer.name + "\r"
+            enriched_layer = intermediate_layer.dependant_enriched_cubes
+            if not enriched_layer is None:
+                output = output + "enriched Layer :" + enriched_layer.name + "\r"
                 output = output + "enriched Layer transformations:\r"
-                for exp in enrichedLayer.transformations:
+                for exp in enriched_layer.transformations:
                     output = output + \
-                        PersistToFile.removeCommentChars(
+                        PersistToFile.remove_comment_chars(
                             self, exp.expression) + "\r"
             output = output + "*/\r\r"
 
             output = output + "/** associated input layer table and filter \r"
-            for link in context.vtlModule.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks:
-                if link.VTLIntermediateLayer == intermediateLayer:
+            for link in context.vtl_module.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks:
+                if link.VTLIntermediateLayer == intermediate_layer:
                     output = output + "input layer entity: " + link.entity.name + "\r"
                     output = output + "filter: " + link.filter + "\r"
 
             output = output + "*/\r\r"
         return output
 
-    def getVTLTextForView(self, context, view):
+    def get_vtl_text_for_view(self, context, view):
         '''
-        Documentation for getVTLTextForView
+        Documentation for get_vtl_text_for_view
         '''
         output = ""
-        if context.persistVTLComments:
+        if context.persist_vtl_comments:
             output = output + "/** View specific VTL \r"
-            for vtl in context.vtlModule.VTLForViews.vTLForViews:
+            for vtl in context.vtl_module.VTLForViews.vTLForViews:
                 if vtl.view == view:
                     output = output + "output layer = " + vtl.vtl.outputLayer.name + "\r"
             output = output + "*/\r\r"
 
         return output
 
-    def countNonNoneLayers(self, element):
+    def count_non_none_layers(self, element):
         '''
-        Documentation for countNonNoneLayers
+        Documentation for count_non_none_layers
         '''
         counter = 0
         for layer in element.selectionLayers:
@@ -259,7 +258,7 @@ class PersistToFile:
                 counter = counter + 1
         return counter
 
-    def saveModelAsXMIFile(self, context):
+    def save_model_as_xmi_file(self, context):
         '''
          save model as an xmi file representing an object tree.
         '''
@@ -267,11 +266,11 @@ class PersistToFile:
 
         # This will create an XMI resource
         resource = rset.create_resource(
-            URI(context.outputDirectory + os.sep + 'xmi' + os.sep +'VTL.xmi'))
-        resource.append(context.moduleList)
+            URI(context.output_directory + os.sep + 'xmi' + os.sep + 'VTL.xmi'))
+        resource.append(context.module_list)
         resource.save()
 
-    def saveModelAsJSONFiles(self, context):
+    def save_model_as_json_files(self, context):
         '''
          save model as an json file representing an object tree.
         '''
@@ -280,53 +279,54 @@ class PersistToFile:
         # we register the factory for '.json' extensions
         rset2.resource_factory['json'] = JsonResource
 
-        inputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension + 
+        input_layer_enums_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
             os.sep + "types.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        inputLayerEnums_resource2.append(context.typesPackage)
-        inputLayerEnums_resource2.save()
-        inputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension +
+        input_layer_enums_resource2.append(context.types_package)
+        input_layer_enums_resource2.save()
+        input_layer_enums_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
             os.sep + "input_layer_enums.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        inputLayerEnums_resource2.append(context.inputLayerEnumsPackage)
-        inputLayerEnums_resource2.save()
-        outputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension +
+        input_layer_enums_resource2.append(context.input_layer_enums_package)
+        input_layer_enums_resource2.save()
+        output_layer_enums_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
             os.sep + "output_layer_enums.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        outputLayerEnums_resource2.append(context.outputLayerEnumsPackage)
-        outputLayerEnums_resource2.save()
-        inputLayerEntities_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension +
+        output_layer_enums_resource2.append(context.output_layer_enums_package)
+        output_layer_enums_resource2.save()
+        input_layer_entities_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
             os.sep + "input_layer_entities.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        inputLayerEntities_resource2.append(context.inputLayerEntitiesPackage)
-        inputLayerEntities_resource2.save()
-        outputLayerEntities_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension +
+        input_layer_entities_resource2.append(
+            context.input_layer_entities_package)
+        input_layer_entities_resource2.save()
+        output_layer_entities_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
             os.sep + "output_layer_entities.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        outputLayerEntities_resource2.append(
-            context.outputLayerEntitiesPackage)
-        outputLayerEntities_resource2.save()
+        output_layer_entities_resource2.append(
+            context.output_layer_entities_package)
+        output_layer_entities_resource2.save()
 
-    def persistWorkflow(self, context):
+    def persist_workflow(self, context):
         '''
-        Documentation for persistWorkflow
+        Documentation for persist_workflow
         '''
-        f = open(context.outputDirectory + os.sep + 'ecore4reg' +
+        f = open(context.output_directory + os.sep + 'ecore4reg' +
                  os.sep +
                  'workflow.ecore4reg', "a",  encoding='utf-8')
-        f.write("WorkflowModule " + context.workflowModule.name + "\r{\r")
+        f.write("WorkflowModule " + context.workflow_module.name + "\r{\r")
         f.write("\t\tsubProcess {\r")
-        for process in context.workflowModule.subProcess:
+        for process in context.workflow_module.subProcess:
             f.write("\t\t\t")
             f.write("SubProcess " + process.name + " flowElements {\r")
             f.write("\t\t\t\tParallelGateway gw1 outgoing (")
@@ -346,13 +346,13 @@ class PersistToFile:
                             " incoming (sf" + str(counter) + ")")
 
                     counter2 = 0
-                    if PersistToFile.countNonNoneLayers(self, element) > 0:
+                    if PersistToFile.count_non_none_layers(self, element) > 0:
                         f.write("\r\t\t\t\t\tselectionLayers {\r")
                         for layer in element.selectionLayers:
-                            if not (layer.name is None):
+                            if not layer.name is None:
                                 if counter2 != 0:
                                     f.write(",")
-                                f.write("\r\t\t\t\t\t\tSelectionLayer " + Utils.makeValidID(str(layer.name)) +
+                                f.write("\r\t\t\t\t\t\tSelectionLayer " + Utils.make_valid_id(str(layer.name)) +
                                         "{generatedEntity output_layer_entities." + layer.generatedEntity.name + " }")
                                 counter2 = counter2+1
                         f.write("\r\t\t\t\t\t}")
@@ -371,16 +371,16 @@ class PersistToFile:
             f.write("}\r")
             f.close()
 
-    def persistGenerationTransformations(self, context):
+    def persist_generation_transformations(self, context):
         '''
-        Documentation for persistGenerationTransformations
+        Documentation for persist_generation_transformations
         '''
-        views = context.viewModule.views
+        views = context.view_module.views
 
         for view in views:
-            f = open(context.outputDirectory + os.sep + 'ecore4reg' +
-                 os.sep + view.name +
-                 '_view.ecore4reg', "a",  encoding='utf-8')
+            f = open(context.output_directory + os.sep + 'ecore4reg' +
+                     os.sep + view.name +
+                     '_view.ecore4reg', "a",  encoding='utf-8')
             f.write("ViewModule " + view.name + "_viewModule\r{\r")
             f.write("\tviews " + "{\r")
             f.write("\t\tView " + view.name + "_view {\r")
@@ -388,83 +388,83 @@ class PersistToFile:
                 if not layer.selectionLayer.name is None:
                     f.write("\t\t\tLayerSQL {\r")
                     f.write("selectionLayer finrepWorkflow.finrepReports.task_" + view.name[5:len(
-                        view.name)] + "." + Utils.makeValidID(str(layer.selectionLayer.name)) + "\r")
+                        view.name)] + "." + Utils.make_valid_id(str(layer.selectionLayer.name)) + "\r")
                     for column in layer.columns:
                         f.write("\t\t\t\tSelectMember   input_layer_enums.Group_type_domain.Internal_group as output_layer_entities." +
                                 view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name + "\r")
                     f.write("\t\t\t}\r")
-                    f.write(PersistToFile.getVTLTextForLayer(
+                    f.write(PersistToFile.get_vtl_text_for_layer(
                         self, context, layer))
             f.write("\t\t}\r")
             f.write("\t}\r")
             f.write("}\r")
-            f.write(PersistToFile.getVTLTextForView(self, context, view))
+            f.write(PersistToFile.get_vtl_text_for_view(self, context, view))
             f.close()
 
-    def saveModelAsEcoreFile(self, context):
+    def save_model_as_ecore_file(self, context):
         '''
          save model as an xmi file representing an object tree.
         '''
         rset2 = ResourceSet()
         extension = 'ecore'
-        inputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension +
-            os.sep+ "input_layer_enums.ecore"))
+        input_layer_enums_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
+            os.sep + "input_layer_enums.ecore"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        inputLayerEnums_resource2.append(context.inputLayerEnumsEcorePackage)
-        inputLayerEnums_resource2.save()
-        outputLayerEnums_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension +
-                 os.sep+ "output_layer_enums.ecore"))
+        input_layer_enums_resource2.append(context.input_layer_enums_ecore_package)
+        input_layer_enums_resource2.save()
+        output_layer_enums_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
+            os.sep + "output_layer_enums.ecore"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        outputLayerEnums_resource2.append(context.outputLayerEnumsEcorePackage)
-        outputLayerEnums_resource2.save()
-        inputLayerEntities_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension +
-                 os.sep + "input_layer_entities.ecore"))
+        output_layer_enums_resource2.append(context.output_layer_enums_ecore_package)
+        output_layer_enums_resource2.save()
+        input_layer_entities_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
+            os.sep + "input_layer_entities.ecore"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        inputLayerEntities_resource2.append(
-            context.inputLayerEntitiesEcorePackage)
-        inputLayerEntities_resource2.save()
-        outputLayerEntities_resource2 = rset2.create_resource(URI(
-            context.outputDirectory + os.sep + extension +
-                 os.sep + "output_layer_entities.ecore"))
+        input_layer_entities_resource2.append(
+            context.input_layer_entities_ecore_package)
+        input_layer_entities_resource2.save()
+        output_layer_entities_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
+            os.sep + "output_layer_entities.ecore"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        outputLayerEntities_resource2.append(
-            context.outputLayerEntitiesEcorePackage)
-        outputLayerEntities_resource2.save()
-        
-        PersistToFile.hotFix(self, context.outputDirectory +
-                             os.sep + extension +
-                            os.sep + "input_layer_enums.ecore")
-        PersistToFile.hotFix(self, context.outputDirectory +
-                             os.sep + extension +
-                             os.sep+ "output_layer_enums.ecore")
-        PersistToFile.hotFix(self, context.outputDirectory +
-                             os.sep + extension +
-                             os.sep+ "input_layer_entities.ecore")
-        PersistToFile.hotFix(self, context.outputDirectory +
-                             os.sep + extension +
-                             os.sep+ "output_layer_entities.ecore")
+        output_layer_entities_resource2.append(
+            context.output_layer_entities_ecore_package)
+        output_layer_entities_resource2.save()
 
-    def hotFix(self, fileName):
+        PersistToFile.hot_fix(self, context.output_directory +
+                              os.sep + extension +
+                              os.sep + "input_layer_enums.ecore")
+        PersistToFile.hot_fix(self, context.output_directory +
+                              os.sep + extension +
+                              os.sep + "output_layer_enums.ecore")
+        PersistToFile.hot_fix(self, context.output_directory +
+                              os.sep + extension +
+                              os.sep + "input_layer_entities.ecore")
+        PersistToFile.hot_fix(self, context.output_directory +
+                              os.sep + extension +
+                              os.sep + "output_layer_entities.ecore")
+
+    def hot_fix(self, file_name):
         '''
-        Documentation for hotFix
+        Documentation for hot_fix
         '''
-        f = open(fileName, "r",encoding='utf-8')
+        f = open(file_name, "r", encoding='utf-8')
         text = f.read()
-        amendedText = text.replace('ecore4reg:EEnum', 'ecore:EEnum')
+        amended_text = text.replace('ecore4reg:EEnum', 'ecore:EEnum')
         f.close()
-        f1 = open(fileName, "w",encoding='utf-8')
-        f1.write(amendedText)
+        f1 = open(file_name, "w", encoding='utf-8')
+        f1.write(amended_text)
         f.close()
 
-    def removeCommentChars(self, theString):
+    def remove_comment_chars(self, the_string):
         '''
-        Documentation for removeCommentChars
+        Documentation for remove_comment_chars
         '''
-        return theString.replace("/**", "").replace("/*", "").replace("*/", "")
+        return the_string.replace("/**", "").replace("/*", "").replace("*/", "")

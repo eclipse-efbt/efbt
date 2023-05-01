@@ -17,113 +17,119 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-from pyecore.ecore import EInt, EDouble, EDate, EString, EBoolean, EPackage, EEnum, EEnumLiteral, EClass, EAttribute, EReference, EOperation
+from pyecore.ecore import EInt, EDouble, EDate, EString, EBoolean
+from pyecore.ecore import EPackage, EEnum, EEnumLiteral, EClass
+from pyecore.ecore import EAttribute, EReference, EOperation
+
 from ecore4reg import ELClass, ELAttribute, ELReference, ELEnum
+
+
+
 
 class Ecore4regToEcoreConverter(object):
     '''
     Documentation for Ecore4regToEcoreConverter
     '''
 
-    def convertPackagesInContext(self, context):
+    def convert_packages_in_context(self, context):
         '''
         Documentation for convertPackagesInContext
         '''
-        context.inputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(
-            self, context.inputLayerEnumsPackage, context)
-        context.outputLayerEnumsEcorePackage = Ecore4regToEcoreConverter.convert(
-            self, context.outputLayerEnumsPackage, context)
-        context.inputLayerEntitiesEcorePackage = Ecore4regToEcoreConverter.convert(
-            self, context.inputLayerEntitiesPackage, context)
-        context.outputLayerEntitiesEcorePackage = Ecore4regToEcoreConverter.convert(
-            self, context.outputLayerEntitiesPackage, context)
+        context.input_layer_enums_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.input_layer_enums_package, context)
+        context.output_layer_enums_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.output_layer_enums_package, context)
+        context.input_layer_entities_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.input_layer_entities_package, context)
+        context.output_layer_entities_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.output_layer_entities_package, context)
 
-    def convert(self, elPackage, context):
+    def convert(self, el_package, context):
         '''
         Documentation for convert
         '''
-        ecorePackage = EPackage(
-            name=elPackage.name, nsURI=elPackage.nsURI, nsPrefix=elPackage.nsPrefix)
+        ecore_package = EPackage(
+            name=el_package.name, nsURI=el_package.nsURI, nsPrefix=el_package.nsPrefix)
 
-        for classifier in elPackage.eClassifiers:
+        for classifier in el_package.eClassifiers:
             if isinstance(classifier, ELEnum):
-                eEnum = EEnum(name=classifier.name)
+                e_enum = EEnum(name=classifier.name)
                 for literal in classifier.eLiterals:
-                    eEnumLiteral = EEnumLiteral(literal.name)
-                    eEnumLiteral.value = literal.value
-                    eEnumLiteral.literal = literal.literal
-                    eEnum.eLiterals.append(eEnumLiteral)
-                ecorePackage.eClassifiers.append(eEnum)
+                    e_enum_literal = EEnumLiteral(literal.name)
+                    e_enum_literal.value = literal.value
+                    e_enum_literal.literal = literal.literal
+                    e_enum.eLiterals.append(e_enum_literal)
+                ecore_package.eClassifiers.append(e_enum)
 
-        for classifier in elPackage.eClassifiers:
+        for classifier in el_package.eClassifiers:
             if isinstance(classifier, ELClass):
-                eClass = EClass(name=classifier.name)
+                e_class = EClass(name=classifier.name)
                 if len(classifier.eSuperTypes) > 0:
-                    eClass.superTypeName = classifier.eSuperTypes[0].name
-                eClass.abstract = classifier.abstract
-                for structuralFeature in classifier.eStructuralFeatures:
+                    e_class.superTypeName = classifier.eSuperTypes[0].name
+                e_class.abstract = classifier.abstract
+                for structural_feature in classifier.eStructuralFeatures:
 
-                    if isinstance(structuralFeature, ELAttribute):
-                        eAttribute = EAttribute(name=structuralFeature.name)
-                        eAttribute.upperBound = structuralFeature.upperBound
-                        eAttribute.lowerBound = structuralFeature.lowerBound
-                        print(eAttribute.upperBound)
-                        print(structuralFeature.name)
-                        typeName = structuralFeature.eAttributeType.name
-                        print(typeName)
-                        if isinstance(structuralFeature.eAttributeType, ELEnum):
-                            eEnum = Ecore4regToEcoreConverter.findEnum(
-                                self, typeName, ecorePackage, context)
-                            eAttribute.eAttributeType = eEnum
-                            eAttribute.eType = eEnum
-                        elif typeName == 'double':
-                            eAttribute.eType = EDouble
-                        elif typeName == 'String':
-                            eAttribute.eType = EString
-                        elif typeName == 'int':
-                            eAttribute.eType = EInt
-                        elif typeName == 'Date':
-                            eAttribute.eType = EDate
-                        elif typeName == 'boolean':
-                            eAttribute.eType = EBoolean
+                    if isinstance(structural_feature, ELAttribute):
+                        e_attribute = EAttribute(name=structural_feature.name)
+                        e_attribute.upperBound = structural_feature.upperBound
+                        e_attribute.lowerBound = structural_feature.lowerBound
+                        type_name = structural_feature.eAttributeType.name
+                        if structural_feature.iD:
+                            e_attribute.iD = True
 
-                        eClass.eStructuralFeatures.append(eAttribute)
+                        if isinstance(structural_feature.eAttributeType, ELEnum):
+                            e_enum = Ecore4regToEcoreConverter.find_enum(
+                                self, type_name, ecore_package, context)
+                            e_attribute.eAttributeType = e_enum
+                            e_attribute.eType = e_enum
+                        elif type_name == 'double':
+                            e_attribute.eType = EDouble
+                        elif type_name == 'String':
+                            e_attribute.eType = EString
+                        elif type_name == 'int':
+                            e_attribute.eType = EInt
+                        elif type_name == 'Date':
+                            e_attribute.eType = EDate
+                        elif type_name == 'boolean':
+                            e_attribute.eType = EBoolean
 
-                    if isinstance(structuralFeature, ELReference):
-                        eReference = EReference(name=structuralFeature.name)
-                        eReference.upperBound = structuralFeature.upperBound
-                        eReference.lowerBound = structuralFeature.lowerBound
-                        eReference.containment = structuralFeature.containment
-                        eClass.eStructuralFeatures.append(eReference)
-                        typeName = structuralFeature.eType.name
-                        eReference.typeName = typeName
+                        e_class.eStructuralFeatures.append(e_attribute)
+
+                    if isinstance(structural_feature, ELReference):
+                        e_reference = EReference(name=structural_feature.name)
+                        e_reference.upperBound = structural_feature.upperBound
+                        e_reference.lowerBound = structural_feature.lowerBound
+                        e_reference.containment = structural_feature.containment
+                        e_class.eStructuralFeatures.append(e_reference)
+                        type_name = structural_feature.eType.name
+                        e_reference.typeName = type_name
 
                 for operation in classifier.eOperations:
-                    eOperation = EOperation(name=operation.name)
-                    eClass.eOperations.append(eOperation)
-                    typeName = operation.eType.name
-                    eOperation.typeName = typeName
+                    e_operation = EOperation(name=operation.name)
+                    e_class.eOperations.append(e_operation)
+                    type_name = operation.eType.name
+                    e_operation.typeName = type_name
 
-                ecorePackage.eClassifiers.append(eClass)
+                ecore_package.eClassifiers.append(e_class)
 
         # set the types for refernces, supercalss, and operations
-        for classifier in ecorePackage.eClassifiers:
+        for classifier in ecore_package.eClassifiers:
             if isinstance(classifier, EClass):
                 if hasattr(classifier, 'superTypeName'):
-                    classifier.eSuperTypes.append(Ecore4regToEcoreConverter.findEClass(
-                        self, classifier.superTypeName, ecorePackage))
+                    classifier.eSuperTypes.append(Ecore4regToEcoreConverter.find_eclass(
+                        self, classifier.superTypeName, ecore_package))
 
-                for structuralFeature in classifier.eStructuralFeatures:
-                    if isinstance(structuralFeature, EReference):
-                        theClass = Ecore4regToEcoreConverter.findEClass(
-                            self, structuralFeature.typeName, ecorePackage)
-                        structuralFeature.eType = theClass
-                        structuralFeature.eReferenceType = theClass
+                for structural_feature in classifier.eStructuralFeatures:
+                    if isinstance(structural_feature, EReference):
+                        the_class = Ecore4regToEcoreConverter.find_eclass(
+                            self, structural_feature.typeName, ecore_package)
+                        structural_feature.eType = the_class
+                        structural_feature.eReferenceType = the_class
                 for operation in classifier.eOperations:
-                    theClass = Ecore4regToEcoreConverter.findEClass(
-                        self, operation.typeName, ecorePackage)
-                    if not (theClass is None):
-                        operation.eType = theClass
+                    the_class = Ecore4regToEcoreConverter.find_eclass(
+                        self, operation.typeName, ecore_package)
+                    if not (the_class is None):
+                        operation.eType = the_class
                     elif operation.typeName == 'double':
                         operation.eType = EDouble
                     elif operation.typeName == 'String':
@@ -135,42 +141,40 @@ class Ecore4regToEcoreConverter(object):
                     elif operation.typeName == 'boolean':
                         operation.eType = EBoolean
                     else:
-                        eEnum = Ecore4regToEcoreConverter.findEnum(
-                            self, operation.typeName, ecorePackage, context)
-                        operation.eType = eEnum
+                        e_enum = Ecore4regToEcoreConverter.find_enum(
+                            self, operation.typeName, ecore_package, context)
+                        operation.eType = e_enum
 
-        return ecorePackage
+        return ecore_package
 
-    def findEClass(self, superTypeName, ecorePackage):
+    def find_eclass(self, supertype_name, ecore_package):
         '''
         Documentation for findEClass
         '''
-        returnEClass = None
-        for classifier in ecorePackage.eClassifiers:
+        return_eclass = None
+        for classifier in ecore_package.eClassifiers:
             if isinstance(classifier, EClass):
-                if classifier.name == superTypeName:
-                    returnEClass = classifier
+                if classifier.name == supertype_name:
+                    return_eclass = classifier
 
-        return returnEClass
+        return return_eclass
 
-    def findEnum(self, typeName, ecorePackage, context):
+    def find_enum(self, type_name, ecore_package, context):
         '''
         Documentation for findEnum
         '''
-        returnEnum = None
+        return_enum = None
 
-        if ecorePackage.name == 'input_layer_entities':
-            for classifier in context.inputLayerEnumsEcorePackage.eClassifiers:
+        if ecore_package.name == 'input_layer_entities':
+            for classifier in context.input_layer_enums_ecore_package.eClassifiers:
                 if isinstance(classifier, EEnum):
-                    if classifier.name == typeName:
-                        returnEnum = classifier
+                    if classifier.name == type_name:
+                        return_enum = classifier
 
-        if ecorePackage.name == 'output_layer_entities':
-            for classifier in context.outputLayerEnumsEcorePackage.eClassifiers:
+        if ecore_package.name == 'output_layer_entities':
+            for classifier in context.output_layer_enums_ecore_package.eClassifiers:
                 if isinstance(classifier, EEnum):
-                    if classifier.name == typeName:
-                        returnEnum = classifier
+                    if classifier.name == type_name:
+                        return_enum = classifier
 
-        # if returnEnum == None:
-        #    returnEnum = EEnum(name=typeName)
-        return returnEnum
+        return return_enum
