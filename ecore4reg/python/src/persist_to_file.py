@@ -16,7 +16,7 @@ from pyecore.resources.json import JsonResource
 from utils import Utils
 
 
-from ecore4reg import ELAttribute, ELClass, ELEnum, ELOperation, ELReference, ScriptTask
+from ecore4reg import ELAttribute, ELClass, ELEnum, ELOperation, ELReference
 
 
 class PersistToFile:
@@ -41,7 +41,6 @@ class PersistToFile:
             self, context, context.output_layer_enums_package, "ecore4reg")
         PersistToFile.persist_types_model(
             self, context, context.types_package, "ecore4reg")
-        PersistToFile.persist_workflow(self, context)
         PersistToFile.persist_generation_transformations(self, context)
 
     def persist_entity_model(self, context, the_package, extension, imported_package):
@@ -317,59 +316,7 @@ class PersistToFile:
             context.output_layer_entities_package)
         output_layer_entities_resource2.save()
 
-    def persist_workflow(self, context):
-        '''
-        Documentation for persist_workflow
-        '''
-        f = open(context.output_directory + os.sep + 'ecore4reg' +
-                 os.sep +
-                 'workflow.ecore4reg', "a",  encoding='utf-8')
-        f.write("WorkflowModule " + context.workflow_module.name + "\r{\r")
-        f.write("\t\tsubProcess {\r")
-        for process in context.workflow_module.subProcess:
-            f.write("\t\t\t")
-            f.write("SubProcess " + process.name + " flowElements {\r")
-            f.write("\t\t\t\tParallelGateway gw1 outgoing (")
-            counter = 0
-            for element in process.flowElements:
-                if counter != 0:
-                    f.write(",")
-                counter = counter + 1
-                f.write("sf" + str(counter))
-            f.write("),\r")
-            counter = 0
-            for element in process.flowElements:
-                if isinstance(element, ScriptTask):
-                    counter = counter + 1
-                    f.write("\t\t\t\t")
-                    f.write("ScriptTask " + element.name +
-                            " incoming (sf" + str(counter) + ")")
-
-                    counter2 = 0
-                    if PersistToFile.count_non_none_layers(self, element) > 0:
-                        f.write("\r\t\t\t\t\tselectionLayers {\r")
-                        for layer in element.selectionLayers:
-                            if not layer.name is None:
-                                if counter2 != 0:
-                                    f.write(",")
-                                f.write("\r\t\t\t\t\t\tSelectionLayer " + Utils.make_valid_id(str(layer.name)) +
-                                        "{generatedEntity output_layer_entities." + layer.generatedEntity.name + " }")
-                                counter2 = counter2+1
-                        f.write("\r\t\t\t\t\t}")
-                    f.write(",\r")
-
-            counter = 0
-
-            for element in process.flowElements:
-                if not (counter == 0):
-                    f.write(",\r")
-                counter = counter + 1
-                f.write("SequenceFlow sf" + str(counter) +
-                        " from gw1 to " + element.name)
-            f.write("\r}\r")
-            f.write("}\r")
-            f.write("}\r")
-            f.close()
+   
 
     def persist_generation_transformations(self, context):
         '''
@@ -387,8 +334,7 @@ class PersistToFile:
             for layer in view.selectionLayerSQL:
                 if not layer.selectionLayer.name is None:
                     f.write("\t\t\tLayerSQL {\r")
-                    f.write("selectionLayer finrepWorkflow.finrepReports.task_" + view.name[5:len(
-                        view.name)] + "." + Utils.make_valid_id(str(layer.selectionLayer.name)) + "\r")
+                    f.write("selectionLayer SelectionLayer " + Utils.make_valid_id(str(layer.selectionLayer.name)) + "\r")
                     for column in layer.columns:
                         f.write("\t\t\t\tSelectMember   input_layer_enums.Group_type_domain.Internal_group as output_layer_entities." +
                                 view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name + "\r")

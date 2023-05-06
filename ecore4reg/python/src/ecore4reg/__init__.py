@@ -1,28 +1,19 @@
 
 from .ecore4reg import getEClassifier, eClassifiers
 from .ecore4reg import name, nsURI, nsPrefix, eClass
-from .ecore4reg import BaseElement, FlowElementsContainer, FlowElement, FlowNode, SequenceFlow, Task, Activity, Gateway, ExclusiveGateway, InclusiveGateway, ParallelGateway, ServiceTask, SubProcess, ScriptTask, UserTask, Import, Module, ModuleList, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, LayerSQL, SelectClause, SelectColumn, SelectColumnMemberAs, SelectValueAs, SelectColumnAttributeAs, Comparitor, WhereClause, ViewModule, ActivityTag, Scenario, ScenarioTag, Test, TestModule, DataConstraint, AttrComparison, SelectionLayer, TestScope, UnitTestScope, E2ETestScope, InputFile, WorkflowModule, ELAttribute, ELClass, ELClassifier, ELDataType, ELEnum, ELEnumLiteral, ELModelElement, ELNamedElement, ELOperation, ELPackage, ELReference, ELStructuralFeature, ELTypedElement, ELAnnotation, VTLEnrichedCube, VTLGeneratedOutputlayer, VTLForOutputLayerAndIntermediateLayerCombination, VTLGeneratedIntermediateLayer, VTLTransformation, VTLScheme, VTLForSelectionLayer, VTLModule, EntityToVTLIntermediateLayerLink, VTLForView, VTLGeneratedOutputlayerModule, VTLForOutputLayerAndIntermediateLayerCombinationModule, VTLGeneratedIntermediateLayerModule, VTLSchemesModule, VTLForSelectionLayerModule, EntityToVTLIntermediateLayerLinkModule, VTLForViewModule
+from .ecore4reg import Import, Module, ModuleList, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, LayerSQL, SelectClause, SelectColumn, SelectColumnMemberAs, SelectValueAs, SelectColumnAttributeAs, Comparitor, WhereClause, ViewModule, SelectionLayer, ELAttribute, ELClass, ELClassifier, ELDataType, ELEnum, ELEnumLiteral, ELModelElement, ELNamedElement, ELOperation, ELPackage, ELReference, ELStructuralFeature, ELTypedElement, ELAnnotation, ELStringToStringMapEntry, VTLEnrichedCube, VTLGeneratedOutputlayer, VTLForOutputLayerAndIntermediateLayerCombination, VTLGeneratedIntermediateLayer, VTLTransformation, VTLScheme, VTLForSelectionLayer, VTLModule, EntityToVTLIntermediateLayerLink, VTLForView, VTLGeneratedOutputlayerModule, VTLForOutputLayerAndIntermediateLayerCombinationModule, VTLGeneratedIntermediateLayerModule, VTLSchemesModule, VTLForSelectionLayerModule, EntityToVTLIntermediateLayerLinkModule, VTLForViewModule
 
 
 from . import ecore4reg
 
-__all__ = ['BaseElement', 'FlowElementsContainer', 'FlowElement', 'FlowNode', 'SequenceFlow', 'Task', 'Activity', 'Gateway', 'ExclusiveGateway', 'InclusiveGateway', 'ParallelGateway', 'ServiceTask', 'SubProcess', 'ScriptTask', 'UserTask', 'Import', 'Module', 'ModuleList', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'LayerSQL', 'SelectClause', 'SelectColumn', 'SelectColumnMemberAs', 'SelectValueAs', 'SelectColumnAttributeAs', 'Comparitor', 'WhereClause', 'ViewModule', 'ActivityTag', 'Scenario', 'ScenarioTag', 'Test', 'TestModule', 'DataConstraint', 'AttrComparison', 'SelectionLayer', 'TestScope',
-           'UnitTestScope', 'E2ETestScope', 'InputFile', 'WorkflowModule', 'ELAttribute', 'ELClass', 'ELClassifier', 'ELDataType', 'ELEnum', 'ELEnumLiteral', 'ELModelElement', 'ELNamedElement', 'ELOperation', 'ELPackage', 'ELReference', 'ELStructuralFeature', 'ELTypedElement', 'ELAnnotation', 'VTLEnrichedCube', 'VTLGeneratedOutputlayer', 'VTLForOutputLayerAndIntermediateLayerCombination', 'VTLGeneratedIntermediateLayer', 'VTLTransformation', 'VTLScheme', 'VTLForSelectionLayer', 'VTLModule', 'EntityToVTLIntermediateLayerLink', 'VTLForView', 'VTLGeneratedOutputlayerModule', 'VTLForOutputLayerAndIntermediateLayerCombinationModule', 'VTLGeneratedIntermediateLayerModule', 'VTLSchemesModule', 'VTLForSelectionLayerModule', 'EntityToVTLIntermediateLayerLinkModule', 'VTLForViewModule']
+__all__ = ['Import', 'Module', 'ModuleList', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'LayerSQL', 'SelectClause', 'SelectColumn', 'SelectColumnMemberAs', 'SelectValueAs', 'SelectColumnAttributeAs', 'Comparitor', 'WhereClause', 'ViewModule', 'SelectionLayer', 'ELAttribute', 'ELClass', 'ELClassifier', 'ELDataType', 'ELEnum', 'ELEnumLiteral', 'ELModelElement', 'ELNamedElement', 'ELOperation', 'ELPackage',
+           'ELReference', 'ELStructuralFeature', 'ELTypedElement', 'ELAnnotation', 'ELStringToStringMapEntry', 'VTLEnrichedCube', 'VTLGeneratedOutputlayer', 'VTLForOutputLayerAndIntermediateLayerCombination', 'VTLGeneratedIntermediateLayer', 'VTLTransformation', 'VTLScheme', 'VTLForSelectionLayer', 'VTLModule', 'EntityToVTLIntermediateLayerLink', 'VTLForView', 'VTLGeneratedOutputlayerModule', 'VTLForOutputLayerAndIntermediateLayerCombinationModule', 'VTLGeneratedIntermediateLayerModule', 'VTLSchemesModule', 'VTLForSelectionLayerModule', 'EntityToVTLIntermediateLayerLinkModule', 'VTLForViewModule']
 
 eSubpackages = []
 eSuperPackage = None
 ecore4reg.eSubpackages = eSubpackages
 ecore4reg.eSuperPackage = eSuperPackage
 
-FlowElementsContainer.flowElements.eType = FlowElement
-ServiceTask.enrichedAttribute.eType = ELOperation
-ServiceTask.scenarios.eType = Scenario
-ServiceTask.secondAttribute.eType = ELAttribute
-ServiceTask.requiredAttributesForScenarioChoice.eType = ELStructuralFeature
-ServiceTask.requiredAttributesForEntityCreation.eType = ELStructuralFeature
-ScriptTask.selectionLayers.eType = SelectionLayer
-ScriptTask.outputLayer.eType = ELClass
-UserTask.entity.eType = ELClass
 Module.dependencies.eType = Module
 Module.imports.eType = Import
 ModuleList.modules.eType = Module
@@ -44,35 +35,15 @@ SelectColumnAttributeAs.attribute.eType = ELAttribute
 WhereClause.attribute1.eType = ELAttribute
 WhereClause.member.eType = ELEnumLiteral
 ViewModule.views.eType = View
-ActivityTag.activity.eType = Activity
-Scenario.requiredAttributes.eType = ELAttribute
-Scenario.data_constraints.eType = DataConstraint
-ScenarioTag.scenario.eType = Scenario
-Test.inputData.eType = InputFile
-Test.expectedResult.eType = InputFile
-Test.scope.eType = TestScope
-TestModule.tests.eType = Test
-DataConstraint.attr1.eType = ELAttribute
-DataConstraint.member.eType = ELEnumLiteral
-SelectionLayer.generatedEntity.eType = ELClass
-UnitTestScope.scenarios.eType = Scenario
-E2ETestScope.scenarios.eType = Scenario
-E2ETestScope.layer.eType = SelectionLayer
-E2ETestScope.scriptTask.eType = ScriptTask
-InputFile.entity.eType = ELClass
-WorkflowModule.taskTags.eType = ActivityTag
-WorkflowModule.scenarioTags.eType = ScenarioTag
-WorkflowModule.subProcess.eType = SubProcess
 ELAttribute.eAttributeType.eType = ELDataType
 ELClass.eSuperTypes.eType = ELClass
 ELClass.eStructuralFeatures.eType = ELStructuralFeature
 ELClass.eOperations.eType = ELOperation
-ELClassifier.package.eType = ELPackage
 ELEnum.eLiterals.eType = ELEnumLiteral
 ELModelElement.eAnnotations.eType = ELAnnotation
-ELPackage.eClassifiers.eType = ELClassifier
 ELReference.eReferenceType.eType = ELClassifier
 ELTypedElement.eType.eType = ELClassifier
+ELAnnotation.details.eType = ELStringToStringMapEntry
 VTLEnrichedCube.transformations.eType = VTLTransformation
 VTLGeneratedOutputlayer.dependant_intermediate_layers.eType = VTLGeneratedIntermediateLayer
 VTLGeneratedOutputlayer.VTLForOutputLayerAndIntemedateLayerCombinations.eType = VTLForOutputLayerAndIntermediateLayerCombination
@@ -104,17 +75,14 @@ VTLSchemesModule.vTLSchemes.eType = VTLScheme
 VTLForSelectionLayerModule.vTLForSelectionLayers.eType = VTLForSelectionLayer
 EntityToVTLIntermediateLayerLinkModule.entityToVTLIntermediateLayerLinks.eType = EntityToVTLIntermediateLayerLink
 VTLForViewModule.vTLForViews.eType = VTLForView
-FlowNode.outgoing.eType = SequenceFlow
-FlowNode.incoming.eType = SequenceFlow
-SequenceFlow.targetRef.eType = FlowNode
-SequenceFlow.targetRef.eOpposite = FlowNode.incoming
-SequenceFlow.sourceRef.eType = FlowNode
-SequenceFlow.sourceRef.eOpposite = FlowNode.outgoing
 RequirementsSectionLinkWithText.linkedRuleSection.eType = TitledRequirementsSection
 TitledRequirementsSection.referencingSections.eType = RequirementsSectionLinkWithText
 TitledRequirementsSection.referencingSections.eOpposite = RequirementsSectionLinkWithText.linkedRuleSection
+ELClassifier.package.eType = ELPackage
+ELPackage.eClassifiers.eType = ELClassifier
+ELPackage.eClassifiers.eOpposite = ELClassifier.package
 
-otherClassifiers = [Comparitor, AttrComparison]
+otherClassifiers = [Comparitor]
 
 for classif in otherClassifiers:
     eClassifiers[classif.name] = classif

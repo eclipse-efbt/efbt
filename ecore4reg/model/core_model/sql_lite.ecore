@@ -12,7 +12,8 @@
         eType="#//LayerSQL" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LayerSQL">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="ecore:EClass bpmn_lite.ecore#//SelectionLayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="#//SelectionLayer"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//SelectColumn" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" upperBound="-1"
@@ -44,5 +45,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="ViewModule" eSuperTypes="module_management.ecore#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="views" upperBound="-1"
         eType="#//View" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectionLayer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>
