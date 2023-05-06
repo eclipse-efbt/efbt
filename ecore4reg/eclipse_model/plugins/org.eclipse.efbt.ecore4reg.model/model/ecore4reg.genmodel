@@ -5,8 +5,8 @@
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
     operationReflection="true" importOrganizing="true" pluginKey="">
   <foreignModel>ecore4reg.ecore</foreignModel>
-  <genPackages prefix="Ecore4reg" basePackage="org.eclipse.efbt.ecore4reg.model"
-      resource="XMI" disposableProviderFactory="true" loadInitialization="true" literalsInterface="false"
+  <genPackages prefix="Ecore4reg" basePackage="org.eclipse.efbt.ecore4reg.model" resource="XMI"
+      disposableProviderFactory="true" loadInitialization="true" literalsInterface="false"
       ecorePackage="ecore4reg.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="ecore4reg.ecore#//Comparitor">
       <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//Comparitor/less_than"/>
@@ -246,7 +246,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELTypedElement/lowerBound"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELAnnotation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELAnnotation/contents"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ELAnnotation/details"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELAnnotation/source"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ELStringToStringMapEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELStringToStringMapEntry/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELStringToStringMapEntry/value"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//VTLEnrichedCube">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//VTLEnrichedCube/transformations"/>
