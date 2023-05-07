@@ -12,7 +12,7 @@
 #
 
 from pyecore.ecore import EPackage
-from ecore4reg import ELDataType, ELPackage, ModuleList, ViewModule, VTLModule, WorkflowModule
+from ecore4reg import ELDataType, ELPackage, ModuleList, ViewModule, VTLModule
 
 
 class Context(object):
@@ -123,8 +123,6 @@ class Context(object):
 
     view_module = ViewModule(name='generations')
 
-    workflow_module = WorkflowModule(name='finrepWorkflow')
-
     vtl_module = VTLModule(name="vtl")
     module_list = ModuleList()
 
@@ -146,5 +144,4 @@ class Context(object):
         self.module_list.modules.append(self.input_layer_entities_package)
         self.module_list.modules.append(self.output_layer_entities_package)
         self.module_list.modules.append(self.view_module)
-        self.module_list.modules.append(self.workflow_module)
         self.module_list.modules.append(self.vtl_module)

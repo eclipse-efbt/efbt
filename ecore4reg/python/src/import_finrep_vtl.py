@@ -18,11 +18,11 @@ Created on 22 Jan 2022
 import csv
 import os
 
-from ecore4reg import SubProcess, ELClass, ELOperation
+from ecore4reg import  ELClass, ELOperation
 from ecore4reg import VTLSchemesModule, VTLTransformation, View
 from ecore4reg import EntityToVTLIntermediateLayerLink
 from ecore4reg import EntityToVTLIntermediateLayerLinkModule
-from ecore4reg import LayerSQL, ScriptTask, SelectColumnAttributeAs
+from ecore4reg import LayerSQL,  SelectColumnAttributeAs
 from ecore4reg import SelectionLayer
 from ecore4reg import VTLForOutputLayerAndIntermediateLayerCombination
 from ecore4reg import VTLForSelectionLayer, VTLForSelectionLayerModule
@@ -42,10 +42,7 @@ class ImportFinrepVTL(object):
         '''
         Documentation for doImport
         '''
-        # ImportFinrepVTL.buildOutputLayerToVTLLayerMap(self,context)
-        sub_process = SubProcess(name="finrepReports")
-        context.workflow_module.subProcess.extend([sub_process])
-        # ImportFinrepVTL.addReports(self,context)
+
         ImportFinrepVTL.initialise_vtl_Module(self, context)
         ImportFinrepVTL.import_finrep_eil_to_rol_transformation_schemes(
             self, context)
@@ -380,12 +377,10 @@ class ImportFinrepVTL(object):
                     view = View(name="view_" + report_template)
                     context.view_module.views.append(view)
 
-                    task = ScriptTask(name="task_" + report_template)
-                    context.workflow_module.subProcess[0].flowElements.append(
-                        task)
-                    ImportFinrepVTL.add_layers(self, context, view, task)
+                    
+                    ImportFinrepVTL.add_layers(self, context, view)
 
-    def add_layers(self, context, view, task):
+    def add_layers(self, context, view):
         '''
         Doc for addLayers
         '''
@@ -409,10 +404,9 @@ class ImportFinrepVTL(object):
                     input_layer = link.entity
                     selection_layer = SelectionLayer()
                     if input_layer is not None:
-                        selection_layer.name = view.outputLayer.name + \
-                            "_" + link.VTLIntermediateLayer.name
+                        selection_layer.name = link.VTLIntermediateLayer.name
                     selection_layer.generatedEntity = rol_vtl.outputLayer
-                    task.selectionLayers.extend([selection_layer])
+                    
                     layer_sql = LayerSQL()
                     layer_sql.selectionLayer = selection_layer
                     vtl_for_selection_layer = VTLForSelectionLayer()
@@ -423,7 +417,7 @@ class ImportFinrepVTL(object):
                         vtl_for_selection_layer)
 
                     view.selectionLayerSQL.extend([layer_sql])
-                    ImportFinrepVTL.add_columns_to_layer(self, layer_sql)
+                    ImportFinrepVTL.add_columns_to_layer(self, layer_sql, view.outputLayer)
 
     def find_output_layer_vtl(self, context, output_layer_name):
         '''
@@ -443,14 +437,14 @@ class ImportFinrepVTL(object):
             if link.VTLIntermediateLayer == intermediate_layer:
                 return link
 
-    def add_columns_to_layer(self, layer_sql):
+    def add_columns_to_layer(self, layer_sql, entity):
         '''
         Doc for addColumnsToLayer
         '''
 
-        output_layer = layer_sql.selectionLayer.generatedEntity
-        if not output_layer is None:
-            for member in output_layer.eOperations:
+        entity = layer_sql.selectionLayer.generatedEntity
+        if not entity is None:
+            for member in entity.eOperations:
                 if isinstance(member, ELOperation):
                     select_column = SelectColumnAttributeAs()
                     select_column.asAttribute = member

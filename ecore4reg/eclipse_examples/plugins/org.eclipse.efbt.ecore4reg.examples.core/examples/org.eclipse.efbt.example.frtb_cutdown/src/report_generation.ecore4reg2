@@ -11,7 +11,7 @@ SPDX-License-Identifier: EPL-2.0
 				View GIRR_LongDeltaSensitivity_View  
 				{ 
 					LayerSQL {
-						selectionLayer frtb_workflow_module.frtb.Report_Generation.FRTB_C91.GIRR_LongDeltaSensitivity_Layer 
+						selectionLayer SelectionLayer  GIRR_LongDeltaSensitivity_Layer 
 						SelectMember   input_layer_enums.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as output_layer_entities.C91_REF_OutputItem.Approach_For_Prudential_Purposes
 						SelectMember input_layer_enums.Base.Memorandum_Items as output_layer_entities.C91_REF_OutputItem.Base
 						SelectMember output_layer_enums.Contingent_Scenario.NA as  output_layer_entities.C91_REF_OutputItem.Contingent_Scenario
@@ -30,7 +30,7 @@ SPDX-License-Identifier: EPL-2.0
 					}
 					
 					LayerSQL {
-						selectionLayer frtb_workflow_module.frtb.Report_Generation.FRTB_C91.GIRR_ShortDeltaSensitivity_Layer
+						selectionLayer SelectionLayer  GIRR_ShortDeltaSensitivity_Layer
 						SelectMember input_layer_enums.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as output_layer_entities.C91_REF_OutputItem.Approach_For_Prudential_Purposes
 						SelectMember input_layer_enums.Base.Memorandum_Items as output_layer_entities.C91_REF_OutputItem.Base
 						SelectMember output_layer_enums.Contingent_Scenario.NA as  output_layer_entities.C91_REF_OutputItem.Contingent_Scenario
@@ -48,7 +48,7 @@ SPDX-License-Identifier: EPL-2.0
 						where  input_layer_entities.Delta_sensitivity.Delta_sensitivity less_than value "0"  
 					 }
 					LayerSQL {
-						selectionLayer frtb_workflow_module.frtb.Report_Generation.FRTB_C91.GIRR_Net_Sensitivity_Layer
+						selectionLayer SelectionLayer  GIRR_Net_Sensitivity_Layer
 						SelectMember input_layer_enums.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as output_layer_entities.C91_REF_OutputItem.Approach_For_Prudential_Purposes
 						SelectMember input_layer_enums.Base.Memorandum_Items as output_layer_entities.C91_REF_OutputItem.Base
 						SelectMember output_layer_enums.Contingent_Scenario.NA as  output_layer_entities.C91_REF_OutputItem.Contingent_Scenario

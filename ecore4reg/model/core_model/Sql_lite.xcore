@@ -1,0 +1,70 @@
+@xcore.lang.Ecore(nsURI="http://www.example.org/sql_lite")
+@License(license="Copyright (c) 2021 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r")
+@xcore.lang.GenModel(modelDirectory="/org.eclipse.efbt.ecore4reg.model.core_model/src",
+	editDirectory="/org.eclipse.efbt.ecore4reg.model.core_model.edit/src",
+	editorDirectory="/org.eclipse.efbt.ecore4reg.model.core_model.editor/src", modelName="Ecore4reg",
+	editPluginClass="ecore_lite.provider.Ecore4regEditPlugin",
+	editorPluginClass="ecore_lite.presentation.Ecore4regEditorPlugin",
+	testsDirectory="/org.eclipse.efbt.ecore4reg.model.core_model.tests/src",
+	testSuiteClass="ecore_lite.tests.Ecore4regAllTests", importerID="org.eclipse.emf.importer.ecore",
+	containmentProxies="false", editorPluginID="org.eclipse.efbt.ecore4reg.model.core_model.editor",
+	testsPluginID="org.eclipse.efbt.ecore4reg.model.core_model.tests")
+package sql_lite
+
+import ecore_lite.ELAttribute
+import ecore_lite.ELClass
+import ecore_lite.ELEnumLiteral
+import ecore_lite.ELOperation
+import module_management.Module
+
+annotation "license" as License
+
+class View {
+	id String name
+	refers ecore_lite.ELClass outputLayer
+	contains LayerSQL[] selectionLayerSQL
+}
+
+class LayerSQL {
+	contains SelectionLayer selectionLayer
+	contains SelectColumn[] columns
+	contains WhereClause[] whereClause
+}
+
+class SelectColumn {
+	refers ecore_lite.ELOperation asAttribute
+}
+
+class SelectColumnMemberAs extends SelectColumn {
+	refers ecore_lite.ELEnumLiteral memberAsConstant
+}
+
+class SelectColumnAttributeAs extends SelectColumn {
+	refers ecore_lite.ELAttribute attribute
+}
+
+class SelectValueAs extends SelectColumn {
+	String value
+}
+
+enum Comparitor {
+	less_than
+	equals = 1
+	greater_than = 2
+	not_equals = 3
+}
+
+class WhereClause {
+	refers ecore_lite.ELAttribute attribute1
+	Comparitor comparitor
+	refers ecore_lite.ELEnumLiteral member
+	String value
+}
+
+class ViewModule extends module_management.Module {
+	contains View[] views
+}
+
+class SelectionLayer {
+	String name
+}

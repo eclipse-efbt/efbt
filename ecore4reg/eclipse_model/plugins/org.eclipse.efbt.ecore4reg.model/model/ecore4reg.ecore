@@ -1,99 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ecore4reg" nsURI="http://www.eclipse.org/efbt/ecore4reg" nsPrefix="ecore4reg">
-  <eClassifiers xsi:type="ecore:EClass" name="BaseElement" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="invisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FlowElementsContainer" abstract="true"
-      eSuperTypes="#//BaseElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="flowElements" ordered="false"
-        upperBound="-1" eType="#//FlowElement" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FlowElement" abstract="true" eSuperTypes="#//BaseElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="display_name" ordered="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FlowNode" abstract="true" eSuperTypes="#//FlowElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="outgoing" upperBound="-1"
-        eType="#//SequenceFlow" eOpposite="#//SequenceFlow/sourceRef"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false"
-        upperBound="-1" eType="#//SequenceFlow" eOpposite="#//SequenceFlow/targetRef"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceFlow" eSuperTypes="#//FlowElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targetRef" ordered="false"
-        eType="#//FlowNode" eOpposite="#//FlowNode/incoming"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceRef" ordered="false"
-        eType="#//FlowNode" eOpposite="#//FlowNode/outgoing"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="#//Activity"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Activity" abstract="true" eSuperTypes="#//FlowNode"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Gateway" abstract="true" eSuperTypes="#//FlowNode"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ExclusiveGateway" eSuperTypes="#//Gateway"/>
-  <eClassifiers xsi:type="ecore:EClass" name="InclusiveGateway" eSuperTypes="#//Gateway"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ParallelGateway" eSuperTypes="#//Gateway"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ServiceTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enrichedAttribute" eType="#//ELOperation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
-        eType="#//Scenario" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="secondAttribute" eType="#//ELAttribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributesForScenarioChoice"
-        upperBound="-1" eType="#//ELStructuralFeature"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributesForEntityCreation"
-        upperBound="-1" eType="#//ELStructuralFeature"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityCreationTask" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SubProcess" eSuperTypes="#//Activity #//FlowElementsContainer"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayers" upperBound="-1"
-        eType="#//SelectionLayer" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//ELClass"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UserTask" eSuperTypes="#//Task">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//ELClass"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Import">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="importedNamespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Module">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="Module"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" upperBound="-1"
-        eType="#//Module">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="dependencies"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="theDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="theDescription"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="license" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="license"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eType="#//Module"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="theDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="license" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="name"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="version"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
         eType="#//Import" containment="true"/>
   </eClassifiers>
@@ -102,151 +20,44 @@
         eType="#//Module" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AllowedTypes">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="AllowedTypes"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allowedTypes" upperBound="-1"
-        eType="#//RequirementType" containment="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="allowedTypes"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eType="#//RequirementType" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequirementsModule" eSuperTypes="#//Module">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="RequirementsModule"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
-        eType="#//TitledRequirementsSection" containment="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="rules"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eType="#//TitledRequirementsSection" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allowedtypes" eType="#//AllowedTypes"
-        containment="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="allowedtypes"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequirementsSection" abstract="true">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="RequirementsSection"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="iD"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequirementsSectionImage" eSuperTypes="#//RequirementsSection">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="RequirementsSectionImage"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="style" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="style"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="uri" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="uri"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="style" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="uri" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequirementsSectionLinkWithText" eSuperTypes="#//RequirementsSection">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="RequirementsSectionLinkWithText"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="linkedRuleSection" eType="#//TitledRequirementsSection"
-        eOpposite="#//TitledRequirementsSection/referencingSections">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="linkedRuleSection"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="linkText"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subsection" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="subsection"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eOpposite="#//TitledRequirementsSection/referencingSections"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subsection" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequirementsSectionText" eSuperTypes="#//RequirementsSection">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="RequirementsSectionText"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="text"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RequirementType">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="RequirementType"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="requirementType"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TitledRequirementsSection" eSuperTypes="#//RequirementsSection">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="TitledRequirementsSection"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sections" upperBound="-1"
-        eType="#//RequirementsSection" containment="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="sections"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eType="#//RequirementsSection" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="referencingSections" eType="#//RequirementsSectionLinkWithText"
-        eOpposite="#//RequirementsSectionLinkWithText/linkedRuleSection">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="referencingSections"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eOpposite="#//RequirementsSectionLinkWithText/linkedRuleSection"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requirementsType" lowerBound="1"
-        eType="#//RequirementType">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="requirementsType"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="title"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eType="#//RequirementType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Tag">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -267,7 +78,8 @@
         eType="#//LayerSQL" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LayerSQL">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="#//SelectionLayer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="#//SelectionLayer"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//SelectColumn" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" upperBound="-1"
@@ -301,92 +113,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="views" upperBound="-1"
         eType="#//View" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ActivityTag" eSuperTypes="#//Tag">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="activity" eType="#//Activity"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Scenario">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="Scenario"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="name"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="invisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="description"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredAttributes" upperBound="-1"
-        eType="#//ELAttribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="data_constraints" eType="#//DataConstraint"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ScenarioTag" eSuperTypes="#//Tag">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" eType="#//Scenario"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Test">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" upperBound="-1"
-        eType="#//InputFile" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expectedResult" upperBound="-1"
-        eType="#//InputFile" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scope" eType="#//TestScope"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestModule" eSuperTypes="#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tests" upperBound="-1"
-        eType="#//Test" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DataConstraint">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attr1" eType="#//ELAttribute"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparison" eType="#//AttrComparison"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="#//ELEnumLiteral"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="AttrComparison">
-    <eLiterals name="equals"/>
-    <eLiterals name="less_than" value="1"/>
-    <eLiterals name="greater_than" value="2"/>
-    <eLiterals name="not_equals" value="3"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectionLayer">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="invisible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="generatedEntity" eType="#//ELClass"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TestScope">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UnitTestScope" eSuperTypes="#//TestScope">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" eType="#//Scenario"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="E2ETestScope" eSuperTypes="#//TestScope">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarios" upperBound="-1"
-        eType="#//Scenario"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="layer" eType="#//SelectionLayer"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scriptTask" eType="#//ScriptTask"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InputFile">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//ELClass"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WorkflowModule" eSuperTypes="#//Module">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="taskTags" upperBound="-1"
-        eType="#//ActivityTag" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="scenarioTags" upperBound="-1"
-        eType="#//ScenarioTag" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subProcess" upperBound="-1"
-        eType="#//SubProcess" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ELAttribute" eSuperTypes="#//ELStructuralFeature">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="iD" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -545,7 +274,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="VTLForOutputLayerAndIntermediateLayerCombinationModule"
       eSuperTypes="#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="vTLForOutputLayerAndIntermediateLayerCombinations"
-        upperBound="-1" eType="#//VTLForOutputLayerAndIntermediateLayerCombinationModule"
+        upperBound="-1" eType="#//VTLForOutputLayerAndIntermediateLayerCombination"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedIntermediateLayerModule"
