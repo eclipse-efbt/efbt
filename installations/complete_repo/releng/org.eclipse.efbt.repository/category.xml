@@ -15,9 +15,6 @@
    <feature id="org.eclipse.efbt.ecore4reg.model.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.ecore4reg.sirius_ui.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.efbt.ecore4reg.dsl.feature">
       <category name="efbt"/>
    </feature>
