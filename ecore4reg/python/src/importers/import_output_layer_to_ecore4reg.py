@@ -476,8 +476,12 @@ class ROLImport(object):
                                 
                                 amended_domain_name = None
                                 if (the_attribute_name1=="MTRCS"):
-                                    domain_id = context.variable_to_domain_map[attribute_name]
-                                    amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
+                                    if context.use_subdomains:
+                                        domain_id = context.variable_to_domain_map[attribute_name]
+                                        amended_domain_name = Utils.make_valid_id(domain_id)
+                                    else:
+                                        domain_id = context.variable_to_domain_map[attribute_name]
+                                        amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
                                 else:   
                                     if context.use_subdomains:
                                         if ((subdomain_id == "") or (subdomain_id == None)) and (len(specific_member) > 0):
