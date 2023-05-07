@@ -18,7 +18,7 @@ Created on 22 Jan 2022
 '''
 import os
 import csv
-from utils import Utils
+from importers.utils import Utils
 from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
 
 class ROLImport(object):
@@ -280,13 +280,13 @@ class ROLImport(object):
                         attributeList = [variable]
                         if (variable=="MTRCS"):
                             attributeList = context.variable_set_to_variable_map[variableSet]
-                        if (variable == "VALUE_DECIMAL"):
+                        if (variable == "VALUE_DECIMAL") or (variable == "OBSERVATION_VALUE"):
                             attributeList = []
                             
                         for attribute_name in attributeList:
                             try: 
 
-                                domain_id = context.variable_to_domain_map[variable]
+                                domain_id = context.variable_to_domain_map[attribute_name]
                                 # domain_ID_Name = context.domain_to_domain_name_map[domainID]
                                 amended_domain_name = Utils.make_valid_id(domain_id)
                                 the_enum = Utils.find_rol_enum(
@@ -356,13 +356,11 @@ class ROLImport(object):
                         attribute_list = [variable]
                         if (variable=="MTRCS"):
                             attribute_list = context.variable_set_to_variable_map[variable_set]
-                        if (variable == "VALUE_DECIMAL"):
+                        if (variable == "VALUE_DECIMAL") or (variable == "OBSERVATION_VALUE"):
                             attribute_list = []
                             
                         for attribute_name in attribute_list:
                         
-                            print("cubeName")
-                            print(cube_name)
                             domain_id = None
                             # deal with the case where we have no subdomain but have a specific member
                             if (variable=="MTRCS"):
@@ -455,7 +453,7 @@ class ROLImport(object):
                         attribute_list = [the_attribute_name1]
                         if (the_attribute_name1=="MTRCS"):
                             attribute_list = context.variable_set_to_variable_map[variable_set]
-                        if (the_attribute_name1 == "VALUE_DECIMAL"):
+                        if (the_attribute_name1 == "VALUE_DECIMAL") or (the_attribute_name1 == "OBSERVATION_VALUE"):
                             attribute_list = []
                         for attribute_name in attribute_list: 
                         
@@ -479,7 +477,7 @@ class ROLImport(object):
                                 amended_domain_name = None
                                 if (the_attribute_name1=="MTRCS"):
                                     domain_id = context.variable_to_domain_map[attribute_name]
-                                    amended_domain_name = Utils.make_valid_id(domain_id)
+                                    amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
                                 else:   
                                     if context.use_subdomains:
                                         if ((subdomain_id == "") or (subdomain_id == None)) and (len(specific_member) > 0):
