@@ -274,7 +274,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="VTLForOutputLayerAndIntermediateLayerCombinationModule"
       eSuperTypes="#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="vTLForOutputLayerAndIntermediateLayerCombinations"
-        upperBound="-1" eType="#//VTLForOutputLayerAndIntermediateLayerCombinationModule"
+        upperBound="-1" eType="#//VTLForOutputLayerAndIntermediateLayerCombination"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedIntermediateLayerModule"

@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Fri Oct 28 14:54:45 BST 2022-->
+<!-- Creation date: Sun May 07 07:14:40 BST 2023-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -157,7 +157,7 @@ function getElementsByTagNames(list,obj) {
 		<span class="teletype">equals</span>
 	</td>
 	<td>
-		0
+		1
 	</td>
 	<td>
 	</td>	
@@ -167,7 +167,17 @@ function getElementsByTagNames(list,obj) {
 		<span class="teletype">greater_than</span>
 	</td>
 	<td>
-		0
+		2
+	</td>
+	<td>
+	</td>	
+</tr>
+<tr>
+	<td>
+		<span class="teletype">not_equals</span>
+	</td>
+	<td>
+		3
 	</td>
 	<td>
 	</td>	
@@ -194,8 +204,9 @@ function getElementsByTagNames(list,obj) {
 <td> </td>
 		</tr><tr>	<td><div id="sqlliteLayerSQL.selectionLayer" class="teletype">selectionLayer</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#bpmnliteSelectionLayer">SelectionLayer</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#sqlliteSelectionLayer">SelectionLayer</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
 </td> 
 <td> </td>
 		</tr><tr>	<td><div id="sqlliteLayerSQL.whereClause" class="teletype">whereClause</div>
@@ -218,9 +229,9 @@ function getElementsByTagNames(list,obj) {
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="sqlliteSelectColumn.as" class="teletype">as</div>
+<tr>	<td><div id="sqlliteSelectColumn.asAttribute" class="teletype">asAttribute</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELOperation">ELOperation</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -239,7 +250,7 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="sqlliteSelectColumnAttributeAs.attribute" class="teletype">attribute</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELAttribute">ELAttribute</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -258,12 +269,48 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="sqlliteSelectColumnMemberAs.memberAsConstant" class="teletype">memberAsConstant</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXEnumLiteral">XEnumLiteral</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELEnumLiteral">ELEnumLiteral</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
 		</tr></table>
 <a href="#sql_lite.SelectColumnMemberAs.ref"></a>
+<h2 id="sqlliteSelectValueAs"><a href="#sqlliteSelectValueAs"><a href="#sqlliteSelectValueAs">SelectValueAs</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#sqlliteSelectColumn">SelectColumn</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="sqlliteSelectValueAs.value" class="teletype">value</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#sql_lite.SelectValueAs.attr"></a>
+<h2 id="sqlliteSelectionLayer"><a href="#sqlliteSelectionLayer"><a href="#sqlliteSelectionLayer">SelectionLayer</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="sqlliteSelectionLayer.name" class="teletype">name</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#sql_lite.SelectionLayer.attr"></a>
 <h2 id="sqlliteView"><a href="#sqlliteView"><a href="#sqlliteView">View</a></a></h2>
 
 <table>
@@ -294,7 +341,7 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="sqlliteView.outputLayer" class="teletype">outputLayer</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXClass">XClass</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELClass">ELClass</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
@@ -361,13 +408,13 @@ function getElementsByTagNames(list,obj) {
 </tr>
 <tr>	<td><div id="sqlliteWhereClause.attribute1" class="teletype">attribute1</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXAttribute">XAttribute</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELAttribute">ELAttribute</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
 		</tr><tr>	<td><div id="sqlliteWhereClause.member" class="teletype">member</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#xcoreXEnumLiteral">XEnumLiteral</a></span></div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELEnumLiteral">ELEnumLiteral</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
 </td> 
 <td> </td>
