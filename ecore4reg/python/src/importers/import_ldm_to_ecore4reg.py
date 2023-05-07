@@ -12,7 +12,7 @@
 #
 import os
 import csv
-from utils import Utils
+from importers.utils import Utils
 
 from ecore4reg import ELAttribute, ELClass, ELEnum
 from ecore4reg import ELEnumLiteral, ELOperation, ELReference

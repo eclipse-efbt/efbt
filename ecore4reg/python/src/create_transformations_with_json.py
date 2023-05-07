@@ -14,13 +14,12 @@
 Created on 25 April 2022
 '''
 
-from context import Context
-
-from import_input_layer_to_ecore4reg import InputLayerImport
-from import_output_layer_to_ecore4reg import ROLImport
-from import_finrep_vtl import ImportFinrepVTL
-from persist_to_file import PersistToFile
-from ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
+from importers.context import Context
+from importers.import_input_layer_to_ecore4reg import InputLayerImport
+from importers.import_output_layer_to_ecore4reg import ROLImport
+from importers.import_finrep_vtl import ImportFinrepVTL
+from importers.persist_to_file import PersistToFile
+from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 
 if __name__ == '__main__':
     context = Context()

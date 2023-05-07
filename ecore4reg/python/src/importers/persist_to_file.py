@@ -13,7 +13,7 @@
 import os
 from pyecore.resources import ResourceSet, URI
 from pyecore.resources.json import JsonResource
-from utils import Utils
+from importers.utils import Utils
 
 
 from ecore4reg import ELAttribute, ELClass, ELEnum, ELOperation, ELReference
@@ -336,7 +336,7 @@ class PersistToFile:
                     f.write("\t\t\tLayerSQL {\r")
                     f.write("selectionLayer SelectionLayer " + Utils.make_valid_id(str(layer.selectionLayer.name)) + "\r")
                     for column in layer.columns:
-                        f.write("\t\t\t\tSelectMember   input_layer_enums.Group_type_domain.Internal_group as output_layer_entities." +
+                        f.write("\t\t\t\tSelectValue \"TODO\" as output_layer_entities." +
                                 view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name + "\r")
                     f.write("\t\t\t}\r")
                     f.write(PersistToFile.get_vtl_text_for_layer(
