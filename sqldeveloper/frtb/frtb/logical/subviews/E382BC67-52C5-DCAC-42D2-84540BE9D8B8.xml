@@ -12,86 +12,202 @@
 <showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
 <display>false</display>
-<notation>1</notation>
+<notation>2</notation>
 <objectViews>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="11E50765-C5BF-FD8F-DEF6-D902D346F324" otype="Note" vid="9B6C4481-8A55-3446-23C6-DAA15D2DE2E5">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="956" y="61" width="255" height="177"/>
+<useDefaultColor>false</useDefaultColor>
+<backgroundColor>-13210</backgroundColor>
+<foregroundColor>-16777216</foregroundColor>
+<comment>Attributes:
+Rating grade not in BIRD LDM
+Q.) Sector, is this institutional sector?
+A.) It is similar similar, it can only take from 9 prescribed values in FRTB such as Sovereign, Healthcare or Other
+Q.) Market cap, is that the market capitalization of the organisation? That is not in the BIRD LDM
+A.) It is ither Small or Large, as defined in d457
+
+Economy is not in the LDM</comment>
+</OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="125F0220-6287-45CE-9C1C-80F29B5D7A31" otype="Entity" vid="B778668F-C1FA-8962-ADC3-4722B9C097E0">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="1307" y="1006" width="170" height="110"/>
+<bounds x="1329" y="434" width="170" height="111"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="22F090A5-3E3F-3F2D-1548-14918799E078" otype="Note" vid="BC2436F6-2473-CEF1-CA3B-657437C5D4C8">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="449" y="219" width="105" height="41"/>
+<comment>NOT in BIRD LDM</comment>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="2BCD02A6-76DC-6E84-FA25-9778097C621E" otype="Entity" vid="12E8090A-DE3C-03A3-E0B4-4B4795E018DA">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="711" y="1126" width="170" height="110"/>
+<bounds x="761" y="0" width="170" height="111"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="365996D5-9A44-42D7-02D5-97011E0EA398" otype="Note" vid="A8A062A5-AFE3-51D3-9E99-94332EBC8BFF">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="1762" y="223" width="162" height="31"/>
+<useDefaultColor>false</useDefaultColor>
+<backgroundColor>-3342388</backgroundColor>
+<foregroundColor>-16777216</foregroundColor>
+<comment>Security or exchange tradable derivative position is in the LDM</comment>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="3E6060EE-7F28-1832-3C65-E0D557094FE7" otype="Note" vid="F934F40D-9741-2F73-FA82-26F1BBE02FB7">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="-371" y="964" width="95" height="41"/>
+<comment>NOT in LDM</comment>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="41723CFA-4325-D82E-7C07-BBF4BEA5B19D" otype="Entity" vid="F6FFE0C0-B9B7-8734-8761-D727B210764C">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="880" y="999" width="151" height="82"/>
+<bounds x="902" y="434" width="151" height="83"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="45F60CE3-DC55-3199-E617-0A9393AAE733" otype="Note" vid="4839FE95-5939-78FC-DDA6-AC2E63A58235">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="705" y="823" width="201" height="202"/>
+<useDefaultColor>false</useDefaultColor>
+<backgroundColor>-13159</backgroundColor>
+<foregroundColor>-16777216</foregroundColor>
+<comment>Securitisation is in the LDM.
+It is not a subtype of Security, although securities are involved in securitisations in the LDM
+
+Q.)Which part of it is meant here?
+
+A.)It is the securitisation, we can probably re-use the securitisation entity here as there is not a specific need for it to subclass security, pther than it can be considered to have an associated organisation.</comment>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="47A941C3-2E4D-07A4-14B2-F4AFB696D126" otype="Entity" vid="0B2C14B7-4DBE-6E2A-18BE-7786BE2A3879">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="1318" y="806" width="170" height="110"/>
+<bounds x="2081" y="637" width="170" height="113"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="4E098DB2-F59B-3809-E8F2-F09EE3F6EB0E" otype="Entity" vid="2538D415-6A05-16E6-D85A-F47BF01A7FD5">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="174" y="1356" width="170" height="110"/>
+<bounds x="196" y="802" width="170" height="111"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="58CA352E-DE50-CD54-EECC-B9D98C76ADE6" otype="Entity" vid="389A3BBA-2924-B0A7-C79B-A04AF5BA7971">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="497" y="1210" width="170" height="110"/>
+<bounds x="519" y="656" width="170" height="111"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="5C84AF14-9F30-4DB3-6A7D-B3E3F397C52C" otype="Entity" vid="10FBE7A6-91C2-B5AD-ED5A-D89CF431D4DA">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="1213" y="1236" width="291" height="221"/>
+<bounds x="1235" y="682" width="291" height="222"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="715A1944-1C26-C437-56F9-E35CB1411DFB" otype="Note" vid="91E3A6C0-9A7B-36C9-2DB7-625591E7F914">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="-257" y="1104" width="95" height="41"/>
+<comment>NOT in LDM</comment>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="74FDE155-399A-5886-2419-C144B9B3EE90" otype="Entity" vid="2FB6E5AE-73E0-A176-C771-AC51749DBB07">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="923" y="800" width="170" height="110"/>
+<bounds x="1686" y="637" width="170" height="113"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="7F7861A5-652D-E468-5DF9-35EEB805D06C" otype="Entity" vid="1598E9AF-EA84-3781-38BE-93F6AE62322F">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="1345" y="640" width="170" height="110"/>
+<bounds x="1912" y="193" width="231" height="81"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="8ABC1D49-C1B4-877C-ED2B-EBC1BFA1363B" otype="Entity" vid="E7B73CEB-FE47-BB62-881E-B447A4784CE3">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="1081" y="1007" width="170" height="110"/>
+<bounds x="1103" y="434" width="170" height="111"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="8E2ECB14-6DE7-A76C-A49A-843C37425415" otype="Note" vid="F6776A6B-7B3D-6476-E761-8706BF26C845">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="223" y="553" width="95" height="41"/>
+<useDefaultColor>false</useDefaultColor>
+<backgroundColor>-3342388</backgroundColor>
+<foregroundColor>-16777216</foregroundColor>
+<comment>Currency is in LDM.</comment>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="8F659CDB-2E91-B1EE-1B06-4BE33E725C25" otype="Note" vid="8619B512-B898-61C5-C86B-52DAC76DD3CC">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="332" y="20" width="104" height="43"/>
+<comment>NOT in BIRD LDM</comment>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="A4E1F026-BF8E-548C-4A9D-C0B863F89F47" otype="Entity" vid="77EFCEB7-771B-5275-E26A-7459301F7946">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="1085" y="637" width="170" height="110"/>
+<bounds x="1858" y="434" width="170" height="113"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="B23842D1-E84A-6E39-1C9B-B10557BD6BC5" otype="Entity" vid="71EE9798-326C-163E-C012-ABD23E4332C0">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="504" y="1354" width="170" height="110"/>
+<bounds x="526" y="800" width="170" height="111"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="B38A778B-0463-9C7D-3502-F4091E4E0384" otype="Entity" vid="11B21C14-532A-D9ED-E308-73E84346E806">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="722" y="994" width="114" height="98"/>
+<bounds x="744" y="434" width="114" height="99"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="B39C4160-D8C1-67E1-70D9-F3DF9C99D3D6" otype="Note" vid="C8B4E00C-35DE-48E8-8B94-A3F10E3E8099">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="23" y="64" width="192" height="213"/>
+<comment>Q.)What is KB?
+A.) The risk position for delta (respectively vega) bucket b as defined in BIS publication d457 for FRTB, 21.4 (4)
+
+Q.)What is GIRR?
+A.) General Interest Rate Risk, which in market risk frameworks is different from specific interest since specific rate risk  considers market value changes dues creditworthiness off issues or issuers as an influences on market risk</comment>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="B9754874-2D0E-EBDE-3D2C-BCC42B114B45" otype="Note" vid="1F8629A4-3C6F-3C33-833A-2BF3241C7475">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="120" y="773" width="162" height="31"/>
+<useDefaultColor>false</useDefaultColor>
+<backgroundColor>-3342388</backgroundColor>
+<foregroundColor>-16777216</foregroundColor>
+<comment>Equity issue is named Equity security in the LDM.</comment>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="BA2E3C75-93F0-6645-DA84-7698317A75B1" otype="Entity" vid="49BF3535-F5A0-45B2-1086-18723B2C0642">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="265" y="600" width="170" height="110"/>
+<bounds x="417" y="46" width="247" height="116"/>
 <useDefaultColor>false</useDefaultColor>
 <backgroundColor>-26317</backgroundColor>
 <foregroundColor>-65485</foregroundColor>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="C479F3DA-D525-3B6D-27B8-E0950E385F50" otype="Entity" vid="7A2993C5-93A5-BEB8-BFEE-C314AFFE08B2">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="475" y="995" width="170" height="110"/>
+<bounds x="497" y="434" width="170" height="111"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="CAAA6A13-3408-32AA-C628-9F0995673C28" otype="Entity" vid="360AA532-39DD-AFC9-3E6C-50F6BF455FBF">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="1104" y="815" width="170" height="110"/>
+<bounds x="1867" y="637" width="170" height="113"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="D401C5C5-2F2B-8103-14BB-6972A07B65E9" otype="Note" vid="EAF3F54F-A6AE-F76E-F637-2764CBEFEDC6">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="700" y="657" width="121" height="40"/>
+<useDefaultColor>false</useDefaultColor>
+<backgroundColor>-3342388</backgroundColor>
+<foregroundColor>-16777216</foregroundColor>
+<comment>Security issue is names Security in the LDM</comment>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="DC47D83D-F3FD-0E36-7035-20FA198E8AB5" otype="Note" vid="CA36A9FF-2DA4-553A-A3B0-2E10949E5BCD">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="2035" y="450" width="95" height="41"/>
+<comment>NOT in LDM</comment>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="E337891C-BA68-AECE-E963-96DCA1F95859" otype="Note" vid="2DB7707F-5FDC-2290-B6D2-22CAEAC5A867">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="-263" y="962" width="95" height="41"/>
+<comment>NOT in LDM</comment>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="E5488186-437C-BC1C-8AC2-048D08999A0A" otype="Entity" vid="03F5D99A-ADC6-F04E-6CE1-A6BBE169BEC2">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="0" y="988" width="170" height="110"/>
+<bounds x="22" y="434" width="170" height="111"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="E7C4E383-AABB-082F-EAE7-A59D01E27340" otype="Entity" vid="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="523" y="776" width="117" height="121"/>
+<bounds x="545" y="222" width="117" height="122"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="F95D606D-8908-F5D4-8D6B-FAD7A0FA7816" otype="Note" vid="A1F9B1CB-FD07-8742-B79E-5816AFB7F85A">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="945" y="1" width="127" height="55"/>
+<useDefaultColor>false</useDefaultColor>
+<backgroundColor>-13159</backgroundColor>
+<foregroundColor>-16777216</foregroundColor>
+<comment>We have the specific roles in the LDM</comment>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.TVNote" oid="F962B6B2-F51D-2889-D7DD-3900CF7E1FA2" otype="Note" vid="24CA754A-F59D-3970-CCF3-E4C7DB045B24">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="225" y="121" width="181" height="250"/>
+<comment>Q.) Where is this a bucket to?
+A.) Buckets mean different things depending on the risk class. For the GIRR Risk class, buckets are just the individual currencies.The buckets are defined in BIS publication d457 on FRTB in section 21.39 - 21.101
+
+Q.)What is in the bucket, instruments, risk factors, securities?
+A.) Buckets contain risk measures, i.e.  delta sensitivities or vega sensitivities or curvatures. delta sensitivity buckets contain delta sensitivities (i.e. a bucket does not contain a mixture of risk measure types)</comment>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="FCC84A65-A0A9-DCAF-8285-6A6BAF8B921C" otype="Entity" vid="2081AB82-5AC8-8AD6-D731-AF01C6E24598">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="210" y="994" width="170" height="110"/>
+<bounds x="232" y="434" width="170" height="111"/>
 </OView>
 </objectViews>
 <connectors>
@@ -100,8 +216,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="1179" y="747"/>
-<point x="1179" y="815"/>
+<point x="1947" y="547"/>
+<point x="1947" y="637"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="51581835-0EB3-A20D-FE96-99D73DC26D32" otype="Relation" vid_source="7A2993C5-93A5-BEB8-BFEE-C314AFFE08B2" vid_target="2538D415-6A05-16E6-D85A-F47BF01A7FD5">
@@ -109,8 +225,8 @@
 <backgroundColor>-16777216</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="514" y="1105"/>
-<point x="304" y="1356"/>
+<point x="535" y="545"/>
+<point x="327" y="802"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="609E646F-44F1-8B17-8BD3-D4B7E0B8E361" otype="Relation" vid_source="E7B73CEB-FE47-BB62-881E-B447A4784CE3" vid_target="71EE9798-326C-163E-C012-ABD23E4332C0">
@@ -118,8 +234,8 @@
 <backgroundColor>-16777216</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="1081" y="1113"/>
-<point x="674" y="1357"/>
+<point x="1103" y="545"/>
+<point x="696" y="804"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="61F68422-DB16-E699-396E-7F7E05929587" otype="Relation" vid_source="77EFCEB7-771B-5275-E26A-7459301F7946" vid_target="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6">
@@ -127,8 +243,8 @@
 <backgroundColor>-16777216</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="1085" y="712"/>
-<point x="640" y="822"/>
+<point x="1858" y="496"/>
+<point x="662" y="292"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="64BE5D69-37C2-D79C-8988-D28E3D7BE621" otype="Hierarchy relation" vid_source="389A3BBA-2924-B0A7-C79B-A04AF5BA7971" vid_target="2538D415-6A05-16E6-D85A-F47BF01A7FD5">
@@ -136,8 +252,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="497" y="1303"/>
-<point x="344" y="1372"/>
+<point x="519" y="749"/>
+<point x="366" y="819"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="7824882F-84AB-A541-BB0B-BA1089EE2913" otype="Hierarchy relation" vid_source="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6" vid_target="F6FFE0C0-B9B7-8734-8761-D727B210764C">
@@ -145,8 +261,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="640" y="868"/>
-<point x="880" y="999"/>
+<point x="662" y="314"/>
+<point x="902" y="445"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="8D535C8F-2910-B878-51D6-91AC6852B8AC" otype="Relation" vid_source="389A3BBA-2924-B0A7-C79B-A04AF5BA7971" vid_target="12E8090A-DE3C-03A3-E0B4-4B4795E018DA">
@@ -154,8 +270,8 @@
 <backgroundColor>-16777216</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="667" y="1223"/>
-<point x="711" y="1223"/>
+<point x="624" y="656"/>
+<point x="825" y="111"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="9378BFE8-FB35-A2E7-8682-BDFF0BC4C33A" otype="Hierarchy relation" vid_source="77EFCEB7-771B-5275-E26A-7459301F7946" vid_target="2FB6E5AE-73E0-A176-C771-AC51749DBB07">
@@ -163,8 +279,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="1089" y="747"/>
-<point x="1089" y="800"/>
+<point x="1889" y="547"/>
+<point x="1824" y="637"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="985B6C2F-2A19-7704-A692-D414B6C12013" otype="Hierarchy relation" vid_source="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6" vid_target="E7B73CEB-FE47-BB62-881E-B447A4784CE3">
@@ -172,8 +288,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="640" y="859"/>
-<point x="1081" y="1029"/>
+<point x="662" y="305"/>
+<point x="1103" y="475"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="B2AEB78B-400E-6410-F5DC-3BF2554A44AD" otype="Hierarchy relation" vid_source="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6" vid_target="7A2993C5-93A5-BEB8-BFEE-C314AFFE08B2">
@@ -181,8 +297,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="581" y="897"/>
-<point x="581" y="995"/>
+<point x="603" y="344"/>
+<point x="603" y="434"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="C109244E-EE50-D70A-423E-2A6FB16C770D" otype="Hierarchy relation" vid_source="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6" vid_target="11B21C14-532A-D9ED-E308-73E84346E806">
@@ -190,8 +306,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="639" y="897"/>
-<point x="732" y="994"/>
+<point x="661" y="344"/>
+<point x="753" y="434"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="C5D7EE96-E799-F6F8-6B9D-E05B4B34EE4A" otype="Relation" vid_source="77EFCEB7-771B-5275-E26A-7459301F7946" vid_target="1598E9AF-EA84-3781-38BE-93F6AE62322F">
@@ -199,8 +315,8 @@
 <backgroundColor>-16777216</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="1255" y="693"/>
-<point x="1345" y="693"/>
+<point x="1970" y="434"/>
+<point x="1970" y="274"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="D201F64A-12C4-52BB-4EA5-F8379AA2A944" otype="Hierarchy relation" vid_source="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6" vid_target="2081AB82-5AC8-8AD6-D731-AF01C6E24598">
@@ -208,8 +324,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="523" y="879"/>
-<point x="369" y="994"/>
+<point x="545" y="326"/>
+<point x="391" y="434"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="D975E46E-187D-4569-18EF-F3D3804D3F1D" otype="Hierarchy relation" vid_source="77EFCEB7-771B-5275-E26A-7459301F7946" vid_target="0B2C14B7-4DBE-6E2A-18BE-7786BE2A3879">
@@ -217,8 +333,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="1245" y="747"/>
-<point x="1327" y="806"/>
+<point x="2011" y="547"/>
+<point x="2097" y="637"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="DA5F2DCB-8788-0E65-68A3-6AA81166A40D" otype="Hierarchy relation" vid_source="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6" vid_target="B778668F-C1FA-8962-ADC3-4722B9C097E0">
@@ -226,8 +342,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="640" y="852"/>
-<point x="1307" y="1037"/>
+<point x="662" y="299"/>
+<point x="1329" y="483"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="DDEC7F48-2A87-DFC9-9772-236D48B2AEAD" otype="Hierarchy relation" vid_source="389A3BBA-2924-B0A7-C79B-A04AF5BA7971" vid_target="71EE9798-326C-163E-C012-ABD23E4332C0">
@@ -235,8 +351,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="585" y="1320"/>
-<point x="585" y="1354"/>
+<point x="607" y="767"/>
+<point x="607" y="800"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVInheritanceRelation" oid="EF03A8EF-53DB-02BC-0374-C2CE69359E1E" otype="Hierarchy relation" vid_source="98D8FE6E-3825-BBDF-7F2E-937605EFAAB6" vid_target="03F5D99A-ADC6-F04E-6CE1-A6BBE169BEC2">
@@ -244,8 +360,8 @@
 <backgroundColor>-65536</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="523" y="860"/>
-<point x="170" y="1007"/>
+<point x="545" y="307"/>
+<point x="192" y="454"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="F4967460-7822-C4DB-CBDD-8D936D400EDC" otype="Relation" vid_source="F6FFE0C0-B9B7-8734-8761-D727B210764C" vid_target="12E8090A-DE3C-03A3-E0B4-4B4795E018DA">
@@ -253,8 +369,8 @@
 <backgroundColor>-16777216</backgroundColor>
 <lineWidth>1</lineWidth>
 <points>
-<point x="880" y="1081"/>
-<point x="880" y="1126"/>
+<point x="916" y="434"/>
+<point x="916" y="111"/>
 </points>
 </Connector>
 </connectors>
