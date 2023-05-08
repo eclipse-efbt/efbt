@@ -14,32 +14,6 @@ eClassifiers = {}
 getEClassifier = partial(Ecore.getEClassifier, searchspace=eClassifiers)
 Comparitor = EEnum('Comparitor', literals=['less_than', 'equals', 'greater_than'])
 
-AttrComparison = EEnum('AttrComparison', literals=[
-                       'equals', 'less_than', 'greater_than', 'not_equals'])
-
-
-@abstract
-class BaseElement(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    invisible = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, name=None, description=None, invisible=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-        if description is not None:
-            self.description = description
-
-        if invisible is not None:
-            self.invisible = invisible
-
 
 class Import(EObject, metaclass=MetaEClass):
 
@@ -193,7 +167,7 @@ class View(EObject, metaclass=MetaEClass):
 
 class LayerSQL(EObject, metaclass=MetaEClass):
 
-    selectionLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    selectionLayer = EReference(ordered=True, unique=True, containment=True, derived=False)
     columns = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     whereClause = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
@@ -262,113 +236,7 @@ class WhereClause(EObject, metaclass=MetaEClass):
             self.member = member
 
 
-class Scenario(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    invisible = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    requiredAttributes = EReference(ordered=True, unique=True,
-                                    containment=False, derived=False, upper=-1)
-    data_constraints = EReference(ordered=True, unique=True, containment=True, derived=False)
-
-    def __init__(self, *, name=None, invisible=None, description=None, requiredAttributes=None, data_constraints=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-        if invisible is not None:
-            self.invisible = invisible
-
-        if description is not None:
-            self.description = description
-
-        if requiredAttributes:
-            self.requiredAttributes.extend(requiredAttributes)
-
-        if data_constraints is not None:
-            self.data_constraints = data_constraints
-
-
-class Test(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    inputData = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    expectedResult = EReference(ordered=True, unique=True,
-                                containment=True, derived=False, upper=-1)
-    scope = EReference(ordered=True, unique=True, containment=True, derived=False)
-
-    def __init__(self, *, inputData=None, expectedResult=None, name=None, scope=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-        if inputData:
-            self.inputData.extend(inputData)
-
-        if expectedResult:
-            self.expectedResult.extend(expectedResult)
-
-        if scope is not None:
-            self.scope = scope
-
-
-class DataConstraint(EObject, metaclass=MetaEClass):
-
-    comparison = EAttribute(eType=AttrComparison, unique=True, derived=False, changeable=True)
-    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    attr1 = EReference(ordered=True, unique=True, containment=False, derived=False)
-    member = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, attr1=None, comparison=None, member=None, value=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if comparison is not None:
-            self.comparison = comparison
-
-        if value is not None:
-            self.value = value
-
-        if attr1 is not None:
-            self.attr1 = attr1
-
-        if member is not None:
-            self.member = member
-
-
 class SelectionLayer(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    invisible = EAttribute(eType=EBooleanObject, unique=True, derived=False, changeable=True)
-    generatedEntity = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, name=None, invisible=None, generatedEntity=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-        if invisible is not None:
-            self.invisible = invisible
-
-        if generatedEntity is not None:
-            self.generatedEntity = generatedEntity
-
-
-class TestScope(EObject, metaclass=MetaEClass):
 
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
 
@@ -380,24 +248,6 @@ class TestScope(EObject, metaclass=MetaEClass):
 
         if name is not None:
             self.name = name
-
-
-class InputFile(EObject, metaclass=MetaEClass):
-
-    fileName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    entity = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, fileName=None, entity=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if fileName is not None:
-            self.fileName = fileName
-
-        if entity is not None:
-            self.entity = entity
 
 
 @abstract
@@ -413,6 +263,24 @@ class ELModelElement(EObject, metaclass=MetaEClass):
 
         if eAnnotations is not None:
             self.eAnnotations = eAnnotations
+
+
+class ELStringToStringMapEntry(EObject, metaclass=MetaEClass):
+
+    key = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+
+    def __init__(self, *, key=None, value=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if key is not None:
+            self.key = key
+
+        if value is not None:
+            self.value = value
 
 
 class VTLEnrichedCube(EObject, metaclass=MetaEClass):
@@ -625,32 +493,6 @@ class VTLForView(EObject, metaclass=MetaEClass):
             self.vtl = vtl
 
 
-@abstract
-class FlowElementsContainer(BaseElement):
-
-    flowElements = EReference(ordered=False, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, flowElements=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if flowElements:
-            self.flowElements.extend(flowElements)
-
-
-@abstract
-class FlowElement(BaseElement):
-
-    display_name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, display_name=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if display_name is not None:
-            self.display_name = display_name
-
-
 class RequirementsModule(Module):
 
     rules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -799,94 +641,6 @@ class ViewModule(Module):
             self.views.extend(views)
 
 
-class ActivityTag(Tag):
-
-    activity = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, activity=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if activity is not None:
-            self.activity = activity
-
-
-class ScenarioTag(Tag):
-
-    scenario = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, scenario=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if scenario is not None:
-            self.scenario = scenario
-
-
-class TestModule(Module):
-
-    tests = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, tests=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if tests:
-            self.tests.extend(tests)
-
-
-class UnitTestScope(TestScope):
-
-    scenarios = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, scenarios=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if scenarios is not None:
-            self.scenarios = scenarios
-
-
-class E2ETestScope(TestScope):
-
-    scenarios = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
-    layer = EReference(ordered=True, unique=True, containment=False, derived=False)
-    scriptTask = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, scenarios=None, layer=None, scriptTask=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if scenarios:
-            self.scenarios.extend(scenarios)
-
-        if layer is not None:
-            self.layer = layer
-
-        if scriptTask is not None:
-            self.scriptTask = scriptTask
-
-
-class WorkflowModule(Module):
-
-    taskTags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    scenarioTags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    subProcess = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, taskTags=None, scenarioTags=None, subProcess=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if taskTags:
-            self.taskTags.extend(taskTags)
-
-        if scenarioTags:
-            self.scenarioTags.extend(scenarioTags)
-
-        if subProcess:
-            self.subProcess.extend(subProcess)
-
-
 @abstract
 class ELNamedElement(ELModelElement):
 
@@ -922,14 +676,18 @@ class ELPackage(Module):
 
 class ELAnnotation(ELModelElement):
 
-    contents = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    source = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    details = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, contents=None, **kwargs):
+    def __init__(self, *, details=None, source=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if contents is not None:
-            self.contents = contents
+        if source is not None:
+            self.source = source
+
+        if details:
+            self.details.extend(details)
 
 
 class VTLModule(Module):
@@ -1062,39 +820,6 @@ class VTLForViewModule(Module):
 
 
 @abstract
-class FlowNode(FlowElement):
-
-    outgoing = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
-    incoming = EReference(ordered=False, unique=True, containment=False, derived=False, upper=-1)
-
-    def __init__(self, *, outgoing=None, incoming=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if outgoing:
-            self.outgoing.extend(outgoing)
-
-        if incoming:
-            self.incoming.extend(incoming)
-
-
-class SequenceFlow(FlowElement):
-
-    targetRef = EReference(ordered=False, unique=True, containment=False, derived=False)
-    sourceRef = EReference(ordered=False, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, targetRef=None, sourceRef=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if targetRef is not None:
-            self.targetRef = targetRef
-
-        if sourceRef is not None:
-            self.sourceRef = sourceRef
-
-
-@abstract
 class ELClassifier(ELNamedElement):
 
     package = EReference(ordered=True, unique=True, containment=False,
@@ -1143,22 +868,6 @@ class ELTypedElement(ELNamedElement):
 
         if eType is not None:
             self.eType = eType
-
-
-@abstract
-class Activity(FlowNode):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
-@abstract
-class Gateway(FlowNode):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
 
 
 class ELClass(ELClassifier):
@@ -1218,34 +927,6 @@ class ELStructuralFeature(ELTypedElement):
         super().__init__(**kwargs)
 
 
-class Task(Activity):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
-class ExclusiveGateway(Gateway):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
-class InclusiveGateway(Gateway):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
-class ParallelGateway(Gateway):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
 class ELAttribute(ELStructuralFeature):
 
     iD = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
@@ -1288,73 +969,3 @@ class ELReference(ELStructuralFeature):
 
         if eReferenceType is not None:
             self.eReferenceType = eReferenceType
-
-
-class ServiceTask(Task):
-
-    entityCreationTask = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    enrichedAttribute = EReference(ordered=True, unique=True, containment=False, derived=False)
-    scenarios = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    secondAttribute = EReference(ordered=True, unique=True, containment=False, derived=False)
-    requiredAttributesForScenarioChoice = EReference(
-        ordered=True, unique=True, containment=False, derived=False, upper=-1)
-    requiredAttributesForEntityCreation = EReference(
-        ordered=True, unique=True, containment=False, derived=False, upper=-1)
-
-    def __init__(self, *, enrichedAttribute=None, scenarios=None, secondAttribute=None, requiredAttributesForScenarioChoice=None, requiredAttributesForEntityCreation=None, entityCreationTask=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if entityCreationTask is not None:
-            self.entityCreationTask = entityCreationTask
-
-        if enrichedAttribute is not None:
-            self.enrichedAttribute = enrichedAttribute
-
-        if scenarios:
-            self.scenarios.extend(scenarios)
-
-        if secondAttribute is not None:
-            self.secondAttribute = secondAttribute
-
-        if requiredAttributesForScenarioChoice:
-            self.requiredAttributesForScenarioChoice.extend(requiredAttributesForScenarioChoice)
-
-        if requiredAttributesForEntityCreation:
-            self.requiredAttributesForEntityCreation.extend(requiredAttributesForEntityCreation)
-
-
-class SubProcess(Activity, FlowElementsContainer):
-
-    def __init__(self, **kwargs):
-
-        super().__init__(**kwargs)
-
-
-class ScriptTask(Task):
-
-    selectionLayers = EReference(ordered=True, unique=True,
-                                 containment=True, derived=False, upper=-1)
-    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, selectionLayers=None, outputLayer=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if selectionLayers:
-            self.selectionLayers.extend(selectionLayers)
-
-        if outputLayer is not None:
-            self.outputLayer = outputLayer
-
-
-class UserTask(Task):
-
-    entity = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, entity=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if entity is not None:
-            self.entity = entity

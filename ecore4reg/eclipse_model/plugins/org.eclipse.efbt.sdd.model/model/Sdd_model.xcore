@@ -1,0 +1,883 @@
+@xcore.lang.Ecore(nsURI="http://www.eclipse.org/efbt/sdd_model")
+@xcore.lang.GenModel(modelDirectory="/org.eclipse.efbt.sdd.model/src",
+	editDirectory="/org.eclipse.efbt.sdd.model.edit/src", editorDirectory="/org.eclipse.efbt.sdd.model.editor/src",
+	editPluginClass="org.eclipse.efbt.sdd.model.sdd.provider.Sdd_modelEditPlugin",
+	editorPluginClass="org.eclipse.efbt.sdd.model.sdd.presentation.Sdd_modelEditorPlugin",
+	testsDirectory="/org.eclipse.efbt.sdd.model.tests/src",
+	testSuiteClass="org.eclipse.efbt.sdd.model.sdd_model.tests.Sdd_modelAllTests",
+	importerID="org.eclipse.emf.importer.ecore", containmentProxies="false",
+	editorPluginID="org.eclipse.efbt.sdd.model.editor", testsPluginID="org.eclipse.efbt.sdd.model.tests", pluginKey="",
+	resource="XMI", loadInitialization="true", literalsInterface="false")
+package org.eclipse.efbt.sdd.model.sdd_model
+
+@xcore.lang.ExtendedMetaData(name="Module", kind="elementOnly")
+class SDDModule {
+	@xcore.lang.ExtendedMetaData(kind="element", name="dependencies")
+	refers SDDModule[] dependencies
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="theDescription")
+	String theDescription
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="license")
+	String license
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	id String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="version")
+	String version
+}
+
+@xcore.lang.ExtendedMetaData(name="DOMAIN", kind="empty")
+class DOMAIN {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="data_type")
+	FACET_VALUE_TYPE data_type
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="domain_id")
+	String domain_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="facet_id")
+	refers FACET_COLLECTION facet_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_enumerated")
+	boolean is_enumerated
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_reference")
+	boolean is_reference
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	id String name
+	String displayName
+}
+
+@xcore.lang.ExtendedMetaData(name="FACET_COLLECTION", kind="empty")
+class FACET_COLLECTION {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="facet_id")
+	id String facet_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="facet_value_type")
+	FACET_VALUE_TYPE facet_value_type
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+}
+
+@xcore.lang.ExtendedMetaData(name="FACET_ENUMERATION", kind="empty")
+class FACET_ENUMERATION {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="facet_id")
+	refers FACET_COLLECTION facet_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="facet_type")
+	refers facet_type facet_type
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="observation_value")
+	String observation_value
+}
+
+@xcore.lang.ExtendedMetaData(name="facet_type", kind="empty")
+class facet_type {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="decimals")
+	int decimals
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="endTime")
+	String endTime
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="endValue")
+	int endValue
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="interval")
+	String interval
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="isSequence")
+	String isSequence
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maxLength")
+	int maxLength
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maxValue")
+	int maxValue
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="minLength")
+	int minLength
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="minValue")
+	int minValue
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="pattern")
+	String pattern
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="startTime")
+	String startTime
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="startValue")
+	int startValue
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="timeInterval")
+	String timeInterval
+}
+
+@xcore.lang.ExtendedMetaData(name="FACET_VALUE_TYPE")
+enum FACET_VALUE_TYPE {
+	BigInteger
+	Boolean = 1
+	DateTime = 2
+	DayMonthDayMonth as "Day_MonthDay_Month" = 3
+	Decimal = 4
+	Double = 5
+	Duration = 6
+	Float = 7
+	GregorianDay = 8
+	GregorianMonth = 9
+	GregorianYear = 11
+	Integer = 12
+	Long = 13
+	Short = 14
+	String = 15
+	Time = 16
+	URI = 17
+}
+
+@xcore.lang.ExtendedMetaData(name="FACET_VALUE_TYPE:Object", baseType="FACET_VALUE_TYPE")
+type FACET_VALUE_TYPEObject wraps org.eclipse.emf.common.util.Enumerator
+
+@xcore.lang.ExtendedMetaData(name="MAINTENANCE_AGENCY", kind="empty")
+class MAINTENANCE_AGENCY {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	String maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	id String name
+}
+
+@xcore.lang.ExtendedMetaData(name="MEMBER", kind="empty")
+class MEMBER {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="domain_id")
+	refers DOMAIN domain_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	String member_id
+	id String name
+	String displayName
+}
+
+@xcore.lang.ExtendedMetaData(name="MEMBER_HIERARCHY", kind="empty")
+class MEMBER_HIERARCHY {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="domain_id")
+	refers DOMAIN domain_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="member_hierarchy_id")
+	String member_hierarchy_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	id String name
+}
+
+@xcore.lang.ExtendedMetaData(name="MEMBER_HIERARCHY_NODE", kind="empty")
+class MEMBER_HIERARCHY_NODE {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="comparator")
+	String comparator
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="level")
+	int level
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="member_hierarchy_id")
+	refers MEMBER_HIERARCHY member_hierarchy_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="member_id")
+	refers MEMBER member_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="operator")
+	String operator
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="parent_member_id")
+	refers MEMBER parent_member_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+}
+
+@xcore.lang.ExtendedMetaData(name="SUBDOMAIN", kind="empty")
+class SUBDOMAIN {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="domain_id")
+	refers DOMAIN domain_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="facet_id")
+	refers FACET_COLLECTION facet_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="IS_LISTED")
+	boolean is_listed
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_natural")
+	boolean is_natural
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="subdomain_id")
+	id String subdomain_id
+	contains SUBDOMAIN_ENUMERATION[] items
+}
+
+class SUBDOMAIN_ENUMERATION {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="member_id")
+	refers MEMBER member_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="order")
+	int order
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+}
+
+@xcore.lang.ExtendedMetaData(name="VARIABLE", kind="empty")
+class VARIABLE {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="domain_id")
+	refers DOMAIN domain_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="primary_concept")
+	String primary_concept
+	String variable_id
+	id String name
+	String displayName
+}
+
+@xcore.lang.ExtendedMetaData(name="VARIABLE_SET", kind="empty")
+class VARIABLE_SET {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_set_id")
+	id String variable_set_id
+}
+
+@xcore.lang.ExtendedMetaData(name="VARIABLE_SET_ENUMERATION", kind="empty")
+class VARIABLE_SET_ENUMERATION {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_flow")
+	boolean is_flow
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="order")
+	int order
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="subdomain_id")
+	refers SUBDOMAIN subdomain_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_id")
+	refers VARIABLE variable_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_set_id")
+	refers VARIABLE_SET variable_set_id
+}
+
+@xcore.lang.ExtendedMetaData(name="COMBINATION", kind="empty")
+class COMBINATION {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="combination_id")
+	String combination_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	id String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="version")
+	String version
+	contains COMBINATION_ITEM[] combination_items
+}
+
+@xcore.lang.ExtendedMetaData(name="COMBINATION_ITEM", kind="empty")
+class COMBINATION_ITEM {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="member_id")
+	refers MEMBER member_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="subdomain_id")
+	refers SUBDOMAIN subdomain_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_id")
+	refers VARIABLE variable_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_set_id")
+	refers VARIABLE_SET variable_set_id
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE", kind="empty")
+class CUBE {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_id")
+	String cube_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_structure_id")
+	refers CUBE_STRUCTURE cube_structure_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_type")
+	String cube_type
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="framework_id")
+	refers FRAMEWORK framework_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_allowed")
+	boolean is_allowed
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	id String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="published")
+	boolean published
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="version")
+	String version
+	String displayName
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE_GROUP", kind="empty")
+class CUBE_GROUP {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_group_id")
+	id String cube_group_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE_GROUP_ENUMERATION", kind="empty")
+class CUBE_GROUP_ENUMERATION {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_group_id")
+	refers CUBE_GROUP cube_group_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_id")
+	refers CUBE cube_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="order")
+	int order
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE_HIERARCHY", kind="empty")
+class CUBE_HIERARCHY {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_hierarchy_id")
+	String cube_hierarchy_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_hierarchy_type")
+	String cube_hierarchy_type
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="framework_id")
+	refers FRAMEWORK framework_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE_HIERARCHY_NODE", kind="empty")
+class CUBE_HIERARCHY_NODE {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_group_id")
+	refers CUBE_GROUP cube_group_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_hierarchy_id")
+	refers CUBE_HIERARCHY cube_hierarchy_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="level")
+	int level
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="NODE_CODE")
+	id String nODE_CODE
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="node_name")
+	String node_name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="order")
+	int order
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="parent_node_code")
+	refers CUBE_HIERARCHY_NODE parent_node_code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE_RELATIONSHIP", kind="empty")
+class CUBE_RELATIONSHIP {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_relationship_id")
+	String cube_relationship_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="establishes_integrity")
+	boolean establishes_integrity
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="foreign_cube_id")
+	refers CUBE foreign_cube_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="foreign_cube_variable_code")
+	refers VARIABLE foreign_cube_variable_code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="primary_cube_id")
+	refers CUBE primary_cube_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="primary_cube_variable_id")
+	refers VARIABLE primary_cube_variable_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="version")
+	String version
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE_STRUCTURE", kind="empty")
+class CUBE_STRUCTURE {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_structure_id")
+	String cube_structure_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	id String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="version")
+	String version
+	String displayName
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE_STRUCTURE_ITEM", kind="empty")
+class CUBE_STRUCTURE_ITEM {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="attribute_associated_variable")
+	refers VARIABLE attribute_associated_variable
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_structure_id")
+	refers CUBE_STRUCTURE cube_structure_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="dimension_type")
+	TYP_DMNSN dimension_type
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_flow")
+	boolean is_flow
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_mandatory")
+	boolean is_mandatory
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="member_id")
+	refers MEMBER member_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="order")
+	int order
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="role")
+	TYP_RL role
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="subdomain_id")
+	refers SUBDOMAIN subdomain_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_id")
+	refers VARIABLE variable_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_set_id")
+	refers VARIABLE_SET variable_set_id
+	boolean isIdentifier
+	String cube_variable_code
+}
+
+@xcore.lang.ExtendedMetaData(name="CUBE_TO_COMBINATION", kind="empty")
+class CUBE_TO_COMBINATION {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="combination_id")
+	refers COMBINATION combination_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cube_id")
+	refers CUBE cube_id
+}
+
+@xcore.lang.ExtendedMetaData(name="FRAMEWORK", kind="empty")
+class FRAMEWORK {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="framework_id")
+	id String framework_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+}
+
+@xcore.lang.ExtendedMetaData(name="FRAMEWORK_SUBDOMAIN", kind="empty")
+class FRAMEWORK_SUBDOMAIN {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="framework_id")
+	refers FRAMEWORK framework_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="subdomain_id")
+	refers SUBDOMAIN subdomain_id
+}
+
+@xcore.lang.ExtendedMetaData(name="FRAMEWORK_VARIABLE_SET", kind="empty")
+class FRAMEWORK_VARIABLE_SET {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="framework_id")
+	refers FRAMEWORK framework_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_set_id")
+	refers VARIABLE_SET variable_set_id
+}
+
+@xcore.lang.ExtendedMetaData(name="TYP_DMNSN")
+enum TYP_DMNSN {
+	B
+	M = 1
+	T = 2
+	U = 3
+}
+
+@xcore.lang.ExtendedMetaData(name="TYP_DMNSN:Object", baseType="TYP_DMNSN")
+type TYP_DMNSNObject wraps org.eclipse.emf.common.util.Enumerator
+
+@xcore.lang.ExtendedMetaData(name="TYP_RL")
+enum TYP_RL {
+	O
+	A = 1
+	D = 2
+}
+
+@xcore.lang.ExtendedMetaData(name="TYP_RL:Object", baseType="TYP_RL")
+type TYP_RLObject wraps org.eclipse.emf.common.util.Enumerator
+
+class CUBE_MAPPING {
+	id String cube_mapping_id
+	String description
+	refers CUBE source_cube
+	refers CUBE target_cube
+	String name
+	String code
+	String maintenance_agency_id
+	contains MAPPING_TO_CUBE[] mappingsToCube
+}
+
+class MEMBER_MAPPING {
+	String name
+	String code
+	String maintenance_agency_id
+	id String member_mapping_id
+	contains MEMBER_MAPPING_ITEM[] memberMappingItems
+}
+
+class MEMBER_MAPPING_ITEM {
+	String isSource
+	refers MEMBER member
+	refers VARIABLE variable
+}
+
+class VARIABLE_MAPPING_ITEM {
+	String isSource
+	refers VARIABLE variable
+}
+
+class VARIABLE_MAPPING {
+	contains VARIABLE_MAPPING_ITEM[] varaibleMappingItems
+	String name
+	String code
+	String maintenance_agency_id
+	id String variable_mapping_id
+}
+
+class MAPPING_TO_CUBE {
+	refers MAPPING_DEFINITION mapping
+}
+
+class VARIABLE_SET_MAPPING {
+	refers MAPPING_DEFINITION sourceMapping
+	refers MAPPING_DEFINITION targetMapping
+}
+
+class MAPPING_DEFINITION {
+	String name
+	String code
+	String maintenance_agency_id
+	id String mapping_id
+	String mapping_type
+	refers MEMBER_MAPPING memberMapping
+	refers VARIABLE_MAPPING variableMapping
+}
+
+@xcore.lang.ExtendedMetaData(name="AXIS", kind="empty")
+class AXIS {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="axis_id")
+	id String axis_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_open_axis")
+	Boolean is_open_axis
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="order")
+	int order
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="orientation")
+	String orientation
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="table_id")
+	refers TABLE table_id
+}
+
+@xcore.lang.ExtendedMetaData(name="AXIS_ORDINATE", kind="empty")
+class AXIS_ORDINATE {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="axis_id")
+	refers AXIS axis_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="axis_ordinate_id")
+	id String axis_ordinate_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_abstract_header")
+	Boolean is_abstract_header
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="level")
+	int level
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="order")
+	int order
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="parent_axis_ordinate_id")
+	refers AXIS_ORDINATE parent_axis_ordinate_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="path")
+	String path
+}
+
+@xcore.lang.ExtendedMetaData(name="CELL_POSITION", kind="empty")
+class CELL_POSITION {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="axis_ordinate_id")
+	refers AXIS_ORDINATE axis_ordinate_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cell_id")
+	refers TABLE_CELL cell_id
+}
+
+@xcore.lang.ExtendedMetaData(name="ORDINATE_ITEM", kind="empty")
+class ORDINATE_ITEM {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="axis_ordinate_id")
+	refers AXIS_ORDINATE axis_ordinate_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_starting_member_included")
+	Boolean is_starting_member_included
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="member_hierarchy_id")
+	refers MEMBER_HIERARCHY member_hierarchy_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="member_id")
+	refers MEMBER member_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="starting_member_id")
+	refers MEMBER starting_member_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="variable_id")
+	refers VARIABLE variable_id
+}
+
+@xcore.lang.ExtendedMetaData(name="TABLE", kind="empty")
+class TABLE {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="code")
+	String code
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="description")
+	String description
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="maintenance_agency_id")
+	refers MAINTENANCE_AGENCY maintenance_agency_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="name")
+	String name
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="table_id")
+	id String table_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_from")
+	Date valid_from
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="valid_to")
+	Date valid_to
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="version")
+	String version
+}
+
+@xcore.lang.ExtendedMetaData(name="TABLE_CELL", kind="empty")
+class TABLE_CELL {
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="cell_id")
+	id String cell_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="combination_id")
+	refers COMBINATION combination_id
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="is_shaded")
+	Boolean is_shaded
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="table_id")
+	refers TABLE table_id
+}
+
+class TRANSFORMATION_SCHEME {
+	id String transformation_scheme_id
+	String ^type
+	String description
+	contains TRANSFORMATION[] tranformations
+	String name
+	String code
+	String maintenance_agency_id
+}
+
+class TRANSFORMATION {
+	id String transformation_id
+	String description
+	String expression
+	String name
+	String code
+	String maintenance_agency_id
+	String order_in_scheme
+}
+
+@xcore.lang.GenModel(documentation="A Module storing a list of Domains")
+@xcore.lang.ExtendedMetaData(name="DomainModule", kind="elementOnly")
+class DomainModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of domains contained in the Module")
+	@xcore.lang.ExtendedMetaData(kind="element", name="domains")
+	contains DOMAIN[] domains
+}
+
+@xcore.lang.GenModel(documentation="A Module storing a list of MemberHierarchies and MemberHierarchiesNodes")
+@xcore.lang.ExtendedMetaData(name="MemberHierarchyModule", kind="elementOnly")
+class MemberHierarchyModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of MemberHierarchies contained in the Module")
+	@xcore.lang.ExtendedMetaData(kind="element", name="memberHierarchies")
+	contains MEMBER_HIERARCHY[] memberHierarchies
+	@xcore.lang.GenModel(documentation="The set of MemberHierarchiesNodes contained in the Module")
+	@xcore.lang.ExtendedMetaData(kind="element", name="memberHierarchiesNodes")
+	contains MEMBER_HIERARCHY_NODE[] memberHierarchiesNodes
+}
+
+@xcore.lang.GenModel(documentation="A Module storing a list of Members")
+@xcore.lang.ExtendedMetaData(name="MemberModule", kind="elementOnly")
+class MemberModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of Members contained in the Module")
+	@xcore.lang.ExtendedMetaData(kind="element", name="members")
+	contains MEMBER[] members
+}
+
+@xcore.lang.GenModel(documentation="A Module containing a list of variables")
+@xcore.lang.ExtendedMetaData(name="VariableModule", kind="elementOnly")
+class VariableModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of Variables  contained in the Module")
+	@xcore.lang.ExtendedMetaData(kind="element", name="variables")
+	contains VARIABLE[] variables
+}
+
+class SubDomainModule extends SDDModule {
+	contains SUBDOMAIN[] subdomains
+}
+
+class SMCubesCoreModel extends SDDModule {
+	contains VariableModule[] variableModules
+	contains DomainModule[] domainModules
+	contains MemberModule[] memberModules
+	contains SubDomainModule[] subDomainModules
+	contains MemberHierarchyModule[] memberHierarchyModules
+}
+
+class SmcubesExtraModel {
+	@xcore.lang.GenModel(documentation="The name of the SMCubesModel")
+	id String name
+}
+
+@xcore.lang.GenModel(documentation="A module storing a list of Combinations, and a list of related Combination Items, and a list of CUBE_TO_COMBINATIONs")
+@xcore.lang.ExtendedMetaData(name="CombinationModule", kind="elementOnly")
+class CombinationModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The list of Combinations")
+	@xcore.lang.ExtendedMetaData(kind="element", name="combinations")
+	contains COMBINATION[] combinations
+	@xcore.lang.GenModel(documentation="The list of Combination items")
+	@xcore.lang.ExtendedMetaData(kind="element", name="combination_items")
+	contains COMBINATION_ITEM[] combination_items
+	@xcore.lang.GenModel(documentation="The list of CUBE_TO_COMBINATIONs providing links between the cubes and combinations")
+	@xcore.lang.ExtendedMetaData(kind="element", name="cubeToCombinationLinks")
+	contains CUBE_TO_COMBINATION[] cubeToCombinationLinks
+}
+
+@xcore.lang.GenModel(documentation="A Module storing a list of CUBEs and a list of CUBE_STRUCTURES and a list of CUBE_STRUCTURE_ITEMS")
+@xcore.lang.ExtendedMetaData(name="CubeModule", kind="elementOnly")
+class CubeModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The list of CUBEs")
+	@xcore.lang.ExtendedMetaData(kind="element", name="cubes")
+	contains CUBE[] cubes
+	@xcore.lang.GenModel(documentation="The list of CUBE_STRUCTURES")
+	@xcore.lang.ExtendedMetaData(kind="element", name="cubeStructures")
+	contains CUBE_STRUCTURE[] cubeStructures
+	@xcore.lang.GenModel(documentation="The list of CUBE_STRUCTURE_ITEMs")
+	@xcore.lang.ExtendedMetaData(kind="element", name="cubeStructureItems")
+	contains CUBE_STRUCTURE_ITEM[] cubeStructureItems
+}
+
+@xcore.lang.GenModel(documentation="A Module containing SMCubes MappingDefintitions")
+class MappingDefinitionModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The  MappingDefintitions")
+	contains MAPPING_DEFINITION[] mappings
+}
+
+@xcore.lang.GenModel(documentation="A Module containing SMCubes CubeMappings")
+class CubeMappingModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The CubeMappings")
+	contains CUBE_MAPPING[] cubeMappings
+}
+
+@xcore.lang.GenModel(documentation="A Module containing SMCubes MemberMappings")
+class MemberMappingModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The MemberMappings")
+	contains MEMBER_MAPPING[] memberMappings
+}
+
+@xcore.lang.GenModel(documentation="A Module containing SMCubes VariableMappings")
+class VariableMappingModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The  VariableMappings")
+	contains VARIABLE_MAPPING[] variableMappings
+}
+
+@xcore.lang.GenModel(documentation="A Module containing a set of  Axis ")
+@xcore.lang.ExtendedMetaData(name="AxisModule", kind="elementOnly")
+class AxisModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of Axes")
+	@xcore.lang.ExtendedMetaData(kind="element", name="axes")
+	contains AXIS[] axes
+}
+
+@xcore.lang.GenModel(documentation="A Module containing a set of  AxisOrdinates")
+@xcore.lang.ExtendedMetaData(name="AxisOrdinateModule", kind="elementOnly")
+class AxisOrdinateModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of AxisOrdinates")
+	@xcore.lang.ExtendedMetaData(kind="element", name="axis_ordinates")
+	contains AXIS_ORDINATE[] axis_ordinates
+}
+
+@xcore.lang.GenModel(documentation="A Module containing a set of Cell Positions ")
+@xcore.lang.ExtendedMetaData(name="CellPositionModule", kind="elementOnly")
+class CellPositionModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of Cell Positions ")
+	@xcore.lang.ExtendedMetaData(kind="element", name="reportTables")
+	contains CELL_POSITION[] reportTables
+}
+
+@xcore.lang.GenModel(documentation="A Module containing a set of OrdinateItems ")
+@xcore.lang.ExtendedMetaData(name="OrdinateItemModule", kind="elementOnly")
+class OrdinateItemModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of OrdinateItems")
+	@xcore.lang.ExtendedMetaData(kind="element", name="ordinateItems")
+	contains ORDINATE_ITEM[] ordinateItems
+}
+
+@xcore.lang.GenModel(documentation="A Report Cell")
+@xcore.lang.ExtendedMetaData(name="ReportCell", kind="empty")
+class ReportCell {
+	@xcore.lang.GenModel(documentation="The related Combination")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="combination")
+	refers COMBINATION combination
+	id String name
+}
+
+@xcore.lang.GenModel(documentation="A ReportCell Value, effectively a populate Report Cell ")
+@xcore.lang.ExtendedMetaData(name="ReportCellValue", kind="empty")
+class ReportCellValue {
+	@xcore.lang.GenModel(documentation="The ReportCell")
+	@xcore.lang.ExtendedMetaData(kind="attribute", name="reportCell")
+	refers ReportCell reportCell
+	String value
+}
+
+@xcore.lang.GenModel(documentation="A Module containing a set of ReportTables")
+@xcore.lang.ExtendedMetaData(name="ReportTableModule", kind="elementOnly")
+class ReportTableModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of ReportTables")
+	@xcore.lang.ExtendedMetaData(kind="element", name="reportTables")
+	contains TABLE[] reportTables
+}
+
+@xcore.lang.GenModel(documentation="A Module containing a set of TableCells ")
+@xcore.lang.ExtendedMetaData(name="TableCellModule", kind="elementOnly")
+class TableCellModule extends SDDModule {
+	@xcore.lang.GenModel(documentation="The set of TableCells ")
+	@xcore.lang.ExtendedMetaData(kind="element", name="tableCells")
+	contains TABLE_CELL[] tableCells
+}

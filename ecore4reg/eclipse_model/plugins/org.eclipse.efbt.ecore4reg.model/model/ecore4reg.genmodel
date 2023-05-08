@@ -5,61 +5,14 @@
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
     operationReflection="true" importOrganizing="true" pluginKey="">
   <foreignModel>ecore4reg.ecore</foreignModel>
-  <genPackages prefix="Ecore4reg" basePackage="org.eclipse.efbt.ecore4reg.model"
-      resource="XMI" disposableProviderFactory="true" loadInitialization="true" literalsInterface="false"
+  <genPackages prefix="Ecore4reg" basePackage="org.eclipse.efbt.ecore4reg.model" resource="XMI"
+      disposableProviderFactory="true" loadInitialization="true" literalsInterface="false"
       ecorePackage="ecore4reg.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="ecore4reg.ecore#//Comparitor">
       <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//Comparitor/less_than"/>
       <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//Comparitor/equals"/>
       <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//Comparitor/greater_than"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ecore4reg.ecore#//AttrComparison">
-      <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//AttrComparison/equals"/>
-      <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//AttrComparison/less_than"/>
-      <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//AttrComparison/greater_than"/>
-      <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//AttrComparison/not_equals"/>
-    </genEnums>
-    <genClasses image="false" ecoreClass="ecore4reg.ecore#//BaseElement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//BaseElement/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//BaseElement/description"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//BaseElement/invisible"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="ecore4reg.ecore#//FlowElementsContainer">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//FlowElementsContainer/flowElements"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="ecore4reg.ecore#//FlowElement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//FlowElement/display_name"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="ecore4reg.ecore#//FlowNode">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//FlowNode/outgoing"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//FlowNode/incoming"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//SequenceFlow">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//SequenceFlow/targetRef"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//SequenceFlow/sourceRef"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//Task"/>
-    <genClasses image="false" ecoreClass="ecore4reg.ecore#//Activity"/>
-    <genClasses image="false" ecoreClass="ecore4reg.ecore#//Gateway"/>
-    <genClasses ecoreClass="ecore4reg.ecore#//ExclusiveGateway"/>
-    <genClasses ecoreClass="ecore4reg.ecore#//InclusiveGateway"/>
-    <genClasses ecoreClass="ecore4reg.ecore#//ParallelGateway"/>
-    <genClasses ecoreClass="ecore4reg.ecore#//ServiceTask">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ServiceTask/enrichedAttribute"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ServiceTask/scenarios"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ServiceTask/secondAttribute"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ServiceTask/requiredAttributesForScenarioChoice"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ServiceTask/requiredAttributesForEntityCreation"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ServiceTask/entityCreationTask"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//SubProcess"/>
-    <genClasses ecoreClass="ecore4reg.ecore#//ScriptTask">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ScriptTask/selectionLayers"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ScriptTask/outputLayer"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//UserTask">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//UserTask/entity"/>
-    </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//Import">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//Import/importedNamespace"/>
     </genClasses>
@@ -145,58 +98,8 @@
     <genClasses ecoreClass="ecore4reg.ecore#//ViewModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ViewModule/views"/>
     </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//ActivityTag">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ActivityTag/activity"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//Scenario">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//Scenario/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//Scenario/invisible"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//Scenario/description"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Scenario/requiredAttributes"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Scenario/data_constraints"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//ScenarioTag">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ScenarioTag/scenario"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//Test">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Test/inputData"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Test/expectedResult"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//Test/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Test/scope"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//TestModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//TestModule/tests"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//DataConstraint">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//DataConstraint/attr1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//DataConstraint/comparison"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//DataConstraint/member"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//DataConstraint/value"/>
-    </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//SelectionLayer">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//SelectionLayer/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//SelectionLayer/invisible"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//SelectionLayer/generatedEntity"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//TestScope">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//TestScope/name"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//UnitTestScope">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//UnitTestScope/scenarios"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//E2ETestScope">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//E2ETestScope/scenarios"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//E2ETestScope/layer"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//E2ETestScope/scriptTask"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//InputFile">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//InputFile/fileName"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//InputFile/entity"/>
-    </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//WorkflowModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//WorkflowModule/taskTags"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//WorkflowModule/scenarioTags"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//WorkflowModule/subProcess"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELAttribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELAttribute/iD"/>
@@ -246,7 +149,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELTypedElement/lowerBound"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELAnnotation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELAnnotation/contents"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ELAnnotation/details"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELAnnotation/source"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ELStringToStringMapEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELStringToStringMapEntry/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELStringToStringMapEntry/value"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//VTLEnrichedCube">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//VTLEnrichedCube/transformations"/>

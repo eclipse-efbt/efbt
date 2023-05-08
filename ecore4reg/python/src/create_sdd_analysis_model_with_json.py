@@ -14,9 +14,8 @@
 Created on 25 April 2022
 '''
 
-from sdd_context import SDDContext
-
-from import_sdd_to_analysis_model import ImportSDD
+from importers.sdd_context import SDDContext
+from importers.import_sdd_to_analysis_model import ImportSDD
 
 
 if __name__ == '__main__':
