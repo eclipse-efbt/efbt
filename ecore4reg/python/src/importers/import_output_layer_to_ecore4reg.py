@@ -60,12 +60,12 @@ class ROLImport(object):
                     header_skipped = True
                 else:
 
-                    class_name = row[0]
+                    class_name = row[context.cubeClassNameIndex]
                     altered_class_name = Utils.make_valid_id(class_name)
-                    object_id = row[1]
-                    cube_type = row[3]
-                    valid_to = row[11]
-                    framework = row[5]
+                    object_id = row[context.cubeObjectIDIndex]
+                    cube_type = row[context.cubeCubeTypeIndex]
+                    valid_to = row[context.cubeValidToIndex]
+                    framework = row[context.cubeFrameworkIndex]
 
 
                     if ((framework == "FINREP_REF") and (cube_type == "RC") and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999"))):
@@ -120,9 +120,9 @@ class ROLImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    valid_to = row[4]
-                    variable_id = row[5]
-                    variable_set = row[6]
+                    valid_to = row[context.variable_set_valid_to]
+                    variable_id = row[context.variable_set_variable_id]
+                    variable_set = row[context.variable_set_valid_set]
 
                     if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         variable_list = None
@@ -153,10 +153,10 @@ class ROLImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    variable_name = row[6]
-                    long_name = row[4]
+                    variable_name = row[context.variableVariableNameIndex]
+                    long_name = row[context.variableLongNameIndex]
                     # domainName = Utils.make_valid_id(row[3])
-                    domain = row[2]
+                    domain = row[context.variableDomainIndex]
                     context.variable_to_domain_map[variable_name] = domain
                     context.variable_to_long_names_map[variable_name] = long_name
 
@@ -173,9 +173,9 @@ class ROLImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    domain_id = row[0]
+                    domain_id = row[context.domainDomainIDIndex]
                     # domainName = Utils.make_valid_id(row[3])
-                    domain_name = row[8]
+                    domain_name = row[context.domainDomainNameIndex]
                     context.domain_to_domain_name_map[domain_id] = domain_name
 
     def create_member_maps(self, context):
@@ -192,13 +192,13 @@ class ROLImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    member_id = row[4]
+                    member_id = row[context.memberMemberIDIndex]
                     # domainName = Utils.make_valid_id(row[3])
-                    member_code = row[0]
-                    member_name = row[5]
+                    member_code = row[context.memberMemberCodeIndex]
+                    member_name = row[context.memberMemberNameIndex]
                     if (member_name is None) or (member_name == ""):
                         member_name = member_id
-                    domain_id = row[2]
+                    domain_id = row[context.memberDomainIDIndex]
 
                     # if there is no domain ID this suggests a faulty 
                     # row in the csv due to return statements in fields
@@ -221,8 +221,8 @@ class ROLImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    domain_id = row[2]
-                    subdomain_id = row[8]
+                    domain_id = row[context.subdomainDomainIDIndex]
+                    subdomain_id = row[context.subDomainSubDomainIDIndex]
                     context.subdomain_id_to_domain_id[subdomain_id] = domain_id
 
     def create_subdomain_to_member_maps(self, context):
@@ -239,9 +239,9 @@ class ROLImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    member_id = row[0]
-                    subdomain_id = row[2]
-                    valid_to = row[4]
+                    member_id = row[context.subdomain_enumerationMemberIDIndex]
+                    subdomain_id = row[context.subdomain_enumerationSubdomainIDIndex]
+                    valid_to = row[context.subdomain_enumerationValidToIndex]
                     if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         member_list = None
                         try:
@@ -271,9 +271,9 @@ class ROLImport(object):
                     header_skipped = True
                 else:
 
-                    variable = row[2]
-                    classID = row[1]
-                    variableSet = row[12]
+                    variable = row[context.cube_structure_itemVariableIndex]
+                    classID = row[context.cube_structure_itemClassIDIndex]
+                    variableSet = row[context.cube_structure_itemVariableSet]
 
                     try: 
                         the_class = context.classes_map[classID]
@@ -346,11 +346,11 @@ class ROLImport(object):
                         header_skipped = True
                 else:
                     
-                    variable = row[2]
-                    subdomain_id = row[10 ]
-                    class_id = row[1]
-                    specific_member = row[7 ]
-                    variable_set = row[12]
+                    variable = row[context.cube_structure_itemVariableIndex]
+                    subdomain_id = row[context.cube_structure_itemSubdomainIndex ]
+                    class_id = row[context.cube_structure_itemClassIDIndex]
+                    specific_member = row[context.cube_structure_itemSpecificMember ]
+                    variable_set = row[context.cube_structure_itemVariableSet]
                     try:
                         cube_name = context.classes_map[class_id]
                         attribute_list = [variable]
@@ -439,14 +439,14 @@ class ROLImport(object):
                 if not header_skipped:
                         header_skipped = True
                 else:
-                    the_attribute_name1 = row[11 ]
+                    the_attribute_name1 = row[context.cube_structure_itemAttributeName]
                     long_name=None
                     
-                    variable = row[2 ]
-                    subdomain_id = row[10 ]
-                    class_id = row[1 ]
-                    specific_member = row[7 ]
-                    variable_set = row[12]
+                    variable = row[context.cube_structure_itemVariableIndex ]
+                    subdomain_id = row[context.cube_structure_itemSubdomainIndex ]
+                    class_id = row[context.cube_structure_itemClassIDIndex ]
+                    specific_member = row[context.cube_structure_itemSpecificMember ]
+                    variable_set = row[context.cube_structure_itemVariableSet]
                     
                     try:
                         the_class = context.classes_map[class_id]
