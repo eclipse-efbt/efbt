@@ -20,7 +20,7 @@ class Context(object):
     Documentation for Context
     '''
     # variables to configure the behaviour
-
+    input_from_website = False
     persist_vtl_comments = True
     use_subdomains = False
     use_variable_long_name = True
@@ -132,7 +132,122 @@ class Context(object):
     importLogicStrings = []
 
     variable_set_to_variable_map = {}
+    
+    cubeClassNameIndex = 0
+    cubeObjectIDIndex = 1
+    cubeCubeTypeIndex = 3
+    cubeValidToIndex = 11
+    cubeFrameworkIndex = 5
+    
+    variable_set_valid_to = 4
+    variable_set_variable_id = 5
+    variable_set_valid_set = 6
+    
+    variableVariableNameIndex = 6
+    variableLongNameIndex = 4
+    variableDomainIndex = 2
+    variableCodeIndex = 0
+    
+    domainDomainIDIndex = 0
+    domainDomainNameIndex = 8
+    
+    memberMemberIDIndex = 4
+    memberMemberCodeIndex = 0
+    memberMemberNameIndex = 5
+    memberDomainIDIndex = 2
+    
+    subdomainDomainIDIndex = 2
+    subDomainSubDomainIDIndex = 8
+    
+    subdomain_enumerationMemberIDIndex = 0
+    subdomain_enumerationSubdomainIDIndex = 2
+    subdomain_enumerationValidToIndex = 4
+    
+    cube_structure_itemVariableIndex = 2
+    cube_structure_itemClassIDIndex = 1
+    cube_structure_itemSubdomainIndex = 10
+    cube_structure_itemSpecificMember = 7
+    cube_structure_itemAttributeName = 11
+    cube_structure_itemVariableSet = 12
+    
+    
 
+    def set_up_csv_indexes(self):
+        if self.input_from_website:
+            self.cubeClassNameIndex = 3
+            self.cubeObjectIDIndex = 1
+            self.cubeCubeTypeIndex = 6
+            self.cubeValidToIndex = 9
+            self.cubeFrameworkIndex = 4
+            
+            self.variable_set_valid_to = 3
+            self.variable_set_variable_id = 1
+            self.variable_set_valid_set = 0
+            
+            self.variableVariableNameIndex = 1
+            self.variableLongNameIndex = 3
+            self.variableDomainIndex = 4
+            self.variableCodeIndex = 2
+            
+            self.domainDomainIDIndex = 6
+            self.domainDomainNameIndex = 2
+            
+            self.memberMemberIDIndex = 1
+            self.memberMemberCodeIndex = 2
+            self.memberMemberNameIndex = 3
+            self.memberDomainIDIndex = 4
+            
+            self.subdomainDomainIDIndex = 3
+            self.subDomainSubDomainIDIndex = 1
+            
+            self.subdomain_enumerationMemberIDIndex = 0
+            self.subdomain_enumerationSubdomainIDIndex = 1
+            self.subdomain_enumerationValidToIndex = 3
+            
+            self.cube_structure_itemVariableIndex = 1
+            self.cube_structure_itemClassIDIndex = 0
+            self.cube_structure_itemSubdomainIndex = 5
+            self.cube_structure_itemSpecificMember = 7
+            self.cube_structure_itemAttributeName = 2
+            self.cube_structure_itemVariableSet = 6
+        else:
+            self.cubeClassNameIndex = 0
+            self.cubeObjectIDIndex = 1
+            self.cubeCubeTypeIndex = 3
+            self.cubeValidToIndex = 11
+            self.cubeFrameworkIndex = 5
+            
+            self.variable_set_valid_to = 4
+            self.variable_set_variable_id = 5
+            self.variable_set_valid_set = 6
+            
+            self.variableVariableNameIndex = 6
+            self.variableLongNameIndex = 4
+            self.variableDomainIndex = 2
+            self.variableCodeIndex = 0
+            
+            self.domainDomainIDIndex = 0
+            self.domainDomainNameIndex = 8
+            
+            self.memberMemberIDIndex = 4
+            self.memberMemberCodeIndex = 0
+            self.memberMemberNameIndex = 5
+            self.memberDomainIDIndex = 2
+            
+            self.subdomainDomainIDIndex = 2
+            self.subDomainSubDomainIDIndex = 8
+            
+            self.subdomain_enumerationMemberIDIndex = 0
+            self.subdomain_enumerationSubdomainIDIndex = 2
+            self.subdomain_enumerationValidToIndex = 4
+            
+            self.cube_structure_itemVariableIndex = 2
+            self.cube_structure_itemClassIDIndex = 1
+            self.cube_structure_itemSubdomainIndex = 10
+            self.cube_structure_itemSpecificMember = 7
+            self.cube_structure_itemAttributeName = 11
+            self.cube_structure_itemVariableSet = 12
+            
     def __init__(self):
 
         self.types_package.eClassifiers.append(self.e_string)
@@ -145,3 +260,5 @@ class Context(object):
         self.module_list.modules.append(self.output_layer_entities_package)
         self.module_list.modules.append(self.view_module)
         self.module_list.modules.append(self.vtl_module)
+        
+        
