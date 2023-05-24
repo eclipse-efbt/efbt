@@ -26,7 +26,7 @@ class PersistToFile:
 
     def save_model_as_ecore4reg_file(self, context):
         '''
-        Documentation for save_model_as_ecore4reg_file
+        Save resources as Ecore4Reg files
         '''
 
         PersistToFile.persist_entity_model(
@@ -42,6 +42,23 @@ class PersistToFile:
         PersistToFile.persist_types_model(
             self, context, context.types_package, "ecore4reg")
         PersistToFile.persist_generation_transformations(self, context)
+        
+    def save_model_as_xcore_file(self, context):
+        '''
+        Save resources as XCore files
+        '''
+
+        PersistToFile.persist_entity_model(
+            self, context, context.input_layer_entities_package,
+            "xcore", context.input_layer_enums_package)
+        PersistToFile.persist_entity_model(
+            self, context, context.output_layer_entities_package,
+            "xcore", context.output_layer_enums_package)
+        PersistToFile.persist_enum_model(
+            self, context, context.input_layer_enums_package, "xcore")
+        PersistToFile.persist_enum_model(
+            self, context, context.output_layer_enums_package, "xcore")
+        
 
     def persist_entity_model(self, context, the_package, extension, imported_package):
         '''
@@ -79,8 +96,13 @@ class PersistToFile:
                         if ((member.lowerBound == 0) and (member.upperBound == 1)):
                             f.write(" ")
                         else:
+                            upperBoundNumber = member.upperBound
+                            upperBoundString = str(member.upperBound)
+                            if (extension == "xcore") and (upperBoundNumber == -1):
+                                upperBoundString = "*"
+                            
                             f.write("[" + str(member.lowerBound) +
-                                    ".." + str(member.upperBound) + "] ")
+                                    ".." + upperBoundString + "] ")
 
                         f.write(member.name)
                         f.write(" \r")
@@ -103,8 +125,13 @@ class PersistToFile:
                         if ((member.lowerBound == 0) and (member.upperBound == 1)):
                             f.write(" ")
                         else:
+                            upperBoundNumber = member.upperBound
+                            upperBoundString = str(member.upperBound)
+                            if (extension == "xcore") and (upperBoundNumber == -1):
+                                upperBoundString = "*"
+                            
                             f.write("[" + str(member.lowerBound) +
-                                    ".." + str(member.upperBound) + "] ")
+                                    ".." + upperBoundString + "] ")
 
                         f.write(member.name)
                         f.write(" \r")
@@ -117,12 +144,20 @@ class PersistToFile:
                         if ((member.lowerBound == 0) and (member.upperBound == 1)):
                             f.write(" ")
                         else:
+                            upperBoundNumber = member.upperBound
+                            upperBoundString = str(member.upperBound)
+                            if (extension == "xcore") and (upperBoundNumber == -1):
+                                upperBoundString = "*"
+                            
                             f.write("[" + str(member.lowerBound) +
-                                    ".." + str(member.upperBound) + "] ")
-
+                                    ".." + upperBoundString + "] ")
+                            
                         f.write(member.name)
-                        f.write("() {}")
-
+                        if (extension == "xcore") and (member.eType.name == "int"):
+                            f.write("() { return 0}")
+                        else:
+                            f.write("() {}")
+                            
                         f.write(" \r")
 
                 f.write("\t\t\t}\r")

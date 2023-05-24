@@ -321,6 +321,19 @@ class InputLayerImport(object):
                                 attribute.eAttributeType = context.e_int
                                 attribute.upperBound = 1
                                 attribute.lowerBound = 1
+                            elif (the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals_domain")):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
+                            elif (the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals")):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
+                                
                             elif (the_enum.name.startswith("All_possible_dates")):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_date
@@ -373,6 +386,16 @@ class InputLayerImport(object):
                                     operation.upperBound = 1
                                     operation.lowerBound = 1
                                 elif (the_enum.name.startswith("Non_negative_integers")):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
+                                elif (the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals")):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
+                                elif (the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals_domain")):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_int
                                     operation.upperBound = 1
@@ -525,6 +548,14 @@ class InputLayerImport(object):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_int
                                 attribute.eAttributeType = context.e_int
+                            elif (the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals_domain")):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
+                            elif (the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals")):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
                             elif (the_enum.name.startswith("All_possible_dates")):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_date
@@ -561,6 +592,12 @@ class InputLayerImport(object):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_int
                                 elif the_enum.name.startswith("Non_negative_integers"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                elif the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals_domain"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                elif the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals"):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_int
                                 elif the_enum.name.startswith("All_possible_dates"):
