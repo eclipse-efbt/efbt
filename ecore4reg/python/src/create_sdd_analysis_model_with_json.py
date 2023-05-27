@@ -28,5 +28,5 @@ if __name__ == '__main__':
     ImportSDD().import_sdd(sdd_context)
 
     #Ecore4regToEcoreConverter().convertPackagesInContext(context)
-    #persister = PersistToFile()
-    #persister.save_analysis_model_as_json_files(context)
+    persister = PersistToFile()
+    persister.save_analysis_model_as_json_files(context)

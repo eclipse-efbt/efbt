@@ -24,7 +24,7 @@ from importers.standard_matching_queries import StandardMatchingQueries
 if __name__ == '__main__':
     context = Context()
     context.persist_to_ecore4reg = True
-    context.use_subdomains = False
+    context.use_subdomains_in_rol = False
     context.input_from_website = True
     context.set_up_csv_indexes()
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources_website'

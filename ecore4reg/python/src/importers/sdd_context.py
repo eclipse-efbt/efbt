@@ -132,8 +132,6 @@ class SDDContext(object):
     combination_item_combination_id = 0
     combination_item_variable_id = 1
     combination_member_id = 4
-    
-    
 
     def set_up_csv_indexes(self):
         if self.input_from_website:

@@ -19,7 +19,7 @@ Created on 22 Jan 2022
 import os
 import csv
 from importers.utils import Utils
-from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
+from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference, ELAttribute
 
 class ROLImport(object):
     '''
@@ -35,7 +35,7 @@ class ROLImport(object):
         ROLImport.create_variable_to_domain_map(self, context)
         ROLImport.create_domain_to_domain_name_map(self, context)
         ROLImport.create_member_maps(self, context)
-        if context.use_subdomains:
+        if context.use_subdomains_in_rol:
             ROLImport.create_subdomain_to_domain_map(self, context)
             ROLImport.create_subdomain_to_member_maps(self, context)
             ROLImport.add_rol_enums_and_literals_to_package_using_subdomains(
@@ -60,22 +60,46 @@ class ROLImport(object):
                     header_skipped = True
                 else:
 
-                    class_name = row[context.cubeClassNameIndex]
+                    framework = row[context.cubeFrameworkIndex]
+                    if (framework == "FINREP_REF"):
+                        class_name = row[context.cubeClassCodeIndex]
+                    else:
+                        class_name = row[context.cubeClassNameIndex]
+                    
                     altered_class_name = Utils.make_valid_id(class_name)
                     object_id = row[context.cubeObjectIDIndex]
                     cube_type = row[context.cubeCubeTypeIndex]
                     valid_to = row[context.cubeValidToIndex]
                     framework = row[context.cubeFrameworkIndex]
+                    derived = True
 
-
-                    if ((framework == "FINREP_REF") and (cube_type == "RC") and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999"))):
+                    if ((((framework == "FINREP_REF") and (cube_type == "RC")) or ( context.load_eil_from_website and ((cube_type == "EIL"))) )and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999"))):
 
                         altered_class_name = Utils.make_valid_id(class_name)
+                        fullName = None
+                        if cube_type == "EIL" : 
+                            fullName=altered_class_name
+                        #elif cube_type == "EIL":
+                        #    fullName=altered_class_name + "_Derived"
+                        else:
+                            fullName=altered_class_name+"_OutputItem"
+                        
+                        if cube_type == "EIL":
+                            derived = False
+                            
+                        eclass = ELClass(name=fullName)
+                        eclass.isDerived = derived
 
-                        eclass = ELClass(name=altered_class_name+"_OutputItem")
-
+                        fullTableName = None
+                        if cube_type == "EIL":
+                            fullTableName=altered_class_name+"_BaseTable"
+                        #elif cube_type == "EIL":
+                        #    fullTableName=altered_class_name+"_DerivedTable"
+                        else:
+                            fullTableName=altered_class_name+"_OutputTable"
+                            
                         eclass_table = ELClass(
-                            name=altered_class_name+"_OutputTable")
+                            name=fullTableName)
                         eclass_table.containedEntityType = eclass
                         containment_reference = ELReference()
                         containment_reference.name = eclass.name+"s"
@@ -85,13 +109,13 @@ class ROLImport(object):
                         containment_reference.containment = True
                         eclass_table.eStructuralFeatures.append(
                             containment_reference)
-                        xclass_table_peration = ELOperation()
-                        xclass_table_peration.name = eclass.name+"s"
-                        xclass_table_peration.eType = eclass
-                        xclass_table_peration.upperBound = -1
-                        xclass_table_peration.lowerBound = 0
-
-                        eclass_table.eOperations.append(xclass_table_peration)
+                        if not (cube_type == "EIL"):
+                            xclass_table_peration = ELOperation()
+                            xclass_table_peration.name = eclass.name+"s"
+                            xclass_table_peration.eType = eclass
+                            xclass_table_peration.upperBound = -1
+                            xclass_table_peration.lowerBound = 0
+                            eclass_table.eOperations.append(xclass_table_peration)
 
                         context.output_layer_entities_package.eClassifiers.extend([
                                                                                eclass])
@@ -101,6 +125,8 @@ class ROLImport(object):
                         # maintain a map a objectIDs to ELClasses
                         context.classes_map[object_id] = eclass
                         context.table_map[eclass] = eclass_table
+                        
+                    
 
     def create_variable_set_to_variable_map(self, context):
         '''
@@ -447,6 +473,7 @@ class ROLImport(object):
                     class_id = row[context.cube_structure_itemClassIDIndex ]
                     specific_member = row[context.cube_structure_itemSpecificMember ]
                     variable_set = row[context.cube_structure_itemVariableSet]
+                    role = row[context.cube_structure_item_role_index]
                     
                     try:
                         the_class = context.classes_map[class_id]
@@ -467,7 +494,9 @@ class ROLImport(object):
                                 
                                 the_class = context.classes_map[class_id]
                                 
-                                class_is_derived = True
+                                class_is_derived = the_class.isDerived
+                                
+                                
                                 
                                 if(context.use_variable_long_name):   
                                     the_attribute_name = amended_attribute_long_name 
@@ -476,14 +505,14 @@ class ROLImport(object):
                                 
                                 amended_domain_name = None
                                 if (the_attribute_name1=="MTRCS"):
-                                    if context.use_subdomains:
+                                    if context.use_subdomains_in_rol:
                                         domain_id = context.variable_to_domain_map[attribute_name]
                                         amended_domain_name = Utils.make_valid_id(domain_id)
                                     else:
                                         domain_id = context.variable_to_domain_map[attribute_name]
                                         amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
                                 else:   
-                                    if context.use_subdomains:
+                                    if context.use_subdomains_in_rol:
                                         if ((subdomain_id == "") or (subdomain_id == None)) and (len(specific_member) > 0):
                                             domain_id = context.variable_to_domain_map[variable]
                                             if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
@@ -558,13 +587,87 @@ class ROLImport(object):
                                             operation.name = the_attribute_name
                                             operation.eType = the_enum  
                                         
-                                    try:
-                                        the_class = context.classes_map[class_id]
+                                        try:
+                                            the_class = context.classes_map[class_id]
+                                            
+                                            if class_is_derived:
+                                                the_class.eOperations.extend([operation])
+                                        except:
+                                            print( "missing class2: " )
+                                            
+                                    else:
+                                        attribute = ELAttribute()
+                                        attribute.lowerBound=0
+                                        attribute.upperBound=1
+                                        if(the_enum.name == "String"):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_string
+                                            attribute.eAttributeType = context.e_string
+                                        elif(the_enum.name == "Date"):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_date
+                                            attribute.eAttributeType = context.e_string
+                                        elif(the_enum.name.startswith("String_")):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_string
+                                            attribute.eAttributeType = context.e_string
+                                        elif(the_enum.name == "STRNG_domain"):
+                                                attribute.name = the_attribute_name
+                                                attribute.eType = context.e_string
+                                                attribute.eAttributeType = context.e_string
+                                        elif(the_enum.name == "EBA_String_domain"):
+                                                attribute.name = the_attribute_name
+                                                attribute.eType = context.e_string
+                                                attribute.eAttributeType = context.e_string
+                                        elif(the_enum.name == "DT_domain"):
+                                                attribute.name = the_attribute_name
+                                                attribute.eType = context.e_date
+                                                attribute.eAttributeType = context.e_date
+                                        elif(the_enum.name == "Number"):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_double
+                                            attribute.eAttributeType = context.e_double
                                         
-                                        if class_is_derived:
-                                            the_class.eOperations.extend([operation])
-                                    except:
-                                        print( "missing class2: " )
+                                        elif(the_enum.name.startswith("Real_")):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_double
+                                            attribute.eAttributeType = context.e_double
+                                        elif(the_enum.name.startswith("Monetary")): 
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_int
+                                            attribute.eAttributeType = context.e_int
+                                        elif(the_enum.name.startswith("MNTRY")): 
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_int
+                                            attribute.eAttributeType = context.e_int
+                                        elif(the_enum.name.startswith("Monetary_domain")): 
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_int
+                                            attribute.eAttributeType = context.e_int
+                                        elif(the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_int
+                                            attribute.eAttributeType = context.e_int
+                                        elif(the_enum.name.startswith("Non_negative_integers")): 
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_int
+                                            attribute.eAttributeType = context.e_int
+                                        elif(the_enum.name.startswith("All_possible_dates")):   
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_date  
+                                            attribute.eAttributeType = context.e_date
+                                        else:
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = the_enum  
+                                            attribute.eAttributeType = the_enum
+                                        
+                                        try:
+                                            the_class = context.classes_map[class_id]
+                                            
+                                            the_class.eStructuralFeatures.extend([attribute])
+                                            
+                                        except:
+                                            print( "missing class2: " )
 
                                 else:
                                     print( "XXXXX missing domainID: " )

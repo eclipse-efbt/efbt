@@ -22,7 +22,9 @@ class Context(object):
     # variables to configure the behaviour
     input_from_website = False
     persist_vtl_comments = True
-    use_subdomains = False
+    use_subdomains_in_rol = False
+    use_subdomains_in_il = True
+    load_eil_from_website = False
     use_variable_long_name = True
     persist_to_ecore4reg = True
     inScopeFileDirectory = ""
@@ -120,6 +122,7 @@ class Context(object):
     # enumMap keeps a reference between ldm ID's for domains and
     # the enum instance
     enum_map = {}
+    enum_id_enum_name_map = {}
 
     view_module = ViewModule(name='generations')
 
@@ -133,11 +136,13 @@ class Context(object):
 
     variable_set_to_variable_map = {}
     
-    cubeClassNameIndex = 0
+    cubeClassNameIndex = 8
+    cubeClassCodeIndex = 0
     cubeObjectIDIndex = 1
     cubeCubeTypeIndex = 3
     cubeValidToIndex = 11
     cubeFrameworkIndex = 5
+    cubeRoleIndex = 9
     
     variable_set_valid_to = 4
     variable_set_variable_id = 5
@@ -180,6 +185,7 @@ class Context(object):
     cube_structure_itemSpecificMember = 7
     cube_structure_itemAttributeName = 11
     cube_structure_itemVariableSet = 12
+    cube_structure_item_role_index = 9
     
     combination_combination_code = 1
     combination_combination_id = 0
@@ -193,7 +199,8 @@ class Context(object):
 
     def set_up_csv_indexes(self):
         if self.input_from_website:
-            self.cubeClassNameIndex = 3
+            self.cubeClassNameIndex = 2
+            self.cubeClassCodeIndex = 3
             self.cubeObjectIDIndex = 1
             self.cubeCubeTypeIndex = 6
             self.cubeValidToIndex = 9
@@ -239,6 +246,7 @@ class Context(object):
             self.cube_structure_itemSpecificMember = 7
             self.cube_structure_itemAttributeName = 2
             self.cube_structure_itemVariableSet = 6
+            self.cube_structure_item_role_index = 3
             self.member_member_descriptions = 5
             
             self.combination_combination_code = 1
@@ -249,7 +257,8 @@ class Context(object):
             self.combination_item_variable_id = 1
             self.combination_member_id = 4
         else:
-            self.cubeClassNameIndex = 0
+            self.cubeClassNameIndex = 8
+            self.cubeClassCodeIndex = 0
             self.cubeObjectIDIndex = 1
             self.cubeCubeTypeIndex = 3
             self.cubeValidToIndex = 11
@@ -296,6 +305,7 @@ class Context(object):
             self.cube_structure_itemSpecificMember = 7
             self.cube_structure_itemAttributeName = 11
             self.cube_structure_itemVariableSet = 12
+            self.cube_structure_item_role_index = 9
             
             self.combination_combination_code = 1
             self.combination_combination_id = 0

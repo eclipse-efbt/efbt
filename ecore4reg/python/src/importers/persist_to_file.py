@@ -381,6 +381,18 @@ class PersistToFile:
             f.write("}\r")
             f.write(PersistToFile.get_vtl_text_for_view(self, context, view))
             f.close()
+            
+    def save_analysis_model_as_xmi_files(self, context):
+        rset2 = ResourceSet()
+        extension = 'xmi'
+        input_layer_enums_resource2 = rset2.create_resource(URI(
+            context.output_directory + os.sep + extension +
+            os.sep + "sdd.xmi"))
+        # This will create an XMI resource
+        # we add the EPackage instance in the resource
+        input_layer_enums_resource2.append(context.input_layer_enums_ecore_package)
+        input_layer_enums_resource2.save()
+        
 
     def save_model_as_ecore_file(self, context):
         '''

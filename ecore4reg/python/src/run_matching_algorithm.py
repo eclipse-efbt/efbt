@@ -24,7 +24,7 @@ from importers.standard_matching_queries import StandardMatchingQueries
 if __name__ == '__main__':
     context = Context()
     context.persist_to_ecore4reg = True
-    context.use_subdomains = True
+    context.use_subdomains_in_rol = True
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     InputLayerImport().do_import(context)
