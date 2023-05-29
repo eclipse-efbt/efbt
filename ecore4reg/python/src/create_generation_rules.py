@@ -20,6 +20,7 @@ from importers.import_input_layer_to_ecore4reg import InputLayerImport
 from importers.import_output_layer_to_ecore4reg import ROLImport
 from importers.persist_to_file import PersistToFile
 from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
+from importers.relationship_enricher import RelationshipEnricher
 
 
 
@@ -32,8 +33,9 @@ if __name__ == '__main__':
     context.set_up_csv_indexes()
     context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resources_website'
     context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\results_website'
-    #InputLayerImport().do_import(context)
+    InputLayerImport().do_import(context)
     ROLImport().doImport(context)
+    RelationshipEnricher().enrich(context)
     #InputLayerImport().do_import(context)
     Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()

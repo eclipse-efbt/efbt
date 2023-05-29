@@ -28,6 +28,7 @@ class Context(object):
     use_variable_long_name = True
     persist_to_ecore4reg = True
     inScopeFileDirectory = ""
+    add_pks_to_input_layer_from_website = True 
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.
@@ -123,6 +124,8 @@ class Context(object):
     # the enum instance
     enum_map = {}
     enum_id_enum_name_map = {}
+    
+    foreign_key_tuple = []
 
     view_module = ViewModule(name='generations')
 

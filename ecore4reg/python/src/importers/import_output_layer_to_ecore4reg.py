@@ -89,6 +89,17 @@ class ROLImport(object):
                             
                         eclass = ELClass(name=fullName)
                         eclass.isDerived = derived
+                        if context.add_pks_to_input_layer_from_website:
+                            if cube_type == "EIL":
+                                pk_name = fullName + "_uniqueID"
+                                attribute = ELAttribute()
+                                attribute.name = pk_name
+                                attribute.eType = context.e_string
+                                attribute.eAttributeType = context.e_string
+                                attribute.iD = True
+                                attribute.lowerBound = 0
+                                attribute.upperBound = 1
+                                eclass.eStructuralFeatures.append(attribute)
 
                         fullTableName = None
                         if cube_type == "EIL":
@@ -116,6 +127,8 @@ class ROLImport(object):
                             xclass_table_peration.upperBound = -1
                             xclass_table_peration.lowerBound = 0
                             eclass_table.eOperations.append(xclass_table_peration)
+                        
+                            
 
                         context.output_layer_entities_package.eClassifiers.extend([
                                                                                eclass])

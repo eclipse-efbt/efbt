@@ -41,7 +41,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLForSelectionLayer">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="ecore:EClass sql_lite.ecore#//LayerSQL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="ecore:EClass generation_rules.ecore#//RuleForILTablePart"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//VTLGeneratedOutputlayer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -69,7 +69,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLForView">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="ecore:EClass sql_lite.ecore#//View"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="ecore:EClass generation_rules.ecore#//RulesForReport"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="vtl" eType="#//VTLGeneratedOutputlayer"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>

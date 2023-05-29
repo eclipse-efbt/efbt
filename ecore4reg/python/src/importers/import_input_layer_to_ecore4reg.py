@@ -832,3 +832,5 @@ class InputLayerImport(object):
                                         source_tables_reference)
                     if not (the_class is None):
                         the_class.eStructuralFeatures.append(e_reference)
+                        reference_tuple = (the_class.name,e_reference.name,e_reference.eType.name,e_reference.upperBound,e_reference.lowerBound)
+                        context.foreign_key_tuple.append(reference_tuple)
