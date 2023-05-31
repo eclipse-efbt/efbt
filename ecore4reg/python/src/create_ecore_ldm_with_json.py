@@ -14,11 +14,11 @@
 Created on 25 April 2022
 '''
 
-from context import Context
+from importers.context  import Context
 
-from import_ldm_to_ecore4reg import LDMImport
-from persist_to_file import PersistToFile
-from ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
+from importers.import_ldm_to_ecore4reg import LDMImport
+from importers.persist_to_file import PersistToFile
+from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 
 if __name__ == '__main__':
     context = Context()

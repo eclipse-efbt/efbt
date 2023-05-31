@@ -19,11 +19,11 @@ import csv
 import os
 
 from ecore4reg import  ELClass, ELOperation
-from ecore4reg import VTLSchemesModule, VTLTransformation, View
+from ecore4reg import VTLSchemesModule, VTLTransformation, RulesForReport
 from ecore4reg import EntityToVTLIntermediateLayerLink
 from ecore4reg import EntityToVTLIntermediateLayerLinkModule
-from ecore4reg import LayerSQL,  SelectColumnAttributeAs
-from ecore4reg import SelectionLayer
+from ecore4reg import RulesForILTable,  SelectColumnAttributeAs
+from ecore4reg import RuleForILTablePart
 from ecore4reg import VTLForOutputLayerAndIntermediateLayerCombination
 from ecore4reg import VTLForSelectionLayer, VTLForSelectionLayerModule
 from ecore4reg import VTLForView, VTLForViewModule
@@ -374,7 +374,7 @@ class ImportFinrepVTL(object):
                     header_skipped = True
                 else:
                     report_template = row[0]
-                    view = View(name="view_" + report_template)
+                    view = RulesForReport()
                     context.view_module.views.append(view)
 
                     
@@ -386,7 +386,7 @@ class ImportFinrepVTL(object):
         '''
 
         rol_vtl = ImportFinrepVTL.find_output_layer_vtl(
-            self, context, view.name[5:len(view.name)] + "_REF_OutputItem")
+            self, context, view.outputLayerCube.name[5:len(view.outputLayerCube.name)] + "_REF_OutputItem")
 
         if not rol_vtl is None:
             view.outputLayer = rol_vtl.outputLayer
@@ -402,13 +402,13 @@ class ImportFinrepVTL(object):
                     self, context, intermediate_layer)
                 if not link is None:
                     input_layer = link.entity
-                    selection_layer = SelectionLayer()
+                    selection_layer = RuleForILTablePart()
                     if input_layer is not None:
                         selection_layer.name = link.VTLIntermediateLayer.name
                     selection_layer.generatedEntity = rol_vtl.outputLayer
                     
-                    layer_sql = LayerSQL()
-                    layer_sql.selectionLayer = selection_layer
+                    layer_sql = RulesForILTable()
+                    layer_sql.rulesForTablePart = selection_layer
                     vtl_for_selection_layer = VTLForSelectionLayer()
                     vtl_for_selection_layer.selectionLayer = layer_sql
                     vtl_for_selection_layer.outputLayer = rol_vtl
@@ -416,7 +416,7 @@ class ImportFinrepVTL(object):
                     context.vtl_module.VTLForSelectionLayers.vTLForSelectionLayers.append(
                         vtl_for_selection_layer)
 
-                    view.selectionLayerSQL.extend([layer_sql])
+                    view.rulesForTable.extend([layer_sql])
                     ImportFinrepVTL.add_columns_to_layer(self, layer_sql, view.outputLayer)
 
     def find_output_layer_vtl(self, context, output_layer_name):

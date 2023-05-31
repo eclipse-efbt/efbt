@@ -93,8 +93,8 @@ class PersistToFile:
                 if classifier.abstract:
                     f.write("abstract ")
                 f.write("class " + classifier.name)
-                if (hasattr(classifier, "superTypes") and len(classifier.superTypes) > 0):
-                    f.write(" extends " + classifier.superTypes[0].name)
+                if (hasattr(classifier, "eSuperTypes") and len(classifier.eSuperTypes) > 0):
+                    f.write(" extends " + classifier.eSuperTypes[0].name)
                 f.write(" {\r")
                 for member in classifier.eStructuralFeatures:
 
