@@ -28,16 +28,25 @@ class RelationshipEnricher(object):
             print("lower_bound")
             print(lower_bound)
             
-            source_class = RelationshipEnricher.get_class_from_package(self, source_class_name, context.output_layer_entities_package)
-            target_class = RelationshipEnricher.get_class_from_package(self, target_class_name, context.output_layer_entities_package)
+            source_class = RelationshipEnricher.get_class_from_package(self, source_class_name, context.input_tables_package)
+            target_class = RelationshipEnricher.get_class_from_package(self, target_class_name, context.input_tables_package)
             e_reference = ELReference()
-            e_reference.name = reference_name
+            if RelationshipEnricher.relationshipExistsOnClass(self,source_class,reference_name):
+                e_reference.name = reference_name + "2"
+            else:
+                e_reference.name = reference_name
             e_reference.eType = target_class
             e_reference.upperBound = upper_bound
             e_reference.lowerBound = lower_bound
             e_reference.containment = False
             source_class.eStructuralFeatures.append(e_reference)
             
+    def relationshipExistsOnClass(self,source_class,reference_name):
+        for feature in source_class.eStructuralFeatures:
+            if feature.name == reference_name:
+                return True
+            
+        return False
     def get_class_from_package(self, class_name, package): 
         for classifier in package.eClassifiers:
             if isinstance(classifier, ELClass):

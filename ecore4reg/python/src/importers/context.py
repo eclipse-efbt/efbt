@@ -55,40 +55,40 @@ class Context(object):
 
     # create  Ecore4Reg  packages
     types_package = ELPackage(name='types')
-    input_layer_enums_package = ELPackage(
-        name='input_layer_enums',
-        nsURI='http://www.eclipse.org/bird/input_layer_enums',
-        nsPrefix='input_layer_enums')
-    output_layer_enums_package = ELPackage(
-        name='output_layer_enums',
-        nsURI='http://www.eclipse.org/bird/output_layer_enums',
-        nsPrefix='output_layer_enums')
-    input_layer_entities_package = ELPackage(
-        name='input_layer_entities',
-        nsURI='http://www.eclipse.org/bird/input_layer_entities',
-        nsPrefix='input_layer_entities')
-    output_layer_entities_package = ELPackage(
-        name='output_layer_entities',
-        nsURI='http://www.eclipse.org/bird/output_layer_entities',
-        nsPrefix='output_layer_entities')
+    il_domains_package = ELPackage(
+        name='il_domains',
+        nsURI='http://www.eclipse.org/bird/il_domains',
+        nsPrefix='il_domains')
+    sdd_domains_package = ELPackage(
+        name='sdd_domains',
+        nsURI='http://www.eclipse.org/bird/sdd_domains',
+        nsPrefix='sdd_domains')
+    input_tables_package = ELPackage(
+        name='input_tables',
+        nsURI='http://www.eclipse.org/bird/input_tables',
+        nsPrefix='input_tables')
+    output_tables_package = ELPackage(
+        name='output_tables',
+        nsURI='http://www.eclipse.org/bird/output_tables',
+        nsPrefix='output_tables')
 
     # create  Ecore packages
-    input_layer_enums_ecore_package = EPackage(
-        name='input_layer_enums',
-        nsURI='http://www.eclipse.org/bird/input_layer_enums',
-        nsPrefix='input_layer_enums')
-    output_layer_enums_ecore_package = EPackage(
-        name='output_layer_enums',
-        nsURI='http://www.eclipse.org/bird/output_layer_enums',
-        nsPrefix='output_layer_enums')
-    input_layer_entities_ecore_package = EPackage(
-        name='input_layer_entities',
-        nsURI='http://www.eclipse.org/bird/input_layer_entities',
-        nsPrefix='input_layer_entities')
-    output_layer_entities_ecore_package = EPackage(
-        name='output_layer_entities',
-        nsURI='http://www.eclipse.org/bird/output_layer_entities',
-        nsPrefix='output_layer_entities')
+    il_domains_ecore_package = EPackage(
+        name='il_domains',
+        nsURI='http://www.eclipse.org/bird/il_domains',
+        nsPrefix='il_domains')
+    sdd_domains_ecore_package = EPackage(
+        name='sdd_domains',
+        nsURI='http://www.eclipse.org/bird/sdd_domains',
+        nsPrefix='sdd_domains')
+    input_tables_ecore_package = EPackage(
+        name='input_tables',
+        nsURI='http://www.eclipse.org/bird/input_tables',
+        nsPrefix='input_tables')
+    output_tables_ecore_package = EPackage(
+        name='output_tables',
+        nsURI='http://www.eclipse.org/bird/output_tables',
+        nsPrefix='output_tables')
 
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
@@ -324,10 +324,10 @@ class Context(object):
         self.types_package.eClassifiers.append(self.e_double)
         self.types_package.eClassifiers.append(self.e_int)
         self.module_list.modules.append(self.types_package)
-        self.module_list.modules.append(self.input_layer_enums_package)
-        self.module_list.modules.append(self.output_layer_enums_package)
-        self.module_list.modules.append(self.input_layer_entities_package)
-        self.module_list.modules.append(self.output_layer_entities_package)
+        self.module_list.modules.append(self.il_domains_package)
+        self.module_list.modules.append(self.sdd_domains_package)
+        self.module_list.modules.append(self.input_tables_package)
+        self.module_list.modules.append(self.output_tables_package)
         self.module_list.modules.append(self.view_module)
         self.module_list.modules.append(self.vtl_module)
         

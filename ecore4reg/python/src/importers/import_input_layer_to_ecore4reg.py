@@ -84,14 +84,14 @@ class InputLayerImport(object):
                         eclass_table_operation.upperBound = -1
                         eclass_table_operation.lowerBound = 0
                         eclass_table.eOperations.append(eclass_table_operation)
-                        context.input_layer_entities_package.eClassifiers.extend([
+                        context.input_tables_package.eClassifiers.extend([
                                                                               eclass])
-                        context.input_layer_entities_package.eClassifiers.extend([
+                        context.input_tables_package.eClassifiers.extend([
                                                                               eclass_table])
                     elif class_name.startswith("OUTPUT_LAYER_"):
                         eclass = ELClass(name=altered_class_name)
 
-                        context.input_layer_entities_package.eClassifiers.extend([
+                        context.input_tables_package.eClassifiers.extend([
                                                                               eclass])
 
                     else:
@@ -103,7 +103,7 @@ class InputLayerImport(object):
                         # of a type heirarchy....we will set such classes
                         # to be abstract.
                         eclass_table = ELClass(
-                            name=altered_class_name+"_BaseTable")
+                            name=altered_class_name+"_Table")
                         containment_reference = ELReference()
                         containment_reference.name = eclass.name+"s"
                         containment_reference.eType = eclass
@@ -112,12 +112,20 @@ class InputLayerImport(object):
                         containment_reference.containment = True
                         eclass_table.eStructuralFeatures.append(
                             containment_reference)
-                        context.input_layer_entities_package.eClassifiers.extend([
-                                                                              eclass])
-                        context.input_layer_entities_package.eClassifiers.extend([
-                                                                              eclass_table])
+                        
+                        # we only add to the package if we are not loading input input 
+                        # tables from the website information
+                        if not (context.load_eil_from_website):
+                            context.input_tables_package.eClassifiers.extend([
+                                                                                  eclass])
+                            context.input_tables_package.eClassifiers.extend([
+                                                                                  eclass_table])
 
-                    # maintain a map a objectIDs to ELClasses
+                    # maintain a map a objectIDs to ELClasses, we add to 
+                    # the map even in input layters come from the websiute, 
+                    # this is because we want to find the table rrealtionship 
+                    # info that is not currently on the website, and use that to 
+                    # enrich the website content
                     context.classes_map[object_id] = eclass
                     context.table_map[eclass] = eclass_table
 
@@ -144,7 +152,7 @@ class InputLayerImport(object):
                         the_enum.name = adapted_enum_name
                         # maintain a map of enum IDS to ELEnum objects
                         context.enum_map[enum_id] = the_enum
-                        context.input_layer_enums_package.eClassifiers.extend([
+                        context.il_domains_package.eClassifiers.extend([
                                                                            the_enum])
 
     def add_il_literals_to_enums(self, context):
@@ -309,6 +317,12 @@ class InputLayerImport(object):
                                 attribute.eAttributeType = context.e_int
                                 attribute.upperBound = 1
                                 attribute.lowerBound = 1
+                            elif (the_enum.name.startswith("INTGR_domain")):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif (the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_int
@@ -376,6 +390,11 @@ class InputLayerImport(object):
                                     operation.upperBound = 1
                                     operation.lowerBound = 1
                                 elif (the_enum.name.startswith("Monetary")):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
+                                elif (the_enum.name.startswith("INTGR_domain")):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_int
                                     operation.upperBound = 1
@@ -540,6 +559,10 @@ class InputLayerImport(object):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_int
                                 attribute.eAttributeType = context.e_int
+                            elif (the_enum.name.startswith("INTGR_domain")):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_int
+                                attribute.eAttributeType = context.e_int
                             elif (the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_int
@@ -586,6 +609,9 @@ class InputLayerImport(object):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_double
                                 elif the_enum.name.startswith("Monetary"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_int
+                                elif the_enum.name.startswith("INTGR_domain"):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_int
                                 elif the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):

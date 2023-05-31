@@ -103,11 +103,11 @@ class ROLImport(object):
 
                         fullTableName = None
                         if cube_type == "EIL":
-                            fullTableName=altered_class_name+"_BaseTable"
+                            fullTableName=altered_class_name+"_Table"
                         #elif cube_type == "EIL":
                         #    fullTableName=altered_class_name+"_DerivedTable"
                         else:
-                            fullTableName=altered_class_name+"_OutputTable"
+                            fullTableName=altered_class_name+"_Table"
                             
                         eclass_table = ELClass(
                             name=fullTableName)
@@ -127,12 +127,14 @@ class ROLImport(object):
                             xclass_table_peration.upperBound = -1
                             xclass_table_peration.lowerBound = 0
                             eclass_table.eOperations.append(xclass_table_peration)
-                        
-                            
-
-                        context.output_layer_entities_package.eClassifiers.extend([
+                            context.output_tables_package.eClassifiers.extend([
                                                                                eclass])
-                        context.output_layer_entities_package.eClassifiers.extend([
+                            context.output_tables_package.eClassifiers.extend([
+                                                                               eclass_table])
+                        else:
+                            context.input_tables_package.eClassifiers.extend([
+                                                                               eclass])
+                            context.input_tables_package.eClassifiers.extend([
                                                                                eclass_table])
 
                         # maintain a map a objectIDs to ELClasses
@@ -349,7 +351,7 @@ class ROLImport(object):
                 the_enum.name = amended_domain_name
                 # maintain a map of enum IDS to ELEnum objects
                 context.enum_map[amended_domain_name] = the_enum
-                context.output_layer_enums_package.eClassifiers.extend([the_enum])
+                context.sdd_domains_package.eClassifiers.extend([the_enum])
                 the_domain_members = Utils.get_members_of_the_domain(
                     the_domain, context.member_id_to_domain_map)
                 counter1 = 0
@@ -429,7 +431,7 @@ class ROLImport(object):
                                         the_enum.name = amended_domain_name 
                                         #maintain a map of enum IDS to XEnum objects
                                         context.enum_map[amended_domain_name] = the_enum
-                                        context.output_layer_enums_package.eClassifiers.extend([the_enum])
+                                        context.sdd_domains_package.eClassifiers.extend([the_enum])
                                         the_domain_members= None
                                         if (variable=="MTRCS"):
                                             the_domain_members=[]
@@ -581,6 +583,9 @@ class ROLImport(object):
                                         elif(the_enum.name.startswith("Monetary")): 
                                             operation.name = the_attribute_name
                                             operation.eType = context.e_int
+                                        elif(the_enum.name.startswith("INTGR_domain")): 
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_int
                                         elif(the_enum.name.startswith("MNTRY")): 
                                             operation.name = the_attribute_name
                                             operation.eType = context.e_int
@@ -652,6 +657,9 @@ class ROLImport(object):
                                         elif(the_enum.name.startswith("MNTRY")): 
                                             attribute.name = the_attribute_name
                                             attribute.eType = context.e_int
+                                        elif(the_enum.name.startswith("INTGR_domain")): 
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_int 
                                             attribute.eAttributeType = context.e_int
                                         elif(the_enum.name.startswith("Monetary_domain")): 
                                             attribute.name = the_attribute_name

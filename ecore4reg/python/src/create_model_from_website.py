@@ -33,8 +33,9 @@ if __name__ == '__main__':
     context.set_up_csv_indexes()
     context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resources_website'
     context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\results_website'
-    InputLayerImport().do_import(context)
+    
     ROLImport().doImport(context)
+    InputLayerImport().do_import(context)
     RelationshipEnricher().enrich(context)
     #InputLayerImport().do_import(context)
     Ecore4regToEcoreConverter().convert_packages_in_context(context)

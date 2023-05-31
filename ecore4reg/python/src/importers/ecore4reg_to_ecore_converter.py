@@ -35,14 +35,14 @@ class Ecore4regToEcoreConverter(object):
         '''
         Documentation for convertPackagesInContext
         '''
-        context.input_layer_enums_ecore_package = Ecore4regToEcoreConverter.convert(
-            self, context.input_layer_enums_package, context)
-        context.output_layer_enums_ecore_package = Ecore4regToEcoreConverter.convert(
-            self, context.output_layer_enums_package, context)
-        context.input_layer_entities_ecore_package = Ecore4regToEcoreConverter.convert(
-            self, context.input_layer_entities_package, context)
-        context.output_layer_entities_ecore_package = Ecore4regToEcoreConverter.convert(
-            self, context.output_layer_entities_package, context)
+        context.il_domains_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.il_domains_package, context)
+        context.sdd_domains_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.sdd_domains_package, context)
+        context.input_tables_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.input_tables_package, context)
+        context.output_tables_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.output_tables_package, context)
 
     def convert(self, el_package, context):
         '''
@@ -165,14 +165,20 @@ class Ecore4regToEcoreConverter(object):
         '''
         return_enum = None
 
-        if ecore_package.name == 'input_layer_entities':
-            for classifier in context.input_layer_enums_ecore_package.eClassifiers:
+        if (ecore_package.name == 'input_tables') and not (context.load_eil_from_website):
+            for classifier in context.il_domains_ecore_package.eClassifiers:
                 if isinstance(classifier, EEnum):
                     if classifier.name == type_name:
                         return_enum = classifier
 
-        if ecore_package.name == 'output_layer_entities':
-            for classifier in context.output_layer_enums_ecore_package.eClassifiers:
+        if (ecore_package.name == 'input_tables') and context.load_eil_from_website:
+            for classifier in context.sdd_domains_ecore_package.eClassifiers:
+                if isinstance(classifier, EEnum):
+                    if classifier.name == type_name:
+                        return_enum = classifier 
+                        
+        if ecore_package.name == 'output_tables':
+            for classifier in context.sdd_domains_ecore_package.eClassifiers:
                 if isinstance(classifier, EEnum):
                     if classifier.name == type_name:
                         return_enum = classifier

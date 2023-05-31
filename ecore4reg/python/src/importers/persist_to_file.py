@@ -28,17 +28,25 @@ class PersistToFile:
         '''
         Save resources as Ecore4Reg files
         '''
+        if context.load_eil_from_website:
+            PersistToFile.persist_entity_model(
+                self, context, context.input_tables_package,
+                "ecore4reg", context.sdd_domains_package)
+        else:        
+            PersistToFile.persist_entity_model(
+                self, context, context.input_tables_package,
+                "ecore4reg", context.il_domains_package)
 
         PersistToFile.persist_entity_model(
-            self, context, context.input_layer_entities_package,
-            "ecore4reg", context.input_layer_enums_package)
+            self, context, context.input_tables_package,
+            "ecore4reg", context.il_domains_package)
         PersistToFile.persist_entity_model(
-            self, context, context.output_layer_entities_package,
-            "ecore4reg", context.output_layer_enums_package)
+            self, context, context.output_tables_package,
+            "ecore4reg", context.sdd_domains_package)
         PersistToFile.persist_enum_model(
-            self, context, context.input_layer_enums_package, "ecore4reg")
+            self, context, context.il_domains_package, "ecore4reg")
         PersistToFile.persist_enum_model(
-            self, context, context.output_layer_enums_package, "ecore4reg")
+            self, context, context.sdd_domains_package, "ecore4reg")
         PersistToFile.persist_types_model(
             self, context, context.types_package, "ecore4reg")
         PersistToFile.persist_generation_transformations(self, context)
@@ -47,17 +55,21 @@ class PersistToFile:
         '''
         Save resources as XCore files
         '''
-
+        if context.load_eil_from_website:
+            PersistToFile.persist_entity_model(
+                self, context, context.input_tables_package,
+                "xcore", context.sdd_domains_package)
+        else:
+            PersistToFile.persist_entity_model(
+                self, context, context.input_tables_package,
+                "xcore", context.il_domains_package)
         PersistToFile.persist_entity_model(
-            self, context, context.input_layer_entities_package,
-            "xcore", context.input_layer_enums_package)
-        PersistToFile.persist_entity_model(
-            self, context, context.output_layer_entities_package,
-            "xcore", context.output_layer_enums_package)
+            self, context, context.output_tables_package,
+            "xcore", context.sdd_domains_package)
         PersistToFile.persist_enum_model(
-            self, context, context.input_layer_enums_package, "xcore")
+            self, context, context.il_domains_package, "xcore")
         PersistToFile.persist_enum_model(
-            self, context, context.output_layer_enums_package, "xcore")
+            self, context, context.sdd_domains_package, "xcore")
         
 
     def persist_entity_model(self, context, the_package, extension, imported_package):
@@ -70,7 +82,7 @@ class PersistToFile:
                  "a",  encoding='utf-8')
         f.write("\t\t package " + the_package.name + "\r")
         f.write("\t\t import " + imported_package.name + ".*\r")
-        if the_package == context.output_layer_entities_package:
+        if the_package == context.output_tables_package:
             for import_string in context.importLogicStrings:
                 f.write("\t\t import " + import_string + ".*\r")
         if extension == "ecore4reg":
@@ -313,43 +325,43 @@ class PersistToFile:
         # we register the factory for '.json' extensions
         rset2.resource_factory['json'] = JsonResource
 
-        input_layer_enums_resource2 = rset2.create_resource(URI(
+        il_domains_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
             os.sep + "types.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        input_layer_enums_resource2.append(context.types_package)
-        input_layer_enums_resource2.save()
-        input_layer_enums_resource2 = rset2.create_resource(URI(
+        il_domains_resource2.append(context.types_package)
+        il_domains_resource2.save()
+        il_domains_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
-            os.sep + "input_layer_enums.json"))
+            os.sep + "il_domains.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        input_layer_enums_resource2.append(context.input_layer_enums_package)
-        input_layer_enums_resource2.save()
-        output_layer_enums_resource2 = rset2.create_resource(URI(
+        il_domains_resource2.append(context.il_domains_package)
+        il_domains_resource2.save()
+        sdd_domains_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
-            os.sep + "output_layer_enums.json"))
+            os.sep + "sdd_domains.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        output_layer_enums_resource2.append(context.output_layer_enums_package)
-        output_layer_enums_resource2.save()
-        input_layer_entities_resource2 = rset2.create_resource(URI(
+        sdd_domains_resource2.append(context.sdd_domains_package)
+        sdd_domains_resource2.save()
+        input_tables_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
-            os.sep + "input_layer_entities.json"))
+            os.sep + "input_tables.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        input_layer_entities_resource2.append(
-            context.input_layer_entities_package)
-        input_layer_entities_resource2.save()
-        output_layer_entities_resource2 = rset2.create_resource(URI(
+        input_tables_resource2.append(
+            context.input_tables_package)
+        input_tables_resource2.save()
+        output_tables_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
-            os.sep + "output_layer_entities.json"))
+            os.sep + "output_tables.json"))
         # This will create an JSON resource
         # we add the EPackage instance in the resource
-        output_layer_entities_resource2.append(
-            context.output_layer_entities_package)
-        output_layer_entities_resource2.save()
+        output_tables_resource2.append(
+            context.output_tables_package)
+        output_tables_resource2.save()
 
    
 
@@ -371,7 +383,7 @@ class PersistToFile:
                     f.write("\t\t\tLayerSQL {\r")
                     f.write("selectionLayer SelectionLayer " + Utils.make_valid_id(str(layer.selectionLayer.name)) + "\r")
                     for column in layer.columns:
-                        f.write("\t\t\t\tSelectValue \"TODO\" as output_layer_entities." +
+                        f.write("\t\t\t\tSelectValue \"TODO\" as output_tables." +
                                 view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name + "\r")
                     f.write("\t\t\t}\r")
                     f.write(PersistToFile.get_vtl_text_for_layer(
@@ -385,13 +397,13 @@ class PersistToFile:
     def save_analysis_model_as_xmi_files(self, context):
         rset2 = ResourceSet()
         extension = 'xmi'
-        input_layer_enums_resource2 = rset2.create_resource(URI(
+        il_domains_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
             os.sep + "sdd.xmi"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        input_layer_enums_resource2.append(context.input_layer_enums_ecore_package)
-        input_layer_enums_resource2.save()
+        il_domains_resource2.append(context.il_domains_ecore_package)
+        il_domains_resource2.save()
         
 
     def save_model_as_ecore_file(self, context):
@@ -400,50 +412,51 @@ class PersistToFile:
         '''
         rset2 = ResourceSet()
         extension = 'ecore'
-        input_layer_enums_resource2 = rset2.create_resource(URI(
+        il_domains_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
-            os.sep + "input_layer_enums.ecore"))
+            os.sep + "il_domains.ecore"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        input_layer_enums_resource2.append(context.input_layer_enums_ecore_package)
-        input_layer_enums_resource2.save()
-        output_layer_enums_resource2 = rset2.create_resource(URI(
+        il_domains_resource2.append(context.il_domains_ecore_package)
+        il_domains_resource2.save()
+        sdd_domains_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
-            os.sep + "output_layer_enums.ecore"))
+            os.sep + "sdd_domains.ecore"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        output_layer_enums_resource2.append(context.output_layer_enums_ecore_package)
-        output_layer_enums_resource2.save()
-        input_layer_entities_resource2 = rset2.create_resource(URI(
+        sdd_domains_resource2.append(context.sdd_domains_ecore_package)
+        sdd_domains_resource2.save()
+        
+        input_tables_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
-            os.sep + "input_layer_entities.ecore"))
+            os.sep + "input_tables.ecore"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        input_layer_entities_resource2.append(
-            context.input_layer_entities_ecore_package)
-        input_layer_entities_resource2.save()
-        output_layer_entities_resource2 = rset2.create_resource(URI(
+        input_tables_resource2.append(
+            context.input_tables_ecore_package)
+        input_tables_resource2.save()
+        output_tables_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
-            os.sep + "output_layer_entities.ecore"))
+            os.sep + "output_tables.ecore"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        output_layer_entities_resource2.append(
-            context.output_layer_entities_ecore_package)
-        output_layer_entities_resource2.save()
+        output_tables_resource2.append(
+            context.output_tables_ecore_package)
+        output_tables_resource2.save()
 
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
-                              os.sep + "input_layer_enums.ecore")
+                              os.sep + "il_domains.ecore")
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
-                              os.sep + "output_layer_enums.ecore")
+                              os.sep + "sdd_domains.ecore")
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
-                              os.sep + "input_layer_entities.ecore")
+                              os.sep + "input_tables.ecore")
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
-                              os.sep + "output_layer_entities.ecore")
-
+                              os.sep + "output_tables.ecore")
+    
     def hot_fix(self, file_name):
         '''
         Documentation for hot_fix

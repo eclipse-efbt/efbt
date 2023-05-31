@@ -205,12 +205,12 @@ class ImportFinrepVTL(object):
         '''
         Doc for findEntity
         '''
-        for the_entity in context.input_layer_entities_package.eClassifiers:
+        for the_entity in context.input_tables_package.eClassifiers:
             if isinstance(the_entity, ELClass):
                 if the_entity.name == output_layer_name:
                     return the_entity
 
-        for the_entity in context.output_layer_entities_package.eClassifiers:
+        for the_entity in context.output_tables_package.eClassifiers:
             if isinstance(the_entity, ELClass):
                 if the_entity.name == output_layer_name:
                     return the_entity
