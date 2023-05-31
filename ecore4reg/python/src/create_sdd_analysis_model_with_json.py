@@ -21,8 +21,8 @@ from importers.import_sdd_to_analysis_model import ImportSDD
 if __name__ == '__main__':
     sdd_context = SDDContext()
 
-    sdd_context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resources_website'
-    sdd_context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\results_website\\sdd'
+    sdd_context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    sdd_context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     sdd_context.input_from_website = True
     sdd_context.set_up_csv_indexes()
     ImportSDD().import_sdd(sdd_context)
