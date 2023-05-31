@@ -1,12 +1,12 @@
 
 from .ecore4reg import getEClassifier, eClassifiers
 from .ecore4reg import name, nsURI, nsPrefix, eClass
-from .ecore4reg import Import, Module, ModuleList, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, View, LayerSQL, SelectClause, SelectColumn, SelectColumnMemberAs, SelectValueAs, SelectColumnAttributeAs, Comparitor, WhereClause, ViewModule, SelectionLayer, ELAttribute, ELClass, ELClassifier, ELDataType, ELEnum, ELEnumLiteral, ELModelElement, ELNamedElement, ELOperation, ELPackage, ELReference, ELStructuralFeature, ELTypedElement, ELAnnotation, ELStringToStringMapEntry, VTLEnrichedCube, VTLGeneratedOutputlayer, VTLForOutputLayerAndIntermediateLayerCombination, VTLGeneratedIntermediateLayer, VTLTransformation, VTLScheme, VTLForSelectionLayer, VTLModule, EntityToVTLIntermediateLayerLink, VTLForView, VTLGeneratedOutputlayerModule, VTLForOutputLayerAndIntermediateLayerCombinationModule, VTLGeneratedIntermediateLayerModule, VTLSchemesModule, VTLForSelectionLayerModule, EntityToVTLIntermediateLayerLinkModule, VTLForViewModule
+from .ecore4reg import Import, Module, ModuleList, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, RulesForReport, RulesForILTable, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, SelectValueAs, Comparitor, TableFilter, GenerationRulesModule, RuleForILTablePart, ELAttribute, ELClass, ELClassifier, ELDataType, ELEnum, ELEnumLiteral, ELModelElement, ELNamedElement, ELOperation, ELPackage, ELReference, ELStructuralFeature, ELTypedElement, ELAnnotation, ELStringToStringMapEntry, VTLEnrichedCube, VTLGeneratedOutputlayer, VTLForOutputLayerAndIntermediateLayerCombination, VTLGeneratedIntermediateLayer, VTLTransformation, VTLScheme, VTLForSelectionLayer, VTLModule, EntityToVTLIntermediateLayerLink, VTLForView, VTLGeneratedOutputlayerModule, VTLForOutputLayerAndIntermediateLayerCombinationModule, VTLGeneratedIntermediateLayerModule, VTLSchemesModule, VTLForSelectionLayerModule, EntityToVTLIntermediateLayerLinkModule, VTLForViewModule
 
 
 from . import ecore4reg
 
-__all__ = ['Import', 'Module', 'ModuleList', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'View', 'LayerSQL', 'SelectClause', 'SelectColumn', 'SelectColumnMemberAs', 'SelectValueAs', 'SelectColumnAttributeAs', 'Comparitor', 'WhereClause', 'ViewModule', 'SelectionLayer', 'ELAttribute', 'ELClass', 'ELClassifier', 'ELDataType', 'ELEnum', 'ELEnumLiteral', 'ELModelElement', 'ELNamedElement', 'ELOperation', 'ELPackage',
+__all__ = ['Import', 'Module', 'ModuleList', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'RulesForReport', 'RulesForILTable', 'SelectColumn', 'SelectColumnMemberAs', 'SelectColumnAttributeAs', 'SelectValueAs', 'Comparitor', 'TableFilter', 'GenerationRulesModule', 'RuleForILTablePart', 'ELAttribute', 'ELClass', 'ELClassifier', 'ELDataType', 'ELEnum', 'ELEnumLiteral', 'ELModelElement', 'ELNamedElement', 'ELOperation', 'ELPackage',
            'ELReference', 'ELStructuralFeature', 'ELTypedElement', 'ELAnnotation', 'ELStringToStringMapEntry', 'VTLEnrichedCube', 'VTLGeneratedOutputlayer', 'VTLForOutputLayerAndIntermediateLayerCombination', 'VTLGeneratedIntermediateLayer', 'VTLTransformation', 'VTLScheme', 'VTLForSelectionLayer', 'VTLModule', 'EntityToVTLIntermediateLayerLink', 'VTLForView', 'VTLGeneratedOutputlayerModule', 'VTLForOutputLayerAndIntermediateLayerCombinationModule', 'VTLGeneratedIntermediateLayerModule', 'VTLSchemesModule', 'VTLForSelectionLayerModule', 'EntityToVTLIntermediateLayerLinkModule', 'VTLForViewModule']
 
 eSubpackages = []
@@ -24,17 +24,18 @@ TitledRequirementsSection.sections.eType = RequirementsSection
 TitledRequirementsSection.requirementsType.eType = RequirementType
 Tag.requirements.eType = TitledRequirementsSection
 TagGroup.tags.eType = Tag
-View.outputLayer.eType = ELClass
-View.selectionLayerSQL.eType = LayerSQL
-LayerSQL.selectionLayer.eType = SelectionLayer
-LayerSQL.columns.eType = SelectColumn
-LayerSQL.whereClause.eType = WhereClause
+RulesForReport.outputLayerCube.eType = ELClass
+RulesForReport.rulesForTable.eType = RulesForILTable
+RulesForILTable.rulesForTablePart.eType = RuleForILTablePart
+RulesForILTable.inputLayerTable.eType = ELClass
 SelectColumn.asAttribute.eType = ELOperation
 SelectColumnMemberAs.memberAsConstant.eType = ELEnumLiteral
 SelectColumnAttributeAs.attribute.eType = ELAttribute
-WhereClause.attribute1.eType = ELAttribute
-WhereClause.member.eType = ELEnumLiteral
-ViewModule.views.eType = View
+TableFilter.attribute1.eType = ELAttribute
+TableFilter.member.eType = ELEnumLiteral
+GenerationRulesModule.views.eType = RulesForReport
+RuleForILTablePart.columns.eType = SelectColumn
+RuleForILTablePart.whereClause.eType = TableFilter
 ELAttribute.eAttributeType.eType = ELDataType
 ELClass.eSuperTypes.eType = ELClass
 ELClass.eStructuralFeatures.eType = ELStructuralFeature
@@ -54,7 +55,7 @@ VTLForOutputLayerAndIntermediateLayerCombination.intermediateLayer.eType = VTLGe
 VTLGeneratedIntermediateLayer.dependant_enriched_cubes.eType = VTLGeneratedIntermediateLayer
 VTLGeneratedIntermediateLayer.transformations.eType = VTLTransformation
 VTLScheme.expressions.eType = VTLTransformation
-VTLForSelectionLayer.selectionLayer.eType = LayerSQL
+VTLForSelectionLayer.selectionLayer.eType = RuleForILTablePart
 VTLForSelectionLayer.outputLayer.eType = VTLGeneratedOutputlayer
 VTLForSelectionLayer.intermediateLayer.eType = VTLGeneratedIntermediateLayer
 VTLModule.VTLSchemes.eType = VTLSchemesModule
@@ -66,7 +67,7 @@ VTLModule.entityToVTLIntermediateLayerLinks.eType = EntityToVTLIntermediateLayer
 VTLModule.VTLForViews.eType = VTLForViewModule
 EntityToVTLIntermediateLayerLink.VTLIntermediateLayer.eType = VTLGeneratedIntermediateLayer
 EntityToVTLIntermediateLayerLink.entity.eType = ELClass
-VTLForView.view.eType = View
+VTLForView.view.eType = RulesForReport
 VTLForView.vtl.eType = VTLGeneratedOutputlayer
 VTLGeneratedOutputlayerModule.vTLGeneratedOutputlayerModules.eType = VTLGeneratedOutputlayer
 VTLForOutputLayerAndIntermediateLayerCombinationModule.vTLForOutputLayerAndIntermediateLayerCombinations.eType = VTLForOutputLayerAndIntermediateLayerCombination

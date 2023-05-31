@@ -18,7 +18,7 @@ import "http://www.eclipse.org/efbt/ecore4reg" as ecore4reg
 
 
 Module returns ecore4reg::Module:
-	Module_Impl | RequirementsModule | TagGroup | ViewModule | ELPackage;
+	Module_Impl | RequirementsModule | TagGroup | GenerationRulesModule | ELPackage;
 	
 ELClassifier returns ecore4reg::ELClassifier:
 	ELClass | ELDataType_Impl | ELEnum ;
@@ -40,11 +40,6 @@ SelectColumn returns ecore4reg::SelectColumn:
 EString returns ecore::EString:
 	STRING ;
 
-SelectionLayer returns ecore4reg::SelectionLayer:
-	{ecore4reg::SelectionLayer}
-	'SelectionLayer'
-	name=ID
-	;
 
 RequirementsModule returns ecore4reg::RequirementsModule:
 	{ecore4reg::RequirementsModule}
@@ -57,14 +52,14 @@ RequirementsModule returns ecore4reg::RequirementsModule:
 		('allowedtypes' allowedtypes=AllowedTypes)?
 	'}';
 
-ViewModule returns ecore4reg::ViewModule:
-	{ecore4reg::ViewModule}
-	'ViewModule'
+GenerationRulesModule returns ecore4reg::GenerationRulesModule:
+	{ecore4reg::GenerationRulesModule}
+	'GenerationRuleModule'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
 		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
-		('views' '{' views+=View ( "," views+=View)* '}' )?
+		('generationRules' '{' views+=RulesForReport ( "," views+=RulesForReport)* '}' )?
 	'}';
 
 
@@ -241,28 +236,35 @@ ELPackage returns ecore4reg::ELPackage:
 	(eClassifiers += ELClassifier)*
 	;
 
-LayerSQL returns ecore4reg::LayerSQL:
-	{ecore4reg::LayerSQL}
-	'LayerSQL'
+RulesForReport returns ecore4reg::RulesForReport:
+	{ecore4reg::RulesForReport}
+	'Report' outputLayerCube=[ecore4reg::ELClass|QualifiedName]
 	'{'
-		('selectionLayer' selectionLayer=SelectionLayer)
-		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
-		( whereClause+=WhereClause ( whereClause+=WhereClause)*  )?
+		(rulesForTable+=RulesForILTable (rulesForTable+=RulesForILTable)*  )?
 	'}';
-
-View returns ecore4reg::View:
-	{ecore4reg::View}
-	'View'
+	
+RulesForILTable returns ecore4reg::RulesForILTable:
+	{ecore4reg::RulesForILTable}
+	'ILTable' inputLayerTable=[ecore4reg::ELClass|QualifiedName]
+	'{'
+		(rulesForTablePart+=RuleForILTablePart (rulesForTablePart+=RuleForILTablePart)*  )?
+	'}';
+	
+RuleForILTablePart returns ecore4reg::RuleForILTablePart:
+	{ecore4reg::RuleForILTablePart}
+	'TablePart'
 	name=ID
 	'{'
-		('outputLayer' outputLayer=[ecore4reg::ELClass|QualifiedName])?
-		(selectionLayerSQL+=LayerSQL (selectionLayerSQL+=LayerSQL)*  )?
+		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
+		( whereClause+=TableFilter ( whereClause+=TableFilter)*  )?
 	'}';
+
+
 
 	
 	
-WhereClause returns ecore4reg::WhereClause:
-	{ecore4reg::WhereClause}
+TableFilter returns ecore4reg::TableFilter:
+	{ecore4reg::TableFilter}
 	'where'
 
 		( attribute1=[ecore4reg::ELAttribute|QualifiedName])?

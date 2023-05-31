@@ -70,52 +70,50 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="tags" upperBound="-1" eType="#//Tag"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="View">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//ELClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayerSQL" upperBound="-1"
-        eType="#//LayerSQL" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RulesForReport">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayerCube" eType="#//ELClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rulesForTable" upperBound="-1"
+        eType="#//RulesForILTable" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LayerSQL">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="#//SelectionLayer"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
-        eType="#//SelectColumn" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" upperBound="-1"
-        eType="#//WhereClause" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RulesForILTable">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rulesForTablePart" upperBound="-1"
+        eType="#//RuleForILTablePart" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputLayerTable" eType="#//ELClass"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SelectClause"/>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="#//ELOperation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnMemberAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="#//ELEnumLiteral"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SelectValueAs" eSuperTypes="#//SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnAttributeAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//ELAttribute"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectValueAs" eSuperTypes="#//SelectColumn">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Comparitor">
     <eLiterals name="less_than"/>
-    <eLiterals name="equals"/>
-    <eLiterals name="greater_than"/>
+    <eLiterals name="equals" value="1"/>
+    <eLiterals name="greater_than" value="2"/>
+    <eLiterals name="not_equals" value="3" literal="not_equals"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WhereClause">
+  <eClassifiers xsi:type="ecore:EClass" name="TableFilter">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute1" eType="#//ELAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparitor" eType="#//Comparitor"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="#//ELEnumLiteral"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ViewModule" eSuperTypes="#//Module">
+  <eClassifiers xsi:type="ecore:EClass" name="GenerationRulesModule" eSuperTypes="#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="views" upperBound="-1"
-        eType="#//View" containment="true"/>
+        eType="#//RulesForReport" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SelectionLayer">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RuleForILTablePart">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
+        eType="#//SelectColumn" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="whereClause" upperBound="-1"
+        eType="#//TableFilter" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ELAttribute" eSuperTypes="#//ELStructuralFeature">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="iD" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -236,7 +234,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLForSelectionLayer">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="#//LayerSQL"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectionLayer" eType="#//RuleForILTablePart"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//VTLGeneratedOutputlayer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="intermediateLayer" eType="#//VTLGeneratedIntermediateLayer"/>
   </eClassifiers>
@@ -264,7 +262,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="VTLForView">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="#//View"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="view" eType="#//RulesForReport"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="vtl" eType="#//VTLGeneratedOutputlayer"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VTLGeneratedOutputlayerModule" eSuperTypes="#//Module">

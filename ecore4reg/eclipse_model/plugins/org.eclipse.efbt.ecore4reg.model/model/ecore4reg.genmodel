@@ -12,6 +12,7 @@
       <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//Comparitor/less_than"/>
       <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//Comparitor/equals"/>
       <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//Comparitor/greater_than"/>
+      <genEnumLiterals ecoreEnumLiteral="ecore4reg.ecore#//Comparitor/not_equals"/>
     </genEnums>
     <genClasses ecoreClass="ecore4reg.ecore#//Import">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//Import/importedNamespace"/>
@@ -66,40 +67,39 @@
     <genClasses ecoreClass="ecore4reg.ecore#//TagGroup">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//TagGroup/tags"/>
     </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//View">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//View/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//View/outputLayer"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//View/selectionLayerSQL"/>
+    <genClasses ecoreClass="ecore4reg.ecore#//RulesForReport">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//RulesForReport/outputLayerCube"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//RulesForReport/rulesForTable"/>
     </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//LayerSQL">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//LayerSQL/selectionLayer"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//LayerSQL/columns"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//LayerSQL/whereClause"/>
+    <genClasses ecoreClass="ecore4reg.ecore#//RulesForILTable">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//RulesForILTable/rulesForTablePart"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//RulesForILTable/inputLayerTable"/>
     </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//SelectClause"/>
     <genClasses ecoreClass="ecore4reg.ecore#//SelectColumn">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//SelectColumn/asAttribute"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//SelectColumnMemberAs">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//SelectColumnMemberAs/memberAsConstant"/>
     </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//SelectValueAs">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//SelectValueAs/value"/>
-    </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//SelectColumnAttributeAs">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//SelectColumnAttributeAs/attribute"/>
     </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//WhereClause">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//WhereClause/attribute1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//WhereClause/comparitor"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//WhereClause/member"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//WhereClause/value"/>
+    <genClasses ecoreClass="ecore4reg.ecore#//SelectValueAs">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//SelectValueAs/value"/>
     </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//ViewModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ViewModule/views"/>
+    <genClasses ecoreClass="ecore4reg.ecore#//TableFilter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//TableFilter/attribute1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//TableFilter/comparitor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//TableFilter/member"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//TableFilter/value"/>
     </genClasses>
-    <genClasses ecoreClass="ecore4reg.ecore#//SelectionLayer">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//SelectionLayer/name"/>
+    <genClasses ecoreClass="ecore4reg.ecore#//GenerationRulesModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//GenerationRulesModule/views"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//RuleForILTablePart">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//RuleForILTablePart/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//RuleForILTablePart/columns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//RuleForILTablePart/whereClause"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELAttribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELAttribute/iD"/>

@@ -33,6 +33,8 @@ import java.nio.CharBuffer
 import java.io.BufferedReader
 import java.nio.file.Path
 import java.nio.file.Files
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELDataType
 
 /**
  * Generates code from your model files on save.
@@ -49,8 +51,48 @@ class Ecore4RegGenerator extends AbstractGenerator {
 		for (elpackage : resource.allContents.toIterable.filter(ELPackage)) {
 
 			processPackage(elpackage,fsa)
+			createXCoreForPackage(elpackage,fsa,resource)
 		}
 	}
+	
+	def createXCoreForPackage(ELPackage elpackage, IFileSystemAccess2 fsa,Resource resource) {
+		fsa.generateFile(elpackage.name + '.xcore',  '''
+		
+		package «elpackage.name»
+		«IF elpackage.name.trim != "types"»
+		«FOR theImport : elpackage.imports»
+		
+		«IF theImport.importedNamespace.trim != "types.*"»
+		import «theImport.importedNamespace» 
+		«ENDIF»
+		«ENDFOR»
+		«FOR elclass : elpackage.EClassifiers.filter(ELClass)»
+		«IF elclass.abstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
+		«FOR elmember : elclass.EStructuralFeatures»  
+		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && (elmember.upperBound == 1)) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
+		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && (elmember.upperBound == 1)) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
+		«ENDFOR»
+		«FOR eloperation : elclass.EOperations»
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && (eloperation.upperBound == 1)) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»() 
+			{
+			 	«IF eloperation.body !== null »«findXCoreSubstring(eloperation.body)»«ENDIF»
+			}
+			«ENDIF»«ENDFOR» 
+		}
+		«ENDFOR»
+		«FOR elEnum : elpackage.EClassifiers.filter(ELEnum)»
+		enum «elEnum.name» {«FOR elliteral : elEnum.ELiterals»  «elliteral.name»  as "«elliteral.literal»"  = «elliteral.value» «ENDFOR»}
+		«ENDFOR»
+		«FOR xDataType : resource.allContents.filter(ELDataType).toIterable»
+		«IF !(xDataType instanceof ELEnum)»
+		type  «xDataType.name» wraps «IF xDataType.name == "Date"»java.util.Date «ELSE»«xDataType.name» «ENDIF» 
+		«ENDIF»	
+		
+		«ENDFOR»
+		«ENDIF»
+		        ''')
+		         }
+	
 
 	def EPackage processPackage(ELPackage elpackage,IFileSystemAccess2 fsa ) {
 
@@ -297,7 +339,14 @@ class Ecore4RegGenerator extends AbstractGenerator {
 		return ecore_package
 	}
 
-		
+	def String findXCoreSubstring(String string) {
+		var startIndex = string.indexOf("<xcore>")
+		var endIndex = string.indexOf("</xcore>")
+		var returnString = string
+		if ( ( endIndex>0) && ( startIndex>-1))
+			returnString = string.substring(startIndex+7,endIndex)
+		return returnString
+	}	
 
 	def findEnum(EPackage thePackage, EPackage dependantPackage,  String enumName) {
 		var returnEnum = null as EEnum

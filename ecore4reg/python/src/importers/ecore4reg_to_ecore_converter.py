@@ -35,14 +35,14 @@ class Ecore4regToEcoreConverter(object):
         '''
         Documentation for convertPackagesInContext
         '''
-        context.input_layer_enums_ecore_package = Ecore4regToEcoreConverter.convert(
-            self, context.input_layer_enums_package, context)
-        context.output_layer_enums_ecore_package = Ecore4regToEcoreConverter.convert(
-            self, context.output_layer_enums_package, context)
-        context.input_layer_entities_ecore_package = Ecore4regToEcoreConverter.convert(
-            self, context.input_layer_entities_package, context)
-        context.output_layer_entities_ecore_package = Ecore4regToEcoreConverter.convert(
-            self, context.output_layer_entities_package, context)
+        context.il_domains_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.il_domains_package, context)
+        context.sdd_domains_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.sdd_domains_package, context)
+        context.input_tables_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.input_tables_package, context)
+        context.output_tables_ecore_package = Ecore4regToEcoreConverter.convert(
+            self, context.output_tables_package, context)
 
     def convert(self, el_package, context):
         '''
@@ -73,13 +73,16 @@ class Ecore4regToEcoreConverter(object):
                         e_attribute = EAttribute(name=structural_feature.name)
                         e_attribute.upperBound = structural_feature.upperBound
                         e_attribute.lowerBound = structural_feature.lowerBound
-                        type_name = structural_feature.eAttributeType.name
+                        print("structural_feature")
+                        print(structural_feature)
+                        print(structural_feature.name)
+                        type_name = structural_feature.eType.name
                         if structural_feature.iD:
                             e_attribute.iD = True
 
                         if isinstance(structural_feature.eAttributeType, ELEnum):
                             e_enum = Ecore4regToEcoreConverter.find_enum(
-                                self, type_name, ecore_package, context)
+                                self, structural_feature.eAttributeType.name, ecore_package, context)
                             e_attribute.eAttributeType = e_enum
                             e_attribute.eType = e_enum
                         elif type_name == 'double':
@@ -165,14 +168,20 @@ class Ecore4regToEcoreConverter(object):
         '''
         return_enum = None
 
-        if ecore_package.name == 'input_layer_entities':
-            for classifier in context.input_layer_enums_ecore_package.eClassifiers:
+        if (ecore_package.name == 'input_tables') and not (context.load_eil_from_website):
+            for classifier in context.il_domains_ecore_package.eClassifiers:
                 if isinstance(classifier, EEnum):
                     if classifier.name == type_name:
                         return_enum = classifier
 
-        if ecore_package.name == 'output_layer_entities':
-            for classifier in context.output_layer_enums_ecore_package.eClassifiers:
+        if (ecore_package.name == 'input_tables') and context.load_eil_from_website:
+            for classifier in context.sdd_domains_ecore_package.eClassifiers:
+                if isinstance(classifier, EEnum):
+                    if classifier.name == type_name:
+                        return_enum = classifier 
+                        
+        if ecore_package.name == 'output_tables':
+            for classifier in context.sdd_domains_ecore_package.eClassifiers:
                 if isinstance(classifier, EEnum):
                     if classifier.name == type_name:
                         return_enum = classifier

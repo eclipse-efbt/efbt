@@ -2,7 +2,11 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ecore_lite" nsURI="http://www.eclipse.org/efbt/ecore_lite" nsPrefix="ecore_lite">
   <eClassifiers xsi:type="ecore:EClass" name="ELAttribute" eSuperTypes="#//ELStructuralFeature">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="iD" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="iD" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="keys">
+        <details key="type" value="ForeignKey"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="eAttributeType" eType="#//ELDataType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ELClass" eSuperTypes="#//ELClassifier">

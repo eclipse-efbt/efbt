@@ -78,14 +78,14 @@ class LDMImport(object):
                         eclass_table_operation.upperBound = -1
                         eclass_table_operation.lowerBound = 0
                         eclass_table.eOperations.append(eclass_table_operation)
-                        context.input_layer_entities_package.eClassifiers.extend([
+                        context.input_tables_package.eClassifiers.extend([
                                                                               eclass])
-                        context.input_layer_entities_package.eClassifiers.extend([
+                        context.input_tables_package.eClassifiers.extend([
                                                                               eclass_table])
                     elif (class_name.startswith("OUTPUT_LAYER_")):
                         eclass = ELClass(name=altered_class_name)
 
-                        context.input_layer_entities_package.eClassifiers.extend([
+                        context.input_tables_package.eClassifiers.extend([
                                                                               eclass])
 
                     else:
@@ -99,7 +99,7 @@ class LDMImport(object):
                         if (engineering_type == "Single Table") and (num_supertype_entity_id == ""):
                             eclass.abstract = True
                         eclass_table = ELClass(
-                            name=altered_class_name+"_BaseTable")
+                            name=altered_class_name+"_Table")
                         containment_reference = ELReference()
                         containment_reference.name = eclass.name+"s"
                         containment_reference.eType = eclass
@@ -108,9 +108,9 @@ class LDMImport(object):
                         containment_reference.containment = True
                         eclass_table.eStructuralFeatures.append(
                             containment_reference)
-                        context.input_layer_entities_package.eClassifiers.extend([
+                        context.input_tables_package.eClassifiers.extend([
                                                                               eclass])
-                        context.input_layer_entities_package.eClassifiers.extend([
+                        context.input_tables_package.eClassifiers.extend([
                                                                               eclass_table])
 
                     # maintain a map a objectIDs to ELClasses
@@ -162,7 +162,7 @@ class LDMImport(object):
                         the_enum.name = adapted_enum_name
                         # maintain a map of enum IDS to ELEnum objects
                         context.enum_map[enum_id] = the_enum
-                        context.input_layer_enums_package.eClassifiers.extend([
+                        context.il_domains_package.eClassifiers.extend([
                                                                            the_enum])
 
     def add_ldm_literals_to_enums(self, context):
