@@ -12,7 +12,7 @@
 #
 
 from pyecore.ecore import EPackage
-from ecore4reg import ELDataType, ELPackage, ModuleList, ViewModule, VTLModule
+from ecore4reg import ELDataType, ELPackage, ModuleList, GenerationRulesModule, VTLModule
 
 
 class Context(object):
@@ -127,7 +127,7 @@ class Context(object):
     
     foreign_key_tuple = []
 
-    view_module = ViewModule(name='generations')
+    view_module = GenerationRulesModule(name='generations')
 
     vtl_module = VTLModule(name="vtl")
     module_list = ModuleList()
