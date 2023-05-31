@@ -73,13 +73,16 @@ class Ecore4regToEcoreConverter(object):
                         e_attribute = EAttribute(name=structural_feature.name)
                         e_attribute.upperBound = structural_feature.upperBound
                         e_attribute.lowerBound = structural_feature.lowerBound
-                        type_name = structural_feature.eAttributeType.name
+                        print("structural_feature")
+                        print(structural_feature)
+                        print(structural_feature.name)
+                        type_name = structural_feature.eType.name
                         if structural_feature.iD:
                             e_attribute.iD = True
 
                         if isinstance(structural_feature.eAttributeType, ELEnum):
                             e_enum = Ecore4regToEcoreConverter.find_enum(
-                                self, type_name, ecore_package, context)
+                                self, structural_feature.eAttributeType.name, ecore_package, context)
                             e_attribute.eAttributeType = e_enum
                             e_attribute.eType = e_enum
                         elif type_name == 'double':

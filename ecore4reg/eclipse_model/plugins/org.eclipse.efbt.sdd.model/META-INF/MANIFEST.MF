@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.efbt.sdd.model;singleton:=true
-Automatic-Module-Name: org.eclipse.efbt.ecore4reg.model
+Automatic-Module-Name: org.eclipse.efbt.sdd.model
 Bundle-Version: 1.1.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
