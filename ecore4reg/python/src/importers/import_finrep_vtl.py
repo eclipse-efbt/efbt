@@ -376,25 +376,29 @@ class ImportFinrepVTL(object):
                     report_template = row[0]
                     view = RulesForReport()
                     context.view_module.views.append(view)
+                    print("report_template")
+                    print(report_template)
+                    generated_output_layer = ImportFinrepVTL.find_output_layer_vtl(self, context, report_template + "_REF_OutputItem")
+                    if not (generated_output_layer is None):
+                        view.outputLayerCube = generated_output_layer.outputLayer
+                        ImportFinrepVTL.add_layers(self, context, view,report_template)
 
-                    
-                    ImportFinrepVTL.add_layers(self, context, view)
-
-    def add_layers(self, context, view):
+    def add_layers(self, context, view,report_template):
         '''
         Doc for addLayers
         '''
-
-        rol_vtl = ImportFinrepVTL.find_output_layer_vtl(
-            self, context, view.outputLayerCube.name[5:len(view.outputLayerCube.name)] + "_REF_OutputItem")
+        rol_vtl = ImportFinrepVTL.find_output_layer_vtl(self, context, report_template + "_REF_OutputItem")
 
         if not rol_vtl is None:
             view.outputLayer = rol_vtl.outputLayer
-            view_vtl = VTLForView(name="vtl_" + view.name)
+            view_vtl = VTLForView(name="vtl_" + view.outputLayerCube.name)
             view_vtl.view = view
             view_vtl.vtl = rol_vtl
             context.vtl_module.VTLForViews.vTLForViews.append(view_vtl)
-
+            layer_sql = RulesForILTable()
+            #layer_sql.inputLayerTable = 
+            
+            view.rulesForTable.extend([layer_sql])
             for intermediate_layer in rol_vtl.dependant_intermediate_layers:
 
                 # vtlLayer = intermediateLayer.transformations
@@ -402,22 +406,23 @@ class ImportFinrepVTL(object):
                     self, context, intermediate_layer)
                 if not link is None:
                     input_layer = link.entity
+                    layer_sql.inputLayerTable = input_layer
                     selection_layer = RuleForILTablePart()
                     if input_layer is not None:
                         selection_layer.name = link.VTLIntermediateLayer.name
                     selection_layer.generatedEntity = rol_vtl.outputLayer
                     
-                    layer_sql = RulesForILTable()
-                    layer_sql.rulesForTablePart = selection_layer
+                    
+                    layer_sql.rulesForTablePart.append(selection_layer)
                     vtl_for_selection_layer = VTLForSelectionLayer()
-                    vtl_for_selection_layer.selectionLayer = layer_sql
+                    vtl_for_selection_layer.selectionLayer = selection_layer
                     vtl_for_selection_layer.outputLayer = rol_vtl
                     vtl_for_selection_layer.intermediateLayer = intermediate_layer
                     context.vtl_module.VTLForSelectionLayers.vTLForSelectionLayers.append(
                         vtl_for_selection_layer)
 
-                    view.rulesForTable.extend([layer_sql])
-                    ImportFinrepVTL.add_columns_to_layer(self, layer_sql, view.outputLayer)
+                    
+                    ImportFinrepVTL.add_columns_to_layer(self, selection_layer, view.outputLayer)
 
     def find_output_layer_vtl(self, context, output_layer_name):
         '''
@@ -437,18 +442,18 @@ class ImportFinrepVTL(object):
             if link.VTLIntermediateLayer == intermediate_layer:
                 return link
 
-    def add_columns_to_layer(self, layer_sql, entity):
+    def add_columns_to_layer(self, selection_layer, entity):
         '''
         Doc for addColumnsToLayer
         '''
 
-        entity = layer_sql.selectionLayer.generatedEntity
+        entity = selection_layer.eContainer().eContainer().outputLayerCube
         if not entity is None:
             for member in entity.eOperations:
                 if isinstance(member, ELOperation):
                     select_column = SelectColumnAttributeAs()
                     select_column.asAttribute = member
-                    layer_sql.columns.extend([select_column])
+                    selection_layer.columns.extend([select_column])
 
     def build_intermediate_layer_to_input_layer(self, context):
         '''

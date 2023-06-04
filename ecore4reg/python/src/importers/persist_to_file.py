@@ -38,9 +38,6 @@ class PersistToFile:
                 "ecore4reg", context.il_domains_package)
 
         PersistToFile.persist_entity_model(
-            self, context, context.input_tables_package,
-            "ecore4reg", context.il_domains_package)
-        PersistToFile.persist_entity_model(
             self, context, context.output_tables_package,
             "ecore4reg", context.sdd_domains_package)
         PersistToFile.persist_enum_model(
@@ -242,7 +239,7 @@ class PersistToFile:
                 if vtl.selectionLayer == layer:
                     intermediate_layer = vtl.intermediateLayer
                     for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
-                        if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.selectionLayer.generatedEntity):
+                        if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.eContainer().eContainer().outputLayerCube):
                             for trans in combo.transformations:
                                 output = output + \
                                     PersistToFile.remove_comment_chars(
@@ -274,7 +271,12 @@ class PersistToFile:
             output = output + "/** associated input layer table and filter \r"
             for link in context.vtl_module.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks:
                 if link.VTLIntermediateLayer == intermediate_layer:
-                    output = output + "input layer entity: " + link.entity.name + "\r"
+                    entity_name = ""
+                    if not(link.entity is None):
+                        entity_name = link.entity.name
+                        
+                        
+                    output = output + "input layer entity: " + entity_name + "\r"
                     output = output + "filter: " + link.filter + "\r"
 
             output = output + "*/\r\r"
@@ -372,27 +374,35 @@ class PersistToFile:
         views = context.view_module.views
 
         for view in views:
-            f = open(context.output_directory + os.sep + 'ecore4reg' +
-                     os.sep + view.name +
-                     '_view.ecore4reg', "a",  encoding='utf-8')
-            f.write("ViewModule " + view.name + "_viewModule\r{\r")
-            f.write("\tviews " + "{\r")
-            f.write("\t\tView " + view.name + "_view {\r")
-            for layer in view.selectionLayerSQL:
-                if not layer.selectionLayer.name is None:
-                    f.write("\t\t\tLayerSQL {\r")
-                    f.write("selectionLayer SelectionLayer " + Utils.make_valid_id(str(layer.selectionLayer.name)) + "\r")
-                    for column in layer.columns:
-                        f.write("\t\t\t\tSelectValue \"TODO\" as output_tables." +
-                                view.name[5:len(view.name)] + "_REF_OutputItem." + column.asAttribute.name + "\r")
+            if not(view.outputLayerCube is None):
+                f = open(context.output_directory + os.sep + 'ecore4reg' +
+                         os.sep + view.outputLayerCube.name +
+                         '_view.ecore4reg', "a",  encoding='utf-8')
+                f.write("GenerationRuleModule " + view.outputLayerCube.name + "_viewModule\r{\r")
+                f.write("\tgenerationRules " + "{\r")
+                f.write("\t\tReport output_tables." + view.outputLayerCube.name + "{\r")
+                for layer in view.rulesForTable:
+                    if layer.inputLayerTable is None:
+                        f.write("\t\t\tILTable None {\r")
+                    else:
+                        f.write("\t\t\tILTable input_tables." + layer.inputLayerTable.name + "{\r")
+                    for table_part in layer.rulesForTablePart:
+                        if table_part.name is None:
+                            f.write("\t\t\t\tTablePart None { \r")
+                        else:
+                            f.write("\t\t\t\tTablePart " + Utils.make_valid_id(table_part.name) + " { \r")
+                        for column in table_part.columns:
+                            f.write("\t\t\t\t\tSelectValue \"TODO\" as output_tables." +
+                                    view.outputLayerCube.name + "." + column.asAttribute.name + "\r")
+                        f.write("\t\t\t\t}\r")
+                        f.write(PersistToFile.get_vtl_text_for_layer(
+                            self, context, table_part))
                     f.write("\t\t\t}\r")
-                    f.write(PersistToFile.get_vtl_text_for_layer(
-                        self, context, layer))
-            f.write("\t\t}\r")
-            f.write("\t}\r")
-            f.write("}\r")
-            f.write(PersistToFile.get_vtl_text_for_view(self, context, view))
-            f.close()
+                f.write("\t\t}\r")
+                f.write("\t}\r")
+                f.write("}\r")
+                f.write(PersistToFile.get_vtl_text_for_view(self, context, view))
+                f.close()
             
     def save_analysis_model_as_xmi_files(self, context):
         rset2 = ResourceSet()
