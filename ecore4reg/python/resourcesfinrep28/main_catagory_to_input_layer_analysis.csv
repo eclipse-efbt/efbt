@@ -1,18 +1,16 @@
-﻿Main Category,LDM,IL,DomainToFilter,Filter,Joins,Notes
-(MC:x44) Cash on hand,Cash On Hand,Cash_on_hand,,,,
-(MC:x60) Debt securities,Debt Security  ,security_and_exchange_traded_derivative,,Type_Security_and_exchange_tradable_derivative=11 Debt security without underlying assets,,
-(MC:x146) Debt securities issued,Debt security issued (by the reporting agent),Debt_security_issued_(by_the_reporting_agent),,Debt_Seccurity_issued_type = 1 fair_valued _debt_Security ISsues,,
-(MC:x135) Deposits,Deposits,Instrument,,Type_Instrument (input layer)= 12 Deposit Redeemable At Notice or Type_Instrument = 522 Deposits with agreed maturity - other than counterpart liability to non-derecognised loans or Type_Instrument =512  Other overnight deposits or Type Intrument = 511 Tranferable deposit,,
-(MC:x99) Derivatives,Over the counter (OTC) Derivative instrument,Instrument,,"Type Instrument = 12 OTC Option other than OTC Credit spread option, or Type Instrument =5 Other OTC Derivative instrument, or Type Instrument = 6 OTC Total return swap, or Type Instrument = 7 OTC Credit default swap, or Type Instrument = 8 Other OTC Swap, or Type Instrument = 9 OTC Credit spread option or Type Instrument = 380 Forward: Forwards are derivative contracts between two parties to buy or to sell an asset at a specified future time at a price agreed upon today  with positive balance",,"complete?Trading financial assets’ includes all financial assets classified as trading under the relevant national GAAP based on BAD. Irrespective of the measurement methodology applied under the relevant national GAAP based on BAD, all derivatives with a positive balance for the reporting institution that are not classified as hedge accounting in accordance with paragraph 22 of this Part shall be reported as trading financial assets."
-(MC:x99) Derivatives,Exchange tradable derivative position,Exchange_tradable_derivative_position,,with positive balance,,
-(MC:x130) Equity instruments,Long equity or fund security position,Security_position,,Type_Security_Position =2  Long equity or fund security position,,
-(MC:x691) Fair value changes,?,?,,?,,
-(MC:x469) Loans and advances,Loan (excluding repurchase agreement) and advance,Instrument,,Type_Instrument = 1022 other loans or 11other advance,,
-(MC:x60) Debt securities,Debt Security  ,security_and_exchange_traded_derivative,,Type_Security_and_exchange_tradable_derivative=11 Debt security without underlying assets,,
-(MC:x146) Debt securities issued,Debt security issued (by the reporting agent),Debt_security_issued_(by_the_reporting_agent),,Debt_Seccurity_issued_type = 1 fair_valued _debt_Security ISsues,,
-(MC:x329) Tangible assets,?,Non-financial asset,,,,
-(MC:x184) Goodwill,Goodwill,Non-financial asset,Type_of_Non-financial_asset(IL),Type_of_Non-financial_asset = Type_of_Non-financial_asset(IL).420 Intangible assets. Goodwill,,we don’t have a seperte goodwill and nott goodwill
-(MC:x210) Intangible assets other than Goodwill,,Non-financial asset,Type_of_Non-financial_asset(IL),Type_of_Non-financial_asset = Type_of_Non-financial_asset(IL).420 Intangible assets. Goodwill,,we don’t have a seperte goodwill and nott goodwill
-(MC:x56) Current tax assets,Current tax asset,Non-financial asset,Type_of_Non-financial_asset(IL),Type_of_Non-financial_asset = 450 Deferred tax assets,,We should have a member for current tax assets?
-(MC:x76) Deferred tax assets,Deferred tax asset,Non-financial asset,Type_of_Non-financial_asset(IL),Type_of_Non-financial_asset = Current tax assets,,
-(MC:x634) Haircuts for trading assets at fair value,?,?,,?,,
+﻿Main Category,Name ,LDM,IL,DomainToFilter,Filter,Joins,Notes
+EBA_MC_EBA_x44,Cash_on_hand,Cash On Hand,Cash_on_hand,,,,
+EBA_MC_EBA_x60,Debt_Securities,Debt Security  ,security_and_exchange_traded_derivative,,Type_Security_and_exchange_tradable_derivative=11 Debt security without underlying assets,,
+EBA_MC_EBA_x146,Securities_issued,Debt security issued (by the reporting agent),Debt_security_issued_(by_the_reporting_agent),,Debt_Seccurity_issued_type = 1 fair_valued _debt_Security ISsues,,
+EBA_MC_EBA_x135,Deposits,Deposits,Instrument,,Type_Instrument (input layer)= 12 Deposit Redeemable At Notice or Type_Instrument = 522 Deposits with agreed maturity - other than counterpart liability to non-derecognised loans or Type_Instrument =512  Other overnight deposits or Type Intrument = 511 Tranferable deposit,,
+EBA_MC_EBA_x99,Derivatives,Over the counter (OTC) Derivative instrument,Instrument,,"Type Instrument = 12 OTC Option other than OTC Credit spread option, or Type Instrument =5 Other OTC Derivative instrument, or Type Instrument = 6 OTC Total return swap, or Type Instrument = 7 OTC Credit default swap, or Type Instrument = 8 Other OTC Swap, or Type Instrument = 9 OTC Credit spread option or Type Instrument = 380 Forward: Forwards are derivative contracts between two parties to buy or to sell an asset at a specified future time at a price agreed upon today  with positive balance",,"complete?Trading financial assets’ includes all financial assets classified as trading under the relevant national GAAP based on BAD. Irrespective of the measurement methodology applied under the relevant national GAAP based on BAD, all derivatives with a positive balance for the reporting institution that are not classified as hedge accounting in accordance with paragraph 22 of this Part shall be reported as trading financial assets."
+EBA_MC_EBA_x99,Derivatives,Exchange tradable derivative position,Exchange_tradable_derivative_position,,with positive balance,,
+EBA_MC_EBA_x130,Equity Instruments,Long equity or fund security position,Security_position,,Type_Security_Position =2  Long equity or fund security position,,
+EBA_MC_EBA_x691,Fair value changes,?,?,,?,,
+EBA_MC_EBA_x469,Loans and advances,Loan (excluding repurchase agreement) and advance,Instrument,,Type_Instrument = 1022 other loans or 11other advance,,
+EBA_MC_EBA_x329,Tangible assets,?,Non-financial asset,,,,
+EBA_MC_EBA_x184,Goodwill,Goodwill,Non-financial asset,Type_of_Non-financial_asset(IL),Type_of_Non-financial_asset = Type_of_Non-financial_asset(IL).420 Intangible assets. Goodwill,,we don’t have a seperte goodwill and nott goodwill
+EBA_MC_EBA_x210,Intangible assets other than Goodwill,,Non-financial asset,Type_of_Non-financial_asset(IL),Type_of_Non-financial_asset = Type_of_Non-financial_asset(IL).420 Intangible assets. Goodwill,,we don’t have a seperte goodwill and nott goodwill
+EBA_MC_EBA_x56,Current tax assets,Current tax asset,Non-financial asset,Type_of_Non-financial_asset(IL),Type_of_Non-financial_asset = 450 Deferred tax assets,,We should have a member for current tax assets?
+EBA_MC_EBA_x76,Deferred tax assets,Deferred tax asset,Non-financial asset,Type_of_Non-financial_asset(IL),Type_of_Non-financial_asset = Current tax assets,,
+EBA_MC_EBA_x624,Haircuts for trading assets at fair value,?,?,,?,,

@@ -29,4 +29,4 @@ if __name__ == '__main__':
 
     #Ecore4regToEcoreConverter().convertPackagesInContext(context)
     persister = PersistToFile()
-    persister.save_analysis_model_as_json_files(context)
+    persister.save_analysis_model_as_json_files(sdd_context)

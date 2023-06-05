@@ -29,7 +29,7 @@ class ImportSDD(object):
         ImportSDD.create_all_variables(self, sdd_context)
         ImportSDD.create_all_subdomains(self, sdd_context)
         ImportSDD.create_all_subdomain_enumerations(self, sdd_context)
-        ImportSDD.create_all_combinations(self, sdd_context)
+        # ImportSDD.create_all_combinations(self, sdd_context)
         # ImportSDD.createVariableSetToVariableMap(self, context)
         # ImportSDD.createVariableToDomainMap(self, context)
         # ImportSDD.createDomainToDomainNameMap(self, context)

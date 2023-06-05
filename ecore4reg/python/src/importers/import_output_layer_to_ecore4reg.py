@@ -64,7 +64,10 @@ class ROLImport(object):
                     if (framework == "FINREP_REF"):
                         class_name = row[context.cubeClassCodeIndex]
                     else:
-                        class_name = row[context.cubeClassNameIndex]
+                        if (context.use_codes):
+                            class_name = row[context.cubeClassCodeIndex]
+                        else:
+                            class_name = row[context.cubeClassNameIndex]
                     
                     altered_class_name = Utils.make_valid_id(class_name)
                     object_id = row[context.cubeObjectIDIndex]
@@ -513,10 +516,10 @@ class ROLImport(object):
                                 
                                 
                                 
-                                if(context.use_variable_long_name):   
-                                    the_attribute_name = amended_attribute_long_name 
+                                if(context.use_codes):   
+                                    the_attribute_name = amended_attribute_name  
                                 else:
-                                    the_attribute_name = amended_attribute_name
+                                    the_attribute_name = amended_attribute_long_name
                                 
                                 amended_domain_name = None
                                 if (the_attribute_name1=="MTRCS"):
