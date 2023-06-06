@@ -6,6 +6,7 @@ from importers.persist_to_file import PersistToFile
 from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 from importers.main_catagory_finder import MainCatagoryFinder
 from importers.generation_rule_creator import GenerationRuleCreator
+from importers.relationship_enricher import RelationshipEnricher
 
 if __name__ == '__main__':
     context = Context()
@@ -16,11 +17,14 @@ if __name__ == '__main__':
     context.input_from_website = True
     context.persist_vtl_comments = False
     context.set_up_csv_indexes()
-    context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resources_website'
-    context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\results_website'
+    context.use_codes = True
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources_website'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results_website'
 
-    InputLayerImport().do_import(context)
     ROLImport().doImport(context)
+    InputLayerImport().do_import(context)
+    RelationshipEnricher().enrich(context)
+    Ecore4regToEcoreConverter().convert_packages_in_context(context)
     
     # sdd_context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     # sdd_context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
@@ -36,5 +40,6 @@ if __name__ == '__main__':
 
     
     persister.save_model_as_ecore_file(context)
+    persister.save_model_as_xcore_file(context)
     persister.save_model_as_ecore4reg_file(context)
     persister.save_model_as_json_files(context)
