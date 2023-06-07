@@ -405,7 +405,10 @@ class PersistToFile:
                                 lineage_type = "tbd"
                                 
                             variable_id = column.asAttribute.name
-                            f.write(template +"," + main_catagory +"," +main_catagory_name+"," +table+"," + filter + "," + filter_items + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,,," +variable_id + "\n")
+                            # remove the _Output_item sring which is appended to the
+                            # template to make the class name.
+                            amended_template_name =  template[0:len(template) - 11]
+                            f.write(amended_template_name +"," + main_catagory +"," +main_catagory_name+"," +table+"," + filter + "," + filter_items + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,,," +variable_id + "\n")
 
                         
         f.close()
