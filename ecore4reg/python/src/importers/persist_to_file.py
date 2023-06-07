@@ -16,7 +16,7 @@ from pyecore.resources.json import JsonResource
 from importers.utils import Utils
 
 
-from ecore4reg import ELAttribute, ELClass, ELEnum, ELOperation, ELReference
+from ecore4reg import ELAttribute, ELClass, ELEnum, ELOperation, ELReference,SelectColumnAttributeAs
 
 
 class PersistToFile:
@@ -46,7 +46,10 @@ class PersistToFile:
             self, context, context.sdd_domains_package, "ecore4reg")
         PersistToFile.persist_types_model(
             self, context, context.types_package, "ecore4reg")
+        PersistToFile.persist_generation_transformations_to_csv(self, context)
         PersistToFile.persist_generation_transformations(self, context)
+        
+        
         
     def save_model_as_xcore_file(self, context):
         '''
@@ -366,6 +369,49 @@ class PersistToFile:
         output_tables_resource2.save()
 
    
+    
+    def persist_generation_transformations_to_csv(self, context):
+        '''
+        Documentation for persist_generation_transformations
+        '''
+        views = context.view_module.views
+        f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
+                         os.sep + 
+                         'generation_transformations.csv', "a",  encoding='utf-8')
+        f.write("Template,Main_category code,Main category,Table,Column or Filter attribute,Filter members,Lineage type,Entity,Attribute,Missing,Not relevant, Derived,Domain,Member,Value,Comment,VARIABLE_ID\n")
+
+        for view in views:
+            if not(view.outputLayerCube is None): #column.attribute.eContainer().name + "." + column.attribute.name
+                template = view.outputLayerCube.name
+                for layer in view.rulesForTable:
+                    table = layer.inputLayerTable.name
+                    for table_part in layer.rulesForTablePart:
+                        main_catagory = table_part.main_catagory
+                        main_catagory_name = context.main_catogory_to_name_map[main_catagory]
+                        
+                        table_and_part = table_part.table_and_part_tuple
+                        filter = context.table_parts_to_to_filter_map[table_and_part]
+                        filter_items = context.table_parts_to_to_filter_items_map[table_and_part]
+                        for column in table_part.columns:
+                            if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
+                                entity  = column.attribute.eContainer().name
+                                attribute = column.attribute.name
+                                lineage_type = "attribute"
+                                missing = "Not Missing"
+                            else:  
+                                entity  = ""
+                                attribute = ""
+                                missing = "Missing"
+                                lineage_type = "tbd"
+                                
+                            variable_id = column.asAttribute.name
+                            # remove the _Output_item sring which is appended to the
+                            # template to make the class name.
+                            amended_template_name =  template[0:len(template) - 11]
+                            f.write(amended_template_name +"," + main_catagory +"," +main_catagory_name+"," +table+"," + filter + "," + filter_items + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,,," +variable_id + "\n")
+
+                        
+        f.close()
 
     def persist_generation_transformations(self, context):
         '''
@@ -392,7 +438,11 @@ class PersistToFile:
                         else:
                             f.write("\t\t\t\tTablePart " + Utils.make_valid_id(table_part.name) + " { \r")
                         for column in table_part.columns:
-                            f.write("\t\t\t\t\tSelectValue \"TODO\" as output_tables." +
+                            if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
+                                f.write("\t\t\t\t\tSelectAttribute input_tables." + column.attribute.eContainer().name + "." + column.attribute.name)
+                            else:  
+                                f.write("\t\t\t\t\tSelectValue \"TODO\"")
+                            f.write(" as output_tables." +
                                     view.outputLayerCube.name + "." + column.asAttribute.name + "\r")
                         f.write("\t\t\t\t}\r")
                         f.write(PersistToFile.get_vtl_text_for_layer(

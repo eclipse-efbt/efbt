@@ -28,8 +28,14 @@ class RelationshipEnricher(object):
             print("lower_bound")
             print(lower_bound)
             
-            source_class = RelationshipEnricher.get_class_from_package(self, source_class_name, context.input_tables_package)
-            target_class = RelationshipEnricher.get_class_from_package(self, target_class_name, context.input_tables_package)
+            if context.use_codes:
+                source_class = RelationshipEnricher.get_class_from_package(self, "BIRD_" + source_class_name + "_EIL", context.input_tables_package)
+                target_class = RelationshipEnricher.get_class_from_package(self, "BIRD_" + target_class_name + "_EIL", context.input_tables_package)
+            else:
+                source_class = RelationshipEnricher.get_class_from_package(self, source_class_name, context.input_tables_package)
+                target_class = RelationshipEnricher.get_class_from_package(self, target_class_name, context.input_tables_package)
+            
+            
             e_reference = ELReference()
             if RelationshipEnricher.relationshipExistsOnClass(self,source_class,reference_name):
                 e_reference.name = reference_name + "2"

@@ -20,6 +20,7 @@ class Context(object):
     Documentation for Context
     '''
     # variables to configure the behaviour
+    use_codes = True
     input_from_website = False
     persist_vtl_comments = True
     use_subdomains_in_rol = False
@@ -52,6 +53,14 @@ class Context(object):
 
     # create the moduleList to hold all the modules
     module_list = ModuleList()
+    
+    main_catogory_to_name_map = {}
+    report_to_main_catogory_map = {}
+    tables_for_main_catagory_map = {}
+    table_and_part_tuple_map = {}
+    table_parts_to_linked_tables_map = {}
+    table_parts_to_to_filter_map = {}
+    table_parts_to_to_filter_items_map = {}
 
     # create  Ecore4Reg  packages
     types_package = ELPackage(name='types')
