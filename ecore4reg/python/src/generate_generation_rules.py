@@ -32,11 +32,15 @@ if __name__ == '__main__':
     # import the information about EIL and ROL from csv files downloaded
     # from the website.
     SDDImport().doImport(context)
-    # import the information about EIL from the SQLDeveloper export files
+    # We may wish to import the information about EIL from the SQLDeveloper
+    # export files.
     # This is used only to enrich website dat with the relationship 
-    # between tables, as this does not yet exist in the website information 
-    SQLDeveloperILImport().do_import(context)
-    RelationshipEnricher().enrich(context)
+    # between tables, as this does not yet exist in the website information.
+    # We can change the flag below if we want to do the enrichment
+    enrich_with_sqldev_table_relationships = False
+    if enrich_with_sqldev_table_relationships:  
+        SQLDeveloperILImport().do_import(context)
+        RelationshipEnricher().enrich(context)
     # create ecore representation to allow use of multiple exsitng ecore tools
     # frameworks and libraries
     Ecore4regToEcoreConverter().convert_packages_in_context(context)
