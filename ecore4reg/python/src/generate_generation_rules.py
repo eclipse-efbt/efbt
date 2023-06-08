@@ -1,7 +1,6 @@
 from importers.context import Context
 from importers.import_sqldev_il_to_ecore4reg import SQLDeveloperILImport
 from importers.import_sdd_to_ecore4reg import SDDImport
-from importers.import_finrep_vtl import ImportFinrepVTL
 from importers.persist_to_file import PersistToFile
 from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 from importers.main_catagory_finder import MainCatagoryFinder
