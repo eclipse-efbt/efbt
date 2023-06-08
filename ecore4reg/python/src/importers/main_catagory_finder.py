@@ -20,16 +20,27 @@ import os
 from importers.utils import Utils
 
 class MainCatagoryFinder(object):
+    '''
+    This class is responsable for creating maps of information
+    related to the EBA main catagory
+    '''
     
     def create_report_to_main_catogory_maps(self, context):
+        '''
+        create maps of information
+        related to the EBA main catagory
+        '''
         MainCatagoryFinder.create_main_catogory_to_name_map(self, context)
         MainCatagoryFinder.create_report_to_main_catogory_map(self, context)
         MainCatagoryFinder.create_il_tables_for_main_catagory_map(self, context)
         MainCatagoryFinder.create_table_parts_for_main_catagory_map(self, context)
         
-    
-        
-    def create_main_catogory_to_name_map(self, context): 
+
+    def create_main_catogory_to_name_map(self, context):
+        '''
+        create a map of EBA main catagory code such as EBA_MC_EBA_x469 
+        into its more user friendly display name such as loans and advances
+        ''' 
         file_location = context.file_directory + os.sep + "main_catagory_to_input_layer_analysis.csv"
 
         header_skipped = False
@@ -49,14 +60,18 @@ class MainCatagoryFinder(object):
                     
 
     def create_report_to_main_catogory_map(self, context):
-        
+        '''
+        create a map from report such as F_01_01_FINREP  
+        into a list of main catagories used in that report
+        ''' 
         file_location = context.file_directory + os.sep + "table.csv"
-
         header_skipped = False
-        
         valid_eba_tables = []
-        # Load all the entities from the csv file, make an ELClass per entity, 
-        # and add the ELClass to the package
+        # Loop through the tables of the rendering package
+        # there is one table per report. 
+        # Note that in the rendering package a table is a grid of
+        # report cells, so is not to be confused with tbles of the 
+        # input layer
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -70,14 +85,16 @@ class MainCatagoryFinder(object):
                     version = row[5]
                     
                     if maintenence_agency_id == "EBA":
-                        # we are only going to include version 3 or version 3.0-ind
-                        # note that in the data some older reports are such as 2.8 are 
-                        # still marked as valid according to the valid to date.
-                        # not yet clear what is the difference between 3 and 3.0-Ind
+                        # we are only going to include specific versions and 
+                        # for FINREP this will be version 3 or version 3.0-ind
+                        # note that in the data some older reports exist such as
+                        # 2.8 that are still marked as valid according to the
+                        # valid to date.
+                        # It is not yet clear what is the difference between 3 and 3.0-Ind
                         # but there is currently no overlap and it gives us the 
                         # set that we are interested in.
                         
-                        if (version == "3.0-Ind") or (version == "3"):
+                        if version in context.reporting_framework_version:
                             if (valid_to == "12/31/9999") or (valid_to == "31/12/9999"):
                                 valid_eba_tables.append(table_id)
                         
@@ -96,7 +113,7 @@ class MainCatagoryFinder(object):
                 else:            
                     axis_ordinate_id = row[0]
                     axis_id = row[6]
-                    if axis_ordinate_id.startswith("EBA_FINREP"):
+                    if axis_ordinate_id.startswith("EBA_" + context.reporting_framework):
                         amended_axis_id = axis_id[0:len(axis_id)-2]
                         if amended_axis_id in valid_eba_tables:
                             valid_eba_axis_ordinates.append(axis_ordinate_id)
@@ -114,13 +131,13 @@ class MainCatagoryFinder(object):
                     header_skipped = True
                 else:
                     axis_ordinate_id = row[0]
-                    if axis_ordinate_id.startswith("EBA_FINREP_EBA_"):
+                    if axis_ordinate_id.startswith("EBA_" + context.reporting_framework + "_EBA_"):
                         if axis_ordinate_id in valid_eba_axis_ordinates:
                             variable_id = row[1]
                             if variable_id == "EBA_MCY":
                                 # we find the report name by looking for the second
                                 # instance of the string FINREP_
-                                report_name = axis_ordinate_id[15:axis_ordinate_id.index("_FINREP",10)]
+                                report_name = axis_ordinate_id[15:axis_ordinate_id.index("_" + context.reporting_framework,10)]
                                 print("report_name")
                                 print(report_name)
                                 member_id = row[2]
@@ -131,13 +148,17 @@ class MainCatagoryFinder(object):
                                     if not(member_id in catagory_list):
                                         catagory_list.append(member_id)
                                 except KeyError: 
+                                    # if we could not find a list of main
+                                    # catagories for  report , create a new list
                                     list  = []
                                     list.append(member_id)
                                     context.report_to_main_catogory_map[amemnded_report_name] = list                                
                                     
     def create_il_tables_for_main_catagory_map(self, context):
-        
-         
+        '''
+        create a map from main catagories such as loans and advancess
+        to the related input layer such as instrument
+        ''' 
         file_location = context.file_directory + os.sep + "main_catagory_to_input_layer_analysis.csv"
 
         header_skipped = False
@@ -158,6 +179,8 @@ class MainCatagoryFinder(object):
                             table_list.append(il_table)
                     
                     except KeyError:
+                        # if we could not find a list of tables for 
+                        # the main catagory then create a new list
                         table_list = []
                         table_list.append(il_table)
                         context.tables_for_main_catagory_map[main_catagory] = table_list
@@ -165,11 +188,15 @@ class MainCatagoryFinder(object):
                     
                         
     def create_table_parts_for_main_catagory_map(self, context):
+        '''
+        create a map from main catagories such as loans and advancess
+        to the related table parts, where table part is a combination
+        of an input layer and main catagory description
+        ''' 
         file_location = context.file_directory + os.sep + "main_catagory_to_input_layer_analysis.csv"
 
         header_skipped = False
-        # Load all the entities from the csv file, make an ELClass per entity, 
-        # and add the ELClass to the package
+
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -178,13 +205,13 @@ class MainCatagoryFinder(object):
                     header_skipped = True
                 else:
                     main_catagory = row[0]
-                    ldm = row[2] 
+                    description = row[2] 
                     il_table = row[3]
                     linked_table_list = row[6]
                     filter = row[4]
                     filter_items = row[5]
                     
-                    table_and_part_tuple = (il_table,ldm)
+                    table_and_part_tuple = (il_table,description)
                     context.table_parts_to_linked_tables_map[table_and_part_tuple] = linked_table_list
                     context.table_parts_to_to_filter_map[table_and_part_tuple] = filter
                     context.table_parts_to_to_filter_items_map[table_and_part_tuple] = filter_items

@@ -30,6 +30,8 @@ class Context(object):
     persist_to_ecore4reg = True
     inScopeFileDirectory = ""
     add_pks_to_input_layer_from_website = True 
+    reporting_framework = "FINREP"
+    reporting_framework_version = ["3","3.0-Ind"]
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.

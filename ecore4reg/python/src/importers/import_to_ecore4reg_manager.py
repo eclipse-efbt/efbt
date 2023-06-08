@@ -18,8 +18,8 @@ Created on 22 Jan 2022
 
 from context import Context
 
-from import_input_layer_to_ecore4reg import InputLayerImport
-from import_output_layer_to_ecore4reg import ROLImport
+from import_sqldev_il_to_ecore4reg import SQLDeveloperILImport
+from import_sdd_to_ecore4reg import SDDImport
 from import_finrep_vtl import ImportFinrepVTL
 from persist_to_file import PersistToFile
 from ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
@@ -35,8 +35,8 @@ if __name__ == '__main__':
     context.addLogicPackages = True
 
 
-    InputLayerImport().do_import(context)
-    ROLImport().doImport(context)
+    SQLDeveloperILImport().do_import(context)
+    SDDImport().doImport(context)
     ImportFinrepVTL().do_import(context)
 
     Ecore4regToEcoreConverter().convert_packages_in_context(context)

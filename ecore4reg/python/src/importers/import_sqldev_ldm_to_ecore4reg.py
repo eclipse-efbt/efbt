@@ -17,23 +17,23 @@ from importers.utils import Utils
 from ecore4reg import ELAttribute, ELClass, ELEnum
 from ecore4reg import ELEnumLiteral, ELOperation, ELReference
 
-class LDMImport(object):
+class SQLDevLDMImport(object):
     '''
-    Documentation for LDMImport
+    Documentation for SQLDevLDMImport
     '''
 
     def do_import(self, context):
         '''
         import the items from the BIRD LDM csv files
         '''
-        LDMImport.add_ldm_classes_to_package(self, context)
-        LDMImport.set_ldm_super_classes(self, context)
-        LDMImport.add_ldm_enums_to_package(self, context)
-        LDMImport.add_ldm_literals_to_enums(self, context)
-        LDMImport.create_ldm_types_map(self, context)
-        LDMImport.add_ldm_attributes_to_classes(self, context)
-        LDMImport.remove_ldm_attributes_already_in_superclass(self, context)
-        LDMImport.add_ldm_relationships_between_classes(self, context)
+        SQLDevLDMImport.add_ldm_classes_to_package(self, context)
+        SQLDevLDMImport.set_ldm_super_classes(self, context)
+        SQLDevLDMImport.add_ldm_enums_to_package(self, context)
+        SQLDevLDMImport.add_ldm_literals_to_enums(self, context)
+        SQLDevLDMImport.create_ldm_types_map(self, context)
+        SQLDevLDMImport.add_ldm_attributes_to_classes(self, context)
+        SQLDevLDMImport.remove_ldm_attributes_already_in_superclass(self, context)
+        SQLDevLDMImport.add_ldm_relationships_between_classes(self, context)
 
     def add_ldm_classes_to_package(self, context):
         '''
