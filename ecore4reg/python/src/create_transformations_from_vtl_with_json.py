@@ -27,8 +27,8 @@ if __name__ == '__main__':
     context.persist_to_ecore4reg = True
     context.persist_vtl_comments = True
     context.use_subdomains_in_rol = False
-    context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resourcesfinrep28'
-    context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resultsfinrep28'
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
 
     SQLDeveloperILImport().do_import(context)
     SDDImport().doImport(context)
