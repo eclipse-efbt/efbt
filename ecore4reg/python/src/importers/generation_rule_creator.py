@@ -50,10 +50,10 @@ class GenerationRuleCreator(object):
                 else:
                     report_template = row[0]
                     rules_for_report = RulesForReport()
-                    context.view_module.views.append(rules_for_report)
+                    context.generation_rules_module.rulesForReport.append(rules_for_report)
                     generated_output_layer = GenerationRuleCreator.find_output_layer_cube(self, context, report_template + "_REF_OutputItem")
                     if not (generated_output_layer is None):
-                        context.view_module.views.append(rules_for_report)
+                        context.generation_rules_module.rulesForReport.append(rules_for_report)
                         rules_for_report.outputLayerCube = generated_output_layer
                         GenerationRuleCreator.add_table_parts(self, context, rules_for_report,report_template)
                         

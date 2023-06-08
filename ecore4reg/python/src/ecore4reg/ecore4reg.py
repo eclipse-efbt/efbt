@@ -622,14 +622,15 @@ class SelectValueAs(SelectColumn):
 
 class GenerationRulesModule(Module):
 
-    views = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    rulesForReport = EReference(ordered=True, unique=True,
+                                containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, views=None, **kwargs):
+    def __init__(self, *, rulesForReport=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if views:
-            self.views.extend(views)
+        if rulesForReport:
+            self.rulesForReport.extend(rulesForReport)
 
 
 @abstract

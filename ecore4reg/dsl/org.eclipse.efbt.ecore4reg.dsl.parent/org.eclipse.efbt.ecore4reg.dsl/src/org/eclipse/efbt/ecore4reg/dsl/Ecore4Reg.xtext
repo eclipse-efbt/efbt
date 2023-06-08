@@ -59,7 +59,7 @@ GenerationRulesModule returns ecore4reg::GenerationRulesModule:
 	(imports += Import)*
 	'{'
 		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
-		('generationRules' '{' views+=RulesForReport ( "," views+=RulesForReport)* '}' )?
+		('generationRules' '{' rulesForReport+=RulesForReport ( "," rulesForReport+=RulesForReport)* '}' )?
 	'}';
 
 

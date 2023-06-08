@@ -138,7 +138,7 @@ class Context(object):
     
     foreign_key_tuple = []
 
-    view_module = GenerationRulesModule(name='generations')
+    generation_rules_module = GenerationRulesModule(name='generations')
 
     vtl_module = VTLModule(name="vtl")
     module_list = ModuleList()
@@ -339,7 +339,7 @@ class Context(object):
         self.module_list.modules.append(self.sdd_domains_package)
         self.module_list.modules.append(self.input_tables_package)
         self.module_list.modules.append(self.output_tables_package)
-        self.module_list.modules.append(self.view_module)
+        self.module_list.modules.append(self.generation_rules_module)
         self.module_list.modules.append(self.vtl_module)
         
         
