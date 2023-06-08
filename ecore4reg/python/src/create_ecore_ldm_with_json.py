@@ -16,7 +16,7 @@ Created on 25 April 2022
 
 from importers.context  import Context
 
-from importers.import_ldm_to_ecore4reg import LDMImport
+from importers.import_sqldev_ldm_to_ecore4reg import SQLDevLDMImport
 from importers.persist_to_file import PersistToFile
 from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
 
-    LDMImport().do_import(context)
+    SQLDevLDMImport().do_import(context)
 
     Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()

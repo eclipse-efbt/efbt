@@ -21,28 +21,28 @@ import csv
 from importers.utils import Utils
 from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference, ELAttribute
 
-class ROLImport(object):
+class SDDImport(object):
     '''
-    Documentation for ROLImport
+    Documentation for SDDImport
     '''
 
     def doImport(self, context):
         '''
         import the items from the Output layer csv files
         '''
-        ROLImport.add_rol_classes_to_package(self, context)
-        ROLImport.create_variable_set_to_variable_map(self, context)
-        ROLImport.create_variable_to_domain_map(self, context)
-        ROLImport.create_domain_to_domain_name_map(self, context)
-        ROLImport.create_member_maps(self, context)
+        SDDImport.add_rol_classes_to_package(self, context)
+        SDDImport.create_variable_set_to_variable_map(self, context)
+        SDDImport.create_variable_to_domain_map(self, context)
+        SDDImport.create_domain_to_domain_name_map(self, context)
+        SDDImport.create_member_maps(self, context)
         if context.use_subdomains_in_rol:
-            ROLImport.create_subdomain_to_domain_map(self, context)
-            ROLImport.create_subdomain_to_member_maps(self, context)
-            ROLImport.add_rol_enums_and_literals_to_package_using_subdomains(
+            SDDImport.create_subdomain_to_domain_map(self, context)
+            SDDImport.create_subdomain_to_member_maps(self, context)
+            SDDImport.add_rol_enums_and_literals_to_package_using_subdomains(
                 self, context)
         else:
-            ROLImport.add_rol_enums_and_literals_to_package(self, context)
-        ROLImport.add_rol_attributes_to_classes(self, context)
+            SDDImport.add_rol_enums_and_literals_to_package(self, context)
+        SDDImport.add_rol_attributes_to_classes(self, context)
 
     def add_rol_classes_to_package(self, context):
         '''
@@ -61,7 +61,7 @@ class ROLImport(object):
                 else:
 
                     framework = row[context.cubeFrameworkIndex]
-                    if (framework == "FINREP_REF"):
+                    if (framework == context.reporting_framework + "_REF"):
                         class_name = row[context.cubeClassCodeIndex]
                     else:
                         if (context.use_codes):
@@ -76,7 +76,7 @@ class ROLImport(object):
                     framework = row[context.cubeFrameworkIndex]
                     derived = True
 
-                    if ((((framework == "FINREP_REF") and (cube_type == "RC")) or ( context.load_eil_from_website and ((cube_type == "EIL"))) )and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999"))):
+                    if ((((framework == context.reporting_framework +"_REF") and (cube_type == "RC")) or ( context.load_eil_from_website and ((cube_type == "EIL"))) )and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999"))):
 
                         altered_class_name = Utils.make_valid_id(class_name)
                         fullName = None

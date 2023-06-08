@@ -15,8 +15,8 @@ Created on 25 April 2022
 '''
 
 from importers.context import Context
-from importers.import_input_layer_to_ecore4reg import InputLayerImport
-from importers.import_output_layer_to_ecore4reg import ROLImport
+from importers.import_sqldev_il_to_ecore4reg import SQLDeveloperILImport
+from importers.import_sdd_to_ecore4reg import SDDImport
 from importers.import_finrep_vtl import ImportFinrepVTL
 from importers.persist_to_file import PersistToFile
 from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
@@ -30,8 +30,8 @@ if __name__ == '__main__':
     context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resourcesfinrep28'
     context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_ecore4reg\\ecore4reg\\python\\resultsfinrep28'
 
-    InputLayerImport().do_import(context)
-    ROLImport().doImport(context)
+    SQLDeveloperILImport().do_import(context)
+    SDDImport().doImport(context)
     ImportFinrepVTL().do_import(context)
 
     Ecore4regToEcoreConverter().convert_packages_in_context(context)

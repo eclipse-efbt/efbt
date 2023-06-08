@@ -94,7 +94,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//TableFilter/value"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//GenerationRulesModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//GenerationRulesModule/views"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//GenerationRulesModule/rulesForReport"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//RuleForILTablePart">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//RuleForILTablePart/name"/>

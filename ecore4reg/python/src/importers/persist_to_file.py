@@ -285,15 +285,15 @@ class PersistToFile:
             output = output + "*/\r\r"
         return output
 
-    def get_vtl_text_for_view(self, context, view):
+    def get_vtl_text_for_rules_for_report(self, context, rules_for_report):
         '''
-        Documentation for get_vtl_text_for_view
+        Documentation for get_vtl_text_for_rules_for_report
         '''
         output = ""
         if context.persist_vtl_comments:
             output = output + "/** View specific VTL \r"
             for vtl in context.vtl_module.VTLForViews.vTLForViews:
-                if vtl.view == view:
+                if vtl.view == rules_for_report:
                     output = output + "output layer = " + vtl.vtl.outputLayer.name + "\r"
             output = output + "*/\r\r"
 
@@ -374,16 +374,16 @@ class PersistToFile:
         '''
         Documentation for persist_generation_transformations
         '''
-        views = context.view_module.views
+        rules_for_reports = context.generation_rules_module.rulesForReport
         f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
                          os.sep + 
                          'generation_transformations.csv', "a",  encoding='utf-8')
         f.write("Template,Main_category code,Main category,Table,Column or Filter attribute,Filter members,Lineage type,Entity,Attribute,Missing,Not relevant, Derived,Domain,Member,Value,Comment,VARIABLE_ID\n")
 
-        for view in views:
-            if not(view.outputLayerCube is None): #column.attribute.eContainer().name + "." + column.attribute.name
-                template = view.outputLayerCube.name
-                for layer in view.rulesForTable:
+        for rules_for_report in rules_for_reports:
+            if not(rules_for_report.outputLayerCube is None): #column.attribute.eContainer().name + "." + column.attribute.name
+                template = rules_for_report.outputLayerCube.name
+                for layer in rules_for_report.rulesForTable:
                     table = layer.inputLayerTable.name
                     for table_part in layer.rulesForTablePart:
                         main_catagory = table_part.main_catagory
@@ -417,17 +417,16 @@ class PersistToFile:
         '''
         Documentation for persist_generation_transformations
         '''
-        views = context.view_module.views
-
-        for view in views:
-            if not(view.outputLayerCube is None):
+        rules_for_reports = context.generation_rules_module.rulesForReport
+        for rules_for_report in rules_for_reports:
+            if not(rules_for_report.outputLayerCube is None):
                 f = open(context.output_directory + os.sep + 'ecore4reg' +
-                         os.sep + view.outputLayerCube.name +
-                         '_view.ecore4reg', "a",  encoding='utf-8')
-                f.write("GenerationRuleModule " + view.outputLayerCube.name + "_viewModule\r{\r")
+                         os.sep + rules_for_report.outputLayerCube.name +
+                         '.ecore4reg', "a",  encoding='utf-8')
+                f.write("GenerationRuleModule " + rules_for_report.outputLayerCube.name + "_generationModule\r{\r")
                 f.write("\tgenerationRules " + "{\r")
-                f.write("\t\tReport output_tables." + view.outputLayerCube.name + "{\r")
-                for layer in view.rulesForTable:
+                f.write("\t\tReport output_tables." + rules_for_report.outputLayerCube.name + "{\r")
+                for layer in rules_for_report.rulesForTable:
                     if layer.inputLayerTable is None:
                         f.write("\t\t\tILTable None {\r")
                     else:
@@ -443,7 +442,7 @@ class PersistToFile:
                             else:  
                                 f.write("\t\t\t\t\tSelectValue \"TODO\"")
                             f.write(" as output_tables." +
-                                    view.outputLayerCube.name + "." + column.asAttribute.name + "\r")
+                                    rules_for_report.outputLayerCube.name + "." + column.asAttribute.name + "\r")
                         f.write("\t\t\t\t}\r")
                         f.write(PersistToFile.get_vtl_text_for_layer(
                             self, context, table_part))
@@ -451,7 +450,7 @@ class PersistToFile:
                 f.write("\t\t}\r")
                 f.write("\t}\r")
                 f.write("}\r")
-                f.write(PersistToFile.get_vtl_text_for_view(self, context, view))
+                f.write(PersistToFile.get_vtl_text_for_rules_for_report(self, context, rules_for_report))
                 f.close()
             
     def save_analysis_model_as_xmi_files(self, context):

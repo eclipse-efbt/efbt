@@ -375,7 +375,7 @@ class ImportFinrepVTL(object):
                 else:
                     report_template = row[0]
                     view = RulesForReport()
-                    context.view_module.views.append(view)
+                    context.generation_rules_module.rulesForReport.append(view)
                     print("report_template")
                     print(report_template)
                     generated_output_layer = ImportFinrepVTL.find_output_layer_vtl(self, context, report_template + "_REF_OutputItem")

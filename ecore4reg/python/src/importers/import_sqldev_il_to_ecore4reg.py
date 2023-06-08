@@ -23,23 +23,23 @@ import os
 from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
 
 
-class InputLayerImport(object):
+class SQLDeveloperILImport(object):
     '''
-    Documentation for InputLayerImport
+    Documentation for SQLDeveloperILImport
     '''
 
     def do_import(self, context):
         '''
         import the items from the BIRD LDM csv files
         '''
-        InputLayerImport.add_il_classes_to_package(self, context)
-        InputLayerImport.add_il_enums_to_package(self, context)
-        InputLayerImport.add_il_literals_to_enums(self, context)
-        InputLayerImport.create_il_types_map(self, context)
-        InputLayerImport.add_il_pk_attributes_to_classes(self, context)
-        InputLayerImport.add_il_attributes_to_classes(self, context)
-        InputLayerImport.create_fk_to_column_map(self, context)
-        InputLayerImport.add_il_relationships_between_classes(self, context)
+        SQLDeveloperILImport.add_il_classes_to_package(self, context)
+        SQLDeveloperILImport.add_il_enums_to_package(self, context)
+        SQLDeveloperILImport.add_il_literals_to_enums(self, context)
+        SQLDeveloperILImport.create_il_types_map(self, context)
+        SQLDeveloperILImport.add_il_pk_attributes_to_classes(self, context)
+        SQLDeveloperILImport.add_il_attributes_to_classes(self, context)
+        SQLDeveloperILImport.create_fk_to_column_map(self, context)
+        SQLDeveloperILImport.add_il_relationships_between_classes(self, context)
 
     def add_il_classes_to_package(self, context):
         '''
@@ -459,7 +459,7 @@ class InputLayerImport(object):
                         try:
 
                             the_class = context.classes_map[class_id]
-                            InputLayerImport.add_composite_pk_if_missing(
+                            SQLDeveloperILImport.add_composite_pk_if_missing(
                                 self, context, the_class)
                             the_class.eStructuralFeatures.extend([attribute])
                             if class_is_derived:
