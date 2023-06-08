@@ -27,8 +27,8 @@ if __name__ == '__main__':
     context.set_up_csv_indexes()
     # use codes not long names for columns
     context.use_codes = True
-    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources_website'
-    context.output_directory = '/workspaces/efbt/ecore4reg/python/results_website'
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     # import the information about EIL and ROL from csv files downloaded
     # from the website.
     SDDImport().doImport(context)

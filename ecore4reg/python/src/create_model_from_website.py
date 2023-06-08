@@ -31,8 +31,8 @@ if __name__ == '__main__':
     context.load_eil_from_website  = True
     context.input_from_website = True
     context.set_up_csv_indexes()
-    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources_website'
-    context.output_directory = '/workspaces/efbt/ecore4reg/python/results_website'
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     SDDImport().doImport(context)
     SQLDeveloperILImport().do_import(context)
     RelationshipEnricher().enrich(context)
