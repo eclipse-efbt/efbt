@@ -305,6 +305,12 @@ class SQLDeveloperILImport(object):
                                 attribute.eAttributeType = context.e_double
                                 attribute.upperBound = 1
                                 attribute.lowerBound = 1
+                            elif (the_enum.name == "RL_domain"):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_double
+                                attribute.eAttributeType = context.e_double
+                                attribute.upperBound = 1
+                                attribute.lowerBound = 1
                             elif (the_enum.name.startswith("Real_")):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_double
@@ -379,6 +385,11 @@ class SQLDeveloperILImport(object):
                                     operation.upperBound = 1
                                     operation.lowerBound = 1
                                 elif (the_enum.name == "Number"):
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_double
+                                    operation.upperBound = 1
+                                    operation.lowerBound = 1
+                                elif (the_enum.name == "RL_domain"):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_double
                                     operation.upperBound = 1
@@ -551,6 +562,10 @@ class SQLDeveloperILImport(object):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_double
                                 attribute.eAttributeType = context.e_double
+                            elif (the_enum.name == "RL_domain"):
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_double
+                                attribute.eAttributeType = context.e_double
                             elif (the_enum.name.startswith("Real_")):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_double
@@ -602,6 +617,9 @@ class SQLDeveloperILImport(object):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_string
                                 elif the_enum.name == "Number":
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_double
+                                elif the_enum.name == "RL_domain":
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_double
 
