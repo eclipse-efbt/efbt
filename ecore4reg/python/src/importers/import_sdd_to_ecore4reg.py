@@ -579,6 +579,9 @@ class SDDImport(object):
                                         elif(the_enum.name == "Number"):
                                             operation.name = the_attribute_name
                                             operation.eType = context.e_double
+                                        elif(the_enum.name == "RL_domain"):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.e_double
                                         
                                         elif(the_enum.name.startswith("Real_")):
                                             operation.name = the_attribute_name
@@ -645,6 +648,10 @@ class SDDImport(object):
                                                 attribute.eType = context.e_date
                                                 attribute.eAttributeType = context.e_date
                                         elif(the_enum.name == "Number"):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.e_double
+                                            attribute.eAttributeType = context.e_double
+                                        elif(the_enum.name == "RL_domain"):
                                             attribute.name = the_attribute_name
                                             attribute.eType = context.e_double
                                             attribute.eAttributeType = context.e_double

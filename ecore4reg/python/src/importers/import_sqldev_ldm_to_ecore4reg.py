@@ -311,6 +311,10 @@ class SQLDevLDMImport(object):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_double
                                 attribute.eAttributeType = context.e_double
+                            elif the_enum.name == "RL_domain":
+                                attribute.name = the_attribute_name
+                                attribute.eType = context.e_double
+                                attribute.eAttributeType = context.e_double
                             elif the_enum.name.startswith("Real_"):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.e_double
@@ -351,6 +355,9 @@ class SQLDevLDMImport(object):
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_string
                                 elif the_enum.name == "Number":
+                                    operation.name = the_attribute_name
+                                    operation.eType = context.e_double
+                                elif the_enum.name == "RL_domain":
                                     operation.name = the_attribute_name
                                     operation.eType = context.e_double
 
