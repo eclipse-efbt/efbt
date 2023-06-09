@@ -49,8 +49,6 @@ class ImportSDD(object):
                     header_skipped = True
                 else:
                     code = row[context.domainDomainIDIndex]
-                    print("domain_Code")
-                    print(code)
                     data_type = row[context.domain_domain_data_type]
                     description = row[context.domain_domain_description]
                     domain_id = row[context.domain_domain_true_id]
@@ -116,8 +114,6 @@ class ImportSDD(object):
                     header_skipped = True
                 else:
                     code = row[context.memberMemberCodeIndex]
-                    print("member_Code")
-                    print(code)
                     description = row[context.member_member_descriptions]
                     domain_id = row[context.memberDomainIDIndex]
                     member_id = row[context.memberMemberIDIndex]
@@ -148,8 +144,6 @@ class ImportSDD(object):
                     header_skipped = True
                 else:
                     code = row[context.variableCodeIndex]
-                    print("variableCode")
-                    print(code)
                     description = row[context.variable_variable_description]
                     domain_id = row[context.variableDomainIndex]
                     name = row[context.variableLongNameIndex]
@@ -181,8 +175,6 @@ class ImportSDD(object):
                     header_skipped = True
                 else:
                     code = row[context.subdomain_subdomain_code]
-                    print("subdomain_Code")
-                    print(code)
                     description = row[context.subdomain_subdomain_description]
                     domain_id = row[context.subdomainDomainIDIndex]
                     name = row[context.subdomain_subdomain_name]
@@ -215,8 +207,6 @@ class ImportSDD(object):
                 else:
                     member_id = row[context.subdomain_enumerationMemberIDIndex]
                     subdomain_id = row[context.subdomain_enumerationSubdomainIDIndex]
-                    print("subdomain_id")
-                    print(subdomain_id)
 
         subdomain = ImportSDD.get_subdomain_with_id(self, context, subdomain_id)
         domain = subdomain.domain_id
@@ -240,8 +230,7 @@ class ImportSDD(object):
                     combination_code = row[context.combination_combination_code]
                     combination_id = row[context.combination_combination_id]
                     combination_name = row[context.combination_combination_name]
-                    print("combination_name")
-                    print(combination_name)
+
 
                     comb = COMBINATION()
                     

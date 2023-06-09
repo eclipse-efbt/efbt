@@ -442,7 +442,6 @@ class SQLDeveloperILImport(object):
                                     operation.lowerBound = 1
 
                         if (attribute_kind == "Logical Type"):
-                            print("Logical Type")
                             data_type_id = row[14]
                             try:
                                 datatype = context.datatype_map[data_type_id]
@@ -652,7 +651,6 @@ class SQLDeveloperILImport(object):
                                     operation.eType = the_enum
 
                         if attribute_kind == "Logical Type":
-                            print("Logical Type")
                             data_type_id = row[14]
                             try:
                                 datatype = context.datatype_map[data_type_id]
@@ -749,8 +747,6 @@ class SQLDeveloperILImport(object):
                     num_of_relations = Utils.number_of_relationships_to_this_class(
                         the_class, target_class)
                     if (num_of_relations > 0):
-                        print("numOfRelations")
-                        print(num_of_relations)
                         reference_name = reference_name + str(num_of_relations)
                     relational_attribute = None
                     if (target_optional.strip() == "Y"):

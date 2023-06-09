@@ -138,8 +138,6 @@ class MainCatagoryFinder(object):
                                 # we find the report name by looking for the second
                                 # instance of the string FINREP_
                                 report_name = axis_ordinate_id[15:axis_ordinate_id.index("_" + context.reporting_framework,10)]
-                                print("report_name")
-                                print(report_name)
                                 member_id = row[2]
                                 amemnded_report_name = Utils.make_valid_id(report_name)
                                 
