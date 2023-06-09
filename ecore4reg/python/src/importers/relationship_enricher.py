@@ -17,17 +17,6 @@ class RelationshipEnricher(object):
             upper_bound = fk_tuple[3]
             lower_bound = fk_tuple[4]
             
-            print("source_class_name")
-            print(source_class_name)
-            print("reference_name")
-            print(reference_name)
-            print("target_class_name")
-            print(target_class_name)
-            print("upper_bound")
-            print(upper_bound)
-            print("lower_bound")
-            print(lower_bound)
-            
             if context.use_codes:
                 source_class = RelationshipEnricher.get_class_from_package(self, "BIRD_" + source_class_name + "_EIL", context.input_tables_package)
                 target_class = RelationshipEnricher.get_class_from_package(self, "BIRD_" + target_class_name + "_EIL", context.input_tables_package)

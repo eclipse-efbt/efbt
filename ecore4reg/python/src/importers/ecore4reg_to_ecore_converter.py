@@ -73,9 +73,6 @@ class Ecore4regToEcoreConverter(object):
                         e_attribute = EAttribute(name=structural_feature.name)
                         e_attribute.upperBound = structural_feature.upperBound
                         e_attribute.lowerBound = structural_feature.lowerBound
-                        print("structural_feature")
-                        print(structural_feature)
-                        print(structural_feature.name)
                         type_name = structural_feature.eType.name
                         if structural_feature.iD:
                             e_attribute.iD = True
