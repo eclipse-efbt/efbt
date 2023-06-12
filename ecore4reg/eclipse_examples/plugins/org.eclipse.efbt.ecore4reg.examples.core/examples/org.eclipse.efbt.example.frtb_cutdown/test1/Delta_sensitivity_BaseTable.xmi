@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<input_layer_entities:Delta_sensitivity_BaseTable
+<input_tables:Delta_sensitivity_Table
     xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:input_layer_entities="input_layer_entities"
-    xsi:schemaLocation="input_layer_entities ../src/input_layer_entities.xcore#/EPackage">
+    xmlns:input_tables="input_tables"
+    xsi:schemaLocation="input_tables ../src/input_tables.xcore#/EPackage">
   <Delta_sensitivitys
       Risk_measure_identifier="DeltaSensitivity1"
       Currency_of_record="USD"
       Delta_sensitivity="100.0"
       Tenor="1.0">
     <theRisk_factor
-        xsi:type="input_layer_entities:GIRR_risk_factor"
-        href="GIRR_risk_factor_BaseTable.xmi#//@GIRR_risk_factors.0"/>
+        xsi:type="input_tables:GIRR_risk_factor"
+        href="GIRR_risk_factor_Table.xmi#//@GIRR_risk_factors.0"/>
     <theSecurity_or_exchange_tradable_derivative_position
-        href="Security_or_exchange_tradable_derivative_position_BaseTable.xmi#//@Security_or_exchange_tradable_derivative_positions.0"/>
+        href="Security_or_exchange_tradable_derivative_position_Table.xmi#//@Security_or_exchange_tradable_derivative_positions.0"/>
   </Delta_sensitivitys>
   <Delta_sensitivitys
       Risk_measure_identifier="DeltaSensitivity2"
@@ -22,10 +22,10 @@
       Delta_sensitivity="100.0"
       Tenor="5.0">
     <theRisk_factor
-        xsi:type="input_layer_entities:GIRR_risk_factor"
-        href="GIRR_risk_factor_BaseTable.xmi#//@GIRR_risk_factors.0"/>
+        xsi:type="input_tables:GIRR_risk_factor"
+        href="GIRR_risk_factor_Table.xmi#//@GIRR_risk_factors.0"/>
     <theSecurity_or_exchange_tradable_derivative_position
-        href="Security_or_exchange_tradable_derivative_position_BaseTable.xmi#//@Security_or_exchange_tradable_derivative_positions.0"/>
+        href="Security_or_exchange_tradable_derivative_position_Table.xmi#//@Security_or_exchange_tradable_derivative_positions.0"/>
   </Delta_sensitivitys>
   <Delta_sensitivitys
       Risk_measure_identifier="DeltaSensitivity3"
@@ -33,10 +33,10 @@
       Delta_sensitivity="400.0"
       Tenor="5.0">
     <theRisk_factor
-        xsi:type="input_layer_entities:GIRR_risk_factor"
-        href="GIRR_risk_factor_BaseTable.xmi#//@GIRR_risk_factors.0"/>
+        xsi:type="input_tables:GIRR_risk_factor"
+        href="GIRR_risk_factor_Table.xmi#//@GIRR_risk_factors.0"/>
     <theSecurity_or_exchange_tradable_derivative_position
-        href="Security_or_exchange_tradable_derivative_position_BaseTable.xmi#//@Security_or_exchange_tradable_derivative_positions.1"/>
+        href="Security_or_exchange_tradable_derivative_position_Table.xmi#//@Security_or_exchange_tradable_derivative_positions.1"/>
   </Delta_sensitivitys>
   <Delta_sensitivitys
       Risk_measure_identifier="DeltaSensitivity4"
@@ -44,9 +44,9 @@
       Delta_sensitivity="400.0"
       Tenor="5.0">
     <theRisk_factor
-        xsi:type="input_layer_entities:GIRR_risk_factor"
-        href="GIRR_risk_factor_BaseTable.xmi#//@GIRR_risk_factors.1"/>
+        xsi:type="input_tables:GIRR_risk_factor"
+        href="GIRR_risk_factor_Table.xmi#//@GIRR_risk_factors.1"/>
     <theSecurity_or_exchange_tradable_derivative_position
-        href="Security_or_exchange_tradable_derivative_position_BaseTable.xmi#//@Security_or_exchange_tradable_derivative_positions.1"/>
+        href="Security_or_exchange_tradable_derivative_position_Table.xmi#//@Security_or_exchange_tradable_derivative_positions.1"/>
   </Delta_sensitivitys>
-</input_layer_entities:Delta_sensitivity_BaseTable>
+</input_tables:Delta_sensitivity_Table>

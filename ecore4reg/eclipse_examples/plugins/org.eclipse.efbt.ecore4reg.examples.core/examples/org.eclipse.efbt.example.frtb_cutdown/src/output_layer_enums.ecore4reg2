@@ -1,1 +1,1 @@
-		 package output_layer_enums			enum Contingent_Scenario {  NA as "NA" = 20 Low_Correlation_Scenario as "Low_Correlation_Scenario" = 21 Medium_Correlation_Scenario as "Medium_Correlation_Scenario" = 22 High_Correlation_Scenario as "High_Correlation_Scenario" = 23 }			
+		 package sdd_domains			enum Contingent_Scenario {  NA as "NA" = 20 Low_Correlation_Scenario as "Low_Correlation_Scenario" = 21 Medium_Correlation_Scenario as "Medium_Correlation_Scenario" = 22 High_Correlation_Scenario as "High_Correlation_Scenario" = 23 }			
