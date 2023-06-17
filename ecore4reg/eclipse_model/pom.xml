@@ -22,7 +22,7 @@
   </prerequisites>
 	<properties>
 	 <xtextVersion>2.31.0</xtextVersion>
-		<mwe2Version>2.14.0</mwe2Version>
+		<mwe2Version>2.15.0.M0</mwe2Version>
 		<junit-version>5.0.3</junit-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
@@ -37,10 +37,11 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
+		<module>releng/org.eclipse.efbt.ecore4reg.model.target</module>
 		<module>plugins/org.eclipse.efbt.ecore4reg.model</module>
 		<module>plugins/org.eclipse.efbt.sdd.model</module>
 		<module>features/org.eclipse.efbt.ecore4reg.model.feature</module>
-		<module>releng/org.eclipse.efbt.ecore4reg.model.target</module>
+		
 	</modules>
 
 	<build>
@@ -270,12 +271,59 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<!-- This must be disabled explicitly, otherwise it is enabled by https://github.com/mojohaus/mojo-parent 
+			which is taken from exec-maven-plugin from at least version 1.6.0 -->
+		<repository>
+			<id>ossrh-snapshots</id>
+			<name>ossrh-snapshots</name>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository>
+		<repository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>codehaus-snapshots</id>
 			<name>disable dead 'Codehaus Snapshots' repository, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=481478</name>
 			<url>http://nexus.codehaus.org/snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>ossrh-snapshots</id>
+			<name>ossrh-snapshots</name>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
