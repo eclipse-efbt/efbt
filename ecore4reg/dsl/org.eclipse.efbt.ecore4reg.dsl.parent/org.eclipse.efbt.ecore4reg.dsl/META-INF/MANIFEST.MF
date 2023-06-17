@@ -6,9 +6,22 @@ Bundle-Vendor: Eclipse Free BIRD Tools
 Bundle-Version: 1.1.0.qualifier
 Bundle-SymbolicName: org.eclipse.efbt.ecore4reg.dsl; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.efbt.ecore4reg.model,
+Require-Bundle: org.eclipse.efbt.ecore4reg.model;bundle-version="1.1.0",
  org.eclipse.emf.ecore,
  org.eclipse.xtext,
  org.eclipse.xtext.xbase,
- org.eclipse.equinox.common;bundle-version="3.5.0"
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.eclipse.efbt.ecore4reg.dsl.serializer,
+ org.eclipse.efbt.ecore4reg.dsl.generator,
+ org.eclipse.efbt.ecore4reg.dsl.services,
+ org.eclipse.efbt.ecore4reg.dsl.parser.antlr.internal,
+ org.eclipse.efbt.ecore4reg.dsl.parser.antlr,
+ org.eclipse.efbt.ecore4reg.dsl,
+ org.eclipse.efbt.ecore4reg.dsl.validation,
+ org.eclipse.efbt.ecore4reg.dsl.formatting2,
+ org.eclipse.efbt.ecore4reg.dsl.scoping
+Import-Package: org.apache.log4j
