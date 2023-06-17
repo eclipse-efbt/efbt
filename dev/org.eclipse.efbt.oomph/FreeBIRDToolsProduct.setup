@@ -85,7 +85,7 @@
       value="${installation.location/}${installation.relativeProductFolder}"/>
   <version name="latest"
       label="Latest"
-      requiredJavaVersion="11">
+      requiredJavaVersion="17">
     <setupTask
         xsi:type="setup:CompoundTask"
         name="User Preferences">
@@ -205,13 +205,13 @@
       <requirement
           name="org.python.pydev.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/releases/2023-03"/>
+          url="http://download.eclipse.org/releases/2023-06"/>
       <repository
-          url="http://download.eclipse.org/technology/epp/packages/2023-03"/>
+          url="http://download.eclipse.org/technology/epp/packages/2023-06"/>
       <repository
           url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
       <repository
-          url="https://download.eclipse.org/tools/orbit/downloads/2023-03"/>
+          url="https://download.eclipse.org/tools/orbit/downloads/2023-06"/>
       <repository
           url="https://download.eclipse.org/efbt/snapshots/"/>
       <repository
