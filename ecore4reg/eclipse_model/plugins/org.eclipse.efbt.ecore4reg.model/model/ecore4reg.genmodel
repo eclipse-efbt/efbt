@@ -84,6 +84,9 @@
     <genClasses ecoreClass="ecore4reg.ecore#//SelectColumnAttributeAs">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//SelectColumnAttributeAs/attribute"/>
     </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//SelectDerivedColumnAs">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//SelectDerivedColumnAs/attribute"/>
+    </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//SelectValueAs">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//SelectValueAs/value"/>
     </genClasses>
@@ -132,7 +135,9 @@
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELOperation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELOperation/body"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ELOperation/eParameters"/>
     </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ELParameter"/>
     <genClasses ecoreClass="ecore4reg.ecore#//ELPackage">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ELPackage/eClassifiers"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELPackage/nsURI"/>

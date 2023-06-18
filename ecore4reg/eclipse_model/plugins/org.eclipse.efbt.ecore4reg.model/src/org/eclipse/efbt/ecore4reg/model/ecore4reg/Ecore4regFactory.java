@@ -175,6 +175,15 @@ public interface Ecore4regFactory extends EFactory {
 	SelectColumnAttributeAs createSelectColumnAttributeAs();
 
 	/**
+	 * Returns a new object of class '<em>Select Derived Column As</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Select Derived Column As</em>'.
+	 * @generated
+	 */
+	SelectDerivedColumnAs createSelectDerivedColumnAs();
+
+	/**
 	 * Returns a new object of class '<em>Select Value As</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -263,6 +272,15 @@ public interface Ecore4regFactory extends EFactory {
 	 * @generated
 	 */
 	ELOperation createELOperation();
+
+	/**
+	 * Returns a new object of class '<em>EL Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EL Parameter</em>'.
+	 * @generated
+	 */
+	ELParameter createELParameter();
 
 	/**
 	 * Returns a new object of class '<em>EL Package</em>'.

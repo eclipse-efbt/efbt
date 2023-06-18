@@ -14,6 +14,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELModelElement;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELNamedElement;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELReference;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStructuralFeature;
@@ -36,6 +37,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.RulesForReport;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumn;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumnAttributeAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumnMemberAs;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectValueAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Tag;
@@ -193,6 +195,10 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 				return createSelectColumnAttributeAsAdapter();
 			}
 			@Override
+			public Adapter caseSelectDerivedColumnAs(SelectDerivedColumnAs object) {
+				return createSelectDerivedColumnAsAdapter();
+			}
+			@Override
 			public Adapter caseSelectValueAs(SelectValueAs object) {
 				return createSelectValueAsAdapter();
 			}
@@ -243,6 +249,10 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseELOperation(ELOperation object) {
 				return createELOperationAdapter();
+			}
+			@Override
+			public Adapter caseELParameter(ELParameter object) {
+				return createELParameterAdapter();
 			}
 			@Override
 			public Adapter caseELPackage(ELPackage object) {
@@ -609,6 +619,20 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs <em>Select Derived Column As</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs
+	 * @generated
+	 */
+	public Adapter createSelectDerivedColumnAsAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectValueAs <em>Select Value As</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -787,6 +811,20 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createELOperationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter <em>EL Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter
+	 * @generated
+	 */
+	public Adapter createELParameterAdapter() {
 		return null;
 	}
 

@@ -12,6 +12,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELEnum;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELEnumLiteral;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELReference;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regFactory;
@@ -32,6 +33,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.RulesForReport;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumn;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumnAttributeAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumnMemberAs;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectValueAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Tag;
@@ -123,6 +125,7 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 			case Ecore4regPackage.SELECT_COLUMN: return createSelectColumn();
 			case Ecore4regPackage.SELECT_COLUMN_MEMBER_AS: return createSelectColumnMemberAs();
 			case Ecore4regPackage.SELECT_COLUMN_ATTRIBUTE_AS: return createSelectColumnAttributeAs();
+			case Ecore4regPackage.SELECT_DERIVED_COLUMN_AS: return createSelectDerivedColumnAs();
 			case Ecore4regPackage.SELECT_VALUE_AS: return createSelectValueAs();
 			case Ecore4regPackage.TABLE_FILTER: return createTableFilter();
 			case Ecore4regPackage.GENERATION_RULES_MODULE: return createGenerationRulesModule();
@@ -133,6 +136,7 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 			case Ecore4regPackage.EL_ENUM: return createELEnum();
 			case Ecore4regPackage.EL_ENUM_LITERAL: return createELEnumLiteral();
 			case Ecore4regPackage.EL_OPERATION: return createELOperation();
+			case Ecore4regPackage.EL_PARAMETER: return createELParameter();
 			case Ecore4regPackage.EL_PACKAGE: return createELPackage();
 			case Ecore4regPackage.EL_REFERENCE: return createELReference();
 			case Ecore4regPackage.EL_ANNOTATION: return createELAnnotation();
@@ -364,6 +368,16 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public SelectDerivedColumnAs createSelectDerivedColumnAs() {
+		SelectDerivedColumnAsImpl selectDerivedColumnAs = new SelectDerivedColumnAsImpl();
+		return selectDerivedColumnAs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public SelectValueAs createSelectValueAs() {
 		SelectValueAsImpl selectValueAs = new SelectValueAsImpl();
 		return selectValueAs;
@@ -457,6 +471,16 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 	public ELOperation createELOperation() {
 		ELOperationImpl elOperation = new ELOperationImpl();
 		return elOperation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ELParameter createELParameter() {
+		ELParameterImpl elParameter = new ELParameterImpl();
+		return elParameter;
 	}
 
 	/**

@@ -89,6 +89,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnAttributeAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//ELAttribute"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectDerivedColumnAs" eSuperTypes="#//SelectColumn">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//ELOperation"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectValueAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
@@ -157,7 +160,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ELOperation" eSuperTypes="#//ELTypedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eParameters" upperBound="-1"
+        eType="#//ELParameter" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ELParameter" eSuperTypes="#//ELTypedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="ELPackage" eSuperTypes="#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="eClassifiers" upperBound="-1"
         eType="#//ELClassifier" containment="true" eOpposite="#//ELClassifier/package"/>

@@ -1030,6 +1030,52 @@ public interface Ecore4regPackage extends EPackage {
 	int SELECT_COLUMN_ATTRIBUTE_AS_OPERATION_COUNT = SELECT_COLUMN_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.SelectDerivedColumnAsImpl <em>Select Derived Column As</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.SelectDerivedColumnAsImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getSelectDerivedColumnAs()
+	 * @generated
+	 */
+	int SELECT_DERIVED_COLUMN_AS = 18;
+
+	/**
+	 * The feature id for the '<em><b>As Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_DERIVED_COLUMN_AS__AS_ATTRIBUTE = SELECT_COLUMN__AS_ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_DERIVED_COLUMN_AS__ATTRIBUTE = SELECT_COLUMN_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Select Derived Column As</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_DERIVED_COLUMN_AS_FEATURE_COUNT = SELECT_COLUMN_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Select Derived Column As</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SELECT_DERIVED_COLUMN_AS_OPERATION_COUNT = SELECT_COLUMN_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.SelectValueAsImpl <em>Select Value As</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1037,7 +1083,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getSelectValueAs()
 	 * @generated
 	 */
-	int SELECT_VALUE_AS = 18;
+	int SELECT_VALUE_AS = 19;
 
 	/**
 	 * The feature id for the '<em><b>As Attribute</b></em>' reference.
@@ -1083,7 +1129,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getTableFilter()
 	 * @generated
 	 */
-	int TABLE_FILTER = 19;
+	int TABLE_FILTER = 20;
 
 	/**
 	 * The feature id for the '<em><b>Attribute1</b></em>' reference.
@@ -1147,7 +1193,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getGenerationRulesModule()
 	 * @generated
 	 */
-	int GENERATION_RULES_MODULE = 20;
+	int GENERATION_RULES_MODULE = 21;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -1238,7 +1284,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getRuleForILTablePart()
 	 * @generated
 	 */
-	int RULE_FOR_IL_TABLE_PART = 21;
+	int RULE_FOR_IL_TABLE_PART = 22;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1293,7 +1339,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELModelElement()
 	 * @generated
 	 */
-	int EL_MODEL_ELEMENT = 28;
+	int EL_MODEL_ELEMENT = 29;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1330,7 +1376,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELNamedElement()
 	 * @generated
 	 */
-	int EL_NAMED_ELEMENT = 29;
+	int EL_NAMED_ELEMENT = 30;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1376,7 +1422,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELTypedElement()
 	 * @generated
 	 */
-	int EL_TYPED_ELEMENT = 34;
+	int EL_TYPED_ELEMENT = 36;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1449,7 +1495,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELStructuralFeature()
 	 * @generated
 	 */
-	int EL_STRUCTURAL_FEATURE = 33;
+	int EL_STRUCTURAL_FEATURE = 35;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1522,7 +1568,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELAttribute()
 	 * @generated
 	 */
-	int EL_ATTRIBUTE = 22;
+	int EL_ATTRIBUTE = 23;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1613,7 +1659,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELClassifier()
 	 * @generated
 	 */
-	int EL_CLASSIFIER = 24;
+	int EL_CLASSIFIER = 25;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1668,7 +1714,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELClass()
 	 * @generated
 	 */
-	int EL_CLASS = 23;
+	int EL_CLASS = 24;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1759,7 +1805,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELDataType()
 	 * @generated
 	 */
-	int EL_DATA_TYPE = 25;
+	int EL_DATA_TYPE = 26;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1823,7 +1869,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELEnum()
 	 * @generated
 	 */
-	int EL_ENUM = 26;
+	int EL_ENUM = 27;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1896,7 +1942,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELEnumLiteral()
 	 * @generated
 	 */
-	int EL_ENUM_LITERAL = 27;
+	int EL_ENUM_LITERAL = 28;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1960,7 +2006,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELOperation()
 	 * @generated
 	 */
-	int EL_OPERATION = 30;
+	int EL_OPERATION = 31;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2017,13 +2063,22 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_OPERATION__BODY = EL_TYPED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_OPERATION__EPARAMETERS = EL_TYPED_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>EL Operation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_OPERATION_FEATURE_COUNT = EL_TYPED_ELEMENT_FEATURE_COUNT + 1;
+	int EL_OPERATION_FEATURE_COUNT = EL_TYPED_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>EL Operation</em>' class.
@@ -2035,6 +2090,79 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_OPERATION_OPERATION_COUNT = EL_TYPED_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELParameterImpl <em>EL Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELParameterImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELParameter()
+	 * @generated
+	 */
+	int EL_PARAMETER = 32;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PARAMETER__EANNOTATIONS = EL_TYPED_ELEMENT__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PARAMETER__NAME = EL_TYPED_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PARAMETER__ETYPE = EL_TYPED_ELEMENT__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PARAMETER__UPPER_BOUND = EL_TYPED_ELEMENT__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PARAMETER__LOWER_BOUND = EL_TYPED_ELEMENT__LOWER_BOUND;
+
+	/**
+	 * The number of structural features of the '<em>EL Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PARAMETER_FEATURE_COUNT = EL_TYPED_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>EL Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PARAMETER_OPERATION_COUNT = EL_TYPED_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELPackageImpl <em>EL Package</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2042,7 +2170,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELPackage()
 	 * @generated
 	 */
-	int EL_PACKAGE = 31;
+	int EL_PACKAGE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -2151,7 +2279,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELReference()
 	 * @generated
 	 */
-	int EL_REFERENCE = 32;
+	int EL_REFERENCE = 34;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2242,7 +2370,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELAnnotation()
 	 * @generated
 	 */
-	int EL_ANNOTATION = 35;
+	int EL_ANNOTATION = 37;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2297,7 +2425,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELStringToStringMapEntry()
 	 * @generated
 	 */
-	int EL_STRING_TO_STRING_MAP_ENTRY = 36;
+	int EL_STRING_TO_STRING_MAP_ENTRY = 38;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -2343,7 +2471,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLEnrichedCube()
 	 * @generated
 	 */
-	int VTL_ENRICHED_CUBE = 37;
+	int VTL_ENRICHED_CUBE = 39;
 
 	/**
 	 * The feature id for the '<em><b>Transformations</b></em>' reference list.
@@ -2380,7 +2508,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedOutputlayer()
 	 * @generated
 	 */
-	int VTL_GENERATED_OUTPUTLAYER = 38;
+	int VTL_GENERATED_OUTPUTLAYER = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2444,7 +2572,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForOutputLayerAndIntermediateLayerCombination()
 	 * @generated
 	 */
-	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION = 39;
+	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION = 41;
 
 	/**
 	 * The feature id for the '<em><b>Transformations</b></em>' reference list.
@@ -2508,7 +2636,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedIntermediateLayer()
 	 * @generated
 	 */
-	int VTL_GENERATED_INTERMEDIATE_LAYER = 40;
+	int VTL_GENERATED_INTERMEDIATE_LAYER = 42;
 
 	/**
 	 * The feature id for the '<em><b>Dependant enriched cubes</b></em>' reference.
@@ -2572,7 +2700,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLTransformation()
 	 * @generated
 	 */
-	int VTL_TRANSFORMATION = 41;
+	int VTL_TRANSFORMATION = 43;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -2636,7 +2764,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLScheme()
 	 * @generated
 	 */
-	int VTL_SCHEME = 42;
+	int VTL_SCHEME = 44;
 
 	/**
 	 * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -2682,7 +2810,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForSelectionLayer()
 	 * @generated
 	 */
-	int VTL_FOR_SELECTION_LAYER = 43;
+	int VTL_FOR_SELECTION_LAYER = 45;
 
 	/**
 	 * The feature id for the '<em><b>Selection Layer</b></em>' reference.
@@ -2737,7 +2865,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLModule()
 	 * @generated
 	 */
-	int VTL_MODULE = 44;
+	int VTL_MODULE = 46;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -2882,7 +3010,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getEntityToVTLIntermediateLayerLink()
 	 * @generated
 	 */
-	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK = 45;
+	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK = 47;
 
 	/**
 	 * The feature id for the '<em><b>VTL Intermediate Layer</b></em>' reference.
@@ -2937,7 +3065,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForView()
 	 * @generated
 	 */
-	int VTL_FOR_VIEW = 46;
+	int VTL_FOR_VIEW = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2992,7 +3120,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedOutputlayerModule()
 	 * @generated
 	 */
-	int VTL_GENERATED_OUTPUTLAYER_MODULE = 47;
+	int VTL_GENERATED_OUTPUTLAYER_MODULE = 49;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3083,7 +3211,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForOutputLayerAndIntermediateLayerCombinationModule()
 	 * @generated
 	 */
-	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION_MODULE = 48;
+	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION_MODULE = 50;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3174,7 +3302,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedIntermediateLayerModule()
 	 * @generated
 	 */
-	int VTL_GENERATED_INTERMEDIATE_LAYER_MODULE = 49;
+	int VTL_GENERATED_INTERMEDIATE_LAYER_MODULE = 51;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3265,7 +3393,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLSchemesModule()
 	 * @generated
 	 */
-	int VTL_SCHEMES_MODULE = 50;
+	int VTL_SCHEMES_MODULE = 52;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3356,7 +3484,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForSelectionLayerModule()
 	 * @generated
 	 */
-	int VTL_FOR_SELECTION_LAYER_MODULE = 51;
+	int VTL_FOR_SELECTION_LAYER_MODULE = 53;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3447,7 +3575,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getEntityToVTLIntermediateLayerLinkModule()
 	 * @generated
 	 */
-	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK_MODULE = 52;
+	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK_MODULE = 54;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3538,7 +3666,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForViewModule()
 	 * @generated
 	 */
-	int VTL_FOR_VIEW_MODULE = 53;
+	int VTL_FOR_VIEW_MODULE = 55;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3629,7 +3757,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getComparitor()
 	 * @generated
 	 */
-	int COMPARITOR = 54;
+	int COMPARITOR = 56;
 
 
 	/**
@@ -4187,6 +4315,27 @@ public interface Ecore4regPackage extends EPackage {
 	EReference getSelectColumnAttributeAs_Attribute();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs <em>Select Derived Column As</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Select Derived Column As</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs
+	 * @generated
+	 */
+	EClass getSelectDerivedColumnAs();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs#getAttribute <em>Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Attribute</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs#getAttribute()
+	 * @see #getSelectDerivedColumnAs()
+	 * @generated
+	 */
+	EReference getSelectDerivedColumnAs_Attribute();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectValueAs <em>Select Value As</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4568,6 +4717,27 @@ public interface Ecore4regPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getELOperation_Body();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation#getEParameters <em>EParameters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>EParameters</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation#getEParameters()
+	 * @see #getELOperation()
+	 * @generated
+	 */
+	EReference getELOperation_EParameters();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter <em>EL Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>EL Parameter</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter
+	 * @generated
+	 */
+	EClass getELParameter();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage <em>EL Package</em>}'.
