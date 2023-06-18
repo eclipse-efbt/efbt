@@ -18,7 +18,7 @@ import "http://www.eclipse.org/efbt/ecore4reg" as ecore4reg
 
 
 Module returns ecore4reg::Module:
-	Module_Impl | RequirementsModule | TagGroup | GenerationRulesModule | ELPackage;
+	RequirementsModule | TagGroup | GenerationRulesModule | ELPackage;
 	
 ELClassifier returns ecore4reg::ELClassifier:
 	ELClass | ELDataType_Impl | ELEnum ;
@@ -167,15 +167,7 @@ AllowedTypes returns ecore4reg::AllowedTypes:
 
 
 
-Module_Impl returns ecore4reg::Module:
-	{ecore4reg::Module}
-	'Module'
-	name=QualifiedName
-	(imports += Import)*
-	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
-		
-	'}';
+
 
 TagGroup returns ecore4reg::TagGroup:
 	{ecore4reg::TagGroup}
