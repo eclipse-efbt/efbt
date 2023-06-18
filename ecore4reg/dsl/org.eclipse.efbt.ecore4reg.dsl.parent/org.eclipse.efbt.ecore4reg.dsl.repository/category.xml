@@ -12,7 +12,7 @@
        Neil Mackenzie - initial API and implementation
  -->
 <site>
-   <feature id="org.eclipse.efbt.ecore4reg.dsl.feature" version="1.1.0">
+   <feature id="org.eclipse.efbt.ecore4reg.dsl.feature" version="1.2.0">
       <category name="main"/>
    </feature>
    <category-def name="main" label="ecore4reg"/>
