@@ -75,7 +75,11 @@ class Ecore4RegGenerator extends AbstractGenerator {
 		«FOR eloperation : elclass.EOperations»
 		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»
 			{
-						 	«IF eloperation.body !== null »«findXCoreSubstring(eloperation.body)»«ENDIF»
+		«IF eloperation.body !== null »          «findXCoreSubstring(eloperation.body)»
+		«ELSEIF eloperation.EType.name == "double" »        return 0
+		«ELSEIF eloperation.EType.name == "int" »        return 0
+		«ELSEIF eloperation.EType.name == "boolean" »        return true
+			«ENDIF»
 			}
 			«ENDIF»«ENDFOR» 
 		}
