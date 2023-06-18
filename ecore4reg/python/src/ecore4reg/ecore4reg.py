@@ -608,6 +608,18 @@ class SelectColumnAttributeAs(SelectColumn):
             self.attribute = attribute
 
 
+class SelectDerivedColumnAs(SelectColumn):
+
+    attribute = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, attribute=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if attribute is not None:
+            self.attribute = attribute
+
+
 class SelectValueAs(SelectColumn):
 
     value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
@@ -902,13 +914,24 @@ class ELDataType(ELClassifier):
 class ELOperation(ELTypedElement):
 
     body = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    eParameters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, body=None, **kwargs):
+    def __init__(self, *, body=None, eParameters=None, **kwargs):
 
         super().__init__(**kwargs)
 
         if body is not None:
             self.body = body
+
+        if eParameters:
+            self.eParameters.extend(eParameters)
+
+
+class ELParameter(ELTypedElement):
+
+    def __init__(self, **kwargs):
+
+        super().__init__(**kwargs)
 
 
 @abstract
