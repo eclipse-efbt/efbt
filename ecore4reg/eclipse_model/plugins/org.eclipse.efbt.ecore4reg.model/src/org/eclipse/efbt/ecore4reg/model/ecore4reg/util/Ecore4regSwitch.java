@@ -14,6 +14,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELModelElement;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELNamedElement;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELReference;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStructuralFeature;
@@ -36,6 +37,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.RulesForReport;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumn;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumnAttributeAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumnMemberAs;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectValueAs;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Tag;
@@ -235,6 +237,13 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Ecore4regPackage.SELECT_DERIVED_COLUMN_AS: {
+				SelectDerivedColumnAs selectDerivedColumnAs = (SelectDerivedColumnAs)theEObject;
+				T result = caseSelectDerivedColumnAs(selectDerivedColumnAs);
+				if (result == null) result = caseSelectColumn(selectDerivedColumnAs);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case Ecore4regPackage.SELECT_VALUE_AS: {
 				SelectValueAs selectValueAs = (SelectValueAs)theEObject;
 				T result = caseSelectValueAs(selectValueAs);
@@ -334,6 +343,15 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 				if (result == null) result = caseELTypedElement(elOperation);
 				if (result == null) result = caseELNamedElement(elOperation);
 				if (result == null) result = caseELModelElement(elOperation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.EL_PARAMETER: {
+				ELParameter elParameter = (ELParameter)theEObject;
+				T result = caseELParameter(elParameter);
+				if (result == null) result = caseELTypedElement(elParameter);
+				if (result == null) result = caseELNamedElement(elParameter);
+				if (result == null) result = caseELModelElement(elParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -769,6 +787,21 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Select Derived Column As</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Select Derived Column As</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSelectDerivedColumnAs(SelectDerivedColumnAs object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Select Value As</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -960,6 +993,21 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseELOperation(ELOperation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EL Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EL Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseELParameter(ELParameter object) {
 		return null;
 	}
 

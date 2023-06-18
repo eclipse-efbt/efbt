@@ -69,13 +69,17 @@ class Ecore4RegGenerator extends AbstractGenerator {
 		«FOR elclass : elpackage.EClassifiers.filter(ELClass)»
 		«IF elclass.abstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
 		«FOR elmember : elclass.EStructuralFeatures»  
-		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && (elmember.upperBound == 1)) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
-		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && (elmember.upperBound == 1)) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
+		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
+		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
 		«ENDFOR»
 		«FOR eloperation : elclass.EOperations»
-		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && (eloperation.upperBound == 1)) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»() 
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»
 			{
-			 	«IF eloperation.body !== null »«findXCoreSubstring(eloperation.body)»«ENDIF»
+		«IF eloperation.body !== null »          «findXCoreSubstring(eloperation.body)»
+		«ELSEIF eloperation.EType.name == "double" »        return 0
+		«ELSEIF eloperation.EType.name == "int" »        return 0
+		«ELSEIF eloperation.EType.name == "boolean" »        return true
+			«ENDIF»
 			}
 			«ENDIF»«ENDFOR» 
 		}
@@ -233,6 +237,24 @@ class Ecore4RegGenerator extends AbstractGenerator {
 						dependantEcorePackage = processPackage(dependantELPackage,fsa)
 					}
 					e_operation.EAnnotations.add(annotation)
+					
+					for (param : operation.EParameters ) {
+						var e_param = EcoreFactory.eINSTANCE.createEParameter()
+						e_param.name = param.name
+						e_operation.EParameters.add(e_param)
+						var param_type_name = param.EType.name
+						// var types_package = operation.EType.package.name
+						var param_annotation = EcoreFactory.eINSTANCE.createEAnnotation()
+						param_annotation.source = "temp"
+						param_annotation.details.put("type_name", param_type_name)
+						var param_types_package = param.EType.package
+						if ((dependantELPackage === null) && (param_types_package != elpackage) && (param_types_package !== null) && (param_types_package.name != "types")) {
+							dependantELPackage = param_types_package
+							dependantEcorePackage = processPackage(dependantELPackage,fsa)
+						}
+						e_param.EAnnotations.add(param_annotation)
+						
+					}
 
 					
 				}
@@ -309,6 +331,34 @@ class Ecore4RegGenerator extends AbstractGenerator {
 						operation.EType = eEnum
 					}
 					operation.EAnnotations.remove(0)
+					for (param : operation.EParameters) {
+						var firstParamAnnotation = param.EAnnotations.get(0)
+						var paramAttributeDetails = firstParamAnnotation.details
+						var paramTypeName = paramAttributeDetails.get("type_name")
+						// var operationTypePackageName = attributeDetails.get("types_package")
+						var paramTypesClass = findClass(ecore_package, dependantEcorePackage, paramTypeName)
+						if (paramTypesClass !== null) {
+							param.EType = paramTypesClass
+						} else if (paramTypeName == 'double') {
+							param.EType = EcorePackage.Literals.EDOUBLE
+						} else if (paramTypeName == 'String') {
+							param.EType = EcorePackage.Literals.ESTRING
+						} else if (paramTypeName == 'String') {
+							param.EType = EcorePackage.Literals.ESTRING
+						} else if (paramTypeName == 'int') {
+							param.EType = EcorePackage.Literals.EINT
+						} else if (paramTypeName == 'Date') {
+							param.EType = EcorePackage.Literals.EDATE
+						} else if (paramTypeName == 'boolean') {
+							param.EType = EcorePackage.Literals.EBOOLEAN
+						} else {
+							var eEnum = findEnum(ecore_package, dependantEcorePackage, paramTypeName)
+							param.EType = eEnum
+							
+						param.EAnnotations.remove(0)
+					}
+					}
+					
 				}
 
 			}

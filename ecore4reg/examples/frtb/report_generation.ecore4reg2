@@ -58,7 +58,7 @@ SPDX-License-Identifier: EPL-2.0
 						SelectValue "0" as  output_tables.C91_REF_OutputItem.Own_Funds_Requirements
 						SelectMember il_domains.Position_In_The_Instrument.NA as  output_tables.C91_REF_OutputItem.Position_In_The_Instrument
 						SelectMember il_domains.Prudential_Portfolio.Banking_And_Trading_Book as output_tables.C91_REF_OutputItem.Prudentia_lPortfolio
-						SelectAttribute input_tables.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities as output_tables.C91_REF_OutputItem.Sensitivity_To_Delta_Risk_Factors 
+						SelectDerivedAttribute input_tables.Netted_delta_sensitivities_per_risk_factor_and_tenor_derived.netted_delta_sensitivities as output_tables.C91_REF_OutputItem.Sensitivity_To_Delta_Risk_Factors 
 						SelectMember  il_domains.Type_And_Nature_Of_Sensitivity.Sensitivity_Net_Per_Risk_Class_Unweighted as output_tables.C91_REF_OutputItem.Type_And_Nature_Of_Sensitivity
 						SelectMember  il_domains.Type_Of_Risk.GIRR as output_tables.C91_REF_OutputItem.Type_Of_Risk
 					}

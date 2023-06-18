@@ -33,7 +33,7 @@ RequirementsSection returns ecore4reg::RequirementsSection:
 
 
 SelectColumn returns ecore4reg::SelectColumn:
-	 SelectColumnMemberAs | SelectColumnAttributeAs | SelectValueAs;
+	 SelectColumnMemberAs | SelectColumnAttributeAs | SelectDerivedColumnAs | SelectValueAs;
 
 
 
@@ -101,9 +101,15 @@ ELOperation returns ecore4reg::ELOperation:
 	'op'
 	eType=[ecore4reg::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
-	'()'
+	'(' (eParameters+=ELParameter (',' eParameters+=ELParameter)*)? ')'
 	'{'(body=EString)?'}'
 	;
+
+ELParameter returns ecore4reg::ELParameter:
+
+    eType=[ecore4reg::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+    name=ID
+;
 
 ELReference returns ecore4reg::ELReference:
 	{ecore4reg::ELReference}
@@ -287,6 +293,13 @@ SelectColumnAttributeAs returns ecore4reg::SelectColumnAttributeAs:
 	{ecore4reg::SelectColumnAttributeAs}
 	'SelectAttribute'
 		( attribute=[ecore4reg::ELAttribute|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
+	;
+	
+SelectDerivedColumnAs returns ecore4reg::SelectDerivedColumnAs:
+	{ecore4reg::SelectDerivedColumnAs}
+	'SelectDerivedAttribute'
+		( attribute=[ecore4reg::ELOperation|QualifiedName])?
 		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
 	;
 	
