@@ -12,7 +12,7 @@ package org.eclipse.efbt.ecore4reg.model.ecore4reg;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getPackage <em>Package</em>}</li>
+ *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getEPackage <em>EPackage</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getELClassifier()
@@ -21,16 +21,16 @@ package org.eclipse.efbt.ecore4reg.model.ecore4reg;
  */
 public interface ELClassifier extends ELNamedElement {
 	/**
-	 * Returns the value of the '<em><b>Package</b></em>' container reference.
+	 * Returns the value of the '<em><b>EPackage</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage#getEClassifiers <em>EClassifiers</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Package</em>' container reference.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getELClassifier_Package()
+	 * @return the value of the '<em>EPackage</em>' container reference.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getELClassifier_EPackage()
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage#getEClassifiers
 	 * @model opposite="eClassifiers" changeable="false"
 	 * @generated
 	 */
-	ELPackage getPackage();
+	ELPackage getEPackage();
 
 } // ELClassifier

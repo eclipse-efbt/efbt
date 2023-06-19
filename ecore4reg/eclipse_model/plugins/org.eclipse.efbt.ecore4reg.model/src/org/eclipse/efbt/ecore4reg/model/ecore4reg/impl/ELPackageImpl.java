@@ -113,7 +113,7 @@ public class ELPackageImpl extends ModuleImpl implements ELPackage {
 	 */
 	public EList<ELClassifier> getEClassifiers() {
 		if (eClassifiers == null) {
-			eClassifiers = new EObjectContainmentWithInverseEList<ELClassifier>(ELClassifier.class, this, Ecore4regPackage.EL_PACKAGE__ECLASSIFIERS, Ecore4regPackage.EL_CLASSIFIER__PACKAGE);
+			eClassifiers = new EObjectContainmentWithInverseEList<ELClassifier>(ELClassifier.class, this, Ecore4regPackage.EL_PACKAGE__ECLASSIFIERS, Ecore4regPackage.EL_CLASSIFIER__EPACKAGE);
 		}
 		return eClassifiers;
 	}

@@ -13,7 +13,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#isAbstract <em>Abstract</em>}</li>
+ *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#isEAbstract <em>EAbstract</em>}</li>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#getESuperTypes <em>ESuper Types</em>}</li>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#getEStructuralFeatures <em>EStructural Features</em>}</li>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#getEOperations <em>EOperations</em>}</li>
@@ -25,26 +25,26 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface ELClass extends ELClassifier {
 	/**
-	 * Returns the value of the '<em><b>Abstract</b></em>' attribute.
+	 * Returns the value of the '<em><b>EAbstract</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Abstract</em>' attribute.
-	 * @see #setAbstract(boolean)
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getELClass_Abstract()
+	 * @return the value of the '<em>EAbstract</em>' attribute.
+	 * @see #setEAbstract(boolean)
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getELClass_EAbstract()
 	 * @model
 	 * @generated
 	 */
-	boolean isAbstract();
+	boolean isEAbstract();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#isAbstract <em>Abstract</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#isEAbstract <em>EAbstract</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Abstract</em>' attribute.
-	 * @see #isAbstract()
+	 * @param value the new value of the '<em>EAbstract</em>' attribute.
+	 * @see #isEAbstract()
 	 * @generated
 	 */
-	void setAbstract(boolean value);
+	void setEAbstract(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>ESuper Types</b></em>' reference list.

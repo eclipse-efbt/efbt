@@ -1,0 +1,60 @@
+package generation_rules
+
+import ecore_lite.*
+import types.*
+import module_management.*
+
+
+class RulesForReport {
+	refers ELClass outputLayerCube
+	contains RulesForILTable[] rulesForTable
+}
+
+class RulesForILTable {
+	contains RuleForILTablePart[] rulesForTablePart
+	refers ELClass inputLayerTable
+}
+
+class SelectColumn {
+	refers ELOperation asAttribute
+}
+
+class SelectColumnMemberAs extends SelectColumn {
+	refers ELEnumLiteral memberAsConstant
+}
+
+class SelectColumnAttributeAs extends SelectColumn {
+	refers ELAttribute attribute
+}
+
+class SelectDerivedColumnAs extends SelectColumn {
+	refers ELOperation attribute
+}
+
+class SelectValueAs extends SelectColumn {
+	String value
+}
+
+enum Comparitor {
+	less_than 
+	equals = 1
+	greater_than = 2
+	not_equals = 3
+}
+
+class TableFilter {
+	refers ELAttribute attribute1
+	Comparitor comparitor
+	refers ELEnumLiteral member
+	String value
+}
+
+class GenerationRulesModule extends Module {
+	contains RulesForReport[] rulesForReport
+}
+
+class RuleForILTablePart {
+	String name
+	contains SelectColumn[] columns
+	contains TableFilter[] whereClause
+}

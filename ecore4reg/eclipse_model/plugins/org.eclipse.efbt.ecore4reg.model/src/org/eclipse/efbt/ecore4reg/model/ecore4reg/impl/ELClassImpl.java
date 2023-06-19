@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELClassImpl#isAbstract <em>Abstract</em>}</li>
+ *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELClassImpl#isEAbstract <em>EAbstract</em>}</li>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELClassImpl#getESuperTypes <em>ESuper Types</em>}</li>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELClassImpl#getEStructuralFeatures <em>EStructural Features</em>}</li>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELClassImpl#getEOperations <em>EOperations</em>}</li>
@@ -41,24 +41,24 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	/**
-	 * The default value of the '{@link #isAbstract() <em>Abstract</em>}' attribute.
+	 * The default value of the '{@link #isEAbstract() <em>EAbstract</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isAbstract()
+	 * @see #isEAbstract()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean ABSTRACT_EDEFAULT = false;
+	protected static final boolean EABSTRACT_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isAbstract() <em>Abstract</em>}' attribute.
+	 * The cached value of the '{@link #isEAbstract() <em>EAbstract</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isAbstract()
+	 * @see #isEAbstract()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean abstract_ = ABSTRACT_EDEFAULT;
+	protected boolean eAbstract = EABSTRACT_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getESuperTypes() <em>ESuper Types</em>}' reference list.
@@ -114,8 +114,8 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isAbstract() {
-		return abstract_;
+	public boolean isEAbstract() {
+		return eAbstract;
 	}
 
 	/**
@@ -123,11 +123,11 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAbstract(boolean newAbstract) {
-		boolean oldAbstract = abstract_;
-		abstract_ = newAbstract;
+	public void setEAbstract(boolean newEAbstract) {
+		boolean oldEAbstract = eAbstract;
+		eAbstract = newEAbstract;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.EL_CLASS__ABSTRACT, oldAbstract, abstract_));
+			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.EL_CLASS__EABSTRACT, oldEAbstract, eAbstract));
 	}
 
 	/**
@@ -208,8 +208,8 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Ecore4regPackage.EL_CLASS__ABSTRACT:
-				return isAbstract();
+			case Ecore4regPackage.EL_CLASS__EABSTRACT:
+				return isEAbstract();
 			case Ecore4regPackage.EL_CLASS__ESUPER_TYPES:
 				return getESuperTypes();
 			case Ecore4regPackage.EL_CLASS__ESTRUCTURAL_FEATURES:
@@ -229,8 +229,8 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Ecore4regPackage.EL_CLASS__ABSTRACT:
-				setAbstract((Boolean)newValue);
+			case Ecore4regPackage.EL_CLASS__EABSTRACT:
+				setEAbstract((Boolean)newValue);
 				return;
 			case Ecore4regPackage.EL_CLASS__ESUPER_TYPES:
 				getESuperTypes().clear();
@@ -256,8 +256,8 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Ecore4regPackage.EL_CLASS__ABSTRACT:
-				setAbstract(ABSTRACT_EDEFAULT);
+			case Ecore4regPackage.EL_CLASS__EABSTRACT:
+				setEAbstract(EABSTRACT_EDEFAULT);
 				return;
 			case Ecore4regPackage.EL_CLASS__ESUPER_TYPES:
 				unsetESuperTypes();
@@ -280,8 +280,8 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Ecore4regPackage.EL_CLASS__ABSTRACT:
-				return abstract_ != ABSTRACT_EDEFAULT;
+			case Ecore4regPackage.EL_CLASS__EABSTRACT:
+				return eAbstract != EABSTRACT_EDEFAULT;
 			case Ecore4regPackage.EL_CLASS__ESUPER_TYPES:
 				return isSetESuperTypes();
 			case Ecore4regPackage.EL_CLASS__ESTRUCTURAL_FEATURES:
@@ -302,8 +302,8 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (abstract: ");
-		result.append(abstract_);
+		result.append(" (eAbstract: ");
+		result.append(eAbstract);
 		result.append(')');
 		return result.toString();
 	}

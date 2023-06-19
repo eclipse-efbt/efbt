@@ -67,7 +67,7 @@ class Ecore4RegGenerator extends AbstractGenerator {
 		«ENDIF»
 		«ENDFOR»
 		«FOR elclass : elpackage.EClassifiers.filter(ELClass)»
-		«IF elclass.abstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
+		«IF elclass.EAbstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
 		«FOR elmember : elclass.EStructuralFeatures»  
 		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
 		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
@@ -127,7 +127,7 @@ class Ecore4RegGenerator extends AbstractGenerator {
 			if (classifier instanceof ELClass) {
 				var e_class = EcoreFactory.eINSTANCE.createEClass()
 				e_class.name = classifier.name
-				e_class.abstract = classifier.abstract
+				e_class.abstract = classifier.EAbstract
 				if (classifier.ESuperTypes.size > 0) {
 					var superTypeName = classifier.ESuperTypes.get(0).name
 					// var superTypePackageName = classifier.ESuperTypes.get(0).package.name
@@ -154,7 +154,7 @@ class Ecore4RegGenerator extends AbstractGenerator {
 							
 							if (structural_feature.EAttributeType instanceof ELEnum) {
 								var attribute_type_name = structural_feature.EAttributeType.name
-								var enumsPackage = structural_feature.EAttributeType.package
+								var enumsPackage = structural_feature.EAttributeType.EPackage
 								System.out.println("enumsPackage1" + enumsPackage)
 								if ((dependantELPackage === null) && (enumsPackage !== null) && (enumsPackage.name != "types")) {
 									dependantELPackage = enumsPackage
@@ -201,7 +201,7 @@ class Ecore4RegGenerator extends AbstractGenerator {
 						e_class.EStructuralFeatures.add(e_reference)
 						var type_name = structural_feature.EType.name
 						// var packageName = structural_feature.EType.package.name
-						var referenceTypePackage = structural_feature.EType.package
+						var referenceTypePackage = structural_feature.EType.EPackage
 						System.out.println("referenceTypePackage" + referenceTypePackage)
 						if ((dependantELPackage === null) && (referenceTypePackage != elpackage) && (referenceTypePackage !== null) &&  (referenceTypePackage.name != "types")) {
 							dependantELPackage = referenceTypePackage
@@ -229,7 +229,7 @@ class Ecore4RegGenerator extends AbstractGenerator {
 					annotation.source = "temp"
 					annotation.details.put("type_name", type_name)
 					// annotation.details.put("types_package", types_package)
-					var types_package = operation.EType.package
+					var types_package = operation.EType.EPackage
 					System.out.println("types_package" + types_package)
 						
 					if ((dependantELPackage === null) && (types_package != elpackage) && (types_package !== null) && (types_package.name != "types")) {
@@ -247,7 +247,7 @@ class Ecore4RegGenerator extends AbstractGenerator {
 						var param_annotation = EcoreFactory.eINSTANCE.createEAnnotation()
 						param_annotation.source = "temp"
 						param_annotation.details.put("type_name", param_type_name)
-						var param_types_package = param.EType.package
+						var param_types_package = param.EType.EPackage
 						if ((dependantELPackage === null) && (param_types_package != elpackage) && (param_types_package !== null) && (param_types_package.name != "types")) {
 							dependantELPackage = param_types_package
 							dependantEcorePackage = processPackage(dependantELPackage,fsa)

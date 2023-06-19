@@ -1215,7 +1215,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getELClass_Abstract() {
+	public EAttribute getELClass_EAbstract() {
         return (EAttribute)getELClass().getEStructuralFeatures().get(0);
 	}
 
@@ -1263,7 +1263,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getELClassifier_Package() {
+	public EReference getELClassifier_EPackage() {
         return (EReference)getELClassifier().getEStructuralFeatures().get(0);
 	}
 
