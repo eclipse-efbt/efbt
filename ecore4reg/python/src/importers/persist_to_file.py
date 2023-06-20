@@ -90,7 +90,7 @@ class PersistToFile:
         for classifier in the_package.eClassifiers:
             if isinstance(classifier, ELClass):
                 f.write("\t\t\t")
-                if classifier.abstract:
+                if classifier.eAbstract:
                     f.write("abstract ")
                 f.write("class " + classifier.name)
                 if (hasattr(classifier, "eSuperTypes") and len(classifier.eSuperTypes) > 0):
@@ -423,9 +423,9 @@ class PersistToFile:
                 f = open(context.output_directory + os.sep + 'ecore4reg' +
                          os.sep + rules_for_report.outputLayerCube.name +
                          '.ecore4reg', "a",  encoding='utf-8')
-                f.write("GenerationRuleModule " + rules_for_report.outputLayerCube.name + "_generationModule\r{\r")
+                f.write("generationRuleModule " + rules_for_report.outputLayerCube.name + "_generationModule\r{\r")
                 f.write("\tgenerationRules " + "{\r")
-                f.write("\t\tReport output_tables." + rules_for_report.outputLayerCube.name + "{\r")
+                f.write("\t\treport output_tables." + rules_for_report.outputLayerCube.name + "{\r")
                 for layer in rules_for_report.rulesForTable:
                     if layer.inputLayerTable is None:
                         f.write("\t\t\tILTable None {\r")
@@ -433,14 +433,14 @@ class PersistToFile:
                         f.write("\t\t\tILTable input_tables." + layer.inputLayerTable.name + "{\r")
                     for table_part in layer.rulesForTablePart:
                         if table_part.name is None:
-                            f.write("\t\t\t\tTablePart None { \r")
+                            f.write("\t\t\t\ttablePart None { \r")
                         else:
-                            f.write("\t\t\t\tTablePart " + Utils.make_valid_id(table_part.name) + " { \r")
+                            f.write("\t\t\t\ttablePart " + Utils.make_valid_id(table_part.name) + " { \r")
                         for column in table_part.columns:
                             if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
-                                f.write("\t\t\t\t\tSelectAttribute input_tables." + column.attribute.eContainer().name + "." + column.attribute.name)
+                                f.write("\t\t\t\t\tselectAttribute input_tables." + column.attribute.eContainer().name + "." + column.attribute.name)
                             else:  
-                                f.write("\t\t\t\t\tSelectValue \"TODO\"")
+                                f.write("\t\t\t\t\tselectValue \"TODO\"")
                             f.write(" as output_tables." +
                                     rules_for_report.outputLayerCube.name + "." + column.asAttribute.name + "\r")
                         f.write("\t\t\t\t}\r")

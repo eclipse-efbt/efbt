@@ -81,9 +81,9 @@ VTLForViewModule.vTLForViews.eType = VTLForView
 RequirementsSectionLinkWithText.linkedRuleSection.eType = TitledRequirementsSection
 TitledRequirementsSection.referencingSections.eType = RequirementsSectionLinkWithText
 TitledRequirementsSection.referencingSections.eOpposite = RequirementsSectionLinkWithText.linkedRuleSection
-ELClassifier.package.eType = ELPackage
+ELClassifier.ePackage.eType = ELPackage
 ELPackage.eClassifiers.eType = ELClassifier
-ELPackage.eClassifiers.eOpposite = ELClassifier.package
+ELPackage.eClassifiers.eOpposite = ELClassifier.ePackage
 
 otherClassifiers = [Comparitor]
 

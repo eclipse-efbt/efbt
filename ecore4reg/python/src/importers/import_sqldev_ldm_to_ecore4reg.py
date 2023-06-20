@@ -97,7 +97,7 @@ class SQLDevLDMImport(object):
                         # of a type heirarchy....we will set such classes
                         #  to be abstract.
                         if (engineering_type == "Single Table") and (num_supertype_entity_id == ""):
-                            eclass.abstract = True
+                            eclass.eAbstract = True
                         eclass_table = ELClass(
                             name=altered_class_name+"_Table")
                         containment_reference = ELReference()
