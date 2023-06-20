@@ -826,15 +826,15 @@ class VTLForViewModule(Module):
 @abstract
 class ELClassifier(ELNamedElement):
 
-    package = EReference(ordered=True, unique=True, containment=False,
-                         derived=False, transient=True)
+    ePackage = EReference(ordered=True, unique=True, containment=False,
+                          derived=False, transient=True)
 
-    def __init__(self, *, package=None, **kwargs):
+    def __init__(self, *, ePackage=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if package is not None:
-            self.package = package
+        if ePackage is not None:
+            self.ePackage = ePackage
 
 
 class ELEnumLiteral(ELNamedElement):
@@ -876,18 +876,18 @@ class ELTypedElement(ELNamedElement):
 
 class ELClass(ELClassifier):
 
-    abstract = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
+    eAbstract = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     eSuperTypes = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
     eStructuralFeatures = EReference(ordered=True, unique=True,
                                      containment=True, derived=False, upper=-1)
     eOperations = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, abstract=None, eSuperTypes=None, eStructuralFeatures=None, eOperations=None, **kwargs):
+    def __init__(self, *, eAbstract=None, eSuperTypes=None, eStructuralFeatures=None, eOperations=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if abstract is not None:
-            self.abstract = abstract
+        if eAbstract is not None:
+            self.eAbstract = eAbstract
 
         if eSuperTypes:
             self.eSuperTypes.extend(eSuperTypes)

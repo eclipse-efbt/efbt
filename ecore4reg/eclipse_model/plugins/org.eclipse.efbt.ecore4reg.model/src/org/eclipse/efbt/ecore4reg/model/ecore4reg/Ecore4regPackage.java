@@ -1680,13 +1680,13 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_CLASSIFIER__NAME = EL_NAMED_ELEMENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Package</b></em>' container reference.
+	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_CLASSIFIER__PACKAGE = EL_NAMED_ELEMENT_FEATURE_COUNT + 0;
+	int EL_CLASSIFIER__EPACKAGE = EL_NAMED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>EL Classifier</em>' class.
@@ -1735,22 +1735,22 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_CLASS__NAME = EL_CLASSIFIER__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Package</b></em>' container reference.
+	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_CLASS__PACKAGE = EL_CLASSIFIER__PACKAGE;
+	int EL_CLASS__EPACKAGE = EL_CLASSIFIER__EPACKAGE;
 
 	/**
-	 * The feature id for the '<em><b>Abstract</b></em>' attribute.
+	 * The feature id for the '<em><b>EAbstract</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_CLASS__ABSTRACT = EL_CLASSIFIER_FEATURE_COUNT + 0;
+	int EL_CLASS__EABSTRACT = EL_CLASSIFIER_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>ESuper Types</b></em>' reference list.
@@ -1826,13 +1826,13 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_DATA_TYPE__NAME = EL_CLASSIFIER__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Package</b></em>' container reference.
+	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_DATA_TYPE__PACKAGE = EL_CLASSIFIER__PACKAGE;
+	int EL_DATA_TYPE__EPACKAGE = EL_CLASSIFIER__EPACKAGE;
 
 	/**
 	 * The feature id for the '<em><b>Industry Name</b></em>' attribute.
@@ -1890,13 +1890,13 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_ENUM__NAME = EL_DATA_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Package</b></em>' container reference.
+	 * The feature id for the '<em><b>EPackage</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_ENUM__PACKAGE = EL_DATA_TYPE__PACKAGE;
+	int EL_ENUM__EPACKAGE = EL_DATA_TYPE__EPACKAGE;
 
 	/**
 	 * The feature id for the '<em><b>Industry Name</b></em>' attribute.
@@ -4517,15 +4517,15 @@ public interface Ecore4regPackage extends EPackage {
 	EClass getELClass();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#isAbstract <em>Abstract</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#isEAbstract <em>EAbstract</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Abstract</em>'.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#isAbstract()
+	 * @return the meta object for the attribute '<em>EAbstract</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#isEAbstract()
 	 * @see #getELClass()
 	 * @generated
 	 */
-	EAttribute getELClass_Abstract();
+	EAttribute getELClass_EAbstract();
 
 	/**
 	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass#getESuperTypes <em>ESuper Types</em>}'.
@@ -4571,15 +4571,15 @@ public interface Ecore4regPackage extends EPackage {
 	EClass getELClassifier();
 
 	/**
-	 * Returns the meta object for the container reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getPackage <em>Package</em>}'.
+	 * Returns the meta object for the container reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getEPackage <em>EPackage</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the container reference '<em>Package</em>'.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getPackage()
+	 * @return the meta object for the container reference '<em>EPackage</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getEPackage()
 	 * @see #getELClassifier()
 	 * @generated
 	 */
-	EReference getELClassifier_Package();
+	EReference getELClassifier_EPackage();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELDataType <em>EL Data Type</em>}'.

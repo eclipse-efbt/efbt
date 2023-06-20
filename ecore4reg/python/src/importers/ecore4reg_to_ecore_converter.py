@@ -66,7 +66,7 @@ class Ecore4regToEcoreConverter(object):
                 e_class = EClass(name=classifier.name)
                 if len(classifier.eSuperTypes) > 0:
                     e_class.superTypeName = classifier.eSuperTypes[0].name
-                e_class.abstract = classifier.abstract
+                e_class.abstract = classifier.eAbstract
                 for structural_feature in classifier.eStructuralFeatures:
 
                     if isinstance(structural_feature, ELAttribute):

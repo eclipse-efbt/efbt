@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.InternalEObject;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELClassifierImpl#getPackage <em>Package</em>}</li>
+ *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELClassifierImpl#getEPackage <em>EPackage</em>}</li>
  * </ul>
  *
  * @generated
@@ -49,8 +49,8 @@ public abstract class ELClassifierImpl extends ELNamedElementImpl implements ELC
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELPackage getPackage() {
-		if (eContainerFeatureID() != Ecore4regPackage.EL_CLASSIFIER__PACKAGE) return null;
+	public ELPackage getEPackage() {
+		if (eContainerFeatureID() != Ecore4regPackage.EL_CLASSIFIER__EPACKAGE) return null;
 		return (ELPackage)eInternalContainer();
 	}
 
@@ -62,10 +62,10 @@ public abstract class ELClassifierImpl extends ELNamedElementImpl implements ELC
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case Ecore4regPackage.EL_CLASSIFIER__PACKAGE:
+			case Ecore4regPackage.EL_CLASSIFIER__EPACKAGE:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
-				return eBasicSetContainer(otherEnd, Ecore4regPackage.EL_CLASSIFIER__PACKAGE, msgs);
+				return eBasicSetContainer(otherEnd, Ecore4regPackage.EL_CLASSIFIER__EPACKAGE, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -78,8 +78,8 @@ public abstract class ELClassifierImpl extends ELNamedElementImpl implements ELC
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case Ecore4regPackage.EL_CLASSIFIER__PACKAGE:
-				return eBasicSetContainer(null, Ecore4regPackage.EL_CLASSIFIER__PACKAGE, msgs);
+			case Ecore4regPackage.EL_CLASSIFIER__EPACKAGE:
+				return eBasicSetContainer(null, Ecore4regPackage.EL_CLASSIFIER__EPACKAGE, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -92,7 +92,7 @@ public abstract class ELClassifierImpl extends ELNamedElementImpl implements ELC
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-			case Ecore4regPackage.EL_CLASSIFIER__PACKAGE:
+			case Ecore4regPackage.EL_CLASSIFIER__EPACKAGE:
 				return eInternalContainer().eInverseRemove(this, Ecore4regPackage.EL_PACKAGE__ECLASSIFIERS, ELPackage.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
@@ -106,8 +106,8 @@ public abstract class ELClassifierImpl extends ELNamedElementImpl implements ELC
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Ecore4regPackage.EL_CLASSIFIER__PACKAGE:
-				return getPackage();
+			case Ecore4regPackage.EL_CLASSIFIER__EPACKAGE:
+				return getEPackage();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -120,8 +120,8 @@ public abstract class ELClassifierImpl extends ELNamedElementImpl implements ELC
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Ecore4regPackage.EL_CLASSIFIER__PACKAGE:
-				return getPackage() != null;
+			case Ecore4regPackage.EL_CLASSIFIER__EPACKAGE:
+				return getEPackage() != null;
 		}
 		return super.eIsSet(featureID);
 	}

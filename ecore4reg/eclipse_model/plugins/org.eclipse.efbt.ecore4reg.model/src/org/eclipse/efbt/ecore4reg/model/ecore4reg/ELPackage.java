@@ -26,13 +26,13 @@ public interface ELPackage extends org.eclipse.efbt.ecore4reg.model.ecore4reg.Mo
 	/**
 	 * Returns the value of the '<em><b>EClassifiers</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getPackage <em>Package</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getEPackage <em>EPackage</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>EClassifiers</em>' containment reference list.
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getELPackage_EClassifiers()
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getPackage
-	 * @model opposite="package" containment="true"
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClassifier#getEPackage
+	 * @model opposite="ePackage" containment="true"
 	 * @generated
 	 */
 	EList<ELClassifier> getEClassifiers();
