@@ -213,6 +213,16 @@
             pattern=".*\.eclipse.efbt.xcorelite.*"/>
       </predicate>
     </workingSet>
+    <workingSet
+        name="orchestrator"
+        id="orchestrator">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.ecore4reg.orchestrator.*"/>
+      </predicate>
+    </workingSet>
     <description>efbt_working_sets</description>
   </setupTask>
   <setupTask

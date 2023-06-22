@@ -27,7 +27,7 @@ SPDX-License-Identifier: EPL-2.0
 						selectMember  il_domains.Type_And_Nature_Of_Sensitivity.Positive_Sensitivity_Gross_Per_Risk_Class_Unweighted as output_tables.C91_REF_OutputItem.Type_And_Nature_Of_Sensitivity
 						selectMember  il_domains.Type_Of_Risk.GIRR as output_tables.C91_REF_OutputItem.Type_Of_Risk
 						where   input_tables.Delta_sensitivity.Delta_sensitivity is_greater_than theValue "0" 
-					}
+					} 
 					
 					tablePart  GIRR_ShortDeltaSensitivity_Layer{						
 						selectMember il_domains.Approach_For_Prudential_Purposes.Sensitivities_Based_Method as output_tables.C91_REF_OutputItem.Approach_For_Prudential_Purposes
