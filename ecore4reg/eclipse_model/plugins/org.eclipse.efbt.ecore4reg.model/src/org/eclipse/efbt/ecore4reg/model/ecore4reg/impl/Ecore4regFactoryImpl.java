@@ -3,6 +3,8 @@
 package org.eclipse.efbt.ecore4reg.model.ecore4reg.impl;
 
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.AllowedTypes;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Comparitor;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELAnnotation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELAttribute;
@@ -22,6 +24,8 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLi
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsSectionImage;
@@ -130,6 +134,10 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 			case Ecore4regPackage.TABLE_FILTER: return createTableFilter();
 			case Ecore4regPackage.GENERATION_RULES_MODULE: return createGenerationRulesModule();
 			case Ecore4regPackage.RULE_FOR_IL_TABLE_PART: return createRuleForILTablePart();
+			case Ecore4regPackage.AND_PREDICATE: return createAndPredicate();
+			case Ecore4regPackage.OR_PREDICATE: return createOrPredicate();
+			case Ecore4regPackage.NOT_PREDICATE: return createNotPredicate();
+			case Ecore4regPackage.ATTRIBUTE_PREDICATE: return createAttributePredicate();
 			case Ecore4regPackage.EL_ATTRIBUTE: return createELAttribute();
 			case Ecore4regPackage.EL_CLASS: return createELClass();
 			case Ecore4regPackage.EL_DATA_TYPE: return createELDataType();
@@ -411,6 +419,46 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 	public RuleForILTablePart createRuleForILTablePart() {
 		RuleForILTablePartImpl ruleForILTablePart = new RuleForILTablePartImpl();
 		return ruleForILTablePart;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AndPredicate createAndPredicate() {
+		AndPredicateImpl andPredicate = new AndPredicateImpl();
+		return andPredicate;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OrPredicate createOrPredicate() {
+		OrPredicateImpl orPredicate = new OrPredicateImpl();
+		return orPredicate;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotPredicate createNotPredicate() {
+		NotPredicateImpl notPredicate = new NotPredicateImpl();
+		return notPredicate;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AttributePredicate createAttributePredicate() {
+		AttributePredicateImpl attributePredicate = new AttributePredicateImpl();
+		return attributePredicate;
 	}
 
 	/**

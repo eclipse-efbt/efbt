@@ -3,6 +3,8 @@
 package org.eclipse.efbt.ecore4reg.model.ecore4reg.util;
 
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.AllowedTypes;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELAnnotation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELAttribute;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass;
@@ -25,6 +27,9 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLi
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsSection;
@@ -267,6 +272,40 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 			case Ecore4regPackage.RULE_FOR_IL_TABLE_PART: {
 				RuleForILTablePart ruleForILTablePart = (RuleForILTablePart)theEObject;
 				T result = caseRuleForILTablePart(ruleForILTablePart);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.PREDICATE: {
+				Predicate predicate = (Predicate)theEObject;
+				T result = casePredicate(predicate);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.AND_PREDICATE: {
+				AndPredicate andPredicate = (AndPredicate)theEObject;
+				T result = caseAndPredicate(andPredicate);
+				if (result == null) result = casePredicate(andPredicate);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.OR_PREDICATE: {
+				OrPredicate orPredicate = (OrPredicate)theEObject;
+				T result = caseOrPredicate(orPredicate);
+				if (result == null) result = casePredicate(orPredicate);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.NOT_PREDICATE: {
+				NotPredicate notPredicate = (NotPredicate)theEObject;
+				T result = caseNotPredicate(notPredicate);
+				if (result == null) result = casePredicate(notPredicate);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.ATTRIBUTE_PREDICATE: {
+				AttributePredicate attributePredicate = (AttributePredicate)theEObject;
+				T result = caseAttributePredicate(attributePredicate);
+				if (result == null) result = casePredicate(attributePredicate);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -858,6 +897,81 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseRuleForILTablePart(RuleForILTablePart object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Predicate</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePredicate(Predicate object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>And Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>And Predicate</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAndPredicate(AndPredicate object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Or Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Or Predicate</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOrPredicate(OrPredicate object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Not Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Not Predicate</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNotPredicate(NotPredicate object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Attribute Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Attribute Predicate</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAttributePredicate(AttributePredicate object) {
 		return null;
 	}
 

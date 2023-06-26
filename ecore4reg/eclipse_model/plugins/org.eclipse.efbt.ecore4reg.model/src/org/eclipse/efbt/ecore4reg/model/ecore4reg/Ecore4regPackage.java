@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regFactory
  * @model kind="package"
+ *        annotation="license license='Copyright (c) 2020 Bird Software Solutions Ltd\n All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html\n\nSPDX-License-Identifier: EPL-2.0 \n\n Contributors:\n Neil Mackenzie - initial API and implementation\r'"
  * @generated
  */
 public interface Ecore4regPackage extends EPackage {
@@ -1132,40 +1133,13 @@ public interface Ecore4regPackage extends EPackage {
 	int TABLE_FILTER = 20;
 
 	/**
-	 * The feature id for the '<em><b>Attribute1</b></em>' reference.
+	 * The feature id for the '<em><b>Predicate</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TABLE_FILTER__ATTRIBUTE1 = 0;
-
-	/**
-	 * The feature id for the '<em><b>Comparitor</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TABLE_FILTER__COMPARITOR = 1;
-
-	/**
-	 * The feature id for the '<em><b>Member</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TABLE_FILTER__MEMBER = 2;
-
-	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TABLE_FILTER__VALUE = 3;
+	int TABLE_FILTER__PREDICATE = 0;
 
 	/**
 	 * The number of structural features of the '<em>Table Filter</em>' class.
@@ -1174,7 +1148,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TABLE_FILTER_FEATURE_COUNT = 4;
+	int TABLE_FILTER_FEATURE_COUNT = 1;
 
 	/**
 	 * The number of operations of the '<em>Table Filter</em>' class.
@@ -1305,7 +1279,7 @@ public interface Ecore4regPackage extends EPackage {
 	int RULE_FOR_IL_TABLE_PART__COLUMNS = 1;
 
 	/**
-	 * The feature id for the '<em><b>Where Clause</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Where Clause</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1332,6 +1306,209 @@ public interface Ecore4regPackage extends EPackage {
 	int RULE_FOR_IL_TABLE_PART_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.PredicateImpl <em>Predicate</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.PredicateImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getPredicate()
+	 * @generated
+	 */
+	int PREDICATE = 23;
+
+	/**
+	 * The number of structural features of the '<em>Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PREDICATE_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PREDICATE_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.AndPredicateImpl <em>And Predicate</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.AndPredicateImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getAndPredicate()
+	 * @generated
+	 */
+	int AND_PREDICATE = 24;
+
+	/**
+	 * The feature id for the '<em><b>Operands</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AND_PREDICATE__OPERANDS = PREDICATE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>And Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AND_PREDICATE_FEATURE_COUNT = PREDICATE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>And Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AND_PREDICATE_OPERATION_COUNT = PREDICATE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.OrPredicateImpl <em>Or Predicate</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.OrPredicateImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getOrPredicate()
+	 * @generated
+	 */
+	int OR_PREDICATE = 25;
+
+	/**
+	 * The feature id for the '<em><b>Operands</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OR_PREDICATE__OPERANDS = PREDICATE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Or Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OR_PREDICATE_FEATURE_COUNT = PREDICATE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Or Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OR_PREDICATE_OPERATION_COUNT = PREDICATE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.NotPredicateImpl <em>Not Predicate</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.NotPredicateImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getNotPredicate()
+	 * @generated
+	 */
+	int NOT_PREDICATE = 26;
+
+	/**
+	 * The feature id for the '<em><b>Operand</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOT_PREDICATE__OPERAND = PREDICATE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Not Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOT_PREDICATE_FEATURE_COUNT = PREDICATE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Not Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOT_PREDICATE_OPERATION_COUNT = PREDICATE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.AttributePredicateImpl <em>Attribute Predicate</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.AttributePredicateImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getAttributePredicate()
+	 * @generated
+	 */
+	int ATTRIBUTE_PREDICATE = 27;
+
+	/**
+	 * The feature id for the '<em><b>Attribute1</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_PREDICATE__ATTRIBUTE1 = PREDICATE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Comparitor</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_PREDICATE__COMPARITOR = PREDICATE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Member</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_PREDICATE__MEMBER = PREDICATE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_PREDICATE__VALUE = PREDICATE_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>Attribute Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_PREDICATE_FEATURE_COUNT = PREDICATE_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of operations of the '<em>Attribute Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_PREDICATE_OPERATION_COUNT = PREDICATE_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELModelElementImpl <em>EL Model Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1339,7 +1516,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELModelElement()
 	 * @generated
 	 */
-	int EL_MODEL_ELEMENT = 29;
+	int EL_MODEL_ELEMENT = 34;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1376,7 +1553,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELNamedElement()
 	 * @generated
 	 */
-	int EL_NAMED_ELEMENT = 30;
+	int EL_NAMED_ELEMENT = 35;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1422,7 +1599,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELTypedElement()
 	 * @generated
 	 */
-	int EL_TYPED_ELEMENT = 36;
+	int EL_TYPED_ELEMENT = 41;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1495,7 +1672,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELStructuralFeature()
 	 * @generated
 	 */
-	int EL_STRUCTURAL_FEATURE = 35;
+	int EL_STRUCTURAL_FEATURE = 40;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1568,7 +1745,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELAttribute()
 	 * @generated
 	 */
-	int EL_ATTRIBUTE = 23;
+	int EL_ATTRIBUTE = 28;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1659,7 +1836,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELClassifier()
 	 * @generated
 	 */
-	int EL_CLASSIFIER = 25;
+	int EL_CLASSIFIER = 30;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1714,7 +1891,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELClass()
 	 * @generated
 	 */
-	int EL_CLASS = 24;
+	int EL_CLASS = 29;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1805,7 +1982,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELDataType()
 	 * @generated
 	 */
-	int EL_DATA_TYPE = 26;
+	int EL_DATA_TYPE = 31;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1869,7 +2046,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELEnum()
 	 * @generated
 	 */
-	int EL_ENUM = 27;
+	int EL_ENUM = 32;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1942,7 +2119,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELEnumLiteral()
 	 * @generated
 	 */
-	int EL_ENUM_LITERAL = 28;
+	int EL_ENUM_LITERAL = 33;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2006,7 +2183,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELOperation()
 	 * @generated
 	 */
-	int EL_OPERATION = 31;
+	int EL_OPERATION = 36;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2097,7 +2274,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELParameter()
 	 * @generated
 	 */
-	int EL_PARAMETER = 32;
+	int EL_PARAMETER = 37;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2170,7 +2347,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELPackage()
 	 * @generated
 	 */
-	int EL_PACKAGE = 33;
+	int EL_PACKAGE = 38;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -2279,7 +2456,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELReference()
 	 * @generated
 	 */
-	int EL_REFERENCE = 34;
+	int EL_REFERENCE = 39;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2370,7 +2547,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELAnnotation()
 	 * @generated
 	 */
-	int EL_ANNOTATION = 37;
+	int EL_ANNOTATION = 42;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2425,7 +2602,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELStringToStringMapEntry()
 	 * @generated
 	 */
-	int EL_STRING_TO_STRING_MAP_ENTRY = 38;
+	int EL_STRING_TO_STRING_MAP_ENTRY = 43;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -2471,7 +2648,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLEnrichedCube()
 	 * @generated
 	 */
-	int VTL_ENRICHED_CUBE = 39;
+	int VTL_ENRICHED_CUBE = 44;
 
 	/**
 	 * The feature id for the '<em><b>Transformations</b></em>' reference list.
@@ -2508,7 +2685,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedOutputlayer()
 	 * @generated
 	 */
-	int VTL_GENERATED_OUTPUTLAYER = 40;
+	int VTL_GENERATED_OUTPUTLAYER = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2572,7 +2749,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForOutputLayerAndIntermediateLayerCombination()
 	 * @generated
 	 */
-	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION = 41;
+	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION = 46;
 
 	/**
 	 * The feature id for the '<em><b>Transformations</b></em>' reference list.
@@ -2636,7 +2813,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedIntermediateLayer()
 	 * @generated
 	 */
-	int VTL_GENERATED_INTERMEDIATE_LAYER = 42;
+	int VTL_GENERATED_INTERMEDIATE_LAYER = 47;
 
 	/**
 	 * The feature id for the '<em><b>Dependant enriched cubes</b></em>' reference.
@@ -2700,7 +2877,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLTransformation()
 	 * @generated
 	 */
-	int VTL_TRANSFORMATION = 43;
+	int VTL_TRANSFORMATION = 48;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -2764,7 +2941,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLScheme()
 	 * @generated
 	 */
-	int VTL_SCHEME = 44;
+	int VTL_SCHEME = 49;
 
 	/**
 	 * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -2810,7 +2987,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForSelectionLayer()
 	 * @generated
 	 */
-	int VTL_FOR_SELECTION_LAYER = 45;
+	int VTL_FOR_SELECTION_LAYER = 50;
 
 	/**
 	 * The feature id for the '<em><b>Selection Layer</b></em>' reference.
@@ -2865,7 +3042,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLModule()
 	 * @generated
 	 */
-	int VTL_MODULE = 46;
+	int VTL_MODULE = 51;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3010,7 +3187,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getEntityToVTLIntermediateLayerLink()
 	 * @generated
 	 */
-	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK = 47;
+	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK = 52;
 
 	/**
 	 * The feature id for the '<em><b>VTL Intermediate Layer</b></em>' reference.
@@ -3065,7 +3242,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForView()
 	 * @generated
 	 */
-	int VTL_FOR_VIEW = 48;
+	int VTL_FOR_VIEW = 53;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3120,7 +3297,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedOutputlayerModule()
 	 * @generated
 	 */
-	int VTL_GENERATED_OUTPUTLAYER_MODULE = 49;
+	int VTL_GENERATED_OUTPUTLAYER_MODULE = 54;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3211,7 +3388,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForOutputLayerAndIntermediateLayerCombinationModule()
 	 * @generated
 	 */
-	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION_MODULE = 50;
+	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION_MODULE = 55;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3302,7 +3479,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedIntermediateLayerModule()
 	 * @generated
 	 */
-	int VTL_GENERATED_INTERMEDIATE_LAYER_MODULE = 51;
+	int VTL_GENERATED_INTERMEDIATE_LAYER_MODULE = 56;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3393,7 +3570,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLSchemesModule()
 	 * @generated
 	 */
-	int VTL_SCHEMES_MODULE = 52;
+	int VTL_SCHEMES_MODULE = 57;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3484,7 +3661,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForSelectionLayerModule()
 	 * @generated
 	 */
-	int VTL_FOR_SELECTION_LAYER_MODULE = 53;
+	int VTL_FOR_SELECTION_LAYER_MODULE = 58;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3575,7 +3752,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getEntityToVTLIntermediateLayerLinkModule()
 	 * @generated
 	 */
-	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK_MODULE = 54;
+	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK_MODULE = 59;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3666,7 +3843,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForViewModule()
 	 * @generated
 	 */
-	int VTL_FOR_VIEW_MODULE = 55;
+	int VTL_FOR_VIEW_MODULE = 60;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3757,7 +3934,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getComparitor()
 	 * @generated
 	 */
-	int COMPARITOR = 56;
+	int COMPARITOR = 61;
 
 
 	/**
@@ -4367,48 +4544,15 @@ public interface Ecore4regPackage extends EPackage {
 	EClass getTableFilter();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getAttribute1 <em>Attribute1</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getPredicate <em>Predicate</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Attribute1</em>'.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getAttribute1()
+	 * @return the meta object for the containment reference '<em>Predicate</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getPredicate()
 	 * @see #getTableFilter()
 	 * @generated
 	 */
-	EReference getTableFilter_Attribute1();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getComparitor <em>Comparitor</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Comparitor</em>'.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getComparitor()
-	 * @see #getTableFilter()
-	 * @generated
-	 */
-	EAttribute getTableFilter_Comparitor();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getMember <em>Member</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Member</em>'.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getMember()
-	 * @see #getTableFilter()
-	 * @generated
-	 */
-	EReference getTableFilter_Member();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getValue <em>Value</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter#getValue()
-	 * @see #getTableFilter()
-	 * @generated
-	 */
-	EAttribute getTableFilter_Value();
+	EReference getTableFilter_Predicate();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule <em>Generation Rules Module</em>}'.
@@ -4464,15 +4608,142 @@ public interface Ecore4regPackage extends EPackage {
 	EReference getRuleForILTablePart_Columns();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.RuleForILTablePart#getWhereClause <em>Where Clause</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.RuleForILTablePart#getWhereClause <em>Where Clause</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Where Clause</em>'.
+	 * @return the meta object for the containment reference '<em>Where Clause</em>'.
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.RuleForILTablePart#getWhereClause()
 	 * @see #getRuleForILTablePart()
 	 * @generated
 	 */
 	EReference getRuleForILTablePart_WhereClause();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate <em>Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Predicate</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate
+	 * @generated
+	 */
+	EClass getPredicate();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate <em>And Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>And Predicate</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate
+	 * @generated
+	 */
+	EClass getAndPredicate();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate#getOperands <em>Operands</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Operands</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate#getOperands()
+	 * @see #getAndPredicate()
+	 * @generated
+	 */
+	EReference getAndPredicate_Operands();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate <em>Or Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Or Predicate</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate
+	 * @generated
+	 */
+	EClass getOrPredicate();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate#getOperands <em>Operands</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Operands</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate#getOperands()
+	 * @see #getOrPredicate()
+	 * @generated
+	 */
+	EReference getOrPredicate_Operands();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate <em>Not Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Not Predicate</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate
+	 * @generated
+	 */
+	EClass getNotPredicate();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate#getOperand <em>Operand</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Operand</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate#getOperand()
+	 * @see #getNotPredicate()
+	 * @generated
+	 */
+	EReference getNotPredicate_Operand();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate <em>Attribute Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Attribute Predicate</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate
+	 * @generated
+	 */
+	EClass getAttributePredicate();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate#getAttribute1 <em>Attribute1</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Attribute1</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate#getAttribute1()
+	 * @see #getAttributePredicate()
+	 * @generated
+	 */
+	EReference getAttributePredicate_Attribute1();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate#getComparitor <em>Comparitor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Comparitor</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate#getComparitor()
+	 * @see #getAttributePredicate()
+	 * @generated
+	 */
+	EAttribute getAttributePredicate_Comparitor();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate#getMember <em>Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Member</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate#getMember()
+	 * @see #getAttributePredicate()
+	 * @generated
+	 */
+	EReference getAttributePredicate_Member();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate#getValue()
+	 * @see #getAttributePredicate()
+	 * @generated
+	 */
+	EAttribute getAttributePredicate_Value();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELAttribute <em>EL Attribute</em>}'.

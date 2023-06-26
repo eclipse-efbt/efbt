@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Sun Jun 18 17:07:21 BST 2023-->
+<!-- Creation date: Mon Jun 26 19:15:17 BST 2023-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -131,6 +131,72 @@ function getElementsByTagNames(list,obj) {
 <div class="">EPackage properties:</div>
 <div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">generation_rules</span></div>
 <div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.example.org/generation_rules</span></div>
+<h2 id="generationrulesAndPredicate"><a href="#generationrulesAndPredicate"><a href="#generationrulesAndPredicate">AndPredicate</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#generationrulesPredicate">Predicate</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="generationrulesAndPredicate.operands" class="teletype">operands</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#generationrulesPredicate">Predicate</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#generation_rules.AndPredicate.ref"></a>
+<h2 id="generationrulesAttributePredicate"><a href="#generationrulesAttributePredicate"><a href="#generationrulesAttributePredicate">AttributePredicate</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#generationrulesPredicate">Predicate</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="generationrulesAttributePredicate.comparitor" class="teletype">comparitor</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#generationrulesComparitor">Comparitor</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr><tr>	<td><div id="generationrulesAttributePredicate.value" class="teletype">value</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#generation_rules.AttributePredicate.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="generationrulesAttributePredicate.attribute1" class="teletype">attribute1</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELAttribute">ELAttribute</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr><tr>	<td><div id="generationrulesAttributePredicate.member" class="teletype">member</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELEnumLiteral">ELEnumLiteral</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#generation_rules.AttributePredicate.ref"></a>
 <h2 id="generationrulesComparitor"><a href="#generationrulesComparitor"><a href="#generationrulesComparitor">Comparitor</a></a></h2>
 
 <table>
@@ -204,7 +270,49 @@ function getElementsByTagNames(list,obj) {
 <td> </td>
 		</tr></table>
 <a href="#generation_rules.GenerationRulesModule.ref"></a>
-<h2 id="generationrulesRuleForILTablePart"><a href="#generationrulesRuleForILTablePart"><a href="#generationrulesRuleForILTablePart">RuleForILTablePart</a></a></h2>
+<h2 id="generationrulesNotPredicate"><a href="#generationrulesNotPredicate"><a href="#generationrulesNotPredicate">NotPredicate</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#generationrulesPredicate">Predicate</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="generationrulesNotPredicate.operand" class="teletype">operand</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#generationrulesPredicate">Predicate</a></span></div>
+<div class="label">Cardinality: [0..1]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#generation_rules.NotPredicate.ref"></a>
+<h2 id="generationrulesOrPredicate"><a href="#generationrulesOrPredicate"><a href="#generationrulesOrPredicate">OrPredicate</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#generationrulesPredicate">Predicate</a></h4><table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="generationrulesOrPredicate.operands" class="teletype">operands</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#generationrulesPredicate">Predicate</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#generation_rules.OrPredicate.ref"></a>
+<h2 id="generationrulesPredicate"><a href="#generationrulesPredicate"><a href="#generationrulesPredicate">Predicate</a></a></h2>
+
+<div class="eclassProps">EClass properties:<div class="eclassPropList"><span class="label">Abstract</span></div></div><h2 id="generationrulesRuleForILTablePart"><a href="#generationrulesRuleForILTablePart"><a href="#generationrulesRuleForILTablePart">RuleForILTablePart</a></a></h2>
 
 <table>
 <tr>
@@ -397,27 +505,6 @@ function getElementsByTagNames(list,obj) {
 
 <table>
 <tr>
-	<th colspan="3"><div class="tableHeader">Attributes</div></th>
-</tr>
-<tr>
-	<th><div class="columnHeader">Name</div></th>
-	<th><div class="columnHeader">Properties</div></th>
-	<th><div class="columnHeader">Documentation</div></th>
-</tr>
-<tr>	<td><div id="generationrulesTableFilter.comparitor" class="teletype">comparitor</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#generationrulesComparitor">Comparitor</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
- </td> <td></td>
-		</tr><tr>	<td><div id="generationrulesTableFilter.value" class="teletype">value</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
-<div class="label">Cardinality: [0..1]</div>
- </td> <td></td>
-		</tr></table>
-<a href="#generation_rules.TableFilter.attr"></a>
-<table>
-<tr>
 	<th colspan="3"><div class="tableHeader">References</div></th>
 </tr>
 <tr>
@@ -425,16 +512,11 @@ function getElementsByTagNames(list,obj) {
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="generationrulesTableFilter.attribute1" class="teletype">attribute1</div>
+<tr>	<td><div id="generationrulesTableFilter.predicates" class="teletype">predicates</div>
 	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELAttribute">ELAttribute</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
-</td> 
-<td> </td>
-		</tr><tr>	<td><div id="generationrulesTableFilter.member" class="teletype">member</div>
-	</td>
-	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELEnumLiteral">ELEnumLiteral</a></span></div>
-<div class="label">Cardinality: [0..1]</div>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#generationrulesPredicate">Predicate</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
 </td> 
 <td> </td>
 		</tr></table>
