@@ -205,6 +205,41 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass predicateEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass andPredicateEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass orPredicateEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass notPredicateEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass attributePredicateEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass elAttributeEClass = null;
 
 	/**
@@ -1077,35 +1112,8 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTableFilter_Attribute1() {
+	public EReference getTableFilter_Predicate() {
         return (EReference)getTableFilter().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTableFilter_Comparitor() {
-        return (EAttribute)getTableFilter().getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTableFilter_Member() {
-        return (EReference)getTableFilter().getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTableFilter_Value() {
-        return (EAttribute)getTableFilter().getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1173,9 +1181,132 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getPredicate() {
+		if (predicateEClass == null) {
+			predicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(24);
+		}
+		return predicateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAndPredicate() {
+		if (andPredicateEClass == null) {
+			andPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(25);
+		}
+		return andPredicateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAndPredicate_Operands() {
+        return (EReference)getAndPredicate().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getOrPredicate() {
+		if (orPredicateEClass == null) {
+			orPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(26);
+		}
+		return orPredicateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOrPredicate_Operands() {
+        return (EReference)getOrPredicate().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNotPredicate() {
+		if (notPredicateEClass == null) {
+			notPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(27);
+		}
+		return notPredicateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNotPredicate_Operand() {
+        return (EReference)getNotPredicate().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAttributePredicate() {
+		if (attributePredicateEClass == null) {
+			attributePredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(28);
+		}
+		return attributePredicateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAttributePredicate_Attribute1() {
+        return (EReference)getAttributePredicate().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAttributePredicate_Comparitor() {
+        return (EAttribute)getAttributePredicate().getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAttributePredicate_Member() {
+        return (EReference)getAttributePredicate().getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAttributePredicate_Value() {
+        return (EAttribute)getAttributePredicate().getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getELAttribute() {
 		if (elAttributeEClass == null) {
-			elAttributeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(24);
+			elAttributeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(29);
 		}
 		return elAttributeEClass;
 	}
@@ -1205,7 +1336,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELClass() {
 		if (elClassEClass == null) {
-			elClassEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(25);
+			elClassEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(30);
 		}
 		return elClassEClass;
 	}
@@ -1253,7 +1384,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELClassifier() {
 		if (elClassifierEClass == null) {
-			elClassifierEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(26);
+			elClassifierEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(31);
 		}
 		return elClassifierEClass;
 	}
@@ -1274,7 +1405,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELDataType() {
 		if (elDataTypeEClass == null) {
-			elDataTypeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(27);
+			elDataTypeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(32);
 		}
 		return elDataTypeEClass;
 	}
@@ -1295,7 +1426,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELEnum() {
 		if (elEnumEClass == null) {
-			elEnumEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(28);
+			elEnumEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(33);
 		}
 		return elEnumEClass;
 	}
@@ -1316,7 +1447,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELEnumLiteral() {
 		if (elEnumLiteralEClass == null) {
-			elEnumLiteralEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(29);
+			elEnumLiteralEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(34);
 		}
 		return elEnumLiteralEClass;
 	}
@@ -1346,7 +1477,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELModelElement() {
 		if (elModelElementEClass == null) {
-			elModelElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(30);
+			elModelElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(35);
 		}
 		return elModelElementEClass;
 	}
@@ -1367,7 +1498,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELNamedElement() {
 		if (elNamedElementEClass == null) {
-			elNamedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(31);
+			elNamedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(36);
 		}
 		return elNamedElementEClass;
 	}
@@ -1388,7 +1519,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELOperation() {
 		if (elOperationEClass == null) {
-			elOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(32);
+			elOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(37);
 		}
 		return elOperationEClass;
 	}
@@ -1418,7 +1549,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELParameter() {
 		if (elParameterEClass == null) {
-			elParameterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(33);
+			elParameterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(38);
 		}
 		return elParameterEClass;
 	}
@@ -1430,7 +1561,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELPackage() {
 		if (elPackageEClass == null) {
-			elPackageEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(34);
+			elPackageEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(39);
 		}
 		return elPackageEClass;
 	}
@@ -1469,7 +1600,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELReference() {
 		if (elReferenceEClass == null) {
-			elReferenceEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(35);
+			elReferenceEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(40);
 		}
 		return elReferenceEClass;
 	}
@@ -1499,7 +1630,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELStructuralFeature() {
 		if (elStructuralFeatureEClass == null) {
-			elStructuralFeatureEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(36);
+			elStructuralFeatureEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(41);
 		}
 		return elStructuralFeatureEClass;
 	}
@@ -1511,7 +1642,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELTypedElement() {
 		if (elTypedElementEClass == null) {
-			elTypedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(37);
+			elTypedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(42);
 		}
 		return elTypedElementEClass;
 	}
@@ -1550,7 +1681,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELAnnotation() {
 		if (elAnnotationEClass == null) {
-			elAnnotationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(38);
+			elAnnotationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(43);
 		}
 		return elAnnotationEClass;
 	}
@@ -1580,7 +1711,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getELStringToStringMapEntry() {
 		if (elStringToStringMapEntryEClass == null) {
-			elStringToStringMapEntryEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(39);
+			elStringToStringMapEntryEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(44);
 		}
 		return elStringToStringMapEntryEClass;
 	}
@@ -1610,7 +1741,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLEnrichedCube() {
 		if (vtlEnrichedCubeEClass == null) {
-			vtlEnrichedCubeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(40);
+			vtlEnrichedCubeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(45);
 		}
 		return vtlEnrichedCubeEClass;
 	}
@@ -1631,7 +1762,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLGeneratedOutputlayer() {
 		if (vtlGeneratedOutputlayerEClass == null) {
-			vtlGeneratedOutputlayerEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(41);
+			vtlGeneratedOutputlayerEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(46);
 		}
 		return vtlGeneratedOutputlayerEClass;
 	}
@@ -1679,7 +1810,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLForOutputLayerAndIntermediateLayerCombination() {
 		if (vtlForOutputLayerAndIntermediateLayerCombinationEClass == null) {
-			vtlForOutputLayerAndIntermediateLayerCombinationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(42);
+			vtlForOutputLayerAndIntermediateLayerCombinationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(47);
 		}
 		return vtlForOutputLayerAndIntermediateLayerCombinationEClass;
 	}
@@ -1727,7 +1858,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLGeneratedIntermediateLayer() {
 		if (vtlGeneratedIntermediateLayerEClass == null) {
-			vtlGeneratedIntermediateLayerEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(43);
+			vtlGeneratedIntermediateLayerEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(48);
 		}
 		return vtlGeneratedIntermediateLayerEClass;
 	}
@@ -1775,7 +1906,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLTransformation() {
 		if (vtlTransformationEClass == null) {
-			vtlTransformationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(44);
+			vtlTransformationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(49);
 		}
 		return vtlTransformationEClass;
 	}
@@ -1823,7 +1954,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLScheme() {
 		if (vtlSchemeEClass == null) {
-			vtlSchemeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(45);
+			vtlSchemeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(50);
 		}
 		return vtlSchemeEClass;
 	}
@@ -1853,7 +1984,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLForSelectionLayer() {
 		if (vtlForSelectionLayerEClass == null) {
-			vtlForSelectionLayerEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(46);
+			vtlForSelectionLayerEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(51);
 		}
 		return vtlForSelectionLayerEClass;
 	}
@@ -1892,7 +2023,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLModule() {
 		if (vtlModuleEClass == null) {
-			vtlModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(47);
+			vtlModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(52);
 		}
 		return vtlModuleEClass;
 	}
@@ -1967,7 +2098,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getEntityToVTLIntermediateLayerLink() {
 		if (entityToVTLIntermediateLayerLinkEClass == null) {
-			entityToVTLIntermediateLayerLinkEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(48);
+			entityToVTLIntermediateLayerLinkEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(53);
 		}
 		return entityToVTLIntermediateLayerLinkEClass;
 	}
@@ -2006,7 +2137,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLForView() {
 		if (vtlForViewEClass == null) {
-			vtlForViewEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(49);
+			vtlForViewEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(54);
 		}
 		return vtlForViewEClass;
 	}
@@ -2045,7 +2176,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLGeneratedOutputlayerModule() {
 		if (vtlGeneratedOutputlayerModuleEClass == null) {
-			vtlGeneratedOutputlayerModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(50);
+			vtlGeneratedOutputlayerModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(55);
 		}
 		return vtlGeneratedOutputlayerModuleEClass;
 	}
@@ -2066,7 +2197,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLForOutputLayerAndIntermediateLayerCombinationModule() {
 		if (vtlForOutputLayerAndIntermediateLayerCombinationModuleEClass == null) {
-			vtlForOutputLayerAndIntermediateLayerCombinationModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(51);
+			vtlForOutputLayerAndIntermediateLayerCombinationModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(56);
 		}
 		return vtlForOutputLayerAndIntermediateLayerCombinationModuleEClass;
 	}
@@ -2087,7 +2218,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLGeneratedIntermediateLayerModule() {
 		if (vtlGeneratedIntermediateLayerModuleEClass == null) {
-			vtlGeneratedIntermediateLayerModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(52);
+			vtlGeneratedIntermediateLayerModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(57);
 		}
 		return vtlGeneratedIntermediateLayerModuleEClass;
 	}
@@ -2108,7 +2239,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLSchemesModule() {
 		if (vtlSchemesModuleEClass == null) {
-			vtlSchemesModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(53);
+			vtlSchemesModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(58);
 		}
 		return vtlSchemesModuleEClass;
 	}
@@ -2129,7 +2260,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLForSelectionLayerModule() {
 		if (vtlForSelectionLayerModuleEClass == null) {
-			vtlForSelectionLayerModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(54);
+			vtlForSelectionLayerModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(59);
 		}
 		return vtlForSelectionLayerModuleEClass;
 	}
@@ -2150,7 +2281,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getEntityToVTLIntermediateLayerLinkModule() {
 		if (entityToVTLIntermediateLayerLinkModuleEClass == null) {
-			entityToVTLIntermediateLayerLinkModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(55);
+			entityToVTLIntermediateLayerLinkModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(60);
 		}
 		return entityToVTLIntermediateLayerLinkModuleEClass;
 	}
@@ -2171,7 +2302,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 */
 	public EClass getVTLForViewModule() {
 		if (vtlForViewModuleEClass == null) {
-			vtlForViewModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(56);
+			vtlForViewModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(Ecore4regPackage.eNS_URI).getEClassifiers().get(61);
 		}
 		return vtlForViewModuleEClass;
 	}

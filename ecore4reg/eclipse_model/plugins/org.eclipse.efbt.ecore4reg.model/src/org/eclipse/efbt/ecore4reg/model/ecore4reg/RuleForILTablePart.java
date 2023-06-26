@@ -60,15 +60,25 @@ public interface RuleForILTablePart extends EObject {
 	EList<SelectColumn> getColumns();
 
 	/**
-	 * Returns the value of the '<em><b>Where Clause</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter}.
+	 * Returns the value of the '<em><b>Where Clause</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Where Clause</em>' containment reference list.
+	 * @return the value of the '<em>Where Clause</em>' containment reference.
+	 * @see #setWhereClause(TableFilter)
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getRuleForILTablePart_WhereClause()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TableFilter> getWhereClause();
+	TableFilter getWhereClause();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.RuleForILTablePart#getWhereClause <em>Where Clause</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Where Clause</em>' containment reference.
+	 * @see #getWhereClause()
+	 * @generated
+	 */
+	void setWhereClause(TableFilter value);
 
 } // RuleForILTablePart

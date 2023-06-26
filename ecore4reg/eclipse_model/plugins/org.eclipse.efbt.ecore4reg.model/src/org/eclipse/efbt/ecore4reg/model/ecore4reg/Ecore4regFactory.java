@@ -220,6 +220,42 @@ public interface Ecore4regFactory extends EFactory {
 	RuleForILTablePart createRuleForILTablePart();
 
 	/**
+	 * Returns a new object of class '<em>And Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>And Predicate</em>'.
+	 * @generated
+	 */
+	AndPredicate createAndPredicate();
+
+	/**
+	 * Returns a new object of class '<em>Or Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Or Predicate</em>'.
+	 * @generated
+	 */
+	OrPredicate createOrPredicate();
+
+	/**
+	 * Returns a new object of class '<em>Not Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Not Predicate</em>'.
+	 * @generated
+	 */
+	NotPredicate createNotPredicate();
+
+	/**
+	 * Returns a new object of class '<em>Attribute Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Attribute Predicate</em>'.
+	 * @generated
+	 */
+	AttributePredicate createAttributePredicate();
+
+	/**
 	 * Returns a new object of class '<em>EL Attribute</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

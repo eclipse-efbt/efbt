@@ -3,44 +3,47 @@
 package org.eclipse.efbt.ecore4reg.model.ecore4reg.impl;
 
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Table Filter</b></em>'.
+ * An implementation of the model object '<em><b>Not Predicate</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.TableFilterImpl#getPredicate <em>Predicate</em>}</li>
+ *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.NotPredicateImpl#getOperand <em>Operand</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class TableFilterImpl extends MinimalEObjectImpl.Container implements TableFilter {
+public class NotPredicateImpl extends PredicateImpl implements NotPredicate {
 	/**
-	 * The cached value of the '{@link #getPredicate() <em>Predicate</em>}' containment reference.
+	 * The cached value of the '{@link #getOperand() <em>Operand</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPredicate()
+	 * @see #getOperand()
 	 * @generated
 	 * @ordered
 	 */
-	protected Predicate predicate;
+	protected Predicate operand;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TableFilterImpl() {
+	protected NotPredicateImpl() {
 		super();
 	}
 
@@ -51,7 +54,7 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return Ecore4regPackage.eINSTANCE.getTableFilter();
+		return Ecore4regPackage.eINSTANCE.getNotPredicate();
 	}
 
 	/**
@@ -59,8 +62,8 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Predicate getPredicate() {
-		return predicate;
+	public Predicate getOperand() {
+		return operand;
 	}
 
 	/**
@@ -68,11 +71,11 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetPredicate(Predicate newPredicate, NotificationChain msgs) {
-		Predicate oldPredicate = predicate;
-		predicate = newPredicate;
+	public NotificationChain basicSetOperand(Predicate newOperand, NotificationChain msgs) {
+		Predicate oldOperand = operand;
+		operand = newOperand;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Ecore4regPackage.TABLE_FILTER__PREDICATE, oldPredicate, newPredicate);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Ecore4regPackage.NOT_PREDICATE__OPERAND, oldOperand, newOperand);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -83,18 +86,18 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setPredicate(Predicate newPredicate) {
-		if (newPredicate != predicate) {
+	public void setOperand(Predicate newOperand) {
+		if (newOperand != operand) {
 			NotificationChain msgs = null;
-			if (predicate != null)
-				msgs = ((InternalEObject)predicate).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - Ecore4regPackage.TABLE_FILTER__PREDICATE, null, msgs);
-			if (newPredicate != null)
-				msgs = ((InternalEObject)newPredicate).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - Ecore4regPackage.TABLE_FILTER__PREDICATE, null, msgs);
-			msgs = basicSetPredicate(newPredicate, msgs);
+			if (operand != null)
+				msgs = ((InternalEObject)operand).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - Ecore4regPackage.NOT_PREDICATE__OPERAND, null, msgs);
+			if (newOperand != null)
+				msgs = ((InternalEObject)newOperand).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - Ecore4regPackage.NOT_PREDICATE__OPERAND, null, msgs);
+			msgs = basicSetOperand(newOperand, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.TABLE_FILTER__PREDICATE, newPredicate, newPredicate));
+			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.NOT_PREDICATE__OPERAND, newOperand, newOperand));
 	}
 
 	/**
@@ -105,8 +108,8 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case Ecore4regPackage.TABLE_FILTER__PREDICATE:
-				return basicSetPredicate(null, msgs);
+			case Ecore4regPackage.NOT_PREDICATE__OPERAND:
+				return basicSetOperand(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -119,8 +122,8 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case Ecore4regPackage.TABLE_FILTER__PREDICATE:
-				return getPredicate();
+			case Ecore4regPackage.NOT_PREDICATE__OPERAND:
+				return getOperand();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -130,12 +133,11 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case Ecore4regPackage.TABLE_FILTER__PREDICATE:
-				setPredicate((Predicate)newValue);
+			case Ecore4regPackage.NOT_PREDICATE__OPERAND:
+				setOperand((Predicate)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -149,8 +151,8 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case Ecore4regPackage.TABLE_FILTER__PREDICATE:
-				setPredicate((Predicate)null);
+			case Ecore4regPackage.NOT_PREDICATE__OPERAND:
+				setOperand((Predicate)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -164,10 +166,10 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case Ecore4regPackage.TABLE_FILTER__PREDICATE:
-				return predicate != null;
+			case Ecore4regPackage.NOT_PREDICATE__OPERAND:
+				return operand != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //TableFilterImpl
+} //NotPredicateImpl

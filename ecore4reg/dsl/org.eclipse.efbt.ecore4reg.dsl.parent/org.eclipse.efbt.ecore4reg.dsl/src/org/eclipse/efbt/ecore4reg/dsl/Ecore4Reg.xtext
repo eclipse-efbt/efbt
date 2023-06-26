@@ -254,7 +254,7 @@ RuleForILTablePart returns ecore4reg::RuleForILTablePart:
 	name=ID
 	'{'
 		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
-		( whereClause+=TableFilter ( whereClause+=TableFilter)*  )?
+		('where' whereClause=TableFilter)?
 	'}';
 
 
@@ -263,16 +263,41 @@ RuleForILTablePart returns ecore4reg::RuleForILTablePart:
 	
 TableFilter returns ecore4reg::TableFilter:
 	{ecore4reg::TableFilter}
-	'where'
+		 (predicate=Predicate )?
+	;
+
+Predicate returns ecore4reg::Predicate:
+	AndPredicate | OrPredicate | NotPredicate | AttributePredicate;
+	
+AndPredicate returns ecore4reg::AndPredicate:
+	{ecore4reg::AndPredicate}
+	'And('
+		(operands+=Predicate ( "and" operands+=Predicate)*  )?
+	')'
+;
+
+OrPredicate returns ecore4reg::OrPredicate:
+	{ecore4reg::OrPredicate}
+	'Or('
+		(operands+=Predicate ( "or" operands+=Predicate)* '}' )?
+	')'
+;
+
+NotPredicate returns ecore4reg::NotPredicate:
+	{ecore4reg::NotPredicate}
+	'Not('
+		( operand=Predicate)?
+	')';
+
+AttributePredicate returns ecore4reg::AttributePredicate:
+	{ecore4reg::AttributePredicate}
+	'filter'
 
 		( attribute1=[ecore4reg::ELAttribute|QualifiedName])?
 		( comparitor=Comparitor)?
 		('theMember' member=[ecore4reg::ELEnumLiteral|QualifiedName])?
 		('theValue' value=EString)?
-;
-
-
-	
+	;
 	
 SelectColumnMemberAs returns ecore4reg::SelectColumnMemberAs:
 	{ecore4reg::SelectColumnMemberAs}

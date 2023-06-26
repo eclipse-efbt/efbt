@@ -3,6 +3,8 @@
 package org.eclipse.efbt.ecore4reg.model.ecore4reg.util;
 
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.AllowedTypes;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELAnnotation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELAttribute;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELClass;
@@ -25,6 +27,9 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLi
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsSection;
@@ -213,6 +218,26 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseRuleForILTablePart(RuleForILTablePart object) {
 				return createRuleForILTablePartAdapter();
+			}
+			@Override
+			public Adapter casePredicate(Predicate object) {
+				return createPredicateAdapter();
+			}
+			@Override
+			public Adapter caseAndPredicate(AndPredicate object) {
+				return createAndPredicateAdapter();
+			}
+			@Override
+			public Adapter caseOrPredicate(OrPredicate object) {
+				return createOrPredicateAdapter();
+			}
+			@Override
+			public Adapter caseNotPredicate(NotPredicate object) {
+				return createNotPredicateAdapter();
+			}
+			@Override
+			public Adapter caseAttributePredicate(AttributePredicate object) {
+				return createAttributePredicateAdapter();
 			}
 			@Override
 			public Adapter caseELAttribute(ELAttribute object) {
@@ -685,6 +710,76 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createRuleForILTablePartAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate <em>Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate
+	 * @generated
+	 */
+	public Adapter createPredicateAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate <em>And Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AndPredicate
+	 * @generated
+	 */
+	public Adapter createAndPredicateAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate <em>Or Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate
+	 * @generated
+	 */
+	public Adapter createOrPredicateAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate <em>Not Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate
+	 * @generated
+	 */
+	public Adapter createNotPredicateAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate <em>Attribute Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.AttributePredicate
+	 * @generated
+	 */
+	public Adapter createAttributePredicateAdapter() {
 		return null;
 	}
 

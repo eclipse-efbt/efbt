@@ -70,14 +70,14 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 	protected EList<SelectColumn> columns;
 
 	/**
-	 * The cached value of the '{@link #getWhereClause() <em>Where Clause</em>}' containment reference list.
+	 * The cached value of the '{@link #getWhereClause() <em>Where Clause</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getWhereClause()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TableFilter> whereClause;
+	protected TableFilter whereClause;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -136,11 +136,42 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<TableFilter> getWhereClause() {
-		if (whereClause == null) {
-			whereClause = new EObjectContainmentEList<TableFilter>(TableFilter.class, this, Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE);
-		}
+	public TableFilter getWhereClause() {
 		return whereClause;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetWhereClause(TableFilter newWhereClause, NotificationChain msgs) {
+		TableFilter oldWhereClause = whereClause;
+		whereClause = newWhereClause;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE, oldWhereClause, newWhereClause);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setWhereClause(TableFilter newWhereClause) {
+		if (newWhereClause != whereClause) {
+			NotificationChain msgs = null;
+			if (whereClause != null)
+				msgs = ((InternalEObject)whereClause).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE, null, msgs);
+			if (newWhereClause != null)
+				msgs = ((InternalEObject)newWhereClause).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE, null, msgs);
+			msgs = basicSetWhereClause(newWhereClause, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE, newWhereClause, newWhereClause));
 	}
 
 	/**
@@ -154,7 +185,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 			case Ecore4regPackage.RULE_FOR_IL_TABLE_PART__COLUMNS:
 				return ((InternalEList<?>)getColumns()).basicRemove(otherEnd, msgs);
 			case Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE:
-				return ((InternalEList<?>)getWhereClause()).basicRemove(otherEnd, msgs);
+				return basicSetWhereClause(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -194,8 +225,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 				getColumns().addAll((Collection<? extends SelectColumn>)newValue);
 				return;
 			case Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE:
-				getWhereClause().clear();
-				getWhereClause().addAll((Collection<? extends TableFilter>)newValue);
+				setWhereClause((TableFilter)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -216,7 +246,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 				getColumns().clear();
 				return;
 			case Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE:
-				getWhereClause().clear();
+				setWhereClause((TableFilter)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -235,7 +265,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 			case Ecore4regPackage.RULE_FOR_IL_TABLE_PART__COLUMNS:
 				return columns != null && !columns.isEmpty();
 			case Ecore4regPackage.RULE_FOR_IL_TABLE_PART__WHERE_CLAUSE:
-				return whereClause != null && !whereClause.isEmpty();
+				return whereClause != null;
 		}
 		return super.eIsSet(featureID);
 	}
