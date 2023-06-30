@@ -32,6 +32,7 @@ class MainCatagoryFinder(object):
         '''
         MainCatagoryFinder.create_main_catogory_to_name_map(self, context)
         MainCatagoryFinder.create_report_to_main_catogory_map(self, context)
+        MainCatagoryFinder.create_table_part_to_main_catagory_map(self, context)
         MainCatagoryFinder.create_il_tables_for_main_catagory_map(self, context)
         MainCatagoryFinder.create_table_parts_for_main_catagory_map(self, context)
         
@@ -41,7 +42,7 @@ class MainCatagoryFinder(object):
         create a map of EBA main catagory code such as EBA_MC_EBA_x469 
         into its more user friendly display name such as loans and advances
         ''' 
-        file_location = context.file_directory + os.sep + "main_catagory_to_input_layer_analysis.csv"
+        file_location = context.file_directory + os.sep + "table_part_main_catagory.csv"
 
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity, 
@@ -150,14 +151,13 @@ class MainCatagoryFinder(object):
                                     # catagories for  report , create a new list
                                     list  = []
                                     list.append(member_id)
-                                    context.report_to_main_catogory_map[amemnded_report_name] = list                                
+                                    context.report_to_main_catogory_map[amemnded_report_name] = list 
                                     
-    def create_il_tables_for_main_catagory_map(self, context):
+    def create_table_part_to_main_catagory_map(self, context):
         '''
-        create a map from main catagories such as loans and advancess
-        to the related input layer such as instrument
+        create a map from table parts to main catagories
         ''' 
-        file_location = context.file_directory + os.sep + "main_catagory_to_input_layer_analysis.csv"
+        file_location = context.file_directory + os.sep + "table_part_main_catagory.csv"
 
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity, 
@@ -170,8 +170,31 @@ class MainCatagoryFinder(object):
                     header_skipped = True
                 else:
                     main_catagory = row[0]
-                    il_table = row[3]
+                    table_part = row[2]    
+                    context.table_parts_to_main_catagory_map[table_part] = main_catagory
+                                
+    def create_il_tables_for_main_catagory_map(self, context):
+        '''
+        create a map from main catagories such as loans and advancess
+        to the related input layer such as instrument
+        ''' 
+        file_location = context.file_directory + os.sep + "table_part_definitions.csv"
+
+        header_skipped = False
+        # Load all the entities from the csv file, make an ELClass per entity, 
+        # and add the ELClass to the package
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if (not header_skipped):
+                    header_skipped = True
+                else:
+                    table_part_name = row[0]                    
+                    il_table = row[1]
+                    main_catagory = context.table_parts_to_main_catagory_map[table_part_name]
                     try: 
+                        
                         table_list = context.tables_for_main_catagory_map[main_catagory]
                         if not(il_table in table_list):
                             table_list.append(il_table)
@@ -191,7 +214,7 @@ class MainCatagoryFinder(object):
         to the related table parts, where table part is a combination
         of an input layer and main catagory description
         ''' 
-        file_location = context.file_directory + os.sep + "main_catagory_to_input_layer_analysis.csv"
+        file_location = context.file_directory + os.sep + "table_part_definitions.csv"
 
         header_skipped = False
 
@@ -202,17 +225,15 @@ class MainCatagoryFinder(object):
                 if (not header_skipped):
                     header_skipped = True
                 else:
-                    main_catagory = row[0]
-                    description = row[2] 
-                    il_table = row[3]
-                    linked_table_list = row[6]
-                    filter = row[4]
-                    filter_items = row[5]
+                    table_part_name = row[0]                    
+                    il_table = row[1]
+                    filter = row[2]
+                    linked_table_list = row[3]
                     
-                    table_and_part_tuple = (il_table,description)
+                    main_catagory = context.table_parts_to_main_catagory_map[table_part_name]
+                    table_and_part_tuple = (il_table,table_part_name)
                     context.table_parts_to_linked_tables_map[table_and_part_tuple] = linked_table_list
                     context.table_parts_to_to_filter_map[table_and_part_tuple] = filter
-                    context.table_parts_to_to_filter_items_map[table_and_part_tuple] = filter_items
                     
                     try:
                         table_and_part_tuple_list = context.table_and_part_tuple_map[main_catagory]

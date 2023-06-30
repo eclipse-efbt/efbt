@@ -375,14 +375,21 @@ class PersistToFile:
         Documentation for persist_generation_transformations
         '''
         rules_for_reports = context.generation_rules_module.rulesForReport
-        f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
+        report_to_table_parts_file = open(context.output_directory + os.sep + 'generations_transformations_csv' +
                          os.sep + 
-                         'generation_transformations.csv', "a",  encoding='utf-8')
-        f.write("Template,Main_category code,Main category,Table,Column or Filter attribute,Filter members,Lineage type,Entity,Attribute,Missing,Not relevant, Derived,Domain,Member,Value,Comment,VARIABLE_ID\n")
+                         'report_to_table_parts.csv', "a",  encoding='utf-8')
+        report_to_table_parts_file.write("Report,Table Part,Notes\n")
 
         for rules_for_report in rules_for_reports:
             if not(rules_for_report.outputLayerCube is None): #column.attribute.eContainer().name + "." + column.attribute.name
+                
                 template = rules_for_report.outputLayerCube.name
+                amended_template_name =  template[0:len(template) - 11]
+                f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
+                         os.sep + 
+                         amended_template_name + '.csv', "a",  encoding='utf-8')
+                f.write("Template,Table Part,Main Table,Filter,Lineage type,Source Table,Source Column,Missing,Relevant, Derived,Domain,Member,Value,ROL Cube Item,Notes\n")
+
                 for layer in rules_for_report.rulesForTable:
                     table = layer.inputLayerTable.name
                     for table_part in layer.rulesForTablePart:
@@ -390,8 +397,8 @@ class PersistToFile:
                         main_catagory_name = context.main_catogory_to_name_map[main_catagory]
                         
                         table_and_part = table_part.table_and_part_tuple
+                        report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",")
                         filter = context.table_parts_to_to_filter_map[table_and_part]
-                        filter_items = context.table_parts_to_to_filter_items_map[table_and_part]
                         for column in table_part.columns:
                             if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
                                 entity  = column.attribute.eContainer().name
@@ -405,13 +412,12 @@ class PersistToFile:
                                 lineage_type = "tbd"
                                 
                             variable_id = column.asAttribute.name
-                            # remove the _Output_item sring which is appended to the
-                            # template to make the class name.
-                            amended_template_name =  template[0:len(template) - 11]
-                            f.write(amended_template_name +"," + main_catagory +"," +main_catagory_name+"," +table+"," + filter + "," + filter_items + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,,," +variable_id + "\n")
 
-                        
-        f.close()
+                            
+                            f.write(amended_template_name +"," + table_part.name +","  +table+"," + filter + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,," +variable_id + ",\n")
+
+                f.close()
+        report_to_table_parts_file.close
 
     def persist_generation_transformations(self, context):
         '''

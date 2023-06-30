@@ -112,11 +112,41 @@ class GenerationRuleCreator(object):
                     select_column = SelectColumnAttributeAs()
                     select_column.asAttribute = output_item
                     rules_for_il_table_part.columns.extend([select_column])
-                    inputColumn = GenerationRuleCreator.findVariableWithSameDomain(self,context,output_item,input_entity_list)
+                    inputColumn = None
+                    if context.match_domains_in_generation_file:
+                        inputColumn = GenerationRuleCreator.findVariableWithSameDomain(self,context,output_item,input_entity_list)
+                    else:
+                        inputColumn = GenerationRuleCreator.findRelatedVariable(self,context,output_item,input_entity_list)
+                        
                     if not(inputColumn is None):
                         select_column.attribute = inputColumn
                         
                     
+    def findRelatedVariable(self,context,output_item,input_entity_list):
+        '''
+        when we have an ROL item it has a specific domain.
+        We want to find any column in the limited related input tables
+        which has the same domain
+        '''  
+        output_variable_name = output_item.name
+           
+        if not (output_variable_name is None): 
+            
+            for input_entity in input_entity_list:
+                if not (input_entity is None):    
+                    for input_item in input_entity.eStructuralFeatures:
+                        if isinstance(input_item, ELAttribute):
+                            input_item_name = input_item.name
+                            if input_item_name == output_variable_name:
+                                return input_item
+                            try:
+                                primary_concept = context.variable_to_primary_concept_map[input_item_name]
+                                if primary_concept == output_variable_name:
+                                    return input_item
+                            except:
+                                print("no primary concept for " + input_item_name)
+        return None
+    
     def findVariableWithSameDomain(self,context,output_item,input_entity_list):
         '''
         when we have an ROL item it has a specific domain.
