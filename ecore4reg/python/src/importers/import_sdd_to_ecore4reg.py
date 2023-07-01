@@ -32,7 +32,7 @@ class SDDImport(object):
         '''
         SDDImport.add_rol_classes_to_package(self, context)
         SDDImport.create_variable_set_to_variable_map(self, context)
-        SDDImport.create_variable_to_domain_map(self, context)
+        SDDImport.create_variable_maps(self, context)
         SDDImport.create_domain_to_domain_name_map(self, context)
         SDDImport.create_member_maps(self, context)
         if context.use_subdomains_in_rol:
@@ -179,9 +179,9 @@ class SDDImport(object):
                         if not variable_id in variable_list:
                             variable_list.append(variable_id)
 
-    def create_variable_to_domain_map(self, context):
+    def create_variable_maps(self, context):
         '''
-        Create a map of variables to domains
+        Create maps of variables to domains, long names, and primary concepts
         '''
 
         # Make a variable to Domain Map
@@ -199,10 +199,15 @@ class SDDImport(object):
                 else:
                     variable_name = row[context.variableVariableNameIndex]
                     long_name = row[context.variableLongNameIndex]
+                    primary_concept = row[context.variable_primary_concept]
                     # domainName = Utils.make_valid_id(row[3])
                     domain = row[context.variableDomainIndex]
                     context.variable_to_domain_map[variable_name] = domain
                     context.variable_to_long_names_map[variable_name] = long_name
+                    if not((primary_concept == "") or (primary_concept == None)):
+                        context.variable_to_primary_concept_map[variable_name] = primary_concept
+                        
+                    
 
     def create_domain_to_domain_name_map(self, context):
         '''

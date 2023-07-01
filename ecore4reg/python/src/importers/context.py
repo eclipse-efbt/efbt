@@ -32,6 +32,7 @@ class Context(object):
     add_pks_to_input_layer_from_website = True 
     reporting_framework = "FINREP"
     reporting_framework_version = ["3","3.0-Ind"]
+    match_domains_in_generation_file = False
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.
@@ -62,7 +63,8 @@ class Context(object):
     table_and_part_tuple_map = {}
     table_parts_to_linked_tables_map = {}
     table_parts_to_to_filter_map = {}
-    table_parts_to_to_filter_items_map = {}
+    #table_parts_to_to_filter_items_map = {}
+    table_parts_to_main_catagory_map = {}
 
     # create  Ecore4Reg  packages
     types_package = ELPackage(name='types')
@@ -114,6 +116,7 @@ class Context(object):
     # and domains
     variable_to_domain_map = {}
     variable_to_long_names_map = {}
+    variable_to_primary_concept_map = {}
     # For the reference output layers we record a map between domains
     # and domain names
     domain_to_domain_name_map = {}
@@ -168,6 +171,7 @@ class Context(object):
     variableCodeIndex = 0
     variable_variable_description = 1
     variable_variable_true_id = 6
+    variable_primary_concept = 5
     
     domainDomainIDIndex = 0
     domainDomainNameIndex = 8
@@ -230,6 +234,7 @@ class Context(object):
             self.variableCodeIndex = 2
             self.variable_variable_description = 5
             self.variable_variable_true_id = 1
+            self.variable_primary_concept = 6
             
             self.domainDomainIDIndex = 6
             self.domainDomainNameIndex = 2
@@ -288,6 +293,7 @@ class Context(object):
             self.variableCodeIndex = 0
             self.variable_variable_description = 1
             self.variable_variable_true_id = 6
+            self.variable_primary_concept = 5
             
             self.domainDomainIDIndex = 0
             self.domainDomainNameIndex = 8

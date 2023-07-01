@@ -40,9 +40,9 @@ if __name__ == '__main__':
     context.use_codes = True
     # when finding  source columns form the input layer, related
     # to items in the output layer we find columns with matching
-    # variables not matching domains
+    # domains domains, even if they have different variables
 
-    context.findVariableWithSameDomain = False
+    context.findVariableWithSameDomain = True
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     # import the information about EIL and ROL from csv files downloaded
