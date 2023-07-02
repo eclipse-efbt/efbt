@@ -397,7 +397,7 @@ class PersistToFile:
                         main_catagory_name = context.main_catogory_to_name_map[main_catagory]
                         
                         table_and_part = table_part.table_and_part_tuple
-                        report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",")
+                        report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
                         filter = context.table_parts_to_to_filter_map[table_and_part]
                         for column in table_part.columns:
                             if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):

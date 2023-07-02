@@ -132,6 +132,12 @@ class SDDContext(object):
     combination_item_combination_id = 0
     combination_item_variable_id = 1
     combination_member_id = 4
+    
+    member_mapping_id = 0
+    member_mapping_row = 1
+    member_mapping_variable_id = 2
+    member_mapping_is_source = 3
+    member_mapping_member_id = 4
 
     def set_up_csv_indexes(self):
         if self.input_from_website:
@@ -190,6 +196,13 @@ class SDDContext(object):
             self.combination_item_combination_id = 0
             self.combination_item_variable_id = 1
             self.combination_member_id = 4
+            
+            self.member_mapping_id = 0
+            self.member_mapping_row = 1
+            self.member_mapping_variable_id = 2
+            self.member_mapping_is_source = 3
+            self.member_mapping_member_id = 4
+            
         else:
             self.cubeClassNameIndex = 0
             self.cubeObjectIDIndex = 1
@@ -246,4 +259,10 @@ class SDDContext(object):
             self.combination_item_combination_id = 0
             self.combination_item_variable_id = 1
             self.combination_member_id = 4
+            
+            self.member_mapping_id = 0
+            self.member_mapping_row = 1
+            self.member_mapping_variable_id = 2
+            self.member_mapping_is_source = 3
+            self.member_mapping_member_id = 4
            

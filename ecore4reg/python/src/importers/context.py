@@ -65,6 +65,7 @@ class Context(object):
     table_parts_to_to_filter_map = {}
     #table_parts_to_to_filter_items_map = {}
     table_parts_to_main_catagory_map = {}
+    main_catagories_in_scope = []
 
     # create  Ecore4Reg  packages
     types_package = ELPackage(name='types')
