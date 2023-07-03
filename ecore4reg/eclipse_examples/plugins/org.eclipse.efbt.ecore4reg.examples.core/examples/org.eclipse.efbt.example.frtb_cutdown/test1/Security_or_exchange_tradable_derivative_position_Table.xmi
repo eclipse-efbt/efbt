@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<input_tables:Security_or_exchange_tradable_derivative_position_Table xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:input_tables="input_tables" xsi:schemaLocation="input_tables ../src/input_tables.xcore#/EPackage">
+  <Security_or_exchange_tradable_derivative_positions Position_identifier="position1"/>
+  <Security_or_exchange_tradable_derivative_positions Position_identifier="position2"/>
+</input_tables:Security_or_exchange_tradable_derivative_position_Table>

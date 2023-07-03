@@ -10,6 +10,6 @@ rm -rf ecore4reg/python/resultsfinrep28/xmi/*
 cd ecore4reg/python/src/
 pip install pyecore
 pip install unidecode
-python create_transformations_with_json.py
+python create_transformations_from_vtl_with_json.py
 
 

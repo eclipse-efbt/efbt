@@ -18,7 +18,7 @@ import "http://www.eclipse.org/efbt/ecore4reg" as ecore4reg
 
 
 Module returns ecore4reg::Module:
-	Module_Impl | RequirementsModule | TagGroup | ViewModule | ELPackage;
+	RequirementsModule | TagGroup | GenerationRulesModule | ELPackage;
 	
 ELClassifier returns ecore4reg::ELClassifier:
 	ELClass | ELDataType_Impl | ELEnum ;
@@ -33,38 +33,33 @@ RequirementsSection returns ecore4reg::RequirementsSection:
 
 
 SelectColumn returns ecore4reg::SelectColumn:
-	 SelectColumnMemberAs | SelectColumnAttributeAs | SelectValueAs;
+	 SelectColumnMemberAs | SelectColumnAttributeAs | SelectDerivedColumnAs | SelectValueAs;
 
 
 
 EString returns ecore::EString:
 	STRING ;
 
-SelectionLayer returns ecore4reg::SelectionLayer:
-	{ecore4reg::SelectionLayer}
-	'SelectionLayer'
-	name=ID
-	;
 
 RequirementsModule returns ecore4reg::RequirementsModule:
 	{ecore4reg::RequirementsModule}
-	'RequirementsModule'
+	'requirementsModule'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
 		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
-		('rules' '{' rules+=TitledRequirementsSection ( "," rules+=TitledRequirementsSection)* '}' )?		
-		('allowedtypes' allowedtypes=AllowedTypes)?
+		('theRules' '{' rules+=TitledRequirementsSection ( "," rules+=TitledRequirementsSection)* '}' )?		
+		('theAllowedtypes' allowedtypes=AllowedTypes)?
 	'}';
 
-ViewModule returns ecore4reg::ViewModule:
-	{ecore4reg::ViewModule}
-	'ViewModule'
+GenerationRulesModule returns ecore4reg::GenerationRulesModule:
+	{ecore4reg::GenerationRulesModule}
+	'generationRuleModule'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
 		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
-		('views' '{' views+=View ( "," views+=View)* '}' )?
+		('generationRules' '{' rulesForReport+=RulesForReport ( "," rulesForReport+=RulesForReport)* '}' )?
 	'}';
 
 
@@ -79,7 +74,7 @@ ELAttribute returns ecore4reg::ELAttribute:
 
 ELClass returns ecore4reg::ELClass:
 	{ecore4reg::ELClass}
-	((abstract?='abstract'? 'class') ) name = ID
+	((eAbstract?='abstract'? 'class') ) name = ID
 	('extends' eSuperTypes+=[ecore4reg::ELClass|QualifiedName] (',' eSuperTypes+=[ecore4reg::ELClass|QualifiedName])*)?
 	'{'
 	   (eStructuralFeatures+=ELStructuralFeature)*
@@ -106,9 +101,15 @@ ELOperation returns ecore4reg::ELOperation:
 	'op'
 	eType=[ecore4reg::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
-	'()'
+	'(' (eParameters+=ELParameter (',' eParameters+=ELParameter)*)? ')'
 	'{'(body=EString)?'}'
 	;
+
+ELParameter returns ecore4reg::ELParameter:
+
+    eType=[ecore4reg::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+    name=ID
+;
 
 ELReference returns ecore4reg::ELReference:
 	{ecore4reg::ELReference}
@@ -146,44 +147,36 @@ QualifiedNameWithWildcard :
 
 
 TitledRequirementsSection returns ecore4reg::TitledRequirementsSection:
-	'TitledRequirementsSection'
+	'titledRequirementsSection'
 	name=ID
 	'{'
-		('title' title=EString)?
-		('referencingSections' referencingSections=[ecore4reg::RequirementsSectionLinkWithText|QualifiedName])?
-		'requirementsType' requirementsType=[ecore4reg::RequirementType|QualifiedName]
-		('sections' '{' sections+=RequirementsSection ( "," sections+=RequirementsSection)* '}' )?
+		('theTitle' title=EString)?
+		('theReferencingSections' referencingSections=[ecore4reg::RequirementsSectionLinkWithText|QualifiedName])?
+		'theRequirementsType' requirementsType=[ecore4reg::RequirementType|QualifiedName]
+		('theSections' '{' sections+=RequirementsSection ( "," sections+=RequirementsSection)* '}' )?
 	'}';
 	
 
 
 AllowedTypes returns ecore4reg::AllowedTypes:
 	{ecore4reg::AllowedTypes}
-	'AllowedTypes'
+	'allAllowedTypes'
 	'{'
-		('allowedTypes' '{' allowedTypes+=RequirementType ( "," allowedTypes+=RequirementType)* '}' )?
+		('theAllowedTypes' '{' allowedTypes+=RequirementType ( "," allowedTypes+=RequirementType)* '}' )?
 	'}';
 
 
 
-Module_Impl returns ecore4reg::Module:
-	{ecore4reg::Module}
-	'Module'
-	name=QualifiedName
-	(imports += Import)*
-	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
-		
-	'}';
+
 
 TagGroup returns ecore4reg::TagGroup:
 	{ecore4reg::TagGroup}
-	'TagGroup'
+	'tagGroup'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
 		('annotation' '"dependency"' 'as' dependencies+=[ecore4reg::Module|QualifiedName])*
-		('tags' '{' tags+=Tag ( "," tags+=Tag)* '}' )?
+		('theTags' '{' tags+=Tag ( "," tags+=Tag)* '}' )?
 	'}';
 	
 Tag returns ecore4reg::Tag:
@@ -192,45 +185,45 @@ Tag returns ecore4reg::Tag:
 
 Tag_Impl returns ecore4reg::Tag:
 	{ecore4reg::Tag}
-	'Tag'
+	'tag'
 	name=ID
 	'{'
-		('displayName' displayName=EString)?
-		('requirements' '(' requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName] ( "," requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName])* ')' )?
+		('theDisplayName' displayName=EString)?
+		('theRequirements' '(' requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName] ( "," requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName])* ')' )?
 	'}';
 
 
 
 RequirementsSectionLinkWithText returns ecore4reg::RequirementsSectionLinkWithText:
 	{ecore4reg::RequirementsSectionLinkWithText}
-	'RequirementsSectionLinkWithText'
+	'requirementsSectionLinkWithText'
 	name=ID
 	'{'
-		('linkText' linkText=EString)?
-		('subsection' subsection=EString)?
-		('linkedRuleSection' linkedRuleSection=[ecore4reg::TitledRequirementsSection|QualifiedName])?
+		('theLinkText' linkText=EString)?
+		('theSubsection' subsection=EString)?
+		('theLinkedRuleSection' linkedRuleSection=[ecore4reg::TitledRequirementsSection|QualifiedName])?
 	'}';
 
 RequirementType returns ecore4reg::RequirementType:
 	{ecore4reg::RequirementType}
-	'RequirementType'
+	'requirementType'
 	name=ID;
 
 RequirementsSectionImage returns ecore4reg::RequirementsSectionImage:
 	{ecore4reg::RequirementsSectionImage}
-	'RequirementsSectionImage'
+	'requirementsSectionImage'
 	name=ID
 	'{'
-		('style' style=EString)?
-		('uri' uri=EString)?
+		('theStyle' style=EString)?
+		('theUri' uri=EString)?
 	'}';
 
 RequirementsSectionText returns ecore4reg::RequirementsSectionText:
 	{ecore4reg::RequirementsSectionText}
-	'RequirementsSectionText'
+	'requirementsSectionText'
 	name=ID
 	'{'
-		('text' text=EString)?
+		('theText' text=EString)?
 	'}';
 
 ELPackage returns ecore4reg::ELPackage:
@@ -241,62 +234,101 @@ ELPackage returns ecore4reg::ELPackage:
 	(eClassifiers += ELClassifier)*
 	;
 
-LayerSQL returns ecore4reg::LayerSQL:
-	{ecore4reg::LayerSQL}
-	'LayerSQL'
+RulesForReport returns ecore4reg::RulesForReport:
+	{ecore4reg::RulesForReport}
+	'report' outputLayerCube=[ecore4reg::ELClass|QualifiedName]
 	'{'
-		('selectionLayer' selectionLayer=SelectionLayer)
-		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
-		( whereClause+=WhereClause ( whereClause+=WhereClause)*  )?
+		(rulesForTable+=RulesForILTable (rulesForTable+=RulesForILTable)*  )?
 	'}';
-
-View returns ecore4reg::View:
-	{ecore4reg::View}
-	'View'
+	
+RulesForILTable returns ecore4reg::RulesForILTable:
+	{ecore4reg::RulesForILTable}
+	'ILTable' inputLayerTable=[ecore4reg::ELClass|QualifiedName]
+	'{'
+		(rulesForTablePart+=RuleForILTablePart (rulesForTablePart+=RuleForILTablePart)*  )?
+	'}';
+	
+RuleForILTablePart returns ecore4reg::RuleForILTablePart:
+	{ecore4reg::RuleForILTablePart}
+	'tablePart'
 	name=ID
 	'{'
-		('outputLayer' outputLayer=[ecore4reg::ELClass|QualifiedName])?
-		(selectionLayerSQL+=LayerSQL (selectionLayerSQL+=LayerSQL)*  )?
+		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
+		('where' whereClause=TableFilter)?
 	'}';
+
+
 
 	
 	
-WhereClause returns ecore4reg::WhereClause:
-	{ecore4reg::WhereClause}
-	'where'
+TableFilter returns ecore4reg::TableFilter:
+	{ecore4reg::TableFilter}
+		 (predicate=Predicate )?
+	;
+
+Predicate returns ecore4reg::Predicate:
+	AndPredicate | OrPredicate | NotPredicate | AttributePredicate;
+	
+AndPredicate returns ecore4reg::AndPredicate:
+	{ecore4reg::AndPredicate}
+	'And('
+		(operands+=Predicate ( "and" operands+=Predicate)*  )?
+	')'
+;
+
+OrPredicate returns ecore4reg::OrPredicate:
+	{ecore4reg::OrPredicate}
+	'Or('
+		(operands+=Predicate ( "or" operands+=Predicate)*  )?
+	')'
+;
+
+NotPredicate returns ecore4reg::NotPredicate:
+	{ecore4reg::NotPredicate}
+	'Not('
+		( operand=Predicate)?
+	')';
+
+AttributePredicate returns ecore4reg::AttributePredicate:
+	{ecore4reg::AttributePredicate}
+	'filter'
 
 		( attribute1=[ecore4reg::ELAttribute|QualifiedName])?
 		( comparitor=Comparitor)?
-		('member' member=[ecore4reg::ELEnumLiteral|QualifiedName])?
-		('value' value=EString)?
-;
-
-
-	
+		('theMember' member=[ecore4reg::ELEnumLiteral|QualifiedName])?
+		('theValue' value=EString)?
+	;
 	
 SelectColumnMemberAs returns ecore4reg::SelectColumnMemberAs:
 	{ecore4reg::SelectColumnMemberAs}
-	'SelectMember'
+	'selectMember'
 		( memberAsConstant=[ecore4reg::ELEnumLiteral|QualifiedName])?
 		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
 		;
 	
 SelectColumnAttributeAs returns ecore4reg::SelectColumnAttributeAs:
 	{ecore4reg::SelectColumnAttributeAs}
-	'SelectAttribute'
+	'selectAttribute'
 		( attribute=[ecore4reg::ELAttribute|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
+	;
+	
+SelectDerivedColumnAs returns ecore4reg::SelectDerivedColumnAs:
+	{ecore4reg::SelectDerivedColumnAs}
+	'selectDerivedAttribute'
+		( attribute=[ecore4reg::ELOperation|QualifiedName])?
 		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
 	;
 	
 SelectValueAs returns ecore4reg::SelectValueAs:
 	{ecore4reg::SelectValueAs}
-	'SelectValue'
+	'selectValue'
 		( value=EString)?
 		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
 	;
 
 enum Comparitor returns ecore4reg::Comparitor:
-				less_than = 'less_than' | equals = 'equals' | equals = 'not_equals' | greater_than = 'greater_than';
+				less_than = 'is_less_than' | equals = 'is_equals' | not_equals = 'is_not_equals' | greater_than = 'is_greater_than';
 
 
 	

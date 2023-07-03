@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<input_layer_entities:GIRR_risk_factor_BaseTable xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:input_layer_entities="input_layer_entities" xsi:schemaLocation="input_layer_entities ../src/input_layer_entities.xcore#/EPackage">
-  <GIRR_risk_factors Risk_factor_Identifier="GIRR_Risk_Factor1" GIRR_risk_factor_type="Yield" Main_currency="USD"/>
-  <GIRR_risk_factors Risk_factor_Identifier="GIRR_Risk_Factor2" GIRR_risk_factor_type="Yield" Main_currency="USD"/>
-</input_layer_entities:GIRR_risk_factor_BaseTable>

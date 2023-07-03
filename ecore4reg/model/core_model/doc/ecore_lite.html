@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Sun May 07 07:14:33 BST 2023-->
+<!-- Creation date: Mon Jul 03 09:41:02 BST 2023-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -213,7 +213,7 @@ function getElementsByTagNames(list,obj) {
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="ecoreliteELClass.abstract" class="teletype">abstract</div>
+<tr>	<td><div id="ecoreliteELClass.eAbstract" class="teletype">eAbstract</div>
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EBoolean</span></div>
 <div class="label">Cardinality: [0..1]</div>
@@ -263,7 +263,7 @@ function getElementsByTagNames(list,obj) {
 	<th><div class="columnHeader">Properties</div></th>
 	<th><div class="columnHeader">Documentation</div></th>
 </tr>
-<tr>	<td><div id="ecoreliteELClassifier.package" class="teletype">package</div>
+<tr>	<td><div id="ecoreliteELClassifier.ePackage" class="teletype">ePackage</div>
 	</td>
 	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELPackage">ELPackage</a></span></div>
 <div class="label">Cardinality: [0..1]</div>
@@ -390,6 +390,24 @@ function getElementsByTagNames(list,obj) {
  </td> <td></td>
 		</tr></table>
 <a href="#ecore_lite.ELOperation.attr"></a>
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="ecoreliteELOperation.eParameters" class="teletype">eParameters</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#ecoreliteELParameter">ELParameter</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#ecore_lite.ELOperation.ref"></a>
 <h2 id="ecoreliteELPackage"><a href="#ecoreliteELPackage"><a href="#ecoreliteELPackage">ELPackage</a></a></h2>
 
 <h4><b>Supertype:</b><a href="#modulemanagementModule">Module</a></h4><table>
@@ -410,7 +428,9 @@ function getElementsByTagNames(list,obj) {
 <td> </td>
 		</tr></table>
 <a href="#ecore_lite.ELPackage.ref"></a>
-<h2 id="ecoreliteELReference"><a href="#ecoreliteELReference"><a href="#ecoreliteELReference">ELReference</a></a></h2>
+<h2 id="ecoreliteELParameter"><a href="#ecoreliteELParameter"><a href="#ecoreliteELParameter">ELParameter</a></a></h2>
+
+<h4><b>Supertype:</b><a href="#ecoreliteELTypedElement">ELTypedElement</a></h4><h2 id="ecoreliteELReference"><a href="#ecoreliteELReference"><a href="#ecoreliteELReference">ELReference</a></a></h2>
 
 <h4><b>Supertype:</b><a href="#ecoreliteELStructuralFeature">ELStructuralFeature</a></h4><table>
 <tr>

@@ -313,6 +313,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//MEMBER_MAPPING_ITEM/isSource"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//MEMBER_MAPPING_ITEM/member"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//MEMBER_MAPPING_ITEM/variable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//MEMBER_MAPPING_ITEM/row"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//VARIABLE_MAPPING_ITEM">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//VARIABLE_MAPPING_ITEM/isSource"/>

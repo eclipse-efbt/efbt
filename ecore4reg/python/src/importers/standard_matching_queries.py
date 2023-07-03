@@ -20,10 +20,10 @@ class StandardMatchingQueries(object):
     '''
     Documentation for StandardMatchingQueries
     '''
-    input_layer_enums_model = None
-    input_layer_entities_model = None
-    output_layer_enums_model = None
-    output_layer_entities_model = None
+    il_domains_model = None
+    input_tables_model = None
+    sdd_domains_model = None
+    output_tables_model = None
     types_model = None
     variable_name_to_code_map = {}
     unique_tuple_list = []
@@ -36,33 +36,33 @@ class StandardMatchingQueries(object):
 
         rset = ResourceSet()
         extension = 'ecore'
-        input_layer_enums_resource = rset.get_resource(
+        il_domains_resource = rset.get_resource(
             URI(context.output_directory + os.sep + extension + 
-            os.sep + "input_layer_enums.ecore"))
-        input_layer_enums_root = input_layer_enums_resource.contents[0]
-        rset.metamodel_registry[input_layer_enums_root.nsURI] = input_layer_enums_root
-        self.input_layer_enums_model = input_layer_enums_root
+            os.sep + "il_domains.ecore"))
+        il_domains_root = il_domains_resource.contents[0]
+        rset.metamodel_registry[il_domains_root.nsURI] = il_domains_root
+        self.il_domains_model = il_domains_root
 
-        output_layer_enums_resource = rset.get_resource(
+        sdd_domains_resource = rset.get_resource(
             URI(context.output_directory + os.sep + extension +
-            os.sep + "output_layer_enums.ecore"))
-        output_layer_enums_root = output_layer_enums_resource.contents[0]
-        rset.metamodel_registry[output_layer_enums_root.nsURI] = output_layer_enums_root
-        self.output_layer_enums_model = output_layer_enums_root
+            os.sep + "sdd_domains.ecore"))
+        sdd_domains_root = sdd_domains_resource.contents[0]
+        rset.metamodel_registry[sdd_domains_root.nsURI] = sdd_domains_root
+        self.sdd_domains_model = sdd_domains_root
 
-        input_layer_entities_resource = rset.get_resource(
+        input_tables_resource = rset.get_resource(
             URI(context.output_directory + os.sep + extension +
-            os.sep+ "input_layer_entities.ecore"))
-        input_layer_entities_root = input_layer_entities_resource.contents[0]
-        rset.metamodel_registry[input_layer_entities_root.nsURI] = input_layer_entities_root
-        self.input_layer_entities_model = input_layer_entities_root
+            os.sep+ "input_tables.ecore"))
+        input_tables_root = input_tables_resource.contents[0]
+        rset.metamodel_registry[input_tables_root.nsURI] = input_tables_root
+        self.input_tables_model = input_tables_root
 
-        output_layer_entities_resource = rset.get_resource(
+        output_tables_resource = rset.get_resource(
             URI(context.output_directory + os.sep + extension +
-            os.sep + "output_layer_entities.ecore"))
-        output_layer_entities_root = output_layer_entities_resource.contents[0]
-        rset.metamodel_registry[output_layer_entities_root.nsURI] = output_layer_entities_root
-        self.output_layer_entities_model = output_layer_entities_root
+            os.sep + "output_tables.ecore"))
+        output_tables_root = output_tables_resource.contents[0]
+        rset.metamodel_registry[output_tables_root.nsURI] = output_tables_root
+        self.output_tables_model = output_tables_root
 
         StandardMatchingQueries.create_input_layer_to_output_layer_matches(
             self, context)
@@ -256,7 +256,7 @@ class StandardMatchingQueries(object):
         '''
         This method is used to find the related attribute in the input layer
         '''
-        classifiers = self.input_layer_entities_model.eClassifiers
+        classifiers = self.input_tables_model.eClassifiers
         return_attributes = []
         
 
@@ -318,7 +318,7 @@ class StandardMatchingQueries(object):
 
     def lastResortMatch(self,inputLayerAttributeType):
 
-        classifiers = self.input_layer_entities_model.eClassifiers
+        classifiers = self.input_tables_model.eClassifiers
         best_attribute = None
         best_attributes_member_matching_count = 1;
         for classifier in classifiers:
@@ -345,7 +345,7 @@ class StandardMatchingQueries(object):
         '''
         This method is used to find the output layers
         '''
-        classifiers = self.output_layer_entities_model.eClassifiers
+        classifiers = self.output_tables_model.eClassifiers
         output_layers = []
         for classifier in classifiers:
             if classifier.name.endswith("_OutputItem"):
@@ -401,8 +401,8 @@ class StandardMatchingQueries(object):
                 if (not header_skipped):
                     header_skipped = True
                 else:
-                    long_name = row[4]
-                    variable_code = row[0]
+                    long_name = row[context.variableLongNameIndex]
+                    variable_code = row[context.variableCodeIndex]
                     self.variable_name_to_code_map[Utils.make_valid_id(
                         long_name)] = variable_code
 

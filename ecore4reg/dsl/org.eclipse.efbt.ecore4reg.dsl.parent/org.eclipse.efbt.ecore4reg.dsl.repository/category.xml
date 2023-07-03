@@ -12,12 +12,8 @@
        Neil Mackenzie - initial API and implementation
  -->
 <site>
-	<feature id="org.eclipse.efbt.ecore4reg.dsl.feature" version="0.0.0">
-		<category name="main"/>
-	</feature>
-	<feature id="org.eclipse.efbt.ecore4reg.dsl.feature.source" version="0.0.0">
-		<category name="main.source"/>
-	</feature>
-	<category-def name="main" label="ecore4reg"/>
-	<category-def name="main.source" label="ecore4reg (Sources)"/>
+   <feature id="org.eclipse.efbt.ecore4reg.dsl.feature" version="1.2.0">
+      <category name="main"/>
+   </feature>
+   <category-def name="main" label="ecore4reg"/>
 </site>

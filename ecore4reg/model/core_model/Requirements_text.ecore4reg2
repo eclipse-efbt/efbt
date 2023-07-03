@@ -1,0 +1,71 @@
+package requirements_text
+/**Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation*/
+ 
+
+import module_management.*
+import types.*
+
+
+
+class AllowedTypes {
+	
+	contains RequirementType[0..-1] allowedTypes
+}
+
+
+class RequirementsModule extends Module {
+
+	contains TitledRequirementsSection[0..-1] rules
+	contains AllowedTypes allowedtypes
+}
+
+abstract class RequirementsSection {
+
+	id String name
+}
+
+
+class RequirementsSectionImage extends RequirementsSection {
+
+	String style
+	String uri
+}
+
+class RequirementsSectionLinkWithText extends RequirementsSection {
+
+	refers TitledRequirementsSection linkedRuleSection 
+	String linkText
+	String subsection
+}
+
+
+class RequirementsSectionText extends RequirementsSection {
+	String text
+}
+
+class RequirementType {
+	id String name
+}
+
+class TitledRequirementsSection extends RequirementsSection {
+	contains RequirementsSection[0..-1] sections
+	refers RequirementsSectionLinkWithText referencingSections 
+	refers RequirementType requirementsType
+	String title
+}
+
+class Tag {
+	String displayName
+	id String name
+	refers TitledRequirementsSection[0..-1] requirements
+}
+
+class TagGroup extends module_management.Module {
+	contains Tag[0..-1] tags
+}

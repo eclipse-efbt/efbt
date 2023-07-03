@@ -3,11 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.efbt.ecore4reg.model;singleton:=true
 Automatic-Module-Name: org.eclipse.efbt.ecore4reg.model
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.eclipse.efbt.ecore4reg.model.ecore4reg,
  org.eclipse.efbt.ecore4reg.model.ecore4reg.impl,
  org.eclipse.efbt.ecore4reg.model.ecore4reg.util

@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_m0fMML_QEe2R2a7D6DrwpQ" version="15.0.0.202209061200">
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" uid="_m0fMML_QEe2R2a7D6DrwpQ" version="15.2.0.202303281325">
   <semanticResources>src/C91_REFoutput_logic.xcorel</semanticResources>
-  <semanticResources>src/input_layer_enums.xcorel</semanticResources>
-  <semanticResources>src/output_layer_enums.xcorel</semanticResources>
+  <semanticResources>src/il_domains.xcorel</semanticResources>
+  <semanticResources>src/sdd_domains.xcorel</semanticResources>
   <semanticResources>src/types.xcorel</semanticResources>
-  <semanticResources>src/input_layer_entities.xcorel</semanticResources>
+  <semanticResources>src/input_tables.xcorel</semanticResources>
   <semanticResources>src/crr_regulation_text.xcorel</semanticResources>
   <semanticResources>src/frtb_e2e_test1.xcorel</semanticResources>
-  <semanticResources>src/output_layer_entities.xcorel</semanticResources>
+  <semanticResources>src/output_tables.xcorel</semanticResources>
   <semanticResources>src/workflow_cutdown.xcorel</semanticResources>
   <semanticResources>src/report_generation.xcorel</semanticResources>
   <semanticResources>src/test_netted_delta_sensitivities.xcorel</semanticResources>
   <semanticResources>src/test_tenor_transformation.xcorel</semanticResources>
+  <semanticResources>src/il_domains.ecore4reg</semanticResources>
+  <semanticResources>src/input_tables.ecore4reg</semanticResources>
+  <semanticResources>src/output_tables.ecore4reg</semanticResources>
+  <semanticResources>src/report_generation.ecore4reg</semanticResources>
+  <semanticResources>src/sdd_domains.ecore4reg</semanticResources>
+  <semanticResources>src/types.ecore4reg</semanticResources>
 </viewpoint:DAnalysis>

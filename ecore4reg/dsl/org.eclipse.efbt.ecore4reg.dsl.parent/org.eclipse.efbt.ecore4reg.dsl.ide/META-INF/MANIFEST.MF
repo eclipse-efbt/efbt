@@ -3,11 +3,11 @@ Automatic-Module-Name: org.eclipse.efbt.ecore4reg.dsl.ide
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.efbt.ecore4reg.dsl.ide
 Bundle-Vendor: Eclipse Free BIRD Tools
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-SymbolicName: org.eclipse.efbt.ecore4reg.dsl.ide; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.efbt.ecore4reg.dsl,
  org.eclipse.efbt.ecore4reg.model,
  org.eclipse.xtext.ide,
  org.eclipse.xtext.xbase.ide
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17

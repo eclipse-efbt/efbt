@@ -1,5 +1,5 @@
 <!-- This file was created using the HTML documentation generator. -->
-<!-- Creation date: Tue Oct 04 06:34:54 BST 2022-->
+<!-- Creation date: Sun Jun 18 17:14:48 BST 2023-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -134,6 +134,24 @@ Modules can also state which other modules they depend upon, allowing for fine g
 <div class="">EPackage properties:</div>
 <div class="keyValue"><span class="label">Namespace Prefix: </span><span class="teletype">module_management</span></div>
 <div class="keyValue"><span class="label">Namespace URI: </span><span class="teletype">http://www.eclipse.org/efbt/module_management</span></div>
+<h2 id="modulemanagementImport"><a href="#modulemanagementImport"><a href="#modulemanagementImport">Import</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">Attributes</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="modulemanagementImport.importedNamespace" class="teletype">importedNamespace</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype">EString</span></div>
+<div class="label">Cardinality: [0..1]</div>
+ </td> <td></td>
+		</tr></table>
+<a href="#module_management.Import.attr"></a>
 <h2 id="modulemanagementModule"><a href="#modulemanagementModule"><a href="#modulemanagementModule">Module</a></a></h2>
 
 <p>A grouping of related artifacts, persisted as a resource, with a version number, and a description, and a description of which Modules it depends upon (and importantly which version of those Modules).</p>
@@ -189,7 +207,34 @@ Modules can also state which other modules they depend upon, allowing for fine g
 </td> 
 <td> <p>These are the modules (and their version numbers) upon which this module is dependent.</p>
 </td>
+		</tr><tr>	<td><div id="modulemanagementModule.imports" class="teletype">imports</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#modulemanagementImport">Import</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
 		</tr></table>
 <a href="#module_management.Module.ref"></a>
+<h2 id="modulemanagementModuleList"><a href="#modulemanagementModuleList"><a href="#modulemanagementModuleList">ModuleList</a></a></h2>
+
+<table>
+<tr>
+	<th colspan="3"><div class="tableHeader">References</div></th>
+</tr>
+<tr>
+	<th><div class="columnHeader">Name</div></th>
+	<th><div class="columnHeader">Properties</div></th>
+	<th><div class="columnHeader">Documentation</div></th>
+</tr>
+<tr>	<td><div id="modulemanagementModuleList.modules" class="teletype">modules</div>
+	</td>
+	<td><div class="keyValue"><span class="label">T: </span><span class="teletype"><a href="#modulemanagementModule">Module</a></span></div>
+<div class="label">Cardinality: [0..*]</div>
+<div class="label">Containment</div>
+</td> 
+<td> </td>
+		</tr></table>
+<a href="#module_management.ModuleList.ref"></a>
 </body>
 </html>

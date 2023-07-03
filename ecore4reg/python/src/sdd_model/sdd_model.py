@@ -1158,10 +1158,11 @@ class MEMBER_MAPPING(EObject, metaclass=MetaEClass):
 class MEMBER_MAPPING_ITEM(EObject, metaclass=MetaEClass):
 
     isSource = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    row = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     member = EReference(ordered=True, unique=True, containment=False, derived=False)
     variable = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, isSource=None, member=None, variable=None):
+    def __init__(self, *, isSource=None, member=None, variable=None, row=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -1169,6 +1170,9 @@ class MEMBER_MAPPING_ITEM(EObject, metaclass=MetaEClass):
 
         if isSource is not None:
             self.isSource = isSource
+
+        if row is not None:
+            self.row = row
 
         if member is not None:
             self.member = member

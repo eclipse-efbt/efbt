@@ -14,18 +14,18 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.efbt.ecore4reg.dsl</groupId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<artifactId>org.eclipse.efbt.ecore4reg.dsl.parent</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
-		<xtextVersion>2.30.0</xtextVersion>
+		<xtextVersion>2.31.0</xtextVersion>
 		<mwe2Version>2.14.0</mwe2Version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<!-- Tycho settings -->
-		<tycho-version>2.7.5</tycho-version>
+		<tycho-version>3.0.4</tycho-version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<platformSystemProperties></platformSystemProperties>
 		<moduleProperties></moduleProperties>
@@ -59,25 +59,7 @@
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-source-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<executions>
-					<execution>
-						<id>plugin-source</id>
-						<goals>
-							<goal>plugin-source</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>feature-source</id>
-						<goals>
-							<goal>feature-source</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
@@ -126,7 +108,7 @@
 							<requirement>
 								<type>eclipse-plugin</type>
 								<id>org.eclipse.xtext.logging</id>
-								<versionRange>1.2.19</versionRange>
+								<versionRange>1.2.24</versionRange>
 							</requirement>
 							<!-- to get the org.eclipse.osgi.compatibility.state plugin if the target
 								platform is Luna or later. (backward compatible with kepler and previous

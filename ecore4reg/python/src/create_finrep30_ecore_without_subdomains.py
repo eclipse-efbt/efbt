@@ -16,8 +16,8 @@ Created on 25 April 2022
 
 from importers.context import Context
 from importers.context import Context
-from importers.import_input_layer_to_ecore4reg import InputLayerImport
-from importers.import_output_layer_to_ecore4reg import ROLImport
+from importers.import_sqldev_il_to_ecore4reg import SQLDeveloperILImport
+from importers.import_sdd_to_ecore4reg import SDDImport
 from importers.persist_to_file import PersistToFile
 from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 
@@ -26,11 +26,12 @@ from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 if __name__ == '__main__':
     context = Context()
     context.persist_to_ecore4reg = True
+    context.use_codes = False
     context.use_subdomains = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
-    InputLayerImport().do_import(context)
-    ROLImport().doImport(context)
+    SQLDeveloperILImport().do_import(context)
+    SDDImport().doImport(context)
     Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()
     persister.save_model_as_ecore_file(context)
