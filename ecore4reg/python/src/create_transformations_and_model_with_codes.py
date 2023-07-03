@@ -38,6 +38,11 @@ if __name__ == '__main__':
     context.set_up_csv_indexes()
     # use codes not long names for columns
     context.use_codes = True
+    # when finding  source columns form the input layer, related
+    # to items in the output layer we find columns with matching
+    # variables not matching domains
+
+    context.findVariableWithSameDomain = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     # import the information about EIL and ROL from csv files downloaded
