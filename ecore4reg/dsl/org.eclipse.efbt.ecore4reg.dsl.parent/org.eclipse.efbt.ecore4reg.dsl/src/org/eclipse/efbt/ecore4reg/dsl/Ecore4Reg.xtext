@@ -279,7 +279,7 @@ AndPredicate returns ecore4reg::AndPredicate:
 OrPredicate returns ecore4reg::OrPredicate:
 	{ecore4reg::OrPredicate}
 	'Or('
-		(operands+=Predicate ( "or" operands+=Predicate)* '}' )?
+		(operands+=Predicate ( "or" operands+=Predicate)*  )?
 	')'
 ;
 
