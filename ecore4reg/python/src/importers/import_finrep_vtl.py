@@ -480,7 +480,7 @@ class ImportFinrepVTL(object):
                         self, context, vtl_layer.strip() + "_FINREP")
                     link.entity = ImportFinrepVTL.find_entity(
                         self, context, input_layer)
-                    link.filter = filter1
+                    link.theFilter = filter1
                     link.filterName = filter_name
                     context.vtl_module.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks.append(
                         link)

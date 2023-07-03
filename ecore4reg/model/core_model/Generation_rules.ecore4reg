@@ -13,11 +13,11 @@ import module_management.*
 
 class RulesForReport {
 	refers ELClass outputLayerCube
-	contains RulesForILTable[] rulesForTable
+	contains RulesForILTable[0..-1] rulesForTable
 }
 
 class RulesForILTable {
-	contains RuleForILTablePart[] rulesForTablePart
+	contains RuleForILTablePart[0..-1] rulesForTablePart
 	refers ELClass inputLayerTable
 }
 
@@ -48,7 +48,7 @@ enum Comparitor {
 	not_equals = 3
 }
 
-class TableFilter {
+class AttributePredicate extends Predicate{
 	refers ELAttribute attribute1
 	Comparitor comparitor
 	refers ELEnumLiteral member
@@ -56,11 +56,31 @@ class TableFilter {
 }
 
 class GenerationRulesModule extends Module {
-	contains RulesForReport[] rulesForReport
+	contains RulesForReport[0..-1] rulesForReport
+}
+
+class TableFilter {
+	contains Predicate predicate
+}
+
+class Predicate {
+	
+}
+
+class AndPredicate extends Predicate {
+	refers Predicate[0..-1] operands
+}
+
+class OrPredicate extends Predicate {
+	refers Predicate[0..-1] operands
+}
+
+class NotPredicate extends Predicate {
+	refers Predicate[0..-1] operands
 }
 
 class RuleForILTablePart {
 	String name
-	contains SelectColumn[] columns
-	contains TableFilter[] whereClause
+	contains SelectColumn[0..-1] columns
+	contains TableFilter[0..-1] whereClause
 }

@@ -14,14 +14,14 @@ import module_management.*
 import types.*
 
 class VTLGeneratedOutputlayer {
-	refers VTLGeneratedIntermediateLayer[] dependant_intermediate_layers
-	contains VTLForOutputLayerAndIntermediateLayerCombination[] VTLForOutputLayerAndIntemedateLayerCombinations
+	refers VTLGeneratedIntermediateLayer[0..-1] dependant_intermediate_layers
+	contains VTLForOutputLayerAndIntermediateLayerCombination[0..-1] VTLForOutputLayerAndIntemedateLayerCombinations
 	refers ecore_lite.ELClass outputLayer
 	id String name
 }
 
 class VTLForOutputLayerAndIntermediateLayerCombination {
-	refers VTLTransformation[] transformations
+	refers VTLTransformation[0..-1] transformations
 	refers VTLGeneratedOutputlayer outputLayer
 	refers VTLGeneratedIntermediateLayer intermediateLayer
 	id String name
@@ -29,7 +29,7 @@ class VTLForOutputLayerAndIntermediateLayerCombination {
 
 class VTLGeneratedIntermediateLayer {
 	refers VTLGeneratedIntermediateLayer dependant_enriched_cubes
-	refers VTLTransformation[] transformations
+	refers VTLTransformation[0..-1] transformations
 	id String name
 	boolean isEnrichment
 }
@@ -42,7 +42,7 @@ class VTLTransformation {
 }
 
 class VTLScheme {
-	contains VTLTransformation[] expressions
+	contains VTLTransformation[0..-1] expressions
 	String scheme_id
 }
 
@@ -66,7 +66,7 @@ class VTLModule extends Module {
 class EntityToVTLIntermediateLayerLink {
 	refers VTLGeneratedIntermediateLayer VTLIntermediateLayer
 	refers ecore_lite.ELClass entity
-	String filter
+	String theFilter
 }
 
 class VTLForView {
@@ -76,29 +76,29 @@ class VTLForView {
 }
 
 class VTLGeneratedOutputlayerModule extends Module {
-	contains VTLGeneratedOutputlayer[] vTLGeneratedOutputlayerModules
+	contains VTLGeneratedOutputlayer[0..-1] vTLGeneratedOutputlayerModules
 }
 
 class VTLForOutputLayerAndIntermediateLayerCombinationModule extends Module {
-	contains VTLForOutputLayerAndIntermediateLayerCombination[] vTLForOutputLayerAndIntermediateLayerCombinations
+	contains VTLForOutputLayerAndIntermediateLayerCombination[0..-1] vTLForOutputLayerAndIntermediateLayerCombinations
 }
 
 class VTLGeneratedIntermediateLayerModule extends Module {
-	contains VTLGeneratedIntermediateLayer[] vTLGeneratedIntermediateLayers
+	contains VTLGeneratedIntermediateLayer[0..-1] vTLGeneratedIntermediateLayers
 }
 
 class VTLSchemesModule extends Module {
-	contains VTLScheme[] vTLSchemes
+	contains VTLScheme[0..-1] vTLSchemes
 }
 
 class VTLForSelectionLayerModule extends Module {
-	contains VTLForSelectionLayer[] vTLForSelectionLayers
+	contains VTLForSelectionLayer[0..-1] vTLForSelectionLayers
 }
 
 class EntityToVTLIntermediateLayerLinkModule extends Module {
-	contains EntityToVTLIntermediateLayerLink[] entityToVTLIntermediateLayerLinks
+	contains EntityToVTLIntermediateLayerLink[0..-1] entityToVTLIntermediateLayerLinks
 }
 
 class VTLForViewModule extends Module {
-	contains VTLForView[] vTLForViews
+	contains VTLForView[0..-1] vTLForViews
 }

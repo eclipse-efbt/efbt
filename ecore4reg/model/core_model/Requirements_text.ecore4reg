@@ -15,13 +15,13 @@ import types.*
 
 class AllowedTypes {
 	
-	contains RequirementType[] allowedTypes
+	contains RequirementType[0..-1] allowedTypes
 }
 
 
 class RequirementsModule extends Module {
 
-	contains TitledRequirementsSection[] rules
+	contains TitledRequirementsSection[0..-1] rules
 	contains AllowedTypes allowedtypes
 }
 
@@ -54,7 +54,7 @@ class RequirementType {
 }
 
 class TitledRequirementsSection extends RequirementsSection {
-	contains RequirementsSection[] sections
+	contains RequirementsSection[0..-1] sections
 	refers RequirementsSectionLinkWithText referencingSections 
 	refers RequirementType requirementsType
 	String title
@@ -63,9 +63,9 @@ class TitledRequirementsSection extends RequirementsSection {
 class Tag {
 	String displayName
 	id String name
-	refers TitledRequirementsSection[] requirements
+	refers TitledRequirementsSection[0..-1] requirements
 }
 
 class TagGroup extends module_management.Module {
-	contains Tag[] tags
+	contains Tag[0..-1] tags
 }

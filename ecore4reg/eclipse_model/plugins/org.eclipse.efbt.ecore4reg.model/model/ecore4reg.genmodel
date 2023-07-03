@@ -222,7 +222,7 @@
     <genClasses ecoreClass="ecore4reg.ecore#//EntityToVTLIntermediateLayerLink">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//EntityToVTLIntermediateLayerLink/VTLIntermediateLayer"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//EntityToVTLIntermediateLayerLink/entity"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//EntityToVTLIntermediateLayerLink/filter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//EntityToVTLIntermediateLayerLink/theFilter"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//VTLForView">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//VTLForView/name"/>

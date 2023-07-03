@@ -195,35 +195,23 @@ class SelectColumn(EObject, metaclass=MetaEClass):
 
 class TableFilter(EObject, metaclass=MetaEClass):
 
-    comparitor = EAttribute(eType=Comparitor, unique=True, derived=False, changeable=True)
-    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    attribute1 = EReference(ordered=True, unique=True, containment=False, derived=False)
-    member = EReference(ordered=True, unique=True, containment=False, derived=False)
+    predicate = EReference(ordered=True, unique=True, containment=True, derived=False)
 
-    def __init__(self, *, attribute1=None, comparitor=None, member=None, value=None):
+    def __init__(self, *, predicate=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
-        if comparitor is not None:
-            self.comparitor = comparitor
-
-        if value is not None:
-            self.value = value
-
-        if attribute1 is not None:
-            self.attribute1 = attribute1
-
-        if member is not None:
-            self.member = member
+        if predicate is not None:
+            self.predicate = predicate
 
 
 class RuleForILTablePart(EObject, metaclass=MetaEClass):
 
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     columns = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    whereClause = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    whereClause = EReference(ordered=True, unique=True, containment=True, derived=False)
 
     def __init__(self, *, name=None, columns=None, whereClause=None):
         # if kwargs:
@@ -237,8 +225,18 @@ class RuleForILTablePart(EObject, metaclass=MetaEClass):
         if columns:
             self.columns.extend(columns)
 
-        if whereClause:
-            self.whereClause.extend(whereClause)
+        if whereClause is not None:
+            self.whereClause = whereClause
+
+
+@abstract
+class Predicate(EObject, metaclass=MetaEClass):
+
+    def __init__(self):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
 
 
 @abstract
@@ -442,18 +440,18 @@ class VTLForSelectionLayer(EObject, metaclass=MetaEClass):
 
 class EntityToVTLIntermediateLayerLink(EObject, metaclass=MetaEClass):
 
-    filter = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    theFilter = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     VTLIntermediateLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
     entity = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, VTLIntermediateLayer=None, entity=None, filter=None):
+    def __init__(self, *, VTLIntermediateLayer=None, entity=None, theFilter=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
 
-        if filter is not None:
-            self.filter = filter
+        if theFilter is not None:
+            self.theFilter = theFilter
 
         if VTLIntermediateLayer is not None:
             self.VTLIntermediateLayer = VTLIntermediateLayer
@@ -643,6 +641,66 @@ class GenerationRulesModule(Module):
 
         if rulesForReport:
             self.rulesForReport.extend(rulesForReport)
+
+
+class AndPredicate(Predicate):
+
+    operands = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, operands=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if operands:
+            self.operands.extend(operands)
+
+
+class OrPredicate(Predicate):
+
+    operands = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, operands=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if operands:
+            self.operands.extend(operands)
+
+
+class NotPredicate(Predicate):
+
+    operand = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, operand=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if operand is not None:
+            self.operand = operand
+
+
+class AttributePredicate(Predicate):
+
+    comparitor = EAttribute(eType=Comparitor, unique=True, derived=False, changeable=True)
+    value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    attribute1 = EReference(ordered=True, unique=True, containment=False, derived=False)
+    member = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, attribute1=None, comparitor=None, member=None, value=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if comparitor is not None:
+            self.comparitor = comparitor
+
+        if value is not None:
+            self.value = value
+
+        if attribute1 is not None:
+            self.attribute1 = attribute1
+
+        if member is not None:
+            self.member = member
 
 
 @abstract

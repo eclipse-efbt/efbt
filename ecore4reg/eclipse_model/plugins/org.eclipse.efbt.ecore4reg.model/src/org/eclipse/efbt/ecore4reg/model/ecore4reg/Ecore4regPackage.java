@@ -3208,13 +3208,13 @@ public interface Ecore4regPackage extends EPackage {
 	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__ENTITY = 1;
 
 	/**
-	 * The feature id for the '<em><b>Filter</b></em>' attribute.
+	 * The feature id for the '<em><b>The Filter</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__FILTER = 2;
+	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__THE_FILTER = 2;
 
 	/**
 	 * The number of structural features of the '<em>Entity To VTL Intermediate Layer Link</em>' class.
@@ -5634,15 +5634,15 @@ public interface Ecore4regPackage extends EPackage {
 	EReference getEntityToVTLIntermediateLayerLink_Entity();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getFilter <em>Filter</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getTheFilter <em>The Filter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Filter</em>'.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getFilter()
+	 * @return the meta object for the attribute '<em>The Filter</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getTheFilter()
 	 * @see #getEntityToVTLIntermediateLayerLink()
 	 * @generated
 	 */
-	EAttribute getEntityToVTLIntermediateLayerLink_Filter();
+	EAttribute getEntityToVTLIntermediateLayerLink_TheFilter();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLForView <em>VTL For View</em>}'.
