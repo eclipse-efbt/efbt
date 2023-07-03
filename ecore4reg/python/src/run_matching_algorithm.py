@@ -25,6 +25,7 @@ if __name__ == '__main__':
     context = Context()
     context.persist_to_ecore4reg = True
     context.use_subdomains_in_rol = True
+    context.use_codes = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     SQLDeveloperILImport().do_import(context)

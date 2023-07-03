@@ -26,6 +26,7 @@ if __name__ == '__main__':
     context.persist_to_ecore4reg = True
     context.use_subdomains_in_rol = True
     context.input_from_website = True
+    context.use_codes = False
     context.set_up_csv_indexes()
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
@@ -41,7 +42,7 @@ if __name__ == '__main__':
     
     persister.save_model_as_json_files(context)
 
-    context.in_scope_file_directory = '/workspaces/efbt/ecore4reg/python/resources_website'
+    context.in_scope_file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     standardMatchingQueries = StandardMatchingQueries()
     standardMatchingQueries.create_variable_name_to_code_map(context)
     standardMatchingQueries.create_derivable_list(context)
