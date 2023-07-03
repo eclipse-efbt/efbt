@@ -92,7 +92,7 @@ class GenerationRuleCreator(object):
                             if table_part[0] == table:
                                 rules_for_il_table_part = RuleForILTablePart()
                                 rules_for_il_table_part.main_catagory = mc
-                                rules_for_il_table_part.name = table + "_" + context.main_catogory_to_name_map[mc]
+                                rules_for_il_table_part.name = table_part[1]
                                 rules_for_il_table_part.table_and_part_tuple = table_part
                                 rules_for_table.rulesForTablePart.append(rules_for_il_table_part)
                                 GenerationRuleCreator.add_field_to_field_lineage_to_rules_for_table_part(self, context, rules_for_il_table_part, rules_for_report.outputLayerCube, input_entity_list)

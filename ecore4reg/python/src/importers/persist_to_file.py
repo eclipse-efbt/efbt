@@ -397,7 +397,7 @@ class PersistToFile:
                         main_catagory_name = context.main_catogory_to_name_map[main_catagory]
                         
                         table_and_part = table_part.table_and_part_tuple
-                        report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",")
+                        report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
                         filter = context.table_parts_to_to_filter_map[table_and_part]
                         for column in table_part.columns:
                             if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
@@ -484,6 +484,9 @@ class PersistToFile:
         # we add the EPackage instance in the resource
         il_domains_resource2.append(context.il_domains_ecore_package)
         il_domains_resource2.save()
+        PersistToFile.hot_fix(self, context.output_directory +
+                              os.sep + extension +
+                              os.sep + "il_domains.ecore")
         sdd_domains_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
             os.sep + "sdd_domains.ecore"))
@@ -491,7 +494,9 @@ class PersistToFile:
         # we add the EPackage instance in the resource
         sdd_domains_resource2.append(context.sdd_domains_ecore_package)
         sdd_domains_resource2.save()
-        
+        PersistToFile.hot_fix(self, context.output_directory +
+                              os.sep + extension +
+                              os.sep + "sdd_domains.ecore")
         input_tables_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
             os.sep + "input_tables.ecore"))
@@ -500,6 +505,9 @@ class PersistToFile:
         input_tables_resource2.append(
             context.input_tables_ecore_package)
         input_tables_resource2.save()
+        PersistToFile.hot_fix(self, context.output_directory +
+                              os.sep + extension +
+                              os.sep + "input_tables.ecore")
         output_tables_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
             os.sep + "output_tables.ecore"))
@@ -508,27 +516,18 @@ class PersistToFile:
         output_tables_resource2.append(
             context.output_tables_ecore_package)
         output_tables_resource2.save()
-
-        PersistToFile.hot_fix(self, context.output_directory +
-                              os.sep + extension +
-                              os.sep + "il_domains.ecore")
-        PersistToFile.hot_fix(self, context.output_directory +
-                              os.sep + extension +
-                              os.sep + "sdd_domains.ecore")
-        PersistToFile.hot_fix(self, context.output_directory +
-                              os.sep + extension +
-                              os.sep + "input_tables.ecore")
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
                               os.sep + "output_tables.ecore")
-    
+
     def hot_fix(self, file_name):
         '''
-        Documentation for hot_fix
+        Documentation for hot_fix, PYEcore seems to want to use the last
+        model it used when persisting Enums
         '''
         f = open(file_name, "r", encoding='utf-8')
         text = f.read()
-        amended_text = text.replace('ecore4reg:EEnum', 'ecore:EEnum')
+        amended_text = text.replace('ecore4reg:EEnum', 'ecore:EEnum').replace('sdd_model:EEnum', 'ecore:EEnum').replace('sdd_model:EDataType', 'ecore:EDataType')
         f.close()
         f1 = open(file_name, "w", encoding='utf-8')
         f1.write(amended_text)

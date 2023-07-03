@@ -18,6 +18,8 @@
 import csv
 import os
 from importers.utils import Utils
+from importers.sdd_context import SDDContext
+from importers.import_sdd_to_analysis_model import ImportSDD
 
 class MainCatagoryFinder(object):
     '''
@@ -32,6 +34,7 @@ class MainCatagoryFinder(object):
         '''
         MainCatagoryFinder.create_main_catogory_to_name_map(self, context)
         MainCatagoryFinder.create_report_to_main_catogory_map(self, context)
+        MainCatagoryFinder.create_draft_table_part_file(self, context)
         MainCatagoryFinder.create_table_part_to_main_catagory_map(self, context)
         MainCatagoryFinder.create_il_tables_for_main_catagory_map(self, context)
         MainCatagoryFinder.create_table_parts_for_main_catagory_map(self, context)
@@ -141,6 +144,9 @@ class MainCatagoryFinder(object):
                                 report_name = axis_ordinate_id[15:axis_ordinate_id.index("_" + context.reporting_framework,10)]
                                 member_id = row[2]
                                 amemnded_report_name = Utils.make_valid_id(report_name)
+                                if not(member_id in context.main_catagories_in_scope):
+                                    context.main_catagories_in_scope.append(member_id)
+                                    
                                 
                                 try:
                                     catagory_list = context.report_to_main_catogory_map[amemnded_report_name]
@@ -153,6 +159,116 @@ class MainCatagoryFinder(object):
                                     list.append(member_id)
                                     context.report_to_main_catogory_map[amemnded_report_name] = list 
                                     
+    def create_draft_table_part_file(self, context):
+        '''
+        create a draft of the table part file, this should be reviewed and edited
+        and the edited version used as an input for processing
+        
+        1.) for each main catagory in scope find the difinition 
+        2.) ignore definitions with full stops and commas as these are currently
+        all composite or subparts
+        3.) in the mappings find the related typ_instrument members(s) print a 
+        message if there is more than 1
+        4.) find the domain which contains that type of instrument
+        5.) find which table and column has that domain
+        6.) The table will be the Main Table
+        7.) expand the member if it is a node in a heirarchy
+        8.) print a warning message if there is more than on heirarchy producing
+            different sub-members
+        9.) the filter is made up of the column and the expanded node
+        '''
+        
+        f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
+                         os.sep + 
+                         'table_parts_draft.csv', "a",  encoding='utf-8')
+        
+        f.write("description,classifier,value,description,Main Catagory\n")
+        sdd_context = SDDContext()
+        sdd_context.file_directory = context.file_directory
+        sdd_context.output_directory = context.output_directory
+        sdd_context.input_from_website = True
+        sdd_context.set_up_csv_indexes()
+        ImportSDD.import_sdd(self,sdd_context)
+        for mc in context.main_catagories_in_scope:
+            mc_member = ImportSDD.find_member_with_id(self, mc, sdd_context)
+            definition = mc_member.displayName
+            if ',' in definition :
+                print(mc_member.name + " : " + definition  + " is a composite catagory")
+            elif '.' in definition :
+                print(mc_member.name + " : " + definition  + " is a sub catagory")
+            else:
+                target_instrument_type = MainCatagoryFinder.get_target_instrument_type_from_mapping(self,context,sdd_context,mc_member) 
+                if not(target_instrument_type is  None):
+                    f.write(definition + ",TYP_INSTRMNT," + target_instrument_type.replace(',',' ').replace('TYP_INSTRMNT_','') + "," + mc +'\n')
+                else:
+                    target_accounting_type = MainCatagoryFinder.get_target_accounting_type_from_mapping(self,context,sdd_context,mc_member) 
+                    if not(target_accounting_type is  None):
+                        f.write(definition + ",TYP_ACCNTNG_ITM," + target_accounting_type.replace(',',' ').replace('TYP_ACCNTNG_ITM_','') + "," +  mc +'\n')
+                    else:
+                        f.write(definition + ",NOTHIN_FOUND,," + mc +'\n')
+                
+            
+        f.close()
+        
+    def get_target_instrument_type_from_mapping(self,context,sdd_context,mc_member):
+        
+        instrument_type_variable = ImportSDD.find_variable_with_id(self,sdd_context,"TYP_INSTRMNT")
+        member_mapping_items = ImportSDD.get_mappings_with_this_member_as_source_and_this_variable_as_target(self,sdd_context,mc_member,instrument_type_variable)
+        unique_member_list = MainCatagoryFinder.remove_duplicates(self,member_mapping_items)
+        if (len(unique_member_list) == 0):
+            print(mc_member.name + " : "  + mc_member.displayName + " has NO instrument types: " )
+            return None
+        if (len(unique_member_list) == 1):
+            print(mc_member.name + " : "  + mc_member.displayName + " has INSTRMNT_TYP: " + unique_member_list[0].name)
+            return unique_member_list[0].name + "_" + unique_member_list[0].displayName 
+        if (len(unique_member_list) > 1):
+            
+            returnString = ""
+            for item in unique_member_list:
+                 returnString = returnString + item.name + "_" + item.displayName  + ":"   
+            return returnString    
+        
+    
+    def warn_if_multiple_instrument_types(self,mc_member,member_mapping_items):
+        
+        ref_item_name = member_mapping_items[0].member.name
+        for item in member_mapping_items:
+            if not(item.member.name == ref_item_name):
+                print (mc_member.name + " : " + mc_member.displayName + " has non duplicate instrument types " + ref_item_name + " and " + item.member.name)
+    
+    def warn_if_multiple_accounting_types(self,mc_member,member_mapping_items):
+        
+        ref_item_name = member_mapping_items[0].member.name
+        for item in member_mapping_items:
+            if not(item.member.name == ref_item_name):
+                print (mc_member.name + " : " +mc_member.displayName + " has non duplicate accounting types " + ref_item_name + " and " + item.member.name)
+    
+    def get_target_accounting_type_from_mapping(self,context,sdd_context,mc_member):
+        
+        accounting_type_variable = ImportSDD.find_variable_with_id(self,sdd_context,"TYP_ACCNTNG_ITM")
+        member_mapping_items = ImportSDD.get_mappings_with_this_member_as_source_and_this_variable_as_target(self,sdd_context,mc_member,accounting_type_variable)
+        unique_member_list = MainCatagoryFinder.remove_duplicates(self,member_mapping_items)
+        if (len(unique_member_list) == 0):
+            print(mc_member.name + " : "  + mc_member.displayName + " has NO accounting types: " )
+            return None
+        if (len(unique_member_list) == 1 ):
+            print(mc_member.name + " : "  + mc_member.displayName + " has TYP_ACCNTNG_ITM: " + unique_member_list[0].name)
+            return unique_member_list[0].name + "_" + unique_member_list[0].displayName
+        if (len(unique_member_list) > 1):                    
+            returnString = ""
+            for item in unique_member_list:
+                 returnString = returnString + item.name + "_" + item.displayName + ":"   
+            return returnString    
+        return None
+        
+    def remove_duplicates(self,member_mapping_items): 
+        unique_list = []
+        for item in member_mapping_items:
+            member = item.member
+            if not (member in unique_list):
+                unique_list.append(member)
+        return unique_list
+                                       
     def create_table_part_to_main_catagory_map(self, context):
         '''
         create a map from table parts to main catagories

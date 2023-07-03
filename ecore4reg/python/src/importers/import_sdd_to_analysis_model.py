@@ -28,12 +28,15 @@ class ImportSDD(object):
         ImportSDD.create_all_members(self, sdd_context)
         ImportSDD.create_all_variables(self, sdd_context)
         ImportSDD.create_all_subdomains(self, sdd_context)
-        ImportSDD.create_all_subdomain_enumerations(self, sdd_context)
+        #ImportSDD.create_all_subdomain_enumerations(self, sdd_context)
         # ImportSDD.create_all_combinations(self, sdd_context)
         # ImportSDD.createVariableSetToVariableMap(self, context)
         # ImportSDD.createVariableToDomainMap(self, context)
         # ImportSDD.createDomainToDomainNameMap(self, context)
         # ImportSDD.createMemberMaps(self, context)
+        ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
+        #ImportSDD.create_member_hierarchies(self, context)
+        
 
     def create_all_domains(self, context):
         '''
@@ -164,7 +167,6 @@ class ImportSDD(object):
         '''
         import all the subdomains
         '''
-
         fileLocation = context.file_directory + os.sep + "subdomain.csv"
         header_skipped = False
 
@@ -195,7 +197,6 @@ class ImportSDD(object):
         '''
         import all the subdomain enumerations
         '''
-
         file_location = context.file_directory + os.sep + "subdomain_enumeration.csv"
         header_skipped = False
 
@@ -261,7 +262,50 @@ class ImportSDD(object):
                         item.variable_id = variable
                     com.combination_items.append(item)
 
-           
+    def create_member_mappings(self, context, source_variable_filter, target_variable_filter, target_variable_filter2):
+        file_location = context.file_directory + os.sep + "member_mapping.csv"
+        header_skipped = False
+        counter = 0
+        
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    member_mapping_id = row[context.member_mapping_id]
+                    row_number = row[context.member_mapping_row]
+                    variable_id = row[context.member_mapping_variable_id]
+                    is_source = row[context.member_mapping_is_source]
+
+                    member_id = row[context.member_mapping_member_id]
+                    if ((variable_id == source_variable_filter) and (is_source == 'TRUE')) or ((variable_id == target_variable_filter) and (is_source == 'FALSE')) or ((variable_id == target_variable_filter2) and (is_source == 'FALSE')):
+                        member_mapping_item = MEMBER_MAPPING_ITEM()
+                        member_mapping_item.isSource = is_source
+                        member_mapping_item.member = ImportSDD.find_member_with_id(self,member_id,context)
+                        member_mapping_item.variable = ImportSDD.find_variable_with_id(self,context,variable_id)
+                        member_mapping_item.row = row_number
+                        
+                        
+                        member_mapping  = ImportSDD.find_member_mapping_with_id(self,context,member_mapping_id)
+                        if member_mapping is None:
+                            member_mapping = MEMBER_MAPPING(name = member_mapping_id)
+                            member_mapping.code = member_mapping_id
+                            member_mapping.member_mapping_id = member_mapping_id
+                            context.memberMappingModule.memberMappings.append(member_mapping)
+                            
+                        member_mapping.memberMappingItems.append(member_mapping_item)
+                        
+
+    def find_member_mapping_with_id(self,context,member_mapping_id):
+        mappingList = context.memberMappingModule.memberMappings
+        return_member_mapping = None
+        for mapping in mappingList:
+           if mapping.name == member_mapping_id:
+               return_member_mapping = mapping
+
+        return return_member_mapping
+                             
     def find_member_with_id(self,element_id,context):
         memberList = context.members.members
         returnMember = None
@@ -270,7 +314,8 @@ class ImportSDD(object):
                returnMember = mem
 
         return returnMember
-
+    
+    
     
     def find_variable_with_id(self,context, element_id):
         variableList = context.variables.variables
@@ -320,3 +365,28 @@ class ImportSDD(object):
         replace dots with underscores
         '''
         return text.replace('.', '_')
+    
+    def get_mappings_with_this_member_as_source_and_this_variable_as_target(self,sdd_context,member, target_variable):
+        
+        return_target_items = []
+        mappingList = sdd_context.memberMappingModule.memberMappings
+       
+        for mapping in mappingList:
+            member_mapping_items = []
+            mapping_items = mapping.memberMappingItems
+            for item in mapping_items:
+                if (item.member == member) and (item.isSource == 'TRUE'):
+                    member_mapping_items.append(item)
+                if (item.variable == target_variable) and (item.isSource == 'FALSE'):
+                    member_mapping_items.append(item)
+                    
+            for item in member_mapping_items:
+                if item.isSource == 'TRUE':
+                    row_id = item.row
+                    for item2 in member_mapping_items:
+                        if (item2.isSource == 'FALSE') and (item2.row == row_id) and not(item2.member.name.endswith("_0")):
+                            return_target_items.append(item2) 
+                            
+
+        return return_target_items
+        
