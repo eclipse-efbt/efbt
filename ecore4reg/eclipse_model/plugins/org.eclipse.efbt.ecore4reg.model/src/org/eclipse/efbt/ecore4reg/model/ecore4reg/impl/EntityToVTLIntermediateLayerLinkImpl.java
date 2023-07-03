@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <ul>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.EntityToVTLIntermediateLayerLinkImpl#getVTLIntermediateLayer <em>VTL Intermediate Layer</em>}</li>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.EntityToVTLIntermediateLayerLinkImpl#getEntity <em>Entity</em>}</li>
- *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.EntityToVTLIntermediateLayerLinkImpl#getFilter <em>Filter</em>}</li>
+ *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.EntityToVTLIntermediateLayerLinkImpl#getTheFilter <em>The Filter</em>}</li>
  * </ul>
  *
  * @generated
@@ -52,24 +52,24 @@ public class EntityToVTLIntermediateLayerLinkImpl extends MinimalEObjectImpl.Con
 	protected ELClass entity;
 
 	/**
-	 * The default value of the '{@link #getFilter() <em>Filter</em>}' attribute.
+	 * The default value of the '{@link #getTheFilter() <em>The Filter</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getFilter()
+	 * @see #getTheFilter()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String FILTER_EDEFAULT = null;
+	protected static final String THE_FILTER_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getFilter() <em>Filter</em>}' attribute.
+	 * The cached value of the '{@link #getTheFilter() <em>The Filter</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getFilter()
+	 * @see #getTheFilter()
 	 * @generated
 	 * @ordered
 	 */
-	protected String filter = FILTER_EDEFAULT;
+	protected String theFilter = THE_FILTER_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -171,8 +171,8 @@ public class EntityToVTLIntermediateLayerLinkImpl extends MinimalEObjectImpl.Con
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getFilter() {
-		return filter;
+	public String getTheFilter() {
+		return theFilter;
 	}
 
 	/**
@@ -180,11 +180,11 @@ public class EntityToVTLIntermediateLayerLinkImpl extends MinimalEObjectImpl.Con
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFilter(String newFilter) {
-		String oldFilter = filter;
-		filter = newFilter;
+	public void setTheFilter(String newTheFilter) {
+		String oldTheFilter = theFilter;
+		theFilter = newTheFilter;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__FILTER, oldFilter, filter));
+			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__THE_FILTER, oldTheFilter, theFilter));
 	}
 
 	/**
@@ -201,8 +201,8 @@ public class EntityToVTLIntermediateLayerLinkImpl extends MinimalEObjectImpl.Con
 			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__ENTITY:
 				if (resolve) return getEntity();
 				return basicGetEntity();
-			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__FILTER:
-				return getFilter();
+			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__THE_FILTER:
+				return getTheFilter();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -221,8 +221,8 @@ public class EntityToVTLIntermediateLayerLinkImpl extends MinimalEObjectImpl.Con
 			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__ENTITY:
 				setEntity((ELClass)newValue);
 				return;
-			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__FILTER:
-				setFilter((String)newValue);
+			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__THE_FILTER:
+				setTheFilter((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -242,8 +242,8 @@ public class EntityToVTLIntermediateLayerLinkImpl extends MinimalEObjectImpl.Con
 			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__ENTITY:
 				setEntity((ELClass)null);
 				return;
-			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__FILTER:
-				setFilter(FILTER_EDEFAULT);
+			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__THE_FILTER:
+				setTheFilter(THE_FILTER_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -261,8 +261,8 @@ public class EntityToVTLIntermediateLayerLinkImpl extends MinimalEObjectImpl.Con
 				return vtlIntermediateLayer != null;
 			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__ENTITY:
 				return entity != null;
-			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__FILTER:
-				return FILTER_EDEFAULT == null ? filter != null : !FILTER_EDEFAULT.equals(filter);
+			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK__THE_FILTER:
+				return THE_FILTER_EDEFAULT == null ? theFilter != null : !THE_FILTER_EDEFAULT.equals(theFilter);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -277,8 +277,8 @@ public class EntityToVTLIntermediateLayerLinkImpl extends MinimalEObjectImpl.Con
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (filter: ");
-		result.append(filter);
+		result.append(" (theFilter: ");
+		result.append(theFilter);
 		result.append(')');
 		return result.toString();
 	}

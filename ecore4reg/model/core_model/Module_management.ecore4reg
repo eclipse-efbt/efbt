@@ -15,12 +15,12 @@ class Module {
 	String license
 	id String name
 	String version
-	contains Import[] imports
+	contains Import[0..-1] imports
 	refers Module dependencies
 }
 
 class ModuleList {
-	contains Module[] modules
+	contains Module[0..-1] modules
 }
 
 class Import {

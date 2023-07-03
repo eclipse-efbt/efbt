@@ -280,7 +280,7 @@ class PersistToFile:
                         
                         
                     output = output + "input layer entity: " + entity_name + "\r"
-                    output = output + "filter: " + link.filter + "\r"
+                    output = output + "filter: " + link.thefilter + "\r"
 
             output = output + "*/\r\r"
         return output

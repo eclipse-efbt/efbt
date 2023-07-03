@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getVTLIntermediateLayer <em>VTL Intermediate Layer</em>}</li>
  *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getEntity <em>Entity</em>}</li>
- *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getFilter <em>Filter</em>}</li>
+ *   <li>{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getTheFilter <em>The Filter</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getEntityToVTLIntermediateLayerLink()
@@ -68,25 +68,25 @@ public interface EntityToVTLIntermediateLayerLink extends EObject {
 	void setEntity(ELClass value);
 
 	/**
-	 * Returns the value of the '<em><b>Filter</b></em>' attribute.
+	 * Returns the value of the '<em><b>The Filter</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Filter</em>' attribute.
-	 * @see #setFilter(String)
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getEntityToVTLIntermediateLayerLink_Filter()
+	 * @return the value of the '<em>The Filter</em>' attribute.
+	 * @see #setTheFilter(String)
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getEntityToVTLIntermediateLayerLink_TheFilter()
 	 * @model
 	 * @generated
 	 */
-	String getFilter();
+	String getTheFilter();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getFilter <em>Filter</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink#getTheFilter <em>The Filter</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Filter</em>' attribute.
-	 * @see #getFilter()
+	 * @param value the new value of the '<em>The Filter</em>' attribute.
+	 * @see #getTheFilter()
 	 * @generated
 	 */
-	void setFilter(String value);
+	void setTheFilter(String value);
 
 } // EntityToVTLIntermediateLayerLink

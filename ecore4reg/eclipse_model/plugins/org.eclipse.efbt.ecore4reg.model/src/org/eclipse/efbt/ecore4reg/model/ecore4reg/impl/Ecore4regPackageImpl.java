@@ -2126,7 +2126,7 @@ public class Ecore4regPackageImpl extends EPackageImpl implements Ecore4regPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getEntityToVTLIntermediateLayerLink_Filter() {
+	public EAttribute getEntityToVTLIntermediateLayerLink_TheFilter() {
         return (EAttribute)getEntityToVTLIntermediateLayerLink().getEStructuralFeatures().get(2);
 	}
 

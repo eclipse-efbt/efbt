@@ -19,9 +19,9 @@ class ELAttribute extends ELStructuralFeature {
 
 class ELClass extends ELClassifier {
 	boolean eAbstract
-	refers  ELClass[] eSuperTypes
-	contains ELStructuralFeature[] eStructuralFeatures
-	contains ELOperation[] eOperations
+	refers  ELClass[0..-1] eSuperTypes
+	contains ELStructuralFeature[0..-1] eStructuralFeatures
+	contains ELOperation[0..-1] eOperations
 }
 
 abstract class ELClassifier extends ELNamedElement {
@@ -33,7 +33,7 @@ class ELDataType extends ELClassifier {
 }
 
 class ELEnum extends ELDataType {
-	contains ELEnumLiteral[] eLiterals
+	contains ELEnumLiteral[0..-1] eLiterals
 }
 
 class ELEnumLiteral extends ELNamedElement {
@@ -51,14 +51,14 @@ abstract class ELNamedElement extends ELModelElement {
 
 class ELOperation extends ELTypedElement {
 	String body
-	contains ELParameter[] eParameters
+	contains ELParameter[0..-1] eParameters
 }
 
 class ELParameter extends ELTypedElement {
 }
 
 class ELPackage extends  Module {
-	contains ELClassifier[] eClassifiers
+	contains ELClassifier[0..-1] eClassifiers
 }
 
 class ELReference extends ELStructuralFeature {
@@ -77,7 +77,7 @@ abstract class ELTypedElement extends ELNamedElement {
 }
 
 class ELAnnotation extends ELModelElement {
-	contains ELStringToStringMapEntry[] details
+	contains ELStringToStringMapEntry[0..-1] details
 	String source
 }
 
