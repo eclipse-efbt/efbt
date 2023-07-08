@@ -263,7 +263,7 @@ class ImportSDD(object):
                     com.combination_items.append(item)
 
     def create_member_mappings(self, context, source_variable_filter, target_variable_filter, target_variable_filter2):
-        file_location = context.file_directory + os.sep + "member_mapping.csv"
+        file_location = context.file_directory + os.sep + "member_mapping_item.csv"
         header_skipped = False
         counter = 0
         
