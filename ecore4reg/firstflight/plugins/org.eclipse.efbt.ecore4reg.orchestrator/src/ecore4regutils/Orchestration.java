@@ -126,7 +126,8 @@ public class Orchestration {
 		
 		try {
 			String platformURI = theObject.eResource().getURI().toFileString();
-			resourceURI = platformURI.substring(0,platformURI.lastIndexOf('\\') );
+			String fileSeparator = FileSystems.getDefault().getSeparator();
+			resourceURI = platformURI.substring(0,platformURI.lastIndexOf(fileSeparator) );
 		
 			Files.writeString(filePath, "resourceURI.toPlatformString2()= " + resourceURI + "\n", StandardOpenOption.CREATE);
 		} catch (Exception e) {
