@@ -19,7 +19,7 @@ Created on 22 Jan 2022
 '''
 from pyecore.ecore import EInt, EDouble, EDate, EString, EBoolean
 from pyecore.ecore import EPackage, EEnum, EEnumLiteral, EClass
-from pyecore.ecore import EAttribute, EReference, EOperation
+from pyecore.ecore import EAttribute, EReference, EOperation,EAnnotation
 
 from ecore4reg import ELClass, ELAttribute, ELReference, ELEnum
 
@@ -59,6 +59,14 @@ class Ecore4regToEcoreConverter(object):
                     e_enum_literal.value = literal.value
                     e_enum_literal.literal = literal.literal
                     e_enum.eLiterals.append(e_enum_literal)
+                annotation = classifier.eAnnotations
+                e_annotation = EAnnotation()
+                e_annotation.source = annotation.source
+                for detail in annotation.details:
+                    key = detail.key
+                    value = detail.value
+                    e_annotation.details[key] = value
+                e_enum.eAnnotations.append(e_annotation)
                 ecore_package.eClassifiers.append(e_enum)
 
         for classifier in el_package.eClassifiers:
