@@ -20,7 +20,7 @@ import csv
 from importers.utils import Utils
 import os
 
-from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference
+from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
 
 
 class SQLDeveloperILImport(object):
@@ -146,10 +146,42 @@ class SQLDeveloperILImport(object):
                     counter = counter+1
                     enum_id = row[0]
                     enum_name = row[1]
+                    enum_synonym = row[3]
+                    # Native type will be something like VARCHAR
+                    enum_native_type = row[9]
+                    # Native type size will be something like 3 for VARCHAR(3)
+                    enum_native_size = row[6]
+                    # LT_name will be something like String or DECIMAL
+                    enum_lt_native = row[10]
                     adapted_enum_name = Utils.make_valid_id(enum_name)+"_domain"
                     if (not Utils.in_enum_excluded_list(adapted_enum_name)):
                         the_enum = ELEnum()
                         the_enum.name = adapted_enum_name
+                        annotation = ELAnnotation()
+                        annotation.source = "type_info"
+                        
+                        detail1 = ELStringToStringMapEntry()
+                        detail1.key = "synonym"
+                        detail1.value = enum_synonym
+                        annotation.details.append(detail1)
+                        
+                        detail2 = ELStringToStringMapEntry()
+                        detail2.key = "native_type"
+                        detail2.value = enum_native_type
+                        annotation.details.append(detail2)
+                        
+                        detail3 = ELStringToStringMapEntry()
+                        detail3.key = "native_size"
+                        detail3.value = enum_native_size
+                        annotation.details.append(detail3)
+                        
+                        detail4 = ELStringToStringMapEntry()
+                        detail4.key = "lt_native"
+                        detail4.value = enum_lt_native
+                        annotation.details.append(detail4)
+
+                            
+                        the_enum.eAnnotations = annotation
                         # maintain a map of enum IDS to ELEnum objects
                         context.enum_map[enum_id] = the_enum
                         context.il_domains_package.eClassifiers.extend([
@@ -157,7 +189,7 @@ class SQLDeveloperILImport(object):
 
     def add_il_literals_to_enums(self, context):
         '''
-        for each memebr of a domain the IL, add a literal to the corresponding enum
+        for each member of a domain the IL, add a literal to the corresponding enum
         '''
         file_location = context.file_directory + os.sep + "DM_Domain_AVT.csv"
         header_skipped = False
