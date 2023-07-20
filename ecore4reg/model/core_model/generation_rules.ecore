@@ -16,7 +16,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputLayerTable" eType="ecore:EClass ecore_lite.ecore#//ELClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="ecore:EClass ecore_lite.ecore#//ELOperation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="asAttribute" eType="ecore:EClass ecore_lite.ecore#//ELPublicOperation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumnMemberAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberAsConstant" eType="ecore:EClass ecore_lite.ecore#//ELEnumLiteral"/>
@@ -25,7 +25,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ecore_lite.ecore#//ELAttribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectDerivedColumnAs" eSuperTypes="#//SelectColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ecore_lite.ecore#//ELOperation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ecore_lite.ecore#//ELPublicOperation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectValueAs" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

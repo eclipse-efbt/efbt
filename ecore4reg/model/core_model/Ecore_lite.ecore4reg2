@@ -51,7 +51,14 @@ abstract class ELNamedElement extends ELModelElement {
 
 class ELOperation extends ELTypedElement {
 	String body
+}
+
+class ELPrivateOperation extends ELOperation {
 	contains ELParameter[0..-1] eParameters
+}
+
+class ELPublicOperation extends ELOperation {
+
 }
 
 class ELParameter extends ELTypedElement {

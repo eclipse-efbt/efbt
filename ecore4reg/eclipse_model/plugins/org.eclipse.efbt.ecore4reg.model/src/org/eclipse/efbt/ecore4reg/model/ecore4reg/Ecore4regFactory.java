@@ -310,6 +310,24 @@ public interface Ecore4regFactory extends EFactory {
 	ELOperation createELOperation();
 
 	/**
+	 * Returns a new object of class '<em>EL Public Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EL Public Operation</em>'.
+	 * @generated
+	 */
+	ELPublicOperation createELPublicOperation();
+
+	/**
+	 * Returns a new object of class '<em>EL Private Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EL Private Operation</em>'.
+	 * @generated
+	 */
+	ELPrivateOperation createELPrivateOperation();
+
+	/**
 	 * Returns a new object of class '<em>EL Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -353,6 +371,15 @@ public interface Ecore4regFactory extends EFactory {
 	 * @generated
 	 */
 	ELStringToStringMapEntry createELStringToStringMapEntry();
+
+	/**
+	 * Returns a new object of class '<em>Operation Tag</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operation Tag</em>'.
+	 * @generated
+	 */
+	OperationTag createOperationTag();
 
 	/**
 	 * Returns a new object of class '<em>VTL Enriched Cube</em>'.

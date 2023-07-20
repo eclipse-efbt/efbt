@@ -18,7 +18,7 @@ Created on 22 Jan 2022
 import csv
 import os
 
-from ecore4reg import  ELClass, ELOperation
+from ecore4reg import  ELClass, ELPublicOperation
 from ecore4reg import VTLSchemesModule, VTLTransformation, RulesForReport
 from ecore4reg import EntityToVTLIntermediateLayerLink
 from ecore4reg import EntityToVTLIntermediateLayerLinkModule
@@ -448,7 +448,7 @@ class ImportFinrepVTL(object):
         entity = selection_layer.eContainer().eContainer().outputLayerCube
         if not entity is None:
             for member in entity.eOperations:
-                if isinstance(member, ELOperation):
+                if isinstance(member, ELPublicOperation):
                     select_column = SelectColumnAttributeAs()
                     select_column.asAttribute = member
                     selection_layer.columns.extend([select_column])

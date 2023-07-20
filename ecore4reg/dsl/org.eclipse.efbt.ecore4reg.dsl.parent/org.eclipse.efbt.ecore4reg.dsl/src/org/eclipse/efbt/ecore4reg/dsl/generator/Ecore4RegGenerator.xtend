@@ -37,6 +37,8 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELDataType
 import java.util.List
 import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation
 
 /**
  * Generates code from your model files on save.
@@ -48,7 +50,6 @@ class Ecore4RegGenerator extends AbstractGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 
 		// var packages = new ArrayList<EPackage>()
-		System.out.println("resource = " + resource)
 
 		for (elpackage : resource.allContents.toIterable.filter(ELPackage)) {
 
@@ -75,7 +76,7 @@ class Ecore4RegGenerator extends AbstractGenerator {
 		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
 		«ENDFOR»
 		«FOR eloperation : elclass.EOperations»
-		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation instanceof ELPublicOperation»()«ENDIF»«IF eloperation instanceof ELPrivateOperation»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»«ENDIF»
 			{
 		«IF eloperation.body !== null »          «findXCoreSubstring(eloperation.body)»
 		«ELSEIF eloperation.EType.name == "double" »        return 0
@@ -105,14 +106,12 @@ class Ecore4RegGenerator extends AbstractGenerator {
 		var dependantELPackages = new BasicEList<ELPackage>()
 		var dependantEcorePackages = new BasicEList<EPackage>()
 		var processedELPackages =  new BasicEList<ELPackage>()
-		System.out.println("package =  " + elpackage.name)
 		var ecore_package = EcoreFactory.eINSTANCE.createEPackage()
 		// packages.add(ecore_package)
 		ecore_package.name = elpackage.name
 		ecore_package.nsURI = "http://www.eclipse.org/efbt/" + elpackage.nsURI
 		ecore_package.nsPrefix = elpackage.name
 		for (classifier : elpackage.EClassifiers) {
-			System.out.println("classifier0 = " + classifier.name)
 			if (classifier instanceof ELEnum) {
 				
 				var e_enum = EcoreFactory.eINSTANCE.createEEnum()
@@ -133,7 +132,6 @@ class Ecore4RegGenerator extends AbstractGenerator {
 				e_class.abstract = classifier.EAbstract
 				if (classifier.ESuperTypes.size > 0) {
 					var superTypesPackage = classifier.ESuperTypes.get(0).EPackage
-					System.out.println("superTypesPackage" + superTypesPackage.name)
 					
 					if ((processedELPackages.indexOf(superTypesPackage) == -1) && (superTypesPackage !== null) && (superTypesPackage.name != "types") && (superTypesPackage != elpackage)) {
 						processedELPackages.add(superTypesPackage)
@@ -165,7 +163,6 @@ class Ecore4RegGenerator extends AbstractGenerator {
 							if (structural_feature.EAttributeType instanceof ELEnum) {
 								var attribute_type_name = structural_feature.EAttributeType.name
 								var enumsPackage = structural_feature.EAttributeType.EPackage
-								System.out.println("enumsPackage1" + enumsPackage)
 								
 								
 								//if ((dependantELPackage === null) && (enumsPackage !== null) && (enumsPackage.name != "types")) {
@@ -215,7 +212,6 @@ class Ecore4RegGenerator extends AbstractGenerator {
 						var type_name = structural_feature.EType.name
 						// var packageName = structural_feature.EType.package.name
 						var referenceTypePackage = structural_feature.EType.EPackage
-						System.out.println("referenceTypePackage" + referenceTypePackage)
 						if ((processedELPackages.indexOf(referenceTypePackage) == -1) && (referenceTypePackage !== null) && (referenceTypePackage.name != "types") && (referenceTypePackage != elpackage)) {
 									processedELPackages.add(referenceTypePackage)
 									dependantEcorePackages.add(processPackage(referenceTypePackage,fsa))
@@ -243,7 +239,6 @@ class Ecore4RegGenerator extends AbstractGenerator {
 					annotation.details.put("type_name", type_name)
 					// annotation.details.put("types_package", types_package)
 					var types_package = operation.EType.EPackage
-					System.out.println("types_package" + types_package)
 						
 					if ((processedELPackages.indexOf(types_package) == -1) && (types_package !== null) && (types_package.name != "types") && (types_package != elpackage)) {
 									processedELPackages.add(types_package)
@@ -252,23 +247,27 @@ class Ecore4RegGenerator extends AbstractGenerator {
 								
 					e_operation.EAnnotations.add(annotation)
 					
-					for (param : operation.EParameters ) {
-						var e_param = EcoreFactory.eINSTANCE.createEParameter()
-						e_param.name = param.name
-						e_operation.EParameters.add(e_param)
-						var param_type_name = param.EType.name
-						// var types_package = operation.EType.package.name
-						var param_annotation = EcoreFactory.eINSTANCE.createEAnnotation()
-						param_annotation.source = "temp"
-						param_annotation.details.put("type_name", param_type_name)
-						var param_types_package = param.EType.EPackage
-
-						if ((processedELPackages.indexOf(param_types_package) == -1) && (param_types_package !== null) && (param_types_package.name != "types") && (param_types_package != elpackage)) {
-									processedELPackages.add(param_types_package)
-									dependantEcorePackages.add(processPackage(param_types_package,fsa))
-								}
-						e_param.EAnnotations.add(param_annotation)
-						
+					if (operation instanceof ELPrivateOperation)
+					{
+						for (param : operation.EParameters ) {
+							var e_param = EcoreFactory.eINSTANCE.createEParameter()
+							e_param.name = param.name
+							e_operation.EParameters.add(e_param)
+							var param_type_name = param.EType.name
+							// var types_package = operation.EType.package.name
+							var param_annotation = EcoreFactory.eINSTANCE.createEAnnotation()
+							param_annotation.source = "temp"
+							param_annotation.details.put("type_name", param_type_name)
+							var param_types_package = param.EType.EPackage
+	
+							if ((processedELPackages.indexOf(param_types_package) == -1) && (param_types_package !== null) && (param_types_package.name != "types") && (param_types_package != elpackage)) {
+										processedELPackages.add(param_types_package)
+										dependantEcorePackages.add(processPackage(param_types_package,fsa))
+									}
+							e_param.EAnnotations.add(param_annotation)
+							
+						}
+					
 					}
 
 					
@@ -278,9 +277,7 @@ class Ecore4RegGenerator extends AbstractGenerator {
 		}
 
 		// set the types for refernces, supercalss, and operations, and also set the enum types
-		System.out.println("ecore_package = " + ecore_package.name)
 		for (classifier : ecore_package.EClassifiers) {
-			//System.out.println("classifier = " + classifier.name)
 			if (classifier instanceof EClass) {
 				if (classifier.EAnnotations.size > 0) {
 					var firstAnnotation = classifier.EAnnotations.get(0)
@@ -443,10 +440,9 @@ class Ecore4RegGenerator extends AbstractGenerator {
 				}
 			}
 		}
-		System.out.println("returnEnum = " + returnEnum)
 		if (returnEnum !== null)
 		{
-			System.out.println("returnEnum name = " + returnEnum.name)
+			//System.out.println("returnEnum name = " + returnEnum.name)
 		}
 		
 		return returnEnum

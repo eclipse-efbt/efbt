@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.ecore4reg.model.ecore4reg.impl;
 
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumn;
 
@@ -36,7 +36,7 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	 * @generated
 	 * @ordered
 	 */
-	protected ELOperation asAttribute;
+	protected ELPublicOperation asAttribute;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,10 +62,10 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELOperation getAsAttribute() {
+	public ELPublicOperation getAsAttribute() {
 		if (asAttribute != null && asAttribute.eIsProxy()) {
 			InternalEObject oldAsAttribute = (InternalEObject)asAttribute;
-			asAttribute = (ELOperation)eResolveProxy(oldAsAttribute);
+			asAttribute = (ELPublicOperation)eResolveProxy(oldAsAttribute);
 			if (asAttribute != oldAsAttribute) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Ecore4regPackage.SELECT_COLUMN__AS_ATTRIBUTE, oldAsAttribute, asAttribute));
@@ -79,7 +79,7 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELOperation basicGetAsAttribute() {
+	public ELPublicOperation basicGetAsAttribute() {
 		return asAttribute;
 	}
 
@@ -88,8 +88,8 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAsAttribute(ELOperation newAsAttribute) {
-		ELOperation oldAsAttribute = asAttribute;
+	public void setAsAttribute(ELPublicOperation newAsAttribute) {
+		ELPublicOperation oldAsAttribute = asAttribute;
 		asAttribute = newAsAttribute;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.SELECT_COLUMN__AS_ATTRIBUTE, oldAsAttribute, asAttribute));
@@ -119,7 +119,7 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Ecore4regPackage.SELECT_COLUMN__AS_ATTRIBUTE:
-				setAsAttribute((ELOperation)newValue);
+				setAsAttribute((ELPublicOperation)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -134,7 +134,7 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Ecore4regPackage.SELECT_COLUMN__AS_ATTRIBUTE:
-				setAsAttribute((ELOperation)null);
+				setAsAttribute((ELPublicOperation)null);
 				return;
 		}
 		super.eUnset(featureID);

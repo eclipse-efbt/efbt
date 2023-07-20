@@ -17,6 +17,8 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELNamedElement;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELReference;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStructuralFeature;
@@ -28,6 +30,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
@@ -276,6 +279,14 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 				return createELOperationAdapter();
 			}
 			@Override
+			public Adapter caseELPublicOperation(ELPublicOperation object) {
+				return createELPublicOperationAdapter();
+			}
+			@Override
+			public Adapter caseELPrivateOperation(ELPrivateOperation object) {
+				return createELPrivateOperationAdapter();
+			}
+			@Override
 			public Adapter caseELParameter(ELParameter object) {
 				return createELParameterAdapter();
 			}
@@ -302,6 +313,10 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseELStringToStringMapEntry(ELStringToStringMapEntry object) {
 				return createELStringToStringMapEntryAdapter();
+			}
+			@Override
+			public Adapter caseOperationTag(OperationTag object) {
+				return createOperationTagAdapter();
 			}
 			@Override
 			public Adapter caseVTLEnrichedCube(VTLEnrichedCube object) {
@@ -910,6 +925,34 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation <em>EL Public Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation
+	 * @generated
+	 */
+	public Adapter createELPublicOperationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation <em>EL Private Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation
+	 * @generated
+	 */
+	public Adapter createELPrivateOperationAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter <em>EL Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1004,6 +1047,20 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createELStringToStringMapEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag <em>Operation Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag
+	 * @generated
+	 */
+	public Adapter createOperationTagAdapter() {
 		return null;
 	}
 

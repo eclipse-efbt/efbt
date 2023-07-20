@@ -66,6 +66,10 @@ class Tag {
 	refers TitledRequirementsSection[0..-1] requirements
 }
 
+class OperationTag extends Tag{
+	refers ELOperation operation
+}
+
 class TagGroup extends module_management.Module {
 	contains Tag[0..-1] tags
 }

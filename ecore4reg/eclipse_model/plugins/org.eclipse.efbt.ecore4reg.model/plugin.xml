@@ -16,12 +16,6 @@
 
 <plugin>
 
-
-
-
-
-
-
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated ecore4reg -->
       <package
@@ -31,19 +25,4 @@
    </extension>
 
 
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated analysis_model -->
-      <package
-            uri="http://www.eclipse.org/efbt/analysis_model"
-            class="org.eclipse.efbt.analysis_model.model.analysis_model.Analysis_modelPackage"
-            genModel="model/analysis_model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated analysis_model -->
-      <parser
-            type="analysis_model"
-            class="org.eclipse.efbt.analysis_model.model.analysis_model.util.Analysis_modelResourceFactoryImpl"/>
-   </extension>
 </plugin>

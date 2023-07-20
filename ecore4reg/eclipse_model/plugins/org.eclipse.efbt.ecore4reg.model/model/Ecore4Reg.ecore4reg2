@@ -71,6 +71,18 @@ abstract class ELNamedElement extends ELModelElement {
 
 class ELOperation extends ELTypedElement {
 	String body
+}
+
+class ELPublicOperation extends ELTypedElement {
+	contains ELPrivateOperation[0..-1] eParameters
+}
+
+class ELPrivateOperation extends ELTypedElement {
+	contains ELPrivateOperation[0..-1] calledPrivateOperations
+}
+
+class ELOperation extends ELTypedElement {
+	String body
 	contains ELParameter[0..-1] eParameters
 }
 
@@ -117,7 +129,7 @@ class RulesForILTable {
 }
 
 class SelectColumn {
-	refers ELOperation asAttribute
+	refers ELPublicOperation asAttribute
 }
 
 class SelectColumnMemberAs extends SelectColumn {
@@ -129,7 +141,7 @@ class SelectColumnAttributeAs extends SelectColumn {
 }
 
 class SelectDerivedColumnAs extends SelectColumn {
-	refers ELOperation attribute
+	refers ELPublicOperation attribute
 }
 
 class SelectValueAs extends SelectColumn {
