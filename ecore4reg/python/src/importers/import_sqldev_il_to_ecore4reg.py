@@ -20,7 +20,7 @@ import csv
 from importers.utils import Utils
 import os
 
-from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
+from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
 
 
 class SQLDeveloperILImport(object):
@@ -78,7 +78,7 @@ class SQLDeveloperILImport(object):
                         containment_reference.lowerBound = 0
                         containment_reference.containment = True
                         eclass_table.eOperations.append(containment_reference)
-                        eclass_table_operation = ELOperation()
+                        eclass_table_operation = ELPublicOperation()
                         eclass_table_operation.name = eclass.name+"s"
                         eclass_table_operation.eType = eclass
                         eclass_table_operation.upperBound = -1
@@ -403,7 +403,7 @@ class SQLDeveloperILImport(object):
                                 attribute.lowerBound = 1
 
                             if class_is_derived:
-                                operation = ELOperation()
+                                operation = ELPublicOperation()
                                 operation.lowerBound = 0
                                 operation.upperBound = 1
                                 if (the_enum.name == "String"):
@@ -487,7 +487,7 @@ class SQLDeveloperILImport(object):
                                     self)
 
                                 if class_is_derived:
-                                    operation = ELOperation()
+                                    operation = ELPublicOperation()
                                     operation.lowerBound = 0
                                     operation.upperBound = 1
                                     operation.name = amended_attribute_name
@@ -638,7 +638,7 @@ class SQLDeveloperILImport(object):
                                 attribute.eAttributeType = the_enum
 
                             if class_is_derived:
-                                operation = ELOperation()
+                                operation = ELPublicOperation()
                                 operation.lowerBound = 0
                                 operation.upperBound = 1
                                 if the_enum.name == "String":
@@ -696,7 +696,7 @@ class SQLDeveloperILImport(object):
                                     self)
 
                                 if class_is_derived:
-                                    operation = ELOperation()
+                                    operation = ELPublicOperation()
                                     operation.lowerBound = 0
                                     operation.upperBound = 1
                                     operation.name = amended_attribute_name

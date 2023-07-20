@@ -148,7 +148,12 @@
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELOperation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELOperation/body"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ELOperation/eParameters"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ELPublicOperation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ELPublicOperation/calledPrivateOperations"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ELPrivateOperation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ELPrivateOperation/eParameters"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//ELParameter"/>
     <genClasses ecoreClass="ecore4reg.ecore#//ELPackage">
@@ -173,6 +178,9 @@
     <genClasses ecoreClass="ecore4reg.ecore#//ELStringToStringMapEntry">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELStringToStringMapEntry/key"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ELStringToStringMapEntry/value"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//OperationTag">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//OperationTag/operation"/>
     </genClasses>
     <genClasses ecoreClass="ecore4reg.ecore#//VTLEnrichedCube">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//VTLEnrichedCube/transformations"/>

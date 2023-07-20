@@ -26,12 +26,12 @@ public interface SelectColumn extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>As Attribute</em>' reference.
-	 * @see #setAsAttribute(ELOperation)
+	 * @see #setAsAttribute(ELPublicOperation)
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getSelectColumn_AsAttribute()
 	 * @model
 	 * @generated
 	 */
-	ELOperation getAsAttribute();
+	ELPublicOperation getAsAttribute();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumn#getAsAttribute <em>As Attribute</em>}' reference.
@@ -41,6 +41,6 @@ public interface SelectColumn extends EObject {
 	 * @see #getAsAttribute()
 	 * @generated
 	 */
-	void setAsAttribute(ELOperation value);
+	void setAsAttribute(ELPublicOperation value);
 
 } // SelectColumn

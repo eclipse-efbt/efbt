@@ -15,6 +15,8 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELEnumLiteral;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELReference;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regFactory;
@@ -25,6 +27,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsModule;
@@ -144,11 +147,14 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 			case Ecore4regPackage.EL_ENUM: return createELEnum();
 			case Ecore4regPackage.EL_ENUM_LITERAL: return createELEnumLiteral();
 			case Ecore4regPackage.EL_OPERATION: return createELOperation();
+			case Ecore4regPackage.EL_PUBLIC_OPERATION: return createELPublicOperation();
+			case Ecore4regPackage.EL_PRIVATE_OPERATION: return createELPrivateOperation();
 			case Ecore4regPackage.EL_PARAMETER: return createELParameter();
 			case Ecore4regPackage.EL_PACKAGE: return createELPackage();
 			case Ecore4regPackage.EL_REFERENCE: return createELReference();
 			case Ecore4regPackage.EL_ANNOTATION: return createELAnnotation();
 			case Ecore4regPackage.EL_STRING_TO_STRING_MAP_ENTRY: return createELStringToStringMapEntry();
+			case Ecore4regPackage.OPERATION_TAG: return createOperationTag();
 			case Ecore4regPackage.VTL_ENRICHED_CUBE: return createVTLEnrichedCube();
 			case Ecore4regPackage.VTL_GENERATED_OUTPUTLAYER: return createVTLGeneratedOutputlayer();
 			case Ecore4regPackage.VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION: return createVTLForOutputLayerAndIntermediateLayerCombination();
@@ -526,6 +532,26 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public ELPublicOperation createELPublicOperation() {
+		ELPublicOperationImpl elPublicOperation = new ELPublicOperationImpl();
+		return elPublicOperation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ELPrivateOperation createELPrivateOperation() {
+		ELPrivateOperationImpl elPrivateOperation = new ELPrivateOperationImpl();
+		return elPrivateOperation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ELParameter createELParameter() {
 		ELParameterImpl elParameter = new ELParameterImpl();
 		return elParameter;
@@ -569,6 +595,16 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 	public ELStringToStringMapEntry createELStringToStringMapEntry() {
 		ELStringToStringMapEntryImpl elStringToStringMapEntry = new ELStringToStringMapEntryImpl();
 		return elStringToStringMapEntry;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OperationTag createOperationTag() {
+		OperationTagImpl operationTag = new OperationTagImpl();
+		return operationTag;
 	}
 
 	/**

@@ -17,6 +17,8 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELNamedElement;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPackage;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELReference;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStructuralFeature;
@@ -28,6 +30,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
@@ -385,6 +388,26 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Ecore4regPackage.EL_PUBLIC_OPERATION: {
+				ELPublicOperation elPublicOperation = (ELPublicOperation)theEObject;
+				T result = caseELPublicOperation(elPublicOperation);
+				if (result == null) result = caseELOperation(elPublicOperation);
+				if (result == null) result = caseELTypedElement(elPublicOperation);
+				if (result == null) result = caseELNamedElement(elPublicOperation);
+				if (result == null) result = caseELModelElement(elPublicOperation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.EL_PRIVATE_OPERATION: {
+				ELPrivateOperation elPrivateOperation = (ELPrivateOperation)theEObject;
+				T result = caseELPrivateOperation(elPrivateOperation);
+				if (result == null) result = caseELOperation(elPrivateOperation);
+				if (result == null) result = caseELTypedElement(elPrivateOperation);
+				if (result == null) result = caseELNamedElement(elPrivateOperation);
+				if (result == null) result = caseELModelElement(elPrivateOperation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case Ecore4regPackage.EL_PARAMETER: {
 				ELParameter elParameter = (ELParameter)theEObject;
 				T result = caseELParameter(elParameter);
@@ -438,6 +461,13 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 			case Ecore4regPackage.EL_STRING_TO_STRING_MAP_ENTRY: {
 				ELStringToStringMapEntry elStringToStringMapEntry = (ELStringToStringMapEntry)theEObject;
 				T result = caseELStringToStringMapEntry(elStringToStringMapEntry);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.OPERATION_TAG: {
+				OperationTag operationTag = (OperationTag)theEObject;
+				T result = caseOperationTag(operationTag);
+				if (result == null) result = caseTag(operationTag);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1111,6 +1141,36 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EL Public Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EL Public Operation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseELPublicOperation(ELPublicOperation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EL Private Operation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EL Private Operation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseELPrivateOperation(ELPrivateOperation object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>EL Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1212,6 +1272,21 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseELStringToStringMapEntry(ELStringToStringMapEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Operation Tag</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Operation Tag</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOperationTag(OperationTag object) {
 		return null;
 	}
 

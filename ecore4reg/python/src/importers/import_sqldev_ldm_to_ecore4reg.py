@@ -15,7 +15,7 @@ import csv
 from importers.utils import Utils
 
 from ecore4reg import ELAttribute, ELClass, ELEnum
-from ecore4reg import ELEnumLiteral, ELOperation, ELReference
+from ecore4reg import ELEnumLiteral, ELPublicOperation, ELReference
 
 class SQLDevLDMImport(object):
     '''
@@ -72,7 +72,7 @@ class SQLDevLDMImport(object):
                         containment_reference.containment = True
                         eclass_table.eStructuralFeatures.append(
                             containment_reference)
-                        eclass_table_operation = ELOperation()
+                        eclass_table_operation = ELPublicOperation()
                         eclass_table_operation.name = eclass.name+"s"
                         eclass_table_operation.eType = eclass
                         eclass_table_operation.upperBound = -1
@@ -345,7 +345,7 @@ class SQLDevLDMImport(object):
                                 attribute.eAttributeType = the_enum
 
                             if class_is_derived:
-                                operation = ELOperation()
+                                operation = ELPublicOperation()
                                 operation.lowerBound = 0
                                 operation.upperBound = 1
                                 if the_enum.name == "String":
@@ -394,7 +394,7 @@ class SQLDevLDMImport(object):
                                     self)
 
                                 if class_is_derived:
-                                    operation = ELOperation()
+                                    operation = ELPublicOperation()
                                     operation.lowerBound = 0
                                     operation.upperBound = 1
                                     operation.name = amended_attribute_name

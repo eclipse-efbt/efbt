@@ -97,13 +97,27 @@ ELEnum returns ecore4reg::ELEnum:
 	'}';
 
 ELOperation returns ecore4reg::ELOperation:
-	{ecore4reg::ELOperation}
+	ELPublicOperation | ELPrivateOperation;
+	
+	
+ELPublicOperation returns ecore4reg::ELPublicOperation:
+	{ecore4reg::ELPublicOperation}
 	'op'
 	eType=[ecore4reg::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
-	'(' (eParameters+=ELParameter (',' eParameters+=ELParameter)*)? ')'
+	'()'
 	'{'(body=EString)?'}'
 	;
+	
+ELPrivateOperation returns ecore4reg::ELPrivateOperation:
+	{ecore4reg::ELPrivateOperation}
+	'private_op'
+	eType=[ecore4reg::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+	name=ID
+	'('(eParameters+=ELParameter (',' eParameters+=ELParameter)*)?')'
+	'{'(body=EString)?'}'
+	;
+
 
 ELParameter returns ecore4reg::ELParameter:
 
@@ -180,8 +194,17 @@ TagGroup returns ecore4reg::TagGroup:
 	'}';
 	
 Tag returns ecore4reg::Tag:
-	Tag_Impl ;
+	Tag_Impl | OperationTag;
 	
+OperationTag returns ecore4reg::OperationTag:
+	{ecore4reg::OperationTag}
+	'operationTag'
+	name=ID
+	'{'
+		('theDisplayName' displayName=EString)?
+		('theRequirements' '(' requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName] ( "," requirements+=[ecore4reg::TitledRequirementsSection|QualifiedName])* ')' )?
+		('theOperation' operation=[ecore4reg::ELOperation|QualifiedName])?
+	'}';
 
 Tag_Impl returns ecore4reg::Tag:
 	{ecore4reg::Tag}
@@ -303,28 +326,28 @@ SelectColumnMemberAs returns ecore4reg::SelectColumnMemberAs:
 	{ecore4reg::SelectColumnMemberAs}
 	'selectMember'
 		( memberAsConstant=[ecore4reg::ELEnumLiteral|QualifiedName])?
-		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELPublicOperation|QualifiedName])?
 		;
 	
 SelectColumnAttributeAs returns ecore4reg::SelectColumnAttributeAs:
 	{ecore4reg::SelectColumnAttributeAs}
 	'selectAttribute'
 		( attribute=[ecore4reg::ELAttribute|QualifiedName])?
-		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELPublicOperation|QualifiedName])?
 	;
 	
 SelectDerivedColumnAs returns ecore4reg::SelectDerivedColumnAs:
 	{ecore4reg::SelectDerivedColumnAs}
 	'selectDerivedAttribute'
-		( attribute=[ecore4reg::ELOperation|QualifiedName])?
-		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
+		( attribute=[ecore4reg::ELPublicOperation|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELPublicOperation|QualifiedName])?
 	;
 	
 SelectValueAs returns ecore4reg::SelectValueAs:
 	{ecore4reg::SelectValueAs}
 	'selectValue'
 		( value=EString)?
-		('as' asAttribute=[ecore4reg::ELOperation|QualifiedName])?
+		('as' asAttribute=[ecore4reg::ELPublicOperation|QualifiedName])?
 	;
 
 enum Comparitor returns ecore4reg::Comparitor:

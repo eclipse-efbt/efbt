@@ -752,6 +752,18 @@ class ELAnnotation(ELModelElement):
             self.details.extend(details)
 
 
+class OperationTag(Tag):
+
+    operation = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, operation=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if operation is not None:
+            self.operation = operation
+
+
 class VTLModule(Module):
 
     VTLSchemes = EReference(ordered=True, unique=True, containment=True, derived=False)
@@ -972,17 +984,13 @@ class ELDataType(ELClassifier):
 class ELOperation(ELTypedElement):
 
     body = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    eParameters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, body=None, eParameters=None, **kwargs):
+    def __init__(self, *, body=None, **kwargs):
 
         super().__init__(**kwargs)
 
         if body is not None:
             self.body = body
-
-        if eParameters:
-            self.eParameters.extend(eParameters)
 
 
 class ELParameter(ELTypedElement):
@@ -1026,6 +1034,31 @@ class ELEnum(ELDataType):
 
         if eLiterals:
             self.eLiterals.extend(eLiterals)
+
+
+class ELPublicOperation(ELOperation):
+
+    calledPrivateOperations = EReference(
+        ordered=True, unique=True, containment=False, derived=False, upper=-1)
+
+    def __init__(self, *, calledPrivateOperations=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if calledPrivateOperations:
+            self.calledPrivateOperations.extend(calledPrivateOperations)
+
+
+class ELPrivateOperation(ELOperation):
+
+    eParameters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, eParameters=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if eParameters:
+            self.eParameters.extend(eParameters)
 
 
 class ELReference(ELStructuralFeature):

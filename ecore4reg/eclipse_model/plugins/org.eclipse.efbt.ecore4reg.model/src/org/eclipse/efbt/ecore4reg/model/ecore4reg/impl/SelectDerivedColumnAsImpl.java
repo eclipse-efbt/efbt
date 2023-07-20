@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.ecore4reg.model.ecore4reg.impl;
 
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs;
 
@@ -35,7 +35,7 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	 * @generated
 	 * @ordered
 	 */
-	protected ELOperation attribute;
+	protected ELPublicOperation attribute;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -61,10 +61,10 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELOperation getAttribute() {
+	public ELPublicOperation getAttribute() {
 		if (attribute != null && attribute.eIsProxy()) {
 			InternalEObject oldAttribute = (InternalEObject)attribute;
-			attribute = (ELOperation)eResolveProxy(oldAttribute);
+			attribute = (ELPublicOperation)eResolveProxy(oldAttribute);
 			if (attribute != oldAttribute) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Ecore4regPackage.SELECT_DERIVED_COLUMN_AS__ATTRIBUTE, oldAttribute, attribute));
@@ -78,7 +78,7 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELOperation basicGetAttribute() {
+	public ELPublicOperation basicGetAttribute() {
 		return attribute;
 	}
 
@@ -87,8 +87,8 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAttribute(ELOperation newAttribute) {
-		ELOperation oldAttribute = attribute;
+	public void setAttribute(ELPublicOperation newAttribute) {
+		ELPublicOperation oldAttribute = attribute;
 		attribute = newAttribute;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Ecore4regPackage.SELECT_DERIVED_COLUMN_AS__ATTRIBUTE, oldAttribute, attribute));
@@ -118,7 +118,7 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case Ecore4regPackage.SELECT_DERIVED_COLUMN_AS__ATTRIBUTE:
-				setAttribute((ELOperation)newValue);
+				setAttribute((ELPublicOperation)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -133,7 +133,7 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case Ecore4regPackage.SELECT_DERIVED_COLUMN_AS__ATTRIBUTE:
-				setAttribute((ELOperation)null);
+				setAttribute((ELPublicOperation)null);
 				return;
 		}
 		super.eUnset(featureID);

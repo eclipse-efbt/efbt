@@ -25,12 +25,12 @@ public interface SelectDerivedColumnAs extends SelectColumn {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attribute</em>' reference.
-	 * @see #setAttribute(ELOperation)
+	 * @see #setAttribute(ELPublicOperation)
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage#getSelectDerivedColumnAs_Attribute()
 	 * @model
 	 * @generated
 	 */
-	ELOperation getAttribute();
+	ELPublicOperation getAttribute();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectDerivedColumnAs#getAttribute <em>Attribute</em>}' reference.
@@ -40,6 +40,6 @@ public interface SelectDerivedColumnAs extends SelectColumn {
 	 * @see #getAttribute()
 	 * @generated
 	 */
-	void setAttribute(ELOperation value);
+	void setAttribute(ELPublicOperation value);
 
 } // SelectDerivedColumnAs

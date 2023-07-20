@@ -19,7 +19,7 @@ Created on 22 Jan 2022
 import os
 import csv
 from importers.utils import Utils
-from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference, ELAttribute
+from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAttribute
 
 class SDDImport(object):
     '''
@@ -124,7 +124,7 @@ class SDDImport(object):
                         eclass_table.eStructuralFeatures.append(
                             containment_reference)
                         if not (cube_type == "EIL"):
-                            xclass_table_peration = ELOperation()
+                            xclass_table_peration = ELPublicOperation()
                             xclass_table_peration.name = eclass.name+"s"
                             xclass_table_peration.eType = eclass
                             xclass_table_peration.upperBound = -1
@@ -560,7 +560,7 @@ class SDDImport(object):
                                 if  the_enum is not None:                     
                                     
                                     if class_is_derived:
-                                        operation = ELOperation()
+                                        operation = ELPublicOperation()
                                         operation.lowerBound=0
                                         operation.upperBound=1
                                         if(the_enum.name == "String"):

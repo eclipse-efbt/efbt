@@ -1599,7 +1599,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELTypedElement()
 	 * @generated
 	 */
-	int EL_TYPED_ELEMENT = 41;
+	int EL_TYPED_ELEMENT = 43;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1672,7 +1672,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELStructuralFeature()
 	 * @generated
 	 */
-	int EL_STRUCTURAL_FEATURE = 40;
+	int EL_STRUCTURAL_FEATURE = 42;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2240,22 +2240,13 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_OPERATION__BODY = EL_TYPED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_OPERATION__EPARAMETERS = EL_TYPED_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>EL Operation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_OPERATION_FEATURE_COUNT = EL_TYPED_ELEMENT_FEATURE_COUNT + 2;
+	int EL_OPERATION_FEATURE_COUNT = EL_TYPED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>EL Operation</em>' class.
@@ -2267,6 +2258,188 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_OPERATION_OPERATION_COUNT = EL_TYPED_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELPublicOperationImpl <em>EL Public Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELPublicOperationImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELPublicOperation()
+	 * @generated
+	 */
+	int EL_PUBLIC_OPERATION = 37;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION__EANNOTATIONS = EL_OPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION__NAME = EL_OPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION__ETYPE = EL_OPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION__UPPER_BOUND = EL_OPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION__LOWER_BOUND = EL_OPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Body</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION__BODY = EL_OPERATION__BODY;
+
+	/**
+	 * The feature id for the '<em><b>Called Private Operations</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION__CALLED_PRIVATE_OPERATIONS = EL_OPERATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>EL Public Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION_FEATURE_COUNT = EL_OPERATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>EL Public Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PUBLIC_OPERATION_OPERATION_COUNT = EL_OPERATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELPrivateOperationImpl <em>EL Private Operation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELPrivateOperationImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELPrivateOperation()
+	 * @generated
+	 */
+	int EL_PRIVATE_OPERATION = 38;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION__EANNOTATIONS = EL_OPERATION__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION__NAME = EL_OPERATION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>EType</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION__ETYPE = EL_OPERATION__ETYPE;
+
+	/**
+	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION__UPPER_BOUND = EL_OPERATION__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION__LOWER_BOUND = EL_OPERATION__LOWER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Body</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION__BODY = EL_OPERATION__BODY;
+
+	/**
+	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION__EPARAMETERS = EL_OPERATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>EL Private Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION_FEATURE_COUNT = EL_OPERATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>EL Private Operation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PRIVATE_OPERATION_OPERATION_COUNT = EL_OPERATION_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ELParameterImpl <em>EL Parameter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2274,7 +2447,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELParameter()
 	 * @generated
 	 */
-	int EL_PARAMETER = 37;
+	int EL_PARAMETER = 39;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2347,7 +2520,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELPackage()
 	 * @generated
 	 */
-	int EL_PACKAGE = 38;
+	int EL_PACKAGE = 40;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -2456,7 +2629,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELReference()
 	 * @generated
 	 */
-	int EL_REFERENCE = 39;
+	int EL_REFERENCE = 41;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2547,7 +2720,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELAnnotation()
 	 * @generated
 	 */
-	int EL_ANNOTATION = 42;
+	int EL_ANNOTATION = 44;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2602,7 +2775,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getELStringToStringMapEntry()
 	 * @generated
 	 */
-	int EL_STRING_TO_STRING_MAP_ENTRY = 43;
+	int EL_STRING_TO_STRING_MAP_ENTRY = 45;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -2641,6 +2814,70 @@ public interface Ecore4regPackage extends EPackage {
 	int EL_STRING_TO_STRING_MAP_ENTRY_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.OperationTagImpl <em>Operation Tag</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.OperationTagImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getOperationTag()
+	 * @generated
+	 */
+	int OPERATION_TAG = 46;
+
+	/**
+	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION_TAG__DISPLAY_NAME = TAG__DISPLAY_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION_TAG__NAME = TAG__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Requirements</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION_TAG__REQUIREMENTS = TAG__REQUIREMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Operation</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION_TAG__OPERATION = TAG_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Operation Tag</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION_TAG_FEATURE_COUNT = TAG_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Operation Tag</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATION_TAG_OPERATION_COUNT = TAG_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.VTLEnrichedCubeImpl <em>VTL Enriched Cube</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2648,7 +2885,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLEnrichedCube()
 	 * @generated
 	 */
-	int VTL_ENRICHED_CUBE = 44;
+	int VTL_ENRICHED_CUBE = 47;
 
 	/**
 	 * The feature id for the '<em><b>Transformations</b></em>' reference list.
@@ -2685,7 +2922,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedOutputlayer()
 	 * @generated
 	 */
-	int VTL_GENERATED_OUTPUTLAYER = 45;
+	int VTL_GENERATED_OUTPUTLAYER = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2749,7 +2986,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForOutputLayerAndIntermediateLayerCombination()
 	 * @generated
 	 */
-	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION = 46;
+	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION = 49;
 
 	/**
 	 * The feature id for the '<em><b>Transformations</b></em>' reference list.
@@ -2813,7 +3050,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedIntermediateLayer()
 	 * @generated
 	 */
-	int VTL_GENERATED_INTERMEDIATE_LAYER = 47;
+	int VTL_GENERATED_INTERMEDIATE_LAYER = 50;
 
 	/**
 	 * The feature id for the '<em><b>Dependant enriched cubes</b></em>' reference.
@@ -2877,7 +3114,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLTransformation()
 	 * @generated
 	 */
-	int VTL_TRANSFORMATION = 48;
+	int VTL_TRANSFORMATION = 51;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -2941,7 +3178,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLScheme()
 	 * @generated
 	 */
-	int VTL_SCHEME = 49;
+	int VTL_SCHEME = 52;
 
 	/**
 	 * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -2987,7 +3224,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForSelectionLayer()
 	 * @generated
 	 */
-	int VTL_FOR_SELECTION_LAYER = 50;
+	int VTL_FOR_SELECTION_LAYER = 53;
 
 	/**
 	 * The feature id for the '<em><b>Selection Layer</b></em>' reference.
@@ -3042,7 +3279,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLModule()
 	 * @generated
 	 */
-	int VTL_MODULE = 51;
+	int VTL_MODULE = 54;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3187,7 +3424,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getEntityToVTLIntermediateLayerLink()
 	 * @generated
 	 */
-	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK = 52;
+	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK = 55;
 
 	/**
 	 * The feature id for the '<em><b>VTL Intermediate Layer</b></em>' reference.
@@ -3242,7 +3479,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForView()
 	 * @generated
 	 */
-	int VTL_FOR_VIEW = 53;
+	int VTL_FOR_VIEW = 56;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3297,7 +3534,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedOutputlayerModule()
 	 * @generated
 	 */
-	int VTL_GENERATED_OUTPUTLAYER_MODULE = 54;
+	int VTL_GENERATED_OUTPUTLAYER_MODULE = 57;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3388,7 +3625,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForOutputLayerAndIntermediateLayerCombinationModule()
 	 * @generated
 	 */
-	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION_MODULE = 55;
+	int VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION_MODULE = 58;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3479,7 +3716,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLGeneratedIntermediateLayerModule()
 	 * @generated
 	 */
-	int VTL_GENERATED_INTERMEDIATE_LAYER_MODULE = 56;
+	int VTL_GENERATED_INTERMEDIATE_LAYER_MODULE = 59;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3570,7 +3807,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLSchemesModule()
 	 * @generated
 	 */
-	int VTL_SCHEMES_MODULE = 57;
+	int VTL_SCHEMES_MODULE = 60;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3661,7 +3898,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForSelectionLayerModule()
 	 * @generated
 	 */
-	int VTL_FOR_SELECTION_LAYER_MODULE = 58;
+	int VTL_FOR_SELECTION_LAYER_MODULE = 61;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3752,7 +3989,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getEntityToVTLIntermediateLayerLinkModule()
 	 * @generated
 	 */
-	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK_MODULE = 59;
+	int ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK_MODULE = 62;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3843,7 +4080,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getVTLForViewModule()
 	 * @generated
 	 */
-	int VTL_FOR_VIEW_MODULE = 60;
+	int VTL_FOR_VIEW_MODULE = 63;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3934,7 +4171,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getComparitor()
 	 * @generated
 	 */
-	int COMPARITOR = 61;
+	int COMPARITOR = 64;
 
 
 	/**
@@ -4990,15 +5227,46 @@ public interface Ecore4regPackage extends EPackage {
 	EAttribute getELOperation_Body();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation#getEParameters <em>EParameters</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation <em>EL Public Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>EL Public Operation</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation
+	 * @generated
+	 */
+	EClass getELPublicOperation();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation#getCalledPrivateOperations <em>Called Private Operations</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Called Private Operations</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation#getCalledPrivateOperations()
+	 * @see #getELPublicOperation()
+	 * @generated
+	 */
+	EReference getELPublicOperation_CalledPrivateOperations();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation <em>EL Private Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>EL Private Operation</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation
+	 * @generated
+	 */
+	EClass getELPrivateOperation();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation#getEParameters <em>EParameters</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>EParameters</em>'.
-	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation#getEParameters()
-	 * @see #getELOperation()
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation#getEParameters()
+	 * @see #getELPrivateOperation()
 	 * @generated
 	 */
-	EReference getELOperation_EParameters();
+	EReference getELPrivateOperation_EParameters();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ELParameter <em>EL Parameter</em>}'.
@@ -5201,6 +5469,27 @@ public interface Ecore4regPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getELStringToStringMapEntry_Value();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag <em>Operation Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Operation Tag</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag
+	 * @generated
+	 */
+	EClass getOperationTag();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag#getOperation <em>Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Operation</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag#getOperation()
+	 * @see #getOperationTag()
+	 * @generated
+	 */
+	EReference getOperationTag_Operation();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLEnrichedCube <em>VTL Enriched Cube</em>}'.

@@ -16,7 +16,7 @@ from pyecore.resources.json import JsonResource
 from importers.utils import Utils
 
 
-from ecore4reg import ELAttribute, ELClass, ELEnum, ELOperation, ELReference,SelectColumnAttributeAs
+from ecore4reg import ELAttribute, ELClass, ELEnum, ELPublicOperation, ELReference,SelectColumnAttributeAs
 
 
 class PersistToFile:
@@ -149,7 +149,7 @@ class PersistToFile:
                         f.write(" \r")
 
                 for member in classifier.eOperations:
-                    if isinstance(member, ELOperation):
+                    if isinstance(member, ELPublicOperation):
                         f.write("\t\t\t\top ")
 
                         f.write(member.eType.name + " ")
