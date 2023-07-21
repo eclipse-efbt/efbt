@@ -176,7 +176,7 @@ public class Orchestration {
 			for (Iterator iterator3 = operations.iterator(); iterator3.hasNext();) {
 				EOperation eOperation = (EOperation) iterator3.next();
 				EList<EParameter> params = new BasicEList<EParameter>();
-				if (!eOperation.getName().equals("init") && !eOperation.getName().contains("_regscenario"))
+				if (!eOperation.getName().equals("init") && !eOperation.getName().contains("_regscenario") && !eOperation.getName().contains("_private"))
 					try {
 						Object result = o.eInvoke(eOperation, params);
 						System.out.println(result);
@@ -342,7 +342,7 @@ public class Orchestration {
 		for (EOperation eOperation : ops) {
 			if (firstItem)
 			{
-				if (!eOperation.getName().contains("_regscenario_"))
+				if (!eOperation.getName().contains("_regscenario_") && !eOperation.getName().contains("_private"))
 				{
 					try {
 						Object result = theObject.eInvoke(eOperation, null);
@@ -360,7 +360,7 @@ public class Orchestration {
 			}
 			else
 			{
-				if (!eOperation.getName().contains("_regscenario_"))
+				if (!eOperation.getName().contains("_regscenario_") && !eOperation.getName().contains("_private"))
 				{
 					try {
 						Object result = theObject.eInvoke(eOperation, null);
@@ -439,7 +439,7 @@ public class Orchestration {
 		for (EOperation eOperation : ops) {
 			if (firstItem)
 			{
-				if (!eOperation.getName().contains("_regscenario_"))
+				if (!eOperation.getName().contains("_regscenario_") && !eOperation.getName().contains("_private"))
 				{
 					csvString = csvString + eOperation.getName();
 					firstItem = false;
@@ -448,7 +448,7 @@ public class Orchestration {
 			}
 			else
 			{
-				if (!eOperation.getName().contains("_regscenario_"))
+				if (!eOperation.getName().contains("_regscenario_") && !eOperation.getName().contains("_private"))
 				{
 					csvString = csvString + "," + eOperation.getName();
 				}
