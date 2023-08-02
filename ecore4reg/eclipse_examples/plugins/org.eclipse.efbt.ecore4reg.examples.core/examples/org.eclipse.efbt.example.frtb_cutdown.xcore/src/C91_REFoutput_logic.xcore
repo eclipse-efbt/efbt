@@ -1,0 +1,303 @@
+
+package C91_REFoutput_logic
+
+import sdd_domains.* 
+
+import il_domains.* 
+
+import input_tables.* 
+
+class C91_REF_Output_Layer_UnionItem {
+ 	refers C91_REF_OutputItem_Base  base	
+ 	op Approach_For_Prudential_Purposes  Approach_For_Prudential_Purposes()
+	{
+          base.Approach_For_Prudential_Purposes()
+	}
+ 	op Base  Base()
+	{
+          base.Base()
+	}
+ 	op Contingent_Scenario  Contingent_Scenario()
+	{
+          base.Contingent_Scenario()
+	}
+ 	op Delta_Vega_Or_Curvature_Risk  Delta_Vega_Or_Curvature_Risk()
+	{
+          base.Delta_Vega_Or_Curvature_Risk()
+	}
+ 	op boolean  Hypothetical_Value_Under_Specific_Assumptions()
+	{
+          base.Hypothetical_Value_Under_Specific_Assumptions()
+	}
+ 	op Instrument  Instrument()
+	{
+          base.Instrument()
+	}
+ 	op Main_Catagory  Main_Catagory()
+	{
+          base.Main_Catagory()
+	}
+ 	op Market_Risk_Portfolio  Market_Risk_Portfolio()
+	{
+          base.Market_Risk_Portfolio()
+	}
+ 	op double  Own_Funds_Requirements()
+	{
+          base.Own_Funds_Requirements()
+	}
+ 	op Position_In_The_Instrument  Position_In_The_Instrument()
+	{
+          base.Position_In_The_Instrument()
+	}
+ 	op Prudential_Portfolio  Prudentia_lPortfolio()
+	{
+          base.Prudentia_lPortfolio()
+	}
+ 	op double  Sensitivity_To_Delta_Risk_Factors()
+	{
+          base.Sensitivity_To_Delta_Risk_Factors()
+	}
+ 	op Type_And_Nature_Of_Sensitivity  Type_And_Nature_Of_Sensitivity()
+	{
+          base.Type_And_Nature_Of_Sensitivity()
+	}
+ 	op Type_Of_Risk  Type_Of_Risk()
+	{
+          base.Type_Of_Risk()
+	}
+}
+class C91_REF_OutputItem_Base {
+ 	op Approach_For_Prudential_Purposes  Approach_For_Prudential_Purposes()
+	{
+	}
+ 	op Base  Base()
+	{
+	}
+ 	op Contingent_Scenario  Contingent_Scenario()
+	{
+	}
+ 	op Delta_Vega_Or_Curvature_Risk  Delta_Vega_Or_Curvature_Risk()
+	{
+	}
+ 	op boolean  Hypothetical_Value_Under_Specific_Assumptions()
+	{
+          false
+	}
+ 	op Instrument  Instrument()
+	{
+	}
+ 	op Main_Catagory  Main_Catagory()
+	{
+	}
+ 	op Market_Risk_Portfolio  Market_Risk_Portfolio()
+	{
+	}
+ 	op double  Own_Funds_Requirements()
+	{
+          0
+	}
+ 	op Position_In_The_Instrument  Position_In_The_Instrument()
+	{
+	}
+ 	op Prudential_Portfolio  Prudentia_lPortfolio()
+	{
+	}
+ 	op double  Sensitivity_To_Delta_Risk_Factors()
+	{
+          0
+	}
+ 	op Type_And_Nature_Of_Sensitivity  Type_And_Nature_Of_Sensitivity()
+	{
+	}
+ 	op Type_Of_Risk  Type_Of_Risk()
+	{
+	}
+}
+class C91_REF_Output_Layer_UnionTable {
+ 	contains  C91_REF_Output_Layer_UnionItem []   C91_REF_Output_Layer_UnionItems	
+ 	refers Layer_C91_REF_OutputItem_LongDeltaSensitivityTable  layer1Table	
+ 	refers Layer_C91_REF_OutputItem_GIRR_Net_SensitivityTable  layer2Table	
+ 	op C91_REF_Output_Layer_UnionItem []   C91_REF_Output_Layer_UnionItems()
+	{
+          var items = new org.eclipse.emf.common.util.BasicEList<C91_REF_Output_Layer_UnionItem>()
+				 					 		 		 	for( Layer_C91_REF_OutputItem_LongDeltaSensitivity item : layer1Table.layer_C91_REF_OutputItem_LongDeltaSensitivitys)
+				 					 		 		 	{
+				 					 		 		 		var newItem = C91_REFoutput_logicFactory.eINSTANCE.createC91_REF_Output_Layer_UnionItem
+				 					 		 		 		newItem.base = item
+				 					 		 		 		items.add(newItem)
+				 					 		 		 	}
+				 										for( Layer_C91_REF_OutputItem_GIRR_Net_Sensitivity item : layer2Table.layer_C91_REF_OutputItem_GIRR_Net_Sensitivitys)
+				 					 		 		 	{
+				 					 		 		 		var newItem = C91_REFoutput_logicFactory.eINSTANCE.createC91_REF_Output_Layer_UnionItem
+				 					 		 		 		newItem.base = item
+				 					 		 		 		items.add(newItem)
+				 					 		 		 	}
+				 					 		 		 	return items
+	}
+ 	op String  init()
+	{
+          ecore4regutils.Orchestration.init(this) 
+				 					 	 			this.c91_REF_Output_Layer_UnionItems.addAll(C91_REF_Output_Layer_UnionItems())
+				 					 	 			  return null
+	}
+}
+class Layer_C91_REF_OutputItem_LongDeltaSensitivity  extends C91_REF_OutputItem_Base {
+ 	refers Delta_sensitivity  delta_sensitivity	
+ 	op Approach_For_Prudential_Purposes  Approach_For_Prudential_Purposes()
+	{
+          il_domains.Approach_For_Prudential_Purposes.SENSITIVITIES_BASED_METHOD
+	}
+ 	op Base  Base()
+	{
+          il_domains.Base.MEMORANDUM_ITEMS
+	}
+ 	op Contingent_Scenario  Contingent_Scenario()
+	{
+          sdd_domains.Contingent_Scenario.NA
+	}
+ 	op Delta_Vega_Or_Curvature_Risk  Delta_Vega_Or_Curvature_Risk()
+	{
+          il_domains.Delta_Vega_Or_Curvature_Risk.DELTA_RISK
+	}
+ 	op boolean  Hypothetical_Value_Under_Specific_Assumptions()
+	{
+          false
+	}
+ 	op Instrument  Instrument()
+	{
+          il_domains.Instrument.INSTRUMENTS_OTHER_THAN_SECURITISATION_POSITIONS
+	}
+ 	op Main_Catagory  Main_Catagory()
+	{
+          il_domains.Main_Catagory.INSTRUMENTS_SUBJECT_TO_MARKET_RISK
+	}
+ 	op Market_Risk_Portfolio  Market_Risk_Portfolio()
+	{
+          il_domains.Market_Risk_Portfolio.NON_ACTP
+	}
+ 	op double  Own_Funds_Requirements()
+	{
+          0
+	}
+ 	op Position_In_The_Instrument  Position_In_The_Instrument()
+	{
+          il_domains.Position_In_The_Instrument.LONG_POSITION
+	}
+ 	op Prudential_Portfolio  Prudentia_lPortfolio()
+	{
+          il_domains.Prudential_Portfolio.BANKING_AND_TRADING_BOOK
+	}
+ 	op double  Sensitivity_To_Delta_Risk_Factors()
+	{
+          delta_sensitivity.delta_sensitivity
+	}
+ 	op Type_And_Nature_Of_Sensitivity  Type_And_Nature_Of_Sensitivity()
+	{
+          il_domains.Type_And_Nature_Of_Sensitivity.POSITIVE_SENSITIVITY_GROSS_PER_RISK_CLASS_UNWEIGHTED
+	}
+ 	op Type_Of_Risk  Type_Of_Risk()
+	{
+          il_domains.Type_Of_Risk.GIRR
+	}
+}
+class Layer_C91_REF_OutputItem_LongDeltaSensitivityTable {
+ 	refers Delta_sensitivity_BaseTable  delta_sensitivity_table_reference	
+ 	contains  Layer_C91_REF_OutputItem_LongDeltaSensitivity []   Layer_C91_REF_OutputItem_LongDeltaSensitivitys	
+ 	op Layer_C91_REF_OutputItem_LongDeltaSensitivity []   Layer_C91_REF_OutputItem_LongDeltaSensitivitys()
+	{
+          var items = new org.eclipse.emf.common.util.BasicEList<Layer_C91_REF_OutputItem_LongDeltaSensitivity>()
+				 					 		 	for( Delta_sensitivity item : delta_sensitivity_table_reference.delta_sensitivitys)
+				 					 		 	{
+				 					 		 		var newItem = C91_REFoutput_logicFactory.eINSTANCE.createLayer_C91_REF_OutputItem_LongDeltaSensitivity
+				 					 		 		newItem.delta_sensitivity = item
+				 					 		 		items.add(newItem)
+				 					 		 	}
+				 					 		 	return items
+	}
+ 	op String  init()
+	{
+          ecore4regutils.Orchestration.init(this)
+				 					 		 	this.layer_C91_REF_OutputItem_LongDeltaSensitivitys.addAll(Layer_C91_REF_OutputItem_LongDeltaSensitivitys()) 		 
+				 					 		 	return null
+	}
+}
+class Layer_C91_REF_OutputItem_GIRR_Net_Sensitivity  extends C91_REF_OutputItem_Base {
+ 	refers Netted_delta_sensitivities_per_risk_factor_and_tenor_derived  net_sensitivity	
+ 	op Approach_For_Prudential_Purposes  Approach_For_Prudential_Purposes()
+	{
+          il_domains.Approach_For_Prudential_Purposes.SENSITIVITIES_BASED_METHOD
+	}
+ 	op Base  Base()
+	{
+          il_domains.Base.MEMORANDUM_ITEMS
+	}
+ 	op Contingent_Scenario  Contingent_Scenario()
+	{
+          sdd_domains.Contingent_Scenario.NA
+	}
+ 	op Delta_Vega_Or_Curvature_Risk  Delta_Vega_Or_Curvature_Risk()
+	{
+          il_domains.Delta_Vega_Or_Curvature_Risk.DELTA_RISK
+	}
+ 	op boolean  Hypothetical_Value_Under_Specific_Assumptions()
+	{
+          false
+	}
+ 	op Instrument  Instrument()
+	{
+          il_domains.Instrument.INSTRUMENTS_OTHER_THAN_SECURITISATION_POSITIONS
+	}
+ 	op Main_Catagory  Main_Catagory()
+	{
+          il_domains.Main_Catagory.INSTRUMENTS_SUBJECT_TO_MARKET_RISK
+	}
+ 	op Market_Risk_Portfolio  Market_Risk_Portfolio()
+	{
+          il_domains.Market_Risk_Portfolio.NON_ACTP
+	}
+ 	op double  Own_Funds_Requirements()
+	{
+          0
+	}
+ 	op Position_In_The_Instrument  Position_In_The_Instrument()
+	{
+          il_domains.Position_In_The_Instrument.LONG_POSITION
+	}
+ 	op Prudential_Portfolio  Prudentia_lPortfolio()
+	{
+          il_domains.Prudential_Portfolio.BANKING_AND_TRADING_BOOK
+	}
+ 	op double  Sensitivity_To_Delta_Risk_Factors()
+	{
+          net_sensitivity.netted_delta_sensitivities
+	}
+ 	op Type_And_Nature_Of_Sensitivity  Type_And_Nature_Of_Sensitivity()
+	{
+          il_domains.Type_And_Nature_Of_Sensitivity.POSITIVE_SENSITIVITY_GROSS_PER_RISK_CLASS_UNWEIGHTED
+	}
+ 	op Type_Of_Risk  Type_Of_Risk()
+	{
+          il_domains.Type_Of_Risk.GIRR
+	}
+}
+class Layer_C91_REF_OutputItem_GIRR_Net_SensitivityTable {
+ 	refers Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_DerivedTable  delta_sensitivity_table_reference	
+ 	contains  Layer_C91_REF_OutputItem_GIRR_Net_Sensitivity []   Layer_C91_REF_OutputItem_GIRR_Net_Sensitivitys	
+ 	op Layer_C91_REF_OutputItem_GIRR_Net_Sensitivity []   Layer_C91_REF_OutputItem_GIRR_Net_Sensitivitys()
+	{
+          var items = new org.eclipse.emf.common.util.BasicEList<Layer_C91_REF_OutputItem_GIRR_Net_Sensitivity>()
+				 					 					 		 	for( Netted_delta_sensitivities_per_risk_factor_and_tenor_derived item : delta_sensitivity_table_reference.netted_delta_sensitivities_per_risk_factor_and_tenor_deriveds)
+				 					 					 		 	{
+				 					 					 		 		var newItem = C91_REFoutput_logicFactory.eINSTANCE.createLayer_C91_REF_OutputItem_GIRR_Net_Sensitivity
+				 					 					 		 		newItem.net_sensitivity = item
+				 					 					 		 		items.add(newItem)
+				 					 					 		 	}
+				 					 					 		 	return items
+	}
+ 	op String  init()
+	{
+          ecore4regutils.Orchestration.init(this)
+				 					 					 		 	this.layer_C91_REF_OutputItem_GIRR_Net_Sensitivitys.addAll(Layer_C91_REF_OutputItem_GIRR_Net_Sensitivitys()) 		 
+				 					 					 		 	return null
+	}
+}
