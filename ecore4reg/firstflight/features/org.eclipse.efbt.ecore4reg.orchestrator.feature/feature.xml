@@ -20,10 +20,15 @@
          id="org.eclipse.emf.ecore.xcore.sdk"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.sirius.runtime.ide.xtext"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import feature="org.eclipse.emf.ecore.xcore.sdk" version="0.0.0"/>
+      <import feature="org.eclipse.sirius.runtime.ide.xtext" version="7.2.0.202306070701"/>
    </requires>
 
    <plugin

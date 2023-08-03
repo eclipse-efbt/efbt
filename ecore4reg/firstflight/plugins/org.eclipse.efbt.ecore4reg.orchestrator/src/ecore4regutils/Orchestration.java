@@ -272,15 +272,24 @@ public class Orchestration {
 	
 	private static void persistObjectAsCSV(EObject theObject) {
 		String csvString = createCSVStringForTable(theObject);
-		
-        try {
-        	Files.writeString(Path.of(resourceURI + '/' +theObject.eClass().getName() + ".csv"),csvString , StandardOpenOption.CREATE_NEW);
+		try {
+			String fileSeparator = FileSystems.getDefault().getSeparator();
+        	Files.createDirectory(Path.of(resourceURI + fileSeparator + "csv" ));
         	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-}
+		
+        try {
+        	String fileSeparator = FileSystems.getDefault().getSeparator();
+        	Files.writeString(Path.of(resourceURI + fileSeparator + "csv" + fileSeparator +theObject.eClass().getName() + ".csv"),csvString , StandardOpenOption.CREATE_NEW);
+        	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
 
 
 	private static String createCSVStringForTable(EObject theObject) {
