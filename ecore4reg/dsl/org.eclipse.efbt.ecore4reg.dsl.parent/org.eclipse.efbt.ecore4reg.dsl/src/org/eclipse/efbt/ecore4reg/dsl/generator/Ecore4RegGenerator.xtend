@@ -25,20 +25,17 @@ import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.common.util.URI
-import java.io.File
-import java.io.FileReader
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
-import java.nio.CharBuffer
-import java.io.BufferedReader
 import java.nio.file.Path
 import java.nio.file.Files
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELDataType
-import java.util.List
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPrivateOperation
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELPublicOperation
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.RulesForReport
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumnAttributeAs
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectColumnMemberAs
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.SelectValueAs
 
 /**
  * Generates code from your model files on save.
@@ -56,6 +53,175 @@ class Ecore4RegGenerator extends AbstractGenerator {
 			processPackage(elpackage,fsa)
 			createXCoreForPackage(elpackage,fsa,resource)
 		}
+		for (rulesForReport : resource.allContents.toIterable.filter(RulesForReport)) {
+
+			processRulesForReport(rulesForReport,fsa)
+			createOutputTablesAmendment(rulesForReport,fsa)
+			
+		}
+	}
+	
+	def createOutputTablesAmendment(RulesForReport rulesForReport, IFileSystemAccess2 fsa) {
+		fsa.generateFile(rulesForReport.outputLayerCube.name + "_output_layer_amendment.ecore4reg",  '''
+		package «rulesForReport.outputLayerCube.name»_output_layer_amendment
+		import sdd_domains.*
+		import input_tables.*
+		import types.* 
+		import «rulesForReport.outputLayerCube.name»_Logic.*
+		class «rulesForReport.outputLayerCube.name»_UnionItem {
+			refers «rulesForReport.outputLayerCube.name»_UnionItem  unionOfLayers 
+		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
+		
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation instanceof ELPublicOperation»()«ENDIF»«IF eloperation instanceof ELPrivateOperation»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»«ENDIF»
+			{
+				"<xcore>unionOfLayers.«eloperation.name»()</xcore>"
+			}
+		
+		«ENDIF»«ENDFOR» 
+		}
+		class «rulesForReport.outputLayerCube.name»_Table {
+						refers  «rulesForReport.outputLayerCube.name»_UnionTable  unionOfLayersTable
+						contains  «rulesForReport.outputLayerCube.name» [0..-1] «rulesForReport.outputLayerCube.name»s 
+						op  «rulesForReport.outputLayerCube.name» [0..-1] calc_«rulesForReport.outputLayerCube.name»s() {
+							"<xcore>var items = new org.eclipse.emf.common.util.BasicEList<«rulesForReport.outputLayerCube.name»>()
+						for( «rulesForReport.outputLayerCube.name»_UnionItem item : unionOfLayersTable.«rulesForReport.outputLayerCube.name»_UnionItems)
+						{
+							var newItem = Output_tablesFactory.eINSTANCE.create«rulesForReport.outputLayerCube.name»
+							newItem.unionOfLayers =  item
+							items.add(newItem)
+		}
+						return items</xcore>"
+							} 
+						op String  init() {
+							"<xcore>ecore4regutils.Orchestration.init(this)
+						 this.«rulesForReport.outputLayerCube.name»s.addAll(calc_«rulesForReport.outputLayerCube.name»s()) 
+		 				return null</xcore>"
+							}
+					} 
+
+		''')
+	}
+	
+	def processRulesForReport(RulesForReport rulesForReport, IFileSystemAccess2 fsa) {
+		fsa.generateFile(rulesForReport.outputLayerCube.name + "_Logic.ecore4reg",  '''
+		package «rulesForReport.outputLayerCube.name»_Logic
+		import sdd_domains.*
+		import input_tables.*
+		import types.* 
+		class «rulesForReport.outputLayerCube.name»_UnionItem {
+			refers «rulesForReport.outputLayerCube.name»_Base base 
+		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
+		
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation instanceof ELPublicOperation»()«ENDIF»«IF eloperation instanceof ELPrivateOperation»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»«ENDIF»
+			{
+				"<xcore>base.«eloperation.name»()</xcore>"
+			}
+		
+		«ENDIF»«ENDFOR» 
+		}
+		class «rulesForReport.outputLayerCube.name»_Base {
+			
+		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
+				
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation instanceof ELPublicOperation»()«ENDIF»«IF eloperation instanceof ELPrivateOperation»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»«ENDIF»
+			{
+			«IF eloperation.EType.name == "double" »"<xcore>return 0</xcore>"
+			«ELSEIF eloperation.EType.name == "int" »"<xcore>return 0</xcore>"
+			«ELSEIF eloperation.EType.name == "boolean" »"<xcore>return true</xcore>"
+			«ENDIF»
+			}
+		
+		«ENDIF»«ENDFOR» 
+		}
+		
+		class «rulesForReport.outputLayerCube.name»_UnionTable {
+					 	contains  «rulesForReport.outputLayerCube.name»_UnionItem [0..-1]   «rulesForReport.outputLayerCube.name»_UnionItems	
+					 	«FOR tableRules : rulesForReport.rulesForTable»
+					 	«FOR tablePartRules : tableRules.rulesForTablePart»
+					 	refers «tablePartRules.name»_Table  «tablePartRules.name»_table
+					 	«ENDFOR»
+					 	«ENDFOR»
+					 	op «rulesForReport.outputLayerCube.name»_UnionItem [0..-1]   calc_«rulesForReport.outputLayerCube.name»_UnionItems() 
+						{
+						 	"<xcore>var items = new org.eclipse.emf.common.util.BasicEList<«rulesForReport.outputLayerCube.name»_UnionItem>()
+						 	«FOR tableRules : rulesForReport.rulesForTable»
+						 	«FOR tablePartRules : tableRules.rulesForTablePart»
+		 		 		 	for(«tablePartRules.name» item : «tablePartRules.name»_table.«tablePartRules.name»s)
+		 		 		 	{
+		 		 		 		var newItem = «rulesForReport.outputLayerCube.name»_LogicFactory.eINSTANCE.create«rulesForReport.outputLayerCube.name»_UnionItem
+		 		 		 		newItem.base = item
+		 		 		 		items.add(newItem)
+		 		 		 	}
+						 	«ENDFOR»
+						 	«ENDFOR»									
+						 	return items</xcore>"
+						}
+					 	op String  init() 
+						{
+						 	"<xcore>ecore4regutils.Orchestration.init(this) 
+			 	 			this.«rulesForReport.outputLayerCube.name»_UnionItems.addAll(calc_«rulesForReport.outputLayerCube.name»_UnionItems)
+			 	 			  return null</xcore>"
+						}
+		
+					}
+		
+		«FOR tableRules : rulesForReport.rulesForTable»
+		«FOR tablePartRules : tableRules.rulesForTablePart»
+		class «tablePartRules.name»  extends «rulesForReport.outputLayerCube.name»_Base {
+		«FOR column : tablePartRules.columns»
+		«IF (column instanceof SelectColumnAttributeAs)»
+		  refers «(column.attribute.eContainer as ELClass).name» «(column.attribute.eContainer as ELClass).name.giveSmallFirstLetter»
+		«ENDIF»	
+		«ENDFOR»
+		«FOR column : tablePartRules.columns»				
+	 	op «column.asAttribute.EType.name»  «column.asAttribute.name»() 
+		{
+			«IF (column instanceof SelectColumnMemberAs)»
+			"<xcore>sdd_domains.«column.asAttribute.EType.name».«column.memberAsConstant.name.toUpperCase»</xcore>"
+			«ELSEIF (column instanceof SelectValueAs)»
+			"<xcore>«column.value»</xcore>"
+			«ELSEIF (column instanceof SelectColumnAttributeAs)»
+			"<xcore>«(column.attribute.eContainer as ELClass).name.giveSmallFirstLetter».«column.attribute.name»</xcore>"
+			«ENDIF»	
+		}
+		«ENDFOR»
+		}
+		
+		class «tablePartRules.name»_Table {
+						«FOR column : tablePartRules.columns»
+						«IF (column instanceof SelectColumnAttributeAs)»
+						refers «(column.attribute.eContainer as ELClass).name»_Table «(column.attribute.eContainer as ELClass).name.giveSmallFirstLetter»_Table
+						// remove any duplicates in these refers statements
+						«ENDIF»	
+						«ENDFOR»
+					 	contains  «tablePartRules.name» [0..-1]   «tablePartRules.name»s	
+					 	op «tablePartRules.name» [0..-1]   calc_«tablePartRules.name»s() 
+						{
+						 	"<xcore>var items = new org.eclipse.emf.common.util.BasicEList<«tablePartRules.name»>()
+				 		 	//Join up any refered tables that you need to join
+				 		 	//loop through the main table
+				 		 	//create an item using var newItem = «rulesForReport.outputLayerCube.name»_LogicFactory.eINSTANCE.create«tablePartRules.name»
+				 		 	//set any references you want to on the new Item so that it can refer to themin operations
+				 		 	return items</xcore>"
+						}
+					 	op String  init() 
+						{
+						 	"<xcore>ecore4regutils.Orchestration.init(this)
+				 		 	this.«tablePartRules.name»s.addAll(calc_«tablePartRules.name»s) 		 
+				 		 	return null</xcore>"
+						}
+					}
+		«ENDFOR»
+		«ENDFOR»
+
+		        ''')
+	}
+	
+	def giveSmallFirstLetter(String string) {
+		var firstLetter = string.substring(0,1)
+		var smallFirstLetter = firstLetter.toLowerCase()
+		return smallFirstLetter + string.substring(1,string.length)
+		
 	}
 	
 	def createXCoreForPackage(ELPackage elpackage, IFileSystemAccess2 fsa,Resource resource) {

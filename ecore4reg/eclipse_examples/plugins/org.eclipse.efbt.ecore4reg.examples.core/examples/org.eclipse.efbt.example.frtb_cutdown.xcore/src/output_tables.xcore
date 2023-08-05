@@ -3,12 +3,13 @@ package output_tables
 
 import sdd_domains.* 
 
-import il_domains.* 
+import sdd_domains.* 
 
 
-import C91_REFoutput_logic.* 
+import C91_REF_OutputItem_Logic.* 
+
 class C91_REF_OutputItem {
- 	refers C91_REF_Output_Layer_UnionItem  unionOfLayers	
+ 	refers C91_REF_OutputItem_UnionItem  unionOfLayers	
  	op Approach_For_Prudential_Purposes  Approach_For_Prudential_Purposes()
 	{
           unionOfLayers.Approach_For_Prudential_Purposes()
@@ -66,13 +67,13 @@ class C91_REF_OutputItem {
           unionOfLayers.Type_Of_Risk()
 	}
 }
-class C91_REF_OutputTable {
- 	refers C91_REF_Output_Layer_UnionTable  unionOfLayersTable	
+class C91_REF_OutputItem_Table {
+ 	refers C91_REF_OutputItem_UnionTable  unionOfLayersTable	
  	contains  C91_REF_OutputItem []   C91_REF_OutputItems	
- 	op C91_REF_OutputItem []   C91_REF_OutputItems()
+ 	op C91_REF_OutputItem []   calc_C91_REF_OutputItems()
 	{
           var items = new org.eclipse.emf.common.util.BasicEList<C91_REF_OutputItem >()
-				for( C91_REF_Output_Layer_UnionItem item : unionOfLayersTable.c91_REF_Output_Layer_UnionItems)
+				for( C91_REF_OutputItem_UnionItem item : unionOfLayersTable.c91_REF_OutputItem_UnionItems)
 				{
 					var newItem = Output_tablesFactory.eINSTANCE.createC91_REF_OutputItem
 					newItem.unionOfLayers =  item
@@ -82,8 +83,8 @@ class C91_REF_OutputTable {
 	}
  	op String  init()
 	{
-          ecore4regutils.Orchestration.init(this) 
-				 this.c91_REF_OutputItems.addAll(C91_REF_OutputItems()) 
+          ecore4regutils.Orchestration.init(this)
+				 this.c91_REF_OutputItems.addAll(calc_C91_REF_OutputItems()) 
  				return null
 	}
 }

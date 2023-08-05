@@ -1,14 +1,14 @@
 
 package input_tables
 
-import il_domains.* 
+import sdd_domains.* 
 
 class Delta_sensitivity  extends Risk_measure {
  	Currency  Currency_of_record 
  	double  Delta_sensitivity 
  	double  Tenor 
 }
-class Delta_sensitivity_BaseTable {
+class Delta_sensitivity_Table {
  	contains  Delta_sensitivity []   Delta_sensitivitys	
 }
 class GIRR_risk_factor  extends Risk_factor {
@@ -16,7 +16,7 @@ class GIRR_risk_factor  extends Risk_factor {
  	Currency  Main_currency 
  	Currency  Second_currency 
 }
-class GIRR_risk_factor_BaseTable {
+class GIRR_risk_factor_Table {
  	contains  GIRR_risk_factor []   GIRR_risk_factors	
 }
 class Netted_delta_sensitivities_per_risk_factor_and_tenor_derived {
@@ -59,9 +59,9 @@ class Netted_delta_sensitivities_per_risk_factor_and_tenor_derived {
           weighted_GIRR_delta_sensitivity*weighted_GIRR_delta_sensitivity
 	}
 }
-class Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_DerivedTable {
- 	refers Delta_sensitivity_BaseTable  sourceTable1	
- 	refers GIRR_risk_factor_BaseTable  sourceTable2	
+class Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_Table {
+ 	refers Delta_sensitivity_Table  sourceTable1	
+ 	refers GIRR_risk_factor_Table  sourceTable2	
  	contains  Netted_delta_sensitivities_per_risk_factor_and_tenor_derived []   Netted_delta_sensitivities_per_risk_factor_and_tenor_deriveds	
  	op Netted_delta_sensitivities_per_risk_factor_and_tenor_derived []   Netted_delta_sensitivities_per_risk_factor_and_tenor_deriveds()
 	{
@@ -100,7 +100,7 @@ class Netted_delta_sensitivities_per_risk_factor_and_tenor_derived_DerivedTable 
 abstract class Risk_factor {
  	String  Risk_factor_Identifier 
 }
-class Risk_factor_BaseTable {
+class Risk_factor_Table {
  	contains  Risk_factor []   Risk_factors	
 }
 abstract class Risk_measure {
@@ -108,12 +108,12 @@ abstract class Risk_measure {
  	refers Risk_factor [1..1] theRisk_factor	
  	refers Security_or_exchange_tradable_derivative_position [1..1] theSecurity_or_exchange_tradable_derivative_position	
 }
-class Risk_measure_BaseTable {
+class Risk_measure_Table {
  	contains  Risk_measure []   Risk_measures	
 }
 class Security_or_exchange_tradable_derivative_position {
  	String  Position_identifier 
 }
-class Security_or_exchange_tradable_derivative_position_BaseTable {
+class Security_or_exchange_tradable_derivative_position_Table {
  	contains  Security_or_exchange_tradable_derivative_position []   Security_or_exchange_tradable_derivative_positions	
 }
