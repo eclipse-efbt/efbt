@@ -1,17 +1,17 @@
 /** 
- *  SCRIPT NAME : Disjoint subtyping
- *  PURPOSE: For disjoint subtypes or implicit subtyping different form of merging applies.  
- *  EXAMPLE: LDM1: "Financial asset in the form of an instrument or security position" ->  
- *           columns from Financial asset according to International Financial Reporting Standard (IFRS) and 
- *           Financial asset according to national general accepted accounting principles (nGAAP)
- *           need to be copied into remaining disjoint subtypes and then Tables deleted
- *              LDM2: columns from Fair valued financial liability have to be copied into Financial liability in the form of a debt security issued, 
- *           then table deleted
- *  OBJECT: applied on relational model
- *  REQUIREMENTS: run before removal of duplicated columns
- *  DYNAMIC: 
- *  SHORT DESCRIPTION: Where the is no pk on Entities in one arc but there are in the other, make columns in the one without pks optional, 
- *                     copy them into other arc subtypes, remove subtypes without pks
+*  Get Arcs
+*
+* Copyright (c) 2020 Bird Software Solutions Ltd
+* This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*    Neil Mackenzie - initial API and implementation
+*
 */
 
 // ---- INPUT PARAMETERS ----
