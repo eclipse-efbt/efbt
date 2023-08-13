@@ -27,6 +27,7 @@ class SQLDevLDMImport(object):
         import the items from the BIRD LDM csv files
         '''
         SQLDevLDMImport.add_ldm_classes_to_package(self, context)
+        SQLDevLDMImport.import_disjoint_subtyping_information(self, context)
         SQLDevLDMImport.set_ldm_super_classes(self, context)
         SQLDevLDMImport.add_ldm_enums_to_package(self, context)
         SQLDevLDMImport.add_ldm_literals_to_enums(self, context)
@@ -61,27 +62,10 @@ class SQLDevLDMImport(object):
                     altered_class_name = Utils.make_valid_id(class_name)
                     if altered_class_name.endswith("_derived"):
                         eclass = ELClass(name=altered_class_name)
-                        eclass_table = ELClass(
-                            name=altered_class_name+"_DerivedTable")
-                        eclass_table.containedEntityType = eclass
-                        containment_reference = ELReference()
-                        containment_reference.name = eclass.name+"s"
-                        containment_reference.eType = eclass
-                        containment_reference.upperBound = -1
-                        containment_reference.lowerBound = 0
-                        containment_reference.containment = True
-                        eclass_table.eStructuralFeatures.append(
-                            containment_reference)
-                        eclass_table_operation = ELPublicOperation()
-                        eclass_table_operation.name = eclass.name+"s"
-                        eclass_table_operation.eType = eclass
-                        eclass_table_operation.upperBound = -1
-                        eclass_table_operation.lowerBound = 0
-                        eclass_table.eOperations.append(eclass_table_operation)
+                        
                         context.input_tables_package.eClassifiers.extend([
                                                                               eclass])
-                        context.input_tables_package.eClassifiers.extend([
-                                                                              eclass_table])
+                       
                     elif (class_name.startswith("OUTPUT_LAYER_")):
                         eclass = ELClass(name=altered_class_name)
 
@@ -98,33 +82,85 @@ class SQLDevLDMImport(object):
                         #  to be abstract.
                         if (engineering_type == "Single Table") and (num_supertype_entity_id == ""):
                             eclass.eAbstract = True
-                        eclass_table = ELClass(
-                            name=altered_class_name+"_Table")
-                        containment_reference = ELReference()
-                        containment_reference.name = eclass.name+"s"
-                        containment_reference.eType = eclass
-                        containment_reference.upperBound = -1
-                        containment_reference.lowerBound = 0
-                        containment_reference.containment = True
-                        eclass_table.eStructuralFeatures.append(
-                            containment_reference)
+                        
                         context.input_tables_package.eClassifiers.extend([
                                                                               eclass])
-                        context.input_tables_package.eClassifiers.extend([
-                                                                              eclass_table])
+                        
 
                     # maintain a map a objectIDs to ELClasses
                     context.classes_map[object_id] = eclass
-                    context.table_map[eclass] = eclass_table
+                   
 
+    def import_disjoint_subtyping_information(self, context):
+        '''
+        for each disjoint substype arc, create a class.
+        for each arc store its source in a dictionary
+        for each arc target store a link from target to the arcs class
+        later we will set supertypes of the targets to be the arcs class
+        later we will set the arc to be a contained class of the source
+        '''
+        file_location = context.file_directory + os.sep + "arcs.csv"
+        header_skipped = False
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    entity_name = row[0]    
+                    arc_name = row[1]
+                    relation_name = row[2]
+                    target_entity_name = row[3]
+                    
+                    altered_arc_name = Utils.make_valid_id(arc_name)
+                    arc_class = None
+                    try:
+                        arc_class = context.arc_name_to_arc_class_map[altered_arc_name]
+                    except KeyError:
+                        # if the arc /source entry has not yet been added to the dictionary
+                        # then we add it here, and we add the arc name
+                        # and we create class for the arc
+                        
+                        arc_class = ELClass(name=altered_arc_name)
+                        source_class = SQLDevLDMImport.find_class_with_name(self, context, Utils.make_valid_id(entity_name))
+                        context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
+                        context.arc_to_source_map[altered_arc_name] = source_class
+                        context.input_tables_package.eClassifiers.extend([arc_class])
+                        containment_reference = ELReference()
+                        containment_reference.name = altered_arc_name + "_delegate"
+                        containment_reference.eType = arc_class
+                        containment_reference.upperBound = 1
+                        containment_reference.lowerBound = 0
+                        containment_reference.containment = True
+                        source_class.eStructuralFeatures.append(
+                            containment_reference)
+                        
+                    
+                    target_class = SQLDevLDMImport.find_class_with_name(self, context,Utils.make_valid_id(target_entity_name))
+                    context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
+                    target_class.eSuperTypes.extend([arc_class])
+         
+    def find_class_with_name(self, context, name):
+        '''
+        get the class with this name from the input tables package
+        '''
+        for eclassifier in context.input_tables_package.eClassifiers:
+            if isinstance(eclassifier, ELClass):
+                if eclassifier.name == name:
+                    return eclassifier
+                
     def set_ldm_super_classes(self, context):
         '''
-        for each entity in the LDM, set the superclass of the class
+        for each entity in the LDM, set the superclass of the class,
+        but not if it already has a super class set by the disjoint subtyping
+        processing
         '''
         file_location = context.file_directory + os.sep + "DM_Entities.csv"
         header_skipped = False
 
-        # Where an nxtity has a superclass, set the superclass on the ELClass
+        # Where an entity has a superclass, set the superclass on the ELClass
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -137,7 +173,8 @@ class SQLDevLDMImport(object):
                     if not (len(superclass_id.strip()) == 0):
                         theclass = context.classes_map[class_id]
                         superclass = context.classes_map[superclass_id]
-                        theclass.eSuperTypes.extend([superclass])
+                        if len(theclass.eSuperTypes) == 0:
+                            theclass.eSuperTypes.extend([superclass])
 
     def add_ldm_enums_to_package(self, context):
         '''

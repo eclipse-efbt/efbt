@@ -141,6 +141,11 @@ class Context(object):
     enum_id_enum_name_map = {}
     
     foreign_key_tuple = []
+    
+    arc_to_source_map = {}
+    arc_name_to_arc_class_map = {}
+    
+    arc_target_to_arc_map = {}
 
     generation_rules_module = GenerationRulesModule(name='generations')
 
