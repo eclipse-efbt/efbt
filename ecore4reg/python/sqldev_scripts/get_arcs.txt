@@ -1,0 +1,45 @@
+/** 
+ *  SCRIPT NAME : Disjoint subtyping
+ *  PURPOSE: For disjoint subtypes or implicit subtyping different form of merging applies.  
+ *  EXAMPLE: LDM1: "Financial asset in the form of an instrument or security position" ->  
+ *           columns from Financial asset according to International Financial Reporting Standard (IFRS) and 
+ *           Financial asset according to national general accepted accounting principles (nGAAP)
+ *           need to be copied into remaining disjoint subtypes and then Tables deleted
+ *              LDM2: columns from Fair valued financial liability have to be copied into Financial liability in the form of a debt security issued, 
+ *           then table deleted
+ *  OBJECT: applied on relational model
+ *  REQUIREMENTS: run before removal of duplicated columns
+ *  DYNAMIC: 
+ *  SHORT DESCRIPTION: Where the is no pk on Entities in one arc but there are in the other, make columns in the one without pks optional, 
+ *                     copy them into other arc subtypes, remove subtypes without pks
+*/
+
+// ---- INPUT PARAMETERS ----
+script_name = "Get Arcs";
+
+// ---- SCRIPT ----
+var app_view = model.getAppView();
+app_view.logMessage("--------------------------------------------------------");
+app_view.logMessage("Start script: " + script_name);
+app_view.logMessage("--------------------------------------------------------");
+logical_m = model;
+	entity_set = logical_m.getEntitySet().toArray();
+app_view.logMessage("entity_name,arc_name,relation_name,target_entity_name");
+for (var t=0; t<entity_set.length; t++){
+    entity = entity_set[t];
+    arcs = entity.getArcs();
+    entity_name = entity.getName();
+    for (var i=0; i<arcs.length; i++) {
+        relations = arcs[i].getRelations();
+        for (var r = 0; r < relations.length; r++) {
+                relation = relations[r];
+                app_view.logMessage(entity_name.replace(',','_') + "," + arcs[i].getName().replace(',','_') + "," + relation.getName().replace(',','_') + "," + relation.getTargetEntity().getName().replace(',','_') );
+
+        }
+    }
+}
+   
+
+app_view.logMessage("--------------------------------------------------------");
+app_view.logMessage("End script: " + script_name);
+app_view.logMessage("--------------------------------------------------------");
