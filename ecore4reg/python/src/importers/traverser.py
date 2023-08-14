@@ -5,19 +5,20 @@ from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELPublicOpera
 
 class SubtypeExploder(object):
     '''
-    Documentation for Traverser
+    Documentation for SubtypeExploder
     '''
 
     def traverse(self, context):
         '''
         
         '''
+        
         column_headers= []
         rows = []
         row = {}
-        entity = Traverser.find_class_with_name(self, context, 'Instrument')
+        entity = SubtypeExploder.find_class_with_name(self, context, 'Instrument')
         #  Instrument_role Over_the_counter_OTC_Derivative_role
-        Traverser.process_entity(self, context, entity,column_headers,row, rows)
+        SubtypeExploder.process_entity(self, context, entity,column_headers,row, rows)
         
         f = open(context.output_directory + os.sep + 'ecore' +
                  os.sep + 'discrimitor_combinations.csv',
@@ -51,29 +52,32 @@ class SubtypeExploder(object):
             
         
     def process_entity(self, context, entity,column_headers,row,rows):
+        show_all_columns = False
         current_row = row
         rows.append(current_row)
-        references = Traverser.get_non_discriminator_references(self, context, entity)
-        for ref in references:
-            column_headers.append(ref.name)
-            current_row[ref.name] = 'X'
+        
+        if show_all_columns:
+            references = SubtypeExploder.get_non_discriminator_references(self, context, entity)
+            for ref in references:
+                column_headers.append(ref.name)
+                current_row[ref.name] = 'X'
 
             
-        attributes = Traverser.get_attributes(self, context, entity)
-        
-        for attribute in attributes:
-            column_headers.append(attribute.name)
-            current_row[attribute.name] = 'X'
+            attributes = SubtypeExploder.get_attributes(self, context, entity)
             
-        discrimitors = Traverser.get_discriminators(self, context, entity)
+            for attribute in attributes:
+                column_headers.append(attribute.name)
+                current_row[attribute.name] = 'X'
+            
+        discrimitors = SubtypeExploder.get_discriminators(self, context, entity)
         for discriminator in discrimitors:
             column_headers.append(discriminator.name[0:len(discriminator.name)-9])
-            entities = Traverser.get_possible_entities(self, context, discriminator)
+            entities = SubtypeExploder.get_possible_entities(self, context, discriminator)
             if not(entities is None):
                 for entity in entities:
                     current_row_detached_clone = current_row.copy()
                     current_row_detached_clone[discriminator.name[0:len(discriminator.name)-9]] = entity.name
-                    Traverser.process_entity(self, context, entity,column_headers,current_row_detached_clone,rows)
+                    SubtypeExploder.process_entity(self, context, entity,column_headers,current_row_detached_clone,rows)
 
     def get_non_discriminator_references(self, context, entity):
         reference_list = []
@@ -101,7 +105,7 @@ class SubtypeExploder(object):
     
     def get_possible_entities(self,context, discriminator):
         entity_type = discriminator.eType
-        subclasses = Traverser.get_subclasses(self,context, entity_type)
+        subclasses = SubtypeExploder.get_subclasses(self,context, entity_type)
         return subclasses
         
     def get_subclasses(self,context, entity_type):

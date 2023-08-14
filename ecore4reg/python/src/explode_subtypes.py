@@ -19,7 +19,7 @@ from importers.context  import Context
 from importers.import_sqldev_ldm_to_ecore4reg import SQLDevLDMImport
 from importers.persist_to_file import PersistToFile
 from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
-from importers.traverser import Traverser
+from importers.traverser import SubtypeExploder
 
 if __name__ == '__main__':
     context = Context()
