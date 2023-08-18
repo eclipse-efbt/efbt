@@ -26,8 +26,8 @@ if __name__ == '__main__':
 
     context.persist_to_ecore4reg = True
     context.use_subdomains_in_rol = False
-    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
-    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
+    context.file_directory = 'C:\\Users\\LENOVO\\freebirdtools-develop-jun23\\git\\efbt\\ecore4reg\\python\\resources'
+    context.output_directory = 'C:\\Users\\LENOVO\\freebirdtools-develop-jun23\\git\\efbt\\ecore4reg\\python\\results'
 
     SQLDevLDMImport().do_import(context)
 

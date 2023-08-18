@@ -6,7 +6,9 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELOperation;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
 
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -102,7 +104,6 @@ public class ELOperationImpl extends ELTypedElementImpl implements ELOperation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {

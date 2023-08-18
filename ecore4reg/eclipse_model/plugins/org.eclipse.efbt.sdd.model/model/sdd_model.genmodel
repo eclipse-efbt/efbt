@@ -396,24 +396,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//TABLE_CELL/table_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TABLE_CELL/name"/>
     </genClasses>
-    <genClasses ecoreClass="sdd_model.ecore#//TRANSFORMATION_SCHEME">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/transformation_scheme_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/description"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//TRANSFORMATION_SCHEME/tranformations"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/code"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/maintenance_agency_id"/>
-    </genClasses>
-    <genClasses ecoreClass="sdd_model.ecore#//TRANSFORMATION">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/transformation_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/description"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/expression"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/code"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/maintenance_agency_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/order_in_scheme"/>
-    </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//DomainModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//DomainModule/domains"/>
     </genClasses>

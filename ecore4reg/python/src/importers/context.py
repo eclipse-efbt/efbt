@@ -12,7 +12,7 @@
 #
 
 from pyecore.ecore import EPackage
-from ecore4reg import ELDataType, ELPackage, ModuleList, GenerationRulesModule, VTLModule
+from ecore4reg import ELDataType, ELPackage, ModuleList, GenerationRulesModule
 
 
 class Context(object):
@@ -21,8 +21,7 @@ class Context(object):
     '''
     # variables to configure the behaviour
     use_codes = True
-    input_from_website = False
-    persist_vtl_comments = True
+    input_from_website = True
     use_subdomains_in_rol = False
     use_subdomains_in_il = True
     load_eil_from_website = False
@@ -149,7 +148,6 @@ class Context(object):
 
     generation_rules_module = GenerationRulesModule(name='generations')
 
-    vtl_module = VTLModule(name="vtl")
     module_list = ModuleList()
 
     subdomain_to_member_list_map = {}
@@ -159,57 +157,56 @@ class Context(object):
 
     variable_set_to_variable_map = {}
     
-    cube_class_name_index = 8
-    cubeClassCodeIndex = 0
+    cube_class_name_index = 2
+    cubeClassCodeIndex = 3
     cube_object_id_index = 1
-    cube_cube_type_index = 3
-    cube_valid_to_index = 11
-    cube_framework_index = 5
-    cubeRoleIndex = 9
+    cube_cube_type_index = 6
+    cube_valid_to_index = 9
+    cube_framework_index = 4
     
-    variable_set_valid_to = 4
-    variable_set_variable_id = 5
-    variable_set_valid_set = 6
+    variable_set_valid_to = 3
+    variable_set_variable_id = 1
+    variable_set_valid_set = 0
     
-    variable_variable_name_index = 6
-    variable_long_name_index = 4
-    variable_domain_index = 2
-    variable_code_index = 0
-    variable_variable_description = 1
-    variable_variable_true_id = 6
-    variable_primary_concept = 5
+    variable_variable_name_index = 1
+    variable_long_name_index = 3
+    variable_domain_index = 4
+    variable_code_index = 2
+    variable_variable_description = 5
+    variable_variable_true_id = 1
+    variable_primary_concept = 6
     
-    domain_domain_id_index = 0
-    domain_domain_name_index = 8
-    domain_domain_data_type = 1
-    domain_domain_description = 2
-    domain_domain_true_id = 3
-    domain_domain_is_enumerated = 5
-    domain_domain_is_reference = 6
+    domain_domain_id_index = 6
+    domain_domain_name_index = 2
+    domain_domain_data_type = 5
+    domain_domain_description = 4
+    domain_domain_true_id = 1
+    domain_domain_is_enumerated = 3
+    domain_domain_is_reference = 8
     
-    member_member_id_index = 4
-    member_member_code_index = 0
-    member_member_name_index = 5
-    member_domain_id_index = 2
-    member_member_descriptions = 1
+    member_member_id_index = 1
+    member_member_code_index = 2
+    member_member_name_index = 3
+    member_domain_id_index = 4
     
-    subdomain_domain_id_index = 2
-    subdomain_subdomain_id_index = 8
+    subdomain_domain_id_index = 3
+    subdomain_subdomain_id_index = 1
     subdomain_subdomain_code = 0
     subdomain_subdomain_description = 1
     subdomain_subdomain_name = 7
-    
+
     subdomain_enumeration_member_id_index = 0
-    subdomain_enumeration_subdomain_id_index = 2
-    subdomain_enumeration_valid_to_index = 4
+    subdomain_enumeration_subdomain_id_index = 1
+    subdomain_enumeration_valid_to_index = 3
     
-    cube_structure_item_variable_index = 2
-    cube_structure_item_class_id_index = 1
-    cube_structure_item_subdomain_index = 10
+    cube_structure_item_variable_index = 1
+    cube_structure_item_class_id_index = 0
+    cube_structure_item_subdomain_index = 5
     cube_structure_item_specific_member = 7
-    cube_structure_item_attribute_name = 11
-    cube_structure_item_variable_set = 12
-    cube_structure_item_role_index = 9
+    cube_structure_item_attribute_name = 2
+    cube_structure_item_variable_set = 6
+    cube_structure_item_role_index = 3
+    member_member_descriptions = 5
     
     combination_combination_code = 1
     combination_combination_id = 0
@@ -219,128 +216,7 @@ class Context(object):
     combination_item_variable_id = 1
     combination_member_id = 4
     
-    
 
-    def set_up_csv_indexes(self):
-        if self.input_from_website:
-            self.cube_class_name_index = 2
-            self.cubeClassCodeIndex = 3
-            self.cube_object_id_index = 1
-            self.cube_cube_type_index = 6
-            self.cube_valid_to_index = 9
-            self.cube_framework_index = 4
-            
-            self.variable_set_valid_to = 3
-            self.variable_set_variable_id = 1
-            self.variable_set_valid_set = 0
-            
-            self.variable_variable_name_index = 1
-            self.variable_long_name_index = 3
-            self.variable_domain_index = 4
-            self.variable_code_index = 2
-            self.variable_variable_description = 5
-            self.variable_variable_true_id = 1
-            self.variable_primary_concept = 6
-            
-            self.domain_domain_id_index = 6
-            self.domain_domain_name_index = 2
-            self.domain_domain_data_type = 5
-            self.domain_domain_description = 4
-            self.domain_domain_true_id = 1
-            self.domain_domain_is_enumerated = 3
-            self.domain_domain_is_reference = 8
-            
-            self.member_member_id_index = 1
-            self.member_member_code_index = 2
-            self.member_member_name_index = 3
-            self.member_domain_id_index = 4
-            
-            self.subdomain_domain_id_index = 3
-            self.subdomain_subdomain_id_index = 1
-            self.subdomain_subdomain_code = 0
-            self.subdomain_subdomain_description = 1
-            self.subdomain_subdomain_name = 7
-    
-            self.subdomain_enumeration_member_id_index = 0
-            self.subdomain_enumeration_subdomain_id_index = 1
-            self.subdomain_enumeration_valid_to_index = 3
-            
-            self.cube_structure_item_variable_index = 1
-            self.cube_structure_item_class_id_index = 0
-            self.cube_structure_item_subdomain_index = 5
-            self.cube_structure_item_specific_member = 7
-            self.cube_structure_item_attribute_name = 2
-            self.cube_structure_item_variable_set = 6
-            self.cube_structure_item_role_index = 3
-            self.member_member_descriptions = 5
-            
-            self.combination_combination_code = 1
-            self.combination_combination_id = 0
-            self.combination_combination_name = 2
-            
-            self.combination_item_combination_id = 0
-            self.combination_item_variable_id = 1
-            self.combination_member_id = 4
-        else:
-            self.cube_class_name_index = 8
-            self.cubeClassCodeIndex = 0
-            self.cube_object_id_index = 1
-            self.cube_cube_type_index = 3
-            self.cube_valid_to_index = 11
-            self.cube_framework_index = 5
-            
-            self.variable_set_valid_to = 4
-            self.variable_set_variable_id = 5
-            self.variable_set_valid_set = 6
-            
-            self.variable_variable_name_index = 6
-            self.variable_long_name_index = 4
-            self.variable_domain_index = 2
-            self.variable_code_index = 0
-            self.variable_variable_description = 1
-            self.variable_variable_true_id = 6
-            self.variable_primary_concept = 5
-            
-            self.domain_domain_id_index = 0
-            self.domain_domain_name_index = 8
-            self.domain_domain_data_type = 1
-            self.domain_domain_description = 2
-            self.domain_domain_true_id = 3
-            self.domain_domain_is_enumerated = 5
-            self.domain_domain_is_reference = 6
-            
-            self.member_member_id_index = 4
-            self.member_member_code_index = 0
-            self.member_member_name_index = 5
-            self.member_domain_id_index = 2
-            self.member_member_descriptions = 1
-            
-            self.subdomain_domain_id_index = 2
-            self.subdomain_subdomain_id_index = 8
-            self.subdomain_subdomain_code = 0
-            self.subdomain_subdomain_description = 1
-            self.subdomain_subdomain_name = 7
-    
-            self.subdomain_enumeration_member_id_index = 0
-            self.subdomain_enumeration_subdomain_id_index = 2
-            self.subdomain_enumeration_valid_to_index = 4
-            
-            self.cube_structure_item_variable_index = 2
-            self.cube_structure_item_class_id_index = 1
-            self.cube_structure_item_subdomain_index = 10
-            self.cube_structure_item_specific_member = 7
-            self.cube_structure_item_attribute_name = 11
-            self.cube_structure_item_variable_set = 12
-            self.cube_structure_item_role_index = 9
-            
-            self.combination_combination_code = 1
-            self.combination_combination_id = 0
-            self.combination_combination_name = 2
-            
-            self.combination_item_combination_id = 0
-            self.combination_item_variable_id = 1
-            self.combination_member_id = 4
-            
     def __init__(self):
 
         self.types_package.eClassifiers.append(self.e_string)
@@ -352,6 +228,4 @@ class Context(object):
         self.module_list.modules.append(self.input_tables_package)
         self.module_list.modules.append(self.output_tables_package)
         self.module_list.modules.append(self.generation_rules_module)
-        self.module_list.modules.append(self.vtl_module)
-        
-        
+

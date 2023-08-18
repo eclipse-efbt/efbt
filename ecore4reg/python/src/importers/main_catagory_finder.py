@@ -186,8 +186,6 @@ class MainCatagoryFinder(object):
         sdd_context = SDDContext()
         sdd_context.file_directory = context.file_directory
         sdd_context.output_directory = context.output_directory
-        sdd_context.input_from_website = True
-        sdd_context.set_up_csv_indexes()
         ImportSDD.import_sdd(self,sdd_context)
         for mc in context.main_catagories_in_scope:
             mc_member = ImportSDD.find_member_with_id(self, mc, sdd_context)

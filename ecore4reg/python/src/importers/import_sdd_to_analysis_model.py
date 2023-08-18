@@ -39,7 +39,7 @@ class ImportSDD(object):
         # ImportSDD.createVariableToDomainMap(self, context)
         # ImportSDD.createDomainToDomainNameMap(self, context)
         # ImportSDD.createMemberMaps(self, context)
-        # ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
+        ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
         # ImportSDD.create_member_hierarchies(self, context)
         
 
@@ -302,9 +302,130 @@ class ImportSDD(object):
 
                     context.report_tables.reportTables.append(table)
                     
-                    
-                   
+    def create_axis (self, context):
+        '''
+        import all the axes from the rendering package
+        '''
+        file_location = context.file_directory + os.sep + "axis.csv"
+        header_skipped = False
 
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    axis_id = row[context.axis_id]
+                    axis_orientation = row[context.axis_orientation]
+                    axis_order = row[context.axis_order]
+                    axis_name = row[context.axis_name]
+                    axis_description = row[context.axis_description]
+                    axis_table_id = row[context.axis_table_id]
+                    axis_is_open_axis = row[context.axis_is_open_axis]
+                    
+                    
+                    axis = AXIS(
+                        name=ImportSDD.replace_dots(self, axis_id))
+                    axis.axis_id = ImportSDD.replace_dots(self, axis_id)
+                    axis.orientation = axis_orientation
+                    axis.order = axis_order
+                    axis.description = axis_description
+                    axis.table_id = ImportSDD.find_table_with_id(self, context, axis_table_id)
+                    # not needed yet
+                    # axis.is_open_axis = axis_is_open_axis
+                                        
+                    context.exes.axis_ordinates.append(axis)              
+                   
+    def create_axis_ordinates(self, context):
+        '''
+        import all the axis_ordinate from the rendering package
+        '''
+        file_location = context.file_directory + os.sep + "axis_ordinate.csv"
+        header_skipped = False
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    axis_ordinate_id = row[context.axis_ordinate_id]
+                    axis_ordinate_is_abstract_header = row[context.axis_ordinate_is_abstract_header]
+                    axis_ordinate_code = row[context.axis_ordinate_code]
+                    axis_ordinate_order = row[context.axis_ordinate_order]
+                    axis_ordinate_path = row[context.axis_ordinate_path]
+                    axis_ordinate_axis_id = row[context.axis_ordinate_axis_id]
+                    axis_ordinate_parent_axis_ordinate_id = row[context.axis_ordinate_parent_axis_ordinate_id]
+                    axis_ordinate_name = row[context.axis_ordinate_name]
+                    axis_ordinate_description = row[context.axis_ordinate_description]
+                    
+                    
+                    
+                    axis_ordinate = AXIS_ORDINATE(
+                        name=ImportSDD.replace_dots(self, axis_ordinate_id))
+                    axis_ordinate.axis_ordinate_id = ImportSDD.replace_dots(self, axis_ordinate_id)
+                    # not needed yet
+                    # axis_ordinate.is_abstract_header = axis_ordinate_is_abstract_header
+                    axis_ordinate.code = axis_ordinate_code
+                    axis_ordinate.order = axis_ordinate_order
+                    axis_ordinate.path = axis_ordinate_path
+                    axis_ordinate.axis_id = ImportSDD.find_axis_with_id(self, context, axis_ordinate_axis_id)
+                    # we don't need the parent axis yet in our processing.
+                    # axis_ordinate.axis_ordinate_id = axis_ordinate_parent_axis_ordinate_id
+                    axis_ordinate.displayName = axis_ordinate_name
+                    axis_ordinate.description = axis_ordinate_description
+                    context.axis_ordinates.axis_ordinates.append(axis_ordinate) 
+                    
+    def create_table_cells(self, context):
+        '''
+        import all the axis_ordinate from the rendering package
+        '''
+        file_location = context.file_directory + os.sep + "table_cell.csv"
+        header_skipped = False
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    table_cell_cell_id = row[context.table_cell_cell_id]
+                    table_cell_is_shaded = row[context.table_cell_is_shaded]
+                    table_cell_combination_id = row[context.table_cell_combiantion_id]
+                    table_cell_table_id = row[context.table_cell_table_id]
+                    table_cell_system_data_code = row[context.table_cell_system_data_code]
+                    
+                    
+                    table_cell = TABLE_CELL(
+                        name=ImportSDD.replace_dots(self, table_cell_cell_id))
+                    table_cell.cell_id = ImportSDD.replace_dots(self, table_cell_cell_id)
+                    # table_cell_is_shaded not needed yet
+                    # 
+                    table_cell.combination_id = ImportSDD.find_combination_with_id(self, context, table_cell_combination_id)
+                    table_cell.table_id = ImportSDD.find_table_with_id(self, context, table_cell_table_id)
+                    
+                    context.table_cells.tableCells.append(table_cell) 
+                    
+    def create_cell_positions(self, context):
+        '''
+        import all the axis_ordinate from the rendering package
+        '''
+        file_location = context.file_directory + os.sep + "cell_position.csv"
+        header_skipped = False
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    cell_positions_cell_id = row[context.cell_positions_cell_id]
+                    cell_positions_axis_ordinate_id = row[context.cell_positions_axis_ordinate_id]
+                    cell_position = CELL_POSITION()
+                    cell_position.axis_ordinate_id = find_axis_ordinate_with_id(self, context, cell_positions_axis_ordinate_id)
+                    cell_position.cell_id = find_table_cell_with_id(self, context, cell_positions_cell_id)
+                    context.cell_positions.reportTables.append(cell_position)    
+                     
     def create_member_mappings(self, context, source_variable_filter, target_variable_filter, target_variable_filter2):
         file_location = context.file_directory + os.sep + "member_mapping_item.csv"
         header_skipped = False
@@ -378,6 +499,39 @@ class ImportSDD(object):
         return returnCombination
 
 
+    def find_table_with_id(self, context, table_id):
+        '''
+        get the report table with the given id
+        '''
+        for table in context.report_tables.reportTables:
+            if table.table_id == table_id:
+                return table
+            
+    def find_axis_with_id(self, context, axis_id):
+        '''
+        get the report table with the given id
+        '''
+        for axis in context.axes.axes:
+            if axis.axis_id == axis_id:
+                return axis
+            
+    def find_table_cell_with_id(self, context, table_cell_id):
+        '''
+        get the report table with the given id
+        '''
+        for table_cell in context.table_cells.tableCells:
+            if table_cell.cell_id == table_cell_id:
+                return table_cell
+            
+    def find_axis_ordinate_with_id(self, context, axis_ordinate_id):
+        '''
+        get the report table with the given id
+        '''
+        for axis_ordinate in context.axis_ordinates.axis_ordinates:
+            if axis_ordinate.axis_ordinate_id == axis_ordinate_id:
+                return axis_ordinate_id
+            
+            
     def get_domain_with_id(self, context, domain_id_string):
         '''
         get the domain with the given id

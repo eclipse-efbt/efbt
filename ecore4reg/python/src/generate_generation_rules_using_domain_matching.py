@@ -31,11 +31,7 @@ if __name__ == '__main__':
     # we are getting the information about EIL from the website information
     # and not from the SQLDeveloper files
     context.load_eil_from_website  = True
-    context.input_from_website = True
-    context.persist_vtl_comments = False
-    # make sure we are using the column indices related to the
-    # website  download file structure
-    context.set_up_csv_indexes()
+
     # use codes not long names for columns
     context.use_codes = True
     # when finding  source columns form the input layer, related

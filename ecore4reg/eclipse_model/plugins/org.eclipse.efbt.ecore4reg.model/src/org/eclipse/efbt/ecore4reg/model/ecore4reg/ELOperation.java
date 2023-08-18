@@ -2,6 +2,7 @@
  */
 package org.eclipse.efbt.ecore4reg.model.ecore4reg;
 
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>EL Operation</b></em>'.

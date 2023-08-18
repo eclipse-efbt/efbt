@@ -16,15 +16,13 @@ Created on 25 April 2022
 
 from importers.sdd_context import SDDContext
 from importers.import_sdd_to_analysis_model import ImportSDD
-
+from importers.persist_to_file import PersistToFile
 
 if __name__ == '__main__':
     sdd_context = SDDContext()
 
-    sdd_context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
-    sdd_context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
-    sdd_context.input_from_website = True
-    sdd_context.set_up_csv_indexes()
+    sdd_context.file_directory = 'C:\\Users\\LENOVO\\freebirdtools-develop-jun23\\git\\efbt\\ecore4reg\\python\\resources'
+    sdd_context.output_directory = 'C:\\Users\\LENOVO\\freebirdtools-develop-jun23\\git\\efbt\\ecore4reg\\python\\results'
     ImportSDD().import_sdd(sdd_context)
 
     #Ecore4regToEcoreConverter().convertPackagesInContext(context)

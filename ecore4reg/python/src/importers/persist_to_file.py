@@ -229,76 +229,7 @@ class PersistToFile:
 
         f.close()
 
-    def get_vtl_text_for_layer(self, context, layer):
-        '''
-        Documentation for get_vtl_text_for_layer
-        '''
-
-        output = ""
-        if context.persist_vtl_comments:
-            output = output + "/** VTL intermediate layer and report combination specific VTL \r"
-            intermediate_layer = None
-            for vtl in context.vtl_module.VTLForSelectionLayers.vTLForSelectionLayers:
-                if vtl.selectionLayer == layer:
-                    intermediate_layer = vtl.intermediateLayer
-                    for combo in vtl.outputLayer.VTLForOutputLayerAndIntemedateLayerCombinations:
-                        if (combo.intermediateLayer == vtl.intermediateLayer) and (combo.outputLayer.outputLayer == layer.eContainer().eContainer().outputLayerCube):
-                            for trans in combo.transformations:
-                                output = output + \
-                                    PersistToFile.remove_comment_chars(
-                                        self, trans.expression) + "\r"
-            output = output + "*/\r\r"
-
-            output = output + "/** VTL intermediate layer specific VTL \r"
-            intermediate_layer = None
-            for vtl in context.vtl_module.VTLForSelectionLayers.vTLForSelectionLayers:
-                if vtl.selectionLayer == layer:
-                    intermediate_layer = vtl.intermediateLayer
-                    for trans in intermediate_layer.transformations:
-                        output = output + \
-                            PersistToFile.remove_comment_chars(
-                                self, trans.expression) + "\r"
-            output = output + "*/\r\r"
-
-            output = output + "/** assocated enriched layer in VTL \r"
-            enriched_layer = intermediate_layer.dependant_enriched_cubes
-            if not enriched_layer is None:
-                output = output + "enriched Layer :" + enriched_layer.name + "\r"
-                output = output + "enriched Layer transformations:\r"
-                for exp in enriched_layer.transformations:
-                    output = output + \
-                        PersistToFile.remove_comment_chars(
-                            self, exp.expression) + "\r"
-            output = output + "*/\r\r"
-
-            output = output + "/** associated input layer table and filter \r"
-            for link in context.vtl_module.entityToVTLIntermediateLayerLinks.entityToVTLIntermediateLayerLinks:
-                if link.VTLIntermediateLayer == intermediate_layer:
-                    entity_name = ""
-                    if not(link.entity is None):
-                        entity_name = link.entity.name
-                        
-                        
-                    output = output + "input layer entity: " + entity_name + "\r"
-                    output = output + "filter: " + link.thefilter + "\r"
-
-            output = output + "*/\r\r"
-        return output
-
-    def get_vtl_text_for_rules_for_report(self, context, rules_for_report):
-        '''
-        Documentation for get_vtl_text_for_rules_for_report
-        '''
-        output = ""
-        if context.persist_vtl_comments:
-            output = output + "/** View specific VTL \r"
-            for vtl in context.vtl_module.VTLForViews.vTLForViews:
-                if vtl.view == rules_for_report:
-                    output = output + "output layer = " + vtl.vtl.outputLayer.name + "\r"
-            output = output + "*/\r\r"
-
-        return output
-
+    
     def count_non_none_layers(self, element):
         '''
         Documentation for count_non_none_layers
@@ -309,18 +240,7 @@ class PersistToFile:
                 counter = counter + 1
         return counter
 
-    def save_model_as_xmi_file(self, context):
-        '''
-         save model as an xmi file representing an object tree.
-        '''
-        rset = ResourceSet()
-
-        # This will create an XMI resource
-        resource = rset.create_resource(
-            URI(context.output_directory + os.sep + 'xmi' + os.sep + 'VTL.xmi'))
-        resource.append(context.module_list)
-        resource.save()
-
+    
     def save_model_as_json_files(self, context):
         '''
          save model as an json file representing an object tree.
@@ -450,13 +370,12 @@ class PersistToFile:
                             f.write(" as output_tables." +
                                     rules_for_report.outputLayerCube.name + "." + column.asAttribute.name + "\r")
                         f.write("\t\t\t\t}\r")
-                        f.write(PersistToFile.get_vtl_text_for_layer(
-                            self, context, table_part))
+                        
                     f.write("\t\t\t}\r")
                 f.write("\t\t}\r")
                 f.write("\t}\r")
                 f.write("}\r")
-                f.write(PersistToFile.get_vtl_text_for_rules_for_report(self, context, rules_for_report))
+               
                 f.close()
             
     def save_analysis_model_as_xmi_files(self, context):
