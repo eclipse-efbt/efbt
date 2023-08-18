@@ -15,6 +15,30 @@
         <details key="documentation" value="The name of the SMCubesModel"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="combinationModules" upperBound="-1"
+        eType="#//CombinationModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cubeModules" upperBound="-1"
+        eType="#//CubeModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mappingDefinitionModules"
+        upperBound="-1" eType="#//MappingDefinitionModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cubeMappingModules" upperBound="-1"
+        eType="#//CubeMappingModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberMappingModules" upperBound="-1"
+        eType="#//MemberMappingModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variableMappingModules"
+        upperBound="-1" eType="#//VariableMappingModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="axisModules" upperBound="-1"
+        eType="#//AxisModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="axisOrdinateModules" upperBound="-1"
+        eType="#//AxisOrdinateModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cellPositionModules" upperBound="-1"
+        eType="#//CellPositionModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ordinateItemsModules" upperBound="-1"
+        eType="#//OrdinateItemModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportTableModules" upperBound="-1"
+        eType="#//ReportTableModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableCellModules" upperBound="-1"
+        eType="#//TableCellModule" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CombinationModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -214,45 +238,6 @@
         <details key="name" value="ordinateItems"/>
       </eAnnotations>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReportCell">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A Report Cell"/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="ReportCell"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="combination" eType="ecore:EClass data_definition.ecore#//COMBINATION">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The related Combination"/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="combination"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReportCellValue">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A ReportCell Value, effectively a populate Report Cell "/>
-    </eAnnotations>
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="ReportCellValue"/>
-      <details key="kind" value="empty"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCell" eType="#//ReportCell">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The ReportCell"/>
-      </eAnnotations>
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="reportCell"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReportTableModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

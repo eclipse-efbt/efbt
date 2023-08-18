@@ -39,23 +39,35 @@ class SDDContext(object):
     #The subdomains
     subdomains = SubDomainModule(name = 'subdomainsModule')
     #The subdomain enumerations
-    combinationsModule = CombinationModule(name = 'combinationsModule')
+    combinations = CombinationModule(name = 'combinationsModule')
     #The cubesModule
-    cubesModule = CubeModule(name = 'cubesModule')
+    cubes = CubeModule(name = 'cubesModule')
     #The cubeStructuresModule
-    cubeStructuresModule = CubeModule(name = 'cubeStructuresModule')
+    cube_structures = CubeModule(name = 'cubeStructuresModule')
     #The cubeStructureItemsModule
-    cubeStructureItemsModule = CubeModule(name = 'cubeStructureItemsModule')
+    cube_structure_items= CubeModule(name = 'cubeStructureItemsModule')
     #The cubeMappingModule
-    cubeMappingModule = CubeMappingModule(name = 'cubeMappingModule')
+    cube_mappings = CubeMappingModule(name = 'cubeMappingModule')
     #The mappingDefinitionModule
-    mappingDefinitionModule = MappingDefinitionModule(name = 'mappingDefinitionModule')
+    mapping_definitions = MappingDefinitionModule(name = 'mappingDefinitionModule')
     #The memberMappingModule
-    memberMappingModule = MemberMappingModule(name = 'memberMappingModule')
+    member_mappings = MemberMappingModule(name = 'memberMappingModule')
     #The variableMappingModule
-    variableMappingModule = VariableMappingModule(name = 'variableMappingModule')
-    #The birdModel
-    birdModel = SMCubesCoreModel(name = 'SMCubesCoreModel')
+    variable_mappings = VariableMappingModule(name = 'variableMappingModule')
+    #The variableMappingModule
+    report_tables = ReportTableModule(name = 'reportTableModule')
+    #The TableCellModule
+    table_cells = TableCellModule(name = 'tableCellModule')
+    #The AxisModule
+    exes = AxisModule (name = 'axisModule')
+    #the AxisOrdinateModule
+    axis_ordinates = AxisOrdinateModule (name = 'axisOrdinateModule')
+    # the CellPositionModule
+    cell_positions = CellPositionModule(name = 'cellPositionModule')
+    #The core sdd model
+    core_sdd_model = SMCubesCoreModel(name = 'smcubesCoreModel')
+    #The extra sdd model
+    extra_sdd_model = SmcubesExtraModel(name = 'SmcubesExtraModel')
 
     variableToDomainMap = {}
     variableToLongNamesMap = {}
@@ -77,53 +89,53 @@ class SDDContext(object):
 
     variableSetToVariableMap = {}
 
-    cubeClassNameIndex = 0
-    cubeObjectIDIndex = 1
-    cubeCubeTypeIndex = 3
-    cubeValidToIndex = 11
-    cubeFrameworkIndex = 5
+    cube_class_name_index = 0
+    cube_object_id_index = 1
+    cube_cube_type_index = 3
+    cube_valid_to_index = 11
+    cube_framework_index = 5
     
     variable_set_valid_to = 4
     variable_set_variable_id = 5
     variable_set_valid_set = 6
     
-    variableVariableNameIndex = 6
-    variableLongNameIndex = 4
-    variableDomainIndex = 2
-    variableCodeIndex = 0
+    variable_variable_name_index = 6
+    variable_long_name_index = 4
+    variable_domain_index = 2
+    variable_code_index = 0
     variable_variable_description = 1
     variable_variable_true_id = 6
     
-    domainDomainIDIndex = 0
-    domainDomainNameIndex = 8
+    domain_domain_id_index = 0
+    domain_domain_name_index = 8
     domain_domain_data_type = 1
     domain_domain_description = 2
     domain_domain_true_id = 3
     domain_domain_is_enumerated = 5
     domain_domain_is_reference = 6
     
-    memberMemberIDIndex = 4
-    memberMemberCodeIndex = 0
-    memberMemberNameIndex = 5
-    memberDomainIDIndex = 2
+    member_member_id_index = 4
+    member_member_code_index = 0
+    member_member_name_index = 5
+    member_domain_id_index = 2
     member_member_descriptions = 1
     
-    subdomainDomainIDIndex = 2
-    subDomainSubDomainIDIndex = 8
+    subdomain_domain_id_index = 2
+    subdomain_subdomain_id_index = 8
     subdomain_subdomain_code = 0
     subdomain_subdomain_description = 1
     subdomain_subdomain_name = 7
     
-    subdomain_enumerationMemberIDIndex = 0
-    subdomain_enumerationSubdomainIDIndex = 2
-    subdomain_enumerationValidToIndex = 4
+    subdomain_enumeration_member_id_index = 0
+    subdomain_enumeration_subdomain_id_index = 2
+    subdomain_enumeration_valid_to_index = 4
     
-    cube_structure_itemVariableIndex = 2
-    cube_structure_itemClassIDIndex = 1
-    cube_structure_itemSubdomainIndex = 10
-    cube_structure_itemSpecificMember = 7
-    cube_structure_itemAttributeName = 11
-    cube_structure_itemVariableSet = 12
+    cube_structure_item_variable_index = 2
+    cube_structure_item_class_id_index = 1
+    cube_structure_item_subdomain_index = 10
+    cube_structure_item_specific_member = 7
+    cube_structure_item_attribute_name = 11
+    cube_structure_item_variable_set = 12
     
     combination_combination_code = 1
     combination_combination_id = 0
@@ -138,55 +150,93 @@ class SDDContext(object):
     member_mapping_variable_id = 2
     member_mapping_is_source = 3
     member_mapping_member_id = 4
-
+    
+    table_table_id = 0
+    table_table_name = 1 
+    table_code = 2 
+    table_description = 3
+    table_maintenance_ageny = 4
+    table_version = 5
+    table_valid_from = 6
+    table_valid_to = 7 
+    
+    table_cell_cell_id = 0
+    table_cell_is_shaded = 1
+    table_cell_combiantion_id = 2
+    table_cell_id = 3
+    table_cell_system_data_code = 4
+    
+    axis_id = 0
+    axis_code = 1
+    axis_orientation = 2
+    axis_order = 3
+    axis_name = 4
+    axis_description = 5
+    axis_table_id =  6
+    axis_is_open_axis = 7
+    
+    axis_ordinate_id = 0
+    axis_ordinate_is_abstract_header = 1
+    axis_ordinate_code = 2
+    axis_ordinate_order = 3
+    axis_ordinate_level = 4
+    axis_ordinate_path = 5
+    axis_ordinate_axis_id = 6
+    axis_ordinate_parent_axis_ordinate_id = 7
+    axis_ordinate_name = 8
+    axis_ordinate_description = 9
+    
+    cell_positions_cell_id = 0
+    cell_positions_axis_ordinate_id = 1
+   
     def set_up_csv_indexes(self):
         if self.input_from_website:
-            self.cubeClassNameIndex = 3
-            self.cubeObjectIDIndex = 1
-            self.cubeCubeTypeIndex = 6
-            self.cubeValidToIndex = 9
-            self.cubeFrameworkIndex = 4
+            self.cube_class_name_index = 3
+            self.cube_object_id_index = 1
+            self.cube_cube_type_index = 6
+            self.cube_valid_to_index = 9
+            self.cube_framework_index = 4
             
             self.variable_set_valid_to = 3
             self.variable_set_variable_id = 1
             self.variable_set_valid_set = 0
             
-            self.variableVariableNameIndex = 1
-            self.variableLongNameIndex = 3
-            self.variableDomainIndex = 4
-            self.variableCodeIndex = 2
+            self.variable_variable_name_index = 1
+            self.variable_long_name_index = 3
+            self.variable_domain_index = 4
+            self.variable_code_index = 2
             self.variable_variable_description = 5
             self.variable_variable_true_id = 1
             
-            self.domainDomainIDIndex = 6
-            self.domainDomainNameIndex = 2
+            self.domain_domain_id_index = 6
+            self.domain_domain_name_index = 2
             self.domain_domain_data_type = 5
             self.domain_domain_description = 4
             self.domain_domain_true_id = 1
             self.domain_domain_is_enumerated = 3
             self.domain_domain_is_reference = 8
             
-            self.memberMemberIDIndex = 1
-            self.memberMemberCodeIndex = 2
-            self.memberMemberNameIndex = 3
-            self.memberDomainIDIndex = 4
+            self.member_member_id_index = 1
+            self.member_member_code_index = 2
+            self.member_member_name_index = 3
+            self.member_domain_id_index = 4
             
-            self.subdomainDomainIDIndex = 3
-            self.subDomainSubDomainIDIndex = 1
+            self.subdomain_domain_id_index = 3
+            self.subdomain_subdomain_id_index = 1
             self.subdomain_subdomain_code = 0
             self.subdomain_subdomain_description = 1
             self.subdomain_subdomain_name = 7
     
-            self.subdomain_enumerationMemberIDIndex = 0
-            self.subdomain_enumerationSubdomainIDIndex = 1
-            self.subdomain_enumerationValidToIndex = 3
+            self.subdomain_enumeration_member_id_index = 0
+            self.subdomain_enumeration_subdomain_id_index = 1
+            self.subdomain_enumeration_valid_to_index = 3
             
-            self.cube_structure_itemVariableIndex = 1
-            self.cube_structure_itemClassIDIndex = 0
-            self.cube_structure_itemSubdomainIndex = 5
-            self.cube_structure_itemSpecificMember = 7
-            self.cube_structure_itemAttributeName = 2
-            self.cube_structure_itemVariableSet = 6
+            self.cube_structure_item_variable_index = 1
+            self.cube_structure_item_class_id_index = 0
+            self.cube_structure_item_subdomain_index = 5
+            self.cube_structure_item_specific_member = 7
+            self.cube_structure_item_attribute_name = 2
+            self.cube_structure_item_variable_set = 6
             self.member_member_descriptions = 5
             
             self.combination_combination_code = 1
@@ -204,53 +254,53 @@ class SDDContext(object):
             self.member_mapping_member_id = 4
             
         else:
-            self.cubeClassNameIndex = 0
-            self.cubeObjectIDIndex = 1
-            self.cubeCubeTypeIndex = 3
-            self.cubeValidToIndex = 11
-            self.cubeFrameworkIndex = 5
+            self.cube_class_name_index = 0
+            self.cube_object_id_index = 1
+            self.cube_cube_type_index = 3
+            self.cube_valid_to_index = 11
+            self.cube_framework_index = 5
             
             self.variable_set_valid_to = 4
             self.variable_set_variable_id = 5
             self.variable_set_valid_set = 6
             
-            self.variableVariableNameIndex = 6
-            self.variableLongNameIndex = 4
-            self.variableDomainIndex = 2
-            self.variableCodeIndex = 0
+            self.variable_variable_name_index = 6
+            self.variable_long_name_index = 4
+            self.variable_domain_index = 2
+            self.variable_code_index = 0
             self.variable_variable_description = 1
             self.variable_variable_true_id = 6
             
-            self.domainDomainIDIndex = 0
-            self.domainDomainNameIndex = 8
+            self.domain_domain_id_index = 0
+            self.domain_domain_name_index = 8
             self.domain_domain_data_type = 1
             self.domain_domain_description = 2
             self.domain_domain_true_id = 3
             self.domain_domain_is_enumerated = 5
             self.domain_domain_is_reference = 6
             
-            self.memberMemberIDIndex = 4
-            self.memberMemberCodeIndex = 0
-            self.memberMemberNameIndex = 5
-            self.memberDomainIDIndex = 2
+            self.member_member_id_index = 4
+            self.member_member_code_index = 0
+            self.member_member_name_index = 5
+            self.member_domain_id_index = 2
             self.member_member_descriptions = 1
             
-            self.subdomainDomainIDIndex = 2
-            self.subDomainSubDomainIDIndex = 8
+            self.subdomain_domain_id_index = 2
+            self.subdomain_subdomain_id_index = 8
             self.subdomain_subdomain_code = 0
             self.subdomain_subdomain_description = 1
             self.subdomain_subdomain_name = 7
     
-            self.subdomain_enumerationMemberIDIndex = 0
-            self.subdomain_enumerationSubdomainIDIndex = 2
-            self.subdomain_enumerationValidToIndex = 4
+            self.subdomain_enumeration_member_id_index = 0
+            self.subdomain_enumeration_subdomain_id_index = 2
+            self.subdomain_enumeration_valid_to_index = 4
             
-            self.cube_structure_itemVariableIndex = 2
-            self.cube_structure_itemClassIDIndex = 1
-            self.cube_structure_itemSubdomainIndex = 10
-            self.cube_structure_itemSpecificMember = 7
-            self.cube_structure_itemAttributeName = 11
-            self.cube_structure_itemVariableSet = 12
+            self.cube_structure_item_variable_index = 2
+            self.cube_structure_item_class_id_index = 1
+            self.cube_structure_item_subdomain_index = 10
+            self.cube_structure_item_specific_member = 7
+            self.cube_structure_item_attribute_name = 11
+            self.cube_structure_item_variable_set = 12
             
             self.combination_combination_code = 1
             self.combination_combination_id = 0

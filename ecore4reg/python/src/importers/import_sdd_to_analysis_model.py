@@ -22,20 +22,25 @@ class ImportSDD(object):
 
     def import_sdd(self, sdd_context):
         '''
-        Import SDD csv files into an instance of the analaysis model
+        Import SDD csv files into an instance of the analysis model
         '''
         ImportSDD.create_all_domains(self, sdd_context)
         ImportSDD.create_all_members(self, sdd_context)
         ImportSDD.create_all_variables(self, sdd_context)
         ImportSDD.create_all_subdomains(self, sdd_context)
-        #ImportSDD.create_all_subdomain_enumerations(self, sdd_context)
-        # ImportSDD.create_all_combinations(self, sdd_context)
+        ImportSDD.create_all_combinations(self, sdd_context)
+        ImportSDD.create_report_tables(self, sdd_context)
+        ImportSDD.create_table_cells(self, sdd_context)
+        ImportSDD.create_axis(self, sdd_context)
+        ImportSDD.create_axis_ordinates(self, sdd_context)
+        ImportSDD.create_cell_positions(self, sdd_context)
+        # ImportSDD.create_all_subdomain_enumerations(self, sdd_context)
         # ImportSDD.createVariableSetToVariableMap(self, context)
         # ImportSDD.createVariableToDomainMap(self, context)
         # ImportSDD.createDomainToDomainNameMap(self, context)
         # ImportSDD.createMemberMaps(self, context)
-        ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
-        #ImportSDD.create_member_hierarchies(self, context)
+        # ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
+        # ImportSDD.create_member_hierarchies(self, context)
         
 
     def create_all_domains(self, context):
@@ -51,14 +56,14 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    code = row[context.domainDomainIDIndex]
+                    code = row[context.domain_domain_id_index]
                     data_type = row[context.domain_domain_data_type]
                     description = row[context.domain_domain_description]
                     domain_id = row[context.domain_domain_true_id]
                     is_enumerated = row[context.domain_domain_is_enumerated]
                     is_reference = row[context.domain_domain_is_reference]
                     # domainName = Utils.make_valid_id(row[3])
-                    domain_name = row[context.domainDomainNameIndex]
+                    domain_name = row[context.domain_domain_name_index]
                     context.domain_to_domain_name_map[domain_id] = domain_name
 
                     # creat the Domain abject and set its fields
@@ -116,11 +121,11 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    code = row[context.memberMemberCodeIndex]
+                    code = row[context.member_member_code_index]
                     description = row[context.member_member_descriptions]
-                    domain_id = row[context.memberDomainIDIndex]
-                    member_id = row[context.memberMemberIDIndex]
-                    member_name = row[context.memberMemberNameIndex]
+                    domain_id = row[context.member_domain_id_index]
+                    member_id = row[context.member_member_id_index]
+                    member_name = row[context.member_member_name_index]
                     member = MEMBER(
                         name=ImportSDD.replace_dots(self, member_id))
                     member.member_id = ImportSDD.replace_dots(self, member_id)
@@ -146,10 +151,10 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    code = row[context.variableCodeIndex]
+                    code = row[context.variable_code_index]
                     description = row[context.variable_variable_description]
-                    domain_id = row[context.variableDomainIndex]
-                    name = row[context.variableLongNameIndex]
+                    domain_id = row[context.variable_domain_index]
+                    name = row[context.variable_long_name_index]
                     variable_id = row[context.variable_variable_true_id]
                     variable = VARIABLE(
                         name=ImportSDD.replace_dots(self, variable_id))
@@ -178,9 +183,9 @@ class ImportSDD(object):
                 else:
                     code = row[context.subdomain_subdomain_code]
                     description = row[context.subdomain_subdomain_description]
-                    domain_id = row[context.subdomainDomainIDIndex]
+                    domain_id = row[context.subdomain_domain_id_index]
                     name = row[context.subdomain_subdomain_name]
-                    subdomain_id = row[context.subDomainSubDomainIDIndex]
+                    subdomain_id = row[context.subdomain_subdomain_id_index]
 
                     subDomain = SUBDOMAIN()
                     subDomain.code = code
@@ -206,16 +211,15 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    member_id = row[context.subdomain_enumerationMemberIDIndex]
-                    subdomain_id = row[context.subdomain_enumerationSubdomainIDIndex]
-
-        subdomain = ImportSDD.get_subdomain_with_id(self, context, subdomain_id)
-        domain = subdomain.domain_id
-        member = ImportSDD.get_member_with_id_and_domain(
-            self, context, member_id, domain)
-        subdomain_enum = SUBDOMAIN_ENUMERATION()
-        subdomain_enum.member_id = member
-        subdomain.items.append(subdomain_enum)
+                    member_id = row[context.subdomain_enumeration_member_id_index]
+                    subdomain_id = row[context.subdomain_enumeration_subdomain_id_index]
+                    subdomain = ImportSDD.get_subdomain_with_id(self, context, subdomain_id)
+                    domain = subdomain.domain_id
+                    member = ImportSDD.get_member_with_id_and_domain(
+                        self, context, member_id, domain)
+                    subdomain_enum = SUBDOMAIN_ENUMERATION()
+                    subdomain_enum.member_id = member
+                    subdomain.items.append(subdomain_enum)
         
     def create_all_combinations(self, context):
         file_location = context.file_directory + os.sep + "combination.csv"
@@ -238,7 +242,7 @@ class ImportSDD(object):
                     comb.code = combination_code
                     comb.combination_id = combination_id
                     comb.name = combination_name
-                    context.combinationsModule.combinations.append(comb)
+                    context.combinations.combinations.append(comb)
 
         file_location = context.file_directory + os.sep + "combination_item.csv"
         header_skipped = False
@@ -261,6 +265,45 @@ class ImportSDD(object):
                         variable = ImportSDD.find_variable_with_id(self,context,variable_string);
                         item.variable_id = variable
                     com.combination_items.append(item)
+                    
+    def create_report_tables (self, context):
+        '''
+        import all the tables from the rendering package
+        '''
+        file_location = context.file_directory + os.sep + "table.csv"
+        header_skipped = False
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    table_id = row[context.table_id]
+                    name = row[context.table_id]
+                    display_name = row[context.table_table_name]
+                    code = row[context.table_code]
+                    description = row[context.table_description]
+                    maintenance_ageny = row[context.table_maintenance_ageny]
+                    version = row[context.table_version]
+                    valid_from = row[context.table_valid_from]
+                    valid_to = row[context.table_valid_to]
+                    
+                    table = TABLE(
+                        name=ImportSDD.replace_dots(self, table_id))
+                    table.table_id = ImportSDD.replace_dots(self, table_id)
+                    table.displayName = name
+                    table.code = code
+                    table.description = description
+                    table.maintenance_ageny = maintenance_ageny
+                    table.version = version
+                    table.valid_from = valid_from
+                    table.valid_to = valid_to
+
+                    context.report_tables.reportTables.append(table)
+                    
+                    
+                   
 
     def create_member_mappings(self, context, source_variable_filter, target_variable_filter, target_variable_filter2):
         file_location = context.file_directory + os.sep + "member_mapping_item.csv"
@@ -329,7 +372,7 @@ class ImportSDD(object):
 
     def find_combination_with_id(self, context, element_id):
         returnCombination = None
-        for com in context.combinationsModule.combinations:
+        for com in context.combinations.combinations:
             if element_id == com.combination_id:
                 returnCombination = com
         return returnCombination

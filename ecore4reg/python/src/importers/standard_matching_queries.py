@@ -401,8 +401,8 @@ class StandardMatchingQueries(object):
                 if (not header_skipped):
                     header_skipped = True
                 else:
-                    long_name = row[context.variableLongNameIndex]
-                    variable_code = row[context.variableCodeIndex]
+                    long_name = row[context.variable_long_name_index]
+                    variable_code = row[context.variable_code_index]
                     self.variable_name_to_code_map[Utils.make_valid_id(
                         long_name)] = variable_code
 
