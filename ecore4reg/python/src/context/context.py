@@ -168,6 +168,8 @@ class Context(object):
     variable_set_enumeration_valid_set = 0
     variable_set_enumeration_subdomain_id = 4
     
+    variable_set_variable_set_id = 1
+    
     variable_variable_name_index = 1
     variable_long_name_index = 3
     variable_domain_index = 4

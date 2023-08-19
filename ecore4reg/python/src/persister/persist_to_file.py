@@ -423,7 +423,12 @@ class PersistToFile:
                         if variable_id == "MTRCS":
                             # todo make sure we can get the metric name from
                             # the associate varaible set
-                            f.write(variable_id+"=MTRCS:")
+                            variable_set = item.variable_set_id
+                            if not(variable_set is None):
+                                for item in variable_set.variable_set_items:
+                                    f.write("Metric=" + item.variable_id.variable_id + ":")
+                            else:
+                                print("combination" + comb.combination_id + "has no metrics for metrics variable")
                         elif variable_id == "SUBA_CD" or variable_id == "VALUE_DECIMAL" or variable_id == "DT_RFRNC" or variable_id == "ENTTY_RIAD_CD_RPRTNG_AGNT" :
                             # these entity and refernce dates are not useful filters , we dont diplay them,
                             pass

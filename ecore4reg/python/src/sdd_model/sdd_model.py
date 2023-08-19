@@ -1,4 +1,4 @@
-"""Definition of meta model 'sdd_model'."""
+"""Generated from sdd_model.ecore"""
 from functools import partial
 import pyecore.ecore as Ecore
 from pyecore.ecore import *

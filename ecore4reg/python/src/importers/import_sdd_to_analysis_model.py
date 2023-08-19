@@ -181,7 +181,7 @@ class ImportSDD(object):
                             context.variable_set_to_variable_map[variable_set] = variable_list
 
                         if not variable_id in variable_list:
-                            variable_list.append(varaible_set_enumeration)
+                            variable_list.append(variable_set_enumeration)
                             
         fileLocation = context.file_directory + os.sep + "variable_set.csv"
         header_skipped = False
@@ -192,6 +192,17 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
+                    variable_set_id = row[context.variable_set_variable_set_id]
+                    variable_set = VARIABLE_SET()
+                    variable_set.variable_set_id = variable_set_id
+                    try:
+                        variable_set_enumerations = context.variable_set_to_variable_map[variable_set_id]
+                        for enumeration in variable_set_enumerations:
+                            variable_set.variable_set_items.append(enumeration)
+                    except:
+                        print("no items for " + variable_set_id )
+                    
+                    context.variable_sets.variableSets.append(variable_set)
                     
     def create_all_subdomains(self, context):
         '''
@@ -287,7 +298,7 @@ class ImportSDD(object):
                     variable_string = row[context.combination_item_variable_id]
                     member_string = row[context.combination_member_id]
                     variable_set = row[context.combination_variable_set]
-                    com = ImportSDD.find_combination_with_id(self,context, combination_string,)
+                    com = ImportSDD.find_combination_with_id(self,context, combination_string)
                     if (not (com is None)) and combination_string.endswith('_REF'):
                         item = COMBINATION_ITEM()
                         mem = ImportSDD.find_member_with_id(self,member_string,context)
@@ -295,6 +306,9 @@ class ImportSDD(object):
                         if not ((variable_string is None) or (variable_string == "")):
                             variable = ImportSDD.find_variable_with_id(self,context,variable_string)
                             item.variable_id = variable
+                        if not(variable_set is None) or not(variable_set == ""):
+                            variable_set = ImportSDD.find_variable_set_with_id(self,context,variable_set)
+                            item.variable_set_id = variable_set
                         com.combination_items.append(item)
                     
     def create_report_tables (self, context):
@@ -606,6 +620,14 @@ class ImportSDD(object):
         for domain in context.domains.domains:
             if domain.domain_id == domain_id_string:
                 return domain
+            
+    def find_variable_set_with_id(self, context, variable_set_id):
+        '''
+        get the VariableSet with the given id
+        '''
+        for variable_set in context.variable_sets.variableSets:
+            if variable_set.variable_set_id == variable_set_id:
+                return variable_set
 
     def get_subdomain_with_id(self, context, subdomain_id_string):
         '''
