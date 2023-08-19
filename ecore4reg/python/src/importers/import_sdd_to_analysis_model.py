@@ -27,6 +27,7 @@ class ImportSDD(object):
         ImportSDD.create_all_domains(self, sdd_context)
         ImportSDD.create_all_members(self, sdd_context)
         ImportSDD.create_all_variables(self, sdd_context)
+        ImportSDD.create_all_variable_sets(self, sdd_context)
         ImportSDD.create_all_subdomains(self, sdd_context)
         ImportSDD.create_all_combinations(self, sdd_context)
         ImportSDD.create_report_tables(self, sdd_context)
@@ -36,7 +37,7 @@ class ImportSDD(object):
         ImportSDD.create_cell_positions(self, sdd_context)
         # ImportSDD.create_all_subdomain_enumerations(self, sdd_context)
         # ImportSDD.createVariableSetToVariableMap(self, context)
-        # ImportSDD.createVariableToDomainMap(self, context)
+        # ImportSDD.createvariable_to_domain_map(self, context)
         # ImportSDD.createDomainToDomainNameMap(self, context)
         # ImportSDD.createMemberMaps(self, context)
         ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
@@ -70,28 +71,6 @@ class ImportSDD(object):
                     domain = DOMAIN(
                         name=ImportSDD.replace_dots(self, domain_id))
                     domain.code = code
-
-                    # if (dataTypeString != null) {
-					# if (dataTypeString.contains("tring")) {
-					# valueType = FACET_VALUE_TYPE.STRING
-					# domain.setData_type(valueType);
-					# }
-					# f (dataTypeString.contains("nteger")) {
-					# valueType = FACET_VALUE_TYPE.BIG_INTEGER;
-					# domain.setData_type(valueType);
-					# }
-					# if (dataTypeString.contains("ate")) {
-					# valueType = FACET_VALUE_TYPE.DATE_TIME;
-					# domain.setData_type(valueType);
-					# }
-					# if (dataTypeString.contains("umber") || dataTypeString.contains("onetary")) {
-					# valueType = FACET_VALUE_TYPE.DECIMAL;
-					# domain.setData_type(valueType);
-					# }
-					# if (dataTypeString.contains("oolean")) {
-					# valueType = FACET_VALUE_TYPE.BOOLEAN;
-					# domain.setData_type(valueType);
-					# }
 
                     domain.description = description
                     domain.domain_id = ImportSDD.replace_dots(self, domain_id)
@@ -136,6 +115,7 @@ class ImportSDD(object):
                         self, context, domain_id)
                     member.domain_id = domain
                     context.members.members.append(member)
+                    context.member_dictionary[member_id] = member
 
     def create_all_variables(self, context):
         '''
@@ -167,7 +147,52 @@ class ImportSDD(object):
                     variable.description = description
 
                     context.variables.variables.append(variable)
+                    context.variable_dictionary[variable_id] = variable
 
+    def create_all_variable_sets(self, context):
+        '''
+        import all the variables
+        '''
+
+        fileLocation = context.file_directory + os.sep + "variable_set_enumeration.csv"
+        header_skipped = False
+
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    valid_to = row[context.variable_set_enumeration_valid_to]
+                    variable_id = row[context.variable_set_enumeration_variable_id]
+                    subdomain_id = row[context.variable_set_enumeration_subdomain_id]
+                    variable_set = row[context.variable_set_enumeration_valid_set]
+                    
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
+                        variable_set_enumeration = VARIABLE_SET_ENUMERATION()
+                        variable_set_enumeration.variable_id = ImportSDD.find_variable_with_id(self,context,variable_id);
+                        variable_set_enumeration.subdomain_id = ImportSDD.get_subdomain_with_id(self,context,subdomain_id);
+                        variable_list = None
+                        
+                        try:
+                            variable_list = context.variable_set_to_variable_map[variable_set]
+                        except:
+                            variable_list = []
+                            context.variable_set_to_variable_map[variable_set] = variable_list
+
+                        if not variable_id in variable_list:
+                            variable_list.append(varaible_set_enumeration)
+                            
+        fileLocation = context.file_directory + os.sep + "variable_set.csv"
+        header_skipped = False
+
+        with open(fileLocation,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    
     def create_all_subdomains(self, context):
         '''
         import all the subdomains
@@ -226,6 +251,7 @@ class ImportSDD(object):
         header_skipped = False
         counter = 0
         
+        combination_dict = {}
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -235,14 +261,17 @@ class ImportSDD(object):
                     combination_code = row[context.combination_combination_code]
                     combination_id = row[context.combination_combination_id]
                     combination_name = row[context.combination_combination_name]
+                    combination_valid_to = row[context.combination_combination_valid_to]
+                    combination_combination_maintenance_agency = row[context.combination_combination_maintenance_agency]
 
-
-                    comb = COMBINATION()
-                    
-                    comb.code = combination_code
-                    comb.combination_id = combination_id
-                    comb.name = combination_name
-                    context.combinations.combinations.append(comb)
+                    if (combination_combination_maintenance_agency == 'ECB') and (combination_valid_to == '12/31/9999'):
+                        comb = COMBINATION()
+                        
+                        comb.code = combination_code
+                        comb.combination_id = combination_id
+                        comb.name = combination_name
+                        context.combinations.combinations.append(comb)
+                        context.combinations_dictionary[combination_id] = comb
 
         file_location = context.file_directory + os.sep + "combination_item.csv"
         header_skipped = False
@@ -257,14 +286,16 @@ class ImportSDD(object):
                     combination_string = row[context.combination_item_combination_id] 
                     variable_string = row[context.combination_item_variable_id]
                     member_string = row[context.combination_member_id]
-                    item = COMBINATION_ITEM()
-                    com = ImportSDD.find_combination_with_id(self,context, combination_string)
-                    mem = ImportSDD.find_member_with_id(self,member_string,context)
-                    item.member_id =mem
-                    if not ((variable_string is None) or (variable_string == "")):
-                        variable = ImportSDD.find_variable_with_id(self,context,variable_string);
-                        item.variable_id = variable
-                    com.combination_items.append(item)
+                    variable_set = row[context.combination_variable_set]
+                    com = ImportSDD.find_combination_with_id(self,context, combination_string,)
+                    if (not (com is None)) and combination_string.endswith('_REF'):
+                        item = COMBINATION_ITEM()
+                        mem = ImportSDD.find_member_with_id(self,member_string,context)
+                        item.member_id =mem
+                        if not ((variable_string is None) or (variable_string == "")):
+                            variable = ImportSDD.find_variable_with_id(self,context,variable_string)
+                            item.variable_id = variable
+                        com.combination_items.append(item)
                     
     def create_report_tables (self, context):
         '''
@@ -279,8 +310,8 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    table_id = row[context.table_id]
-                    name = row[context.table_id]
+                    table_id = row[context.table_table_id]
+                    name = row[context.table_table_id]
                     display_name = row[context.table_table_name]
                     code = row[context.table_code]
                     description = row[context.table_description]
@@ -297,8 +328,8 @@ class ImportSDD(object):
                     table.description = description
                     table.maintenance_ageny = maintenance_ageny
                     table.version = version
-                    table.valid_from = valid_from
-                    table.valid_to = valid_to
+                    # not needed yet table.valid_from = valid_from
+                    # not needed yet table.valid_to = valid_to
 
                     context.report_tables.reportTables.append(table)
                     
@@ -328,13 +359,13 @@ class ImportSDD(object):
                         name=ImportSDD.replace_dots(self, axis_id))
                     axis.axis_id = ImportSDD.replace_dots(self, axis_id)
                     axis.orientation = axis_orientation
-                    axis.order = axis_order
+                    # not needed yet axis.order = axis_order
                     axis.description = axis_description
                     axis.table_id = ImportSDD.find_table_with_id(self, context, axis_table_id)
                     # not needed yet
                     # axis.is_open_axis = axis_is_open_axis
                                         
-                    context.exes.axis_ordinates.append(axis)              
+                    context.axes.axes.append(axis)              
                    
     def create_axis_ordinates(self, context):
         '''
@@ -367,7 +398,7 @@ class ImportSDD(object):
                     # not needed yet
                     # axis_ordinate.is_abstract_header = axis_ordinate_is_abstract_header
                     axis_ordinate.code = axis_ordinate_code
-                    axis_ordinate.order = axis_ordinate_order
+                    # not needed yet axis_ordinate.order = axis_ordinate_order
                     axis_ordinate.path = axis_ordinate_path
                     axis_ordinate.axis_id = ImportSDD.find_axis_with_id(self, context, axis_ordinate_axis_id)
                     # we don't need the parent axis yet in our processing.
@@ -375,6 +406,7 @@ class ImportSDD(object):
                     axis_ordinate.displayName = axis_ordinate_name
                     axis_ordinate.description = axis_ordinate_description
                     context.axis_ordinates.axis_ordinates.append(axis_ordinate) 
+                    context.axis_ordinate_dictionary[axis_ordinate_id] = axis_ordinate
                     
     def create_table_cells(self, context):
         '''
@@ -391,20 +423,22 @@ class ImportSDD(object):
                 else:
                     table_cell_cell_id = row[context.table_cell_cell_id]
                     table_cell_is_shaded = row[context.table_cell_is_shaded]
-                    table_cell_combination_id = row[context.table_cell_combiantion_id]
+                    table_cell_combination_id = row[context.table_cell_combination_id]
                     table_cell_table_id = row[context.table_cell_table_id]
                     table_cell_system_data_code = row[context.table_cell_system_data_code]
                     
-                    
-                    table_cell = TABLE_CELL(
-                        name=ImportSDD.replace_dots(self, table_cell_cell_id))
-                    table_cell.cell_id = ImportSDD.replace_dots(self, table_cell_cell_id)
-                    # table_cell_is_shaded not needed yet
-                    # 
-                    table_cell.combination_id = ImportSDD.find_combination_with_id(self, context, table_cell_combination_id)
-                    table_cell.table_id = ImportSDD.find_table_with_id(self, context, table_cell_table_id)
-                    
-                    context.table_cells.tableCells.append(table_cell) 
+                    # we only look at the reference combinations, they all end with the string _REF
+                    if table_cell_cell_id.endswith("_REF"):
+                        table_cell = TABLE_CELL(
+                            name=ImportSDD.replace_dots(self, table_cell_cell_id))
+                        table_cell.cell_id = ImportSDD.replace_dots(self, table_cell_cell_id)
+                        # table_cell_is_shaded not needed yet
+                        # 
+                        table_cell.combination_id = ImportSDD.find_combination_with_id(self, context, table_cell_combination_id)
+                        table_cell.table_id = ImportSDD.find_table_with_id(self, context, table_cell_table_id)
+                        
+                        context.table_cells.tableCells.append(table_cell)
+                        context.table_cell_dictionary[table_cell_cell_id] = table_cell
                     
     def create_cell_positions(self, context):
         '''
@@ -421,10 +455,17 @@ class ImportSDD(object):
                 else:
                     cell_positions_cell_id = row[context.cell_positions_cell_id]
                     cell_positions_axis_ordinate_id = row[context.cell_positions_axis_ordinate_id]
-                    cell_position = CELL_POSITION()
-                    cell_position.axis_ordinate_id = find_axis_ordinate_with_id(self, context, cell_positions_axis_ordinate_id)
-                    cell_position.cell_id = find_table_cell_with_id(self, context, cell_positions_cell_id)
-                    context.cell_positions.reportTables.append(cell_position)    
+                    # check if we already have the table cell created
+                    cell_position = None
+                    try:
+                        cell_position = context.cell_positions_dictionary[cell_positions_cell_id]
+                    except:
+                        cell_position = CELL_POSITION()
+                        context.cell_positions_dictionary[cell_positions_cell_id] = cell_position 
+                        
+                    cell_position.axis_ordinate_id.append(ImportSDD.find_axis_ordinate_with_id(self, context, cell_positions_axis_ordinate_id))
+                    cell_position.cell_id = ImportSDD.find_table_cell_with_id(self, context, cell_positions_cell_id)
+                    context.cell_positions.cellPositions.append(cell_position)    
                      
     def create_member_mappings(self, context, source_variable_filter, target_variable_filter, target_variable_filter2):
         file_location = context.file_directory + os.sep + "member_mapping_item.csv"
@@ -456,55 +497,71 @@ class ImportSDD(object):
                             member_mapping = MEMBER_MAPPING(name = member_mapping_id)
                             member_mapping.code = member_mapping_id
                             member_mapping.member_mapping_id = member_mapping_id
-                            context.memberMappingModule.memberMappings.append(member_mapping)
+                            context.member_mappings.memberMappings.append(member_mapping)
                             
                         member_mapping.memberMappingItems.append(member_mapping_item)
+                        context.member_mapping_dictionary[member_mapping_id] = member_mapping
                         
 
     def find_member_mapping_with_id(self,context,member_mapping_id):
-        mappingList = context.memberMappingModule.memberMappings
-        return_member_mapping = None
-        for mapping in mappingList:
-           if mapping.name == member_mapping_id:
-               return_member_mapping = mapping
+        # mappingList = context.memberMappingModule.memberMappings
+        # return_member_mapping = None
+        # for mapping in mappingList:
+        #    if mapping.name == member_mapping_id:
+        #        return_member_mapping = mapping
 
-        return return_member_mapping
+        # return return_member_mapping
+        try:
+            return context.member_mapping_dictionary[member_mapping_id]
+        except:
+            return None
                              
     def find_member_with_id(self,element_id,context):
-        memberList = context.members.members
-        returnMember = None
-        for mem in memberList:
-           if element_id == mem.name:
-               returnMember = mem
+        # memberList = context.members.members
+        # returnMember = None
+        # for mem in memberList:
+        #    if element_id == mem.name:
+        #        returnMember = mem
 
-        return returnMember
+        # return returnMember
+        try:
+            return context.member_dictionary[element_id]
+        except:
+            return None
     
     
     
     def find_variable_with_id(self,context, element_id):
-        variableList = context.variables.variables
-        returnVariable = None
-        for var in variableList:
+        # variableList = context.variables.variables
+        # returnVariable = None
+        # for var in variableList:
            
-            if element_id == var.name:
-                returnVariable = var
+        #     if element_id == var.name:
+        #         returnVariable = var
    
-        return returnVariable
+        # return returnVariable
+        try:
+            return context.variable_dictionary[element_id]
+        except:
+            return None
 
     def find_combination_with_id(self, context, element_id):
-        returnCombination = None
-        for com in context.combinations.combinations:
-            if element_id == com.combination_id:
-                returnCombination = com
-        return returnCombination
-
+        # returnCombination = None
+        # for com in context.combinations.combinations:
+        #     if element_id == com.combination_id:
+        #         returnCombination = com
+        # return returnCombination
+        try:
+            return context.combinations_dictionary[element_id]
+        except:
+            return None
 
     def find_table_with_id(self, context, table_id):
         '''
         get the report table with the given id
         '''
         for table in context.report_tables.reportTables:
-            if table.table_id == table_id:
+            if table.table_id == ImportSDD.replace_dots(self, table_id):
                 return table
             
     def find_axis_with_id(self, context, axis_id):
@@ -512,24 +569,34 @@ class ImportSDD(object):
         get the report table with the given id
         '''
         for axis in context.axes.axes:
-            if axis.axis_id == axis_id:
+            if axis.axis_id == ImportSDD.replace_dots(self, axis_id):
                 return axis
             
     def find_table_cell_with_id(self, context, table_cell_id):
         '''
         get the report table with the given id
         '''
-        for table_cell in context.table_cells.tableCells:
-            if table_cell.cell_id == table_cell_id:
-                return table_cell
+        # for table_cell in context.table_cells.tableCells:
+        #     if table_cell.cell_id == table_cell_id:
+        #         return table_cell       
+        
+        try:
+            return context.table_cell_dictionary[table_cell_id]
+        except:
+            return None
             
     def find_axis_ordinate_with_id(self, context, axis_ordinate_id):
         '''
         get the report table with the given id
         '''
-        for axis_ordinate in context.axis_ordinates.axis_ordinates:
-            if axis_ordinate.axis_ordinate_id == axis_ordinate_id:
-                return axis_ordinate_id
+        # for axis_ordinate in context.axis_ordinates.axis_ordinates:
+        #     if axis_ordinate.axis_ordinate_id == axis_ordinate_id:
+        #         return axis_ordinate_id
+            
+        try:
+            return context.axis_ordinate_dictionary[axis_ordinate_id]
+        except:
+            return None
             
             
     def get_domain_with_id(self, context, domain_id_string):

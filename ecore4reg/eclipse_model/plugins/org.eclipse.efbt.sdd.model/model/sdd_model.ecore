@@ -600,6 +600,8 @@
         <details key="name" value="variable_set_id"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variable_set_items" upperBound="-1"
+        eType="#//VARIABLE_SET_ENUMERATION" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VARIABLE_SET_ENUMERATION">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -640,12 +642,6 @@
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="variable_id"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="variable_set_id" eType="#//VARIABLE_SET">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="variable_set_id"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -1544,7 +1540,8 @@
       <details key="name" value="CELL_POSITION"/>
       <details key="kind" value="empty"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="axis_ordinate_id" eType="#//AXIS_ORDINATE">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="axis_ordinate_id" upperBound="-1"
+        eType="#//AXIS_ORDINATE">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="axis_ordinate_id"/>
@@ -1785,6 +1782,10 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VariableSetModule" eSuperTypes="#//SDDModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variableSets" upperBound="-1"
+        eType="#//VARIABLE_SET" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SubDomainModule" eSuperTypes="#//SDDModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subdomains" upperBound="-1"
         eType="#//SUBDOMAIN" containment="true"/>
@@ -1792,6 +1793,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="SMCubesCoreModel" eSuperTypes="#//SDDModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="variableModules" upperBound="-1"
         eType="#//VariableModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variableSetModules" upperBound="-1"
+        eType="#//VariableSetModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="domainModules" upperBound="-1"
         eType="#//DomainModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberModules" upperBound="-1"
@@ -1801,13 +1804,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberHierarchyModules"
         upperBound="-1" eType="#//MemberHierarchyModule" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SmcubesExtraModel">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The name of the SMCubesModel"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesModel" eSuperTypes="#//SDDModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coreModel" eType="#//SMCubesCoreModel"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extraModel" eType="#//SMCubesExtraModel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SMCubesExtraModel" eSuperTypes="#//SDDModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="combinationModules" upperBound="-1"
         eType="#//CombinationModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cubeModules" upperBound="-1"
@@ -2001,7 +2004,7 @@
       <details key="name" value="CellPositionModule"/>
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reportTables" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cellPositions" upperBound="-1"
         eType="#//CELL_POSITION" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The set of Cell Positions "/>

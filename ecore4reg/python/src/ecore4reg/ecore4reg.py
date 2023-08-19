@@ -1,4 +1,4 @@
-"""Definition of meta model 'ecore4reg'."""
+"""Generated from ecore4reg.ecore"""
 from functools import partial
 import pyecore.ecore as Ecore
 from pyecore.ecore import *

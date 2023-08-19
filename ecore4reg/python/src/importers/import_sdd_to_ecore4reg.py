@@ -18,7 +18,7 @@ Created on 22 Jan 2022
 '''
 import os
 import csv
-from importers.utils import Utils
+from utils.utils import Utils
 from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAttribute
 
 class SDDImport(object):
@@ -164,9 +164,9 @@ class SDDImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    valid_to = row[context.variable_set_valid_to]
-                    variable_id = row[context.variable_set_variable_id]
-                    variable_set = row[context.variable_set_valid_set]
+                    valid_to = row[context.variable_set_enumeration_valid_to]
+                    variable_id = row[context.variable_set_enumeration_variable_id]
+                    variable_set = row[context.variable_set_enumeration_valid_set]
 
                     if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         variable_list = None

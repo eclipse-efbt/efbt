@@ -13,7 +13,7 @@
 import os
 from pyecore.resources import ResourceSet, URI
 from pyecore.resources.json import JsonResource
-from importers.utils import Utils
+from utils.utils import Utils
 
 
 from ecore4reg import ELAttribute, ELClass, ELEnum, ELPublicOperation, ELReference,SelectColumnAttributeAs
@@ -198,7 +198,6 @@ class PersistToFile:
         '''
         Documentation for persist_enum_model
         '''
-
         f = open(context.output_directory + os.sep + extension +
                  os.sep + the_package.name +
                  '.' + extension, "a",  encoding='utf-8')
@@ -378,18 +377,64 @@ class PersistToFile:
                
                 f.close()
             
-    def save_analysis_model_as_xmi_files(self, context):
-        rset2 = ResourceSet()
+    def save_analysis_model_as_xmi_files(self, sdd_context):
+        rset = ResourceSet()
         extension = 'xmi'
-        il_domains_resource2 = rset2.create_resource(URI(
-            context.output_directory + os.sep + extension +
+        sdd_model_resource = rset.create_resource(URI(
+            sdd_context.output_directory + os.sep + extension +
             os.sep + "sdd.xmi"))
         # This will create an XMI resource
         # we add the EPackage instance in the resource
-        il_domains_resource2.append(context.il_domains_ecore_package)
-        il_domains_resource2.save()
+        sdd_model_resource.append(sdd_context.sdd_model)
+        sdd_model_resource.save()
         
-
+    def save_analysis_model_as_csv(self, sdd_context):
+        ''' For each report cell, show its report, row and column
+        and each of its combination items
+        '''
+        f = open(sdd_context.output_directory + os.sep + "csv" +
+                 os.sep + "report_cells" +
+                 '.' + "csv", "a",  encoding='utf-8')
+        for cell_position in sdd_context.cell_positions.cellPositions:
+            x_axis = "None"
+            y_axis = "None"
+            cell = cell_position.cell_id
+            if not(cell is None):
+                template = cell.table_id
+                template_name = template.table_id
+                for axis_ordinate in cell_position.axis_ordinate_id:
+                    axis=axis_ordinate.axis_id
+                    orientation = axis.orientation
+                    if orientation == 'X':
+                        x_axis = axis_ordinate.code
+                    if orientation == 'Y':
+                        y_axis = axis_ordinate.code
+                    axis_ordinate_id = axis_ordinate.axis_ordinate_id
+                    index_of_ref = axis_ordinate_id.index('_REF')
+                   
+                f.write(template_name+"," +x_axis +"," + y_axis +",")
+                comb = cell_position.cell_id.combination_id
+                # if there is no combination, this is because the combination is not
+                # current, according to its valid_to date.
+                if not(comb is None):
+                    items = comb.combination_items
+                    for item in items:
+                        variable_id = item.variable_id.variable_id
+                        if variable_id == "MTRCS":
+                            # todo make sure we can get the metric name from
+                            # the associate varaible set
+                            f.write(variable_id+"=MTRCS:")
+                        elif variable_id == "SUBA_CD" or variable_id == "VALUE_DECIMAL" or variable_id == "DT_RFRNC" or variable_id == "ENTTY_RIAD_CD_RPRTNG_AGNT" :
+                            # these entity and refernce dates are not useful filters , we dont diplay them,
+                            pass
+                        else:
+    
+                            member = item.member_id
+                            if(member is not None):
+                                member_id = member.member_id
+                                f.write(variable_id+"=" +member_id +":")
+                    f.write("\n")
+                    
     def save_model_as_ecore_file(self, context):
         '''
          save model as an xmi file representing an object tree.

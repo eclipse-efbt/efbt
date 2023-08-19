@@ -482,8 +482,10 @@ class VARIABLE_SET(EObject, metaclass=MetaEClass):
     variable_set_id = EAttribute(eType=EString, unique=True,
                                  derived=False, changeable=True, iD=True)
     maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+    variable_set_items = EReference(ordered=True, unique=True,
+                                    containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, code=None, description=None, maintenance_agency_id=None, name=None, variable_set_id=None):
+    def __init__(self, *, code=None, description=None, maintenance_agency_id=None, name=None, variable_set_id=None, variable_set_items=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -504,6 +506,9 @@ class VARIABLE_SET(EObject, metaclass=MetaEClass):
         if maintenance_agency_id is not None:
             self.maintenance_agency_id = maintenance_agency_id
 
+        if variable_set_items:
+            self.variable_set_items.extend(variable_set_items)
+
 
 class VARIABLE_SET_ENUMERATION(EObject, metaclass=MetaEClass):
 
@@ -513,9 +518,8 @@ class VARIABLE_SET_ENUMERATION(EObject, metaclass=MetaEClass):
     valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
     subdomain_id = EReference(ordered=True, unique=True, containment=False, derived=False)
     variable_id = EReference(ordered=True, unique=True, containment=False, derived=False)
-    variable_set_id = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, is_flow=None, order=None, subdomain_id=None, valid_from=None, valid_to=None, variable_id=None, variable_set_id=None):
+    def __init__(self, *, is_flow=None, order=None, subdomain_id=None, valid_from=None, valid_to=None, variable_id=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -538,9 +542,6 @@ class VARIABLE_SET_ENUMERATION(EObject, metaclass=MetaEClass):
 
         if variable_id is not None:
             self.variable_id = variable_id
-
-        if variable_set_id is not None:
-            self.variable_set_id = variable_set_id
 
 
 class COMBINATION(EObject, metaclass=MetaEClass):
@@ -1405,7 +1406,8 @@ class AXIS_ORDINATE(EObject, metaclass=MetaEClass):
 
 class CELL_POSITION(EObject, metaclass=MetaEClass):
 
-    axis_ordinate_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+    axis_ordinate_id = EReference(ordered=True, unique=True,
+                                  containment=False, derived=False, upper=-1)
     cell_id = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, axis_ordinate_id=None, cell_id=None):
@@ -1414,8 +1416,8 @@ class CELL_POSITION(EObject, metaclass=MetaEClass):
 
         super().__init__()
 
-        if axis_ordinate_id is not None:
-            self.axis_ordinate_id = axis_ordinate_id
+        if axis_ordinate_id:
+            self.axis_ordinate_id.extend(axis_ordinate_id)
 
         if cell_id is not None:
             self.cell_id = cell_id
@@ -1532,78 +1534,6 @@ class TABLE_CELL(EObject, metaclass=MetaEClass):
             self.table_id = table_id
 
 
-class SmcubesExtraModel(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    combinationModules = EReference(ordered=True, unique=True,
-                                    containment=True, derived=False, upper=-1)
-    cubeModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    mappingDefinitionModules = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    cubeMappingModules = EReference(ordered=True, unique=True,
-                                    containment=True, derived=False, upper=-1)
-    memberMappingModules = EReference(ordered=True, unique=True,
-                                      containment=True, derived=False, upper=-1)
-    variableMappingModules = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    axisModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    axisOrdinateModules = EReference(ordered=True, unique=True,
-                                     containment=True, derived=False, upper=-1)
-    cellPositionModules = EReference(ordered=True, unique=True,
-                                     containment=True, derived=False, upper=-1)
-    ordinateItemsModules = EReference(ordered=True, unique=True,
-                                      containment=True, derived=False, upper=-1)
-    reportTableModules = EReference(ordered=True, unique=True,
-                                    containment=True, derived=False, upper=-1)
-    tableCellModules = EReference(ordered=True, unique=True,
-                                  containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, name=None, combinationModules=None, cubeModules=None, mappingDefinitionModules=None, cubeMappingModules=None, memberMappingModules=None, variableMappingModules=None, axisModules=None, axisOrdinateModules=None, cellPositionModules=None, ordinateItemsModules=None, reportTableModules=None, tableCellModules=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-        if combinationModules:
-            self.combinationModules.extend(combinationModules)
-
-        if cubeModules:
-            self.cubeModules.extend(cubeModules)
-
-        if mappingDefinitionModules:
-            self.mappingDefinitionModules.extend(mappingDefinitionModules)
-
-        if cubeMappingModules:
-            self.cubeMappingModules.extend(cubeMappingModules)
-
-        if memberMappingModules:
-            self.memberMappingModules.extend(memberMappingModules)
-
-        if variableMappingModules:
-            self.variableMappingModules.extend(variableMappingModules)
-
-        if axisModules:
-            self.axisModules.extend(axisModules)
-
-        if axisOrdinateModules:
-            self.axisOrdinateModules.extend(axisOrdinateModules)
-
-        if cellPositionModules:
-            self.cellPositionModules.extend(cellPositionModules)
-
-        if ordinateItemsModules:
-            self.ordinateItemsModules.extend(ordinateItemsModules)
-
-        if reportTableModules:
-            self.reportTableModules.extend(reportTableModules)
-
-        if tableCellModules:
-            self.tableCellModules.extend(tableCellModules)
-
-
 class DomainModule(SDDModule):
     """A Module storing a list of Domains"""
     domains = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -1658,6 +1588,18 @@ class VariableModule(SDDModule):
             self.variables.extend(variables)
 
 
+class VariableSetModule(SDDModule):
+
+    variableSets = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, variableSets=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if variableSets:
+            self.variableSets.extend(variableSets)
+
+
 class SubDomainModule(SDDModule):
 
     subdomains = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -1674,6 +1616,8 @@ class SMCubesCoreModel(SDDModule):
 
     variableModules = EReference(ordered=True, unique=True,
                                  containment=True, derived=False, upper=-1)
+    variableSetModules = EReference(ordered=True, unique=True,
+                                    containment=True, derived=False, upper=-1)
     domainModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     memberModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     subDomainModules = EReference(ordered=True, unique=True,
@@ -1681,12 +1625,15 @@ class SMCubesCoreModel(SDDModule):
     memberHierarchyModules = EReference(
         ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, variableModules=None, domainModules=None, memberModules=None, subDomainModules=None, memberHierarchyModules=None, **kwargs):
+    def __init__(self, *, variableModules=None, variableSetModules=None, domainModules=None, memberModules=None, subDomainModules=None, memberHierarchyModules=None, **kwargs):
 
         super().__init__(**kwargs)
 
         if variableModules:
             self.variableModules.extend(variableModules)
+
+        if variableSetModules:
+            self.variableSetModules.extend(variableSetModules)
 
         if domainModules:
             self.domainModules.extend(domainModules)
@@ -1699,6 +1646,88 @@ class SMCubesCoreModel(SDDModule):
 
         if memberHierarchyModules:
             self.memberHierarchyModules.extend(memberHierarchyModules)
+
+
+class SMCubesModel(SDDModule):
+
+    coreModel = EReference(ordered=True, unique=True, containment=True, derived=False)
+    extraModel = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, coreModel=None, extraModel=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if coreModel is not None:
+            self.coreModel = coreModel
+
+        if extraModel is not None:
+            self.extraModel = extraModel
+
+
+class SMCubesExtraModel(SDDModule):
+
+    combinationModules = EReference(ordered=True, unique=True,
+                                    containment=True, derived=False, upper=-1)
+    cubeModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    mappingDefinitionModules = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    cubeMappingModules = EReference(ordered=True, unique=True,
+                                    containment=True, derived=False, upper=-1)
+    memberMappingModules = EReference(ordered=True, unique=True,
+                                      containment=True, derived=False, upper=-1)
+    variableMappingModules = EReference(
+        ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    axisModules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    axisOrdinateModules = EReference(ordered=True, unique=True,
+                                     containment=True, derived=False, upper=-1)
+    cellPositionModules = EReference(ordered=True, unique=True,
+                                     containment=True, derived=False, upper=-1)
+    ordinateItemsModules = EReference(ordered=True, unique=True,
+                                      containment=True, derived=False, upper=-1)
+    reportTableModules = EReference(ordered=True, unique=True,
+                                    containment=True, derived=False, upper=-1)
+    tableCellModules = EReference(ordered=True, unique=True,
+                                  containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, combinationModules=None, cubeModules=None, mappingDefinitionModules=None, cubeMappingModules=None, memberMappingModules=None, variableMappingModules=None, axisModules=None, axisOrdinateModules=None, cellPositionModules=None, ordinateItemsModules=None, reportTableModules=None, tableCellModules=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if combinationModules:
+            self.combinationModules.extend(combinationModules)
+
+        if cubeModules:
+            self.cubeModules.extend(cubeModules)
+
+        if mappingDefinitionModules:
+            self.mappingDefinitionModules.extend(mappingDefinitionModules)
+
+        if cubeMappingModules:
+            self.cubeMappingModules.extend(cubeMappingModules)
+
+        if memberMappingModules:
+            self.memberMappingModules.extend(memberMappingModules)
+
+        if variableMappingModules:
+            self.variableMappingModules.extend(variableMappingModules)
+
+        if axisModules:
+            self.axisModules.extend(axisModules)
+
+        if axisOrdinateModules:
+            self.axisOrdinateModules.extend(axisOrdinateModules)
+
+        if cellPositionModules:
+            self.cellPositionModules.extend(cellPositionModules)
+
+        if ordinateItemsModules:
+            self.ordinateItemsModules.extend(ordinateItemsModules)
+
+        if reportTableModules:
+            self.reportTableModules.extend(reportTableModules)
+
+        if tableCellModules:
+            self.tableCellModules.extend(tableCellModules)
 
 
 class CombinationModule(SDDModule):
@@ -1822,14 +1851,14 @@ class AxisOrdinateModule(SDDModule):
 
 class CellPositionModule(SDDModule):
     """A Module containing a set of Cell Positions """
-    reportTables = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    cellPositions = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, reportTables=None, **kwargs):
+    def __init__(self, *, cellPositions=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if reportTables:
-            self.reportTables.extend(reportTables)
+        if cellPositions:
+            self.cellPositions.extend(cellPositions)
 
 
 class OrdinateItemModule(SDDModule):

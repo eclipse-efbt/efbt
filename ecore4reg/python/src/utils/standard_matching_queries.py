@@ -13,7 +13,7 @@
 import os
 import csv
 from pyecore.resources import ResourceSet, URI
-from importers.utils import Utils
+from utils.utils import Utils
 
 
 class StandardMatchingQueries(object):

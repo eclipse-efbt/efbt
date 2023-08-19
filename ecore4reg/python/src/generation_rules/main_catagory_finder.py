@@ -17,8 +17,8 @@
 '''
 import csv
 import os
-from importers.utils import Utils
-from importers.sdd_context import SDDContext
+from utils.utils import Utils
+from context.sdd_context import SDDContext
 from importers.import_sdd_to_analysis_model import ImportSDD
 
 class MainCatagoryFinder(object):

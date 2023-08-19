@@ -14,12 +14,12 @@
 Created on 25 April 2022
 '''
 
-from importers.context import Context
+from context.context import Context
 from importers.import_sqldev_il_to_ecore4reg import SQLDeveloperILImport
 from importers.import_sdd_to_ecore4reg import SDDImport
-from importers.persist_to_file import PersistToFile
-from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
-from importers.standard_matching_queries import StandardMatchingQueries
+from persister.persist_to_file import PersistToFile
+from utils.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
+from utils.standard_matching_queries import StandardMatchingQueries
 
 if __name__ == '__main__':
     context = Context()
@@ -28,7 +28,6 @@ if __name__ == '__main__':
     context.use_codes = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
-    
 
     SQLDeveloperILImport().do_import(context)
     SDDImport().doImport(context)

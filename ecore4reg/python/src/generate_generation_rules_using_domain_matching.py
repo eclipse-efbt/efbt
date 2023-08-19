@@ -10,14 +10,14 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from importers.context import Context
+from context.context import Context
 from importers.import_sqldev_il_to_ecore4reg import SQLDeveloperILImport
 from importers.import_sdd_to_ecore4reg import SDDImport
-from importers.persist_to_file import PersistToFile
-from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
-from importers.main_catagory_finder import MainCatagoryFinder
-from importers.generation_rule_creator import GenerationRuleCreator
-from importers.relationship_enricher import RelationshipEnricher
+from persister.persist_to_file import PersistToFile
+from utils.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
+from generation_rules.main_catagory_finder import MainCatagoryFinder
+from generation_rules.generation_rule_creator import GenerationRuleCreator
+from utils.relationship_enricher import RelationshipEnricher
 
 if __name__ == '__main__':
     context = Context()

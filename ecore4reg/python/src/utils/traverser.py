@@ -1,4 +1,4 @@
-from importers.utils import Utils
+from utils.utils import Utils
 import os
 
 from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAnnotation, ELStringToStringMapEntry

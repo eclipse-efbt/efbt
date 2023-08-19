@@ -13,6 +13,7 @@
 
 from pyecore.ecore import EPackage
 from sdd_model import *
+from lxml.etree import ErrorDomains
 
 
 class SDDContext(object):
@@ -31,6 +32,8 @@ class SDDContext(object):
     domains = DomainModule(name = 'domainsModule')
     #The variables
     variables = VariableModule(name = 'variablesModule')
+    #The variable sets
+    variable_sets = VariableSetModule(name = 'variablesModule')
     #The members
     members = MemberModule(name = 'memberModule')
     #The subdomains
@@ -56,7 +59,7 @@ class SDDContext(object):
     #The TableCellModule
     table_cells = TableCellModule(name = 'tableCellModule')
     #The AxisModule
-    exes = AxisModule (name = 'axisModule')
+    axes = AxisModule (name = 'axisModule')
     #the AxisOrdinateModule
     axis_ordinates = AxisOrdinateModule (name = 'axisOrdinateModule')
     # the CellPositionModule
@@ -64,27 +67,23 @@ class SDDContext(object):
     #The core sdd model
     core_sdd_model = SMCubesCoreModel(name = 'smcubesCoreModel')
     #The extra sdd model
-    extra_sdd_model = SmcubesExtraModel(name = 'SmcubesExtraModel')
+    extra_sdd_model = SMCubesExtraModel(name = 'smcubesExtraModel')
+    
+    sdd_model = SMCubesModel(name = 'smcubesModel')
 
-    variableToDomainMap = {}
-    variableToLongNamesMap = {}
+    combinations_dictionary = {}
+    member_dictionary = {}
+    variable_dictionary= {}
+    axis_ordinate_dictionary= {}
+    table_cell_dictionary= {}
+    member_mapping_dictionary = {}
+    cell_positions_dictionary = {}
+    variable_set_enumeration_dictionary = {}
+    variable_to_domain_map = {}
+    variable_set_to_variable_map = {}
     # For the reference output layers we record a map between domains
     # and domain names
     domain_to_domain_name_map = {}
-    # For the reference output layers we record a map between members ids
-    # andtheir containing domains
-    memberIDToDomainMap = {}
-    # For the reference output layers we record a map between members ids
-    # and their names
-    memberIDToMemberNameMap = {}
-    # For the reference output layers we record a map between members ids
-    # and their codes
-    memberIDToMemberCodeMap = {}
-
-    subDomainToMemberListMap = {}
-    subDomainIDToDomainID = {}
-
-    variableSetToVariableMap = {}
 
     cube_class_name_index = 3
     cube_object_id_index = 1
@@ -92,9 +91,10 @@ class SDDContext(object):
     cube_valid_to_index = 9
     cube_framework_index = 4
     
-    variable_set_valid_to = 3
-    variable_set_variable_id = 1
-    variable_set_valid_set = 0
+    variable_set_enumeration_valid_to = 3
+    variable_set_enumeration_variable_id = 1
+    variable_set_enumeration_valid_set = 0
+    variable_set_enumeration_subdomain_id = 4
     
     variable_variable_name_index = 1
     variable_long_name_index = 3
@@ -137,10 +137,15 @@ class SDDContext(object):
     combination_combination_code = 1
     combination_combination_id = 0
     combination_combination_name = 2
+    combination_combination_valid_to = 6
+    combination_combination_maintenance_agency = 3
+     
+    
     
     combination_item_combination_id = 0
     combination_item_variable_id = 1
     combination_member_id = 4
+    combination_variable_set=3 
     
     member_mapping_id = 0
     member_mapping_row = 1
@@ -185,5 +190,21 @@ class SDDContext(object):
     
     cell_positions_cell_id = 0
     cell_positions_axis_ordinate_id = 1
-   
+    
+    def __init__(self):
 
+        self.core_sdd_model.variableModules.append(self.variables)
+        self.core_sdd_model.variableSetModules.append(self.variable_sets)
+        self.core_sdd_model.domainModules.append(self.domains)
+        self.core_sdd_model.memberModules.append(self.members)
+        self.core_sdd_model.subDomainModules.append(self.subdomains)
+        self.extra_sdd_model.combinationModules.append(self.combinations)
+        self.extra_sdd_model.memberMappingModules.append(self.member_mappings)
+        self.extra_sdd_model.axisModules.append(self.axes)
+        self.extra_sdd_model.axisOrdinateModules.append(self.axis_ordinates)
+        self.extra_sdd_model.cellPositionModules.append(self.cell_positions)
+        #self.extra_sdd_model.ordinateItemsModules.append(self.ordinate_items)
+        self.extra_sdd_model.reportTableModules.append(self.report_tables)
+        self.extra_sdd_model.tableCellModules.append(self.table_cells)
+        self.sdd_model.coreModel=self.core_sdd_model
+        self.sdd_model.extraModel=self.extra_sdd_model

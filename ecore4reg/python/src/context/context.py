@@ -21,7 +21,6 @@ class Context(object):
     '''
     # variables to configure the behaviour
     use_codes = True
-    input_from_website = True
     use_subdomains_in_rol = False
     use_subdomains_in_il = True
     load_eil_from_website = False
@@ -164,9 +163,10 @@ class Context(object):
     cube_valid_to_index = 9
     cube_framework_index = 4
     
-    variable_set_valid_to = 3
-    variable_set_variable_id = 1
-    variable_set_valid_set = 0
+    variable_set_enumeration_valid_to = 3
+    variable_set_enumeration_variable_id = 1
+    variable_set_enumeration_valid_set = 0
+    variable_set_enumeration_subdomain_id = 4
     
     variable_variable_name_index = 1
     variable_long_name_index = 3
@@ -212,9 +212,12 @@ class Context(object):
     combination_combination_id = 0
     combination_combination_name = 2
     
+    
     combination_item_combination_id = 0
     combination_item_variable_id = 1
+    combination_variable_set=3
     combination_member_id = 4
+    
     
 
     def __init__(self):

@@ -565,6 +565,8 @@
         <details key="name" value="variable_set_id"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variable_set_items" upperBound="-1"
+        eType="#//VARIABLE_SET_ENUMERATION" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VARIABLE_SET_ENUMERATION">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -605,12 +607,6 @@
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="variable_id"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="variable_set_id" eType="#//VARIABLE_SET">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="attribute"/>
-        <details key="name" value="variable_set_id"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
