@@ -10,6 +10,7 @@ rm -rf ecore4reg/python/results/xcore/*
 rm -rf ecore4reg/python/results/sdd/*
 rm -rf ecore4reg/python/results/xmi/*
 rm -rf ecore4reg/python/results/generations_transformations_csv/*
+rm -rf ecore4reg/python/results/csv/*
 
 cd ecore4reg/python/src/
 pip install pyecore
