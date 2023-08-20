@@ -26,8 +26,8 @@ if __name__ == '__main__':
 
     context.persist_to_ecore4reg = True
     context.use_subdomains_in_rol = False
-    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
-    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
+    context.file_directory = 'C:\\Users\\LENOVO\\freebirdtools-develop-jun23\\git\\efbt\\ecore4reg\\python\\resources'
+    context.output_directory = 'C:\\Users\\LENOVO\\freebirdtools-develop-jun23\\git\\efbt\\ecore4reg\\python\\results'
     
     SQLDevLDMImport().do_import(context)
 
@@ -48,6 +48,13 @@ if __name__ == '__main__':
     traverser.traverse(context,'Non_financial_asset_and_non_financial_liability',True)
     traverser.traverse(context,'Cash_on_hand',False)
     traverser.traverse(context,'Cash_on_hand',True)
+    traverser.traverse(context,'Security_or_exchange_tradable_derivative_position',False)
+    traverser.traverse(context,'Security_or_exchange_tradable_derivative_position',True)
+    traverser.traverse(context,'Long_security_position_Prudential_portfolio_assignment',False)
+    traverser.traverse(context,'Long_security_position_Prudential_portfolio_assignment',True)
+    traverser.traverse(context,'Long_security_position_Prudential_Portfolio_assignment_Accounting_classification_for_financial_assets_assignment',False)
+    traverser.traverse(context,'Long_security_position_Prudential_Portfolio_assignment_Accounting_classification_for_financial_assets_assignment',True)
+
 
     
     
