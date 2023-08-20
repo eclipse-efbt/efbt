@@ -10,9 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-'''
-Created on 25 April 2022
-'''
+# This script creates an analysis model from an SDD file and saves it as a CSV filegit add 
 
 from context.sdd_context import SDDContext
 from importers.import_sdd_to_analysis_model import ImportSDD
@@ -20,8 +18,8 @@ from persister.persist_to_file import PersistToFile
 
 if __name__ == '__main__':
     sdd_context = SDDContext()
-    sdd_context.file_directory = 'C:\\Users\\LENOVO\\freebirdtools-develop-jun23\\git\\efbt\\ecore4reg\\python\\resources'
-    sdd_context.output_directory = 'C:\\Users\\LENOVO\\freebirdtools-develop-jun23\\git\\efbt\\ecore4reg\\python\\results'
+    sdd_context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    sdd_context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     ImportSDD().import_sdd(sdd_context)
     persister = PersistToFile()
     persister.save_analysis_model_as_csv(sdd_context)
