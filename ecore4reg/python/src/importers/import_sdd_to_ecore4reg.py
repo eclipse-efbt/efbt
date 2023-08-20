@@ -18,7 +18,7 @@ Created on 22 Jan 2022
 '''
 import os
 import csv
-from importers.utils import Utils
+from utils.utils import Utils
 from ecore4reg import ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAttribute
 
 class SDDImport(object):
@@ -60,20 +60,20 @@ class SDDImport(object):
                     header_skipped = True
                 else:
 
-                    framework = row[context.cubeFrameworkIndex]
+                    framework = row[context.cube_framework_index]
                     if (framework == context.reporting_framework + "_REF"):
                         class_name = row[context.cubeClassCodeIndex]
                     else:
                         if (context.use_codes):
                             class_name = row[context.cubeClassCodeIndex]
                         else:
-                            class_name = row[context.cubeClassNameIndex]
+                            class_name = row[context.cube_class_name_index]
                     
                     altered_class_name = Utils.make_valid_id(class_name)
-                    object_id = row[context.cubeObjectIDIndex]
-                    cube_type = row[context.cubeCubeTypeIndex]
-                    valid_to = row[context.cubeValidToIndex]
-                    framework = row[context.cubeFrameworkIndex]
+                    object_id = row[context.cube_object_id_index]
+                    cube_type = row[context.cube_cube_type_index]
+                    valid_to = row[context.cube_valid_to_index]
+                    framework = row[context.cube_framework_index]
                     derived = True
 
                     if ((((framework == context.reporting_framework +"_REF") and (cube_type == "RC")) or ( context.load_eil_from_website and ((cube_type == "EIL"))) )and ((valid_to == "12/31/9999") or (valid_to == "31/12/9999"))):
@@ -164,9 +164,9 @@ class SDDImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    valid_to = row[context.variable_set_valid_to]
-                    variable_id = row[context.variable_set_variable_id]
-                    variable_set = row[context.variable_set_valid_set]
+                    valid_to = row[context.variable_set_enumeration_valid_to]
+                    variable_id = row[context.variable_set_enumeration_variable_id]
+                    variable_set = row[context.variable_set_enumeration_valid_set]
 
                     if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         variable_list = None
@@ -197,11 +197,11 @@ class SDDImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    variable_name = row[context.variableVariableNameIndex]
-                    long_name = row[context.variableLongNameIndex]
+                    variable_name = row[context.variable_variable_name_index]
+                    long_name = row[context.variable_long_name_index]
                     primary_concept = row[context.variable_primary_concept]
                     # domainName = Utils.make_valid_id(row[3])
-                    domain = row[context.variableDomainIndex]
+                    domain = row[context.variable_domain_index]
                     context.variable_to_domain_map[variable_name] = domain
                     context.variable_to_long_names_map[variable_name] = long_name
                     if not((primary_concept == "") or (primary_concept == None)):
@@ -222,9 +222,9 @@ class SDDImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    domain_id = row[context.domainDomainIDIndex]
+                    domain_id = row[context.domain_domain_id_index]
                     # domainName = Utils.make_valid_id(row[3])
-                    domain_name = row[context.domainDomainNameIndex]
+                    domain_name = row[context.domain_domain_name_index]
                     context.domain_to_domain_name_map[domain_id] = domain_name
 
     def create_member_maps(self, context):
@@ -241,13 +241,13 @@ class SDDImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    member_id = row[context.memberMemberIDIndex]
+                    member_id = row[context.member_member_id_index]
                     # domainName = Utils.make_valid_id(row[3])
-                    member_code = row[context.memberMemberCodeIndex]
-                    member_name = row[context.memberMemberNameIndex]
+                    member_code = row[context.member_member_code_index]
+                    member_name = row[context.member_member_name_index]
                     if (member_name is None) or (member_name == ""):
                         member_name = member_id
-                    domain_id = row[context.memberDomainIDIndex]
+                    domain_id = row[context.member_domain_id_index]
 
                     # if there is no domain ID this suggests a faulty 
                     # row in the csv due to return statements in fields
@@ -270,8 +270,8 @@ class SDDImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    domain_id = row[context.subdomainDomainIDIndex]
-                    subdomain_id = row[context.subDomainSubDomainIDIndex]
+                    domain_id = row[context.subdomain_domain_id_index]
+                    subdomain_id = row[context.subdomain_subdomain_id_index]
                     context.subdomain_id_to_domain_id[subdomain_id] = domain_id
 
     def create_subdomain_to_member_maps(self, context):
@@ -288,9 +288,9 @@ class SDDImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    member_id = row[context.subdomain_enumerationMemberIDIndex]
-                    subdomain_id = row[context.subdomain_enumerationSubdomainIDIndex]
-                    valid_to = row[context.subdomain_enumerationValidToIndex]
+                    member_id = row[context.subdomain_enumeration_member_id_index]
+                    subdomain_id = row[context.subdomain_enumeration_subdomain_id_index]
+                    valid_to = row[context.subdomain_enumeration_valid_to_index]
                     if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         member_list = None
                         try:
@@ -320,9 +320,9 @@ class SDDImport(object):
                     header_skipped = True
                 else:
 
-                    variable = row[context.cube_structure_itemVariableIndex]
-                    classID = row[context.cube_structure_itemClassIDIndex]
-                    variableSet = row[context.cube_structure_itemVariableSet]
+                    variable = row[context.cube_structure_item_variable_index]
+                    classID = row[context.cube_structure_item_class_id_index]
+                    variableSet = row[context.cube_structure_item_variable_set]
 
                     try: 
                         the_class = context.classes_map[classID]
@@ -395,11 +395,11 @@ class SDDImport(object):
                         header_skipped = True
                 else:
                     
-                    variable = row[context.cube_structure_itemVariableIndex]
-                    subdomain_id = row[context.cube_structure_itemSubdomainIndex ]
-                    class_id = row[context.cube_structure_itemClassIDIndex]
-                    specific_member = row[context.cube_structure_itemSpecificMember ]
-                    variable_set = row[context.cube_structure_itemVariableSet]
+                    variable = row[context.cube_structure_item_variable_index]
+                    subdomain_id = row[context.cube_structure_item_subdomain_index ]
+                    class_id = row[context.cube_structure_item_class_id_index]
+                    specific_member = row[context.cube_structure_item_specific_member ]
+                    variable_set = row[context.cube_structure_item_variable_set]
                     try:
                         cube_name = context.classes_map[class_id]
                         attribute_list = [variable]
@@ -488,14 +488,14 @@ class SDDImport(object):
                 if not header_skipped:
                         header_skipped = True
                 else:
-                    the_attribute_name1 = row[context.cube_structure_itemAttributeName]
+                    the_attribute_name1 = row[context.cube_structure_item_attribute_name]
                     long_name=None
                     
-                    variable = row[context.cube_structure_itemVariableIndex ]
-                    subdomain_id = row[context.cube_structure_itemSubdomainIndex ]
-                    class_id = row[context.cube_structure_itemClassIDIndex ]
-                    specific_member = row[context.cube_structure_itemSpecificMember ]
-                    variable_set = row[context.cube_structure_itemVariableSet]
+                    variable = row[context.cube_structure_item_variable_index ]
+                    subdomain_id = row[context.cube_structure_item_subdomain_index ]
+                    class_id = row[context.cube_structure_item_class_id_index ]
+                    specific_member = row[context.cube_structure_item_specific_member ]
+                    variable_set = row[context.cube_structure_item_variable_set]
                     role = row[context.cube_structure_item_role_index]
                     
                     try:

@@ -14,12 +14,12 @@
 Created on 25 April 2022
 '''
 
-from importers.context  import Context
+from context.context  import Context
 
 from importers.import_sqldev_ldm_to_ecore4reg import SQLDevLDMImport
-from importers.persist_to_file import PersistToFile
-from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
-from importers.traverser import SubtypeExploder
+from persister.persist_to_file import PersistToFile
+from utils.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
+from utils.traverser import SubtypeExploder
 
 if __name__ == '__main__':
     context = Context()
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     context.use_subdomains_in_rol = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
-
+    
     SQLDevLDMImport().do_import(context)
 
     Ecore4regToEcoreConverter().convert_packages_in_context(context)

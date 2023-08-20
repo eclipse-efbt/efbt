@@ -21,8 +21,6 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELReference;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regFactory;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLink;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.EntityToVTLIntermediateLayerLinkModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
@@ -46,21 +44,6 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Tag;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.TagGroup;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.TitledRequirementsSection;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLEnrichedCube;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLForOutputLayerAndIntermediateLayerCombination;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLForOutputLayerAndIntermediateLayerCombinationModule;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLForSelectionLayer;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLForSelectionLayerModule;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLForView;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLForViewModule;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLGeneratedIntermediateLayer;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLGeneratedIntermediateLayerModule;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLGeneratedOutputlayer;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLGeneratedOutputlayerModule;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLModule;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLScheme;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLSchemesModule;
-import org.eclipse.efbt.ecore4reg.model.ecore4reg.VTLTransformation;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -155,23 +138,6 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 			case Ecore4regPackage.EL_ANNOTATION: return createELAnnotation();
 			case Ecore4regPackage.EL_STRING_TO_STRING_MAP_ENTRY: return createELStringToStringMapEntry();
 			case Ecore4regPackage.OPERATION_TAG: return createOperationTag();
-			case Ecore4regPackage.VTL_ENRICHED_CUBE: return createVTLEnrichedCube();
-			case Ecore4regPackage.VTL_GENERATED_OUTPUTLAYER: return createVTLGeneratedOutputlayer();
-			case Ecore4regPackage.VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION: return createVTLForOutputLayerAndIntermediateLayerCombination();
-			case Ecore4regPackage.VTL_GENERATED_INTERMEDIATE_LAYER: return createVTLGeneratedIntermediateLayer();
-			case Ecore4regPackage.VTL_TRANSFORMATION: return createVTLTransformation();
-			case Ecore4regPackage.VTL_SCHEME: return createVTLScheme();
-			case Ecore4regPackage.VTL_FOR_SELECTION_LAYER: return createVTLForSelectionLayer();
-			case Ecore4regPackage.VTL_MODULE: return createVTLModule();
-			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK: return createEntityToVTLIntermediateLayerLink();
-			case Ecore4regPackage.VTL_FOR_VIEW: return createVTLForView();
-			case Ecore4regPackage.VTL_GENERATED_OUTPUTLAYER_MODULE: return createVTLGeneratedOutputlayerModule();
-			case Ecore4regPackage.VTL_FOR_OUTPUT_LAYER_AND_INTERMEDIATE_LAYER_COMBINATION_MODULE: return createVTLForOutputLayerAndIntermediateLayerCombinationModule();
-			case Ecore4regPackage.VTL_GENERATED_INTERMEDIATE_LAYER_MODULE: return createVTLGeneratedIntermediateLayerModule();
-			case Ecore4regPackage.VTL_SCHEMES_MODULE: return createVTLSchemesModule();
-			case Ecore4regPackage.VTL_FOR_SELECTION_LAYER_MODULE: return createVTLForSelectionLayerModule();
-			case Ecore4regPackage.ENTITY_TO_VTL_INTERMEDIATE_LAYER_LINK_MODULE: return createEntityToVTLIntermediateLayerLinkModule();
-			case Ecore4regPackage.VTL_FOR_VIEW_MODULE: return createVTLForViewModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -605,176 +571,6 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 	public OperationTag createOperationTag() {
 		OperationTagImpl operationTag = new OperationTagImpl();
 		return operationTag;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLEnrichedCube createVTLEnrichedCube() {
-		VTLEnrichedCubeImpl vtlEnrichedCube = new VTLEnrichedCubeImpl();
-		return vtlEnrichedCube;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLGeneratedOutputlayer createVTLGeneratedOutputlayer() {
-		VTLGeneratedOutputlayerImpl vtlGeneratedOutputlayer = new VTLGeneratedOutputlayerImpl();
-		return vtlGeneratedOutputlayer;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLForOutputLayerAndIntermediateLayerCombination createVTLForOutputLayerAndIntermediateLayerCombination() {
-		VTLForOutputLayerAndIntermediateLayerCombinationImpl vtlForOutputLayerAndIntermediateLayerCombination = new VTLForOutputLayerAndIntermediateLayerCombinationImpl();
-		return vtlForOutputLayerAndIntermediateLayerCombination;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLGeneratedIntermediateLayer createVTLGeneratedIntermediateLayer() {
-		VTLGeneratedIntermediateLayerImpl vtlGeneratedIntermediateLayer = new VTLGeneratedIntermediateLayerImpl();
-		return vtlGeneratedIntermediateLayer;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLTransformation createVTLTransformation() {
-		VTLTransformationImpl vtlTransformation = new VTLTransformationImpl();
-		return vtlTransformation;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLScheme createVTLScheme() {
-		VTLSchemeImpl vtlScheme = new VTLSchemeImpl();
-		return vtlScheme;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLForSelectionLayer createVTLForSelectionLayer() {
-		VTLForSelectionLayerImpl vtlForSelectionLayer = new VTLForSelectionLayerImpl();
-		return vtlForSelectionLayer;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLModule createVTLModule() {
-		VTLModuleImpl vtlModule = new VTLModuleImpl();
-		return vtlModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EntityToVTLIntermediateLayerLink createEntityToVTLIntermediateLayerLink() {
-		EntityToVTLIntermediateLayerLinkImpl entityToVTLIntermediateLayerLink = new EntityToVTLIntermediateLayerLinkImpl();
-		return entityToVTLIntermediateLayerLink;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLForView createVTLForView() {
-		VTLForViewImpl vtlForView = new VTLForViewImpl();
-		return vtlForView;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLGeneratedOutputlayerModule createVTLGeneratedOutputlayerModule() {
-		VTLGeneratedOutputlayerModuleImpl vtlGeneratedOutputlayerModule = new VTLGeneratedOutputlayerModuleImpl();
-		return vtlGeneratedOutputlayerModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLForOutputLayerAndIntermediateLayerCombinationModule createVTLForOutputLayerAndIntermediateLayerCombinationModule() {
-		VTLForOutputLayerAndIntermediateLayerCombinationModuleImpl vtlForOutputLayerAndIntermediateLayerCombinationModule = new VTLForOutputLayerAndIntermediateLayerCombinationModuleImpl();
-		return vtlForOutputLayerAndIntermediateLayerCombinationModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLGeneratedIntermediateLayerModule createVTLGeneratedIntermediateLayerModule() {
-		VTLGeneratedIntermediateLayerModuleImpl vtlGeneratedIntermediateLayerModule = new VTLGeneratedIntermediateLayerModuleImpl();
-		return vtlGeneratedIntermediateLayerModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLSchemesModule createVTLSchemesModule() {
-		VTLSchemesModuleImpl vtlSchemesModule = new VTLSchemesModuleImpl();
-		return vtlSchemesModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLForSelectionLayerModule createVTLForSelectionLayerModule() {
-		VTLForSelectionLayerModuleImpl vtlForSelectionLayerModule = new VTLForSelectionLayerModuleImpl();
-		return vtlForSelectionLayerModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EntityToVTLIntermediateLayerLinkModule createEntityToVTLIntermediateLayerLinkModule() {
-		EntityToVTLIntermediateLayerLinkModuleImpl entityToVTLIntermediateLayerLinkModule = new EntityToVTLIntermediateLayerLinkModuleImpl();
-		return entityToVTLIntermediateLayerLinkModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public VTLForViewModule createVTLForViewModule() {
-		VTLForViewModuleImpl vtlForViewModule = new VTLForViewModuleImpl();
-		return vtlForViewModule;
 	}
 
 	/**

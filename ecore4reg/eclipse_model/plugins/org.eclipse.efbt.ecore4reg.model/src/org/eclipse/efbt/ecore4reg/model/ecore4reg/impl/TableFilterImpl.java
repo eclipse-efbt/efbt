@@ -5,10 +5,13 @@ package org.eclipse.efbt.ecore4reg.model.ecore4reg.impl;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.TableFilter;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -35,6 +38,7 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 * @ordered
 	 */
 	protected Predicate predicate;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -130,7 +134,6 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {

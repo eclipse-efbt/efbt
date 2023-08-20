@@ -156,6 +156,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//VARIABLE_SET/maintenance_agency_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//VARIABLE_SET/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//VARIABLE_SET/variable_set_id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//VARIABLE_SET/variable_set_items"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//VARIABLE_SET_ENUMERATION">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//VARIABLE_SET_ENUMERATION/is_flow"/>
@@ -164,7 +165,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//VARIABLE_SET_ENUMERATION/valid_from"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//VARIABLE_SET_ENUMERATION/valid_to"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//VARIABLE_SET_ENUMERATION/variable_id"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//VARIABLE_SET_ENUMERATION/variable_set_id"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//COMBINATION">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//COMBINATION/code"/>
@@ -351,6 +351,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//AXIS/order"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//AXIS/orientation"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//AXIS/table_id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//AXIS/displayName"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//AXIS_ORDINATE">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//AXIS_ORDINATE/axis_id"/>
@@ -363,6 +364,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//AXIS_ORDINATE/order"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//AXIS_ORDINATE/parent_axis_ordinate_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//AXIS_ORDINATE/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//AXIS_ORDINATE/displayName"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//CELL_POSITION">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//CELL_POSITION/axis_ordinate_id"/>
@@ -385,30 +387,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TABLE/valid_from"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TABLE/valid_to"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TABLE/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TABLE/displayName"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//TABLE_CELL">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TABLE_CELL/cell_id"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//TABLE_CELL/combination_id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TABLE_CELL/is_shaded"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//TABLE_CELL/table_id"/>
-    </genClasses>
-    <genClasses ecoreClass="sdd_model.ecore#//TRANSFORMATION_SCHEME">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/transformation_scheme_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/description"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//TRANSFORMATION_SCHEME/tranformations"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/code"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION_SCHEME/maintenance_agency_id"/>
-    </genClasses>
-    <genClasses ecoreClass="sdd_model.ecore#//TRANSFORMATION">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/transformation_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/description"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/expression"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/code"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/maintenance_agency_id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TRANSFORMATION/order_in_scheme"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//TABLE_CELL/name"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//DomainModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//DomainModule/domains"/>
@@ -423,18 +409,37 @@
     <genClasses ecoreClass="sdd_model.ecore#//VariableModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//VariableModule/variables"/>
     </genClasses>
+    <genClasses ecoreClass="sdd_model.ecore#//VariableSetModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//VariableSetModule/variableSets"/>
+    </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//SubDomainModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SubDomainModule/subdomains"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//SMCubesCoreModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesCoreModel/variableModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesCoreModel/variableSetModules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesCoreModel/domainModules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesCoreModel/memberModules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesCoreModel/subDomainModules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesCoreModel/memberHierarchyModules"/>
     </genClasses>
-    <genClasses ecoreClass="sdd_model.ecore#//SmcubesExtraModel">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//SmcubesExtraModel/name"/>
+    <genClasses ecoreClass="sdd_model.ecore#//SMCubesModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesModel/coreModel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesModel/extraModel"/>
+    </genClasses>
+    <genClasses ecoreClass="sdd_model.ecore#//SMCubesExtraModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/combinationModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/cubeModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/mappingDefinitionModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/cubeMappingModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/memberMappingModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/variableMappingModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/axisModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/axisOrdinateModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/cellPositionModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/ordinateItemsModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/reportTableModules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//SMCubesExtraModel/tableCellModules"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//CombinationModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//CombinationModule/combinations"/>
@@ -465,18 +470,10 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//AxisOrdinateModule/axis_ordinates"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//CellPositionModule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//CellPositionModule/reportTables"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//CellPositionModule/cellPositions"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//OrdinateItemModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//OrdinateItemModule/ordinateItems"/>
-    </genClasses>
-    <genClasses ecoreClass="sdd_model.ecore#//ReportCell">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//ReportCell/combination"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//ReportCell/name"/>
-    </genClasses>
-    <genClasses ecoreClass="sdd_model.ecore#//ReportCellValue">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sdd_model.ecore#//ReportCellValue/reportCell"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdd_model.ecore#//ReportCellValue/value"/>
     </genClasses>
     <genClasses ecoreClass="sdd_model.ecore#//ReportTableModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sdd_model.ecore#//ReportTableModule/reportTables"/>

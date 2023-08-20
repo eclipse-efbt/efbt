@@ -10,14 +10,14 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from importers.context import Context
+from context.context import Context
 from importers.import_sqldev_il_to_ecore4reg import SQLDeveloperILImport
 from importers.import_sdd_to_ecore4reg import SDDImport
-from importers.persist_to_file import PersistToFile
-from importers.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
-from importers.main_catagory_finder import MainCatagoryFinder
-from importers.generation_rule_creator import GenerationRuleCreator
-from importers.relationship_enricher import RelationshipEnricher
+from persister.persist_to_file import PersistToFile
+from utils.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
+from generation_rules.main_catagory_finder import MainCatagoryFinder
+from generation_rules.generation_rule_creator import GenerationRuleCreator
+from utils.relationship_enricher import RelationshipEnricher
 
 if __name__ == '__main__':
     context = Context()
@@ -31,18 +31,14 @@ if __name__ == '__main__':
     # we are getting the information about EIL from the website information
     # and not from the SQLDeveloper files
     context.load_eil_from_website  = True
-    context.input_from_website = True
-    context.persist_vtl_comments = False
-    # make sure we are using the column indices related to the
-    # website  download file structure
-    context.set_up_csv_indexes()
+
     # use codes not long names for columns
     context.use_codes = True
     # when finding  source columns form the input layer, related
     # to items in the output layer we find columns with matching
     # variables not matching domains
 
-    context.findVariableWithSameDomain = False
+    context.find_variable_with_same_domain = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     # import the information about EIL and ROL from csv files downloaded
