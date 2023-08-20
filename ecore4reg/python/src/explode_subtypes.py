@@ -37,6 +37,17 @@ if __name__ == '__main__':
     persister.save_model_as_ecore4reg_file(context)
     persister.save_model_as_json_files(context)
     traverser = SubtypeExploder()
-    traverser.traverse(context)
+    # for all the root types get the full and summary breakdowns
+    traverser.traverse(context,'Security_and_exchange_tradable_derivative',False)
+    traverser.traverse(context,'Security_and_exchange_tradable_derivative',True)
+    traverser.traverse(context,'Instrument',False)
+    traverser.traverse(context,'Instrument',True)
+    traverser.traverse(context,'Instrument_role',False)
+    traverser.traverse(context,'Instrument_role',True)
+    traverser.traverse(context,'Non_financial_asset_and_non_financial_liability',False)
+    traverser.traverse(context,'Non_financial_asset_and_non_financial_liability',True)
+    traverser.traverse(context,'Cash_on_hand',False)
+    traverser.traverse(context,'Cash_on_hand',True)
+
     
     
