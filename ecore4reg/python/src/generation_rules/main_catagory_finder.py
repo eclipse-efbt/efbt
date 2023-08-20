@@ -186,7 +186,7 @@ class MainCatagoryFinder(object):
         sdd_context = SDDContext()
         sdd_context.file_directory = context.file_directory
         sdd_context.output_directory = context.output_directory
-        ImportSDD.import_sdd(self,sdd_context)
+        ImportSDD.import_core_sdd(self,sdd_context)
         for mc in context.main_catagories_in_scope:
             mc_member = ImportSDD.find_member_with_id(self, mc, sdd_context)
             definition = mc_member.displayName

@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # to items in the output layer we find columns with matching
     # domains domains, even if they have different variables
 
-    context.findVariableWithSameDomain = True
+    context.find_variable_with_same_domain = True
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     # import the information about EIL and ROL from csv files downloaded

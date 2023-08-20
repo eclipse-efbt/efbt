@@ -20,6 +20,7 @@ class ImportSDD(object):
     into an instance of the analaysis model
     '''
 
+    
     def import_sdd(self, sdd_context):
         '''
         Import SDD csv files into an instance of the analysis model
@@ -35,15 +36,18 @@ class ImportSDD(object):
         ImportSDD.create_axis(self, sdd_context)
         ImportSDD.create_axis_ordinates(self, sdd_context)
         ImportSDD.create_cell_positions(self, sdd_context)
-        # ImportSDD.create_all_subdomain_enumerations(self, sdd_context)
-        # ImportSDD.createVariableSetToVariableMap(self, context)
-        # ImportSDD.createvariable_to_domain_map(self, context)
-        # ImportSDD.createDomainToDomainNameMap(self, context)
-        # ImportSDD.createMemberMaps(self, context)
         ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
-        # ImportSDD.create_member_hierarchies(self, context)
         
-
+    def import_core_sdd(self, sdd_context):
+        '''
+        Import SDD csv files into an instance of the analysis model
+        '''
+        ImportSDD.create_all_domains(self, sdd_context)
+        ImportSDD.create_all_members(self, sdd_context)
+        ImportSDD.create_all_variables(self, sdd_context)
+        ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
+        
+        
     def create_all_domains(self, context):
         '''
         import all the domains
@@ -655,7 +659,7 @@ class ImportSDD(object):
     def get_mappings_with_this_member_as_source_and_this_variable_as_target(self,sdd_context,member, target_variable):
         
         return_target_items = []
-        mappingList = sdd_context.memberMappingModule.memberMappings
+        mappingList = sdd_context.member_mappings.memberMappings
        
         for mapping in mappingList:
             member_mapping_items = []

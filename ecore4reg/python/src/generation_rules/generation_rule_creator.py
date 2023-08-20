@@ -114,15 +114,15 @@ class GenerationRuleCreator(object):
                     rules_for_il_table_part.columns.extend([select_column])
                     inputColumn = None
                     if context.match_domains_in_generation_file:
-                        inputColumn = GenerationRuleCreator.findVariableWithSameDomain(self,context,output_item,input_entity_list)
+                        inputColumn = GenerationRuleCreator.find_variable_with_same_domain(self,context,output_item,input_entity_list)
                     else:
-                        inputColumn = GenerationRuleCreator.findRelatedVariable(self,context,output_item,input_entity_list)
+                        inputColumn = GenerationRuleCreator.find_related_variable(self,context,output_item,input_entity_list)
                         
                     if not(inputColumn is None):
                         select_column.attribute = inputColumn
                         
                     
-    def findRelatedVariable(self,context,output_item,input_entity_list):
+    def find_related_variable(self,context,output_item,input_entity_list):
         '''
         when we have an ROL item it has a specific domain.
         We want to find any column in the limited related input tables
@@ -147,7 +147,7 @@ class GenerationRuleCreator(object):
                                 print("no primary concept for " + input_item_name)
         return None
     
-    def findVariableWithSameDomain(self,context,output_item,input_entity_list):
+    def find_variable_with_same_domain(self,context,output_item,input_entity_list):
         '''
         when we have an ROL item it has a specific domain.
         We want to find any column in the limited related input tables
