@@ -102,6 +102,15 @@ class Ecore4regToEcoreConverter(object):
                         elif type_name == 'boolean':
                             e_attribute.eType = EBoolean
 
+                        annotation = structural_feature.eAnnotations
+                        if not (annotation is None):
+                            e_annotation = EAnnotation()
+                            e_annotation.source = annotation.source
+                            for detail in annotation.details:
+                                key = detail.key
+                                value = detail.value
+                                e_annotation.details[key] = value
+                            e_attribute.eAnnotations.append(e_annotation)
                         e_class.eStructuralFeatures.append(e_attribute)
 
                     if isinstance(structural_feature, ELReference):
@@ -109,6 +118,15 @@ class Ecore4regToEcoreConverter(object):
                         e_reference.upperBound = structural_feature.upperBound
                         e_reference.lowerBound = structural_feature.lowerBound
                         e_reference.containment = structural_feature.containment
+                        annotation = structural_feature.eAnnotations
+                        if not (annotation is None):
+                            e_annotation = EAnnotation()
+                            e_annotation.source = annotation.source
+                            for detail in annotation.details:
+                                key = detail.key
+                                value = detail.value
+                                e_annotation.details[key] = value
+                            e_reference.eAnnotations.append(e_annotation)
                         e_class.eStructuralFeatures.append(e_reference)
                         type_name = structural_feature.eType.name
                         e_reference.typeName = type_name
