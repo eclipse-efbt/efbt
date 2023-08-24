@@ -490,9 +490,9 @@ class SQLDevLDMImport(object):
                     source_to_target_cardinality = row[10]
                     target_class_name = row[7]
                     target_optional = row[13]
+                    relation_name = row[0]
 
-                    reference_name = "the" + \
-                        Utils.make_valid_id(target_class_name)
+                    reference_name = Utils.make_valid_id(relation_name)
 
                     try:
                         the_class = context.classes_map[source_id]
@@ -504,14 +504,13 @@ class SQLDevLDMImport(object):
                     except KeyError:
                         print("missing target class: " + target_id)
 
-                    num_of_relations = Utils.number_of_relationships_to_this_class(
-                        the_class, target_class)
-                    if num_of_relations > 0:
-                        reference_name = reference_name + str(num_of_relations)
+                    # num_of_relations = Utils.number_of_relationships_to_this_class(
+                    #     the_class, target_class)
+                    # if num_of_relations > 0:
+                    #     reference_name = reference_name + str(num_of_relations)
 
                     if target_optional.strip() == "Y":
-                        if source_to_target_cardinality.strip() == "*":
-                            reference_name = reference_name + "s"
+                        if source_to_target_cardinality.strip() == "*":                            
                             ereference = ELReference()
                             ereference.name = reference_name
                             ereference.eType = target_class
@@ -575,7 +574,6 @@ class SQLDevLDMImport(object):
                                         source_tables_reference)
                     else:
                         if source_to_target_cardinality.strip() == "*":
-                            reference_name = reference_name + "s"
                             ereference = ELReference()
                             ereference.name = reference_name
                             ereference.eType = target_class

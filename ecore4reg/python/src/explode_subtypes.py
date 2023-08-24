@@ -20,6 +20,7 @@ from importers.import_sqldev_ldm_to_ecore4reg import SQLDevLDMImport
 from persister.persist_to_file import PersistToFile
 from utils.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 from utils.traverser import SubtypeExploder
+from utils.enrich_ldm_with_il_links_from_fe import InputLayerLinkEnricher
 
 if __name__ == '__main__':
     context = Context()
@@ -30,6 +31,7 @@ if __name__ == '__main__':
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     
     SQLDevLDMImport().do_import(context)
+    InputLayerLinkEnricher().enrich_with_links_to_input_layer_columns(context)
 
     Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()

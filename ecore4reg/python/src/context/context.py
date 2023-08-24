@@ -31,6 +31,7 @@ class Context(object):
     reporting_framework = "FINREP"
     reporting_framework_version = ["3","3.0-Ind"]
     match_domains_in_generation_file = False
+    input_layer_name = "Input Layer 6.2"
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.
@@ -102,6 +103,10 @@ class Context(object):
         nsURI='http://www.eclipse.org/bird/output_tables',
         nsPrefix='output_tables')
 
+    generation_rules_module = GenerationRulesModule(name='generations')
+
+    module_list = ModuleList()
+    
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classes_map = {}
@@ -145,10 +150,7 @@ class Context(object):
     
     arc_target_to_arc_map = {}
 
-    generation_rules_module = GenerationRulesModule(name='generations')
-
-    module_list = ModuleList()
-
+    logical_attribute_to_relational_name = {}
     subdomain_to_member_list_map = {}
     subdomain_id_to_domain_id = {}
 
