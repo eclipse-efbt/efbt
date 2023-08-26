@@ -30,7 +30,10 @@ class SubtypeExploder(object):
         row = {}
         entity = SubtypeExploder.find_class_with_name(self, context,entity_name)
         #  Instrument_role Over_the_counter_OTC_Derivative_role
-        SubtypeExploder.process_entity(self, context, entity,column_headers,
+        entity_list = []
+        entity_list.append(entity)
+        
+        SubtypeExploder.process_entity(self, context, [], entity, entity_list,column_headers,
                                        input_layer_column_headers,row, rows,
                                        show_all_columns_for_subtype_explosion)
         full_or_summary = "_summary"
@@ -80,7 +83,7 @@ class SubtypeExploder(object):
             f.write("\n")
             
         
-    def process_entity(self, context, entity,column_headers,input_layer_column_headers,
+    def process_entity(self, context, discriminator_list, parent_entity, entity_combination,column_headers,input_layer_column_headers,
                        row,rows,show_all_columns_for_subtype_explosion):
         '''
         For a specific entity, append the attributes of that entity
@@ -92,70 +95,110 @@ class SubtypeExploder(object):
         of delegates
         '''
         current_row = row
-        rows.append(current_row)
-        
-        if show_all_columns_for_subtype_explosion:
-            references = SubtypeExploder.get_non_discriminator_references(self, context, entity)
-            for ref in references:
-                
-                qualified_attribute_name = entity.name + "." + ref.name
-                if not(qualified_attribute_name in column_headers):
-                    column_headers.append(qualified_attribute_name)
-                    input_layer_column_name = SubtypeExploder.get_input_layer_column(self,ref)
-                    input_layer_column_headers.append(input_layer_column_name)
-                    current_row[qualified_attribute_name] = 'X'
 
-            attributes = SubtypeExploder.get_attributes(self, context, entity)
+        count = 0            
+        for discriminator in discriminator_list:
+            qualified_attribute_name = parent_entity.name + "." + discriminator.name
             
-            for attribute in attributes:
-                qualified_attribute_name = entity.name + "." + attribute.name
-                if not(qualified_attribute_name in column_headers):
-                    column_headers.append(qualified_attribute_name)
-                    input_layer_column_name = SubtypeExploder.get_input_layer_column(self,attribute)
-                    input_layer_column_headers.append(input_layer_column_name)
-                    current_row[entity.name + "."+ attribute.name] = 'X'
-            
-        discrimitors = SubtypeExploder.get_discriminators(self, context, entity)
-        for discriminator in discrimitors:
-            qualified_attribute_name = entity.name + "." + discriminator.name[0:len(discriminator.name)-9]
             if not(qualified_attribute_name in column_headers):
                 column_headers.append(qualified_attribute_name)
                 input_layer_column_name = SubtypeExploder.get_input_layer_column(self,discriminator)
-                input_layer_column_headers.append(input_layer_column_name)
-            entities = SubtypeExploder.get_possible_entities(self, context, discriminator)
-            if not(entities is None):
-                for the_entity in entities:
-                    current_row_detached_clone = current_row.copy()
-                    current_row_detached_clone[qualified_attribute_name] = the_entity.name
-                    SubtypeExploder.process_entity(self, context, the_entity,
-                                                   column_headers, input_layer_column_headers,
-                                                   current_row_detached_clone,
-                                                   rows,
-                                                   show_all_columns_for_subtype_explosion)
-        # we act as if there is one more discriminator, which is the name of the class prefixed with TYP_
-        # and this has all the actual subclasses of this entity
-        dummy_discriminator_name = entity.name + "_type_disc"
-        input_layer_column_headers.append("UNKNOWN")
-        column_headers.append(entity.name + "." + dummy_discriminator_name)
-        subclasses = SubtypeExploder.get_subclasses(self,context, entity)
-        if not(subclasses is None):
-                for subclass in subclasses:
-                    current_row_detached_clone = current_row.copy()
-                    current_row_detached_clone[entity.name + "." +dummy_discriminator_name] = subclass.name
-                    SubtypeExploder.process_entity(
-                        self, context, subclass,column_headers,
-                        input_layer_column_headers, current_row_detached_clone,rows,
-                        show_all_columns_for_subtype_explosion)
+                input_layer_column_headers.append(input_layer_column_name)  
+            current_row[qualified_attribute_name] = entity_combination[count].name
+            count = count +1
+        for entity in entity_combination:
+            if show_all_columns_for_subtype_explosion:
+                references = SubtypeExploder.get_non_discriminator_references(self, context, entity)
+                for ref in references:
+                    qualified_attribute_name = entity.name + "." + ref.name
+                    if not(qualified_attribute_name in column_headers):
+                        column_headers.append(qualified_attribute_name)
+                        input_layer_column_name = SubtypeExploder.get_input_layer_column(self,ref)
+                        input_layer_column_headers.append(input_layer_column_name)
+                        current_row[qualified_attribute_name] = 'X'
+    
+                attributes = SubtypeExploder.get_attributes(self, context, entity)
+                
+                for attribute in attributes:
+                    qualified_attribute_name = entity.name + "." + attribute.name
+                    if not(qualified_attribute_name in column_headers):
+                        column_headers.append(qualified_attribute_name)
+                        input_layer_column_name = SubtypeExploder.get_input_layer_column(self,attribute)
+                        input_layer_column_headers.append(input_layer_column_name)
+                        current_row[entity.name + "."+ attribute.name] = 'X'
 
+                discriminators = SubtypeExploder.get_discriminators(self, context, entity)
+                columns = []
+                for discriminator in discriminators:
+                    SubtypeExploder.enrich_discrimitor_columns(self, context, discriminator,columns)
+                   
+                if len(columns) > 0:
+                    count = 0
+                    for each_entity in columns[0]:
+                        entity_combination = []
+                        
+                        for column in columns: 
+                            entity_combination.append(column[count])
+                        
+            
+                        current_row_detached_clone = current_row.copy()
+                        #current_row_detached_clone[qualified_attribute_name] = each_entity.name
+                        SubtypeExploder.process_entity(self, context, discriminators, entity, entity_combination,
+                                                       column_headers, input_layer_column_headers,
+                                                       current_row_detached_clone,
+                                                       rows,
+                                                       show_all_columns_for_subtype_explosion)
+                        count = count + 1
+        rows.append(current_row)
+
+    def enrich_discrimitor_columns(self, context, discriminator, list_of_lists):
+        
+        entities = SubtypeExploder.get_possible_entities(self, context, discriminator)
+        discrimitors_entity_list = []
+        if len(list_of_lists) == 0:
+            for entity in entities:
+                discrimitors_entity_list.append(entity)
+        else:
+            first_one = True
+            for the_list in list_of_lists:
+                list_copy = the_list.copy()
+                first_one = False
+                for entity in entities:
+                    for item in list_copy:
+                        if not(first_one):
+                            the_list.append(item)
+                        discrimitors_entity_list.append(entity)
+                    first_one = True      
+               
+        list_of_lists.append(discrimitors_entity_list)
+                
+        
+                
+                
+            
     def get_non_discriminator_references(self, context, entity):
         '''
-        get any references from the entity, which are not delegates.
+        get any non-containment references from the entity, which are not delegates.
         Note that the delegates can represent the arcs of the 
         BIRD SQLDevelope model used to describe disjoint subtyping
         '''
         reference_list = []
         for ref in entity.eStructuralFeatures:
             if isinstance(ref,ELReference):
+                if not(ref.name.endswith('_delegate')) and not(ref.containment):
+                    reference_list.append(ref)
+            
+        return reference_list
+    
+    def get_non_discriminator_containment_references(self, context, entity):
+        '''
+        get any containment references from the entity, which are not delegates.
+        Note that the delegates can represent the arcs of the 
+        BIRD SQLDevelope model used to describe disjoint subtyping
+        '''
+        reference_list = []
+        for ref in entity.eStructuralFeatures:
+            if isinstance(ref,ELReference) and ref.containment:
                 if not(ref.name.endswith('_delegate')):
                     reference_list.append(ref)
             
