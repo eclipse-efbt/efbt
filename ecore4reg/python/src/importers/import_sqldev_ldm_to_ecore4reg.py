@@ -60,31 +60,10 @@ class SQLDevLDMImport(object):
                     num_supertype_entity_id = row[26]
 
                     altered_class_name = Utils.make_valid_id(class_name)
-                    if altered_class_name.endswith("_derived"):
-                        eclass = ELClass(name=altered_class_name)
-                        
-                        context.input_tables_package.eClassifiers.extend([
-                                                                              eclass])
-                       
-                    elif (class_name.startswith("OUTPUT_LAYER_")):
-                        eclass = ELClass(name=altered_class_name)
+                    eclass = ELClass(name=altered_class_name)                    
 
-                        context.input_tables_package.eClassifiers.extend([
-                                                                              eclass])
-
-                    else:
-                        eclass = ELClass(name=altered_class_name)
-                        # of engineering type is single table, as it should be
-                        # for all members of a type
-                        # heirarchy, and num_suptype is blank,
-                        # then this means that this class is a root
-                        # of a type heirarchy....we will set such classes
-                        #  to be abstract.
-                        if (engineering_type == "Single Table") and (num_supertype_entity_id == ""):
-                            eclass.eAbstract = True
-                        
-                        context.input_tables_package.eClassifiers.extend([
-                                                                              eclass])
+                    context.input_tables_package.eClassifiers.extend([
+                                                                          eclass])
                         
 
                     # maintain a map a objectIDs to ELClasses
@@ -124,6 +103,7 @@ class SQLDevLDMImport(object):
                         # and we create class for the arc
                         
                         arc_class = ELClass(name=altered_arc_name)
+                        arc_class.eAbstract = True
                         source_class = SQLDevLDMImport.find_class_with_name(self, context, Utils.make_valid_id(entity_name))
                         context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
                         context.arc_to_source_map[altered_arc_name] = source_class
@@ -317,10 +297,6 @@ class SQLDevLDMImport(object):
                     primary_key_or_not = row[35]
                     the_class = context.classes_map[class_id]
 
-                    class_is_derived = False
-                    if the_class.name.endswith("_derived"):
-                        class_is_derived = True
-
                     the_attribute_name = amended_attribute_name
 
                     # we only add attributes here if they are not representing a relationship
@@ -381,41 +357,7 @@ class SQLDevLDMImport(object):
                                 attribute.eType = the_enum
                                 attribute.eAttributeType = the_enum
 
-                            if class_is_derived:
-                                operation = ELPublicOperation()
-                                operation.lowerBound = 0
-                                operation.upperBound = 1
-                                if the_enum.name == "String":
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_string
-                                elif the_enum.name.startswith("String_"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_string
-                                elif the_enum.name == "Number":
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_double
-                                elif the_enum.name == "RL_domain":
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_double
-
-                                elif the_enum.name.startswith("Real_"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_double
-                                elif the_enum.name.startswith("Monetary"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_int
-                                elif the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_int
-                                elif the_enum.name.startswith("Non_negative_integers"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_int
-                                elif the_enum.name.startswith("All_possible_dates"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.e_date
-                                else:
-                                    operation.name = the_attribute_name
-                                    operation.eType = the_enum
+                            
 
                         if (attribute_kind == "Logical Type"):
                             datatype_id = row[14]
@@ -430,14 +372,6 @@ class SQLDevLDMImport(object):
                                 attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
                                     self)
 
-                                if class_is_derived:
-                                    operation = ELPublicOperation()
-                                    operation.lowerBound = 0
-                                    operation.upperBound = 1
-                                    operation.name = amended_attribute_name
-                                    operation.eType = Utils.get_ecore_datatype_for_datatype(
-                                        self)
-
                             except KeyError:
                                 print("missing datatype: ")
                                 print(datatype_id)
@@ -446,8 +380,6 @@ class SQLDevLDMImport(object):
 
                             the_class = context.classes_map[class_id]
                             the_class.eStructuralFeatures.extend([attribute])
-                            if class_is_derived:
-                                the_class.eOperations.extend([operation])
 
                         except:
                             print("missing class2: ")
@@ -491,6 +423,7 @@ class SQLDevLDMImport(object):
                     target_class_name = row[7]
                     target_optional = row[13]
                     relation_name = row[0]
+                    identifying = row[15]
 
                     reference_name = Utils.make_valid_id(relation_name)
 
@@ -509,125 +442,33 @@ class SQLDevLDMImport(object):
                     # if num_of_relations > 0:
                     #     reference_name = reference_name + str(num_of_relations)
 
+                    ereference = ELReference()
+                    ereference.name = reference_name
+                    ereference.eType = target_class
+                    if identifying == "Y":
+                        ereference.containment = True
+                    else:
+                        ereference.containment = False
+                        
                     if target_optional.strip() == "Y":
                         if source_to_target_cardinality.strip() == "*":                            
-                            ereference = ELReference()
-                            ereference.name = reference_name
-                            ereference.eType = target_class
                             # upper bound of -1 means there is no upper bounds, 
                             # so represents an open list of reference
                             ereference.upperBound = -1
                             ereference.lowerBound = 0
-                            ereference.containment = False
-                            if the_class.name.endswith("_derived"):
-                                the_source_table = context.table_map[the_class]
-                                the_target_table = context.table_map[target_class]
-                                if not Utils.has_member_called( the_source_table, "sourceTable1"):
 
-                                    source_tables_reference = ELReference()
-                                    source_tables_reference.name = "sourceTable1"
-                                    source_tables_reference.eType = the_target_table
-                                    source_tables_reference.upperBound = -1
-                                    source_tables_reference.lowerBound = 0
-                                    source_tables_reference.containment = False
-                                    the_source_table.eStructuralFeatures.append(
-                                        source_tables_reference)
-                                else:
-
-                                    source_tables_reference = ELReference()
-                                    source_tables_reference.name = "sourceTable2"
-                                    source_tables_reference.eType = the_target_table
-                                    source_tables_reference.upperBound = -1
-                                    source_tables_reference.lowerBound = 0
-                                    source_tables_reference.containment = False
-                                    the_source_table.eStructuralFeatures.append(
-                                        source_tables_reference)
                         else:
-                            ereference = ELReference()
-                            ereference.name = reference_name
-                            ereference.eType = target_class
                             ereference.upperBound = 1
                             ereference.lowerBound = 0
-                            ereference.containment = False
-                            if the_class.name.endswith("_derived"):
-                                the_source_table = context.table_map[the_class]
-                                the_target_table = context.table_map[target_class]
-                                if not Utils.has_member_called(the_source_table, "sourceTable1"):
-
-                                    source_tables_reference = ELReference()
-                                    source_tables_reference.name = "sourceTable1"
-                                    source_tables_reference.eType = the_target_table
-                                    source_tables_reference.upperBound = -1
-                                    source_tables_reference.lowerBound = 0
-                                    source_tables_reference.containment = False
-                                    the_source_table.eStructuralFeatures.append(
-                                        source_tables_reference)
-                                else:
-
-                                    source_tables_reference = ELReference()
-                                    source_tables_reference.name = "sourceTable2"
-                                    source_tables_reference.eType = the_target_table
-                                    source_tables_reference.upperBound = -1
-                                    source_tables_reference.lowerBound = 0
-                                    source_tables_reference.containment = False
-                                    the_source_table.eStructuralFeatures.append(
-                                        source_tables_reference)
                     else:
                         if source_to_target_cardinality.strip() == "*":
-                            ereference = ELReference()
-                            ereference.name = reference_name
-                            ereference.eType = target_class
+
                             ereference.upperBound = -1
                             ereference.lowerBound = 1
-                            ereference.containment = False
-                            if the_class.name.endswith("_derived"):
-
-                                the_source_table = context.table_map[the_class]
-                                the_target_table = context.table_map[target_class]
-                                if not Utils.has_member_called(the_source_table, "sourceTable1"):
-
-                                    source_tables_reference = ELReference()
-                                    source_tables_reference.name = "sourceTable1"
-                                    source_tables_reference.eType = the_target_table
-                                    source_tables_reference.upperBound = -1
-                                    source_tables_reference.lowerBound = 0
-                                    source_tables_reference.containment = False
-                                    the_source_table.eStructuralFeatures.append(
-                                        source_tables_reference)
-                                else:
-                                    source_tables_reference = ELReference(
-                                        "sourceTable2", the_target_table, upper=-1, lower=0, containment=False)
-                                    the_source_table.eStructuralFeatures.append(
-                                        source_tables_reference)
                         else:
-                            ereference = ELReference()
-                            ereference.name = reference_name
-                            ereference.eType = target_class
                             ereference.upperBound = 1
                             ereference.lowerBound = 1
-                            ereference.containment = False
-                            if the_class.name.endswith("_derived"):
-                                the_source_table = context.table_map[the_class]
-                                the_target_table = context.table_map[target_class]
-                                if not (Utils.has_member_called(the_source_table, "sourceTable1")):
 
-                                    source_tables_reference = ELReference()
-                                    source_tables_reference.name = "sourceTable1"
-                                    source_tables_reference.eType = the_target_table
-                                    source_tables_reference.upperBound = -1
-                                    source_tables_reference.lowerBound = 0
-                                    source_tables_reference.containment = False
-                                    the_source_table.eStructuralFeatures.append(
-                                        source_tables_reference)
-                                else:
-
-                                    source_tables_reference = ELReference()
-                                    source_tables_reference.name = "sourceTable2"
-                                    source_tables_reference.eType = the_target_table
-                                    source_tables_reference.upperBound = -1
-                                    source_tables_reference.lowerBound = 0
-                                    source_tables_reference.containment = False
-                                    the_source_table.eStructuralFeatures.append(
-                                        source_tables_reference)
+                            
                     if not the_class is None:
                         the_class.eStructuralFeatures.append(ereference)
