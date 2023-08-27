@@ -287,6 +287,16 @@ class SubtypeExploder(object):
             if isinstance(ref,ELReference):
                 if ref.containment:
                     reference_list.append(ref)
+                    
+        # if there are any direct subclasses of this entity 
+        # (not including disjoint subclasses) then we create a
+        # dummy discriminator for those
+        direct_subclasses = SubtypeExploder.get_subclasses(self,context,entity);
+        if len(direct_subclasses) > 0:
+            dummy_discrimitory = ELReference()
+            dummy_discrimitory.name = entity.name + "_disc"
+            dummy_discrimitory.eType = entity
+            reference_list.append(dummy_discrimitory);
         return reference_list
     
     def get_possible_entities(self,context, discriminator):
@@ -305,26 +315,27 @@ class SubtypeExploder(object):
         # For basic identifying (composition/containment) relationships
         # the entity may not be abstract, and so we should include it 
         # in processing and its subtypes
-        if not (entity_type.eAbstract):
+        if not (entity_type.eAbstract) and not(discriminator.name.endswith("_disc")):
             class_list.append(entity_type)
             
         # get the subclasses, for disjoint subtyping there will
         # only be direct subtypes. we should consider that for 
         # identifying relationships there might be subtypes that have
         # subtypes, so we may need to amend this code to 
-        # deal with that situation.
+        # deal with that situation....need to think exactly how the
+        # combinations are and should be made in this case with a
+        # a clear test
         for eclassifier in context.input_tables_package.eClassifiers:
             if isinstance(eclassifier,ELClass):
                 if len(eclassifier.eSuperTypes) > 0:
                     if eclassifier.eSuperTypes[0] == entity_type:
                         class_list.append(eclassifier)
         return class_list
-        
-        return subclasses
+
         
     def get_subclasses(self,context, entity_type):
         '''
-        Get the subcalsses of a class
+        Get the subclasses of a class
         '''
         subclass_list = []
         for eclassifier in context.input_tables_package.eClassifiers:
