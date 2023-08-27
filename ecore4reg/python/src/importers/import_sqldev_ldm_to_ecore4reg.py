@@ -103,6 +103,7 @@ class SQLDevLDMImport(object):
                         # and we create class for the arc
                         
                         arc_class = ELClass(name=altered_arc_name)
+                        arc_class.eAbstract = True
                         source_class = SQLDevLDMImport.find_class_with_name(self, context, Utils.make_valid_id(entity_name))
                         context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
                         context.arc_to_source_map[altered_arc_name] = source_class

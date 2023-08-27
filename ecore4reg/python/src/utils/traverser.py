@@ -5,7 +5,42 @@ from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELPublicOpera
 
 class SubtypeExploder(object):
     '''
-    Documentation for SubtypeExploder
+    To make input layer test data for transformations, we want to have 
+    some ’useful concrete things’ like an example of ‘credit credit debt’,
+    and  not  ’abstract things’ like ‘loans and advances’. We also want
+    to have concise things, we don’t want to fill in every column of
+    every IL table for a credit card debt, we want to fill in just the
+    columns that are needed for credit card debt.  This class helps us
+    find the list of useful concrete things, shown in a concise way.
+
+    Ultimately to show these in a concise way we want to show the input
+    layer columns. But to make this easier we will show this first as a
+    set of LDM entities, and then for each entity find the relevant input 
+    layer columns.
+
+    Note that  useful concrete things are usually represented as leaf nodes
+    in the LDM (like credit card debt or other loans).
+    If the leaf is a simple subtype directly under a root of a type hierarchy ,
+    then the related set of LDM entities is just this leaf and each of its ancestors.
+
+    Sometimes however a useful concrete thing is a pair or set of leaf entities,
+    this is common when a SQLDeveloper hierarchy uses disjoint subtyping or
+    has other identifying (owning/composition) relationships. An example of
+    this is under Instrument where we might have a useful thing defined by
+    its product type and its role (both of which are also hierarchies)…
+    so for example a credit card debt acting in the role of an 
+    on -balance sheet instrument, or a basic ‘other-loan’ acting in the
+    role of collateral.
+
+    This class provides a concise representation of all the useful concrete
+    things in BIRD, and where these are defined as a pair/set of leaf
+    entities it shows the related entities for the pair/set. Occasionally
+    it will show things allowed by the LDM which are not useful (e.g. a
+    loan acting in the role of an off-balance sheet item), these non-useful
+    combinations are a known issue in the LDM, and there is an attempt to
+    reduce them or at least document which combinations do not really
+    relate to real world concepts.
+
     '''
 
     def traverse(self, context, entity_name,
@@ -127,48 +162,61 @@ class SubtypeExploder(object):
                         input_layer_column_headers.append(input_layer_column_name)
                         current_row[entity.name + "."+ attribute.name] = 'X'
 
-                discriminators = SubtypeExploder.get_discriminators(self, context, entity)
-                columns = []
-                for discriminator in discriminators:
-                    SubtypeExploder.enrich_discrimitor_columns(self, context, discriminator,columns)
-                   
-                if len(columns) > 0:
-                    count = 0
-                    for each_entity in columns[0]:
-                        entity_combination = []
-                        
-                        for column in columns: 
-                            entity_combination.append(column[count])
-                        
+            discriminators = SubtypeExploder.get_discriminators(self, context, entity)
+            columns = []
+            # here we work out the possible combinations of entities for the discriminotors
+            # these are stored as a set of columns, these reresent a grid that can be read
+            # row by row, where 1 row represents one possible combination of entities.
+            for discriminator in discriminators:
+                SubtypeExploder.enrich_discrimitor_columns(self, context, discriminator,columns)
+               
+            if len(columns) > 0:
+                count = 0
+                for each_entity in columns[0]:
+                    entity_combination = []
+                    
+                    for column in columns:
+                        # here we get one row form the grid, 
+                        # e.g getting the nth item from each columns 
+                        entity_combination.append(column[count])
+                    
+                    # for our row of csv data we have already worked out the value for sme columns
+                    # we are going to copy/clone that row and add further information to it
+                    # not that this is a recursive process.
+                    current_row_detached_clone = current_row.copy()
+                    #current_row_detached_clone[qualified_attribute_name] = each_entity.name
+                    SubtypeExploder.process_entity(self, context, discriminators, entity, entity_combination,
+                                                   column_headers, input_layer_column_headers,
+                                                   current_row_detached_clone,
+                                                   rows,
+                                                   show_all_columns_for_subtype_explosion)
+                    count = count + 1
+                    
             
-                        current_row_detached_clone = current_row.copy()
-                        #current_row_detached_clone[qualified_attribute_name] = each_entity.name
-                        SubtypeExploder.process_entity(self, context, discriminators, entity, entity_combination,
-                                                       column_headers, input_layer_column_headers,
-                                                       current_row_detached_clone,
-                                                       rows,
-                                                       show_all_columns_for_subtype_explosion)
-                        count = count + 1
         rows.append(current_row)
 
     def enrich_discrimitor_columns(self, context, discriminator, list_of_lists):
         
         entities = SubtypeExploder.get_possible_entities(self, context, discriminator)
         discrimitors_entity_list = []
+        # For this base case of empty lists we just populate a list
         if len(list_of_lists) == 0:
             for entity in entities:
                 discrimitors_entity_list.append(entity)
+        # here we work out the possible combinations of entities for the discriminotors
+        # these are stored as a set of columns, these reresent a grid that can be read
+        # row by row, where 1 row represents one possible combination of entities.
         else:
-            first_one = True
+            # first_one = True
             for the_list in list_of_lists:
                 list_copy = the_list.copy()
-                first_one = False
+                first_one = True
                 for entity in entities:
                     for item in list_copy:
                         if not(first_one):
                             the_list.append(item)
                         discrimitors_entity_list.append(entity)
-                    first_one = True      
+                    first_one = False      
                
         list_of_lists.append(discrimitors_entity_list)
                 
@@ -231,14 +279,13 @@ class SubtypeExploder(object):
     
     def get_discriminators(self, context, entity):
         '''
-        get any references from the entity, which are  delegates.
-        Note that the delegates can represent the arcs of the 
-        BIRD SQLDeveloper model used to describe disjoint subtyping
+        get any containment references, these represent identifying relationships
+        in the LDM, and also arcs for disjoint subtyping.
         '''
         reference_list = []
         for ref in entity.eStructuralFeatures:
             if isinstance(ref,ELReference):
-                if ref.name.endswith('_delegate'):
+                if ref.containment:
                     reference_list.append(ref)
         return reference_list
     
@@ -251,7 +298,28 @@ class SubtypeExploder(object):
         delegated class (or more likely, its subclasses)
         '''
         entity_type = discriminator.eType
-        subclasses = SubtypeExploder.get_subclasses(self,context, entity_type)
+        class_list = []
+        # for disjoint subtypes we always delegate to an abstract 
+        # class and provide concrete subclasses for each disjoint subclasses
+        # we dont need to consider the abstract subclass in the processing.
+        # For basic identifying (composition/containment) relationships
+        # the entity may not be abstract, and so we should include it 
+        # in processing and its subtypes
+        if not (entity_type.eAbstract):
+            class_list.append(entity_type)
+            
+        # get the subclasses, for disjoint subtyping there will
+        # only be direct subtypes. we should consider that for 
+        # identifying relationships there might be subtypes that have
+        # subtypes, so we may need to amend this code to 
+        # deal with that situation.
+        for eclassifier in context.input_tables_package.eClassifiers:
+            if isinstance(eclassifier,ELClass):
+                if len(eclassifier.eSuperTypes) > 0:
+                    if eclassifier.eSuperTypes[0] == entity_type:
+                        class_list.append(eclassifier)
+        return class_list
+        
         return subclasses
         
     def get_subclasses(self,context, entity_type):
