@@ -440,6 +440,44 @@ class PersistToFile:
                                 f.write(variable_id+"=" +member_id +":")
                     f.write("\n")
                     
+        f = open(sdd_context.output_directory + os.sep + "csv" +
+                 os.sep + "eba_dimensions" +
+                 '.' + "csv", "a",  encoding='utf-8')
+        
+        f.write("dpm_dimension,dpm_dimension_member,choices\n")
+        
+        for member_mapping in sdd_context.member_mappings.memberMappings:
+            member_mapping_name = member_mapping.name
+            # we find mappings related to  just one non-reference variable
+            # for ecample DPM_MCY, but not DPM_MCY_CPS
+            if member_mapping_name.startswith("DPM_"):
+                dpm_dimension = member_mapping_name[member_mapping_name.index('_')+1:len(member_mapping_name)]
+                if dpm_dimension.find('_') == -1:
+                    target_mapping_item_dict = {}
+                    source_mapping_item_dict = {}
+                    items = member_mapping.memberMappingItems
+                    
+                    for item in items:
+                        row = item.row
+                        is_source = item.isSource
+                        variable_name = item.variable.name
+                        member_name = item.member.name
+                        choice = variable_name + ":" + member_name
+                        if is_source == "TRUE":
+                            source_mapping_item_dict[row] = member_name
+                        else:
+                            target_row_details = None
+                            try:
+                                target_row_details = target_mapping_item_dict[row]
+                                target_mapping_item_dict[row] = target_row_details + ";" + choice
+                            except KeyError:
+                                target_mapping_item_dict[row] = choice
+                                
+                    for key,value in source_mapping_item_dict.items():
+                        f.write(dpm_dimension + "," + source_mapping_item_dict[key] + "," + target_mapping_item_dict[key])
+                        f.write("\n")
+  
+                    
     def save_model_as_ecore_file(self, context):
         '''
          save model as an xmi file representing an object tree.

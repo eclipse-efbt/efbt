@@ -39,7 +39,8 @@ class ImportSDD(object):
         # now that we use dictionaries to assist in lookups we can
         # later try to upload all member_mappings and see if it is
         # fast enough when using dictionaries.
-        ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
+        #ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
+        ImportSDD.create_all_member_mappings(self, sdd_context)
         
     def import_core_sdd(self, sdd_context):
         '''
@@ -541,6 +542,43 @@ class ImportSDD(object):
                             
                         member_mapping.memberMappingItems.append(member_mapping_item)
                         context.member_mapping_dictionary[member_mapping_id] = member_mapping
+                        
+    def create_all_member_mappings(self, context):
+        ''' import all the member mappings from the rendering package'''
+        file_location = context.file_directory + os.sep + "member_mapping_item.csv"
+        header_skipped = False
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    member_mapping_id = row[context.member_mapping_id]
+                    row_number = row[context.member_mapping_row]
+                    variable_id = row[context.member_mapping_variable_id]
+                    is_source = row[context.member_mapping_is_source]
+
+                    member_id = row[context.member_mapping_member_id]
+                    
+                    member_mapping_item = MEMBER_MAPPING_ITEM()
+                    member_mapping_item.isSource = is_source
+                    member_mapping_item.member = ImportSDD.find_member_with_id(
+                                                        self,member_id,context)
+                    member_mapping_item.variable = ImportSDD.find_variable_with_id(
+                                                        self,context,variable_id)
+                    member_mapping_item.row = row_number
+
+                    member_mapping  = ImportSDD.find_member_mapping_with_id(
+                                        self,context,member_mapping_id)
+                    if member_mapping is None:
+                        member_mapping = MEMBER_MAPPING(name = member_mapping_id)
+                        member_mapping.code = member_mapping_id
+                        member_mapping.member_mapping_id = member_mapping_id
+                        context.member_mappings.memberMappings.append(member_mapping)
+                        
+                    member_mapping.memberMappingItems.append(member_mapping_item)
+                    context.member_mapping_dictionary[member_mapping_id] = member_mapping
                         
 
     def find_member_mapping_with_id(self,context,member_mapping_id):
