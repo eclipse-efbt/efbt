@@ -2,6 +2,7 @@ from utils.utils import Utils
 import os
 
 from ecore4reg import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
+from pickle import TRUE
 
 class SubtypeExploder(object):
     '''
@@ -234,7 +235,8 @@ class SubtypeExploder(object):
         for ref in entity.eStructuralFeatures:
             if isinstance(ref,ELReference):
                 if not(ref.name.endswith('_delegate')) and not(ref.containment):
-                    reference_list.append(ref)
+                    if not (ref.name == 'attributes'):
+                        reference_list.append(ref)
             
         return reference_list
     
@@ -272,9 +274,13 @@ class SubtypeExploder(object):
         get the attributes of an entity
         '''
         attribute_list = []
-        for attribute in entity.eStructuralFeatures:
-            if isinstance(attribute,ELAttribute):
-                attribute_list.append(attribute)
+        for ref in entity.eStructuralFeatures:
+            if isinstance(ref,ELReference):
+                if ref.name == 'attributes':
+                    attribute_class = ref.eType
+                    for attribute in attribute_class.eStructuralFeatures:
+                        if isinstance(attribute,ELAttribute):
+                            attribute_list.append(attribute)
         return attribute_list
     
     def get_discriminators(self, context, entity):
@@ -286,7 +292,10 @@ class SubtypeExploder(object):
         for ref in entity.eStructuralFeatures:
             if isinstance(ref,ELReference):
                 if ref.containment:
-                    reference_list.append(ref)
+                    # if we are refering to an entity in a differnt hierarchy then
+                    # we don't consider it a discriminator.
+                    if not(SubtypeExploder.different_hirarchies(self, context, entity,ref.eType)):
+                        reference_list.append(ref)
                     
         # if there are any direct subclasses of this entity 
         # (not including disjoint subclasses) then we create a
@@ -299,6 +308,32 @@ class SubtypeExploder(object):
             reference_list.append(dummy_discrimitory);
         return reference_list
     
+    def different_hirarchies(self, context, class1, class2):
+        annotations1 = class1.eAnnotations
+        annotations2 = class2.eAnnotations
+        hierarchy1 = "NA"
+        hierarchy2 = "NA"
+        if not (annotations1 is None):
+            details1 = annotations1.details
+            for map_entry in details1:
+                if map_entry.key == 'entity_hierarchy':
+                    hierarchy1 = map_entry.value
+        if not (annotations2 is None):
+            details2 = annotations2.details
+            for map_entry in details2:
+                if map_entry.key == 'entity_hierarchy':
+                    hierarchy2 = map_entry.value
+                    
+        if (hierarchy1 == "NA") or (hierarchy2 == "NA"):
+            return False
+        elif hierarchy1 == hierarchy2:
+            return False
+        else:
+            return True
+                
+         
+        
+        
     def get_possible_entities(self,context, discriminator):
         '''
         get any subclasses related to a delegate

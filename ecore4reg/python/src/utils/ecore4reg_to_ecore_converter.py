@@ -72,7 +72,19 @@ class Ecore4regToEcoreConverter(object):
 
         for classifier in el_package.eClassifiers:
             if isinstance(classifier, ELClass):
+                
+                    
                 e_class = EClass(name=classifier.name)
+                annotation = classifier.eAnnotations
+                if not (annotation is None):
+                    e_annotation = EAnnotation()
+                    e_annotation.source = annotation.source
+                    for detail in annotation.details:
+                        key = detail.key
+                        value = detail.value
+                        e_annotation.details[key] = value
+                    e_class.eAnnotations.append(e_annotation)
+                    
                 if len(classifier.eSuperTypes) > 0:
                     e_class.superTypeName = classifier.eSuperTypes[0].name
                 e_class.abstract = classifier.eAbstract
