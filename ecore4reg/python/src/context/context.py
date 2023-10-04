@@ -112,6 +112,8 @@ class Context(object):
     classes_map = {}
     # 
     attribute_classes_map = {}
+    # 
+    object_classes_table_map = {}
     # classesMap keeps a reference between ldm ID's for classes and
     # the list of these calsses that we call tables
     table_map = {}
