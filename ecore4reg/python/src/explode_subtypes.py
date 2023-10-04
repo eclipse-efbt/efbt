@@ -50,6 +50,8 @@ if __name__ == '__main__':
     traverser.traverse(context,'Non_financial_asset_and_non_financial_liability',True)
     traverser.traverse(context,'Cash_on_hand',False)
     traverser.traverse(context,'Cash_on_hand',True)
+    traverser.traverse(context,'Party',False)
+    traverser.traverse(context,'Party',True)
     traverser.traverse(context,'Security_or_exchange_tradable_derivative_position',False)
     traverser.traverse(context,'Security_or_exchange_tradable_derivative_position',True)
     traverser.traverse(context,'Long_security_position_Prudential_portfolio_assignment',False)
