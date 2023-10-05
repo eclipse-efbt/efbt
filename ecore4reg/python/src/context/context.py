@@ -21,7 +21,7 @@ class Context(object):
     '''
     # variables to configure the behaviour
     use_codes = True
-    use_subdomains_in_rol = False
+    use_subdomains = False
     use_subdomains_in_il = True
     load_eil_from_website = False
     use_variable_long_name = True
@@ -84,6 +84,24 @@ class Context(object):
         name='output_tables',
         nsURI='http://www.eclipse.org/bird/output_tables',
         nsPrefix='output_tables')
+    # create  Ecore4Reg  packages For ORM
+    types_package_orm = ELPackage(name='types_orm')
+    il_domains_package_orm = ELPackage(
+        name='il_domains_orm',
+        nsURI='http://www.eclipse.org/bird/il_domains_orm',
+        nsPrefix='il_domains_orm')
+    sdd_domains_package_orm = ELPackage(
+        name='sdd_domains_orm',
+        nsURI='http://www.eclipse.org/bird/sdd_domains_orm',
+        nsPrefix='sdd_domains_orm')
+    input_tables_package_orm = ELPackage(
+        name='input_tables_orm',
+        nsURI='http://www.eclipse.org/bird/input_tables_orm',
+        nsPrefix='input_tables_orm')
+    output_tables_package_orm = ELPackage(
+        name='output_tables_orm',
+        nsURI='http://www.eclipse.org/bird/output_tables_orm',
+        nsPrefix='output_tables_orm')
 
     # create  Ecore packages
     il_domains_ecore_package = EPackage(
@@ -102,6 +120,24 @@ class Context(object):
         name='output_tables',
         nsURI='http://www.eclipse.org/bird/output_tables',
         nsPrefix='output_tables')
+    
+    # create  Ecore packages For ORM
+    il_domains_ecore_package_orm = EPackage(
+        name='il_domains_orm',
+        nsURI='http://www.eclipse.org/bird/il_domains_orm',
+        nsPrefix='il_domains_orm')
+    sdd_domains_ecore_package_orm = EPackage(
+        name='sdd_domains_orm',
+        nsURI='http://www.eclipse.org/bird/sdd_domains_orm',
+        nsPrefix='sdd_domains_orm')
+    input_tables_ecore_package_orm = EPackage(
+        name='input_tables_orm',
+        nsURI='http://www.eclipse.org/bird/input_tables_orm',
+        nsPrefix='input_tables_orm')
+    output_tables_ecore_package_orm = EPackage(
+        name='output_tables_orm',
+        nsURI='http://www.eclipse.org/bird/output_tables_orm',
+        nsPrefix='output_tables_orm')
 
     generation_rules_module = GenerationRulesModule(name='generations')
 

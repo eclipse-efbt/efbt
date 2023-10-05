@@ -238,7 +238,7 @@ class Utils(object):
         return context.e_string
 
     @classmethod
-    def find_rol_enum(cls, enum_name, enum_map):
+    def find_enum(cls, enum_name, enum_map):        
         '''
         returns the enum for a reference output layer
         '''
@@ -262,3 +262,4 @@ class Utils(object):
         if new_adapted_value == "s_p_":
             return_val = "s_p_dup" + str(counter)
         return return_val
+        

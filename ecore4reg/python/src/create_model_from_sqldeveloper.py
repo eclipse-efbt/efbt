@@ -24,7 +24,7 @@ from utils.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
 if __name__ == '__main__':
     context = Context()
     context.persist_to_ecore4reg = True
-    context.use_subdomains_in_rol = False
+    context.use_subdomains = False
     context.load_eil_from_website  = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
