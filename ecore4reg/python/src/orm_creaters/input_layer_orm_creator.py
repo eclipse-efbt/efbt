@@ -10,6 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
+from pickle import NONE
 
 '''
 
@@ -61,8 +62,8 @@ class CreateORMForIL(object):
                 eclass_objects_table.eStructuralFeatures.append(object_reference_list)
                 
                 object_table_to_attribute_table_link = ELReference(name = "object_table_to_attribute_table_link")
-                object_table_to_attribute_table_link.upperBound = -1
-                object_table_to_attribute_table_link.lowerBound = 0
+                object_table_to_attribute_table_link.upperBound = 1
+                object_table_to_attribute_table_link.lowerBound = 1
                 object_table_to_attribute_table_link.eType = eclass_attributes_table
                 object_table_to_attribute_table_link.containment = False
                 eclass_objects_table.eStructuralFeatures.append(object_table_to_attribute_table_link)
@@ -110,6 +111,29 @@ class CreateORMForIL(object):
                         type_name = ref_type.name
                         eclass = CreateORMForIL.get_class_from_input_tables_package_orm(self,context,type_name)
                         feature.eType = eclass
+
+        # add other attribute tables to eclass_objects_table, similar to 
+        # object_table_to_attribute_table_link but for the other side of foreign keys
+        
+        for classifier in input_tables_package_orm.eClassifiers:
+            if isinstance(classifier, ELClass):
+                if classifier.name.endswith('_objects_table'):
+                    related_type = None 
+                    for feature in classifier.eStructuralFeatures:
+                        if feature.name == 'object_list':
+                            underlying_type = feature.eType
+                            for feature2 in underlying_type.eStructuralFeatures:
+                                if isinstance(feature2, ELReference):
+                                    if not (feature2.name == 'attributes'):
+                                        other_table_type= feature2.eType
+                                        other_table_name = other_table_type.name
+                                        other_table_attribute_table = CreateORMForIL.get_class_from_input_tables_package_orm(self,context,other_table_name+"_attributes_table")
+                                        attribute_table_reference = ELReference(name = other_table_name+"_attributes_table")
+                                        attribute_table_reference.eType = other_table_attribute_table
+                                        attribute_table_reference.upperBound = 1
+                                        attribute_table_reference.lowerBound = 1
+                                        attribute_table_reference.containment=False
+                                        classifier.eStructuralFeatures.append(attribute_table_reference)
 
     def get_class_from_input_tables_package_orm(self,context,type_name):
         for classifier in context.input_tables_package_orm.eClassifiers:
