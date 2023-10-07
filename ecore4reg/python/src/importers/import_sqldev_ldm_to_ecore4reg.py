@@ -44,7 +44,6 @@ class SQLDevLDMImport(object):
         '''
         for each entity in the LDM, create a class and add it to the package
         '''
-
         file_location = context.file_directory + os.sep + "DM_Entities.csv"
 
         header_skipped = False
