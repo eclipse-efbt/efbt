@@ -11,7 +11,6 @@
 #    Neil Mackenzie - initial API and implementation
 #
 from context.context import Context
-from importers.import_sqldev_il_to_ecore4reg import SQLDeveloperILImport
 from importers.import_sdd_to_ecore4reg import SDDImport
 from persister.persist_to_file import PersistToFile
 from utils.ecore4reg_to_ecore_converter import Ecore4regToEcoreConverter
@@ -44,15 +43,8 @@ if __name__ == '__main__':
     # import the information about EIL and ROL from csv files downloaded
     # from the website.
     SDDImport().doImport(context)
-    # We may wish to import the information about EIL from the SQLDeveloper
-    # export files.
-    # This is used only to enrich website dat with the relationship 
-    # between tables, as this does not yet exist in the website information.
-    # We can change the flag below if we want to do the enrichment
-    enrich_with_sqldev_table_relationships = True
-    if enrich_with_sqldev_table_relationships:  
-        SQLDeveloperILImport().do_import(context)
-        RelationshipEnricher().enrich(context)
+
+    RelationshipEnricher().enrich(context)
     # create ecore representation to allow use of multiple exsitng ecore tools
     # frameworks and libraries
     Ecore4regToEcoreConverter().convert_packages_in_context(context)
