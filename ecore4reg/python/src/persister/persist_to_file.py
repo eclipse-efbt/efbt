@@ -536,9 +536,7 @@ class PersistToFile:
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
                               os.sep + "output_tables.ecore")
-        
-        
-)
+    
 
     def hot_fix(self, file_name):
         '''
