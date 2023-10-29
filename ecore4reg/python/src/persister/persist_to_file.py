@@ -32,15 +32,9 @@ class PersistToFile:
             PersistToFile.persist_entity_model(
                 self, context, context.input_tables_package,
                 "ecore4reg", context.sdd_domains_package)
-            PersistToFile.persist_entity_model(
-                self, context, context.input_tables_package_orm,
-                "ecore4reg", context.sdd_domains_package)
         else:        
             PersistToFile.persist_entity_model(
                 self, context, context.input_tables_package,
-                "ecore4reg", context.il_domains_package)
-            PersistToFile.persist_entity_model(
-                self, context, context.input_tables_package_orm,
                 "ecore4reg", context.il_domains_package)
 
         PersistToFile.persist_entity_model(
@@ -53,9 +47,7 @@ class PersistToFile:
         PersistToFile.persist_types_model(
             self, context, context.types_package, "ecore4reg")
         
-        PersistToFile.persist_entity_model(
-            self, context, context.output_tables_package_orm,
-            "ecore4reg", context.sdd_domains_package)
+
         PersistToFile.persist_enum_model(
             self, context, context.il_domains_package, "ecore4reg")
         PersistToFile.persist_enum_model(
@@ -545,28 +537,8 @@ class PersistToFile:
                               os.sep + extension +
                               os.sep + "output_tables.ecore")
         
-        input_tables_orm_resource2 = rset2.create_resource(URI(
-            context.output_directory + os.sep + extension +
-            os.sep + "input_tables_orm.ecore"))
-        # This will create an XMI resource
-        # we add the EPackage instance in the resource
-        input_tables_orm_resource2.append(
-            context.input_tables_ecore_package_orm)
-        input_tables_orm_resource2.save()
-        PersistToFile.hot_fix(self, context.output_directory +
-                              os.sep + extension +
-                              os.sep + "input_tables_orm.ecore")
-        output_tables_orm_resource2 = rset2.create_resource(URI(
-            context.output_directory + os.sep + extension +
-            os.sep + "output_tables_orm.ecore"))
-        # This will create an XMI resource
-        # we add the EPackage instance in the resource
-        output_tables_orm_resource2.append(
-            context.output_tables_ecore_package_orm)
-        output_tables_orm_resource2.save()
-        PersistToFile.hot_fix(self, context.output_directory +
-                              os.sep + extension +
-                              os.sep + "output_tables_orm.ecore")
+        
+)
 
     def hot_fix(self, file_name):
         '''

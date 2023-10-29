@@ -43,11 +43,6 @@ class Ecore4regToEcoreConverter(object):
             self, context.input_tables_package, context)
         context.output_tables_ecore_package = Ecore4regToEcoreConverter.convert(
             self, context.output_tables_package, context)
-        
-        context.input_tables_ecore_package_orm = Ecore4regToEcoreConverter.convert(
-            self, context.input_tables_package_orm, context)
-        context.output_tables_ecore_package_orm = Ecore4regToEcoreConverter.convert(
-            self, context.output_tables_package_orm, context)
 
     def convert(self, el_package, context):
         '''
@@ -221,22 +216,5 @@ class Ecore4regToEcoreConverter(object):
                     if classifier.name == type_name:
                         return_enum = classifier 
                         
-        if (ecore_package.name == 'input_tables_orm') and not (context.load_eil_from_website):
-            for classifier in context.il_domains_ecore_package.eClassifiers:
-                if isinstance(classifier, EEnum):
-                    if classifier.name == type_name:
-                        return_enum = classifier
-
-        if (ecore_package.name == 'input_tables_orm') and context.load_eil_from_website:
-            for classifier in context.sdd_domains_ecore_package.eClassifiers:
-                if isinstance(classifier, EEnum):
-                    if classifier.name == type_name:
-                        return_enum = classifier 
-                        
-        if ecore_package.name == 'output_tables_orm':
-            for classifier in context.sdd_domains_ecore_package.eClassifiers:
-                if isinstance(classifier, EEnum):
-                    if classifier.name == type_name:
-                        return_enum = classifier
 
         return return_enum

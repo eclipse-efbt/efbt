@@ -80,6 +80,12 @@ class RelationshipEnricher(object):
                                 the_reference.eType = primary_class
                                 
                                 foreign_class.eStructuralFeatures.append(the_reference)
+                                
+                                
+                                
+                                
+                            
+                            
         
                             # add the foreign_key field list if it does not exist
                             # append to the foreign key list
