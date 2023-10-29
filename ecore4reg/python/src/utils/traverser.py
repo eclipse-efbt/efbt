@@ -252,7 +252,6 @@ class SubtypeExploder(object):
         for ref in entity.eStructuralFeatures:
             if isinstance(ref,ELReference):
                 if not(ref.name.endswith('_delegate')) and not(ref.containment):
-                    if not (ref.name == 'attributes'):
                         reference_list.append(ref)
             
         return reference_list
@@ -280,7 +279,7 @@ class SubtypeExploder(object):
         if not(annotation is None):
             details = annotation.details
             
-            for detail in details:
+            for detail in details.items:
                 if detail.key == "il_column":
                     return_value = detail.value
             
@@ -291,13 +290,9 @@ class SubtypeExploder(object):
         get the attributes of an entity
         '''
         attribute_list = []
-        for ref in entity.eStructuralFeatures:
-            if isinstance(ref,ELReference):
-                if ref.name == 'attributes':
-                    attribute_class = ref.eType
-                    for attribute in attribute_class.eStructuralFeatures:
-                        if isinstance(attribute,ELAttribute):
-                            attribute_list.append(attribute)
+        for attribute in entity.eStructuralFeatures:
+            if isinstance(attribute,ELAttribute):
+                attribute_list.append(attribute)
         return attribute_list
     
     def get_discriminators(self, context, entity):

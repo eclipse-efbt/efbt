@@ -91,7 +91,7 @@ class PersistToFile:
         f.write("\t\t package " + the_package.name + "\r")
         f.write("\t\t import " + imported_package.name + ".*\r")
         if the_package == context.output_tables_package:
-            for import_string in context.importLogicStrings:
+            for import_string in context.import_logic_strings:
                 f.write("\t\t import " + import_string + ".*\r")
         if extension == "ecore4reg":
             f.write("\t\t import types.*\r")

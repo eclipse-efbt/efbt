@@ -60,21 +60,29 @@ class InputLayerLinkEnricher(object):
                         # logical_attribute_to_relational_name[ldm_attribute] =  table_name + "." + relational_object_Name
                         if not(ldm_attribute is None):
                             if isinstance(ldm_attribute,ELAttribute):
-                                eAnnotation = ELAnnotation()
-                                eAnnotation.source = "impact_analysis"
+                                the_annotation = ldm_attribute.eAnnotations
+                                if the_annotation is None:
+                                    the_annotation = ELAnnotation()
+                                    ldm_attribute.eAnnotations = the_annotation
+                                
+                                details = the_annotation.details
                                 detail1 = ELStringToStringMapEntry()
                                 detail1.key = "il_column"
                                 detail1.value = table_name + "." + relational_object_Name
-                                eAnnotation.details.append(detail1)
-                                ldm_attribute.eAnnotations = eAnnotation
+                                details.append(detail1)
                             if isinstance(ldm_attribute,ELReference):
-                                eAnnotation = ELAnnotation()
-                                eAnnotation.source = "impact_analysis"
+                                the_annotation = ldm_attribute.eAnnotations
+                                if the_annotation is None:
+                                    the_annotation = ELAnnotation()
+                                    ldm_attribute.eAnnotations = the_annotation
+                                
+                                details = the_annotation.details
+                            
                                 detail1 = ELStringToStringMapEntry()
                                 detail1.key = "il_column"
                                 detail1.value = relational_object_Name
-                                eAnnotation.details.append(detail1)
-                                ldm_attribute.eAnnotations = eAnnotation
+                                details.append(detail1)
+                                
                         
 
     def get_ldm_attribute(self, context,entity_name,attribute_name):

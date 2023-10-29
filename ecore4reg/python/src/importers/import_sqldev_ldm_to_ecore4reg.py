@@ -35,10 +35,8 @@ class SQLDevLDMImport(object):
         SQLDevLDMImport.add_ldm_literals_to_enums(self, context)
         SQLDevLDMImport.create_ldm_types_map(self, context)
         SQLDevLDMImport.add_ldm_attributes_to_classes(self, context)
-        #SQLDevLDMImport.remove_ldm_attributes_already_in_superclass(self, context)
         SQLDevLDMImport.add_ldm_relationships_between_classes(self, context)
         SQLDevLDMImport.mark_root_class_as_entity_group_annotation(self, context)
-        #SQLDevLDMImport.copy_primary_keys_to_subclasses(self, context)
 
     def add_ldm_classes_to_package(self, context):
         '''
@@ -63,58 +61,13 @@ class SQLDevLDMImport(object):
                     num_supertype_entity_id = row[26]
 
                     altered_class_name = Utils.make_valid_id(class_name)
-                    eclass = ELClass(name=altered_class_name)
-                    eclass_attributes = ELClass(name=altered_class_name+"_attributes") 
-                    eclass_attributes_table = ELClass(name=altered_class_name+"_attributes_table")  
-                    eclass_objects_table = ELClass(name=altered_class_name+"_objects_table")                
-                    
-                    attribute_reference = ELReference(name = "attributes")
-                    attribute_reference.upperBound = 1
-                    attribute_reference.lowerBound = 1
-                    attribute_reference.eType = eclass_attributes
-                    attribute_reference.containment = False
-                    eclass.eStructuralFeatures.append(attribute_reference)
-                    
-                    attribute_reference_list = ELReference(name = "attribute_list")
-                    attribute_reference_list.upperBound = -1
-                    attribute_reference_list.lowerBound = 0
-                    attribute_reference_list.eType = eclass_attributes
-                    attribute_reference_list.containment = True
-                    eclass_attributes_table.eStructuralFeatures.append(attribute_reference_list)
-                    
-                    object_reference_list = ELReference(name = "object_list")
-                    object_reference_list.upperBound = -1
-                    object_reference_list.lowerBound = 0
-                    object_reference_list.eType = eclass
-                    object_reference_list.containment = False
-                    eclass_objects_table.eStructuralFeatures.append(object_reference_list)
-                    
-                    object_table_to_attribute_table_link = ELReference(name = "object_table_to_attribute_table_link")
-                    object_table_to_attribute_table_link.upperBound = -1
-                    object_table_to_attribute_table_link.lowerBound = 0
-                    object_table_to_attribute_table_link.eType = eclass_attributes_table
-                    object_table_to_attribute_table_link.containment = False
-                    eclass_objects_table.eStructuralFeatures.append(object_table_to_attribute_table_link)
-                    
+                    eclass = ELClass(name=altered_class_name)         
+
                     context.input_tables_package.eClassifiers.extend([
                                                                           eclass])
-                    context.input_tables_package.eClassifiers.extend([
-                                                                          eclass_attributes])
-                    context.input_tables_package.eClassifiers.extend([
-                                                                          eclass_attributes_table])
-                    context.input_tables_package.eClassifiers.extend([
-                                                                          eclass_objects_table])
 
                     # maintain a map a objectIDs to ELClasses
                     context.classes_map[object_id] = eclass
-                    context.attribute_classes_map[object_id] = eclass_attributes
-                    context.object_classes_table_map[object_id] = eclass_objects_table
-                    
-                    init_operation = ELPublicOperation()
-                    init_operation.name = 'init'
-                    init_operation.eType = context.e_string
-                    eclass_objects_table.eOperations.append(init_operation)
-                   
 
     def import_disjoint_subtyping_information(self, context):
         '''
@@ -342,7 +295,7 @@ class SQLDevLDMImport(object):
                     relation_id = row[32]
                     primary_key_or_not = row[35]
                     foreign_key_or_not = row[36]
-                    the_class = context.attribute_classes_map[class_id]
+                    the_class = context.classes_map[class_id]
 
                     the_attribute_name = amended_attribute_name
                    
@@ -438,32 +391,14 @@ class SQLDevLDMImport(object):
 
                     try:
 
-                        the_class = context.attribute_classes_map[class_id]
+                        the_class = context.classes_map[class_id]
                         the_class.eStructuralFeatures.extend([attribute])
 
                     except:
                         print("missing class2: ")
                         print(class_id)
 
-    def remove_ldm_attributes_already_in_superclass(self, context):
-        '''
-        if we already have created an attribute in both a subclass and a superclass
-        then we delete it in the subclass
-        '''
-        for the_class in context.classes_map.values():
-            if len(the_class.eSuperTypes) > 0:
-                superclass = the_class.eSuperTypes[0]
-                if superclass:
-
-                    attributes = the_class.eStructuralFeatures
-                    attributes_to_delete = []
-                    for the_attribute in attributes:
-                        if Utils.superclass_contains_feature( superclass, the_attribute):
-                            attributes_to_delete.append(the_attribute)
-
-                    for the_attribute in attributes_to_delete:
-                        the_class.eStructuralFeatures.remove(the_attribute)
-
+    
 
     def add_ldm_relationships_between_classes(self, context):
         '''
@@ -489,37 +424,23 @@ class SQLDevLDMImport(object):
 
                     try:
                         the_class = context.classes_map[source_id]
-                        object_table  = context.object_classes_table_map[source_id]
                     except KeyError:
                         print("missing class1: " + source_id)
 
                     try:
                         target_class = context.classes_map[target_id]
-                        target_object_table  = context.object_classes_table_map[target_id]
                     except KeyError:
                         print("missing target class: " + target_id)
 
-                    # num_of_relations = Utils.number_of_relationships_to_this_class(
-                    #     the_class, target_class)
-                    # if num_of_relations > 0:
-                    #     reference_name = reference_name + str(num_of_relations)
-
                     ereference = ELReference()
-                    object_table_ereference = ELReference()
-                    
                     ereference.name = reference_name
-                    object_table_ereference.name = reference_name + "_object_table"
-                    
                     ereference.eType = target_class
-                    object_table_ereference.eType = target_object_table
-                    
+
                     if identifying == "Y":
                         ereference.containment = True
                     else:
                         ereference.containment = False
-                        
-                    object_table_ereference.containment = False
-                    
+
                     if target_optional.strip() == "Y":
                         if source_to_target_cardinality.strip() == "*":                            
                             # upper bound of -1 means there is no upper bounds, 
@@ -539,12 +460,10 @@ class SQLDevLDMImport(object):
                             ereference.upperBound = 1
                             ereference.lowerBound = 1
 
-                    object_table_ereference.upperBound = 1    
-                    object_table_ereference.lowerBound = 1
                         
                     if not the_class is None:
                         the_class.eStructuralFeatures.append(ereference)
-                        object_table.eStructuralFeatures.append(object_table_ereference)
+
     
     def mark_root_class_as_entity_group_annotation(self,context):
         for the_class in context.classes_map.values():
@@ -613,22 +532,7 @@ class SQLDevLDMImport(object):
                 
         return None
     
-    def create_init_function_text(self,object_table):
-        ''' 
-        The init function for an object table should look at the
-        associated attribute list table, nd its associated attributes,
-        and any referenced object tables, and their associated attributes.
-        Looking at the annotations of the attributes we can find 
-        what is a primary key, and a foreign key, and what links
-        are annotated between tables. Then we can create an object
-        for each attribute list in the attribute list table we create an object
-        and with the annotated information of the attributes we try 
-        to set the rferences (relationships) correctly on the object.
-        We assume that attribute lists  have already been populated
-        at the tim that the init function is run. It will be run 
-        by an orchestrator.
-        '''
-        return ""
+
         
     
         
