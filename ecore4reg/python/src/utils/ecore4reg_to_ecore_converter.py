@@ -216,10 +216,5 @@ class Ecore4regToEcoreConverter(object):
                     if classifier.name == type_name:
                         return_enum = classifier 
                         
-        if ecore_package.name == 'output_tables':
-            for classifier in context.sdd_domains_ecore_package.eClassifiers:
-                if isinstance(classifier, EEnum):
-                    if classifier.name == type_name:
-                        return_enum = classifier
 
         return return_enum

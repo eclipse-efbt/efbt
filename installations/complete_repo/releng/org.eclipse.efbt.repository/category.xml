@@ -21,9 +21,6 @@
    <feature id="org.eclipse.efbt.ecore4reg.examples.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.ecore4reg.orchestrator.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.emf.ecore.xcore.sdk">
       <category name="efbt"/>
    </feature>

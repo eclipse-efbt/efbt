@@ -10,59 +10,140 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from ecore4reg import ELAttribute, ELClass, ELReference
+from ecore4reg import ELAttribute, ELClass, ELReference,ELAnnotation,ELStringToStringMapEntry
+import csv
+from utils.utils import Utils
+import os
 
 class RelationshipEnricher(object):
     '''
     Enrich a model which can from the SDD website,
-    with the relationship information from SQLDeveloper
+    Create references for each relationship, mark the references
+    with the separated list of target keys and separated list of source keys
+    For each foreign key, annotate that attribute as FK.
+    For each primary key, annotate that as private key.
+    foreign cubes should have the relationship to primary cube
     '''
     def enrich(self, context):
-        '''
-        Enrich a model which can from the SDD website,
-        with the relationship information from SQLDeveloper
-        '''
-        for fk_tuple in context.foreign_key_tuple:
-            source_class_name= fk_tuple[0]
-            reference_name = fk_tuple[1]
-            target_class_name= fk_tuple[2]
-            upper_bound = fk_tuple[3]
-            lower_bound = fk_tuple[4]
-            
-            if context.use_codes:
-                source_class = RelationshipEnricher.get_class_from_package(self, "BIRD_" + source_class_name + "_EIL", context.input_tables_package)
-                target_class = RelationshipEnricher.get_class_from_package(self, "BIRD_" + target_class_name + "_EIL", context.input_tables_package)
-            else:
-                source_class = RelationshipEnricher.get_class_from_package(self, source_class_name, context.input_tables_package)
-                target_class = RelationshipEnricher.get_class_from_package(self, target_class_name, context.input_tables_package)
-            
-            
-            e_reference = ELReference()
-            if RelationshipEnricher.relationshipExistsOnClass(self,source_class,reference_name):
-                e_reference.name = reference_name + "2"
-            else:
-                e_reference.name = reference_name
-            e_reference.eType = target_class
-            e_reference.upperBound = upper_bound
-            e_reference.lowerBound = lower_bound
-            e_reference.containment = False
-            source_class.eStructuralFeatures.append(e_reference)
-            
-    def relationshipExistsOnClass(self,source_class,reference_name):
-        for feature in source_class.eStructuralFeatures:
-            if feature.name == reference_name:
-                return True
-            
-        return False
-    def get_class_from_package(self, class_name, package): 
-        for classifier in package.eClassifiers:
-            if isinstance(classifier, ELClass):
-                if classifier.name == class_name:
-                    return classifier
-            
-            
-            #create the pks
-            
-            #create the relationships
         
+        file_location = context.file_directory + os.sep + "cube_relationship.csv"
+        header_skipped = False
+        # Load all the entities from the csv file, make an ELClass per entity,
+        # and add the ELClass to the package
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    typ_relationship = row[5]
+                    primary_cube_id = row[9]
+                    primary_cube_variable_code = row[10]
+                    foreign_cube_id = row[11]
+                    foreign_cube_variable_code = row[12]
+                    primary_cube_cardinality = row[13]
+                    foreign_cube_cardinality = row[14]
+                    primary_cube_mandatoriness = row[15]
+                    foreign_cube_mandatoriness =row[16]
+                    
+                    if typ_relationship == 'ASS':
+                        foreign_class = None 
+                        try:                            
+                            foreign_class = context.classes_map[foreign_cube_id]
+                        except KeyError:
+                            pass
+                   
+                        if not (foreign_class is None):
+                            relationship_name = 'the_' + primary_cube_id
+                            
+                            primary_class = context.classes_map[primary_cube_id]                    # add the relationship to the class if it does not exist
+                            # and set its mandatoriness and its cardinality
+                            the_reference = None 
+                            for reference in foreign_class.eStructuralFeatures:
+                                if reference.name == relationship_name:
+                                    the_reference = reference
+                                    
+                            if the_reference is None:
+                                the_reference = ELReference()
+                                the_reference.name = relationship_name
+                                if primary_cube_mandatoriness == 'TRUE':
+                                    the_reference.lowerBound = 1
+                                else:
+                                    the_reference.lowerBound = 0
+                                    
+                                if primary_cube_cardinality == '1':
+                                    the_reference.upperBound = 1
+                                else:
+                                    the_reference.upperBound = -1
+                                    
+                                the_reference.eType = primary_class
+                                
+                                foreign_class.eStructuralFeatures.append(the_reference)
+                                
+                                
+                                
+                                
+                            
+                            
         
+                            # add the foreign_key field list if it does not exist
+                            # append to the foreign key list
+                            the_reference_annotation = the_reference.eAnnotations
+                            if the_reference_annotation is None:
+                                the_reference_annotation = ELAnnotation()
+                                the_reference.eAnnotations = the_reference_annotation
+                                
+                            details = the_reference_annotation.details
+                            
+                            foreign_key_field_list = None 
+                            
+                            for key_value_pair in details.items:
+                                if key_value_pair.key == 'foreign_key_field_list':
+                                    foreign_key_field_list = key_value_pair
+                                    foreign_key_field_list.value=foreign_key_field_list.value + ":" + foreign_cube_variable_code
+                                    
+                            if foreign_key_field_list is None:
+                                foreign_key_field_list = ELStringToStringMapEntry()
+                                foreign_key_field_list.key = "foreign_key_field_list"
+                                foreign_key_field_list.value = foreign_cube_variable_code
+                                details.append(foreign_key_field_list)
+        
+                                
+                            primary_key_field_list = None 
+                            
+                            for key_value_pair in details.items:
+                                if key_value_pair.key == 'primary_key_field_list':
+                                    primary_key_field_list = key_value_pair
+                                    primary_key_field_list.value=primary_key_field_list.value + ":" + primary_cube_variable_code
+                                    
+                            if primary_key_field_list is None:
+                                primary_key_field_list = ELStringToStringMapEntry()
+                                primary_key_field_list.key = "primary_key_field_list"
+                                primary_key_field_list.value = primary_cube_variable_code
+                                details.append(primary_key_field_list)
+        
+                            # find the related attributes and set their FK or PK annotation
+                            for attribute in foreign_class.eStructuralFeatures:
+                                if attribute.name == foreign_cube_variable_code:
+                                    the_attribute_annotation = attribute.eAnnotations
+                                    if the_attribute_annotation is None:
+                                        the_attribute_annotation = ELAnnotation()
+                                        attribute.eAnnotations = the_attribute_annotation
+                                    foreign_key = ELStringToStringMapEntry()
+                                    foreign_key.key = "foreign_key"
+                                    foreign_key.value = "foreign_key"
+                                    the_attribute_annotation.details.append(foreign_key) 
+                                    
+                            for attribute in primary_class.eStructuralFeatures:
+                                if attribute.name == primary_cube_variable_code:
+                                    the_attribute_annotation = attribute.eAnnotations
+                                    if the_attribute_annotation is None:
+                                        the_attribute_annotation = ELAnnotation()
+                                        attribute.eAnnotations = the_attribute_annotation
+                                    primary_key = ELStringToStringMapEntry()
+                                    primary_key.key = "primary_key"
+                                    primary_key.value = "primary_key"
+                                    the_attribute_annotation.details.append(primary_key)     
+          
+                

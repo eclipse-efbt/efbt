@@ -30,23 +30,23 @@ class SDDImport(object):
         '''
         import the items from the Output layer csv files
         '''
-        SDDImport.add_rol_classes_to_package(self, context)
+        SDDImport.add_classes_to_package(self, context)
         SDDImport.create_variable_set_to_variable_map(self, context)
         SDDImport.create_variable_maps(self, context)
         SDDImport.create_domain_to_domain_name_map(self, context)
         SDDImport.create_member_maps(self, context)
-        if context.use_subdomains_in_rol:
+        if context.use_subdomains:
             SDDImport.create_subdomain_to_domain_map(self, context)
             SDDImport.create_subdomain_to_member_maps(self, context)
-            SDDImport.add_rol_enums_and_literals_to_package_using_subdomains(
+            SDDImport.add_enums_and_literals_to_package_using_subdomains(
                 self, context)
         else:
-            SDDImport.add_rol_enums_and_literals_to_package(self, context)
-        SDDImport.add_rol_attributes_to_classes(self, context)
+            SDDImport.add_enums_and_literals_to_package(self, context)
+        SDDImport.add_attributes_to_classes(self, context)
 
-    def add_rol_classes_to_package(self, context):
+    def add_classes_to_package(self, context):
         '''
-        Add the ROL classes to the package
+        Add the classes to the package
         '''
         file_location = context.file_directory + os.sep + "cube.csv"
         header_skipped = False
@@ -82,8 +82,6 @@ class SDDImport(object):
                         fullName = None
                         if cube_type == "EIL" : 
                             fullName=altered_class_name
-                        #elif cube_type == "EIL":
-                        #    fullName=altered_class_name + "_Derived"
                         else:
                             fullName=altered_class_name+"_OutputItem"
                         
@@ -104,47 +102,16 @@ class SDDImport(object):
                                 attribute.upperBound = 1
                                 eclass.eStructuralFeatures.append(attribute)
 
-                        fullTableName = None
-                        if cube_type == "EIL":
-                            fullTableName=altered_class_name+"_Table"
-                        #elif cube_type == "EIL":
-                        #    fullTableName=altered_class_name+"_DerivedTable"
-                        else:
-                            fullTableName=altered_class_name+"_Table"
-                            
-                        eclass_table = ELClass(
-                            name=fullTableName)
-                        eclass_table.containedEntityType = eclass
-                        containment_reference = ELReference()
-                        containment_reference.name = eclass.name+"s"
-                        containment_reference.eType = eclass
-                        containment_reference.upperBound = -1
-                        containment_reference.lowerBound = 0
-                        containment_reference.containment = True
-                        eclass_table.eStructuralFeatures.append(
-                            containment_reference)
                         if not (cube_type == "EIL"):
-                            xclass_table_peration = ELPublicOperation()
-                            xclass_table_peration.name = eclass.name+"s"
-                            xclass_table_peration.eType = eclass
-                            xclass_table_peration.upperBound = -1
-                            xclass_table_peration.lowerBound = 0
-                            eclass_table.eOperations.append(xclass_table_peration)
                             context.output_tables_package.eClassifiers.extend([
                                                                                eclass])
-                            context.output_tables_package.eClassifiers.extend([
-                                                                               eclass_table])
                         else:
                             context.input_tables_package.eClassifiers.extend([
                                                                                eclass])
-                            context.input_tables_package.eClassifiers.extend([
-                                                                               eclass_table])
 
                         # maintain a map a objectIDs to ELClasses
                         context.classes_map[object_id] = eclass
-                        context.table_map[eclass] = eclass_table
-                        
-                    
+
 
     def create_variable_set_to_variable_map(self, context):
         '''
@@ -302,9 +269,9 @@ class SDDImport(object):
                         if not member_id in member_list:
                             member_list.append(member_id)
 
-    def add_rol_enums_and_literals_to_package(self, context):
+    def add_enums_and_literals_to_package(self, context):
         '''
-        Add the ROLEnums and Literals to the package
+        Add the Enums and Literals to the package
         '''
 
         file_location = context.file_directory + os.sep + "cube_structure_item.csv"
@@ -338,21 +305,20 @@ class SDDImport(object):
                                 domain_id = context.variable_to_domain_map[attribute_name]
                                 # domain_ID_Name = context.domain_to_domain_name_map[domainID]
                                 amended_domain_name = Utils.make_valid_id(domain_id)
-                                the_enum = Utils.find_rol_enum(
+                                the_enum = Utils.find_enum(
                                     amended_domain_name+"_domain", context.enum_map)
                                 if the_enum is None:
                                     if not domain_id in context.missing_domains:
                                         context.missing_domains.append(domain_id)
                             except:
-                                print("missing ROL class2: ")
+                                print("missing  class2: ")
                                 print(classID)
                     except:
-                                print( "missing ROL class2: " )
+                                print( "missing  class2: " )
                                 print(classID)
 
         for the_domain in context.missing_domains:
 
-            # domain_ID_Name = context.domain_to_domain_name_map[theDomain]
             amended_domain_name = Utils.make_valid_id(the_domain) + "_domain"
             if not ((amended_domain_name == "String") or (amended_domain_name == "Date")):
                 the_enum = ELEnum()
@@ -378,9 +344,9 @@ class SDDImport(object):
                     enum_literal.value = counter1
                     the_enum.eLiterals.extend([enum_literal])
 
-    def add_rol_enums_and_literals_to_package_using_subdomains(self, context):
+    def add_enums_and_literals_to_package_using_subdomains(self, context):
         '''
-        Add the ROLEnums and Literals to the package
+        Add the Enums and Literals to the package
         '''
         file_location = context.file_directory + os.sep + "cube_structure_item.csv"
         header_skipped = False
@@ -432,7 +398,7 @@ class SDDImport(object):
                                  
                             try: 
         
-                                the_enum =  Utils.find_rol_enum(amended_domain_name,context.enum_map)
+                                the_enum =  Utils.find_enum(amended_domain_name,context.enum_map)
                                 if the_enum is None:
                                     if not( (amended_domain_name == "String") or (amended_domain_name == "Date")  ):
                                         the_enum = ELEnum()
@@ -467,15 +433,15 @@ class SDDImport(object):
                                           
                                     
                             except:
-                                    print( "missing ROL class2: " )
+                                    print( "missing  class2: " )
                                     print(class_id)
                     except:
                                 print( "class not in list: " )
                                 print(class_id)    
                             
-    def add_rol_attributes_to_classes(self, context):
+    def add_attributes_to_classes(self, context):
         '''
-        For each attribute add an Xattribute to the correct ELClass represtnting the Entity
+        For each attribute add an XAttribute to the correct ELClass representing the Entity
         the attribute should have the correct type, which may be a specific
         enumeration
         '''
@@ -528,14 +494,14 @@ class SDDImport(object):
                                 
                                 amended_domain_name = None
                                 if (the_attribute_name1=="MTRCS"):
-                                    if context.use_subdomains_in_rol:
+                                    if context.use_subdomains:
                                         domain_id = context.variable_to_domain_map[attribute_name]
                                         amended_domain_name = Utils.make_valid_id(domain_id)
                                     else:
                                         domain_id = context.variable_to_domain_map[attribute_name]
                                         amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
                                 else:   
-                                    if context.use_subdomains_in_rol:
+                                    if context.use_subdomains:
                                         if ((subdomain_id == "") or (subdomain_id == None)) and (len(specific_member) > 0):
                                             domain_id = context.variable_to_domain_map[variable]
                                             if (domain_ID_Name == "Date") or (domain_ID_Name == "String"):
@@ -556,7 +522,7 @@ class SDDImport(object):
                                         amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
                                 #domain_ID_Name = context.domain_to_domain_name_map[domainID]
                               
-                                the_enum =  Utils.find_rol_enum(amended_domain_name,context.enum_map)
+                                the_enum =  Utils.find_enum(amended_domain_name,context.enum_map)
                                 if  the_enum is not None:                     
                                     
                                     if class_is_derived:
@@ -712,8 +678,8 @@ class SDDImport(object):
                                     if not(domain_id in context.missing_domains):
                                         context.missing_domains.append(domain_id)
                             except:
-                                    print( "XX missing ROL class1: " )
+                                    print( "XX missing class1: " )
                                     print(class_id) 
                     except:
-                        print("XX missing ROL class1: ")
+                        print("XX missing class1: ")
                         print(class_id)

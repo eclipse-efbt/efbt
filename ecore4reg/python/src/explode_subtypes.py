@@ -26,7 +26,7 @@ if __name__ == '__main__':
     context = Context()
 
     context.persist_to_ecore4reg = True
-    context.use_subdomains_in_rol = False
+    context.use_subdomains = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     
@@ -42,8 +42,12 @@ if __name__ == '__main__':
     # for all the root types get the full and summary breakdowns
     traverser.traverse(context,'Security_and_exchange_tradable_derivative',False)
     traverser.traverse(context,'Security_and_exchange_tradable_derivative',True)
-    traverser.traverse(context,'Instrument',False)
+    traverser.traverse(context,'Credit_facility',False)
+    traverser.traverse(context,'Credit_facility',True)
+    traverser.traverse(context,'Credit_facility_Entity_role_assignment',False)
+    traverser.traverse(context,'Credit_facility_Entity_role_assignment',True)
     traverser.traverse(context,'Instrument',True)
+    traverser.traverse(context,'Instrument',False)
     traverser.traverse(context,'Instrument_role',False)
     traverser.traverse(context,'Instrument_role',True)
     traverser.traverse(context,'Non_financial_asset_and_non_financial_liability',False)

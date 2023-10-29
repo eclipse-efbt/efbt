@@ -21,7 +21,7 @@ class Context(object):
     '''
     # variables to configure the behaviour
     use_codes = True
-    use_subdomains_in_rol = False
+    use_subdomains = False
     use_subdomains_in_il = True
     load_eil_from_website = False
     use_variable_long_name = True
@@ -84,7 +84,7 @@ class Context(object):
         name='output_tables',
         nsURI='http://www.eclipse.org/bird/output_tables',
         nsPrefix='output_tables')
-
+    
     # create  Ecore packages
     il_domains_ecore_package = EPackage(
         name='il_domains',
@@ -110,10 +110,7 @@ class Context(object):
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classes_map = {}
-    # 
-    attribute_classes_map = {}
-    # 
-    object_classes_table_map = {}
+
     # classesMap keeps a reference between ldm ID's for classes and
     # the list of these calsses that we call tables
     table_map = {}
@@ -147,8 +144,6 @@ class Context(object):
     enum_map = {}
     enum_id_enum_name_map = {}
     
-    foreign_key_tuple = []
-    
     arc_to_source_map = {}
     arc_name_to_arc_class_map = {}
     
@@ -158,7 +153,7 @@ class Context(object):
     subdomain_to_member_list_map = {}
     subdomain_id_to_domain_id = {}
 
-    importLogicStrings = []
+    import_logic_strings = []
 
     variable_set_to_variable_map = {}
     

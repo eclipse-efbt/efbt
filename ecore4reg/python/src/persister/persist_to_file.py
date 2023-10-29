@@ -46,6 +46,14 @@ class PersistToFile:
             self, context, context.sdd_domains_package, "ecore4reg")
         PersistToFile.persist_types_model(
             self, context, context.types_package, "ecore4reg")
+        
+
+        PersistToFile.persist_enum_model(
+            self, context, context.il_domains_package, "ecore4reg")
+        PersistToFile.persist_enum_model(
+            self, context, context.sdd_domains_package, "ecore4reg")
+        PersistToFile.persist_types_model(
+            self, context, context.types_package, "ecore4reg")
         PersistToFile.persist_generation_transformations_to_csv(self, context)
         PersistToFile.persist_generation_transformations(self, context)
         
@@ -83,7 +91,7 @@ class PersistToFile:
         f.write("\t\t package " + the_package.name + "\r")
         f.write("\t\t import " + imported_package.name + ".*\r")
         if the_package == context.output_tables_package:
-            for import_string in context.importLogicStrings:
+            for import_string in context.import_logic_strings:
                 f.write("\t\t import " + import_string + ".*\r")
         if extension == "ecore4reg":
             f.write("\t\t import types.*\r")
@@ -494,6 +502,7 @@ class PersistToFile:
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
                               os.sep + "il_domains.ecore")
+        
         sdd_domains_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
             os.sep + "sdd_domains.ecore"))
@@ -504,6 +513,7 @@ class PersistToFile:
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
                               os.sep + "sdd_domains.ecore")
+        
         input_tables_resource2 = rset2.create_resource(URI(
             context.output_directory + os.sep + extension +
             os.sep + "input_tables.ecore"))
@@ -526,6 +536,7 @@ class PersistToFile:
         PersistToFile.hot_fix(self, context.output_directory +
                               os.sep + extension +
                               os.sep + "output_tables.ecore")
+    
 
     def hot_fix(self, file_name):
         '''

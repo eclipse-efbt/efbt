@@ -7,9 +7,6 @@ cd ../..
 cd ecore4reg/dsl/org.eclipse.efbt.ecore4reg.dsl.parent
 mvn install
 cd ../../..
-cd ecore4reg/firstflight
-mvn install
-cd ../..
 cd installations/complete_repo/
 mvn install
 cd ../..
