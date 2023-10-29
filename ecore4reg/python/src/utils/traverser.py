@@ -69,7 +69,7 @@ class SubtypeExploder(object):
         entity_list = []
         entity_list.append(entity)
         
-        SubtypeExploder.process_entity(self, context, [], entity, entity_list,column_headers,
+        SubtypeExploder.process_entity(self, context, [], entity, "", entity_list,column_headers,
                                        input_layer_column_headers,row, rows,
                                        show_all_columns_for_subtype_explosion)
         full_or_summary = "_summary"
@@ -119,7 +119,7 @@ class SubtypeExploder(object):
             f.write("\n")
             
         
-    def process_entity(self, context, discriminator_list, parent_entity, entity_combination,column_headers,input_layer_column_headers,
+    def process_entity(self, context, discriminator_list, parent_entity, parent_entity_prefix, entity_combination,column_headers,input_layer_column_headers,
                        row,rows,show_all_columns_for_subtype_explosion):
         '''
         For a specific entity, append the attributes of that entity
@@ -134,7 +134,7 @@ class SubtypeExploder(object):
 
         count = 0            
         for discriminator in discriminator_list:
-            qualified_attribute_name = parent_entity.name + "." + discriminator.name
+            qualified_attribute_name = parent_entity_prefix + "." + discriminator.name
             
             if not(qualified_attribute_name in column_headers):
                 column_headers.append(qualified_attribute_name)
@@ -146,7 +146,12 @@ class SubtypeExploder(object):
             if show_all_columns_for_subtype_explosion:
                 references = SubtypeExploder.get_non_discriminator_references(self, context, entity)
                 for ref in references:
-                    qualified_attribute_name = entity.name + "." + ref.name
+                    qualified_attribute_name = ""
+                    if parent_entity_prefix == "":
+                        qualified_attribute_name = entity.name + "." + ref.name
+                    else:
+                        qualified_attribute_name = parent_entity_prefix + "." + entity.name + "." + ref.name
+                    
                     if not(qualified_attribute_name in column_headers):
                         column_headers.append(qualified_attribute_name)
                         input_layer_column_name = SubtypeExploder.get_input_layer_column(self,ref)
@@ -156,12 +161,16 @@ class SubtypeExploder(object):
                 attributes = SubtypeExploder.get_attributes(self, context, entity)
                 
                 for attribute in attributes:
-                    qualified_attribute_name = entity.name + "." + attribute.name
+                    if parent_entity_prefix == "":
+                        qualified_attribute_name = entity.name + "." + attribute.name
+                    else:
+                        qualified_attribute_name = parent_entity_prefix + "." + entity.name + "." + attribute.name
+
                     if not(qualified_attribute_name in column_headers):
                         column_headers.append(qualified_attribute_name)
                         input_layer_column_name = SubtypeExploder.get_input_layer_column(self,attribute)
                         input_layer_column_headers.append(input_layer_column_name)
-                        current_row[entity.name + "."+ attribute.name] = 'X'
+                        current_row[qualified_attribute_name] = 'X'
 
             discriminators = SubtypeExploder.get_discriminators(self, context, entity)
             columns = []
@@ -186,7 +195,15 @@ class SubtypeExploder(object):
                     # not that this is a recursive process.
                     current_row_detached_clone = current_row.copy()
                     #current_row_detached_clone[qualified_attribute_name] = each_entity.name
-                    SubtypeExploder.process_entity(self, context, discriminators, entity, entity_combination,
+                    
+                    new_parent_entity_prefix = ""
+                    if (parent_entity_prefix == ""):
+                        new_parent_entity_prefix = entity.name
+                    else:
+                        new_parent_entity_prefix = parent_entity_prefix + "." + entity.name
+                        
+                    
+                    SubtypeExploder.process_entity(self, context, discriminators, entity, new_parent_entity_prefix , entity_combination,
                                                    column_headers, input_layer_column_headers,
                                                    current_row_detached_clone,
                                                    rows,
