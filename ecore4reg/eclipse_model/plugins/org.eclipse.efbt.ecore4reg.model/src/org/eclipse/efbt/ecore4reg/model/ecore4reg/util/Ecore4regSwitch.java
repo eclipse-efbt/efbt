@@ -24,6 +24,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStructuralFeature;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELTypedElement;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
@@ -31,6 +32,11 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Report;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsSection;
@@ -451,6 +457,43 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 				OperationTag operationTag = (OperationTag)theEObject;
 				T result = caseOperationTag(operationTag);
 				if (result == null) result = caseTag(operationTag);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.REPORT: {
+				Report report = (Report)theEObject;
+				T result = caseReport(report);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.REPORT_ROW: {
+				ReportRow reportRow = (ReportRow)theEObject;
+				T result = caseReportRow(reportRow);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.REPORT_COLUMN: {
+				ReportColumn reportColumn = (ReportColumn)theEObject;
+				T result = caseReportColumn(reportColumn);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.REPORT_CELL: {
+				ReportCell reportCell = (ReportCell)theEObject;
+				T result = caseReportCell(reportCell);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.FILTER: {
+				Filter filter = (Filter)theEObject;
+				T result = caseFilter(filter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Ecore4regPackage.REPORT_MODULE: {
+				ReportModule reportModule = (ReportModule)theEObject;
+				T result = caseReportModule(reportModule);
+				if (result == null) result = caseModule(reportModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1160,6 +1203,96 @@ public class Ecore4regSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseOperationTag(OperationTag object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Report</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Report</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReport(Report object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Report Row</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Report Row</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReportRow(ReportRow object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Report Column</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Report Column</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReportColumn(ReportColumn object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Report Cell</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Report Cell</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReportCell(ReportCell object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Filter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFilter(Filter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Report Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Report Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReportModule(ReportModule object) {
 		return null;
 	}
 

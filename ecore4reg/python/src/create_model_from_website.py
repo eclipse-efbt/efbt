@@ -29,7 +29,7 @@ if __name__ == '__main__':
     context.load_eil_from_website  = True
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
-    SDDImport().doImport(context)
+    SDDImport().do_import(context)
     RelationshipEnricher().enrich(context)
     Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()

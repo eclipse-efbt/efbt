@@ -24,6 +24,7 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStructuralFeature;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELTypedElement;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
@@ -31,6 +32,11 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Predicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Report;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsSection;
@@ -300,6 +306,30 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseOperationTag(OperationTag object) {
 				return createOperationTagAdapter();
+			}
+			@Override
+			public Adapter caseReport(Report object) {
+				return createReportAdapter();
+			}
+			@Override
+			public Adapter caseReportRow(ReportRow object) {
+				return createReportRowAdapter();
+			}
+			@Override
+			public Adapter caseReportColumn(ReportColumn object) {
+				return createReportColumnAdapter();
+			}
+			@Override
+			public Adapter caseReportCell(ReportCell object) {
+				return createReportCellAdapter();
+			}
+			@Override
+			public Adapter caseFilter(Filter object) {
+				return createFilterAdapter();
+			}
+			@Override
+			public Adapter caseReportModule(ReportModule object) {
+				return createReportModuleAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -976,6 +1006,90 @@ public class Ecore4regAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createOperationTagAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Report <em>Report</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Report
+	 * @generated
+	 */
+	public Adapter createReportAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow <em>Report Row</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow
+	 * @generated
+	 */
+	public Adapter createReportRowAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn <em>Report Column</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn
+	 * @generated
+	 */
+	public Adapter createReportColumnAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell <em>Report Cell</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell
+	 * @generated
+	 */
+	public Adapter createReportCellAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter <em>Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter
+	 * @generated
+	 */
+	public Adapter createFilterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule <em>Report Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule
+	 * @generated
+	 */
+	public Adapter createReportModuleAdapter() {
 		return null;
 	}
 

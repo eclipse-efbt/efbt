@@ -21,5 +21,6 @@ if __name__ == '__main__':
     sdd_context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     sdd_context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     ImportSDD().import_sdd(sdd_context)
+    SDDImport()
     persister = PersistToFile()
     persister.save_analysis_model_as_csv(sdd_context)

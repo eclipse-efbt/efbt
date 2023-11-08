@@ -18,7 +18,7 @@ import "http://www.eclipse.org/efbt/ecore4reg" as ecore4reg
 
 
 Module returns ecore4reg::Module:
-	RequirementsModule | TagGroup | GenerationRulesModule | ELPackage;
+	RequirementsModule | TagGroup | GenerationRulesModule | ELPackage | ReportModule;
 	
 ELClassifier returns ecore4reg::ELClassifier:
 	ELClass | ELDataType_Impl | ELEnum ;
@@ -349,6 +349,59 @@ SelectValueAs returns ecore4reg::SelectValueAs:
 		( value=EString)?
 		('as' asAttribute=[ecore4reg::ELPublicOperation|QualifiedName])?
 	;
+	
+ReportModule returns ecore4reg::ReportModule:
+	{ecore4reg::ReportModule}
+	'ReportModule'
+	name=QualifiedName
+	'{'
+		('theDescription' theDescription=EString)?
+		('license' license=EString)?
+		('version' version=EString)?
+		('dependencies' '(' dependencies+=[ecore4reg::Module|QualifiedName] ( "," dependencies+=[ecore4reg::Module|QualifiedName])* ')' )?
+		('imports' '{' imports+=Import ( "," imports+=Import)* '}' )?
+		('reports' '{' reports+=Report ( "," reports+=Report)* '}' )?
+	'}';
+	
+Report returns ecore4reg::Report:
+	{ecore4reg::Report}
+	'Report'
+	'{'
+		('outputLayer' outputLayer=[ecore4reg::ELClass|QualifiedName])?
+		('rows' '{' rows+=ReportRow ( "," rows+=ReportRow)* '}' )?
+		('columns' '{' columns+=ReportColumn ( "," columns+=ReportColumn)* '}' )?
+		('reportCells' '{' reportCells+=ReportCell ( "," reportCells+=ReportCell)* '}' )?
+	'}';
+
+ReportRow returns ecore4reg::ReportRow:
+	{ecore4reg::ReportRow}
+	'ReportRow'
+	name=ID;
+
+ReportColumn returns ecore4reg::ReportColumn:
+	{ecore4reg::ReportColumn}
+	'ReportColumn'
+	name=ID;
+
+ReportCell returns ecore4reg::ReportCell:
+	{ecore4reg::ReportCell}
+	'ReportCell'
+	'{'
+		('datapointID' datapointID=EString)?
+		('row' row=[ecore4reg::ReportRow|QualifiedName])?
+		('column' column=[ecore4reg::ReportColumn|QualifiedName])?
+		('metric' metric=[ecore4reg::ELAttribute|QualifiedName])?
+		('filters' '{' filters+=Filter ( "," filters+=Filter)* '}' )?
+	'}';
+
+Filter returns ecore4reg::Filter:
+	{ecore4reg::Filter}
+	'Filter'
+	'{'
+		('outputLayer' outputLayer=[ecore4reg::ELClass|QualifiedName])?
+		('operation' operation=[ecore4reg::ELOperation|QualifiedName])?
+		('member' '(' member+=[ecore4reg::ELEnumLiteral|QualifiedName] ( "," member+=[ecore4reg::ELEnumLiteral|QualifiedName])* ')' )?
+	'}';
 
 enum Comparitor returns ecore4reg::Comparitor:
 				less_than = 'is_less_than' | equals = 'is_equals' | not_equals = 'is_not_equals' | greater_than = 'is_greater_than';

@@ -272,6 +272,112 @@ class ELStringToStringMapEntry(EObject, metaclass=MetaEClass):
             self.value = value
 
 
+class Report(EObject, metaclass=MetaEClass):
+
+    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    rows = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    columns = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    reportCells = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, outputLayer=None, rows=None, columns=None, reportCells=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if outputLayer is not None:
+            self.outputLayer = outputLayer
+
+        if rows:
+            self.rows.extend(rows)
+
+        if columns:
+            self.columns.extend(columns)
+
+        if reportCells:
+            self.reportCells.extend(reportCells)
+
+
+class ReportRow(EObject, metaclass=MetaEClass):
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+
+    def __init__(self, *, name=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if name is not None:
+            self.name = name
+
+
+class ReportColumn(EObject, metaclass=MetaEClass):
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+
+    def __init__(self, *, name=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if name is not None:
+            self.name = name
+
+
+class ReportCell(EObject, metaclass=MetaEClass):
+
+    datapointID = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    row = EReference(ordered=True, unique=True, containment=False, derived=False)
+    column = EReference(ordered=True, unique=True, containment=False, derived=False)
+    filters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    metric = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, row=None, column=None, filters=None, metric=None, datapointID=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if datapointID is not None:
+            self.datapointID = datapointID
+
+        if row is not None:
+            self.row = row
+
+        if column is not None:
+            self.column = column
+
+        if filters:
+            self.filters.extend(filters)
+
+        if metric is not None:
+            self.metric = metric
+
+
+class Filter(EObject, metaclass=MetaEClass):
+
+    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    operation = EReference(ordered=True, unique=True, containment=False, derived=False)
+    member = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+
+    def __init__(self, *, outputLayer=None, operation=None, member=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if outputLayer is not None:
+            self.outputLayer = outputLayer
+
+        if operation is not None:
+            self.operation = operation
+
+        if member:
+            self.member.extend(member)
+
+
 class RequirementsModule(Module):
 
     rules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -552,6 +658,18 @@ class OperationTag(Tag):
 
         if operation is not None:
             self.operation = operation
+
+
+class ReportModule(Module):
+
+    reports = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, reports=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if reports:
+            self.reports.extend(reports)
 
 
 @abstract

@@ -42,7 +42,7 @@ if __name__ == '__main__':
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     # import the information about EIL and ROL from csv files downloaded
     # from the website.
-    SDDImport().doImport(context)
+    SDDImport().do_import(context)
 
     RelationshipEnricher().enrich(context)
     # create ecore representation to allow use of multiple exsitng ecore tools

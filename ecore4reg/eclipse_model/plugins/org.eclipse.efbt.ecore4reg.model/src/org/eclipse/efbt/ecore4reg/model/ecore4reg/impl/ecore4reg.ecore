@@ -215,4 +215,39 @@
   <eClassifiers xsi:type="ecore:EClass" name="OperationTag" eSuperTypes="#//Tag">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" eType="#//ELOperation"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Report">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//ELClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rows" upperBound="-1" eType="#//ReportRow"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
+        eType="#//ReportColumn" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportCells" upperBound="-1"
+        eType="#//ReportCell" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportRow">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportColumn">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportCell">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="row" eType="#//ReportRow"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="#//ReportColumn"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filters" upperBound="-1"
+        eType="#//Filter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metric" eType="#//ELAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="datapointID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Filter">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputLayer" eType="#//ELClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operation" eType="#//ELOperation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="member" upperBound="-1"
+        eType="#//ELEnumLiteral"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReportModule" eSuperTypes="#//Module">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reports" upperBound="-1"
+        eType="#//Report" containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

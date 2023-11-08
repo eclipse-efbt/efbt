@@ -27,7 +27,7 @@ if __name__ == '__main__':
     context.use_codes = False
     context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
     context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
-    SDDImport().doImport(context)
+    SDDImport().do_import(context)
     Ecore4regToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()
     persister.save_model_as_ecore_file(context)

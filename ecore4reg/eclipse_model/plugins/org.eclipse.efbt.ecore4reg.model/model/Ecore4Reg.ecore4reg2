@@ -249,5 +249,39 @@ class TagGroup extends module_management.Module {
 	contains Tag[0..-1] tags
 }
 
+class Report {
+	refers ELClass outputLayer
+	contains ReportRow[0..-1] rows
+	contains ReportColumn[0..-1] columns
+	contains ReportCell[0..-1] reportCells
+}
+
+class ReportRow {
+	id name
+}
+
+class ReportColumn {
+	id name
+}
+
+class ReportCell {
+	refers ReportRow row
+	refers ReportColumn column
+	String datapointID
+	contains Filter[0..-1] filters
+	refers ELAttribute metric
+}
+
+
+class Filter {
+	refers ELClass outputLayer
+	refers ELOperation operation
+	refers ELEnumLiteral[0..-1] member
+}
+
+class ReportModule extends Module {
+	contains Report[0..-1] reports
+}
+
 
 

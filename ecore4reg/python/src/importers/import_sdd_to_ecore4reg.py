@@ -26,7 +26,7 @@ class SDDImport(object):
     Documentation for SDDImport
     '''
 
-    def doImport(self, context):
+    def do_import(self, context):
         '''
         import the items from the Output layer csv files
         '''
