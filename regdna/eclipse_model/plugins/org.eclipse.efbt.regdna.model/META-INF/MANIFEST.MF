@@ -7,7 +7,7 @@ Bundle-Version: 1.2.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.efbt.regdna.model.regdna,
  org.eclipse.efbt.regdna.model.regdna.impl,
  org.eclipse.efbt.regdna.model.regdna.util

@@ -27,15 +27,13 @@ if __name__ == '__main__':
     context.persist_to_regdna = True
     context.use_subdomains = False
     context.load_eil_from_website  = True
-    context.file_directory = '/workspaces/efbt/regdna/python/resources'
-    context.output_directory = '/workspaces/efbt/regdna/python/results'
+    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
     SDDImport().do_import(context)
     RelationshipEnricher().enrich(context)
     regdnaToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()
-    persister.save_model_as_ecore_file(context)
-    persister.save_model_as_xcore_file(context)
     persister.save_model_as_regdna_file(context)
-    persister.save_model_as_json_files(context)
+    persister.save_model_as_an_xmi_file(context)
 
     

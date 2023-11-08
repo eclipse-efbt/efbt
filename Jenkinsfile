@@ -8,19 +8,12 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''                                     
-                    cd ecore4reg/eclipse_model
-					mvn install
-					cd ../..
-					cd ecore4reg/eclipse_examples
-					mvn install
-					cd ../..
-					cd ecore4reg/dsl/org.eclipse.efbt.ecore4reg.dsl.parent
-					mvn install
-					cd ../../..  		
-					cd installations/complete_repo/
-					mvn install
-					cd ../..
-                    
+                    cd regdna\eclipse_model
+					call mvn install
+					cd ..\..  
+					cd regdna\dsl\org.eclipse.efbt.regdna.dsl.parent
+					call mvn install
+					cd ..\..\.. 
                 '''
             }
         }

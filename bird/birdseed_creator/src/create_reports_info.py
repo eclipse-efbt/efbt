@@ -14,18 +14,18 @@
 
 from context.sdd_context import SDDContext
 from importers.import_sdd_to_analysis_model import ImportSDD
-from importers.import_sdd_to_regdna import SDDImport
+from importers.import_sdd_to_ecore4reg import SDDImport
 from report_filters.translate_combinations_to_report_filters import CombinationsToReportFilters
 from persister.persist_to_file import PersistToFile
 
 if __name__ == '__main__':
     sdd_context = SDDContext()
-    sdd_context.file_directory = '/workspaces/efbt/regdna/python/resources'
-    sdd_context.output_directory = '/workspaces/efbt/regdna/python/results'
+    sdd_context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    sdd_context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     ImportSDD().import_sdd(sdd_context)
     context = Context()
-    context.file_directory = '/workspaces/efbt/regdna/python/resources'
-    context.output_directory = '/workspaces/efbt/regdna/python/results'
+    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
+    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
     SDDImport().do_import(context)
     CombinationsToReportFilters().translate_combinations_to_report_filters(sdd_context)
     persister = PersistToFile()

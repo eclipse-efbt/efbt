@@ -39,7 +39,6 @@
 	<modules>
 		<module>releng/org.eclipse.efbt.regdna.model.target</module>
 		<module>plugins/org.eclipse.efbt.regdna.model</module>
-		<module>plugins/org.eclipse.efbt.sdd.model</module>
 		<module>features/org.eclipse.efbt.regdna.model.feature</module>
 		
 	</modules>

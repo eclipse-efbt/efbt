@@ -85,25 +85,7 @@ class Context(object):
         nsURI='http://www.eclipse.org/bird/output_tables',
         nsPrefix='output_tables')
     
-    # create  Ecore packages
-    il_domains_ecore_package = EPackage(
-        name='il_domains',
-        nsURI='http://www.eclipse.org/bird/il_domains',
-        nsPrefix='il_domains')
-    sdd_domains_ecore_package = EPackage(
-        name='sdd_domains',
-        nsURI='http://www.eclipse.org/bird/sdd_domains',
-        nsPrefix='sdd_domains')
-    input_tables_ecore_package = EPackage(
-        name='input_tables',
-        nsURI='http://www.eclipse.org/bird/input_tables',
-        nsPrefix='input_tables')
-    output_tables_ecore_package = EPackage(
-        name='output_tables',
-        nsURI='http://www.eclipse.org/bird/output_tables',
-        nsPrefix='output_tables')
-
-    generation_rules_module = GenerationRulesModule(name='generations')
+    
 
     module_list = ModuleList()
     
