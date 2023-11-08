@@ -1,0 +1,287 @@
+package regdna
+/**Copyright (c) 2020 Bird Software Solutions Ltd
+ All rights reserved. This file and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
+
+SPDX-License-Identifier: EPL-2.0 
+
+ Contributors:
+ Neil Mackenzie - initial API and implementation*/
+
+type double wraps Double
+			type String wraps String
+			type int wraps Integer
+			type boolean wraps boolean
+			type Date wraps Date
+
+class Module {
+	
+	String theDescription
+	String license
+	id String name
+	String version
+	contains Import[0..-1] imports
+	refers Module dependencies
+}
+
+class ModuleList {
+	contains Module[0..-1] modules
+}
+
+class Import {
+	String importedNamespace
+}
+			
+class ELAttribute extends ELStructuralFeature {
+
+	boolean iD
+	refers ELDataType eAttributeType
+}
+
+class ELClass extends ELClassifier {
+	boolean eAbstract
+	refers  ELClass[0..-1] eSuperTypes
+	contains ELStructuralFeature[0..-1] eStructuralFeatures
+	contains ELOperation[0..-1] eOperations
+}
+
+abstract class ELClassifier extends ELNamedElement {
+	refers ELPackage ePackage
+}
+
+class ELDataType extends ELClassifier {
+	String industryName
+}
+
+class ELEnum extends ELDataType {
+	contains ELEnumLiteral[0..-1] eLiterals
+}
+
+class ELEnumLiteral extends ELNamedElement {
+	int value
+	String literal
+}
+
+abstract class ELModelElement {
+	contains ELAnnotation eAnnotations
+}
+
+abstract class ELNamedElement extends ELModelElement {
+	String name
+}
+
+class ELOperation extends ELTypedElement {
+	String body
+}
+
+class ELPublicOperation extends ELTypedElement {
+	contains ELPrivateOperation[0..-1] eParameters
+}
+
+class ELPrivateOperation extends ELTypedElement {
+	contains ELPrivateOperation[0..-1] calledPrivateOperations
+}
+
+class ELOperation extends ELTypedElement {
+	String body
+	contains ELParameter[0..-1] eParameters
+}
+
+class ELParameter extends ELTypedElement {
+}
+
+class ELPackage extends  Module {
+	contains ELClassifier[0..-1] eClassifiers
+}
+
+class ELReference extends ELStructuralFeature {
+	boolean containment
+	refers ELClassifier[1..1] eReferenceType
+}
+
+abstract class ELStructuralFeature extends ELTypedElement {
+}
+
+abstract class ELTypedElement extends ELNamedElement {
+
+	refers  ELClassifier eType
+	int upperBound
+	int lowerBound
+}
+
+class ELAnnotation extends ELModelElement {
+	contains ELStringToStringMapEntry[0..-1] details
+	String source
+}
+
+class ELStringToStringMapEntry {
+	String key
+	String value
+}
+
+class RulesForReport {
+	refers ELClass outputLayerCube
+	contains RulesForILTable[0..-1] rulesForTable
+}
+
+class RulesForILTable {
+	contains RuleForILTablePart[0..-1] rulesForTablePart
+	refers ELClass inputLayerTable
+}
+
+class SelectColumn {
+	refers ELPublicOperation asAttribute
+}
+
+class SelectColumnMemberAs extends SelectColumn {
+	refers ELEnumLiteral memberAsConstant
+}
+
+class SelectColumnAttributeAs extends SelectColumn {
+	refers ELAttribute attribute
+}
+
+class SelectDerivedColumnAs extends SelectColumn {
+	refers ELPublicOperation attribute
+}
+
+class SelectValueAs extends SelectColumn {
+	String value
+}
+
+enum Comparitor {
+	less_than 
+	equals = 1
+	greater_than = 2
+	not_equals = 3
+}
+
+class AttributePredicate extends Predicate{
+	refers ELAttribute attribute1
+	Comparitor comparitor
+	refers ELEnumLiteral member
+	String value
+}
+
+class GenerationRulesModule extends Module {
+	contains RulesForReport[0..-1] rulesForReport
+}
+
+class TableFilter {
+	contains Predicate predicate
+}
+
+class Predicate {
+	
+}
+
+class AndPredicate extends Predicate {
+	refers Predicate[0..-1] operands
+}
+
+class OrPredicate extends Predicate {
+	refers Predicate[0..-1] operands
+}
+
+class NotPredicate extends Predicate {
+	refers Predicate[0..-1] operands
+}
+
+class RuleForILTablePart {
+	String name
+	contains SelectColumn[0..-1] columns
+	contains TableFilter[0..-1] whereClause
+}
+
+class AllowedTypes {
+	
+	contains RequirementType[0..-1] allowedTypes
+}
+
+
+class RequirementsModule extends Module {
+
+	contains TitledRequirementsSection[0..-1] rules
+	contains AllowedTypes allowedtypes
+}
+
+abstract class RequirementsSection {
+
+	id String name
+}
+
+
+class RequirementsSectionImage extends RequirementsSection {
+
+	String style
+	String uri
+}
+
+class RequirementsSectionLinkWithText extends RequirementsSection {
+
+	refers TitledRequirementsSection linkedRuleSection 
+	String linkText
+	String subsection
+}
+
+
+class RequirementsSectionText extends RequirementsSection {
+	String text
+}
+
+class RequirementType {
+	id String name
+}
+
+class TitledRequirementsSection extends RequirementsSection {
+	contains RequirementsSection[0..-1] sections
+	refers RequirementsSectionLinkWithText referencingSections 
+	refers RequirementType requirementsType
+	String title
+}
+
+class Tag {
+	String displayName
+	id String name
+	refers TitledRequirementsSection[0..-1] requirements
+}
+
+class TagGroup extends module_management.Module {
+	contains Tag[0..-1] tags
+}
+
+class Report {
+	refers ELClass outputLayer
+	contains ReportRow[0..-1] rows
+	contains ReportColumn[0..-1] columns
+	contains ReportCell[0..-1] reportCells
+}
+
+class ReportRow {
+	id name
+}
+
+class ReportColumn {
+	id name
+}
+
+class ReportCell {
+	refers ReportRow row
+	refers ReportColumn column
+	String datapointID
+	contains Filter[0..-1] filters
+	refers ELAttribute metric
+}
+
+
+class Filter {
+	refers ELClass outputLayer
+	refers ELOperation operation
+	refers ELEnumLiteral[0..-1] member
+}
+
+class ReportModule extends Module {
+	contains Report[0..-1] reports
+}
+
+
+

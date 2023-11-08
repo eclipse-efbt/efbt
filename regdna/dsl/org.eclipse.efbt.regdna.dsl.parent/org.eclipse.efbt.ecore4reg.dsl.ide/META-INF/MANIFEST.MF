@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.efbt.regdna.dsl.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.efbt.regdna.dsl.ide
+Bundle-Vendor: Eclipse Free BIRD Tools
+Bundle-Version: 1.2.0.qualifier
+Bundle-SymbolicName: org.eclipse.efbt.regdna.dsl.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.efbt.regdna.dsl,
+ org.eclipse.efbt.regdna.model,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-17
