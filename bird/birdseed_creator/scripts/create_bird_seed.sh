@@ -2,6 +2,7 @@
 
 # create_bird_seed
 rm -rf ecore4reg/python/results/regdna/*
+rm -rf ecore4reg/python/results/xmi/*
 
 cd ecore4reg/python/src/
 pip install pyecore
