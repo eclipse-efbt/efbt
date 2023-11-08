@@ -2878,6 +2878,363 @@ public interface Ecore4regPackage extends EPackage {
 	int OPERATION_TAG_OPERATION_COUNT = TAG_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportImpl <em>Report</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getReport()
+	 * @generated
+	 */
+	int REPORT = 47;
+
+	/**
+	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT__OUTPUT_LAYER = 0;
+
+	/**
+	 * The feature id for the '<em><b>Rows</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT__ROWS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Columns</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT__COLUMNS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Report Cells</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT__REPORT_CELLS = 3;
+
+	/**
+	 * The number of structural features of the '<em>Report</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_FEATURE_COUNT = 4;
+
+	/**
+	 * The number of operations of the '<em>Report</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportRowImpl <em>Report Row</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportRowImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getReportRow()
+	 * @generated
+	 */
+	int REPORT_ROW = 48;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_ROW__NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>Report Row</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_ROW_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Report Row</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_ROW_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportColumnImpl <em>Report Column</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportColumnImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getReportColumn()
+	 * @generated
+	 */
+	int REPORT_COLUMN = 49;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_COLUMN__NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>Report Column</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_COLUMN_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Report Column</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_COLUMN_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportCellImpl <em>Report Cell</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportCellImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getReportCell()
+	 * @generated
+	 */
+	int REPORT_CELL = 50;
+
+	/**
+	 * The feature id for the '<em><b>Row</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_CELL__ROW = 0;
+
+	/**
+	 * The feature id for the '<em><b>Column</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_CELL__COLUMN = 1;
+
+	/**
+	 * The feature id for the '<em><b>Filters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_CELL__FILTERS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Metric</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_CELL__METRIC = 3;
+
+	/**
+	 * The feature id for the '<em><b>Datapoint ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_CELL__DATAPOINT_ID = 4;
+
+	/**
+	 * The number of structural features of the '<em>Report Cell</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_CELL_FEATURE_COUNT = 5;
+
+	/**
+	 * The number of operations of the '<em>Report Cell</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_CELL_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.FilterImpl <em>Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.FilterImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getFilter()
+	 * @generated
+	 */
+	int FILTER = 51;
+
+	/**
+	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER__OUTPUT_LAYER = 0;
+
+	/**
+	 * The feature id for the '<em><b>Operation</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER__OPERATION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Member</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER__MEMBER = 2;
+
+	/**
+	 * The number of structural features of the '<em>Filter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Filter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportModuleImpl <em>Report Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.ReportModuleImpl
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getReportModule()
+	 * @generated
+	 */
+	int REPORT_MODULE = 52;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE__DEPENDENCIES = MODULE__DEPENDENCIES;
+
+	/**
+	 * The feature id for the '<em><b>The Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE__THE_DESCRIPTION = MODULE__THE_DESCRIPTION;
+
+	/**
+	 * The feature id for the '<em><b>License</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE__LICENSE = MODULE__LICENSE;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE__NAME = MODULE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE__VERSION = MODULE__VERSION;
+
+	/**
+	 * The feature id for the '<em><b>Imports</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE__IMPORTS = MODULE__IMPORTS;
+
+	/**
+	 * The feature id for the '<em><b>Reports</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE__REPORTS = MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Report Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE_FEATURE_COUNT = MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Report Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE_OPERATION_COUNT = MODULE_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Comparitor <em>Comparitor</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2885,7 +3242,7 @@ public interface Ecore4regPackage extends EPackage {
 	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.impl.Ecore4regPackageImpl#getComparitor()
 	 * @generated
 	 */
-	int COMPARITOR = 47;
+	int COMPARITOR = 53;
 
 
 	/**
@@ -4204,6 +4561,231 @@ public interface Ecore4regPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getOperationTag_Operation();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Report <em>Report</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Report</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Report
+	 * @generated
+	 */
+	EClass getReport();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Report#getOutputLayer <em>Output Layer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Output Layer</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Report#getOutputLayer()
+	 * @see #getReport()
+	 * @generated
+	 */
+	EReference getReport_OutputLayer();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Report#getRows <em>Rows</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Rows</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Report#getRows()
+	 * @see #getReport()
+	 * @generated
+	 */
+	EReference getReport_Rows();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Report#getColumns <em>Columns</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Columns</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Report#getColumns()
+	 * @see #getReport()
+	 * @generated
+	 */
+	EReference getReport_Columns();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Report#getReportCells <em>Report Cells</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Report Cells</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Report#getReportCells()
+	 * @see #getReport()
+	 * @generated
+	 */
+	EReference getReport_ReportCells();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow <em>Report Row</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Report Row</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow
+	 * @generated
+	 */
+	EClass getReportRow();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow#getName()
+	 * @see #getReportRow()
+	 * @generated
+	 */
+	EAttribute getReportRow_Name();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn <em>Report Column</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Report Column</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn
+	 * @generated
+	 */
+	EClass getReportColumn();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn#getName()
+	 * @see #getReportColumn()
+	 * @generated
+	 */
+	EAttribute getReportColumn_Name();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell <em>Report Cell</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Report Cell</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell
+	 * @generated
+	 */
+	EClass getReportCell();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getRow <em>Row</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Row</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getRow()
+	 * @see #getReportCell()
+	 * @generated
+	 */
+	EReference getReportCell_Row();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getColumn <em>Column</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Column</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getColumn()
+	 * @see #getReportCell()
+	 * @generated
+	 */
+	EReference getReportCell_Column();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getFilters <em>Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Filters</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getFilters()
+	 * @see #getReportCell()
+	 * @generated
+	 */
+	EReference getReportCell_Filters();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getMetric <em>Metric</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Metric</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getMetric()
+	 * @see #getReportCell()
+	 * @generated
+	 */
+	EReference getReportCell_Metric();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getDatapointID <em>Datapoint ID</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Datapoint ID</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell#getDatapointID()
+	 * @see #getReportCell()
+	 * @generated
+	 */
+	EAttribute getReportCell_DatapointID();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter <em>Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Filter</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter
+	 * @generated
+	 */
+	EClass getFilter();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter#getOutputLayer <em>Output Layer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Output Layer</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter#getOutputLayer()
+	 * @see #getFilter()
+	 * @generated
+	 */
+	EReference getFilter_OutputLayer();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter#getOperation <em>Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Operation</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter#getOperation()
+	 * @see #getFilter()
+	 * @generated
+	 */
+	EReference getFilter_Operation();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter#getMember <em>Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Member</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter#getMember()
+	 * @see #getFilter()
+	 * @generated
+	 */
+	EReference getFilter_Member();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule <em>Report Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Report Module</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule
+	 * @generated
+	 */
+	EClass getReportModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule#getReports <em>Reports</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Reports</em>'.
+	 * @see org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule#getReports()
+	 * @see #getReportModule()
+	 * @generated
+	 */
+	EReference getReportModule_Reports();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.efbt.ecore4reg.model.ecore4reg.Comparitor <em>Comparitor</em>}'.

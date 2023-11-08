@@ -382,6 +382,60 @@ public interface Ecore4regFactory extends EFactory {
 	OperationTag createOperationTag();
 
 	/**
+	 * Returns a new object of class '<em>Report</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Report</em>'.
+	 * @generated
+	 */
+	Report createReport();
+
+	/**
+	 * Returns a new object of class '<em>Report Row</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Report Row</em>'.
+	 * @generated
+	 */
+	ReportRow createReportRow();
+
+	/**
+	 * Returns a new object of class '<em>Report Column</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Report Column</em>'.
+	 * @generated
+	 */
+	ReportColumn createReportColumn();
+
+	/**
+	 * Returns a new object of class '<em>Report Cell</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Report Cell</em>'.
+	 * @generated
+	 */
+	ReportCell createReportCell();
+
+	/**
+	 * Returns a new object of class '<em>Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Filter</em>'.
+	 * @generated
+	 */
+	Filter createFilter();
+
+	/**
+	 * Returns a new object of class '<em>Report Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Report Module</em>'.
+	 * @generated
+	 */
+	ReportModule createReportModule();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

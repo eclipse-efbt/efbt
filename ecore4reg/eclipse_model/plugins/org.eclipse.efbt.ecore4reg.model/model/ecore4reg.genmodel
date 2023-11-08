@@ -182,5 +182,32 @@
     <genClasses ecoreClass="ecore4reg.ecore#//OperationTag">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//OperationTag/operation"/>
     </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//Report">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Report/outputLayer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Report/rows"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Report/columns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Report/reportCells"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ReportRow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ReportRow/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ReportColumn">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ReportColumn/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ReportCell">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ReportCell/row"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ReportCell/column"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ReportCell/filters"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ReportCell/metric"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecore4reg.ecore#//ReportCell/datapointID"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//Filter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Filter/outputLayer"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Filter/operation"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//Filter/member"/>
+    </genClasses>
+    <genClasses ecoreClass="ecore4reg.ecore#//ReportModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecore4reg.ecore#//ReportModule/reports"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

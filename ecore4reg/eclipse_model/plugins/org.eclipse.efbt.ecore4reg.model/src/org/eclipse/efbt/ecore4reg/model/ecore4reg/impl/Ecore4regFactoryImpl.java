@@ -21,12 +21,18 @@ import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELReference;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ELStringToStringMapEntry;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regFactory;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Ecore4regPackage;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Filter;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.GenerationRulesModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.Import;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.ModuleList;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.NotPredicate;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OperationTag;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.OrPredicate;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.Report;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportCell;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportColumn;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportModule;
+import org.eclipse.efbt.ecore4reg.model.ecore4reg.ReportRow;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementType;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsModule;
 import org.eclipse.efbt.ecore4reg.model.ecore4reg.RequirementsSectionImage;
@@ -138,6 +144,12 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 			case Ecore4regPackage.EL_ANNOTATION: return createELAnnotation();
 			case Ecore4regPackage.EL_STRING_TO_STRING_MAP_ENTRY: return createELStringToStringMapEntry();
 			case Ecore4regPackage.OPERATION_TAG: return createOperationTag();
+			case Ecore4regPackage.REPORT: return createReport();
+			case Ecore4regPackage.REPORT_ROW: return createReportRow();
+			case Ecore4regPackage.REPORT_COLUMN: return createReportColumn();
+			case Ecore4regPackage.REPORT_CELL: return createReportCell();
+			case Ecore4regPackage.FILTER: return createFilter();
+			case Ecore4regPackage.REPORT_MODULE: return createReportModule();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -571,6 +583,66 @@ public class Ecore4regFactoryImpl extends EFactoryImpl implements Ecore4regFacto
 	public OperationTag createOperationTag() {
 		OperationTagImpl operationTag = new OperationTagImpl();
 		return operationTag;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Report createReport() {
+		ReportImpl report = new ReportImpl();
+		return report;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ReportRow createReportRow() {
+		ReportRowImpl reportRow = new ReportRowImpl();
+		return reportRow;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ReportColumn createReportColumn() {
+		ReportColumnImpl reportColumn = new ReportColumnImpl();
+		return reportColumn;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ReportCell createReportCell() {
+		ReportCellImpl reportCell = new ReportCellImpl();
+		return reportCell;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Filter createFilter() {
+		FilterImpl filter = new FilterImpl();
+		return filter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ReportModule createReportModule() {
+		ReportModuleImpl reportModule = new ReportModuleImpl();
+		return reportModule;
 	}
 
 	/**
