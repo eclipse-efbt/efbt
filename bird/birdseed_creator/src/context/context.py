@@ -215,5 +215,4 @@ class Context(object):
         self.module_list.modules.append(self.sdd_domains_package)
         self.module_list.modules.append(self.input_tables_package)
         self.module_list.modules.append(self.output_tables_package)
-        self.module_list.modules.append(self.generation_rules_module)
 
