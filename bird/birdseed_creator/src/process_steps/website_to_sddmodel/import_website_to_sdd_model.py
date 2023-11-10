@@ -13,8 +13,10 @@
 import os
 import csv
 from sdd_model import *
+from utils.utils import Utils
+from context.csv_column_index_context import ColumnIndexes
 
-class ImportSDD(object):
+class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for the import of  SDD csv files
     into an instance of the analaysis model
@@ -23,24 +25,32 @@ class ImportSDD(object):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
-        ImportSDD.create_all_domains(self, sdd_context)
-        ImportSDD.create_all_members(self, sdd_context)
-        ImportSDD.create_all_variables(self, sdd_context)
-        ImportSDD.create_all_variable_sets(self, sdd_context)
-        ImportSDD.create_all_subdomains(self, sdd_context)
-        ImportSDD.create_all_combinations(self, sdd_context)
-        ImportSDD.create_report_tables(self, sdd_context)
-        ImportSDD.create_table_cells(self, sdd_context)
-        ImportSDD.create_axis(self, sdd_context)
-        ImportSDD.create_axis_ordinates(self, sdd_context)
-        ImportSDD.create_cell_positions(self, sdd_context)
+        ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_domains(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_members(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_variables(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_variable_sets(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_subdomains(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_combinations(self, sdd_context)
+        
+        ImportWebsiteToSDDModel.create_all_cubes(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_cube_structure(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_cube_structure_items(self, sdd_context)
+        
+        
+        ImportWebsiteToSDDModel.create_report_tables(self, sdd_context)
+        ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
+        ImportWebsiteToSDDModel.create_axis(self, sdd_context)
+        ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
+        ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
+        
         # For now we just import a subset of the member mappings as
         # this was a slow process due to the large file involved.
         # now that we use dictionaries to assist in lookups we can
         # later try to upload all member_mappings and see if it is
         # fast enough when using dictionaries.
-        #ImportSDD.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
-        ImportSDD.create_all_member_mappings(self, sdd_context)
+        #ImportWebsiteToSDDModel.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
+        ImportWebsiteToSDDModel.create_all_member_mappings(self, sdd_context)
         
     def import_core_sdd(self, sdd_context):
         '''
@@ -48,10 +58,10 @@ class ImportSDD(object):
         This is useful when we dont need all the input files to be provided
         and it is a bit faster
         '''
-        ImportSDD.create_all_domains(self, sdd_context)
-        ImportSDD.create_all_members(self, sdd_context)
-        ImportSDD.create_all_variables(self, sdd_context)
-        ImportSDD.create_member_mappings(self, sdd_context,
+        ImportWebsiteToSDDModel.create_all_domains(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_members(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_variables(self, sdd_context)
+        ImportWebsiteToSDDModel.create_member_mappings(self, sdd_context,
                                          'EBA_MCY','TYP_INSTRMNT',
                                          'TYP_ACCNTNG_ITM' )
 
@@ -68,23 +78,23 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    code = row[context.domain_domain_id_index]
-                    data_type = row[context.domain_domain_data_type]
-                    description = row[context.domain_domain_description]
-                    domain_id = row[context.domain_domain_true_id]
-                    is_enumerated = row[context.domain_domain_is_enumerated]
-                    is_reference = row[context.domain_domain_is_reference]
+                    code = row[ColumnIndexes().domain_domain_id_index]
+                    data_type = row[ColumnIndexes().domain_domain_data_type]
+                    description = row[ColumnIndexes().domain_domain_description]
+                    domain_id = row[ColumnIndexes().domain_domain_true_id]
+                    is_enumerated = row[ColumnIndexes().domain_domain_is_enumerated]
+                    is_reference = row[ColumnIndexes().domain_domain_is_reference]
                     # domainName = Utils.make_valid_id(row[3])
-                    domain_name = row[context.domain_domain_name_index]
+                    domain_name = row[ColumnIndexes().domain_domain_name_index]
                     context.domain_to_domain_name_map[domain_id] = domain_name
 
                     # creat the Domain abject and set its fields
                     domain = DOMAIN(
-                        name=ImportSDD.replace_dots(self, domain_id))
+                        name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
                     domain.code = code
 
                     domain.description = description
-                    domain.domain_id = ImportSDD.replace_dots(self, domain_id)
+                    domain.domain_id = ImportWebsiteToSDDModel.replace_dots(self, domain_id)
                     domain.displayName = domain_name
                     if is_enumerated:
                         domain.is_enumerated = True
@@ -111,18 +121,18 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    code = row[context.member_member_code_index]
-                    description = row[context.member_member_descriptions]
-                    domain_id = row[context.member_domain_id_index]
-                    member_id = row[context.member_member_id_index]
-                    member_name = row[context.member_member_name_index]
+                    code = row[ColumnIndexes().member_member_code_index]
+                    description = row[ColumnIndexes().member_member_descriptions]
+                    domain_id = row[ColumnIndexes().member_domain_id_index]
+                    member_id = row[ColumnIndexes().member_member_id_index]
+                    member_name = row[ColumnIndexes().member_member_name_index]
                     member = MEMBER(
-                        name=ImportSDD.replace_dots(self, member_id))
-                    member.member_id = ImportSDD.replace_dots(self, member_id)
+                        name=ImportWebsiteToSDDModel.replace_dots(self, member_id))
+                    member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
                     member.code = code
                     member.description = description
                     member.displayName = member_name
-                    domain = ImportSDD.get_domain_with_id(
+                    domain = ImportWebsiteToSDDModel.get_domain_with_id(
                         self, context, domain_id)
                     member.domain_id = domain
                     context.members.members.append(member)
@@ -141,18 +151,18 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    code = row[context.variable_code_index]
-                    description = row[context.variable_variable_description]
-                    domain_id = row[context.variable_domain_index]
-                    name = row[context.variable_long_name_index]
-                    variable_id = row[context.variable_variable_true_id]
+                    code = row[ColumnIndexes().variable_code_index]
+                    description = row[ColumnIndexes().variable_variable_description]
+                    domain_id = row[ColumnIndexes().variable_domain_index]
+                    name = row[ColumnIndexes().variable_long_name_index]
+                    variable_id = row[ColumnIndexes().variable_variable_true_id]
                     variable = VARIABLE(
-                        name=ImportSDD.replace_dots(self, variable_id))
+                        name=ImportWebsiteToSDDModel.replace_dots(self, variable_id))
                     variable.code = code
-                    variable.variable_id = ImportSDD.replace_dots(
+                    variable.variable_id = ImportWebsiteToSDDModel.replace_dots(
                         self, variable_id)
                     variable.displayName = name
-                    domain = ImportSDD.get_domain_with_id(self, context, domain_id)
+                    domain = ImportWebsiteToSDDModel.get_domain_with_id(self, context, domain_id)
                     variable.domain_id =domain
                     variable.description = description
 
@@ -172,18 +182,18 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    valid_to = row[context.variable_set_enumeration_valid_to]
-                    variable_id = row[context.variable_set_enumeration_variable_id]
-                    subdomain_id = row[context.variable_set_enumeration_subdomain_id]
-                    variable_set = row[context.variable_set_enumeration_valid_set]
+                    valid_to = row[ColumnIndexes().variable_set_enumeration_valid_to]
+                    variable_id = row[ColumnIndexes().variable_set_enumeration_variable_id]
+                    subdomain_id = row[ColumnIndexes().variable_set_enumeration_subdomain_id]
+                    variable_set = row[ColumnIndexes().variable_set_enumeration_valid_set]
 
                     if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
                             or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         variable_set_enumeration = VARIABLE_SET_ENUMERATION()
                         variable_set_enumeration.variable_id = \
-                                ImportSDD.find_variable_with_id(self,context,variable_id)
+                                ImportWebsiteToSDDModel.find_variable_with_id(self,context,variable_id)
                         variable_set_enumeration.subdomain_id = \
-                                ImportSDD.get_subdomain_with_id(self,context,subdomain_id)
+                                ImportWebsiteToSDDModel.get_subdomain_with_id(self,context,subdomain_id)
                         variable_list = None
 
                         try:
@@ -204,7 +214,7 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    variable_set_id = row[context.variable_set_variable_set_id]
+                    variable_set_id = row[ColumnIndexes().variable_set_variable_set_id]
                     variable_set = VARIABLE_SET()
                     variable_set.variable_set_id = variable_set_id
                     try:
@@ -230,20 +240,20 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    code = row[context.subdomain_subdomain_code]
-                    description = row[context.subdomain_subdomain_description]
-                    domain_id = row[context.subdomain_domain_id_index]
-                    name = row[context.subdomain_subdomain_name]
-                    subdomain_id = row[context.subdomain_subdomain_id_index]
+                    code = row[ColumnIndexes().subdomain_subdomain_code]
+                    description = row[ColumnIndexes().subdomain_subdomain_description]
+                    domain_id = row[ColumnIndexes().subdomain_domain_id_index]
+                    name = row[ColumnIndexes().subdomain_subdomain_name]
+                    subdomain_id = row[ColumnIndexes().subdomain_subdomain_id_index]
 
                     subDomain = SUBDOMAIN()
                     subDomain.code = code
-                    subDomain.subdomain_id = ImportSDD.replace_dots(
+                    subDomain.subdomain_id = ImportWebsiteToSDDModel.replace_dots(
                         self, subdomain_id)
                     subDomain.displayName = name
                     subDomain.description = description
 
-                    domain = ImportSDD.get_domain_with_id(self, context, domain_id)
+                    domain = ImportWebsiteToSDDModel.get_domain_with_id(self, context, domain_id)
                     subDomain.domain_id = domain
                     context.subdomains.subdomains.append(subDomain)
 
@@ -260,11 +270,11 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    member_id = row[context.subdomain_enumeration_member_id_index]
-                    subdomain_id = row[context.subdomain_enumeration_subdomain_id_index]
-                    subdomain = ImportSDD.get_subdomain_with_id(self, context, subdomain_id)
+                    member_id = row[ColumnIndexes().subdomain_enumeration_member_id_index]
+                    subdomain_id = row[ColumnIndexes().subdomain_enumeration_subdomain_id_index]
+                    subdomain = ImportWebsiteToSDDModel.get_subdomain_with_id(self, context, subdomain_id)
                     domain = subdomain.domain_id
-                    member = ImportSDD.get_member_with_id_and_domain(
+                    member = ImportWebsiteToSDDModel.get_member_with_id_and_domain(
                         self, context, member_id, domain)
                     subdomain_enum = SUBDOMAIN_ENUMERATION()
                     subdomain_enum.member_id = member
@@ -280,11 +290,11 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    combination_code = row[context.combination_combination_code]
-                    combination_id = row[context.combination_combination_id]
-                    combination_name = row[context.combination_combination_name]
-                    combination_valid_to = row[context.combination_combination_valid_to]
-                    combination_combination_maintenance_agency = row[context.combination_combination_maintenance_agency]
+                    combination_code = row[ColumnIndexes().combination_combination_code]
+                    combination_id = row[ColumnIndexes().combination_combination_id]
+                    combination_name = row[ColumnIndexes().combination_combination_name]
+                    combination_valid_to = row[ColumnIndexes().combination_combination_valid_to]
+                    combination_combination_maintenance_agency = row[ColumnIndexes().combination_combination_maintenance_agency]
 
                     if (combination_combination_maintenance_agency == 'ECB') \
                             and (combination_valid_to == '12/31/9999'):
@@ -304,23 +314,93 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    combination_string = row[context.combination_item_combination_id] 
-                    variable_string = row[context.combination_item_variable_id]
-                    member_string = row[context.combination_member_id]
-                    variable_set = row[context.combination_variable_set]
-                    com = ImportSDD.find_combination_with_id(self,context, combination_string)
+                    combination_string = row[ColumnIndexes().combination_item_combination_id] 
+                    variable_string = row[ColumnIndexes().combination_item_variable_id]
+                    member_string = row[ColumnIndexes().combination_member_id]
+                    variable_set = row[ColumnIndexes().combination_variable_set]
+                    com = ImportWebsiteToSDDModel.find_combination_with_id(self,context, combination_string)
                     if (not (com is None)) and combination_string.endswith('_REF'):
                         item = COMBINATION_ITEM()
-                        mem = ImportSDD.find_member_with_id(self,member_string,context)
+                        mem = ImportWebsiteToSDDModel.find_member_with_id(self,member_string,context)
                         item.member_id =mem
                         if not ((variable_string is None) or (variable_string == "")):
-                            variable = ImportSDD.find_variable_with_id(self,context,variable_string)
+                            variable = ImportWebsiteToSDDModel.find_variable_with_id(self,context,variable_string)
                             item.variable_id = variable
                         if not(variable_set is None) or not(variable_set == ""):
-                            variable_set = ImportSDD.find_variable_set_with_id(
+                            variable_set = ImportWebsiteToSDDModel.find_variable_set_with_id(
                                                             self,context,variable_set)
                             item.variable_set_id = variable_set
                         com.combination_items.append(item)
+                        
+    def create_all_cubes(self, context):
+        file_location = context.file_directory + os.sep + "cube.csv"
+        header_skipped = False
+        # Load all the entities from the csv file, make an ELClass per entity,
+        # and add the ELClass to the package
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if not header_skipped:
+                    header_skipped = True
+                else:
+
+                    framework = row[ColumnIndexes().cube_framework_index]
+                    cube_code = row[ColumnIndexes().cube_class_code_index]
+                    cube_name = row[ColumnIndexes().cube_class_name_index]
+                    object_id = row[ColumnIndexes().cube_object_id_index]
+                    cube_type = row[ColumnIndexes().cube_cube_type_index]
+                    valid_to = row[ColumnIndexes().cube_valid_to_index]
+                   
+                    
+                    cube = CUBE(name=ImportWebsiteToSDDModel.replace_dots(self, cube_name))
+                    cube.cube_id = ImportWebsiteToSDDModel.replace_dots(self, object_id)
+                    cube.displayName = cube_name
+                    cube.code = cube_code
+                    cube.type = cube_type
+                    cube.valid_to = valid_to
+
+    def create_all_cube_structures(self, context):
+        file_location = context.file_directory + os.sep + "cube_structure.csv"
+        header_skipped = False
+        # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+
+                    code = row[ColumnIndexes().cube_structure_code_index]
+                    id = row[ColumnIndexes().cube_structure_id_index]
+                    name = row[ColumnIndexes().cube_structure_name_index]
+                    valid_to = row[ColumnIndexes().cube_structure_valid_to_index]
+                    description = row[ColumnIndexes().cube_structure_description_index]
+                    maintenance = row[ColumnIndexes().cube_structure_maintenance_agency]                   
+                    
+    def create_all_cube_structure_items(self, context):
+        file_location = context.file_directory + os.sep + "cube_structure_item.csv"
+        header_skipped = False
+        # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+
+                    variable = row[ColumnIndexes().cube_structure_item_variable_index]
+                    classID = row[ColumnIndexes().cube_structure_item_class_id_index]
+                    variableSet = row[ColumnIndexes().cube_structure_item_variable_set]
+
+                     
+                    
 
     def create_report_tables (self, context):
         '''
@@ -335,19 +415,19 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    table_id = row[context.table_table_id]
-                    name = row[context.table_table_id]
-                    display_name = row[context.table_table_name]
-                    code = row[context.table_code]
-                    description = row[context.table_description]
-                    maintenance_ageny = row[context.table_maintenance_ageny]
-                    version = row[context.table_version]
-                    valid_from = row[context.table_valid_from]
-                    valid_to = row[context.table_valid_to]
+                    table_id = row[ColumnIndexes().table_table_id]
+                    name = row[ColumnIndexes().table_table_id]
+                    display_name = row[ColumnIndexes().table_table_name]
+                    code = row[ColumnIndexes().table_code]
+                    description = row[ColumnIndexes().table_description]
+                    maintenance_ageny = row[ColumnIndexes().table_maintenance_ageny]
+                    version = row[ColumnIndexes().table_version]
+                    valid_from = row[ColumnIndexes().table_valid_from]
+                    valid_to = row[ColumnIndexes().table_valid_to]
 
                     table = TABLE(
-                        name=ImportSDD.replace_dots(self, table_id))
-                    table.table_id = ImportSDD.replace_dots(self, table_id)
+                        name=ImportWebsiteToSDDModel.replace_dots(self, table_id))
+                    table.table_id = ImportWebsiteToSDDModel.replace_dots(self, table_id)
                     table.displayName = display_name
                     table.code = code
                     table.description = description
@@ -371,22 +451,22 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    axis_id = row[context.axis_id]
-                    axis_orientation = row[context.axis_orientation]
-                    axis_order = row[context.axis_order]
-                    axis_name = row[context.axis_name]
-                    axis_description = row[context.axis_description]
-                    axis_table_id = row[context.axis_table_id]
-                    axis_is_open_axis = row[context.axis_is_open_axis]
+                    axis_id = row[ColumnIndexes().axis_id]
+                    axis_orientation = row[ColumnIndexes().axis_orientation]
+                    axis_order = row[ColumnIndexes().axis_order]
+                    axis_name = row[ColumnIndexes().axis_name]
+                    axis_description = row[ColumnIndexes().axis_description]
+                    axis_table_id = row[ColumnIndexes().axis_table_id]
+                    axis_is_open_axis = row[ColumnIndexes().axis_is_open_axis]
                     
                     
                     axis = AXIS(
-                        name=ImportSDD.replace_dots(self, axis_id))
-                    axis.axis_id = ImportSDD.replace_dots(self, axis_id)
+                        name=ImportWebsiteToSDDModel.replace_dots(self, axis_id))
+                    axis.axis_id = ImportWebsiteToSDDModel.replace_dots(self, axis_id)
                     axis.orientation = axis_orientation
                     # not needed yet axis.order = axis_order
                     axis.description = axis_description
-                    axis.table_id = ImportSDD.find_table_with_id(self, context, axis_table_id)
+                    axis.table_id = ImportWebsiteToSDDModel.find_table_with_id(self, context, axis_table_id)
                     # not needed yet
                     # axis.is_open_axis = axis_is_open_axis
                                         
@@ -405,27 +485,27 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    axis_ordinate_id = row[context.axis_ordinate_id]
+                    axis_ordinate_id = row[ColumnIndexes().axis_ordinate_id]
                     axis_ordinate_is_abstract_header = row[
-                            context.axis_ordinate_is_abstract_header]
-                    axis_ordinate_code = row[context.axis_ordinate_code]
-                    axis_ordinate_order = row[context.axis_ordinate_order]
-                    axis_ordinate_path = row[context.axis_ordinate_path]
-                    axis_ordinate_axis_id = row[context.axis_ordinate_axis_id]
+                            ColumnIndexes().axis_ordinate_is_abstract_header]
+                    axis_ordinate_code = row[ColumnIndexes().axis_ordinate_code]
+                    axis_ordinate_order = row[ColumnIndexes().axis_ordinate_order]
+                    axis_ordinate_path = row[ColumnIndexes().axis_ordinate_path]
+                    axis_ordinate_axis_id = row[ColumnIndexes().axis_ordinate_axis_id]
                     axis_ordinate_parent_axis_ordinate_id = row[
-                            context.axis_ordinate_parent_axis_ordinate_id]
-                    axis_ordinate_name = row[context.axis_ordinate_name]
-                    axis_ordinate_description = row[context.axis_ordinate_description]
+                            ColumnIndexes().axis_ordinate_parent_axis_ordinate_id]
+                    axis_ordinate_name = row[ColumnIndexes().axis_ordinate_name]
+                    axis_ordinate_description = row[ColumnIndexes().axis_ordinate_description]
 
                     axis_ordinate = AXIS_ORDINATE(
-                        name=ImportSDD.replace_dots(self, axis_ordinate_id))
-                    axis_ordinate.axis_ordinate_id = ImportSDD.replace_dots(self, axis_ordinate_id)
+                        name=ImportWebsiteToSDDModel.replace_dots(self, axis_ordinate_id))
+                    axis_ordinate.axis_ordinate_id = ImportWebsiteToSDDModel.replace_dots(self, axis_ordinate_id)
                     # not needed yet
                     # axis_ordinate.is_abstract_header = axis_ordinate_is_abstract_header
                     axis_ordinate.code = axis_ordinate_code
                     # not needed yet axis_ordinate.order = axis_ordinate_order
                     axis_ordinate.path = axis_ordinate_path
-                    axis_ordinate.axis_id = ImportSDD.find_axis_with_id(self,
+                    axis_ordinate.axis_id = ImportWebsiteToSDDModel.find_axis_with_id(self,
                                                     context, axis_ordinate_axis_id)
                     # we don't need the parent axis yet in our processing.
                     # axis_ordinate.axis_ordinate_id = 
@@ -448,22 +528,22 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    table_cell_cell_id = row[context.table_cell_cell_id]
-                    table_cell_is_shaded = row[context.table_cell_is_shaded]
-                    table_cell_combination_id = row[context.table_cell_combination_id]
-                    table_cell_table_id = row[context.table_cell_table_id]
-                    table_cell_system_data_code = row[context.table_cell_system_data_code]
+                    table_cell_cell_id = row[ColumnIndexes().table_cell_cell_id]
+                    table_cell_is_shaded = row[ColumnIndexes().table_cell_is_shaded]
+                    table_cell_combination_id = row[ColumnIndexes().table_cell_combination_id]
+                    table_cell_table_id = row[ColumnIndexes().table_cell_table_id]
+                    table_cell_system_data_code = row[ColumnIndexes().table_cell_system_data_code]
 
                     # we only look at the reference combinations, they all end with the string _REF
                     if table_cell_cell_id.endswith("_REF"):
                         table_cell = TABLE_CELL(
-                            name=ImportSDD.replace_dots(self, table_cell_cell_id))
-                        table_cell.cell_id = ImportSDD.replace_dots(self, table_cell_cell_id)
+                            name=ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id))
+                        table_cell.cell_id = ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id)
                         # table_cell_is_shaded not needed yet
                         # 
-                        table_cell.combination_id = ImportSDD.\
+                        table_cell.combination_id = ImportWebsiteToSDDModel.\
                             find_combination_with_id(self, context, table_cell_combination_id)
-                        table_cell.table_id = ImportSDD.\
+                        table_cell.table_id = ImportWebsiteToSDDModel.\
                             find_table_with_id(self, context, table_cell_table_id)
 
                         context.table_cells.tableCells.append(table_cell)
@@ -482,8 +562,8 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    cell_positions_cell_id = row[context.cell_positions_cell_id]
-                    cell_positions_axis_ordinate_id = row[context.cell_positions_axis_ordinate_id]
+                    cell_positions_cell_id = row[ColumnIndexes().cell_positions_cell_id]
+                    cell_positions_axis_ordinate_id = row[ColumnIndexes().cell_positions_axis_ordinate_id]
                     # check if we already have the table cell created
                     cell_position = None
                     try:
@@ -493,9 +573,9 @@ class ImportSDD(object):
                         context.cell_positions_dictionary[cell_positions_cell_id] = cell_position 
 
                     cell_position.axis_ordinate_id.append(
-                            ImportSDD.find_axis_ordinate_with_id(  
+                            ImportWebsiteToSDDModel.find_axis_ordinate_with_id(  
                                 self, context, cell_positions_axis_ordinate_id))
-                    cell_position.cell_id = ImportSDD.find_table_cell_with_id(
+                    cell_position.cell_id = ImportWebsiteToSDDModel.find_table_cell_with_id(
                                             self, context, cell_positions_cell_id)
                     context.cell_positions.cellPositions.append(cell_position)
 
@@ -512,12 +592,12 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    member_mapping_id = row[context.member_mapping_id]
-                    row_number = row[context.member_mapping_row]
-                    variable_id = row[context.member_mapping_variable_id]
-                    is_source = row[context.member_mapping_is_source]
+                    member_mapping_id = row[ColumnIndexes().member_mapping_id]
+                    row_number = row[ColumnIndexes().member_mapping_row]
+                    variable_id = row[ColumnIndexes().member_mapping_variable_id]
+                    is_source = row[ColumnIndexes().member_mapping_is_source]
 
-                    member_id = row[context.member_mapping_member_id]
+                    member_id = row[ColumnIndexes().member_mapping_member_id]
                     if ((variable_id == source_variable_filter) and \
                         (is_source == 'TRUE')) or \
                         ((variable_id == target_variable_filter) and \
@@ -526,13 +606,13 @@ class ImportSDD(object):
                         (is_source == 'FALSE')):
                         member_mapping_item = MEMBER_MAPPING_ITEM()
                         member_mapping_item.isSource = is_source
-                        member_mapping_item.member = ImportSDD.find_member_with_id(
+                        member_mapping_item.member = ImportWebsiteToSDDModel.find_member_with_id(
                                                             self,member_id,context)
-                        member_mapping_item.variable = ImportSDD.find_variable_with_id(
+                        member_mapping_item.variable = ImportWebsiteToSDDModel.find_variable_with_id(
                                                             self,context,variable_id)
                         member_mapping_item.row = row_number
 
-                        member_mapping  = ImportSDD.find_member_mapping_with_id(
+                        member_mapping  = ImportWebsiteToSDDModel.find_member_mapping_with_id(
                                             self,context,member_mapping_id)
                         if member_mapping is None:
                             member_mapping = MEMBER_MAPPING(name = member_mapping_id)
@@ -554,22 +634,22 @@ class ImportSDD(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    member_mapping_id = row[context.member_mapping_id]
-                    row_number = row[context.member_mapping_row]
-                    variable_id = row[context.member_mapping_variable_id]
-                    is_source = row[context.member_mapping_is_source]
+                    member_mapping_id = row[ColumnIndexes().member_mapping_id]
+                    row_number = row[ColumnIndexes().member_mapping_row]
+                    variable_id = row[ColumnIndexes().member_mapping_variable_id]
+                    is_source = row[ColumnIndexes().member_mapping_is_source]
 
-                    member_id = row[context.member_mapping_member_id]
+                    member_id = row[ColumnIndexes().member_mapping_member_id]
                     
                     member_mapping_item = MEMBER_MAPPING_ITEM()
                     member_mapping_item.isSource = is_source
-                    member_mapping_item.member = ImportSDD.find_member_with_id(
+                    member_mapping_item.member = ImportWebsiteToSDDModel.find_member_with_id(
                                                         self,member_id,context)
-                    member_mapping_item.variable = ImportSDD.find_variable_with_id(
+                    member_mapping_item.variable = ImportWebsiteToSDDModel.find_variable_with_id(
                                                         self,context,variable_id)
                     member_mapping_item.row = row_number
 
-                    member_mapping  = ImportSDD.find_member_mapping_with_id(
+                    member_mapping  = ImportWebsiteToSDDModel.find_member_mapping_with_id(
                                         self,context,member_mapping_id)
                     if member_mapping is None:
                         member_mapping = MEMBER_MAPPING(name = member_mapping_id)
@@ -614,7 +694,7 @@ class ImportSDD(object):
         get the report table with the given id
         '''
         for table in context.report_tables.reportTables:
-            if table.table_id == ImportSDD.replace_dots(self, table_id):
+            if table.table_id == ImportWebsiteToSDDModel.replace_dots(self, table_id):
                 return table
             
     def find_axis_with_id(self, context, axis_id):
@@ -622,7 +702,7 @@ class ImportSDD(object):
         get the axis with the given id
         '''
         for axis in context.axes.axes:
-            if axis.axis_id == ImportSDD.replace_dots(self, axis_id):
+            if axis.axis_id == ImportWebsiteToSDDModel.replace_dots(self, axis_id):
                 return axis
             
     def find_table_cell_with_id(self, context, table_cell_id):

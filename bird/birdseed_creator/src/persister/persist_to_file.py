@@ -206,31 +206,20 @@ class PersistToFile:
 
     
     
-           
-    def save_analysis_model_as_xmi_files(self, sdd_context):
+    def save_model_as_xmi_file(self, context):
+        '''
+         save model as an xmi file representing an object tree.
+        '''
         rset = ResourceSet()
-        extension = 'xmi'
-        sdd_model_resource = rset.create_resource(URI(
-            sdd_context.output_directory + os.sep + extension +
-            os.sep + "sdd.xmi"))
+
         # This will create an XMI resource
-        # we add the EPackage instance in the resource
-        sdd_model_resource.append(sdd_context.sdd_model)
-        sdd_model_resource.save()
+        resource = rset.create_resource(
+            URI(context.output_directory + os.sep + 'xmi' + os.sep + 'birdseed.xmi'))
+        resource.append(context.module_list)
+        resource.save()
     
 
-    def hot_fix(self, file_name):
-        '''
-        Documentation for hot_fix, PYEcore seems to want to use the last
-        model it used when persisting Enums
-        '''
-        f = open(file_name, "r", encoding='utf-8')
-        text = f.read()
-        amended_text = text.replace('regdna:EEnum', 'ecore:EEnum').replace('sdd_model:EEnum', 'ecore:EEnum').replace('sdd_model:EDataType', 'ecore:EDataType')
-        f.close()
-        f1 = open(file_name, "w", encoding='utf-8')
-        f1.write(amended_text)
-        f.close()
+    
 
     def remove_comment_chars(self, the_string):
         '''

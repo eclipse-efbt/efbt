@@ -13,9 +13,6 @@
 from context.context import Context
 from importers.import_sdd_to_regdna import SDDImport
 from persister.persist_to_file import PersistToFile
-from utils.regdna_to_ecore_converter import regdnaToEcoreConverter
-from generation_rules.main_catagory_finder import MainCatagoryFinder
-from generation_rules.generation_rule_creator import GenerationRuleCreator
 from utils.relationship_enricher import RelationshipEnricher
 
 if __name__ == '__main__':
@@ -45,13 +42,7 @@ if __name__ == '__main__':
     SDDImport().do_import(context)
 
     RelationshipEnricher().enrich(context)
-    # create ecore representation to allow use of multiple exsitng ecore tools
-    # frameworks and libraries
-    regdnaToEcoreConverter().convert_packages_in_context(context)
-    # find the main catagories related with reports.
-    MainCatagoryFinder().create_report_to_main_catogory_maps(context)
-    # create the generation rules
-    GenerationRuleCreator().generate_generation_rules(context)
+
     # save the generated  files in useful formats
     persister = PersistToFile()
 

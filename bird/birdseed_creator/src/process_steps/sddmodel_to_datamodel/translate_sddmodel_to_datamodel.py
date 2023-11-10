@@ -21,28 +21,28 @@ import csv
 from utils.utils import Utils
 from regdna import ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAttribute
 
-class SDDImport(object):
+class TranslateSDDModelToDataModel(object):
     '''
-    Documentation for SDDImport
+    Documentation for TranslateSDDModelToDataModel
     '''
 
-    def do_import(self, context):
+    def do_import(self, context,sdd_context):
         '''
         import the items from the Output layer csv files
         '''
-        SDDImport.add_classes_to_package(self, context)
-        SDDImport.create_variable_set_to_variable_map(self, context)
-        SDDImport.create_variable_maps(self, context)
-        SDDImport.create_domain_to_domain_name_map(self, context)
-        SDDImport.create_member_maps(self, context)
+        TranslateSDDModelToDataModel.add_classes_to_package(self, context,sdd_context)
+        TranslateSDDModelToDataModel.create_variable_set_to_variable_map(self, context,sdd_context)
+        TranslateSDDModelToDataModel.create_variable_maps(self, context,sdd_context)
+        TranslateSDDModelToDataModel.create_domain_to_domain_name_map(self, context,sdd_context)
+        TranslateSDDModelToDataModel.create_member_maps(self, context,sdd_context)
         if context.use_subdomains:
-            SDDImport.create_subdomain_to_domain_map(self, context)
-            SDDImport.create_subdomain_to_member_maps(self, context)
-            SDDImport.add_enums_and_literals_to_package_using_subdomains(
-                self, context)
+            TranslateSDDModelToDataModel.create_subdomain_to_domain_map(self, context,sdd_context)
+            TranslateSDDModelToDataModel.create_subdomain_to_member_maps(self, context,sdd_context)
+            TranslateSDDModelToDataModel.add_enums_and_literals_to_package_using_subdomains(
+                self, context,sdd_context)
         else:
-            SDDImport.add_enums_and_literals_to_package(self, context)
-        SDDImport.add_attributes_to_classes(self, context)
+            TranslateSDDModelToDataModel.add_enums_and_literals_to_package(self, context,sdd_context)
+        TranslateSDDModelToDataModel.add_attributes_to_classes(self, context,sdd_context)
 
     def add_classes_to_package(self, context):
         '''
@@ -62,10 +62,10 @@ class SDDImport(object):
 
                     framework = row[context.cube_framework_index]
                     if (framework == context.reporting_framework + "_REF"):
-                        class_name = row[context.cubeClassCodeIndex]
+                        class_name = row[context.cube_class_code_index]
                     else:
                         if (context.use_codes):
-                            class_name = row[context.cubeClassCodeIndex]
+                            class_name = row[context.cube_class_code_index]
                         else:
                             class_name = row[context.cube_class_name_index]
                     

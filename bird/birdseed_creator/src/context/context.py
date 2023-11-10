@@ -11,8 +11,10 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pyecore.ecore import EPackage
-from regdna import ELDataType, ELPackage, ModuleList, GenerationRulesModule
+
+from regdna import  ELPackage, ModuleList
+
+from context.ecore_lite_types import EcoreLiteTypes
 
 
 class Context(object):
@@ -36,22 +38,6 @@ class Context(object):
     file_directory = ""
     # the directory where we save our outputs.
     output_directory = ""
-
-    # we create the main 5 'primitive' data types
-    e_string = ELDataType()
-    e_string.name = "String"
-
-    e_double = ELDataType()
-    e_double.name = "double"
-
-    e_int = ELDataType()
-    e_int.name = "int"
-
-    e_date = ELDataType()
-    e_date.name = "Date"
-
-    e_boolean = ELDataType()
-    e_boolean.name = "boolean"
 
     # create the moduleList to hold all the modules
     module_list = ModuleList()
@@ -139,77 +125,16 @@ class Context(object):
 
     variable_set_to_variable_map = {}
     
-    cube_class_name_index = 2
-    cubeClassCodeIndex = 3
-    cube_object_id_index = 1
-    cube_cube_type_index = 6
-    cube_valid_to_index = 9
-    cube_framework_index = 4
     
-    variable_set_enumeration_valid_to = 3
-    variable_set_enumeration_variable_id = 1
-    variable_set_enumeration_valid_set = 0
-    variable_set_enumeration_subdomain_id = 4
-    
-    variable_set_variable_set_id = 1
-    
-    variable_variable_name_index = 1
-    variable_long_name_index = 3
-    variable_domain_index = 4
-    variable_code_index = 2
-    variable_variable_description = 5
-    variable_variable_true_id = 1
-    variable_primary_concept = 6
-    
-    domain_domain_id_index = 6
-    domain_domain_name_index = 2
-    domain_domain_data_type = 5
-    domain_domain_description = 4
-    domain_domain_true_id = 1
-    domain_domain_is_enumerated = 3
-    domain_domain_is_reference = 8
-    
-    member_member_id_index = 1
-    member_member_code_index = 2
-    member_member_name_index = 3
-    member_domain_id_index = 4
-    
-    subdomain_domain_id_index = 3
-    subdomain_subdomain_id_index = 1
-    subdomain_subdomain_code = 0
-    subdomain_subdomain_description = 1
-    subdomain_subdomain_name = 7
-
-    subdomain_enumeration_member_id_index = 0
-    subdomain_enumeration_subdomain_id_index = 1
-    subdomain_enumeration_valid_to_index = 3
-    
-    cube_structure_item_variable_index = 1
-    cube_structure_item_class_id_index = 0
-    cube_structure_item_subdomain_index = 5
-    cube_structure_item_specific_member = 7
-    cube_structure_item_attribute_name = 2
-    cube_structure_item_variable_set = 6
-    cube_structure_item_role_index = 3
-    member_member_descriptions = 5
-    
-    combination_combination_code = 1
-    combination_combination_id = 0
-    combination_combination_name = 2
-    
-    
-    combination_item_combination_id = 0
-    combination_item_variable_id = 1
-    combination_variable_set=3
-    combination_member_id = 4
     
     
 
     def __init__(self):
 
-        self.types_package.eClassifiers.append(self.e_string)
-        self.types_package.eClassifiers.append(self.e_double)
-        self.types_package.eClassifiers.append(self.e_int)
+        types = EcoreLiteTypes()
+        self.types_package.eClassifiers.append(types.e_string)
+        self.types_package.eClassifiers.append(types.e_double)
+        self.types_package.eClassifiers.append(types.e_int)
         self.module_list.modules.append(self.types_package)
         self.module_list.modules.append(self.il_domains_package)
         self.module_list.modules.append(self.sdd_domains_package)
