@@ -1,11 +1,23 @@
 
 class ColumnIndexes(object):
+    
+    maintenance_agency_id = 0
+    maintenance_agency_code = 1
+    maintenance_agency_name = 2
+    maintenance_agency_description = 3
+    
+    framework_id = 1 
+    framework_name = 2 
+    framework_code = 3
+    framework_description = 4
+    
     cube_class_name_index = 2
     cube_class_code_index = 3
     cube_object_id_index = 1
     cube_cube_type_index = 6
     cube_valid_to_index = 9
     cube_framework_index = 4
+    cube_cube_structure_id_index = 5
     
     variable_set_enumeration_valid_to = 3
     variable_set_enumeration_variable_id = 1

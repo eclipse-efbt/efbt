@@ -1803,6 +1803,8 @@
         eType="#//SubDomainModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberHierarchyModules"
         upperBound="-1" eType="#//MemberHierarchyModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="maintenanceAgencyModules"
+        upperBound="-1" eType="#//MaintenanceAgencyModule" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SMCubesModel" eSuperTypes="#//SDDModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="coreModel" eType="#//SMCubesCoreModel"
@@ -1815,6 +1817,8 @@
         eType="#//CombinationModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cubeModules" upperBound="-1"
         eType="#//CubeModule" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="frameworkModules" upperBound="-1"
+        eType="#//FrameworkModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mappingDefinitionModules"
         upperBound="-1" eType="#//MappingDefinitionModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cubeMappingModules" upperBound="-1"
@@ -1913,6 +1917,10 @@
         <details key="name" value="cubeStructureItems"/>
       </eAnnotations>
     </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FrameworkModule" eSuperTypes="#//SDDModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="frameworks" upperBound="-1"
+        eType="#//FRAMEWORK" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MappingDefinitionModule" eSuperTypes="#//SDDModule">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -2071,5 +2079,9 @@
         <details key="name" value="tableCells"/>
       </eAnnotations>
     </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MaintenanceAgencyModule" eSuperTypes="#//SDDModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="maintenanceAgencies" upperBound="-1"
+        eType="#//MAINTENANCE_AGENCY" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -1,13 +1,13 @@
 
 from .sdd_model import getEClassifier, eClassifiers
 from .sdd_model import name, nsURI, nsPrefix, eClass
-from .sdd_model import SDDModule, DOMAIN, FACET_COLLECTION, FACET_ENUMERATION, facet_type, FACET_VALUE_TYPE, FACET_VALUE_TYPEObject, MAINTENANCE_AGENCY, MEMBER, MEMBER_HIERARCHY, MEMBER_HIERARCHY_NODE, SUBDOMAIN, SUBDOMAIN_ENUMERATION, VARIABLE, VARIABLE_SET, VARIABLE_SET_ENUMERATION, COMBINATION, COMBINATION_ITEM, CUBE, CUBE_GROUP, CUBE_GROUP_ENUMERATION, CUBE_HIERARCHY, CUBE_HIERARCHY_NODE, CUBE_RELATIONSHIP, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, FRAMEWORK, FRAMEWORK_SUBDOMAIN, FRAMEWORK_VARIABLE_SET, TYP_DMNSN, TYP_DMNSNObject, TYP_RL, TYP_RLObject, CUBE_MAPPING, MEMBER_MAPPING, MEMBER_MAPPING_ITEM, VARIABLE_MAPPING_ITEM, VARIABLE_MAPPING, MAPPING_TO_CUBE, VARIABLE_SET_MAPPING, MAPPING_DEFINITION, AXIS, AXIS_ORDINATE, CELL_POSITION, ORDINATE_ITEM, TABLE, TABLE_CELL, TRANSFORMATION_SCHEME, TRANSFORMATION, DomainModule, MemberHierarchyModule, MemberModule, VariableModule, VariableSetModule, SubDomainModule, SMCubesCoreModel, SMCubesExtraModel, SMCubesModel, CombinationModule, CubeModule, MappingDefinitionModule, CubeMappingModule, MemberMappingModule, VariableMappingModule, AxisModule, AxisOrdinateModule, CellPositionModule, OrdinateItemModule, ReportCell, ReportCellValue, ReportTableModule, TableCellModule
+from .sdd_model import SDDModule, DOMAIN, FACET_COLLECTION, FACET_ENUMERATION, facet_type, FACET_VALUE_TYPE, FACET_VALUE_TYPEObject, MAINTENANCE_AGENCY, MEMBER, MEMBER_HIERARCHY, MEMBER_HIERARCHY_NODE, SUBDOMAIN, SUBDOMAIN_ENUMERATION, VARIABLE, VARIABLE_SET, VARIABLE_SET_ENUMERATION, COMBINATION, COMBINATION_ITEM, CUBE, CUBE_GROUP, CUBE_GROUP_ENUMERATION, CUBE_HIERARCHY, CUBE_HIERARCHY_NODE, CUBE_RELATIONSHIP, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, FRAMEWORK, FRAMEWORK_SUBDOMAIN, FRAMEWORK_VARIABLE_SET, TYP_DMNSN, TYP_DMNSNObject, TYP_RL, TYP_RLObject, CUBE_MAPPING, MEMBER_MAPPING, MEMBER_MAPPING_ITEM, VARIABLE_MAPPING_ITEM, VARIABLE_MAPPING, MAPPING_TO_CUBE, VARIABLE_SET_MAPPING, MAPPING_DEFINITION, AXIS, AXIS_ORDINATE, CELL_POSITION, ORDINATE_ITEM, TABLE, TABLE_CELL, DomainModule, MemberHierarchyModule, MemberModule, VariableModule, VariableSetModule, SubDomainModule, SMCubesCoreModel, SMCubesModel, SMCubesExtraModel, CombinationModule, CubeModule, FrameworkModule, MappingDefinitionModule, CubeMappingModule, MemberMappingModule, VariableMappingModule, AxisModule, AxisOrdinateModule, CellPositionModule, OrdinateItemModule, ReportTableModule, TableCellModule, MaintenanceAgencyModule
 
 
 from . import sdd_model
 
-__all__ = ['SDDModule', 'DOMAIN', 'FACET_COLLECTION', 'FACET_ENUMERATION', 'facet_type', 'FACET_VALUE_TYPE', 'FACET_VALUE_TYPEObject', 'MAINTENANCE_AGENCY', 'MEMBER', 'MEMBER_HIERARCHY', 'MEMBER_HIERARCHY_NODE', 'SUBDOMAIN', 'SUBDOMAIN_ENUMERATION', 'VARIABLE', 'VARIABLE_SET', 'VARIABLE_SET_ENUMERATION', 'COMBINATION', 'COMBINATION_ITEM', 'CUBE', 'CUBE_GROUP', 'CUBE_GROUP_ENUMERATION', 'CUBE_HIERARCHY', 'CUBE_HIERARCHY_NODE', 'CUBE_RELATIONSHIP', 'CUBE_STRUCTURE', 'CUBE_STRUCTURE_ITEM', 'CUBE_TO_COMBINATION', 'FRAMEWORK', 'FRAMEWORK_SUBDOMAIN', 'FRAMEWORK_VARIABLE_SET', 'TYP_DMNSN', 'TYP_DMNSNObject', 'TYP_RL', 'TYP_RLObject', 'CUBE_MAPPING', 'MEMBER_MAPPING', 'MEMBER_MAPPING_ITEM',
-           'VARIABLE_MAPPING_ITEM', 'VARIABLE_MAPPING', 'MAPPING_TO_CUBE', 'VARIABLE_SET_MAPPING', 'MAPPING_DEFINITION', 'AXIS', 'AXIS_ORDINATE', 'CELL_POSITION', 'ORDINATE_ITEM', 'TABLE', 'TABLE_CELL', 'TRANSFORMATION_SCHEME', 'TRANSFORMATION', 'DomainModule', 'MemberHierarchyModule', 'MemberModule', 'VariableModule', 'VariableSetModule', 'SubDomainModule', 'SMCubesCoreModel', 'SMCubesExtraModel', 'SMCubesModel', 'CombinationModule', 'CubeModule', 'MappingDefinitionModule', 'CubeMappingModule', 'MemberMappingModule', 'VariableMappingModule', 'AxisModule', 'AxisOrdinateModule', 'CellPositionModule', 'OrdinateItemModule', 'ReportCell', 'ReportCellValue', 'ReportTableModule', 'TableCellModule']
+__all__ = ['SDDModule', 'DOMAIN', 'FACET_COLLECTION', 'FACET_ENUMERATION', 'facet_type', 'FACET_VALUE_TYPE', 'FACET_VALUE_TYPEObject', 'MAINTENANCE_AGENCY', 'MEMBER', 'MEMBER_HIERARCHY', 'MEMBER_HIERARCHY_NODE', 'SUBDOMAIN', 'SUBDOMAIN_ENUMERATION', 'VARIABLE', 'VARIABLE_SET', 'VARIABLE_SET_ENUMERATION', 'COMBINATION', 'COMBINATION_ITEM', 'CUBE', 'CUBE_GROUP', 'CUBE_GROUP_ENUMERATION', 'CUBE_HIERARCHY', 'CUBE_HIERARCHY_NODE', 'CUBE_RELATIONSHIP', 'CUBE_STRUCTURE', 'CUBE_STRUCTURE_ITEM', 'CUBE_TO_COMBINATION', 'FRAMEWORK', 'FRAMEWORK_SUBDOMAIN', 'FRAMEWORK_VARIABLE_SET', 'TYP_DMNSN', 'TYP_DMNSNObject', 'TYP_RL', 'TYP_RLObject', 'CUBE_MAPPING', 'MEMBER_MAPPING',
+           'MEMBER_MAPPING_ITEM', 'VARIABLE_MAPPING_ITEM', 'VARIABLE_MAPPING', 'MAPPING_TO_CUBE', 'VARIABLE_SET_MAPPING', 'MAPPING_DEFINITION', 'AXIS', 'AXIS_ORDINATE', 'CELL_POSITION', 'ORDINATE_ITEM', 'TABLE', 'TABLE_CELL', 'DomainModule', 'MemberHierarchyModule', 'MemberModule', 'VariableModule', 'VariableSetModule', 'SubDomainModule', 'SMCubesCoreModel', 'SMCubesModel', 'SMCubesExtraModel', 'CombinationModule', 'CubeModule', 'FrameworkModule', 'MappingDefinitionModule', 'CubeMappingModule', 'MemberMappingModule', 'VariableMappingModule', 'AxisModule', 'AxisOrdinateModule', 'CellPositionModule', 'OrdinateItemModule', 'ReportTableModule', 'TableCellModule', 'MaintenanceAgencyModule']
 
 eSubpackages = []
 eSuperPackage = None
@@ -35,9 +35,9 @@ SUBDOMAIN_ENUMERATION.member_id.eType = MEMBER
 VARIABLE.domain_id.eType = DOMAIN
 VARIABLE.maintenance_agency_id.eType = MAINTENANCE_AGENCY
 VARIABLE_SET.maintenance_agency_id.eType = MAINTENANCE_AGENCY
+VARIABLE_SET.variable_set_items.eType = VARIABLE_SET_ENUMERATION
 VARIABLE_SET_ENUMERATION.subdomain_id.eType = SUBDOMAIN
 VARIABLE_SET_ENUMERATION.variable_id.eType = VARIABLE
-VARIABLE_SET_ENUMERATION.variable_set_id.eType = VARIABLE_SET
 COMBINATION.maintenance_agency_id.eType = MAINTENANCE_AGENCY
 COMBINATION.combination_items.eType = COMBINATION_ITEM
 COMBINATION_ITEM.member_id.eType = MEMBER
@@ -100,21 +100,25 @@ ORDINATE_ITEM.variable_id.eType = VARIABLE
 TABLE.maintenance_agency_id.eType = MAINTENANCE_AGENCY
 TABLE_CELL.combination_id.eType = COMBINATION
 TABLE_CELL.table_id.eType = TABLE
-TRANSFORMATION_SCHEME.tranformations.eType = TRANSFORMATION
 DomainModule.domains.eType = DOMAIN
 MemberHierarchyModule.memberHierarchies.eType = MEMBER_HIERARCHY
 MemberHierarchyModule.memberHierarchiesNodes.eType = MEMBER_HIERARCHY_NODE
 MemberModule.members.eType = MEMBER
 VariableModule.variables.eType = VARIABLE
-VariableSetModule.variable_sets.eType = VARIABLE_SET
+VariableSetModule.variableSets.eType = VARIABLE_SET
 SubDomainModule.subdomains.eType = SUBDOMAIN
 SMCubesCoreModel.variableModules.eType = VariableModule
+SMCubesCoreModel.variableSetModules.eType = VariableSetModule
 SMCubesCoreModel.domainModules.eType = DomainModule
 SMCubesCoreModel.memberModules.eType = MemberModule
 SMCubesCoreModel.subDomainModules.eType = SubDomainModule
 SMCubesCoreModel.memberHierarchyModules.eType = MemberHierarchyModule
+SMCubesCoreModel.maintenanceAgencyModules.eType = MaintenanceAgencyModule
+SMCubesModel.coreModel.eType = SMCubesCoreModel
+SMCubesModel.extraModel.eType = SMCubesExtraModel
 SMCubesExtraModel.combinationModules.eType = CombinationModule
 SMCubesExtraModel.cubeModules.eType = CubeModule
+SMCubesExtraModel.frameworkModules.eType = FrameworkModule
 SMCubesExtraModel.mappingDefinitionModules.eType = MappingDefinitionModule
 SMCubesExtraModel.cubeMappingModules.eType = CubeMappingModule
 SMCubesExtraModel.memberMappingModules.eType = MemberMappingModule
@@ -125,26 +129,24 @@ SMCubesExtraModel.cellPositionModules.eType = CellPositionModule
 SMCubesExtraModel.ordinateItemsModules.eType = OrdinateItemModule
 SMCubesExtraModel.reportTableModules.eType = ReportTableModule
 SMCubesExtraModel.tableCellModules.eType = TableCellModule
-SMCubesModel.coreModel.eType = SMCubesCoreModel
-SMCubesModel.extraModel.eType = SMCubesExtraModel
 CombinationModule.combinations.eType = COMBINATION
 CombinationModule.combination_items.eType = COMBINATION_ITEM
 CombinationModule.cubeToCombinationLinks.eType = CUBE_TO_COMBINATION
 CubeModule.cubes.eType = CUBE
 CubeModule.cubeStructures.eType = CUBE_STRUCTURE
 CubeModule.cubeStructureItems.eType = CUBE_STRUCTURE_ITEM
+FrameworkModule.frameworks.eType = FRAMEWORK
 MappingDefinitionModule.mappings.eType = MAPPING_DEFINITION
 CubeMappingModule.cubeMappings.eType = CUBE_MAPPING
 MemberMappingModule.memberMappings.eType = MEMBER_MAPPING
 VariableMappingModule.variableMappings.eType = VARIABLE_MAPPING
 AxisModule.axes.eType = AXIS
 AxisOrdinateModule.axis_ordinates.eType = AXIS_ORDINATE
-CellPositionModule.reportTables.eType = CELL_POSITION
+CellPositionModule.cellPositions.eType = CELL_POSITION
 OrdinateItemModule.ordinateItems.eType = ORDINATE_ITEM
-ReportCell.combination.eType = COMBINATION
-ReportCellValue.reportCell.eType = ReportCell
 ReportTableModule.reportTables.eType = TABLE
 TableCellModule.tableCells.eType = TABLE_CELL
+MaintenanceAgencyModule.maintenanceAgencies.eType = MAINTENANCE_AGENCY
 
 otherClassifiers = [FACET_VALUE_TYPE, FACET_VALUE_TYPEObject,
                     TYP_DMNSN, TYP_DMNSNObject, TYP_RL, TYP_RLObject]

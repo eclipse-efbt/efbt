@@ -26,6 +26,7 @@ class ImportWebsiteToSDDModel(object):
         Import SDD csv files into an instance of the analysis model
         '''
         ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
+        ImportWebsiteToSDDModel.create_frameworks(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_domains(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_members(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_variables(self, sdd_context)
@@ -33,10 +34,9 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_all_subdomains(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_combinations(self, sdd_context)
         
+        ImportWebsiteToSDDModel.create_all_cube_structures(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_cubes(self, sdd_context)
-        ImportWebsiteToSDDModel.create_all_cube_structure(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_cube_structure_items(self, sdd_context)
-        
         
         ImportWebsiteToSDDModel.create_report_tables(self, sdd_context)
         ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
@@ -44,14 +44,56 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
         ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
         
-        # For now we just import a subset of the member mappings as
-        # this was a slow process due to the large file involved.
-        # now that we use dictionaries to assist in lookups we can
-        # later try to upload all member_mappings and see if it is
-        # fast enough when using dictionaries.
-        #ImportWebsiteToSDDModel.create_member_mappings(self, sdd_context,'EBA_MCY','TYP_INSTRMNT', 'TYP_ACCNTNG_ITM' )
         ImportWebsiteToSDDModel.create_all_member_mappings(self, sdd_context)
         
+    def create_maintenance_agencies(self, context):
+        
+        file_location = context.file_directory + os.sep + "maintenance_agency.csv"
+        header_skipped = False
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    code = row[ColumnIndexes().maintenance_agency_code]
+                    description = row[ColumnIndexes().maintenance_agency_description]
+                    id = row[ColumnIndexes().maintenance_agency_id]
+                    name = row[ColumnIndexes().maintenance_agency_name]
+
+                    maintenance_agency = MAINTENANCE_AGENCY(
+                        name=ImportWebsiteToSDDModel.replace_dots(self, id))
+                    maintenance_agency.code = code
+
+                    maintenance_agency.description = description
+                    maintenance_agency.maintenance_agency_id = ImportWebsiteToSDDModel.replace_dots(self, id)
+                    context.maintenance_agencies.maintenanceAgencies.append(maintenance_agency)
+        
+    def create_frameworks(self, context):
+        
+        file_location = context.file_directory + os.sep + "framework.csv"
+        header_skipped = False
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    code = row[ColumnIndexes().framework_code]
+                    description = row[ColumnIndexes().framework_description]
+                    id = row[ColumnIndexes().framework_id]
+                    name = row[ColumnIndexes().framework_name]
+
+                    framework = FRAMEWORK(
+                        name=ImportWebsiteToSDDModel.replace_dots(self, id))
+                    framework.code = code
+
+                    framework.description = description
+                    framework.framework_id = ImportWebsiteToSDDModel.replace_dots(self, id)
+                    context.frameworks.frameworks.append(framework)
+                
     def import_core_sdd(self, sdd_context):
         '''
         Import core SDD csv files into an instance of the analysis model.
@@ -108,6 +150,7 @@ class ImportWebsiteToSDDModel(object):
 
                     context.domains.domains.append(domain)
 
+
     def create_all_members(self, context):
         '''
         import all the members
@@ -126,6 +169,8 @@ class ImportWebsiteToSDDModel(object):
                     domain_id = row[ColumnIndexes().member_domain_id_index]
                     member_id = row[ColumnIndexes().member_member_id_index]
                     member_name = row[ColumnIndexes().member_member_name_index]
+                    if (member_name is None) or (member_name == ""):
+                        member_name = member_id
                     member = MEMBER(
                         name=ImportWebsiteToSDDModel.replace_dots(self, member_id))
                     member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
@@ -137,6 +182,12 @@ class ImportWebsiteToSDDModel(object):
                     member.domain_id = domain
                     context.members.members.append(member)
                     context.member_dictionary[member_id] = member
+                    
+                    #create a dictionary that is useful later
+                    if not (domain_id is None) and not (domain_id == ""):
+                        context.member_id_to_domain_map[member_id] = domain_id
+                        context.member_id_to_member_name_map[member_id] = member_name
+                        context.member_id_to_member_code_map[member_id] = code
 
     def create_all_variables(self, context):
         '''
@@ -156,6 +207,8 @@ class ImportWebsiteToSDDModel(object):
                     domain_id = row[ColumnIndexes().variable_domain_index]
                     name = row[ColumnIndexes().variable_long_name_index]
                     variable_id = row[ColumnIndexes().variable_variable_true_id]
+                    primary_concept = row[ColumnIndexes().variable_primary_concept]
+                    
                     variable = VARIABLE(
                         name=ImportWebsiteToSDDModel.replace_dots(self, variable_id))
                     variable.code = code
@@ -168,6 +221,13 @@ class ImportWebsiteToSDDModel(object):
 
                     context.variables.variables.append(variable)
                     context.variable_dictionary[variable_id] = variable
+                    
+                    #set up some useful dictionaries for later.
+                    context.variable_to_domain_map[variable_id] = domain_id
+                    context.variable_to_long_names_map[variable_id] = name
+                    if not((primary_concept == "") or (primary_concept == None)):
+                        context.variable_to_primary_concept_map[variable_id] = primary_concept
+                        
 
     def create_all_variable_sets(self, context):
         '''
@@ -345,20 +405,27 @@ class ImportWebsiteToSDDModel(object):
                     header_skipped = True
                 else:
 
-                    framework = row[ColumnIndexes().cube_framework_index]
+                    framework_id = row[ColumnIndexes().cube_framework_index]
                     cube_code = row[ColumnIndexes().cube_class_code_index]
                     cube_name = row[ColumnIndexes().cube_class_name_index]
                     object_id = row[ColumnIndexes().cube_object_id_index]
                     cube_type = row[ColumnIndexes().cube_cube_type_index]
                     valid_to = row[ColumnIndexes().cube_valid_to_index]
-                   
                     
-                    cube = CUBE(name=ImportWebsiteToSDDModel.replace_dots(self, cube_name))
-                    cube.cube_id = ImportWebsiteToSDDModel.replace_dots(self, object_id)
-                    cube.displayName = cube_name
-                    cube.code = cube_code
-                    cube.type = cube_type
-                    cube.valid_to = valid_to
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                            or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
+                        cube_structure_id = row[ColumnIndexes().cube_cube_structure_id_index] 
+                        framework = ImportWebsiteToSDDModel.find_framework_with_id(self,context, framework_id)
+                        cube_structure = ImportWebsiteToSDDModel.find_cube_structure_with_id(self,context, cube_structure_id)
+                        cube = CUBE(name=ImportWebsiteToSDDModel.replace_dots(self, cube_name))
+                        cube.cube_id = ImportWebsiteToSDDModel.replace_dots(self, object_id)
+                        cube.displayName = cube_name
+                        cube.framework_id = framework
+                        cube.code = cube_code
+                        cube.type = cube_type
+                        cube.cube_structure_id = cube_structure
+                        context.cube_dictionary[id] = cube
+                        context.cubes.cubes.append(cube)
 
     def create_all_cube_structures(self, context):
         file_location = context.file_directory + os.sep + "cube_structure.csv"
@@ -379,8 +446,21 @@ class ImportWebsiteToSDDModel(object):
                     name = row[ColumnIndexes().cube_structure_name_index]
                     valid_to = row[ColumnIndexes().cube_structure_valid_to_index]
                     description = row[ColumnIndexes().cube_structure_description_index]
-                    maintenance = row[ColumnIndexes().cube_structure_maintenance_agency]                   
+                    maintenance_agency_id = row[ColumnIndexes().cube_structure_maintenance_agency]
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                            or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                     
+                        maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id) 
+                        cube_structure = CUBE_STRUCTURE(name=ImportWebsiteToSDDModel.replace_dots(self, code))
+                        cube_structure.cube_structure_id = ImportWebsiteToSDDModel.replace_dots(self, id)
+                        
+                        cube_structure.code = code
+                        cube_structure.description = description
+                        cube_structure.maintenance_agency_id = maintenance_agency
+                        
+                        context.cube_structure_dictionary[id] = cube_structure
+                        context.cube_structures.cubeStructures.append(cube_structure)
+
     def create_all_cube_structure_items(self, context):
         file_location = context.file_directory + os.sep + "cube_structure_item.csv"
         header_skipped = False
@@ -395,10 +475,22 @@ class ImportWebsiteToSDDModel(object):
                     header_skipped = True
                 else:
 
-                    variable = row[ColumnIndexes().cube_structure_item_variable_index]
-                    classID = row[ColumnIndexes().cube_structure_item_class_id_index]
-                    variableSet = row[ColumnIndexes().cube_structure_item_variable_set]
+                    variable_id = row[ColumnIndexes().cube_structure_item_variable_index]
+                    cube_structure_id = row[ColumnIndexes().cube_structure_item_class_id_index]
+                    variable_set_id = row[ColumnIndexes().cube_structure_item_variable_set]
 
+                    cube_structure_item = CUBE_STRUCTURE_ITEM()
+                    
+                    cube_structure = ImportWebsiteToSDDModel.find_cube_structure_with_id(self,context, cube_structure_id)
+                    cube_structure_item.cube_structure_id = cube_structure
+                    
+                    variable = ImportWebsiteToSDDModel.find_variable_with_id(self,context, variable_id)
+                    cube_structure_item.variable_id = variable
+                    
+                    variable_set = ImportWebsiteToSDDModel.find_variable_set_with_id(self,context, variable_set_id)
+                    cube_structure_item.variable_set_id = variable_set
+
+                    context.cube_structure_items.cubeStructureItems.append(cube_structure_item)
                      
                     
 
@@ -754,6 +846,25 @@ class ImportWebsiteToSDDModel(object):
         for member in context.members.members:
             if (member_id == member.name) and (member.domain_id == domain):
                 return member
+            
+    def find_maintenance_agency_with_id(self,context,maintenance_agency_id):
+    
+        for agency in context.maintenance_agencies.maintenanceAgencies:
+            if agency.maintenance_agency_id == maintenance_agency_id:
+                return agency
+            
+    def find_framework_with_id(self,context,framework_id):
+    
+        for framework in context.frameworks.frameworks:
+            if framework.framework_id == framework_id:
+                return framework
+            
+    def find_cube_structure_with_id(self,context,cube_structure_id):
+    
+        try:
+            return context.cube_structure_dictionary[cube_structure_id]
+        except KeyError:
+            return None
 
     def replace_dots(self, text):
         '''

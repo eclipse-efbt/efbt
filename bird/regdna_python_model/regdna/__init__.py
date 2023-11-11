@@ -1,5 +1,5 @@
 
-from .regdna import getEClassifier, eClassifiers
+from .regdna import getEClassifier, eClassifiers 
 from .regdna import name, nsURI, nsPrefix, eClass
 from .regdna import Import, Module, ModuleList, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, RulesForReport, RulesForILTable, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, SelectDerivedColumnAs, SelectValueAs, Comparitor, TableFilter, GenerationRulesModule, RuleForILTablePart, Predicate, AndPredicate, OrPredicate, NotPredicate, AttributePredicate, ELAttribute, ELClass, ELClassifier, ELDataType, ELEnum, ELEnumLiteral, ELModelElement, ELNamedElement, ELOperation, ELPublicOperation, ELPrivateOperation, ELParameter, ELPackage, ELReference, ELStructuralFeature, ELTypedElement, ELAnnotation, ELStringToStringMapEntry, OperationTag, Report, ReportRow, ReportColumn, ReportCell, Filter, ReportModule
 

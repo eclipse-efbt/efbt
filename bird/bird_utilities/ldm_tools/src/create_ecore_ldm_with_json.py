@@ -24,7 +24,6 @@ if __name__ == '__main__':
     context = Context()
 
     context.persist_to_regdna = True
-    context.use_subdomains = False
     context.file_directory = '/workspaces/efbt/regdna/python/resources'
     context.output_directory = '/workspaces/efbt/regdna/python/results'
 

@@ -23,7 +23,6 @@ if __name__ == '__main__':
     # to allow rapid what=-if changes to the model and instant 
     # validation of generation rules
     context.persist_to_regdna = True
-    context.use_subdomains = False
     # we are getting the information about EIL from the website information
     # and not from the SQLDeveloper files
     context.load_eil_from_website  = True

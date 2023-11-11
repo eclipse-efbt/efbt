@@ -23,8 +23,6 @@ class Context(object):
     '''
     # variables to configure the behaviour
     use_codes = True
-    use_subdomains = False
-    use_subdomains_in_il = True
     load_eil_from_website = False
     use_variable_long_name = True
     persist_to_regdna = True
@@ -85,23 +83,11 @@ class Context(object):
     # A map between the LDM names for primitive types types, and
     # our standard primitive types such as EString
     datatype_map = {}
-    # For the reference output layers we record a map between variables
-    # and domains
-    variable_to_domain_map = {}
-    variable_to_long_names_map = {}
-    variable_to_primary_concept_map = {}
+    
     # For the reference output layers we record a map between domains
     # and domain names
     domain_to_domain_name_map = {}
-    # For the reference output layers we record a map between members ids
-    # andtheir containing domains
-    member_id_to_domain_map = {}
-    # For the reference output layers we record a map between members ids
-    # and their names
-    member_id_to_member_name_map = {}
-    # For the reference output layers we record a map between members ids
-    # and their codes
-    member_id_to_member_code_map = {}
+   
 
     fk_to_mandatory_map = {}
     fk_to_column_map = {}
@@ -123,7 +109,7 @@ class Context(object):
 
     import_logic_strings = []
 
-    variable_set_to_variable_map = {}
+    
     
     
     

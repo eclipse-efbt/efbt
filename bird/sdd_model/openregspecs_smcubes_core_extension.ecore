@@ -115,7 +115,11 @@
         upperBound="-1" eType="#//MemberHierarchyModule" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variableSetModules" upperBound="-1"
         eType="#//VariableSetModule" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="maintenanceAgencyModules"
+        upperBound="-1" eType="#//MaintenanceAgencyModule" containment="true"/>    
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MaintenanceAgencyModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="maintenanceAgencies" upperBound="-1"
+        eType="ecore:EClass core.ecore#//MAINTENANCE_AGENCY" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
