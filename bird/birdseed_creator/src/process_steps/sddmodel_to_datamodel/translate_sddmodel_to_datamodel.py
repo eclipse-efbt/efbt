@@ -10,6 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
+from pickle import NONE
 
 '''
 Created on 22 Jan 2022
@@ -72,8 +73,8 @@ class TranslateSDDModelToDataModel(object):
                         pk_name = fullName + "_uniqueID"
                         attribute = ELAttribute()
                         attribute.name = pk_name
-                        attribute.eType = context.e_string
-                        attribute.eAttributeType = context.e_string
+                        attribute.eType = context.types.e_string
+                        attribute.eAttributeType = context.types.e_string
                         attribute.iD = True
                         attribute.lowerBound = 0
                         attribute.upperBound = 1
@@ -98,22 +99,26 @@ class TranslateSDDModelToDataModel(object):
         '''
        
         for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
-            variable = cube_structure_item.variable_id.code
-            class_id = cube_structure_item.cube_structure_id.code
-            variableSet = cube_structure_item.cube_structure_id.variable_set_id.variable_set_id
-
+            
+            
+            class_id = cube_structure_item.cube_structure_id.cube_structure_id
             try: 
-                the_class = context.classes_map[class_id]
+                the_class = context.classes_map[class_id]               
+                variable = cube_structure_item.variable_id.code
                 attributeList = [variable]
                 if (variable=="MTRCS"):
-                    attributeList = sdd_context.variable_set_to_variable_map[variableSet]
+                    variable_set = cube_structure_item.variable_set_id
+                    variable_set_id = None
+                    if not(variable_set is None):
+                        variable_set_id = variable_set.variable_set_id
+                    attributeList = sdd_context.variable_set_to_variable_map[variable_set_id]
                 if (variable == "VALUE_DECIMAL") or (variable == "OBSERVATION_VALUE"):
                     attributeList = []
                     
                 for attribute_name in attributeList:
                     try: 
 
-                        domain_id = cube_structure_item.variable_id.domain_id.domain_id
+                        domain_id = sdd_context.variable_to_domain_map[attribute_name]
                         amended_domain_name = Utils.make_valid_id(domain_id)
                         the_enum = Utils.find_enum(
                             amended_domain_name+"_domain", context.enum_map)
@@ -164,20 +169,15 @@ class TranslateSDDModelToDataModel(object):
         '''
         
         for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
-            the_attribute_name1 = cube_structure_item.variable_id.variable_id
-            long_name=None
-            
-            variable = cube_structure_item.variable_id.variable_id
-            #subdomain_id = row[context.cube_structure_item_subdomain_index ]
             class_id = cube_structure_item.cube_structure_id.cube_structure_id
-            #specific_member = row[context.cube_structure_item_specific_member ]
-            variable_set = cube_structure_item.variable_set_id.variable_set_id
-            #role = row[context.cube_structure_item_role_index]
-            
             try:
                 the_class = context.classes_map[class_id]
+                the_attribute_name1 = cube_structure_item.variable_id.variable_id
+                long_name=None
+                variable = cube_structure_item.variable_id.variable_id
                 attribute_list = [the_attribute_name1]
                 if (the_attribute_name1=="MTRCS"):
+                    variable_set = cube_structure_item.variable_set_id.variable_set_id
                     attribute_list = sdd_context.variable_set_to_variable_map[variable_set]
                 if (the_attribute_name1 == "VALUE_DECIMAL") or (the_attribute_name1 == "OBSERVATION_VALUE"):
                     attribute_list = []
@@ -220,53 +220,53 @@ class TranslateSDDModelToDataModel(object):
                                 operation.upperBound=1
                                 if(the_enum.name == "String"):
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_string
+                                    operation.eType = context.types.e_string
                                 elif(the_enum.name == "Date"):
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_date
+                                    operation.eType = context.types.e_date
                                 elif(the_enum.name.startswith("String_")):
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_string
+                                    operation.eType = context.types.e_string
                                 elif(the_enum.name == "STRNG_domain"):
                                         operation.name = the_attribute_name
-                                        operation.eType = context.e_string
+                                        operation.eType = context.types.e_string
                                 elif(the_enum.name == "EBA_String_domain"):
                                         operation.name = the_attribute_name
-                                        operation.eType = context.e_string
+                                        operation.eType = context.types.e_string
                                 elif(the_enum.name == "DT_domain"):
                                         operation.name = the_attribute_name
-                                        operation.eType = context.e_date
+                                        operation.eType = context.types.e_date
                                 elif(the_enum.name == "Number"):
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_double
+                                    operation.eType = context.types.e_double
                                 elif(the_enum.name == "RL_domain"):
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_double
+                                    operation.eType = context.types.e_double
                                 
                                 elif(the_enum.name.startswith("Real_")):
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_double
+                                    operation.eType = context.types.e_double
                                 elif(the_enum.name.startswith("Monetary")): 
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_int
+                                    operation.eType = context.types.e_int
                                 elif(the_enum.name.startswith("INTGR_domain")): 
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_int
+                                    operation.eType = context.types.e_int
                                 elif(the_enum.name.startswith("MNTRY")): 
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_int
+                                    operation.eType = context.types.e_int
                                 elif(the_enum.name.startswith("Monetary_domain")): 
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_int
+                                    operation.eType = context.types.e_int
                                 elif(the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_int
+                                    operation.eType = context.types.e_int
                                 elif(the_enum.name.startswith("Non_negative_integers")): 
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_int
+                                    operation.eType = context.types.e_int
                                 elif(the_enum.name.startswith("All_possible_dates")):   
                                     operation.name = the_attribute_name
-                                    operation.eType = context.e_date  
+                                    operation.eType = context.types.e_date  
                                 else:
                                     operation.name = the_attribute_name
                                     operation.eType = the_enum  
@@ -285,68 +285,68 @@ class TranslateSDDModelToDataModel(object):
                                 attribute.upperBound=1
                                 if(the_enum.name == "String"):
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_string
-                                    attribute.eAttributeType = context.e_string
+                                    attribute.eType = context.types.e_string
+                                    attribute.eAttributeType = context.types.e_string
                                 elif(the_enum.name == "Date"):
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_date
-                                    attribute.eAttributeType = context.e_string
+                                    attribute.eType = context.types.e_date
+                                    attribute.eAttributeType = context.types.e_string
                                 elif(the_enum.name.startswith("String_")):
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_string
-                                    attribute.eAttributeType = context.e_string
+                                    attribute.eType = context.types.e_string
+                                    attribute.eAttributeType = context.types.e_string
                                 elif(the_enum.name == "STRNG_domain"):
                                         attribute.name = the_attribute_name
-                                        attribute.eType = context.e_string
-                                        attribute.eAttributeType = context.e_string
+                                        attribute.eType = context.types.e_string
+                                        attribute.eAttributeType = context.types.e_string
                                 elif(the_enum.name == "EBA_String_domain"):
                                         attribute.name = the_attribute_name
-                                        attribute.eType = context.e_string
-                                        attribute.eAttributeType = context.e_string
+                                        attribute.eType = context.types.e_string
+                                        attribute.eAttributeType = context.types.e_string
                                 elif(the_enum.name == "DT_domain"):
                                         attribute.name = the_attribute_name
-                                        attribute.eType = context.e_date
-                                        attribute.eAttributeType = context.e_date
+                                        attribute.eType = context.types.e_date
+                                        attribute.eAttributeType = context.types.e_date
                                 elif(the_enum.name == "Number"):
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_double
-                                    attribute.eAttributeType = context.e_double
+                                    attribute.eType = context.types.e_double
+                                    attribute.eAttributeType = context.types.e_double
                                 elif(the_enum.name == "RL_domain"):
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_double
-                                    attribute.eAttributeType = context.e_double
+                                    attribute.eType = context.types.e_double
+                                    attribute.eAttributeType = context.types.e_double
                                 
                                 elif(the_enum.name.startswith("Real_")):
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_double
-                                    attribute.eAttributeType = context.e_double
+                                    attribute.eType = context.types.e_double
+                                    attribute.eAttributeType = context.types.e_double
                                 elif(the_enum.name.startswith("Monetary")): 
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_int
-                                    attribute.eAttributeType = context.e_int
+                                    attribute.eType = context.types.e_int
+                                    attribute.eAttributeType = context.types.e_int
                                 elif(the_enum.name.startswith("MNTRY")): 
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_int
+                                    attribute.eType = context.types.e_int
                                 elif(the_enum.name.startswith("INTGR_domain")): 
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_int 
-                                    attribute.eAttributeType = context.e_int
+                                    attribute.eType = context.types.e_int 
+                                    attribute.eAttributeType = context.types.e_int
                                 elif(the_enum.name.startswith("Monetary_domain")): 
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_int
-                                    attribute.eAttributeType = context.e_int
+                                    attribute.eType = context.types.e_int
+                                    attribute.eAttributeType = context.types.e_int
                                 elif(the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_int
-                                    attribute.eAttributeType = context.e_int
+                                    attribute.eType = context.types.e_int
+                                    attribute.eAttributeType = context.types.e_int
                                 elif(the_enum.name.startswith("Non_negative_integers")): 
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_int
-                                    attribute.eAttributeType = context.e_int
+                                    attribute.eType = context.types.e_int
+                                    attribute.eAttributeType = context.types.e_int
                                 elif(the_enum.name.startswith("All_possible_dates")):   
                                     attribute.name = the_attribute_name
-                                    attribute.eType = context.e_date  
-                                    attribute.eAttributeType = context.e_date
+                                    attribute.eType = context.types.e_date  
+                                    attribute.eAttributeType = context.types.e_date
                                 else:
                                     attribute.name = the_attribute_name
                                     attribute.eType = the_enum  

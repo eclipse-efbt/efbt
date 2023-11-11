@@ -12,7 +12,6 @@
 #
 import os
 from pyecore.resources import ResourceSet, URI
-from pyecore.resources.json import JsonResource
 from utils.utils import Utils
 
 
@@ -37,21 +36,17 @@ class PersistToFile:
                 self, context, context.input_tables_package,
                 "regdna", context.il_domains_package)
 
-        PersistToFile.persist_entity_model(
-            self, context, context.output_tables_package,
-            "regdna", context.sdd_domains_package)
+        
         PersistToFile.persist_enum_model(
             self, context, context.il_domains_package, "regdna")
-        PersistToFile.persist_enum_model(
-            self, context, context.sdd_domains_package, "regdna")
+        
         PersistToFile.persist_types_model(
             self, context, context.types_package, "regdna")
         
 
         PersistToFile.persist_enum_model(
             self, context, context.il_domains_package, "regdna")
-        PersistToFile.persist_enum_model(
-            self, context, context.sdd_domains_package, "regdna")
+
         PersistToFile.persist_types_model(
             self, context, context.types_package, "regdna")
         
@@ -66,9 +61,7 @@ class PersistToFile:
                  "a",  encoding='utf-8')
         f.write("\t\t package " + the_package.name + "\r")
         f.write("\t\t import " + imported_package.name + ".*\r")
-        if the_package == context.output_tables_package:
-            for import_string in context.import_logic_strings:
-                f.write("\t\t import " + import_string + ".*\r")
+        
         if extension == "regdna":
             f.write("\t\t import types.*\r")
         for classifier in the_package.eClassifiers:
@@ -217,98 +210,4 @@ class PersistToFile:
             URI(context.output_directory + os.sep + 'xmi' + os.sep + 'birdseed.xmi'))
         resource.append(context.module_list)
         resource.save()
-    
-    def persist_generation_transformations_to_csv(self, context):
-        '''
-        Documentation for persist_generation_transformations
-        '''
-        rules_for_reports = context.generation_rules_module.rulesForReport
-        report_to_table_parts_file = open(context.output_directory + os.sep + 'generations_transformations_csv' +
-                         os.sep + 
-                         'report_to_table_parts.csv', "a",  encoding='utf-8')
-        report_to_table_parts_file.write("Report,Table Part,Notes\n")
-
-        for rules_for_report in rules_for_reports:
-            if not(rules_for_report.outputLayerCube is None): #column.attribute.eContainer().name + "." + column.attribute.name
-                
-                template = rules_for_report.outputLayerCube.name
-                amended_template_name =  template[0:len(template) - 11]
-                f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
-                         os.sep + 
-                         amended_template_name + '.csv', "a",  encoding='utf-8')
-                f.write("Template,Table Part,Main Table,Filter,Lineage type,Source Table,Source Column,Missing,Relevant, Derived,Domain,Member,Value,ROL Cube Item,Notes\n")
-
-                for layer in rules_for_report.rulesForTable:
-                    table = layer.inputLayerTable.name
-                    for table_part in layer.rulesForTablePart:
-                        main_catagory = table_part.main_catagory
-                        main_catagory_name = context.main_catogory_to_name_map[main_catagory]
-                        
-                        table_and_part = table_part.table_and_part_tuple
-                        report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
-                        filter = context.table_parts_to_to_filter_map[table_and_part]
-                        for column in table_part.columns:
-                            if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
-                                entity  = column.attribute.eContainer().name
-                                attribute = column.attribute.name
-                                lineage_type = "attribute"
-                                missing = "Not Missing"
-                            else:  
-                                entity  = ""
-                                attribute = ""
-                                missing = "Missing"
-                                lineage_type = "tbd"
-                                
-                            variable_id = column.asAttribute.name
-
-                            
-                            f.write(amended_template_name +"," + table_part.name +","  +table+"," + filter + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,," +variable_id + ",\n")
-
-                f.close()
-        report_to_table_parts_file.close
-
-    def persist_generation_transformations(self, context):
-        '''
-        Documentation for persist_generation_transformations
-        '''
-        rules_for_reports = context.generation_rules_module.rulesForReport
-        for rules_for_report in rules_for_reports:
-            if not(rules_for_report.outputLayerCube is None):
-                f = open(context.output_directory + os.sep + 'regdna' +
-                         os.sep + rules_for_report.outputLayerCube.name +
-                         '.regdna', "a",  encoding='utf-8')
-                f.write("generationRuleModule " + rules_for_report.outputLayerCube.name + "_generationModule\r{\r")
-                f.write("\tgenerationRules " + "{\r")
-                f.write("\t\treport output_tables." + rules_for_report.outputLayerCube.name + "{\r")
-                for layer in rules_for_report.rulesForTable:
-                    if layer.inputLayerTable is None:
-                        f.write("\t\t\tILTable None {\r")
-                    else:
-                        f.write("\t\t\tILTable input_tables." + layer.inputLayerTable.name + "{\r")
-                    for table_part in layer.rulesForTablePart:
-                        if table_part.name is None:
-                            f.write("\t\t\t\ttablePart None { \r")
-                        else:
-                            f.write("\t\t\t\ttablePart " + Utils.make_valid_id(table_part.name) + " { \r")
-                        for column in table_part.columns:
-                            if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
-                                f.write("\t\t\t\t\tselectAttribute input_tables." + column.attribute.eContainer().name + "." + column.attribute.name)
-                            else:  
-                                f.write("\t\t\t\t\tselectValue \"TODO\"")
-                            f.write(" as output_tables." +
-                                    rules_for_report.outputLayerCube.name + "." + column.asAttribute.name + "\r")
-                        f.write("\t\t\t\t}\r")
-                        
-                    f.write("\t\t\t}\r")
-                f.write("\t\t}\r")
-                f.write("\t}\r")
-                f.write("}\r")
-               
-                f.close()
-    
-
-    def remove_comment_chars(self, the_string):
-        '''
-        Documentation for remove_comment_chars
-        '''
-        return the_string.replace("/**", "").replace("/*", "").replace("*/", "")
+  

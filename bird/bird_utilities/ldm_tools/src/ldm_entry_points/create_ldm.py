@@ -14,23 +14,19 @@
 Created on 25 April 2022
 '''
 
-from context.context  import Context
+from ldm_context.context  import Context
+from ldm_processing.import_sqldev_ldm_to_regdna import SQLDevLDMImport
+from ldm_persister.persist_to_file import PersistToFile
 
-from importers.import_sqldev_ldm_to_regdna import SQLDevLDMImport
-from persister.persist_to_file import PersistToFile
-from utils.regdna_to_ecore_converter import regdnaToEcoreConverter
 
 if __name__ == '__main__':
     context = Context()
 
     context.persist_to_regdna = True
-    context.file_directory = '/workspaces/efbt/regdna/python/resources'
-    context.output_directory = '/workspaces/efbt/regdna/python/results'
-
+    context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_the_directories2\\bird\\bird_utilities\\ldm_tools\\resources'
+    context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_the_directories2\\bird\\bird_utilities\\ldm_tools\\results' 
+    
     SQLDevLDMImport().do_import(context)
-
-    regdnaToEcoreConverter().convert_packages_in_context(context)
     persister = PersistToFile()
-    persister.save_model_as_ecore_file(context)
     persister.save_model_as_regdna_file(context)
-    persister.save_model_as_json_files(context)
+

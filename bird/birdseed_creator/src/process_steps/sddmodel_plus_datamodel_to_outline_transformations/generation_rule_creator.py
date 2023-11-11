@@ -27,13 +27,13 @@ class GenerationRuleCreator(object):
     of generation rules
     '''
 
-    def generate_generation_rules(self, context):
+    def generate_generation_rules(self, context,sdd_context):
         '''
         generate generation rules
         '''
-        GenerationRuleCreator.add_reports(self, context)
+        GenerationRuleCreator.add_reports(self, context,sdd_context)
         
-    def add_reports(self, context):
+    def add_reports(self, context,sdd_context):
         '''
         Create the generation rule for each report that is in scope.
         '''
@@ -60,10 +60,10 @@ class GenerationRuleCreator(object):
                                                                 rules_for_report)
                         rules_for_report.outputLayerCube = generated_output_layer
                         GenerationRuleCreator.add_table_parts(
-                                                    self, context,
+                                                    self, context,sdd_context,
                                                     rules_for_report,report_template)
                         
-    def add_table_parts(self, context, rules_for_report,report_template):
+    def add_table_parts(self, context, sdd_context, rules_for_report,report_template):
         '''
         For each report, check which main catagories are applicable 
         (e.g loans and advances)
@@ -106,7 +106,7 @@ class GenerationRuleCreator(object):
                                 rules_for_table.rulesForTablePart.append(rules_for_il_table_part)
                                 GenerationRuleCreator.\
                                     add_field_to_field_lineage_to_rules_for_table_part(
-                                                    self, context, rules_for_il_table_part,
+                                                    self, context,sdd_context, rules_for_il_table_part,
                                                      rules_for_report.outputLayerCube,
                                                      input_entity_list)
                 except KeyError:
@@ -115,7 +115,7 @@ class GenerationRuleCreator(object):
         except KeyError:
                     print ("no main catagory for report :" + report_template)
 
-    def add_field_to_field_lineage_to_rules_for_table_part(self, context, rules_for_il_table_part, output_entity, input_entity_list):
+    def add_field_to_field_lineage_to_rules_for_table_part(self, context,sdd_context, rules_for_il_table_part, output_entity, input_entity_list):
         '''
         Add field to field lineage entries to the rules for the table part
         '''
@@ -134,13 +134,13 @@ class GenerationRuleCreator(object):
                     else:
                         input_column = GenerationRuleCreator.\
                             find_related_variable( 
-                            self,context,output_item,input_entity_list)
+                            self,context,sdd_context,output_item,input_entity_list)
 
                     if not(input_column is None):
                         select_column.attribute = input_column
 
 
-    def find_related_variable(self,context,output_item,input_entity_list):
+    def find_related_variable(self,context,sdd_context,output_item,input_entity_list):
         '''
         when we have an ROL item it has a specific domain.
         We want to find any column in the limited related input tables
@@ -157,7 +157,7 @@ class GenerationRuleCreator(object):
                             if input_item_name == output_variable_name:
                                 return input_item
                             try:
-                                primary_concept = context.\
+                                primary_concept = sdd_context.\
                                     variable_to_primary_concept_map[input_item_name]
                                 if primary_concept == output_variable_name:
                                     return input_item

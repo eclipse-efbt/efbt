@@ -14,7 +14,7 @@ import os
 import csv
 from sdd_model import *
 from utils.utils import Utils
-from context.csv_column_index_context import ColumnIndexes
+from ldm_context.context.csv_column_index_context import ColumnIndexes
 
 class ImportWebsiteToSDDModel(object):
     '''
@@ -422,7 +422,7 @@ class ImportWebsiteToSDDModel(object):
                         cube.displayName = cube_name
                         cube.framework_id = framework
                         cube.code = cube_code
-                        cube.type = cube_type
+                        cube.cube_type = cube_type
                         cube.cube_structure_id = cube_structure
                         context.cube_dictionary[id] = cube
                         context.cubes.cubes.append(cube)
@@ -479,18 +479,22 @@ class ImportWebsiteToSDDModel(object):
                     cube_structure_id = row[ColumnIndexes().cube_structure_item_class_id_index]
                     variable_set_id = row[ColumnIndexes().cube_structure_item_variable_set]
 
-                    cube_structure_item = CUBE_STRUCTURE_ITEM()
                     
+                    # it is possible that the cube structure item realtes to a cube which is
+                    # not currently valid according to its valif_to time. in this case
+                    # we do not save the cube_structure_item
                     cube_structure = ImportWebsiteToSDDModel.find_cube_structure_with_id(self,context, cube_structure_id)
-                    cube_structure_item.cube_structure_id = cube_structure
-                    
-                    variable = ImportWebsiteToSDDModel.find_variable_with_id(self,context, variable_id)
-                    cube_structure_item.variable_id = variable
-                    
-                    variable_set = ImportWebsiteToSDDModel.find_variable_set_with_id(self,context, variable_set_id)
-                    cube_structure_item.variable_set_id = variable_set
-
-                    context.cube_structure_items.cubeStructureItems.append(cube_structure_item)
+                    if not (cube_structure is None):
+                        cube_structure_item = CUBE_STRUCTURE_ITEM()
+                        cube_structure_item.cube_structure_id = cube_structure
+                        
+                        variable = ImportWebsiteToSDDModel.find_variable_with_id(self,context, variable_id)
+                        cube_structure_item.variable_id = variable
+                        
+                        variable_set = ImportWebsiteToSDDModel.find_variable_set_with_id(self,context, variable_set_id)
+                        cube_structure_item.variable_set_id = variable_set
+    
+                        context.cube_structure_items.cubeStructureItems.append(cube_structure_item)
                      
                     
 

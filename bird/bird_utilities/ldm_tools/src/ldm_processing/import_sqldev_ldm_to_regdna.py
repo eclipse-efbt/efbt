@@ -246,27 +246,27 @@ class SQLDevLDMImport(object):
 
                         if native_type.strip() == "VARCHAR":
 
-                            context.datatype_map[datatype_id] = context.e_string
+                            context.datatype_map[datatype_id] = context.types.e_string
 
                         if native_type.strip() == "VARCHAR2":
 
-                            context.datatype_map[datatype_id] = context.e_string
+                            context.datatype_map[datatype_id] = context.types.e_string
 
                         if native_type.strip() == "INTEGER":
 
-                            context.datatype_map[datatype_id] = context.e_int
+                            context.datatype_map[datatype_id] = context.types.e_int
 
                         if native_type.strip() == "DATE":
 
-                            context.datatype_map[datatype_id] = context.e_date
+                            context.datatype_map[datatype_id] = context.types.e_date
 
                         if native_type.strip() == "NUMBER":
 
-                            context.datatype_map[datatype_id] = context.e_double
+                            context.datatype_map[datatype_id] = context.types.e_double
 
                         if native_type.strip() == "UNKNOWN":
 
-                            context.datatype_map[datatype_id] = context.e_string
+                            context.datatype_map[datatype_id] = context.types.e_string
 
     def add_ldm_attributes_to_classes(self, context):
         '''
@@ -327,40 +327,40 @@ class SQLDevLDMImport(object):
                         attribute.upperBound = 1
                         if the_enum.name == "String":
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_string
-                            attribute.eAttributeType = context.e_string
+                            attribute.eType = context.types.e_string
+                            attribute.eAttributeType = context.types.e_string
                         elif the_enum.name.startswith("String_"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_string
-                            attribute.eAttributeType = context.e_string
+                            attribute.eType = context.types.e_string
+                            attribute.eAttributeType = context.types.e_string
                         elif the_enum.name == "Number":
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_double
-                            attribute.eAttributeType = context.e_double
+                            attribute.eType = context.types.e_double
+                            attribute.eAttributeType = context.types.e_double
                         elif the_enum.name == "RL_domain":
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_double
-                            attribute.eAttributeType = context.e_double
+                            attribute.eType = context.types.e_double
+                            attribute.eAttributeType = context.types.e_double
                         elif the_enum.name.startswith("Real_"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_double
-                            attribute.eAttributeType = context.e_double
+                            attribute.eType = context.types.e_double
+                            attribute.eAttributeType = context.types.e_double
                         elif the_enum.name.startswith("Monetary"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_int
-                            attribute.eAttributeType = context.e_int
+                            attribute.eType = context.types.e_int
+                            attribute.eAttributeType = context.types.e_int
                         elif the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_int
-                            attribute.eAttributeType = context.e_int
+                            attribute.eType = context.types.e_int
+                            attribute.eAttributeType = context.types.e_int
                         elif the_enum.name.startswith("Non_negative_integers"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_int
-                            attribute.eAttributeType = context.e_int
+                            attribute.eType = context.types.e_int
+                            attribute.eAttributeType = context.types.e_int
                         elif the_enum.name.startswith("All_possible_dates"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.e_date
-                            attribute.eAttributeType = context.e_date
+                            attribute.eType = context.types.e_date
+                            attribute.eAttributeType = context.types.e_date
 
                         # This is a common domain used for String identifiers in BIRD
                         # in SQLDeveloper

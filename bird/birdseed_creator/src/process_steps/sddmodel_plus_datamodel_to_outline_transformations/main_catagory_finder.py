@@ -16,28 +16,29 @@
 import csv
 import os
 from utils.utils import Utils
-from context.sdd_context import SDDContext
-from importers.import_sdd_to_analysis_model import ImportSDD
+from ldm_context.context.sdd_context import SDDContext
+from process_steps.website_to_sddmodel.import_website_to_sdd_model import ImportWebsiteToSDDModel
+
 
 class MainCatagoryFinder(object):
     '''
     This class is responsable for creating maps of information
     related to the EBA main catagory
     '''
-    def create_report_to_main_catogory_maps(self, context):
+    def create_report_to_main_catogory_maps(self, context,sdd_context):
         '''
         create maps of information
         related to the EBA main catagory
         '''
-        MainCatagoryFinder.create_main_catogory_to_name_map(self, context)
-        MainCatagoryFinder.create_report_to_main_catogory_map(self, context)
-        MainCatagoryFinder.create_draft_table_part_file(self, context)
-        MainCatagoryFinder.create_table_part_to_main_catagory_map(self, context)
-        MainCatagoryFinder.create_il_tables_for_main_catagory_map(self, context)
-        MainCatagoryFinder.create_table_parts_for_main_catagory_map(self, context)
+        MainCatagoryFinder.create_main_catogory_to_name_map(self, context,sdd_context)
+        MainCatagoryFinder.create_report_to_main_catogory_map(self, context,sdd_context)
+        MainCatagoryFinder.create_draft_table_part_file(self, context,sdd_context)
+        MainCatagoryFinder.create_table_part_to_main_catagory_map(self, context,sdd_context)
+        MainCatagoryFinder.create_il_tables_for_main_catagory_map(self, context,sdd_context)
+        MainCatagoryFinder.create_table_parts_for_main_catagory_map(self, context,sdd_context)
         
 
-    def create_main_catogory_to_name_map(self, context):
+    def create_main_catogory_to_name_map(self, context,sdd_context):
         '''
         create a map of EBA main catagory code such as EBA_MC_EBA_x469 
         into its more user friendly display name such as loans and advances
@@ -57,7 +58,7 @@ class MainCatagoryFinder(object):
                     main_catagory_name = row[1]
                     context.main_catogory_to_name_map[main_catagory] = main_catagory_name
 
-    def create_report_to_main_catogory_map(self, context):
+    def create_report_to_main_catogory_map(self, context,sdd_context):
         '''
         create a map from report such as F_01_01_FINREP  
         into a list of main catagories used in that report
@@ -150,7 +151,7 @@ class MainCatagoryFinder(object):
                                         report_to_main_catogory_map[
                                             amemnded_report_name] = member_list
                                     
-    def create_draft_table_part_file(self, context):
+    def create_draft_table_part_file(self, context,sdd_context):
         '''
         create a draft of the table part file, this should be reviewed and edited
         and the edited version used as an input for processing
@@ -164,9 +165,8 @@ class MainCatagoryFinder(object):
         sdd_context = SDDContext()
         sdd_context.file_directory = context.file_directory
         sdd_context.output_directory = context.output_directory
-        ImportSDD.import_core_sdd(self,sdd_context)
         for mc in context.main_catagories_in_scope:
-            mc_member = ImportSDD.find_member_with_id(self, mc, sdd_context)
+            mc_member = ImportWebsiteToSDDModel.find_member_with_id(self, mc, sdd_context)
             definition = mc_member.displayName
             if ',' in definition :
                 print(mc_member.name + " : " + definition  + \
@@ -198,9 +198,9 @@ class MainCatagoryFinder(object):
 
     def get_target_instrument_type_from_mapping(self,sdd_context,mc_member):
         ''' get the target instrument type from the mapping'''
-        instrument_type_variable = ImportSDD.\
+        instrument_type_variable = ImportWebsiteToSDDModel.\
             find_variable_with_id(self,sdd_context,"TYP_INSTRMNT")
-        member_mapping_items = ImportSDD.\
+        member_mapping_items = ImportWebsiteToSDDModel.\
             get_mappings_with_this_member_as_source_and_this_variable_as_target(
             self,sdd_context,mc_member,instrument_type_variable)
         unique_member_list = MainCatagoryFinder.\
@@ -225,9 +225,9 @@ class MainCatagoryFinder(object):
     def get_target_accounting_type_from_mapping(self,sdd_context,mc_member):
         ''' get the target accounting type from the mapping'''
 
-        accounting_type_variable = ImportSDD.\
+        accounting_type_variable = ImportWebsiteToSDDModel.\
             find_variable_with_id(self,sdd_context,"TYP_ACCNTNG_ITM")
-        member_mapping_items = ImportSDD.\
+        member_mapping_items = ImportWebsiteToSDDModel.\
             get_mappings_with_this_member_as_source_and_this_variable_as_target(
             self,sdd_context,mc_member,accounting_type_variable)
         unique_member_list = MainCatagoryFinder.remove_duplicates(
@@ -257,7 +257,7 @@ class MainCatagoryFinder(object):
                 unique_list.append(member)
         return unique_list
 
-    def create_table_part_to_main_catagory_map(self, context):
+    def create_table_part_to_main_catagory_map(self, context, sdd_context):
         '''
         create a map from table parts to main catagories
         '''
@@ -278,7 +278,7 @@ class MainCatagoryFinder(object):
                     context.table_parts_to_main_catagory_map[
                         table_part] = main_catagory
 
-    def create_il_tables_for_main_catagory_map(self, context):
+    def create_il_tables_for_main_catagory_map(self, context, sdd_context):
         '''
         create a map from main catagories such as loans and advancess
         to the related input layer such as instrument
@@ -314,7 +314,7 @@ class MainCatagoryFinder(object):
                         context.\
                             tables_for_main_catagory_map[main_catagory] = table_list
 
-    def create_table_parts_for_main_catagory_map(self, context):
+    def create_table_parts_for_main_catagory_map(self, context, sdd_context):
         '''
         create a map from main catagories such as loans and advancess
         to the related table parts, where table part is a combination

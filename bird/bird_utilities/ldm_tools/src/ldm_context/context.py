@@ -14,7 +14,7 @@
 
 from regdna import  ELPackage, ModuleList, GenerationRulesModule
 
-from ldm_context.context.ecore_lite_types import EcoreLiteTypes
+from ldm_context.ecore_lite_types import EcoreLiteTypes
 
 
 class Context(object):
@@ -22,35 +22,21 @@ class Context(object):
     Documentation for Context
     '''
     # variables to configure the behaviour
-    
+    types = EcoreLiteTypes()
     use_codes = True
     load_eil_from_website = False
     use_variable_long_name = True
     persist_to_regdna = True
-    inScopeFileDirectory = ""
-    add_pks_to_input_layer_from_website = True 
-    reporting_framework = "FINREP"
-    reporting_framework_version = ["3","3.0-Ind"]
-    match_domains_in_generation_file = False
-    input_layer_name = "Input Layer 6.2"
+
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.
     output_directory = ""
 
-    types = EcoreLiteTypes()
     # create the moduleList to hold all the modules
     module_list = ModuleList()
     
     main_catogory_to_name_map = {}
-    report_to_main_catogory_map = {}
-    tables_for_main_catagory_map = {}
-    table_and_part_tuple_map = {}
-    table_parts_to_linked_tables_map = {}
-    table_parts_to_to_filter_map = {}
-    #table_parts_to_to_filter_items_map = {}
-    table_parts_to_main_catagory_map = {}
-    main_catagories_in_scope = []
 
     # create  regdna  packages
     types_package = ELPackage(name='types')
@@ -58,41 +44,51 @@ class Context(object):
         name='il_domains',
         nsURI='http://www.eclipse.org/bird/il_domains',
         nsPrefix='il_domains')
-    sdd_domains_package = ELPackage(
-        name='sdd_domains',
-        nsURI='http://www.eclipse.org/bird/sdd_domains',
-        nsPrefix='sdd_domains')
+
     input_tables_package = ELPackage(
         name='input_tables',
         nsURI='http://www.eclipse.org/bird/input_tables',
         nsPrefix='input_tables')
-    output_tables_package = ELPackage(
-        name='output_tables',
-        nsURI='http://www.eclipse.org/bird/output_tables',
-        nsPrefix='output_tables')
-    
-    generation_rules_module = GenerationRulesModule(name='generations')
 
     module_list = ModuleList()
+    
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classes_map = {}
+
     # classesMap keeps a reference between ldm ID's for classes and
     # the list of these calsses that we call tables
     table_map = {}
     # A map between the LDM names for primitive types types, and
     # our standard primitive types such as EString
     datatype_map = {}
+    
     # For the reference output layers we record a map between domains
     # and domain names
     domain_to_domain_name_map = {}
+
     # we record a list of missing domains
     missing_domains = []
     # enumMap keeps a reference between ldm ID's for domains and
     # the enum instance
     enum_map = {}
     enum_id_enum_name_map = {}
+    
+    arc_to_source_map = {}
+    arc_name_to_arc_class_map = {}
+    
+    arc_target_to_arc_map = {}
+
+    logical_attribute_to_relational_name = {}
+
     import_logic_strings = []
+
+    input_layer_name = "Input Layer 6.2"
+    
+    
+    
+    
+    
 
     def __init__(self):
 
@@ -102,8 +98,6 @@ class Context(object):
         self.types_package.eClassifiers.append(types.e_int)
         self.module_list.modules.append(self.types_package)
         self.module_list.modules.append(self.il_domains_package)
-        self.module_list.modules.append(self.sdd_domains_package)
         self.module_list.modules.append(self.input_tables_package)
-        self.module_list.modules.append(self.output_tables_package)
-        self.module_list.modules.append(self.generation_rules_module)
+
 
