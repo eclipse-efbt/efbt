@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 import csv
-from utils.utils import Utils
+from ldm_utils.utils import Utils
 import os
 
 from regdna import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAnnotation, ELStringToStringMapEntry

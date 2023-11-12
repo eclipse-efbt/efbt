@@ -14,7 +14,7 @@
 
 from regdna import  ELPackage, ModuleList, GenerationRulesModule
 
-from ldm_context.context.ecore_lite_types import EcoreLiteTypes
+from context.ecore_lite_types import EcoreLiteTypes
 
 
 class Context(object):

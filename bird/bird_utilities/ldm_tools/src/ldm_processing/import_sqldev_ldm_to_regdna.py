@@ -12,7 +12,7 @@
 #
 import os
 import csv
-from utils.utils import Utils
+from ldm_utils.utils import Utils
 
 from regdna import ELAttribute, ELClass, ELEnum
 from regdna import ELEnumLiteral, ELPublicOperation, ELReference

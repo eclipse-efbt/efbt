@@ -14,7 +14,7 @@ import os
 import csv
 from sdd_model import *
 from utils.utils import Utils
-from ldm_context.context.csv_column_index_context import ColumnIndexes
+from context.csv_column_index_context import ColumnIndexes
 
 class ImportWebsiteToSDDModel(object):
     '''
@@ -235,7 +235,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         file_location = context.file_directory + os.sep + "variable_set_enumeration.csv"
         header_skipped = False
-
+        variable_set_to_variable_map = {}
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -257,10 +257,10 @@ class ImportWebsiteToSDDModel(object):
                         variable_list = None
 
                         try:
-                            variable_list = context.variable_set_to_variable_map[variable_set]
+                            variable_list = variable_set_to_variable_map[variable_set]
                         except KeyError:
                             variable_list = []
-                            context.variable_set_to_variable_map[variable_set] = variable_list
+                            variable_set_to_variable_map[variable_set] = variable_list
 
                         if not variable_id in variable_list:
                             variable_list.append(variable_set_enumeration)
@@ -279,7 +279,7 @@ class ImportWebsiteToSDDModel(object):
                     variable_set.variable_set_id = variable_set_id
                     try:
                         variable_set_enumerations = \
-                            context.variable_set_to_variable_map[variable_set_id]
+                            variable_set_to_variable_map[variable_set_id]
                         for enumeration in variable_set_enumerations:
                             variable_set.variable_set_items.append(enumeration)
                     except KeyError:

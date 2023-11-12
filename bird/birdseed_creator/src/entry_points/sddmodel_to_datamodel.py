@@ -15,8 +15,8 @@ Created on 25 April 2022
 '''
 
 from entry_points.website_to_sddmodel import RunWebsiteToSDDModel 
-from ldm_context.context.context import Context
-from ldm_context.context.sdd_context import SDDContext
+from context.context import Context
+from context.sdd_context import SDDContext
 from persister.persist_sdd import PersistSDD
 from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_datamodel import TranslateSDDModelToDataModel
 from persister.persist_to_file import PersistToFile
@@ -35,10 +35,10 @@ class RunSDDModelToDataModel:
 if __name__ == '__main__':
     sdd_context = SDDContext()
     context = Context()
-    context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_the_directories2\\bird\\birdseed_creator\\resources'
-    context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_the_directories2\\bird\\birdseed_creator\\results' 
-    sdd_context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_the_directories2\\bird\\birdseed_creator\\resources'
-    sdd_context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_the_directories2\\bird\\birdseed_creator\\results'    
+    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results' 
+    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModel().run(context,sdd_context)
     persister = PersistToFile()

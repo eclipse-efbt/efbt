@@ -12,7 +12,7 @@
 #
 import os
 from pyecore.resources import ResourceSet, URI
-from utils.utils import Utils
+from ldm_utils.utils import Utils
 
 
 from regdna import ELAttribute, ELClass, ELEnum, ELPublicOperation, ELReference,SelectColumnAttributeAs

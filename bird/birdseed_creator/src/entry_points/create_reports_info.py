@@ -12,7 +12,7 @@
 #
 # This script creates an analysis model from an SDD file and saves it as a CSV filegit add 
 
-from ldm_context.context.sdd_context import SDDContext
+from context.sdd_context import SDDContext
 from importers.import_sdd_to_analysis_model import ImportSDD
 from importers.import_sdd_to_ecore4reg import SDDImport
 from report_filters.translate_combinations_to_report_filters import CombinationsToReportFilters

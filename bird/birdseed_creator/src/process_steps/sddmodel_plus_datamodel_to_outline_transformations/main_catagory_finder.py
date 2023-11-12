@@ -16,7 +16,7 @@
 import csv
 import os
 from utils.utils import Utils
-from ldm_context.context.sdd_context import SDDContext
+from context.sdd_context import SDDContext
 from process_steps.website_to_sddmodel.import_website_to_sdd_model import ImportWebsiteToSDDModel
 
 

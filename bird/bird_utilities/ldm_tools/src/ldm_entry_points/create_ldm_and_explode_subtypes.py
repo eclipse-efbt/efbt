@@ -18,17 +18,19 @@ from ldm_context.context  import Context
 from ldm_processing.import_sqldev_ldm_to_regdna import SQLDevLDMImport
 from ldm_processing.traverser import SubtypeExploder
 from ldm_processing.enrich_ldm_with_il_links_from_fe import InputLayerLinkEnricher
+from ldm_persister.persist_to_file import PersistToFile
 
 if __name__ == '__main__':
     context = Context()
 
     context.persist_to_ecore4reg = True
-    context.use_subdomains = False
-    context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_the_directories2\\bird\\bird_utilities\\ldm_tools\\resources'
-    context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_the_directories2\\bird\\bird_utilities\\ldm_tools\\results' 
+    context.file_directory = '/workspaces/efbt/bird/bird_utilities/ldm_tools/resources'
+    context.output_directory = '/workspaces/efbt/bird/bird_utilities/ldm_tools/results' 
     
     SQLDevLDMImport().do_import(context)
     InputLayerLinkEnricher().enrich_with_links_to_input_layer_columns(context)
+    persister = PersistToFile()
+    persister.save_model_as_regdna_file(context)
     traverser = SubtypeExploder()
     # for all the root types get the full and summary breakdowns
     traverser.traverse(context,'Security_and_exchange_tradable_derivative',False)

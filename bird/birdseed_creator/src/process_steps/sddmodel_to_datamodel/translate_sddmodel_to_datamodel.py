@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from pickle import NONE
+
 
 '''
 Created on 22 Jan 2022
@@ -105,17 +105,14 @@ class TranslateSDDModelToDataModel(object):
             try: 
                 the_class = context.classes_map[class_id]               
                 variable = cube_structure_item.variable_id.code
-                attributeList = [variable]
+                attribute_list = [variable]
                 if (variable=="MTRCS"):
                     variable_set = cube_structure_item.variable_set_id
-                    variable_set_id = None
-                    if not(variable_set is None):
-                        variable_set_id = variable_set.variable_set_id
-                    attributeList = sdd_context.variable_set_to_variable_map[variable_set_id]
+                    attribute_list = TranslateSDDModelToDataModel.get_attribute_list_from_variable_set(self,variable_set)
                 if (variable == "VALUE_DECIMAL") or (variable == "OBSERVATION_VALUE"):
-                    attributeList = []
+                    attribute_list = []
                     
-                for attribute_name in attributeList:
+                for attribute_name in attribute_list:
                     try: 
 
                         domain_id = sdd_context.variable_to_domain_map[attribute_name]
@@ -177,8 +174,8 @@ class TranslateSDDModelToDataModel(object):
                 variable = cube_structure_item.variable_id.variable_id
                 attribute_list = [the_attribute_name1]
                 if (the_attribute_name1=="MTRCS"):
-                    variable_set = cube_structure_item.variable_set_id.variable_set_id
-                    attribute_list = sdd_context.variable_set_to_variable_map[variable_set]
+                    variable_set = cube_structure_item.variable_set_id
+                    attribute_list = TranslateSDDModelToDataModel.get_attribute_list_from_variable_set(self,variable_set)
                 if (the_attribute_name1 == "VALUE_DECIMAL") or (the_attribute_name1 == "OBSERVATION_VALUE"):
                     attribute_list = []
                 for attribute_name in attribute_list: 
@@ -372,3 +369,12 @@ class TranslateSDDModelToDataModel(object):
             except:
                 print("XX missing class1: ")
                 print(class_id)
+                
+    def get_attribute_list_from_variable_set(self,variable_set):
+        attribute_code_list = []
+        variable_set_items = variable_set.variable_set_items
+        for item in variable_set_items:
+            variable = item.variable_id
+            attribute_code_list.append(variable.code)
+             
+        return attribute_code_list
