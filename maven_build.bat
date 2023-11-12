@@ -1,12 +1,6 @@
-cd ecore4reg\eclipse_model
-call mvn install
-cd ..\.. 
-cd ecore4reg\eclipse_examples
+cd regdna\eclipse_model
 call mvn install
 cd ..\..  
-cd ecore4reg\dsl\org.eclipse.efbt.ecore4reg.dsl.parent
+cd regdna\dsl\org.eclipse.efbt.regdna.dsl.parent
 call mvn install
 cd ..\..\..
-cd installations\complete_repo\
-call mvn install
-cd ..\..
