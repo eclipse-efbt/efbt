@@ -95,10 +95,10 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.complete_repo</groupId>
-							<artifactId>org.eclipse.efbt.target</artifactId>
+							<groupId>org.eclipse.efbt.regdna.model</groupId>
+							<artifactId>org.eclipse.efbt.regdna.model.target</artifactId>
 							<version>${project.version}</version>
-						</artifact>
+						</artifact>	
 					</target>
 					<environments>
 						<environment>
