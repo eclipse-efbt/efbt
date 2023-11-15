@@ -18,19 +18,19 @@
    <feature id="org.eclipse.efbt.regdna.dsl.feature">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.regdna.examples.feature">
+   <feature id="org.eclipse.efbt.regpot_desktop.orchestrator.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.emf.ecore.xcore.sdk">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.sirius.runtime.ide.xtext">
+   <feature id="org.eclipse.efbt.regpot_desktop.sirius_ui.feature">
       <category name="efbt"/>
    </feature>
    <feature id="org.eclipse.emf.ecoretools.design">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.sirius.specifier">
+   <feature id="org.eclipse.sirius.runtime.ide.xtext">
       <category name="efbt"/>
    </feature>
    <category-def name="efbt" label="Complete EFBT Repository"/>

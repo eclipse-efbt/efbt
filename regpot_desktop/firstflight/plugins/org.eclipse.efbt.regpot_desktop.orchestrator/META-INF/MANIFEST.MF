@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Orchestrator
+Bundle-SymbolicName: org.eclipse.efbt.regpot_desktop.orchestrator
+Bundle-Version: 1.2.0.qualifier
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi
+Automatic-Module-Name: org.eclipse.efbt.regpot_desktop.orchestrator
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: regpot_desktoputils

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ASCII"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" name="regpot_desktop" version="12.0.0.2017041100">
+  <ownedViewpoints name="AttributeLineage" label="AttributeLineage" modelFileExtension="regpot_desktop">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="RulesForReport" initialisation="true" domainClass="RulesForReport" enablePopupBars="true">
+      <metamodel href="../../../../../regdna/eclipse_model/plugins/org.eclipse.efbt.regdna.model/model/regdna.ecore#/"/>
+      <layout xsi:type="description_1:CompositeLayout"/>
+      <defaultLayer name="Default">
+        <nodeMappings name="RulesForReport" semanticCandidatesExpression="aql:self" domainClass="RulesForReport">
+          <style xsi:type="style:SquareDescription" labelSize="6" labelExpression="aql:self.outputLayerCube.name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="10" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_orange']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="RulesForILTable" semanticCandidatesExpression="aql:self.rulesForTable" domainClass="RulesForILTable">
+          <style xsi:type="style:SquareDescription" labelSize="6" labelExpression="aql:self.inputLayerTable.name" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW" width="10" height="5">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="Table" semanticCandidatesExpression="aql:self.eAllContents()->filter(regpot_desktop::SelectColumn).attribute.eContainer()" domainClass="ELClass"/>
+        <edgeMappings name="ReportToTableLink" sourceMapping="//@ownedViewpoints[name='AttributeLineage']/@ownedRepresentations[name='RulesForReport']/@defaultLayer/@nodeMappings[name='RulesForReport']" targetMapping="//@ownedViewpoints[name='AttributeLineage']/@ownedRepresentations[name='RulesForReport']/@defaultLayer/@nodeMappings[name='RulesForILTable']" targetFinderExpression="feature:rulesForTable">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="6">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="TableToPartLink" sourceMapping="//@ownedViewpoints[name='AttributeLineage']/@ownedRepresentations[name='RulesForReport']/@defaultLayer/@nodeMappings[name='RulesForILTable']" targetMapping="//@ownedViewpoints[name='AttributeLineage']/@ownedRepresentations[name='RulesForReport']/@defaultLayer/@containerMappings[name='RuleForILTablePart']" targetFinderExpression="feature:rulesForTablePart">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="6">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="ColumnToAttributeLink" sourceMapping="//@ownedViewpoints[name='AttributeLineage']/@ownedRepresentations[name='RulesForReport']/@defaultLayer/@containerMappings[name='RuleForILTablePart']/@subContainerMappings[name='SelectColumn']" targetMapping="//@ownedViewpoints[name='AttributeLineage']/@ownedRepresentations[name='RulesForReport']/@defaultLayer/@containerMappings[name='Table']/@subContainerMappings[name='ELAttribute']" targetFinderExpression="aql:self.attribute">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="6">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="ColumnToOperationLink" sourceMapping="//@ownedViewpoints[name='AttributeLineage']/@ownedRepresentations[name='RulesForReport']/@defaultLayer/@containerMappings[name='RuleForILTablePart']/@subContainerMappings[name='SelectColumn']" targetMapping="//@ownedViewpoints[name='AttributeLineage']/@ownedRepresentations[name='RulesForReport']/@defaultLayer/@containerMappings[name='Table']/@subContainerMappings[name='ELOperation']" targetFinderExpression="aql:self.attribute">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="6">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <containerMappings name="RuleForILTablePart" semanticCandidatesExpression="aql:self.eAllContents()" domainClass="RuleForILTablePart" childrenPresentation="HorizontalStack">
+          <subContainerMappings name="SelectColumn" semanticCandidatesExpression="aql:self.columns" domainClass="SelectColumn">
+            <subContainerMappings name="SelectColumn" semanticCandidatesExpression="aql:self.columns" domainClass="SelectColumn">
+              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="aql:self.asAttribute.name">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_blue']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="aql:self.asAttribute.name">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_blue']"/>
+            </style>
+          </subContainerMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_orange']"/>
+          </style>
+        </containerMappings>
+        <containerMappings name="Table" semanticCandidatesExpression="aql:self.eAllContents()->filter(regpot_desktop::SelectColumn).attribute.eContainer()" domainClass="ELClass" childrenPresentation="HorizontalStack">
+          <subContainerMappings name="ELAttribute" semanticCandidatesExpression="service:getUsedAttributes(diagram)" domainClass="ELAttribute">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_red']"/>
+            </style>
+          </subContainerMappings>
+          <subContainerMappings name="ELOperation" semanticCandidatesExpression="service:getUsedOperations(diagram)" domainClass="ELOperation">
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
+            </style>
+          </subContainerMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" foregroundColor="//@userColorsPalettes[name='Colors']/@entries[name='LightYellow']">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+          </style>
+        </containerMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.regpot_desktop.ui.sirius.core.Services"/>
+  </ownedViewpoints>
+  <ownedViewpoints name="data_lineage" modelFileExtension="*.xmi">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="DataLineage" label="DataLineage" domainClass="EObject" enablePopupBars="true">
+      <metamodel href="http://www.eclipse.org/emf/2002/Ecore#/"/>
+      <layout xsi:type="description_1:CompositeLayout"/>
+      <defaultLayer name="Default">
+        <edgeMappings name="TableLink" sourceMapping="//@ownedViewpoints[name='data_lineage']/@ownedRepresentations[name='DataLineage']/@defaultLayer/@containerMappings[name='OtherEObject'] //@ownedViewpoints[name='data_lineage']/@ownedRepresentations[name='DataLineage']/@defaultLayer/@containerMappings[name='RootEObject']" targetMapping="//@ownedViewpoints[name='data_lineage']/@ownedRepresentations[name='DataLineage']/@defaultLayer/@containerMappings[name='OtherEObject']" targetFinderExpression="aql:self.eCrossReferences()">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <containerMappings name="RootEObject" semanticCandidatesExpression="aql:self" domainClass="EObject" childrenPresentation="VerticalStack">
+          <subContainerMappings name="Row" semanticCandidatesExpression="aql:self.eAllContents()" domainClass="EObject" childrenPresentation="HorizontalStack">
+            <subContainerMappings name="EOperation" semanticCandidatesExpression="service:getPublicOperations()" domainClass="EOperation">
+              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="service:getInvokedOperation(diagram,view)" tooltipExpression="feature:name" foregroundColor="//@userColorsPalettes[name='Colors']/@entries[name='Yellow']">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              </style>
+            </subContainerMappings>
+            <subContainerMappings name="EAttribute" semanticCandidatesExpression="aql:self.eClass().eAttributes" domainClass="EAttribute">
+              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="service:getAttributeValue(diagram,view)" tooltipExpression="feature:name">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_green']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="aql:self.eClass().name">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+            </style>
+          </subContainerMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="aql:self.eClass().name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_red']"/>
+          </style>
+        </containerMappings>
+        <containerMappings name="OtherEObject" semanticCandidatesExpression="service:getUsedReferencedObjects()" domainClass="EObject" childrenPresentation="VerticalStack">
+          <subContainerMappings name="Row" semanticCandidatesExpression="aql:self.eAllContents()" domainClass="EObject" childrenPresentation="HorizontalStack">
+            <subContainerMappings name="EOperation" semanticCandidatesExpression="service:getUsedInvokedOperations(diagram,containerView)" domainClass="EOperation">
+              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="service:getInvokedOperation(diagram,view)" tooltipExpression="feature:name" foregroundColor="//@userColorsPalettes[name='Colors']/@entries[name='Yellow']">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              </style>
+            </subContainerMappings>
+            <subContainerMappings name="EAttribute" semanticCandidatesExpression="service:getUsedAttributeValues(diagram,containerView)" domainClass="EAttribute">
+              <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="service:getAttributeValue(diagram,view)" tooltipExpression="feature:name">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+                <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_green']"/>
+              </style>
+            </subContainerMappings>
+            <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="aql:self.eClass().name">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+              <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+            </style>
+          </subContainerMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="6" labelExpression="aql:self.eClass().name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_red']"/>
+          </style>
+        </containerMappings>
+      </defaultLayer>
+      <additionalLayers name="RowLinks">
+        <edgeMappings name="RowLink" sourceMapping="//@ownedViewpoints[name='data_lineage']/@ownedRepresentations[name='DataLineage']/@defaultLayer/@containerMappings[name='RootEObject']/@subContainerMappings[name='Row'] //@ownedViewpoints[name='data_lineage']/@ownedRepresentations[name='DataLineage']/@defaultLayer/@containerMappings[name='OtherEObject']/@subContainerMappings[name='Row']" targetMapping="//@ownedViewpoints[name='data_lineage']/@ownedRepresentations[name='DataLineage']/@defaultLayer/@containerMappings[name='OtherEObject']/@subContainerMappings[name='Row']" targetFinderExpression="aql:self.eCrossReferences()">
+          <style sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+      </additionalLayers>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="org.eclipse.efbt.regpot_desktop.ui.sirius.core.Services"/>
+  </ownedViewpoints>
+  <userColorsPalettes name="Colors">
+    <entries xsi:type="description:UserFixedColor" red="255" green="255" blue="255" name="LaneBackgroundRight"/>
+    <entries xsi:type="description:UserFixedColor" red="255" green="249" blue="225" name="LightYellow"/>
+    <entries xsi:type="description:UserFixedColor" red="255" green="243" blue="171" name="Yellow"/>
+    <entries xsi:type="description:UserFixedColor" red="245" green="233" blue="73" name="DarkYellow"/>
+    <entries xsi:type="description:UserFixedColor" name="SequenceFlowColor"/>
+    <entries xsi:type="description:UserFixedColor" name="MessageFlowColor"/>
+    <entries xsi:type="description:UserFixedColor" red="176" green="176" blue="176" name="AssociationLinkColor"/>
+    <entries xsi:type="description:UserFixedColor" red="255" green="243" blue="171" name="TaskBorder"/>
+    <entries xsi:type="description:UserFixedColor" red="255" green="243" blue="171" name="TaskBackgroundLeft"/>
+    <entries xsi:type="description:UserFixedColor" red="255" green="243" blue="171" name="TaskBackgroundRight"/>
+    <entries xsi:type="description:UserFixedColor" red="64" green="41" blue="0" name="TextBackground"/>
+    <entries xsi:type="description:UserFixedColor" red="238" green="250" blue="255" name="GlobalTaskBackground"/>
+    <entries xsi:type="description:UserFixedColor" red="255" green="255" blue="255" name="ParticipantBackgroundRight"/>
+    <entries xsi:type="description:UserFixedColor" red="172" green="226" blue="253" name="ParticipantBackgroundLeft"/>
+    <entries xsi:type="description:UserFixedColor" red="133" green="200" blue="250" name="ParticipantBorder"/>
+  </userColorsPalettes>
+</description:Group>
