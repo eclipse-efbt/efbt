@@ -27,14 +27,13 @@ import org.eclipse.sirius.diagram.DSemanticDiagram;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import org.eclipse.efbt.regpot_desktop.model.*;
-import org.eclipse.efbt.regpot_desktop.model.regpot_desktop.ELAttribute;
-import org.eclipse.efbt.regpot_desktop.model.regpot_desktop.ELClass;
-import org.eclipse.efbt.regpot_desktop.model.regpot_desktop.ELOperation;
-import org.eclipse.efbt.regpot_desktop.model.regpot_desktop.ELPublicOperation;
-import org.eclipse.efbt.regpot_desktop.model.regpot_desktop.SelectColumn;
-import org.eclipse.efbt.regpot_desktop.model.regpot_desktop.SelectColumnAttributeAs;
-import org.eclipse.efbt.regpot_desktop.model.regpot_desktop.SelectDerivedColumnAs;
+import org.eclipse.efbt.regdna.model.regdna.*;
+import org.eclipse.efbt.regdna.model.regdna.ELAttribute;
+import org.eclipse.efbt.regdna.model.regdna.ELClass;
+import org.eclipse.efbt.regdna.model.regdna.ELOperation;
+import org.eclipse.efbt.regdna.model.regdna.ELPublicOperation;
+import org.eclipse.efbt.regdna.model.regdna.SelectColumn;
+import org.eclipse.efbt.regdna.model.regdna.SelectColumnAttributeAs;
 
 
 

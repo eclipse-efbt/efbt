@@ -4,3 +4,12 @@ cd ../..
 cd regdna/dsl/org.eclipse.efbt.regdna.dsl.parent
 mvn install
 cd ../../..
+cd regpot_desktop/firstflight
+mvn install
+cd ../..  
+cd regpot_desktop/sirius_ui
+mvn install
+cd ../..
+cd regpot_desktop/installation
+mvn install
+cd ../..

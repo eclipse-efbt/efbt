@@ -95,8 +95,8 @@
 				  <pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
-							<groupId>org.eclipse.efbt.regpot_desktop.model</groupId>
-							<artifactId>org.eclipse.efbt.regpot_desktop.model.target</artifactId>
+							<groupId>org.eclipse.efbt.complete_repo</groupId>
+							<artifactId>org.eclipse.efbt.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>
