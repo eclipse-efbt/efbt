@@ -24,9 +24,6 @@
    <feature id="org.eclipse.emf.ecore.xcore.sdk">
       <category name="efbt"/>
    </feature>
-   <feature id="org.eclipse.efbt.regpot_desktop.sirius_ui.feature">
-      <category name="efbt"/>
-   </feature>
    <feature id="org.eclipse.emf.ecoretools.design">
       <category name="efbt"/>
    </feature>
