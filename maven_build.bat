@@ -7,9 +7,6 @@ cd ..\..\..
 cd regpot_desktop\firstflight
 call mvn install
 cd ..\..  
-cd regpot_desktop\sirius_ui
-call mvn install
-cd ..\..
 cd regpot_desktop\installation
 call mvn install
 cd ..\..
