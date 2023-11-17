@@ -43,7 +43,8 @@ class CombinationsToReportFilters:
                 template_name = template.table_id
                 template_code = template.code
                 try:
-                    related_report = context.reports_dictionary[template_code]
+                    altered_template_name = Utils.make_valid_id(template_code) +"_REF_OutputItem"
+                    related_report = context.reports_dictionary[altered_template_name]
                     for axis_ordinate in cell_position.axis_ordinate_id:
                         axis=axis_ordinate.axis_id
                         orientation = axis.orientation
@@ -54,7 +55,7 @@ class CombinationsToReportFilters:
                             col = ReportColumn(name = axis_ordinate.code)
                             related_report.columns.append(col)
                         axis_ordinate_id = axis_ordinate.axis_ordinate_id
-                        index_of_ref = axis_ordinate_id.index('_REF')
+
                 
                     report_cell = ReportCell()
                     comb = cell_position.cell_id.combination_id
