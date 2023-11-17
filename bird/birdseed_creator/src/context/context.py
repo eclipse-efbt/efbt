@@ -12,7 +12,7 @@
 #
 
 
-from regdna import  ELPackage, ModuleList, GenerationRulesModule
+from regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule
 
 from context.ecore_lite_types import EcoreLiteTypes
 
@@ -72,6 +72,7 @@ class Context(object):
         nsPrefix='output_tables')
     
     generation_rules_module = GenerationRulesModule(name='generations')
+    reports_moduel = ReportModule(name='report')
 
     module_list = ModuleList()
     # classesMap keeps a reference between ldm ID's for classes and
