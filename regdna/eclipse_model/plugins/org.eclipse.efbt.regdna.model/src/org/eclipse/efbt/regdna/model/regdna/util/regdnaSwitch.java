@@ -2,7 +2,6 @@
  */
 package org.eclipse.efbt.regdna.model.regdna.util;
 
-import org.eclipse.efbt.regdna.model.regdna.AllowedTypes;
 import org.eclipse.efbt.regdna.model.regdna.AndPredicate;
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotation;
@@ -28,7 +27,6 @@ import org.eclipse.efbt.regdna.model.regdna.GenerationRulesModule;
 import org.eclipse.efbt.regdna.model.regdna.Import;
 import org.eclipse.efbt.regdna.model.regdna.ModuleList;
 import org.eclipse.efbt.regdna.model.regdna.NotPredicate;
-import org.eclipse.efbt.regdna.model.regdna.OperationTag;
 import org.eclipse.efbt.regdna.model.regdna.OrPredicate;
 import org.eclipse.efbt.regdna.model.regdna.Predicate;
 import org.eclipse.efbt.regdna.model.regdna.Report;
@@ -36,12 +34,6 @@ import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.ReportColumn;
 import org.eclipse.efbt.regdna.model.regdna.ReportModule;
 import org.eclipse.efbt.regdna.model.regdna.ReportRow;
-import org.eclipse.efbt.regdna.model.regdna.RequirementType;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsModule;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSection;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText;
 import org.eclipse.efbt.regdna.model.regdna.RuleForILTablePart;
 import org.eclipse.efbt.regdna.model.regdna.RulesForILTable;
 import org.eclipse.efbt.regdna.model.regdna.RulesForReport;
@@ -51,9 +43,6 @@ import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectValueAs;
 import org.eclipse.efbt.regdna.model.regdna.TableFilter;
-import org.eclipse.efbt.regdna.model.regdna.Tag;
-import org.eclipse.efbt.regdna.model.regdna.TagGroup;
-import org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
 import org.eclipse.emf.ecore.EObject;
@@ -133,72 +122,6 @@ public class regdnaSwitch<T> extends Switch<T> {
 			case regdnaPackage.MODULE_LIST: {
 				ModuleList moduleList = (ModuleList)theEObject;
 				T result = caseModuleList(moduleList);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.ALLOWED_TYPES: {
-				AllowedTypes allowedTypes = (AllowedTypes)theEObject;
-				T result = caseAllowedTypes(allowedTypes);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.REQUIREMENTS_MODULE: {
-				RequirementsModule requirementsModule = (RequirementsModule)theEObject;
-				T result = caseRequirementsModule(requirementsModule);
-				if (result == null) result = caseModule(requirementsModule);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.REQUIREMENTS_SECTION: {
-				RequirementsSection requirementsSection = (RequirementsSection)theEObject;
-				T result = caseRequirementsSection(requirementsSection);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.REQUIREMENTS_SECTION_IMAGE: {
-				RequirementsSectionImage requirementsSectionImage = (RequirementsSectionImage)theEObject;
-				T result = caseRequirementsSectionImage(requirementsSectionImage);
-				if (result == null) result = caseRequirementsSection(requirementsSectionImage);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.REQUIREMENTS_SECTION_LINK_WITH_TEXT: {
-				RequirementsSectionLinkWithText requirementsSectionLinkWithText = (RequirementsSectionLinkWithText)theEObject;
-				T result = caseRequirementsSectionLinkWithText(requirementsSectionLinkWithText);
-				if (result == null) result = caseRequirementsSection(requirementsSectionLinkWithText);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.REQUIREMENTS_SECTION_TEXT: {
-				RequirementsSectionText requirementsSectionText = (RequirementsSectionText)theEObject;
-				T result = caseRequirementsSectionText(requirementsSectionText);
-				if (result == null) result = caseRequirementsSection(requirementsSectionText);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.REQUIREMENT_TYPE: {
-				RequirementType requirementType = (RequirementType)theEObject;
-				T result = caseRequirementType(requirementType);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.TITLED_REQUIREMENTS_SECTION: {
-				TitledRequirementsSection titledRequirementsSection = (TitledRequirementsSection)theEObject;
-				T result = caseTitledRequirementsSection(titledRequirementsSection);
-				if (result == null) result = caseRequirementsSection(titledRequirementsSection);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.TAG: {
-				Tag tag = (Tag)theEObject;
-				T result = caseTag(tag);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case regdnaPackage.TAG_GROUP: {
-				TagGroup tagGroup = (TagGroup)theEObject;
-				T result = caseTagGroup(tagGroup);
-				if (result == null) result = caseModule(tagGroup);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -453,13 +376,6 @@ public class regdnaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case regdnaPackage.OPERATION_TAG: {
-				OperationTag operationTag = (OperationTag)theEObject;
-				T result = caseOperationTag(operationTag);
-				if (result == null) result = caseTag(operationTag);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case regdnaPackage.REPORT: {
 				Report report = (Report)theEObject;
 				T result = caseReport(report);
@@ -543,156 +459,6 @@ public class regdnaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseModuleList(ModuleList object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Allowed Types</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Allowed Types</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAllowedTypes(AllowedTypes object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Requirements Module</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Requirements Module</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRequirementsModule(RequirementsModule object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Requirements Section</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Requirements Section</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRequirementsSection(RequirementsSection object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Requirements Section Image</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Requirements Section Image</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRequirementsSectionImage(RequirementsSectionImage object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Requirements Section Link With Text</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Requirements Section Link With Text</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRequirementsSectionLinkWithText(RequirementsSectionLinkWithText object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Requirements Section Text</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Requirements Section Text</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRequirementsSectionText(RequirementsSectionText object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Requirement Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Requirement Type</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseRequirementType(RequirementType object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Titled Requirements Section</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Titled Requirements Section</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTitledRequirementsSection(TitledRequirementsSection object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Tag</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Tag</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTag(Tag object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Tag Group</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Tag Group</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTagGroup(TagGroup object) {
 		return null;
 	}
 
@@ -1188,21 +954,6 @@ public class regdnaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseELStringToStringMapEntry(ELStringToStringMapEntry object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Operation Tag</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Operation Tag</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseOperationTag(OperationTag object) {
 		return null;
 	}
 

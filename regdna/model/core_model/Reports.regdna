@@ -30,7 +30,7 @@ class ReportCell {
 	refers ReportColumn column
 	String datapointID
 	contains Filter[0..-1] filters
-	refers ELAttribute metric
+	refers ELOperation metric
 }
 
 

@@ -1,13 +1,13 @@
 
-from .regdna import getEClassifier, eClassifiers 
+from .regdna import getEClassifier, eClassifiers
 from .regdna import name, nsURI, nsPrefix, eClass
-from .regdna import Import, Module, ModuleList, AllowedTypes, RequirementsModule, RequirementsSection, RequirementsSectionImage, RequirementsSectionLinkWithText, RequirementsSectionText, RequirementType, TitledRequirementsSection, Tag, TagGroup, RulesForReport, RulesForILTable, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, SelectDerivedColumnAs, SelectValueAs, Comparitor, TableFilter, GenerationRulesModule, RuleForILTablePart, Predicate, AndPredicate, OrPredicate, NotPredicate, AttributePredicate, ELAttribute, ELClass, ELClassifier, ELDataType, ELEnum, ELEnumLiteral, ELModelElement, ELNamedElement, ELOperation, ELPublicOperation, ELPrivateOperation, ELParameter, ELPackage, ELReference, ELStructuralFeature, ELTypedElement, ELAnnotation, ELStringToStringMapEntry, OperationTag, Report, ReportRow, ReportColumn, ReportCell, Filter, ReportModule
+from .regdna import Import, Module, ModuleList, RulesForReport, RulesForILTable, SelectColumn, SelectColumnMemberAs, SelectColumnAttributeAs, SelectDerivedColumnAs, SelectValueAs, Comparitor, TableFilter, GenerationRulesModule, RuleForILTablePart, Predicate, AndPredicate, OrPredicate, NotPredicate, AttributePredicate, ELAttribute, ELClass, ELClassifier, ELDataType, ELEnum, ELEnumLiteral, ELModelElement, ELNamedElement, ELOperation, ELPublicOperation, ELPrivateOperation, ELParameter, ELPackage, ELReference, ELStructuralFeature, ELTypedElement, ELAnnotation, ELStringToStringMapEntry, Report, ReportRow, ReportColumn, ReportCell, Filter, ReportModule
 
 
 from . import regdna
 
-__all__ = ['Import', 'Module', 'ModuleList', 'AllowedTypes', 'RequirementsModule', 'RequirementsSection', 'RequirementsSectionImage', 'RequirementsSectionLinkWithText', 'RequirementsSectionText', 'RequirementType', 'TitledRequirementsSection', 'Tag', 'TagGroup', 'RulesForReport', 'RulesForILTable', 'SelectColumn', 'SelectColumnMemberAs', 'SelectColumnAttributeAs', 'SelectDerivedColumnAs', 'SelectValueAs', 'Comparitor', 'TableFilter', 'GenerationRulesModule', 'RuleForILTablePart',
-           'Predicate', 'AndPredicate', 'OrPredicate', 'NotPredicate', 'AttributePredicate', 'ELAttribute', 'ELClass', 'ELClassifier', 'ELDataType', 'ELEnum', 'ELEnumLiteral', 'ELModelElement', 'ELNamedElement', 'ELOperation', 'ELPublicOperation', 'ELPrivateOperation', 'ELParameter', 'ELPackage', 'ELReference', 'ELStructuralFeature', 'ELTypedElement', 'ELAnnotation', 'ELStringToStringMapEntry', 'OperationTag', 'Report', 'ReportRow', 'ReportColumn', 'ReportCell', 'Filter', 'ReportModule']
+__all__ = ['Import', 'Module', 'ModuleList', 'RulesForReport', 'RulesForILTable', 'SelectColumn', 'SelectColumnMemberAs', 'SelectColumnAttributeAs', 'SelectDerivedColumnAs', 'SelectValueAs', 'Comparitor', 'TableFilter', 'GenerationRulesModule', 'RuleForILTablePart', 'Predicate', 'AndPredicate', 'OrPredicate', 'NotPredicate', 'AttributePredicate', 'ELAttribute',
+           'ELClass', 'ELClassifier', 'ELDataType', 'ELEnum', 'ELEnumLiteral', 'ELModelElement', 'ELNamedElement', 'ELOperation', 'ELPublicOperation', 'ELPrivateOperation', 'ELParameter', 'ELPackage', 'ELReference', 'ELStructuralFeature', 'ELTypedElement', 'ELAnnotation', 'ELStringToStringMapEntry', 'Report', 'ReportRow', 'ReportColumn', 'ReportCell', 'Filter', 'ReportModule']
 
 eSubpackages = []
 eSuperPackage = None
@@ -17,13 +17,6 @@ regdna.eSuperPackage = eSuperPackage
 Module.dependencies.eType = Module
 Module.imports.eType = Import
 ModuleList.modules.eType = Module
-AllowedTypes.allowedTypes.eType = RequirementType
-RequirementsModule.rules.eType = TitledRequirementsSection
-RequirementsModule.allowedtypes.eType = AllowedTypes
-TitledRequirementsSection.sections.eType = RequirementsSection
-TitledRequirementsSection.requirementsType.eType = RequirementType
-Tag.requirements.eType = TitledRequirementsSection
-TagGroup.tags.eType = Tag
 RulesForReport.outputLayerCube.eType = ELClass
 RulesForReport.rulesForTable.eType = RulesForILTable
 RulesForILTable.rulesForTablePart.eType = RuleForILTablePart
@@ -52,7 +45,6 @@ ELPrivateOperation.eParameters.eType = ELParameter
 ELReference.eReferenceType.eType = ELClassifier
 ELTypedElement.eType.eType = ELClassifier
 ELAnnotation.details.eType = ELStringToStringMapEntry
-OperationTag.operation.eType = ELOperation
 Report.outputLayer.eType = ELClass
 Report.rows.eType = ReportRow
 Report.columns.eType = ReportColumn
@@ -60,14 +52,11 @@ Report.reportCells.eType = ReportCell
 ReportCell.row.eType = ReportRow
 ReportCell.column.eType = ReportColumn
 ReportCell.filters.eType = Filter
-ReportCell.metric.eType = ELAttribute
+ReportCell.metric.eType = ELOperation
 Filter.outputLayer.eType = ELClass
 Filter.operation.eType = ELOperation
 Filter.member.eType = ELEnumLiteral
 ReportModule.reports.eType = Report
-RequirementsSectionLinkWithText.linkedRuleSection.eType = TitledRequirementsSection
-TitledRequirementsSection.referencingSections.eType = RequirementsSectionLinkWithText
-TitledRequirementsSection.referencingSections.eOpposite = RequirementsSectionLinkWithText.linkedRuleSection
 ELClassifier.ePackage.eType = ELPackage
 ELPackage.eClassifiers.eType = ELClassifier
 ELPackage.eClassifiers.eOpposite = ELClassifier.ePackage

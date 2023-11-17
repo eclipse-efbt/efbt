@@ -2,7 +2,6 @@
  */
 package org.eclipse.efbt.regdna.model.regdna.impl;
 
-import org.eclipse.efbt.regdna.model.regdna.AllowedTypes;
 import org.eclipse.efbt.regdna.model.regdna.AndPredicate;
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
 import org.eclipse.efbt.regdna.model.regdna.Comparitor;
@@ -24,18 +23,12 @@ import org.eclipse.efbt.regdna.model.regdna.GenerationRulesModule;
 import org.eclipse.efbt.regdna.model.regdna.Import;
 import org.eclipse.efbt.regdna.model.regdna.ModuleList;
 import org.eclipse.efbt.regdna.model.regdna.NotPredicate;
-import org.eclipse.efbt.regdna.model.regdna.OperationTag;
 import org.eclipse.efbt.regdna.model.regdna.OrPredicate;
 import org.eclipse.efbt.regdna.model.regdna.Report;
 import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.ReportColumn;
 import org.eclipse.efbt.regdna.model.regdna.ReportModule;
 import org.eclipse.efbt.regdna.model.regdna.ReportRow;
-import org.eclipse.efbt.regdna.model.regdna.RequirementType;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsModule;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText;
 import org.eclipse.efbt.regdna.model.regdna.RuleForILTablePart;
 import org.eclipse.efbt.regdna.model.regdna.RulesForILTable;
 import org.eclipse.efbt.regdna.model.regdna.RulesForReport;
@@ -45,9 +38,6 @@ import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectValueAs;
 import org.eclipse.efbt.regdna.model.regdna.TableFilter;
-import org.eclipse.efbt.regdna.model.regdna.Tag;
-import org.eclipse.efbt.regdna.model.regdna.TagGroup;
-import org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection;
 import org.eclipse.efbt.regdna.model.regdna.regdnaFactory;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
@@ -107,15 +97,6 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 			case regdnaPackage.IMPORT: return createImport();
 			case regdnaPackage.MODULE: return createModule();
 			case regdnaPackage.MODULE_LIST: return createModuleList();
-			case regdnaPackage.ALLOWED_TYPES: return createAllowedTypes();
-			case regdnaPackage.REQUIREMENTS_MODULE: return createRequirementsModule();
-			case regdnaPackage.REQUIREMENTS_SECTION_IMAGE: return createRequirementsSectionImage();
-			case regdnaPackage.REQUIREMENTS_SECTION_LINK_WITH_TEXT: return createRequirementsSectionLinkWithText();
-			case regdnaPackage.REQUIREMENTS_SECTION_TEXT: return createRequirementsSectionText();
-			case regdnaPackage.REQUIREMENT_TYPE: return createRequirementType();
-			case regdnaPackage.TITLED_REQUIREMENTS_SECTION: return createTitledRequirementsSection();
-			case regdnaPackage.TAG: return createTag();
-			case regdnaPackage.TAG_GROUP: return createTagGroup();
 			case regdnaPackage.RULES_FOR_REPORT: return createRulesForReport();
 			case regdnaPackage.RULES_FOR_IL_TABLE: return createRulesForILTable();
 			case regdnaPackage.SELECT_COLUMN: return createSelectColumn();
@@ -143,7 +124,6 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 			case regdnaPackage.EL_REFERENCE: return createELReference();
 			case regdnaPackage.EL_ANNOTATION: return createELAnnotation();
 			case regdnaPackage.EL_STRING_TO_STRING_MAP_ENTRY: return createELStringToStringMapEntry();
-			case regdnaPackage.OPERATION_TAG: return createOperationTag();
 			case regdnaPackage.REPORT: return createReport();
 			case regdnaPackage.REPORT_ROW: return createReportRow();
 			case regdnaPackage.REPORT_COLUMN: return createReportColumn();
@@ -213,96 +193,6 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	public ModuleList createModuleList() {
 		ModuleListImpl moduleList = new ModuleListImpl();
 		return moduleList;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AllowedTypes createAllowedTypes() {
-		AllowedTypesImpl allowedTypes = new AllowedTypesImpl();
-		return allowedTypes;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RequirementsModule createRequirementsModule() {
-		RequirementsModuleImpl requirementsModule = new RequirementsModuleImpl();
-		return requirementsModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RequirementsSectionImage createRequirementsSectionImage() {
-		RequirementsSectionImageImpl requirementsSectionImage = new RequirementsSectionImageImpl();
-		return requirementsSectionImage;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RequirementsSectionLinkWithText createRequirementsSectionLinkWithText() {
-		RequirementsSectionLinkWithTextImpl requirementsSectionLinkWithText = new RequirementsSectionLinkWithTextImpl();
-		return requirementsSectionLinkWithText;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RequirementsSectionText createRequirementsSectionText() {
-		RequirementsSectionTextImpl requirementsSectionText = new RequirementsSectionTextImpl();
-		return requirementsSectionText;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RequirementType createRequirementType() {
-		RequirementTypeImpl requirementType = new RequirementTypeImpl();
-		return requirementType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TitledRequirementsSection createTitledRequirementsSection() {
-		TitledRequirementsSectionImpl titledRequirementsSection = new TitledRequirementsSectionImpl();
-		return titledRequirementsSection;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Tag createTag() {
-		TagImpl tag = new TagImpl();
-		return tag;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TagGroup createTagGroup() {
-		TagGroupImpl tagGroup = new TagGroupImpl();
-		return tagGroup;
 	}
 
 	/**
@@ -573,16 +463,6 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	public ELStringToStringMapEntry createELStringToStringMapEntry() {
 		ELStringToStringMapEntryImpl elStringToStringMapEntry = new ELStringToStringMapEntryImpl();
 		return elStringToStringMapEntry;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public OperationTag createOperationTag() {
-		OperationTagImpl operationTag = new OperationTagImpl();
-		return operationTag;
 	}
 
 	/**

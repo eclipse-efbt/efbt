@@ -49,87 +49,6 @@ public interface regdnaFactory extends EFactory {
 	ModuleList createModuleList();
 
 	/**
-	 * Returns a new object of class '<em>Allowed Types</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Allowed Types</em>'.
-	 * @generated
-	 */
-	AllowedTypes createAllowedTypes();
-
-	/**
-	 * Returns a new object of class '<em>Requirements Module</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Requirements Module</em>'.
-	 * @generated
-	 */
-	RequirementsModule createRequirementsModule();
-
-	/**
-	 * Returns a new object of class '<em>Requirements Section Image</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Requirements Section Image</em>'.
-	 * @generated
-	 */
-	RequirementsSectionImage createRequirementsSectionImage();
-
-	/**
-	 * Returns a new object of class '<em>Requirements Section Link With Text</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Requirements Section Link With Text</em>'.
-	 * @generated
-	 */
-	RequirementsSectionLinkWithText createRequirementsSectionLinkWithText();
-
-	/**
-	 * Returns a new object of class '<em>Requirements Section Text</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Requirements Section Text</em>'.
-	 * @generated
-	 */
-	RequirementsSectionText createRequirementsSectionText();
-
-	/**
-	 * Returns a new object of class '<em>Requirement Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Requirement Type</em>'.
-	 * @generated
-	 */
-	RequirementType createRequirementType();
-
-	/**
-	 * Returns a new object of class '<em>Titled Requirements Section</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Titled Requirements Section</em>'.
-	 * @generated
-	 */
-	TitledRequirementsSection createTitledRequirementsSection();
-
-	/**
-	 * Returns a new object of class '<em>Tag</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Tag</em>'.
-	 * @generated
-	 */
-	Tag createTag();
-
-	/**
-	 * Returns a new object of class '<em>Tag Group</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Tag Group</em>'.
-	 * @generated
-	 */
-	TagGroup createTagGroup();
-
-	/**
 	 * Returns a new object of class '<em>Rules For Report</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -371,15 +290,6 @@ public interface regdnaFactory extends EFactory {
 	 * @generated
 	 */
 	ELStringToStringMapEntry createELStringToStringMapEntry();
-
-	/**
-	 * Returns a new object of class '<em>Operation Tag</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Operation Tag</em>'.
-	 * @generated
-	 */
-	OperationTag createOperationTag();
 
 	/**
 	 * Returns a new object of class '<em>Report</em>'.

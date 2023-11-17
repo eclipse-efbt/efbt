@@ -72,14 +72,15 @@ class Context(object):
         nsPrefix='output_tables')
     
     generation_rules_module = GenerationRulesModule(name='generations')
-    reports_moduel = ReportModule(name='report')
+    reports_module = ReportModule(name='report')
+    reports_dictionary = {}
 
     module_list = ModuleList()
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classes_map = {}
     # classesMap keeps a reference between ldm ID's for classes and
-    # the list of these calsses that we call tables
+    # the list of these classes that we call tables
     table_map = {}
     # A map between the LDM names for primitive types types, and
     # our standard primitive types such as EString
@@ -107,4 +108,6 @@ class Context(object):
         self.module_list.modules.append(self.input_tables_package)
         self.module_list.modules.append(self.output_tables_package)
         self.module_list.modules.append(self.generation_rules_module)
+        self.module_list.modules.append(self.reports_module)
+        
 

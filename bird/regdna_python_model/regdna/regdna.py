@@ -77,71 +77,6 @@ class ModuleList(EObject, metaclass=MetaEClass):
             self.modules.extend(modules)
 
 
-class AllowedTypes(EObject, metaclass=MetaEClass):
-
-    allowedTypes = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, allowedTypes=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if allowedTypes:
-            self.allowedTypes.extend(allowedTypes)
-
-
-@abstract
-class RequirementsSection(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-
-    def __init__(self, *, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-
-class RequirementType(EObject, metaclass=MetaEClass):
-
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-
-    def __init__(self, *, name=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if name is not None:
-            self.name = name
-
-
-class Tag(EObject, metaclass=MetaEClass):
-
-    displayName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
-    requirements = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
-
-    def __init__(self, *, displayName=None, name=None, requirements=None):
-        # if kwargs:
-        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
-
-        super().__init__()
-
-        if displayName is not None:
-            self.displayName = displayName
-
-        if name is not None:
-            self.name = name
-
-        if requirements:
-            self.requirements.extend(requirements)
-
-
 class RulesForReport(EObject, metaclass=MetaEClass):
 
     outputLayerCube = EReference(ordered=True, unique=True, containment=False, derived=False)
@@ -378,106 +313,6 @@ class Filter(EObject, metaclass=MetaEClass):
             self.member.extend(member)
 
 
-class RequirementsModule(Module):
-
-    rules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    allowedtypes = EReference(ordered=True, unique=True, containment=True, derived=False)
-
-    def __init__(self, *, rules=None, allowedtypes=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if rules:
-            self.rules.extend(rules)
-
-        if allowedtypes is not None:
-            self.allowedtypes = allowedtypes
-
-
-class RequirementsSectionImage(RequirementsSection):
-
-    style = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    uri = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, style=None, uri=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if style is not None:
-            self.style = style
-
-        if uri is not None:
-            self.uri = uri
-
-
-class RequirementsSectionLinkWithText(RequirementsSection):
-
-    linkText = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    subsection = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    linkedRuleSection = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, linkedRuleSection=None, linkText=None, subsection=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if linkText is not None:
-            self.linkText = linkText
-
-        if subsection is not None:
-            self.subsection = subsection
-
-        if linkedRuleSection is not None:
-            self.linkedRuleSection = linkedRuleSection
-
-
-class RequirementsSectionText(RequirementsSection):
-
-    text = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-
-    def __init__(self, *, text=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if text is not None:
-            self.text = text
-
-
-class TitledRequirementsSection(RequirementsSection):
-
-    title = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    sections = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    referencingSections = EReference(ordered=True, unique=True, containment=False, derived=False)
-    requirementsType = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, sections=None, referencingSections=None, requirementsType=None, title=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if title is not None:
-            self.title = title
-
-        if sections:
-            self.sections.extend(sections)
-
-        if referencingSections is not None:
-            self.referencingSections = referencingSections
-
-        if requirementsType is not None:
-            self.requirementsType = requirementsType
-
-
-class TagGroup(Module):
-
-    tags = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, tags=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if tags:
-            self.tags.extend(tags)
-
-
 class SelectColumnMemberAs(SelectColumn):
 
     memberAsConstant = EReference(ordered=True, unique=True, containment=False, derived=False)
@@ -646,18 +481,6 @@ class ELAnnotation(ELModelElement):
 
         if details:
             self.details.extend(details)
-
-
-class OperationTag(Tag):
-
-    operation = EReference(ordered=True, unique=True, containment=False, derived=False)
-
-    def __init__(self, *, operation=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if operation is not None:
-            self.operation = operation
 
 
 class ReportModule(Module):

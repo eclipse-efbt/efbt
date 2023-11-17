@@ -65,76 +65,6 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass allowedTypesEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass requirementsModuleEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass requirementsSectionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass requirementsSectionImageEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass requirementsSectionLinkWithTextEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass requirementsSectionTextEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass requirementTypeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass titledRequirementsSectionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass tagEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass tagGroupEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass rulesForReportEClass = null;
 
 	/**
@@ -366,13 +296,6 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass operationTagEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass reportEClass = null;
 
 	/**
@@ -588,300 +511,9 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getAllowedTypes() {
-		if (allowedTypesEClass == null) {
-			allowedTypesEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(3);
-		}
-		return allowedTypesEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getAllowedTypes_AllowedTypes() {
-        return (EReference)getAllowedTypes().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRequirementsModule() {
-		if (requirementsModuleEClass == null) {
-			requirementsModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(4);
-		}
-		return requirementsModuleEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getRequirementsModule_Rules() {
-        return (EReference)getRequirementsModule().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getRequirementsModule_Allowedtypes() {
-        return (EReference)getRequirementsModule().getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRequirementsSection() {
-		if (requirementsSectionEClass == null) {
-			requirementsSectionEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(5);
-		}
-		return requirementsSectionEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRequirementsSection_Name() {
-        return (EAttribute)getRequirementsSection().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRequirementsSectionImage() {
-		if (requirementsSectionImageEClass == null) {
-			requirementsSectionImageEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(6);
-		}
-		return requirementsSectionImageEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRequirementsSectionImage_Style() {
-        return (EAttribute)getRequirementsSectionImage().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRequirementsSectionImage_Uri() {
-        return (EAttribute)getRequirementsSectionImage().getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRequirementsSectionLinkWithText() {
-		if (requirementsSectionLinkWithTextEClass == null) {
-			requirementsSectionLinkWithTextEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(7);
-		}
-		return requirementsSectionLinkWithTextEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getRequirementsSectionLinkWithText_LinkedRuleSection() {
-        return (EReference)getRequirementsSectionLinkWithText().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRequirementsSectionLinkWithText_LinkText() {
-        return (EAttribute)getRequirementsSectionLinkWithText().getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRequirementsSectionLinkWithText_Subsection() {
-        return (EAttribute)getRequirementsSectionLinkWithText().getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRequirementsSectionText() {
-		if (requirementsSectionTextEClass == null) {
-			requirementsSectionTextEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(8);
-		}
-		return requirementsSectionTextEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRequirementsSectionText_Text() {
-        return (EAttribute)getRequirementsSectionText().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRequirementType() {
-		if (requirementTypeEClass == null) {
-			requirementTypeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(9);
-		}
-		return requirementTypeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRequirementType_Name() {
-        return (EAttribute)getRequirementType().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getTitledRequirementsSection() {
-		if (titledRequirementsSectionEClass == null) {
-			titledRequirementsSectionEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(10);
-		}
-		return titledRequirementsSectionEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTitledRequirementsSection_Sections() {
-        return (EReference)getTitledRequirementsSection().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTitledRequirementsSection_ReferencingSections() {
-        return (EReference)getTitledRequirementsSection().getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTitledRequirementsSection_RequirementsType() {
-        return (EReference)getTitledRequirementsSection().getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTitledRequirementsSection_Title() {
-        return (EAttribute)getTitledRequirementsSection().getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getTag() {
-		if (tagEClass == null) {
-			tagEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(11);
-		}
-		return tagEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTag_DisplayName() {
-        return (EAttribute)getTag().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTag_Name() {
-        return (EAttribute)getTag().getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTag_Requirements() {
-        return (EReference)getTag().getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getTagGroup() {
-		if (tagGroupEClass == null) {
-			tagGroupEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(12);
-		}
-		return tagGroupEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTagGroup_Tags() {
-        return (EReference)getTagGroup().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getRulesForReport() {
 		if (rulesForReportEClass == null) {
-			rulesForReportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(13);
+			rulesForReportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(3);
 		}
 		return rulesForReportEClass;
 	}
@@ -911,7 +543,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getRulesForILTable() {
 		if (rulesForILTableEClass == null) {
-			rulesForILTableEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(14);
+			rulesForILTableEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(4);
 		}
 		return rulesForILTableEClass;
 	}
@@ -941,7 +573,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getSelectColumn() {
 		if (selectColumnEClass == null) {
-			selectColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(15);
+			selectColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(5);
 		}
 		return selectColumnEClass;
 	}
@@ -962,7 +594,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getSelectColumnMemberAs() {
 		if (selectColumnMemberAsEClass == null) {
-			selectColumnMemberAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(16);
+			selectColumnMemberAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(6);
 		}
 		return selectColumnMemberAsEClass;
 	}
@@ -983,7 +615,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getSelectColumnAttributeAs() {
 		if (selectColumnAttributeAsEClass == null) {
-			selectColumnAttributeAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(17);
+			selectColumnAttributeAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(7);
 		}
 		return selectColumnAttributeAsEClass;
 	}
@@ -1004,7 +636,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getSelectDerivedColumnAs() {
 		if (selectDerivedColumnAsEClass == null) {
-			selectDerivedColumnAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(18);
+			selectDerivedColumnAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(8);
 		}
 		return selectDerivedColumnAsEClass;
 	}
@@ -1025,7 +657,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getSelectValueAs() {
 		if (selectValueAsEClass == null) {
-			selectValueAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(19);
+			selectValueAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(9);
 		}
 		return selectValueAsEClass;
 	}
@@ -1046,7 +678,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getTableFilter() {
 		if (tableFilterEClass == null) {
-			tableFilterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(21);
+			tableFilterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(11);
 		}
 		return tableFilterEClass;
 	}
@@ -1067,7 +699,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getGenerationRulesModule() {
 		if (generationRulesModuleEClass == null) {
-			generationRulesModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(22);
+			generationRulesModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(12);
 		}
 		return generationRulesModuleEClass;
 	}
@@ -1088,7 +720,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getRuleForILTablePart() {
 		if (ruleForILTablePartEClass == null) {
-			ruleForILTablePartEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(23);
+			ruleForILTablePartEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(13);
 		}
 		return ruleForILTablePartEClass;
 	}
@@ -1127,7 +759,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getPredicate() {
 		if (predicateEClass == null) {
-			predicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(24);
+			predicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(14);
 		}
 		return predicateEClass;
 	}
@@ -1139,7 +771,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getAndPredicate() {
 		if (andPredicateEClass == null) {
-			andPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(25);
+			andPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(15);
 		}
 		return andPredicateEClass;
 	}
@@ -1160,7 +792,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getOrPredicate() {
 		if (orPredicateEClass == null) {
-			orPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(26);
+			orPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(16);
 		}
 		return orPredicateEClass;
 	}
@@ -1181,7 +813,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getNotPredicate() {
 		if (notPredicateEClass == null) {
-			notPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(27);
+			notPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(17);
 		}
 		return notPredicateEClass;
 	}
@@ -1202,7 +834,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getAttributePredicate() {
 		if (attributePredicateEClass == null) {
-			attributePredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(28);
+			attributePredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(18);
 		}
 		return attributePredicateEClass;
 	}
@@ -1250,7 +882,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELAttribute() {
 		if (elAttributeEClass == null) {
-			elAttributeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(29);
+			elAttributeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(19);
 		}
 		return elAttributeEClass;
 	}
@@ -1280,7 +912,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELClass() {
 		if (elClassEClass == null) {
-			elClassEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(30);
+			elClassEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(20);
 		}
 		return elClassEClass;
 	}
@@ -1328,7 +960,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELClassifier() {
 		if (elClassifierEClass == null) {
-			elClassifierEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(31);
+			elClassifierEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(21);
 		}
 		return elClassifierEClass;
 	}
@@ -1349,7 +981,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELDataType() {
 		if (elDataTypeEClass == null) {
-			elDataTypeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(32);
+			elDataTypeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(22);
 		}
 		return elDataTypeEClass;
 	}
@@ -1370,7 +1002,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELEnum() {
 		if (elEnumEClass == null) {
-			elEnumEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(33);
+			elEnumEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(23);
 		}
 		return elEnumEClass;
 	}
@@ -1391,7 +1023,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELEnumLiteral() {
 		if (elEnumLiteralEClass == null) {
-			elEnumLiteralEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(34);
+			elEnumLiteralEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(24);
 		}
 		return elEnumLiteralEClass;
 	}
@@ -1421,7 +1053,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELModelElement() {
 		if (elModelElementEClass == null) {
-			elModelElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(35);
+			elModelElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(25);
 		}
 		return elModelElementEClass;
 	}
@@ -1442,7 +1074,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELNamedElement() {
 		if (elNamedElementEClass == null) {
-			elNamedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(36);
+			elNamedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(26);
 		}
 		return elNamedElementEClass;
 	}
@@ -1463,7 +1095,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELOperation() {
 		if (elOperationEClass == null) {
-			elOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(37);
+			elOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(27);
 		}
 		return elOperationEClass;
 	}
@@ -1484,7 +1116,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELPublicOperation() {
 		if (elPublicOperationEClass == null) {
-			elPublicOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(38);
+			elPublicOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(28);
 		}
 		return elPublicOperationEClass;
 	}
@@ -1505,7 +1137,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELPrivateOperation() {
 		if (elPrivateOperationEClass == null) {
-			elPrivateOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(39);
+			elPrivateOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(29);
 		}
 		return elPrivateOperationEClass;
 	}
@@ -1526,7 +1158,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELParameter() {
 		if (elParameterEClass == null) {
-			elParameterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(40);
+			elParameterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(30);
 		}
 		return elParameterEClass;
 	}
@@ -1538,7 +1170,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELPackage() {
 		if (elPackageEClass == null) {
-			elPackageEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(41);
+			elPackageEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(31);
 		}
 		return elPackageEClass;
 	}
@@ -1577,7 +1209,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELReference() {
 		if (elReferenceEClass == null) {
-			elReferenceEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(42);
+			elReferenceEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(32);
 		}
 		return elReferenceEClass;
 	}
@@ -1607,7 +1239,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELStructuralFeature() {
 		if (elStructuralFeatureEClass == null) {
-			elStructuralFeatureEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(43);
+			elStructuralFeatureEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(33);
 		}
 		return elStructuralFeatureEClass;
 	}
@@ -1619,7 +1251,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELTypedElement() {
 		if (elTypedElementEClass == null) {
-			elTypedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(44);
+			elTypedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(34);
 		}
 		return elTypedElementEClass;
 	}
@@ -1658,7 +1290,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELAnnotation() {
 		if (elAnnotationEClass == null) {
-			elAnnotationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(45);
+			elAnnotationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(35);
 		}
 		return elAnnotationEClass;
 	}
@@ -1688,7 +1320,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getELStringToStringMapEntry() {
 		if (elStringToStringMapEntryEClass == null) {
-			elStringToStringMapEntryEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(46);
+			elStringToStringMapEntryEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(36);
 		}
 		return elStringToStringMapEntryEClass;
 	}
@@ -1716,30 +1348,9 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getOperationTag() {
-		if (operationTagEClass == null) {
-			operationTagEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(47);
-		}
-		return operationTagEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getOperationTag_Operation() {
-        return (EReference)getOperationTag().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getReport() {
 		if (reportEClass == null) {
-			reportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(48);
+			reportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(37);
 		}
 		return reportEClass;
 	}
@@ -1787,7 +1398,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getReportRow() {
 		if (reportRowEClass == null) {
-			reportRowEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(49);
+			reportRowEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(38);
 		}
 		return reportRowEClass;
 	}
@@ -1808,7 +1419,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getReportColumn() {
 		if (reportColumnEClass == null) {
-			reportColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(50);
+			reportColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(39);
 		}
 		return reportColumnEClass;
 	}
@@ -1829,7 +1440,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getReportCell() {
 		if (reportCellEClass == null) {
-			reportCellEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(51);
+			reportCellEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(40);
 		}
 		return reportCellEClass;
 	}
@@ -1886,7 +1497,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getFilter() {
 		if (filterEClass == null) {
-			filterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(52);
+			filterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(41);
 		}
 		return filterEClass;
 	}
@@ -1925,7 +1536,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EClass getReportModule() {
 		if (reportModuleEClass == null) {
-			reportModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(53);
+			reportModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(42);
 		}
 		return reportModuleEClass;
 	}
@@ -1946,7 +1557,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 */
 	public EEnum getComparitor() {
 		if (comparitorEEnum == null) {
-			comparitorEEnum = (EEnum)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(20);
+			comparitorEEnum = (EEnum)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(10);
 		}
 		return comparitorEEnum;
 	}

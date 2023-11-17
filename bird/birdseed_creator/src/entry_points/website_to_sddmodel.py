@@ -23,8 +23,8 @@ class RunWebsiteToSDDModel:
 
 if __name__ == '__main__':
     sdd_context = SDDContext()
-    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'      
+    sdd_context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_regpot_desktop\\bird\\birdseed_creator\\resources'
+    sdd_context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_regpot_desktop\\bird\\birdseed_creator\\results'      
     RunWebsiteToSDDModel().run(sdd_context)
     persister =PersistSDD()
     persister.save_analysis_model_as_xmi_files(sdd_context)
