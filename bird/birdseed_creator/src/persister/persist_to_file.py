@@ -306,7 +306,44 @@ class PersistToFile:
                
                 f.close()
     
-
+    def persist_reports(self, context):
+        '''
+        Documentation for persist_generation_transformations
+        '''
+        reports = context.reports_module.reports
+        for report in reports:
+            if not(report.outputLayer is None):
+                f = open(context.output_directory + os.sep + 'regdna' +
+                         os.sep + report.outputLayer.name +
+                         '.regdna', "a",  encoding='utf-8')
+                f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
+                f.write("\treports " + "{\r")
+                f.write("\t\tReport " + "{\r")
+                f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
+                f.write("\t\t\trows{\r")
+                for row in report.rows:                    
+                    f.write("\t\t\t\tReportRow " + row.name + ",\r")
+                f.write("\t\t\t}\r")
+                f.write("\t\t\tcolumns{\r")
+                for col in report.columns:                    
+                    f.write("\t\t\tReportColumn " + col.name + ",\r")
+                f.write("\t\t\t}\r")
+                f.write("\t\t\treportCells{\r")  
+                for cell in report.reportCells:                    
+                    f.write("\t\t\ReportCell{\r")
+                    f.write("\t\t\t\datapointID\"" + cell.datapointID + "\" row " +cell.row.name + " column " + cell.col.name + " metric " + cell.metric.name + " filters {\r")
+                    for filter in cell.filters:
+                        f.write("\t\t\t\tFilter { operation " + filter.operation.name + "  item ( ")
+                        for item in filter.member:
+                            f.write(item.name + "," ) 
+                        f.write(")\r")   
+                        f.write("\t\t\t\t}\r")   
+                    f.write("\t\t\t}\r")
+                f.write("\t\t}\r")
+                f.write("\t}\r")
+                f.write("}\r")
+                f.close()
+                
     def remove_comment_chars(self, the_string):
         '''
         Documentation for remove_comment_chars

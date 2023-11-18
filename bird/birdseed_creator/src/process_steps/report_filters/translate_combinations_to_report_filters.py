@@ -23,7 +23,7 @@ class CombinationsToReportFilters:
         
         for table in sdd_context.report_tables.reportTables:
             table_code  =  table.code
-            altered_table_name = Utils.make_valid_id(table_code) +"_REF_OutputItem"
+            altered_table_name = Utils.make_valid_id(table_code) +"_OutputItem"
             report_rol = CombinationsToReportFilters.get_report_rol_for_table_code(self, altered_table_name, context)
             print("report_rol")
             print(report_rol)
@@ -43,25 +43,25 @@ class CombinationsToReportFilters:
                 template_name = template.table_id
                 template_code = template.code
                 try:
-                    altered_template_name = Utils.make_valid_id(template_code) +"_REF_OutputItem"
+                    altered_template_name = Utils.make_valid_id(template_code) +"_OutputItem"
                     related_report = context.reports_dictionary[altered_template_name]
                     for axis_ordinate in cell_position.axis_ordinate_id:
                         axis=axis_ordinate.axis_id
                         orientation = axis.orientation
-                        if orientation == 'X':
+                        if orientation == 'Y':
                             row = ReportRow(name = axis_ordinate.code)
                             related_report.rows.append(row)
-                        if orientation == 'Y':
+                        if orientation == 'X':
                             col = ReportColumn(name = axis_ordinate.code)
                             related_report.columns.append(col)
-                        axis_ordinate_id = axis_ordinate.axis_ordinate_id
 
-                
                     report_cell = ReportCell()
+                    related_report.reportCells.append(report_cell)
                     comb = cell_position.cell_id.combination_id
                     # if there is no combination, this is because the combination is not
                     # current, according to its valid_to date.
                     if not(comb is None):
+                        report_cell.datapointID = comb.combination_id
                         items = comb.combination_items
                         for item in items:
                             variable_id = item.variable_id.variable_id
@@ -84,16 +84,18 @@ class CombinationsToReportFilters:
                                 pass
                             else:
                                 filter = Filter()
+                                report_cell.filters.append(filter)
                                 try:
                                     operation = CombinationsToReportFilters.find_operation_with_id(self,context,related_report,item.variable_id.variable_id)
                                         
                                     member = item.member_id
                                     if(member is not None):
                                         member_id = member.member_id
-                                        print(variable_id+"=" +member_id +":")
-                                        literal = CombinationsToReportFilters.find_literal_with_id(self,context,item.member_id.member_id)
+                                        member_code = member.code
+                                        print(variable_id+"==" +member_code +":")
+                                        literal = CombinationsToReportFilters.find_literal_with_id(self,context,member_code)
                                         filter.operation = operation
-                                        filter.member = literal
+                                        filter.member.append(literal)
                                 except:
                                     print("failed to make filter")
                                     pass
@@ -108,7 +110,7 @@ class CombinationsToReportFilters:
         # when creating filters, get all leaf nodes from hierarchy.
         # persists as xmi and as text.
       
-    def find_operations_with_id(self,context,related_report,op_id):
+    def find_operation_with_id(self,context,related_report,op_id):
 
         for op in related_report.outputLayer.eOperations:
             if op.name == op_id:
@@ -126,7 +128,7 @@ class CombinationsToReportFilters:
         for enum in context.sdd_domains_package.eClassifiers:
             if isinstance(enum, ELEnum):
                 for literal in enum.eLiterals:
-                    if literal.name == member_id:
+                    if literal.literal == "_" + member_id:
                         return literal
         
         

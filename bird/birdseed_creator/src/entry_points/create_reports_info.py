@@ -42,3 +42,4 @@ if __name__ == '__main__':
     persister = PersistToFile()
     persister.save_model_as_regdna_file(context)
     persister.save_model_as_xmi_file(context)
+    persister.persist_reports(context)

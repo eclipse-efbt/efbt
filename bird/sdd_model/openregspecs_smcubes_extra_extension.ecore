@@ -281,6 +281,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FrameworkModule" eSuperTypes="sdd_module_management.ecore#//SDDModule">
     <eStructuralFeatures xsi:type="ecore:EReference" name="frameworks" upperBound="-1"
-        containment="true"/>
+        eType="ecore:EClass data_definition.ecore#//FRAMEWORK" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
