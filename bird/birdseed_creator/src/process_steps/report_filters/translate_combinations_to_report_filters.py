@@ -93,9 +93,9 @@ class CombinationsToReportFilters:
                                         member_id = member.member_id
                                         member_code = member.code
                                         print(variable_id+"==" +member_code +":")
-                                        literal = CombinationsToReportFilters.find_literal_with_id(self,context,member_code)
+                                        literals = CombinationsToReportFilters.find_literals_with_id(self,context,sdd_context,member_code)
                                         filter.operation = operation
-                                        filter.member.append(literal)
+                                        filter.member.append(literals)
                                 except:
                                     print("failed to make filter")
                                     pass
@@ -124,14 +124,37 @@ class CombinationsToReportFilters:
                 return rol_class
         return None   
     
-    def find_literal_with_id(self,context,member_id):
+    def find_literals_with_id(self,context,sdd_context,member_code):
+        return_literal = None
+        return_literal = CombinationsToReportFilters.find_literal_with_id(self,context,sdd_context,member_code)
+        if not (return_literal is None):
+            CombinationsToReportFilters.get_literal_list_considering_hierarchies(self,context,sdd_context,member_code)
+        else:
+            return []
+       
+    def find_literal_with_id(self,context,sdd_context,member_code):
         for enum in context.sdd_domains_package.eClassifiers:
             if isinstance(enum, ELEnum):
                 for literal in enum.eLiterals:
-                    if literal.literal == "_" + member_id:
-                        return literal
-        
+                    if literal.literal == "_" + member_code:
+                        return_literal = literal
+         
+    def get_literal_list_considering_hierarchies(self,context,sdd_context,member_code):
+        return_list = []
+        for node in sdd_context.member_hierarchies.memberHierarchiesNodes:
+            if CombinationsToReportFilters.node_is_child_of_member(self,context,sdd_context,node,member_code):
+                literal = CombinationsToReportFilters.find_literal_with_id(self,context,sdd_context,node.member_id.code)
+                return_list.append(literal) 
+            parent_member_id = node.parent_member_id
+            
+    def node_is_child_of_member(self,context,sdd_context,node,member_code):
+        parent_member_id = node.parent_member_id
+        if parent_member_id is None:
+            return False
+        elif parent_member_id.code == member_code:
+            return True
+        else:
+            return node_is_child_of_member(self,context,sdd_context,node,member_code)
         
             
-        
-        
+            

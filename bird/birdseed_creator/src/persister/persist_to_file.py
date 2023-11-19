@@ -331,11 +331,27 @@ class PersistToFile:
                 f.write("\t\t\treportCells{\r")  
                 for cell in report.reportCells:                    
                     f.write("\t\t\ReportCell{\r")
-                    f.write("\t\t\t\datapointID\"" + cell.datapointID + "\" row " +cell.row.name + " column " + cell.col.name + " metric " + cell.metric.name + " filters {\r")
+                    
+                    data_point_id = "None"
+                    if not (cell.datapointID is None):
+                        data_point_id= cell.datapointID
+                        
+                    
+                    
+                    metric_name = "None"
+                    if not (cell.metric is None):
+                        metric_name = cell.metric.name
+                        
+                    
+                    
+                    f.write("\t\t\t\datapointID\"" + data_point_id +  " metric " + metric_name+ " filters {\r")
                     for filter in cell.filters:
-                        f.write("\t\t\t\tFilter { operation " + filter.operation.name + "  item ( ")
+                        operation_name = "none"
+                        if not(filter.operation is None):
+                            operation_name = filter.operation.name
+                        f.write("\t\t\t\tFilter { operation " + operation_name + "  item ( ")
                         for item in filter.member:
-                            f.write(item.name + "," ) 
+                            f.write(item.literal + "," ) 
                         f.write(")\r")   
                         f.write("\t\t\t\t}\r")   
                     f.write("\t\t\t}\r")

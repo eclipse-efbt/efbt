@@ -32,14 +32,19 @@ class RunCreateReports:
 if __name__ == '__main__':
     sdd_context = SDDContext()
     context = Context()
-    context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_regpot_desktop\\bird\\birdseed_creator\\resources'
-    context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_regpot_desktop\\bird\\birdseed_creator\\results'
-    sdd_context.file_directory = 'C:\\Users\\LENOVO\\git\\efbt_regpot_desktop\\bird\\birdseed_creator\\resources'
-    sdd_context.output_directory = 'C:\\Users\\LENOVO\\git\\efbt_regpot_desktop\\bird\\birdseed_creator\\results' 
+    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results' 
+    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModel().run(context,sdd_context)
     RunCreateReports().run(context,sdd_context)
+    print("1")
     persister = PersistToFile()
+    print("1")
     persister.save_model_as_regdna_file(context)
+    print("1")
     persister.save_model_as_xmi_file(context)
+    print("1")
     persister.persist_reports(context)
+    print("1")
