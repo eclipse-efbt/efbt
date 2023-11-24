@@ -498,7 +498,7 @@ class ImportWebsiteToSDDModel(object):
                         hierarchy_node.member_id = member
                         hierarchy_node.level = int(node_level)
                         hierarchy_node.parent_member_id = parent_member
-                        context.member_hierarchy_node_dictionary[id] = hierarchy_node
+                        context.member_hierarchy_node_dictionary[hierarchy_id + ":" + member_id] = hierarchy_node
                         context.member_hierarchies.memberHierarchiesNodes.append(hierarchy_node)
                         
     def create_all_cube_structures(self, context):
@@ -605,8 +605,9 @@ class ImportWebsiteToSDDModel(object):
                     table.version = version
                     # not needed yet table.valid_from = valid_from
                     # not needed yet table.valid_to = valid_to
-
-                    context.report_tables.reportTables.append(table)
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                            or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
+                        context.report_tables.reportTables.append(table)
                     
     def create_axis (self, context):
         '''

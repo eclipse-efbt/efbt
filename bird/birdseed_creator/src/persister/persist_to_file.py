@@ -322,38 +322,45 @@ class PersistToFile:
                 f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
                 f.write("\t\t\trows{\r")
                 for row in report.rows:                    
-                    f.write("\t\t\t\tReportRow " + row.name + ",\r")
+                    f.write("\t\t\t\tReportRow " + row.name + "\r")
                 f.write("\t\t\t}\r")
                 f.write("\t\t\tcolumns{\r")
                 for col in report.columns:                    
-                    f.write("\t\t\tReportColumn " + col.name + ",\r")
+                    f.write("\t\t\tReportColumn " + col.name + "\r")
                 f.write("\t\t\t}\r")
                 f.write("\t\t\treportCells{\r")  
                 for cell in report.reportCells:                    
-                    f.write("\t\t\ReportCell{\r")
+                    f.write("\t\t\t\tReportCell{\r")
                     
                     data_point_id = "None"
                     if not (cell.datapointID is None):
                         data_point_id= cell.datapointID
                         
-                    
-                    
+                    row_name = "None"
+                    if not (cell.row is None):
+                        row_name= cell.row.name
+                        
+                    col_name = "None"
+                    if not (cell.column is None):
+                        col_name= cell.column.name
+
                     metric_name = "None"
                     if not (cell.metric is None):
-                        metric_name = cell.metric.name
+                        metric_name = "output_tables." + cell.metric.eContainer().name + "." + cell.metric.name
                         
                     
                     
-                    f.write("\t\t\t\datapointID\"" + data_point_id +  " metric " + metric_name+ " filters {\r")
+                    f.write("\t\t\t\t\tdatapointID \"" + data_point_id + "\" row " + row_name + " column " + col_name  + " metric " + metric_name+ " filters {\r")
                     for filter in cell.filters:
                         operation_name = "none"
                         if not(filter.operation is None):
-                            operation_name = filter.operation.name
-                        f.write("\t\t\t\tFilter { operation " + operation_name + "  item ( ")
+                            operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                        f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
                         for item in filter.member:
-                            f.write(item.literal + "," ) 
+                            f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
                         f.write(")\r")   
-                        f.write("\t\t\t\t}\r")   
+                        f.write("\t\t\t\t\t\t}\r") 
+                    f.write("\t\t\t\t\t}\r")  
                     f.write("\t\t\t}\r")
                 f.write("\t\t}\r")
                 f.write("\t}\r")

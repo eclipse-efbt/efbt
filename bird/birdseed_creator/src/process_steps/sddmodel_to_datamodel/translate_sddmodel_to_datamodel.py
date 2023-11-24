@@ -143,7 +143,7 @@ class TranslateSDDModelToDataModel(object):
                 counter1 = 0
                 for member in the_domain_members:
                     enum_literal = ELEnumLiteral()
-                    enum_used_name = Utils.make_valid_id(
+                    enum_used_name = Utils.make_valid_id_but_keep_minus_sign(
                         sdd_context.member_id_to_member_code_map[member])
                     adapted_value = Utils.make_valid_id(
                         sdd_context.member_id_to_member_name_map[member])
@@ -155,6 +155,7 @@ class TranslateSDDModelToDataModel(object):
                     counter1 = counter1 + 1
                     enum_literal.value = counter1
                     the_enum.eLiterals.extend([enum_literal])
+                    context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
 
     
                             

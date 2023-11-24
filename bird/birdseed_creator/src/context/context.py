@@ -88,6 +88,9 @@ class Context(object):
     # For the reference output layers we record a map between domains
     # and domain names
     domain_to_domain_name_map = {}
+    
+    enum_literals_map = {}
+    
     # we record a list of missing domains
     missing_domains = []
     # enumMap keeps a reference between ldm ID's for domains and
