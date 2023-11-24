@@ -2265,13 +2265,22 @@ public interface regdnaPackage extends EPackage {
 	int REPORT__REPORT_CELLS = 3;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT__NAME = 4;
+
+	/**
 	 * The number of structural features of the '<em>Report</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPORT_FEATURE_COUNT = 4;
+	int REPORT_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Report</em>' class.
@@ -3626,6 +3635,17 @@ public interface regdnaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getReport_ReportCells();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.Report#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.Report#getName()
+	 * @see #getReport()
+	 * @generated
+	 */
+	EAttribute getReport_Name();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ReportRow <em>Report Row</em>}'.

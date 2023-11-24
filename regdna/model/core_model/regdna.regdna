@@ -195,6 +195,7 @@ class RuleForILTablePart {
 
 
 class Report {
+	id String name
 	refers ELClass outputLayer
 	contains ReportRow[0..-1] rows
 	contains ReportColumn[0..-1] columns
@@ -202,11 +203,11 @@ class Report {
 }
 
 class ReportRow {
-	id name
+	id String name
 }
 
 class ReportColumn {
-	id name
+	id String name
 }
 
 class ReportCell {

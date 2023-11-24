@@ -145,6 +145,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//Report/rows"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//Report/columns"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//Report/reportCells"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//Report/name"/>
     </genClasses>
     <genClasses ecoreClass="regdna.ecore#//ReportRow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//ReportRow/name"/>

@@ -1396,6 +1396,15 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getReport_Name() {
+        return (EAttribute)getReport().getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getReportRow() {
 		if (reportRowEClass == null) {
 			reportRowEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(38);
