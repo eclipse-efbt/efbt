@@ -171,6 +171,39 @@ class Utils(object):
         if return_string == "op":
             return_string = "_op"
         return return_string
+    
+    @classmethod
+    def make_valid_id_but_keep_minus_sign(cls, input_string):
+        ''' 
+        Tranlate text to be a valid id, without special characters, and following
+        the rules for valid id's in regdna
+        '''
+
+        # we do not allow id's to start with  number, if it does then we prepend with an underscore
+        if len(input_string) > 0:
+            if ((input_string[0] >= '0') and (input_string[0] <= '9')) or input_string[0:2] == '-1':
+                input_string = "_" + input_string
+        # we replace special characters not allowed in id's with an underscore
+        amended_input_string = input_string.replace('  ', ' ').replace(' ', '_').replace(')', '_').replace('(', '_') \
+            .replace(',', '_').replace('\'', '_').replace('\n', '_').replace('\r', '_').replace('\'t', '_').replace('new', 'New') \
+            .replace('\\', '_').replace('/', '_').replace(':', '_') \
+            .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_gt') \
+            .replace('<', '_lt').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_eq').replace('#', '_') \
+            .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace('?', '_').replace('–', '_').replace('__', '_').replace('__', '_') \
+            .replace(chr(0x2019), '_').replace(chr(65533), '_') \
+            .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_').replace(chr(0x2026), '_') \
+            .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
+            .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
+            .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
+            .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
+            .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_')
+
+        return_string = Utils.replace_acutes_graves_and_circumflexes(
+            amended_input_string).replace('\'', '_')
+
+        if return_string == "op":
+            return_string = "_op"
+        return return_string
 
     @classmethod
     def replace_acutes_graves_and_circumflexes(cls, the_input_string):

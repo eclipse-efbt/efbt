@@ -188,3 +188,21 @@ class ColumnIndexes(object):
     
     cell_positions_cell_id = 0
     cell_positions_axis_ordinate_id = 1
+       
+    member_hierarchy_maintenance_agency = 0
+    member_hierarchy_id = 1
+    member_hierarchy_code = 2
+    member_hierarchy_domain_id = 3
+    member_hierarchy_name = 4
+    member_hierarchy_description = 5
+    member_hierarchy_is_main_hierarchy = 6
+    
+    member_hierarchy_node_hierarchy_id = 0
+    member_hierarchy_node_member_id = 1
+    member_hierarchy_node_level = 2
+    member_hierarchy_node_parent_member_id = 3
+    member_hierarchy_node_comparator = 4
+    member_hierarchy_node_operator = 5
+    member_hierarchy_node_valid_from = 6
+    member_hierarchy_node_valid_to = 7
+    

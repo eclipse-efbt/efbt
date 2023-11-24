@@ -306,7 +306,67 @@ class PersistToFile:
                
                 f.close()
     
+    def persist_reports(self, context):
+        '''
+        Documentation for persist_generation_transformations
+        '''
+        reports = context.reports_module.reports
+        for report in reports:
+            if not(report.outputLayer is None):
+                f = open(context.output_directory + os.sep + 'regdna' +
+                         os.sep + report.outputLayer.name +
+                         '.regdna', "a",  encoding='utf-8')
+                f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
+                f.write("\treports " + "{\r")
+                f.write("\t\tReport " + "{\r")
+                f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
+                f.write("\t\t\trows{\r")
+                for row in report.rows:                    
+                    f.write("\t\t\t\tReportRow " + row.name + "\r")
+                f.write("\t\t\t}\r")
+                f.write("\t\t\tcolumns{\r")
+                for col in report.columns:                    
+                    f.write("\t\t\tReportColumn " + col.name + "\r")
+                f.write("\t\t\t}\r")
+                f.write("\t\t\treportCells{\r")  
+                for cell in report.reportCells:                    
+                    f.write("\t\t\t\tReportCell{\r")
+                    
+                    data_point_id = "None"
+                    if not (cell.datapointID is None):
+                        data_point_id= cell.datapointID
+                        
+                    row_name = "None"
+                    if not (cell.row is None):
+                        row_name= cell.row.name
+                        
+                    col_name = "None"
+                    if not (cell.column is None):
+                        col_name= cell.column.name
 
+                    metric_name = "None"
+                    if not (cell.metric is None):
+                        metric_name = "output_tables." + cell.metric.eContainer().name + "." + cell.metric.name
+                        
+                    
+                    
+                    f.write("\t\t\t\t\tdatapointID \"" + data_point_id + "\" row " + row_name + " column " + col_name  + " metric " + metric_name+ " filters {\r")
+                    for filter in cell.filters:
+                        operation_name = "none"
+                        if not(filter.operation is None):
+                            operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                        f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                        for item in filter.member:
+                            f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                        f.write(")\r")   
+                        f.write("\t\t\t\t\t\t}\r") 
+                    f.write("\t\t\t\t\t}\r")  
+                    f.write("\t\t\t}\r")
+                f.write("\t\t}\r")
+                f.write("\t}\r")
+                f.write("}\r")
+                f.close()
+                
     def remove_comment_chars(self, the_string):
         '''
         Documentation for remove_comment_chars

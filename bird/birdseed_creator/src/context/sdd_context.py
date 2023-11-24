@@ -55,6 +55,8 @@ class SDDContext(object):
     mapping_definitions = MappingDefinitionModule(name = 'mappingDefinitionModule')
     #The memberMappingModule
     member_mappings = MemberMappingModule(name = 'memberMappingModule')
+    #The memberHierarchyModule
+    member_hierarchies = MemberHierarchyModule(name = 'memberHierarchyModule')
     #The variableMappingModule
     variable_mappings = VariableMappingModule(name = 'variableMappingModule')
     #The variableMappingModule
@@ -76,6 +78,9 @@ class SDDContext(object):
 
     combinations_dictionary = {}
     member_dictionary = {}
+    domain_dictionary = {}
+    member_hierarchy_dictionary = {}
+    member_hierarchy_node_dictionary = {}
     cube_structure_dictionary = {}
     cube_dictionary = {}
     variable_dictionary= {}
@@ -116,7 +121,7 @@ class SDDContext(object):
         self.core_sdd_model.memberModules.append(self.members)
         self.core_sdd_model.subDomainModules.append(self.subdomains)
         self.core_sdd_model.maintenanceAgencyModules.append(self.maintenance_agencies)
-
+        self.core_sdd_model.memberHierarchyModules.append(self.member_hierarchies)
         self.extra_sdd_model.frameworkModules.append(self.frameworks)        
         self.extra_sdd_model.cubeModules.append(self.cubes)
         self.extra_sdd_model.combinationModules.append(self.combinations)

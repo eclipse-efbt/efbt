@@ -192,64 +192,10 @@ class RuleForILTablePart {
 	contains TableFilter[0..-1] whereClause
 }
 
-class AllowedTypes {
-	
-	contains RequirementType[0..-1] allowedTypes
-}
 
-
-class RequirementsModule extends Module {
-
-	contains TitledRequirementsSection[0..-1] rules
-	contains AllowedTypes allowedtypes
-}
-
-abstract class RequirementsSection {
-
-	id String name
-}
-
-
-class RequirementsSectionImage extends RequirementsSection {
-
-	String style
-	String uri
-}
-
-class RequirementsSectionLinkWithText extends RequirementsSection {
-
-	refers TitledRequirementsSection linkedRuleSection 
-	String linkText
-	String subsection
-}
-
-
-class RequirementsSectionText extends RequirementsSection {
-	String text
-}
-
-class RequirementType {
-	id String name
-}
-
-class TitledRequirementsSection extends RequirementsSection {
-	contains RequirementsSection[0..-1] sections
-	refers RequirementsSectionLinkWithText referencingSections 
-	refers RequirementType requirementsType
-	String title
-}
-
-class Tag {
-	String displayName
-	id String name
-	refers TitledRequirementsSection[0..-1] requirements
-}
-
-class TagGroup extends module_management.Module {
-	contains Tag[0..-1] tags
-}
 
 class Report {
+	id String name
 	refers ELClass outputLayer
 	contains ReportRow[0..-1] rows
 	contains ReportColumn[0..-1] columns
@@ -257,11 +203,11 @@ class Report {
 }
 
 class ReportRow {
-	id name
+	id String name
 }
 
 class ReportColumn {
-	id name
+	id String name
 }
 
 class ReportCell {
@@ -269,7 +215,7 @@ class ReportCell {
 	refers ReportColumn column
 	String datapointID
 	contains Filter[0..-1] filters
-	refers ELAttribute metric
+	refers ELOperation metric
 }
 
 

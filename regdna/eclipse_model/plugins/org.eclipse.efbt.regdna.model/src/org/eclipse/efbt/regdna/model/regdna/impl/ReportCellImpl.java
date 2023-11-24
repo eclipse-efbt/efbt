@@ -4,7 +4,7 @@ package org.eclipse.efbt.regdna.model.regdna.impl;
 
 import java.util.Collection;
 
-import org.eclipse.efbt.regdna.model.regdna.ELAttribute;
+import org.eclipse.efbt.regdna.model.regdna.ELOperation;
 import org.eclipse.efbt.regdna.model.regdna.Filter;
 import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.ReportColumn;
@@ -81,7 +81,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * @generated
 	 * @ordered
 	 */
-	protected ELAttribute metric;
+	protected ELOperation metric;
 
 	/**
 	 * The default value of the '{@link #getDatapointID() <em>Datapoint ID</em>}' attribute.
@@ -215,10 +215,10 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELAttribute getMetric() {
+	public ELOperation getMetric() {
 		if (metric != null && metric.eIsProxy()) {
 			InternalEObject oldMetric = (InternalEObject)metric;
-			metric = (ELAttribute)eResolveProxy(oldMetric);
+			metric = (ELOperation)eResolveProxy(oldMetric);
 			if (metric != oldMetric) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, regdnaPackage.REPORT_CELL__METRIC, oldMetric, metric));
@@ -232,7 +232,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELAttribute basicGetMetric() {
+	public ELOperation basicGetMetric() {
 		return metric;
 	}
 
@@ -241,8 +241,8 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setMetric(ELAttribute newMetric) {
-		ELAttribute oldMetric = metric;
+	public void setMetric(ELOperation newMetric) {
+		ELOperation oldMetric = metric;
 		metric = newMetric;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, regdnaPackage.REPORT_CELL__METRIC, oldMetric, metric));
@@ -328,7 +328,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 				getFilters().addAll((Collection<? extends Filter>)newValue);
 				return;
 			case regdnaPackage.REPORT_CELL__METRIC:
-				setMetric((ELAttribute)newValue);
+				setMetric((ELOperation)newValue);
 				return;
 			case regdnaPackage.REPORT_CELL__DATAPOINT_ID:
 				setDatapointID((String)newValue);
@@ -355,7 +355,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 				getFilters().clear();
 				return;
 			case regdnaPackage.REPORT_CELL__METRIC:
-				setMetric((ELAttribute)null);
+				setMetric((ELOperation)null);
 				return;
 			case regdnaPackage.REPORT_CELL__DATAPOINT_ID:
 				setDatapointID(DATAPOINT_ID_EDEFAULT);

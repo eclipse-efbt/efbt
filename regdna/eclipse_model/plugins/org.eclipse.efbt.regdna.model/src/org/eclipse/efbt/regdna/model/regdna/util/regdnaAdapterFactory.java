@@ -2,7 +2,6 @@
  */
 package org.eclipse.efbt.regdna.model.regdna.util;
 
-import org.eclipse.efbt.regdna.model.regdna.AllowedTypes;
 import org.eclipse.efbt.regdna.model.regdna.AndPredicate;
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotation;
@@ -28,7 +27,6 @@ import org.eclipse.efbt.regdna.model.regdna.GenerationRulesModule;
 import org.eclipse.efbt.regdna.model.regdna.Import;
 import org.eclipse.efbt.regdna.model.regdna.ModuleList;
 import org.eclipse.efbt.regdna.model.regdna.NotPredicate;
-import org.eclipse.efbt.regdna.model.regdna.OperationTag;
 import org.eclipse.efbt.regdna.model.regdna.OrPredicate;
 import org.eclipse.efbt.regdna.model.regdna.Predicate;
 import org.eclipse.efbt.regdna.model.regdna.Report;
@@ -36,12 +34,6 @@ import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.ReportColumn;
 import org.eclipse.efbt.regdna.model.regdna.ReportModule;
 import org.eclipse.efbt.regdna.model.regdna.ReportRow;
-import org.eclipse.efbt.regdna.model.regdna.RequirementType;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsModule;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSection;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText;
-import org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText;
 import org.eclipse.efbt.regdna.model.regdna.RuleForILTablePart;
 import org.eclipse.efbt.regdna.model.regdna.RulesForILTable;
 import org.eclipse.efbt.regdna.model.regdna.RulesForReport;
@@ -51,9 +43,6 @@ import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectValueAs;
 import org.eclipse.efbt.regdna.model.regdna.TableFilter;
-import org.eclipse.efbt.regdna.model.regdna.Tag;
-import org.eclipse.efbt.regdna.model.regdna.TagGroup;
-import org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -130,46 +119,6 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseModuleList(ModuleList object) {
 				return createModuleListAdapter();
-			}
-			@Override
-			public Adapter caseAllowedTypes(AllowedTypes object) {
-				return createAllowedTypesAdapter();
-			}
-			@Override
-			public Adapter caseRequirementsModule(RequirementsModule object) {
-				return createRequirementsModuleAdapter();
-			}
-			@Override
-			public Adapter caseRequirementsSection(RequirementsSection object) {
-				return createRequirementsSectionAdapter();
-			}
-			@Override
-			public Adapter caseRequirementsSectionImage(RequirementsSectionImage object) {
-				return createRequirementsSectionImageAdapter();
-			}
-			@Override
-			public Adapter caseRequirementsSectionLinkWithText(RequirementsSectionLinkWithText object) {
-				return createRequirementsSectionLinkWithTextAdapter();
-			}
-			@Override
-			public Adapter caseRequirementsSectionText(RequirementsSectionText object) {
-				return createRequirementsSectionTextAdapter();
-			}
-			@Override
-			public Adapter caseRequirementType(RequirementType object) {
-				return createRequirementTypeAdapter();
-			}
-			@Override
-			public Adapter caseTitledRequirementsSection(TitledRequirementsSection object) {
-				return createTitledRequirementsSectionAdapter();
-			}
-			@Override
-			public Adapter caseTag(Tag object) {
-				return createTagAdapter();
-			}
-			@Override
-			public Adapter caseTagGroup(TagGroup object) {
-				return createTagGroupAdapter();
 			}
 			@Override
 			public Adapter caseRulesForReport(RulesForReport object) {
@@ -304,10 +253,6 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 				return createELStringToStringMapEntryAdapter();
 			}
 			@Override
-			public Adapter caseOperationTag(OperationTag object) {
-				return createOperationTagAdapter();
-			}
-			@Override
 			public Adapter caseReport(Report object) {
 				return createReportAdapter();
 			}
@@ -390,146 +335,6 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createModuleListAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.AllowedTypes <em>Allowed Types</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.AllowedTypes
-	 * @generated
-	 */
-	public Adapter createAllowedTypesAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsModule <em>Requirements Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsModule
-	 * @generated
-	 */
-	public Adapter createRequirementsModuleAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSection <em>Requirements Section</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSection
-	 * @generated
-	 */
-	public Adapter createRequirementsSectionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage <em>Requirements Section Image</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage
-	 * @generated
-	 */
-	public Adapter createRequirementsSectionImageAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText <em>Requirements Section Link With Text</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText
-	 * @generated
-	 */
-	public Adapter createRequirementsSectionLinkWithTextAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText <em>Requirements Section Text</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText
-	 * @generated
-	 */
-	public Adapter createRequirementsSectionTextAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementType <em>Requirement Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementType
-	 * @generated
-	 */
-	public Adapter createRequirementTypeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection <em>Titled Requirements Section</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection
-	 * @generated
-	 */
-	public Adapter createTitledRequirementsSectionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.Tag <em>Tag</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.Tag
-	 * @generated
-	 */
-	public Adapter createTagAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.TagGroup <em>Tag Group</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TagGroup
-	 * @generated
-	 */
-	public Adapter createTagGroupAdapter() {
 		return null;
 	}
 
@@ -992,20 +797,6 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createELStringToStringMapEntryAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.OperationTag <em>Operation Tag</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.OperationTag
-	 * @generated
-	 */
-	public Adapter createOperationTagAdapter() {
 		return null;
 	}
 

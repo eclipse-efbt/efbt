@@ -18,7 +18,7 @@ import "http://www.eclipse.org/efbt/regdna" as regdna
 
 
 Module returns regdna::Module:
-	RequirementsModule | TagGroup | GenerationRulesModule | ELPackage | ReportModule;
+	 GenerationRulesModule | ELPackage | ReportModule;
 	
 ELClassifier returns regdna::ELClassifier:
 	ELClass | ELDataType_Impl | ELEnum ;
@@ -26,10 +26,6 @@ ELClassifier returns regdna::ELClassifier:
 
 ELStructuralFeature returns regdna::ELStructuralFeature:
 	ELAttribute | ELReference;
-
-
-RequirementsSection returns regdna::RequirementsSection:
-	RequirementsSectionImage | RequirementsSectionLinkWithText | RequirementsSectionText | TitledRequirementsSection;
 
 
 SelectColumn returns regdna::SelectColumn:
@@ -40,17 +36,6 @@ SelectColumn returns regdna::SelectColumn:
 EString returns ecore::EString:
 	STRING ;
 
-
-RequirementsModule returns regdna::RequirementsModule:
-	{regdna::RequirementsModule}
-	'requirementsModule'
-	name=QualifiedName
-	(imports += Import)*
-	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[regdna::Module|QualifiedName])*
-		('theRules' '{' rules+=TitledRequirementsSection ( "," rules+=TitledRequirementsSection)* '}' )?		
-		('theAllowedtypes' allowedtypes=AllowedTypes)?
-	'}';
 
 GenerationRulesModule returns regdna::GenerationRulesModule:
 	{regdna::GenerationRulesModule}
@@ -160,94 +145,6 @@ QualifiedNameWithWildcard :
 
 
 
-TitledRequirementsSection returns regdna::TitledRequirementsSection:
-	'titledRequirementsSection'
-	name=ID
-	'{'
-		('theTitle' title=EString)?
-		('theReferencingSections' referencingSections=[regdna::RequirementsSectionLinkWithText|QualifiedName])?
-		'theRequirementsType' requirementsType=[regdna::RequirementType|QualifiedName]
-		('theSections' '{' sections+=RequirementsSection ( "," sections+=RequirementsSection)* '}' )?
-	'}';
-	
-
-
-AllowedTypes returns regdna::AllowedTypes:
-	{regdna::AllowedTypes}
-	'allAllowedTypes'
-	'{'
-		('theAllowedTypes' '{' allowedTypes+=RequirementType ( "," allowedTypes+=RequirementType)* '}' )?
-	'}';
-
-
-
-
-
-TagGroup returns regdna::TagGroup:
-	{regdna::TagGroup}
-	'tagGroup'
-	name=QualifiedName
-	(imports += Import)*
-	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[regdna::Module|QualifiedName])*
-		('theTags' '{' tags+=Tag ( "," tags+=Tag)* '}' )?
-	'}';
-	
-Tag returns regdna::Tag:
-	Tag_Impl | OperationTag;
-	
-OperationTag returns regdna::OperationTag:
-	{regdna::OperationTag}
-	'operationTag'
-	name=ID
-	'{'
-		('theDisplayName' displayName=EString)?
-		('theRequirements' '(' requirements+=[regdna::TitledRequirementsSection|QualifiedName] ( "," requirements+=[regdna::TitledRequirementsSection|QualifiedName])* ')' )?
-		('theOperation' operation=[regdna::ELOperation|QualifiedName])?
-	'}';
-
-Tag_Impl returns regdna::Tag:
-	{regdna::Tag}
-	'tag'
-	name=ID
-	'{'
-		('theDisplayName' displayName=EString)?
-		('theRequirements' '(' requirements+=[regdna::TitledRequirementsSection|QualifiedName] ( "," requirements+=[regdna::TitledRequirementsSection|QualifiedName])* ')' )?
-	'}';
-
-
-
-RequirementsSectionLinkWithText returns regdna::RequirementsSectionLinkWithText:
-	{regdna::RequirementsSectionLinkWithText}
-	'requirementsSectionLinkWithText'
-	name=ID
-	'{'
-		('theLinkText' linkText=EString)?
-		('theSubsection' subsection=EString)?
-		('theLinkedRuleSection' linkedRuleSection=[regdna::TitledRequirementsSection|QualifiedName])?
-	'}';
-
-RequirementType returns regdna::RequirementType:
-	{regdna::RequirementType}
-	'requirementType'
-	name=ID;
-
-RequirementsSectionImage returns regdna::RequirementsSectionImage:
-	{regdna::RequirementsSectionImage}
-	'requirementsSectionImage'
-	name=ID
-	'{'
-		('theStyle' style=EString)?
-		('theUri' uri=EString)?
-	'}';
-
-RequirementsSectionText returns regdna::RequirementsSectionText:
-	{regdna::RequirementsSectionText}
-	'requirementsSectionText'
-	name=ID
-	'{'
-		('theText' text=EString)?
-	'}';
 
 ELPackage returns regdna::ELPackage:
 	{regdna::ELPackage}
@@ -368,9 +265,9 @@ Report returns regdna::Report:
 	'Report'
 	'{'
 		('outputLayer' outputLayer=[regdna::ELClass|QualifiedName])?
-		('rows' '{' rows+=ReportRow ( "," rows+=ReportRow)* '}' )?
-		('columns' '{' columns+=ReportColumn ( "," columns+=ReportColumn)* '}' )?
-		('reportCells' '{' reportCells+=ReportCell ( "," reportCells+=ReportCell)* '}' )?
+		('rows' '{' rows+=ReportRow (  rows+=ReportRow)* '}' )?
+		('columns' '{' columns+=ReportColumn (  columns+=ReportColumn)* '}' )?
+		('reportCells' '{' reportCells+=ReportCell (  reportCells+=ReportCell)* '}' )?
 	'}';
 
 ReportRow returns regdna::ReportRow:
@@ -390,8 +287,8 @@ ReportCell returns regdna::ReportCell:
 		('datapointID' datapointID=EString)?
 		('row' row=[regdna::ReportRow|QualifiedName])?
 		('column' column=[regdna::ReportColumn|QualifiedName])?
-		('metric' metric=[regdna::ELAttribute|QualifiedName])?
-		('filters' '{' filters+=Filter ( "," filters+=Filter)* '}' )?
+		('metric' metric=[regdna::ELOperation|QualifiedName])?
+		('filters' '{' filters+=Filter (  filters+=Filter)* '}' )?
 	'}';
 
 Filter returns regdna::Filter:
@@ -400,7 +297,7 @@ Filter returns regdna::Filter:
 	'{'
 		('outputLayer' outputLayer=[regdna::ELClass|QualifiedName])?
 		('operation' operation=[regdna::ELOperation|QualifiedName])?
-		('member' '(' member+=[regdna::ELEnumLiteral|QualifiedName] ( "," member+=[regdna::ELEnumLiteral|QualifiedName])* ')' )?
+		('item' '(' member+=[regdna::ELEnumLiteral|QualifiedName] (  member+=[regdna::ELEnumLiteral|QualifiedName])* ')' )?
 	'}';
 
 enum Comparitor returns regdna::Comparitor:

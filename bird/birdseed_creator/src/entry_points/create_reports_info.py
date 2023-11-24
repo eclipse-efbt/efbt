@@ -12,21 +12,39 @@
 #
 # This script creates an analysis model from an SDD file and saves it as a CSV filegit add 
 
-from context.sdd_context import SDDContext
-from importers.import_sdd_to_analysis_model import ImportSDD
-from importers.import_sdd_to_ecore4reg import SDDImport
-from report_filters.translate_combinations_to_report_filters import CombinationsToReportFilters
-from persister.persist_to_file import PersistToFile
 
+
+from entry_points.website_to_sddmodel import RunWebsiteToSDDModel
+from entry_points.sddmodel_to_datamodel import RunSDDModelToDataModel 
+from context.context import Context
+from context.sdd_context import SDDContext
+from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_datamodel import TranslateSDDModelToDataModel
+from persister.persist_to_file import PersistToFile
+from process_steps.report_filters.translate_combinations_to_report_filters import CombinationsToReportFilters
+
+
+class RunCreateReports:
+    
+    def run(self,context,sdd_context):
+        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context)
+        
+        
 if __name__ == '__main__':
     sdd_context = SDDContext()
-    sdd_context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
-    sdd_context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
-    ImportSDD().import_sdd(sdd_context)
     context = Context()
-    context.file_directory = '/workspaces/efbt/ecore4reg/python/resources'
-    context.output_directory = '/workspaces/efbt/ecore4reg/python/results'
-    SDDImport().do_import(context)
-    CombinationsToReportFilters().translate_combinations_to_report_filters(sdd_context)
+    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results' 
+    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
+    RunWebsiteToSDDModel().run(sdd_context)
+    RunSDDModelToDataModel().run(context,sdd_context)
+    RunCreateReports().run(context,sdd_context)
+    print("1")
     persister = PersistToFile()
-    persister.save_analysis_model_as_csv(sdd_context)
+    print("1")
+    persister.save_model_as_regdna_file(context)
+    print("1")
+    persister.save_model_as_xmi_file(context)
+    print("1")
+    persister.persist_reports(context)
+    print("1")

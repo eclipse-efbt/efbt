@@ -33,6 +33,8 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_all_variable_sets(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_subdomains(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_combinations(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_member_hierarchies(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_member_hierarchies_nodes(self, sdd_context)
         
         ImportWebsiteToSDDModel.create_all_cube_structures(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_cubes(self, sdd_context)
@@ -149,6 +151,7 @@ class ImportWebsiteToSDDModel(object):
                         domain.is_reference = False
 
                     context.domains.domains.append(domain)
+                    context.domain_dictionary[domain_id] = domain
 
 
     def create_all_members(self, context):
@@ -427,6 +430,77 @@ class ImportWebsiteToSDDModel(object):
                         context.cube_dictionary[id] = cube
                         context.cubes.cubes.append(cube)
 
+    def create_all_member_hierarchies(self, context):
+        file_location = context.file_directory + os.sep + "member_hierarchy.csv"
+        header_skipped = False
+        # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:                    
+                    maintenance_agency_id = row[ColumnIndexes().member_hierarchy_maintenance_agency]
+                    code = row[ColumnIndexes().member_hierarchy_code]
+                    id = row[ColumnIndexes().member_hierarchy_id]
+                    domain_id = row[ColumnIndexes().member_hierarchy_domain_id]
+                    is_main_hierarchy = row[ColumnIndexes().member_hierarchy_is_main_hierarchy]
+                    name = row[ColumnIndexes().member_hierarchy_name]
+                    description = row[ColumnIndexes().member_hierarchy_description]
+                    
+                    maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id)
+                    domain = ImportWebsiteToSDDModel.get_domain_with_id(self,context,domain_id)
+                    hierarchy = MEMBER_HIERARCHY(name=ImportWebsiteToSDDModel.replace_dots(self, id))
+                    hierarchy.member_hierarchy_id = ImportWebsiteToSDDModel.replace_dots(self, id)
+                    hierarchy.code = code
+                    hierarchy.description = description
+                    hierarchy.maintenance_agency_id = maintenance_agency
+                    hierarchy.domain_id = domain
+                        
+                    context.member_hierarchy_dictionary[id] = hierarchy
+                    context.member_hierarchies.memberHierarchies.append(hierarchy)
+                    
+    def create_all_member_hierarchies_nodes(self, context):
+        file_location = context.file_directory + os.sep + "member_hierarchy_node.csv"
+        header_skipped = False
+        # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
+        # the attribute should have the correct type, which may be a specific
+        # enumeration
+
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:             
+                    hierarchy_id = row[ColumnIndexes().member_hierarchy_node_hierarchy_id]
+                    member_id = row[ColumnIndexes().member_hierarchy_node_member_id]
+                    parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id]
+                    node_level = row[ColumnIndexes().member_hierarchy_node_level]
+                    comparator = row[ColumnIndexes().member_hierarchy_node_comparator]
+                    operator = row[ColumnIndexes().member_hierarchy_node_operator]
+                    valid_from = row[ColumnIndexes().member_hierarchy_node_valid_from]
+                    valid_to = row[ColumnIndexes().member_hierarchy_node_valid_to]
+                    
+                    member = ImportWebsiteToSDDModel.find_member_with_id(self,member_id,context)
+                    parent_member = ImportWebsiteToSDDModel.find_member_with_id(self,parent_member_id,context)
+                    
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                            or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
+                        hierarchy = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
+                        hierarchy_node = MEMBER_HIERARCHY_NODE()
+                        hierarchy_node.member_hierarchy_id = hierarchy
+                        hierarchy_node.comparator = comparator
+                        hierarchy_node.operator = operator
+                        hierarchy_node.member_id = member
+                        hierarchy_node.level = int(node_level)
+                        hierarchy_node.parent_member_id = parent_member
+                        context.member_hierarchy_node_dictionary[hierarchy_id + ":" + member_id] = hierarchy_node
+                        context.member_hierarchies.memberHierarchiesNodes.append(hierarchy_node)
+                        
     def create_all_cube_structures(self, context):
         file_location = context.file_directory + os.sep + "cube_structure.csv"
         header_skipped = False
@@ -531,8 +605,9 @@ class ImportWebsiteToSDDModel(object):
                     table.version = version
                     # not needed yet table.valid_from = valid_from
                     # not needed yet table.valid_to = valid_to
-
-                    context.report_tables.reportTables.append(table)
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                            or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
+                        context.report_tables.reportTables.append(table)
                     
     def create_axis (self, context):
         '''
@@ -770,6 +845,13 @@ class ImportWebsiteToSDDModel(object):
             return context.member_dictionary[element_id]
         except KeyError:
             return None
+        
+    def find_member_hierarchy_with_id(self,element_id,context):
+        ''' find an existing member with this id'''
+        try:
+            return context.member_hierarchy_dictionary[element_id]
+        except KeyError:
+            return None
     
     def find_variable_with_id(self,context, element_id):
         ''' find an existing variable with this id'''
@@ -823,9 +905,10 @@ class ImportWebsiteToSDDModel(object):
         '''
         get the domain with the given id
         '''
-        for domain in context.domains.domains:
-            if domain.domain_id == domain_id_string:
-                return domain
+        try:
+            return context.domain_dictionary[domain_id_string]
+        except KeyError:
+            return None
             
     def find_variable_set_with_id(self, context, variable_set_id):
         '''

@@ -215,601 +215,6 @@ public interface regdnaPackage extends EPackage {
 	int MODULE_LIST_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.AllowedTypesImpl <em>Allowed Types</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.AllowedTypesImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getAllowedTypes()
-	 * @generated
-	 */
-	int ALLOWED_TYPES = 3;
-
-	/**
-	 * The feature id for the '<em><b>Allowed Types</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ALLOWED_TYPES__ALLOWED_TYPES = 0;
-
-	/**
-	 * The number of structural features of the '<em>Allowed Types</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ALLOWED_TYPES_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Allowed Types</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ALLOWED_TYPES_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RequirementsModuleImpl <em>Requirements Module</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.RequirementsModuleImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRequirementsModule()
-	 * @generated
-	 */
-	int REQUIREMENTS_MODULE = 4;
-
-	/**
-	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE__DEPENDENCIES = MODULE__DEPENDENCIES;
-
-	/**
-	 * The feature id for the '<em><b>The Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE__THE_DESCRIPTION = MODULE__THE_DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>License</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE__LICENSE = MODULE__LICENSE;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE__NAME = MODULE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE__VERSION = MODULE__VERSION;
-
-	/**
-	 * The feature id for the '<em><b>Imports</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE__IMPORTS = MODULE__IMPORTS;
-
-	/**
-	 * The feature id for the '<em><b>Rules</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE__RULES = MODULE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Allowedtypes</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE__ALLOWEDTYPES = MODULE_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Requirements Module</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE_FEATURE_COUNT = MODULE_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Requirements Module</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_MODULE_OPERATION_COUNT = MODULE_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RequirementsSectionImpl <em>Requirements Section</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.RequirementsSectionImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRequirementsSection()
-	 * @generated
-	 */
-	int REQUIREMENTS_SECTION = 5;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION__NAME = 0;
-
-	/**
-	 * The number of structural features of the '<em>Requirements Section</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Requirements Section</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RequirementsSectionImageImpl <em>Requirements Section Image</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.RequirementsSectionImageImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRequirementsSectionImage()
-	 * @generated
-	 */
-	int REQUIREMENTS_SECTION_IMAGE = 6;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_IMAGE__NAME = REQUIREMENTS_SECTION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Style</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_IMAGE__STYLE = REQUIREMENTS_SECTION_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Uri</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_IMAGE__URI = REQUIREMENTS_SECTION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Requirements Section Image</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_IMAGE_FEATURE_COUNT = REQUIREMENTS_SECTION_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of operations of the '<em>Requirements Section Image</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_IMAGE_OPERATION_COUNT = REQUIREMENTS_SECTION_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RequirementsSectionLinkWithTextImpl <em>Requirements Section Link With Text</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.RequirementsSectionLinkWithTextImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRequirementsSectionLinkWithText()
-	 * @generated
-	 */
-	int REQUIREMENTS_SECTION_LINK_WITH_TEXT = 7;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_LINK_WITH_TEXT__NAME = REQUIREMENTS_SECTION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Linked Rule Section</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_LINK_WITH_TEXT__LINKED_RULE_SECTION = REQUIREMENTS_SECTION_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Link Text</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_LINK_WITH_TEXT__LINK_TEXT = REQUIREMENTS_SECTION_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Subsection</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_LINK_WITH_TEXT__SUBSECTION = REQUIREMENTS_SECTION_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of structural features of the '<em>Requirements Section Link With Text</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_LINK_WITH_TEXT_FEATURE_COUNT = REQUIREMENTS_SECTION_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of operations of the '<em>Requirements Section Link With Text</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_LINK_WITH_TEXT_OPERATION_COUNT = REQUIREMENTS_SECTION_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RequirementsSectionTextImpl <em>Requirements Section Text</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.RequirementsSectionTextImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRequirementsSectionText()
-	 * @generated
-	 */
-	int REQUIREMENTS_SECTION_TEXT = 8;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_TEXT__NAME = REQUIREMENTS_SECTION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Text</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_TEXT__TEXT = REQUIREMENTS_SECTION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Requirements Section Text</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_TEXT_FEATURE_COUNT = REQUIREMENTS_SECTION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Requirements Section Text</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENTS_SECTION_TEXT_OPERATION_COUNT = REQUIREMENTS_SECTION_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RequirementTypeImpl <em>Requirement Type</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.RequirementTypeImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRequirementType()
-	 * @generated
-	 */
-	int REQUIREMENT_TYPE = 9;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENT_TYPE__NAME = 0;
-
-	/**
-	 * The number of structural features of the '<em>Requirement Type</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENT_TYPE_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Requirement Type</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REQUIREMENT_TYPE_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.TitledRequirementsSectionImpl <em>Titled Requirements Section</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.TitledRequirementsSectionImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getTitledRequirementsSection()
-	 * @generated
-	 */
-	int TITLED_REQUIREMENTS_SECTION = 10;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TITLED_REQUIREMENTS_SECTION__NAME = REQUIREMENTS_SECTION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Sections</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TITLED_REQUIREMENTS_SECTION__SECTIONS = REQUIREMENTS_SECTION_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Referencing Sections</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TITLED_REQUIREMENTS_SECTION__REFERENCING_SECTIONS = REQUIREMENTS_SECTION_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Requirements Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TITLED_REQUIREMENTS_SECTION__REQUIREMENTS_TYPE = REQUIREMENTS_SECTION_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Title</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TITLED_REQUIREMENTS_SECTION__TITLE = REQUIREMENTS_SECTION_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of structural features of the '<em>Titled Requirements Section</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TITLED_REQUIREMENTS_SECTION_FEATURE_COUNT = REQUIREMENTS_SECTION_FEATURE_COUNT + 4;
-
-	/**
-	 * The number of operations of the '<em>Titled Requirements Section</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TITLED_REQUIREMENTS_SECTION_OPERATION_COUNT = REQUIREMENTS_SECTION_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.TagImpl <em>Tag</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.TagImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getTag()
-	 * @generated
-	 */
-	int TAG = 11;
-
-	/**
-	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG__DISPLAY_NAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG__NAME = 1;
-
-	/**
-	 * The feature id for the '<em><b>Requirements</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG__REQUIREMENTS = 2;
-
-	/**
-	 * The number of structural features of the '<em>Tag</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_FEATURE_COUNT = 3;
-
-	/**
-	 * The number of operations of the '<em>Tag</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.TagGroupImpl <em>Tag Group</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.TagGroupImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getTagGroup()
-	 * @generated
-	 */
-	int TAG_GROUP = 12;
-
-	/**
-	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP__DEPENDENCIES = MODULE__DEPENDENCIES;
-
-	/**
-	 * The feature id for the '<em><b>The Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP__THE_DESCRIPTION = MODULE__THE_DESCRIPTION;
-
-	/**
-	 * The feature id for the '<em><b>License</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP__LICENSE = MODULE__LICENSE;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP__NAME = MODULE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP__VERSION = MODULE__VERSION;
-
-	/**
-	 * The feature id for the '<em><b>Imports</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP__IMPORTS = MODULE__IMPORTS;
-
-	/**
-	 * The feature id for the '<em><b>Tags</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP__TAGS = MODULE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Tag Group</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP_FEATURE_COUNT = MODULE_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Tag Group</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TAG_GROUP_OPERATION_COUNT = MODULE_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RulesForReportImpl <em>Rules For Report</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -817,7 +222,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRulesForReport()
 	 * @generated
 	 */
-	int RULES_FOR_REPORT = 13;
+	int RULES_FOR_REPORT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Output Layer Cube</b></em>' reference.
@@ -863,7 +268,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRulesForILTable()
 	 * @generated
 	 */
-	int RULES_FOR_IL_TABLE = 14;
+	int RULES_FOR_IL_TABLE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Rules For Table Part</b></em>' containment reference list.
@@ -909,7 +314,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getSelectColumn()
 	 * @generated
 	 */
-	int SELECT_COLUMN = 15;
+	int SELECT_COLUMN = 5;
 
 	/**
 	 * The feature id for the '<em><b>As Attribute</b></em>' reference.
@@ -946,7 +351,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getSelectColumnMemberAs()
 	 * @generated
 	 */
-	int SELECT_COLUMN_MEMBER_AS = 16;
+	int SELECT_COLUMN_MEMBER_AS = 6;
 
 	/**
 	 * The feature id for the '<em><b>As Attribute</b></em>' reference.
@@ -992,7 +397,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getSelectColumnAttributeAs()
 	 * @generated
 	 */
-	int SELECT_COLUMN_ATTRIBUTE_AS = 17;
+	int SELECT_COLUMN_ATTRIBUTE_AS = 7;
 
 	/**
 	 * The feature id for the '<em><b>As Attribute</b></em>' reference.
@@ -1038,7 +443,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getSelectDerivedColumnAs()
 	 * @generated
 	 */
-	int SELECT_DERIVED_COLUMN_AS = 18;
+	int SELECT_DERIVED_COLUMN_AS = 8;
 
 	/**
 	 * The feature id for the '<em><b>As Attribute</b></em>' reference.
@@ -1084,7 +489,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getSelectValueAs()
 	 * @generated
 	 */
-	int SELECT_VALUE_AS = 19;
+	int SELECT_VALUE_AS = 9;
 
 	/**
 	 * The feature id for the '<em><b>As Attribute</b></em>' reference.
@@ -1130,7 +535,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getTableFilter()
 	 * @generated
 	 */
-	int TABLE_FILTER = 20;
+	int TABLE_FILTER = 10;
 
 	/**
 	 * The feature id for the '<em><b>Predicate</b></em>' containment reference.
@@ -1167,7 +572,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getGenerationRulesModule()
 	 * @generated
 	 */
-	int GENERATION_RULES_MODULE = 21;
+	int GENERATION_RULES_MODULE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -1258,7 +663,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRuleForILTablePart()
 	 * @generated
 	 */
-	int RULE_FOR_IL_TABLE_PART = 22;
+	int RULE_FOR_IL_TABLE_PART = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1313,7 +718,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getPredicate()
 	 * @generated
 	 */
-	int PREDICATE = 23;
+	int PREDICATE = 13;
 
 	/**
 	 * The number of structural features of the '<em>Predicate</em>' class.
@@ -1341,7 +746,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getAndPredicate()
 	 * @generated
 	 */
-	int AND_PREDICATE = 24;
+	int AND_PREDICATE = 14;
 
 	/**
 	 * The feature id for the '<em><b>Operands</b></em>' containment reference list.
@@ -1378,7 +783,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getOrPredicate()
 	 * @generated
 	 */
-	int OR_PREDICATE = 25;
+	int OR_PREDICATE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Operands</b></em>' containment reference list.
@@ -1415,7 +820,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getNotPredicate()
 	 * @generated
 	 */
-	int NOT_PREDICATE = 26;
+	int NOT_PREDICATE = 16;
 
 	/**
 	 * The feature id for the '<em><b>Operand</b></em>' containment reference.
@@ -1452,7 +857,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getAttributePredicate()
 	 * @generated
 	 */
-	int ATTRIBUTE_PREDICATE = 27;
+	int ATTRIBUTE_PREDICATE = 17;
 
 	/**
 	 * The feature id for the '<em><b>Attribute1</b></em>' reference.
@@ -1516,7 +921,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELModelElement()
 	 * @generated
 	 */
-	int EL_MODEL_ELEMENT = 34;
+	int EL_MODEL_ELEMENT = 24;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1553,7 +958,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELNamedElement()
 	 * @generated
 	 */
-	int EL_NAMED_ELEMENT = 35;
+	int EL_NAMED_ELEMENT = 25;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1599,7 +1004,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELTypedElement()
 	 * @generated
 	 */
-	int EL_TYPED_ELEMENT = 43;
+	int EL_TYPED_ELEMENT = 33;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1672,7 +1077,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELStructuralFeature()
 	 * @generated
 	 */
-	int EL_STRUCTURAL_FEATURE = 42;
+	int EL_STRUCTURAL_FEATURE = 32;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1745,7 +1150,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELAttribute()
 	 * @generated
 	 */
-	int EL_ATTRIBUTE = 28;
+	int EL_ATTRIBUTE = 18;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1836,7 +1241,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELClassifier()
 	 * @generated
 	 */
-	int EL_CLASSIFIER = 30;
+	int EL_CLASSIFIER = 20;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1891,7 +1296,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELClass()
 	 * @generated
 	 */
-	int EL_CLASS = 29;
+	int EL_CLASS = 19;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -1982,7 +1387,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELDataType()
 	 * @generated
 	 */
-	int EL_DATA_TYPE = 31;
+	int EL_DATA_TYPE = 21;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2046,7 +1451,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELEnum()
 	 * @generated
 	 */
-	int EL_ENUM = 32;
+	int EL_ENUM = 22;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2119,7 +1524,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELEnumLiteral()
 	 * @generated
 	 */
-	int EL_ENUM_LITERAL = 33;
+	int EL_ENUM_LITERAL = 23;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2183,7 +1588,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELOperation()
 	 * @generated
 	 */
-	int EL_OPERATION = 36;
+	int EL_OPERATION = 26;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2265,7 +1670,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELPublicOperation()
 	 * @generated
 	 */
-	int EL_PUBLIC_OPERATION = 37;
+	int EL_PUBLIC_OPERATION = 27;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2356,7 +1761,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELPrivateOperation()
 	 * @generated
 	 */
-	int EL_PRIVATE_OPERATION = 38;
+	int EL_PRIVATE_OPERATION = 28;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2447,7 +1852,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELParameter()
 	 * @generated
 	 */
-	int EL_PARAMETER = 39;
+	int EL_PARAMETER = 29;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2520,7 +1925,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELPackage()
 	 * @generated
 	 */
-	int EL_PACKAGE = 40;
+	int EL_PACKAGE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -2629,7 +2034,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELReference()
 	 * @generated
 	 */
-	int EL_REFERENCE = 41;
+	int EL_REFERENCE = 31;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2720,7 +2125,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELAnnotation()
 	 * @generated
 	 */
-	int EL_ANNOTATION = 44;
+	int EL_ANNOTATION = 34;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
@@ -2775,7 +2180,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELStringToStringMapEntry()
 	 * @generated
 	 */
-	int EL_STRING_TO_STRING_MAP_ENTRY = 45;
+	int EL_STRING_TO_STRING_MAP_ENTRY = 35;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -2814,70 +2219,6 @@ public interface regdnaPackage extends EPackage {
 	int EL_STRING_TO_STRING_MAP_ENTRY_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.OperationTagImpl <em>Operation Tag</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.OperationTagImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getOperationTag()
-	 * @generated
-	 */
-	int OPERATION_TAG = 46;
-
-	/**
-	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATION_TAG__DISPLAY_NAME = TAG__DISPLAY_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATION_TAG__NAME = TAG__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Requirements</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATION_TAG__REQUIREMENTS = TAG__REQUIREMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Operation</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATION_TAG__OPERATION = TAG_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Operation Tag</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATION_TAG_FEATURE_COUNT = TAG_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Operation Tag</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATION_TAG_OPERATION_COUNT = TAG_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.ReportImpl <em>Report</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2885,7 +2226,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReport()
 	 * @generated
 	 */
-	int REPORT = 47;
+	int REPORT = 36;
 
 	/**
 	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
@@ -2924,13 +2265,22 @@ public interface regdnaPackage extends EPackage {
 	int REPORT__REPORT_CELLS = 3;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT__NAME = 4;
+
+	/**
 	 * The number of structural features of the '<em>Report</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPORT_FEATURE_COUNT = 4;
+	int REPORT_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Report</em>' class.
@@ -2949,7 +2299,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportRow()
 	 * @generated
 	 */
-	int REPORT_ROW = 48;
+	int REPORT_ROW = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2986,7 +2336,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportColumn()
 	 * @generated
 	 */
-	int REPORT_COLUMN = 49;
+	int REPORT_COLUMN = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3023,7 +2373,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportCell()
 	 * @generated
 	 */
-	int REPORT_CELL = 50;
+	int REPORT_CELL = 39;
 
 	/**
 	 * The feature id for the '<em><b>Row</b></em>' reference.
@@ -3096,7 +2446,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getFilter()
 	 * @generated
 	 */
-	int FILTER = 51;
+	int FILTER = 40;
 
 	/**
 	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
@@ -3151,7 +2501,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportModule()
 	 * @generated
 	 */
-	int REPORT_MODULE = 52;
+	int REPORT_MODULE = 41;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -3242,7 +2592,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getComparitor()
 	 * @generated
 	 */
-	int COMPARITOR = 53;
+	int COMPARITOR = 42;
 
 
 	/**
@@ -3362,315 +2712,6 @@ public interface regdnaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getModuleList_Modules();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.AllowedTypes <em>Allowed Types</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Allowed Types</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.AllowedTypes
-	 * @generated
-	 */
-	EClass getAllowedTypes();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.AllowedTypes#getAllowedTypes <em>Allowed Types</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Allowed Types</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.AllowedTypes#getAllowedTypes()
-	 * @see #getAllowedTypes()
-	 * @generated
-	 */
-	EReference getAllowedTypes_AllowedTypes();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsModule <em>Requirements Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Requirements Module</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsModule
-	 * @generated
-	 */
-	EClass getRequirementsModule();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsModule#getRules <em>Rules</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Rules</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsModule#getRules()
-	 * @see #getRequirementsModule()
-	 * @generated
-	 */
-	EReference getRequirementsModule_Rules();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsModule#getAllowedtypes <em>Allowedtypes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Allowedtypes</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsModule#getAllowedtypes()
-	 * @see #getRequirementsModule()
-	 * @generated
-	 */
-	EReference getRequirementsModule_Allowedtypes();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSection <em>Requirements Section</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Requirements Section</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSection
-	 * @generated
-	 */
-	EClass getRequirementsSection();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSection#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSection#getName()
-	 * @see #getRequirementsSection()
-	 * @generated
-	 */
-	EAttribute getRequirementsSection_Name();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage <em>Requirements Section Image</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Requirements Section Image</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage
-	 * @generated
-	 */
-	EClass getRequirementsSectionImage();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage#getStyle <em>Style</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Style</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage#getStyle()
-	 * @see #getRequirementsSectionImage()
-	 * @generated
-	 */
-	EAttribute getRequirementsSectionImage_Style();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage#getUri <em>Uri</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Uri</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionImage#getUri()
-	 * @see #getRequirementsSectionImage()
-	 * @generated
-	 */
-	EAttribute getRequirementsSectionImage_Uri();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText <em>Requirements Section Link With Text</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Requirements Section Link With Text</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText
-	 * @generated
-	 */
-	EClass getRequirementsSectionLinkWithText();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText#getLinkedRuleSection <em>Linked Rule Section</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Linked Rule Section</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText#getLinkedRuleSection()
-	 * @see #getRequirementsSectionLinkWithText()
-	 * @generated
-	 */
-	EReference getRequirementsSectionLinkWithText_LinkedRuleSection();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText#getLinkText <em>Link Text</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Link Text</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText#getLinkText()
-	 * @see #getRequirementsSectionLinkWithText()
-	 * @generated
-	 */
-	EAttribute getRequirementsSectionLinkWithText_LinkText();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText#getSubsection <em>Subsection</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Subsection</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionLinkWithText#getSubsection()
-	 * @see #getRequirementsSectionLinkWithText()
-	 * @generated
-	 */
-	EAttribute getRequirementsSectionLinkWithText_Subsection();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText <em>Requirements Section Text</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Requirements Section Text</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText
-	 * @generated
-	 */
-	EClass getRequirementsSectionText();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText#getText <em>Text</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Text</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementsSectionText#getText()
-	 * @see #getRequirementsSectionText()
-	 * @generated
-	 */
-	EAttribute getRequirementsSectionText_Text();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RequirementType <em>Requirement Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Requirement Type</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementType
-	 * @generated
-	 */
-	EClass getRequirementType();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.RequirementType#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.RequirementType#getName()
-	 * @see #getRequirementType()
-	 * @generated
-	 */
-	EAttribute getRequirementType_Name();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection <em>Titled Requirements Section</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Titled Requirements Section</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection
-	 * @generated
-	 */
-	EClass getTitledRequirementsSection();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection#getSections <em>Sections</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Sections</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection#getSections()
-	 * @see #getTitledRequirementsSection()
-	 * @generated
-	 */
-	EReference getTitledRequirementsSection_Sections();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection#getReferencingSections <em>Referencing Sections</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Referencing Sections</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection#getReferencingSections()
-	 * @see #getTitledRequirementsSection()
-	 * @generated
-	 */
-	EReference getTitledRequirementsSection_ReferencingSections();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection#getRequirementsType <em>Requirements Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Requirements Type</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection#getRequirementsType()
-	 * @see #getTitledRequirementsSection()
-	 * @generated
-	 */
-	EReference getTitledRequirementsSection_RequirementsType();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection#getTitle <em>Title</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Title</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TitledRequirementsSection#getTitle()
-	 * @see #getTitledRequirementsSection()
-	 * @generated
-	 */
-	EAttribute getTitledRequirementsSection_Title();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.Tag <em>Tag</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Tag</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.Tag
-	 * @generated
-	 */
-	EClass getTag();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.Tag#getDisplayName <em>Display Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Display Name</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.Tag#getDisplayName()
-	 * @see #getTag()
-	 * @generated
-	 */
-	EAttribute getTag_DisplayName();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.Tag#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.Tag#getName()
-	 * @see #getTag()
-	 * @generated
-	 */
-	EAttribute getTag_Name();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.regdna.model.regdna.Tag#getRequirements <em>Requirements</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Requirements</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.Tag#getRequirements()
-	 * @see #getTag()
-	 * @generated
-	 */
-	EReference getTag_Requirements();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.TagGroup <em>Tag Group</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Tag Group</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TagGroup
-	 * @generated
-	 */
-	EClass getTagGroup();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.TagGroup#getTags <em>Tags</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Tags</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.TagGroup#getTags()
-	 * @see #getTagGroup()
-	 * @generated
-	 */
-	EReference getTagGroup_Tags();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RulesForReport <em>Rules For Report</em>}'.
@@ -4542,27 +3583,6 @@ public interface regdnaPackage extends EPackage {
 	EAttribute getELStringToStringMapEntry_Value();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.OperationTag <em>Operation Tag</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Operation Tag</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.OperationTag
-	 * @generated
-	 */
-	EClass getOperationTag();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.OperationTag#getOperation <em>Operation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Operation</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.OperationTag#getOperation()
-	 * @see #getOperationTag()
-	 * @generated
-	 */
-	EReference getOperationTag_Operation();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.Report <em>Report</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4615,6 +3635,17 @@ public interface regdnaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getReport_ReportCells();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.Report#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.Report#getName()
+	 * @see #getReport()
+	 * @generated
+	 */
+	EAttribute getReport_Name();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ReportRow <em>Report Row</em>}'.

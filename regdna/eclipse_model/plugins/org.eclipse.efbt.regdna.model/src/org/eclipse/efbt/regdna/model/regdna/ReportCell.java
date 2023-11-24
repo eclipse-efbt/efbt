@@ -88,12 +88,12 @@ public interface ReportCell extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Metric</em>' reference.
-	 * @see #setMetric(ELAttribute)
+	 * @see #setMetric(ELOperation)
 	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getReportCell_Metric()
 	 * @model
 	 * @generated
 	 */
-	ELAttribute getMetric();
+	ELOperation getMetric();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.ReportCell#getMetric <em>Metric</em>}' reference.
@@ -103,7 +103,7 @@ public interface ReportCell extends EObject {
 	 * @see #getMetric()
 	 * @generated
 	 */
-	void setMetric(ELAttribute value);
+	void setMetric(ELOperation value);
 
 	/**
 	 * Returns the value of the '<em><b>Datapoint ID</b></em>' attribute.
