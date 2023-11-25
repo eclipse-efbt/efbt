@@ -55,7 +55,15 @@ if __name__ == '__main__':
     traverser.traverse(context,'Long_security_position_Prudential_portfolio_assignment',True)
     traverser.traverse(context,'Long_security_position_Prudential_Portfolio_assignment_Accounting_classification_for_financial_assets_assignment',False)
     traverser.traverse(context,'Long_security_position_Prudential_Portfolio_assignment_Accounting_classification_for_financial_assets_assignment',True)
-
+    traverser.traverse(context,'Collateral',False)
+    traverser.traverse(context,'Collateral',True)
+    traverser.traverse(context,'Instrument_Entity_role_assignment',False)
+    traverser.traverse(context,'Instrument_Entity_role_assignment',True)
+    traverser.traverse(context,'Financial_contract',False)
+    traverser.traverse(context,'Financial_contract',True)
+    traverser.traverse(context,'Entity_role',False)
+    traverser.traverse(context,'Entity_role',True)
+    
 
     
     

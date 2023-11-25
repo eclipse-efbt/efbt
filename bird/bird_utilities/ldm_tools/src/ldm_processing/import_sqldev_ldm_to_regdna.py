@@ -420,7 +420,11 @@ class SQLDevLDMImport(object):
                     relation_name = row[0]
                     identifying = row[15]
 
-                    reference_name = Utils.make_valid_id(relation_name)
+                    reference_name = ""
+                    if identifying == "Y":
+                        reference_name = Utils.make_valid_id(relation_name)+"_association"
+                    else:
+                        reference_name = Utils.make_valid_id(relation_name)+"_composition"
 
                     try:
                         the_class = context.classes_map[source_id]

@@ -52,38 +52,58 @@ class InputLayerLinkEnricher(object):
                     entity_name = row[12]
                     table_name = row[13]
                     if (relational_model_name == context.input_layer_name):
-                        ldm_attribute = InputLayerLinkEnricher.get_ldm_attribute(
-                            self, 
-                            context,
-                            Utils.make_valid_id(entity_name),
-                            Utils.make_valid_id(logical_object_name))
-                        # logical_attribute_to_relational_name[ldm_attribute] =  table_name + "." + relational_object_Name
-                        if not(ldm_attribute is None):
-                            if isinstance(ldm_attribute,ELAttribute):
-                                the_annotation = ldm_attribute.eAnnotations
-                                if the_annotation is None:
-                                    the_annotation = ELAnnotation()
-                                    ldm_attribute.eAnnotations = the_annotation
-                                
-                                details = the_annotation.details
-                                detail1 = ELStringToStringMapEntry()
-                                detail1.key = "il_column"
-                                detail1.value = table_name + "." + relational_object_Name
-                                details.append(detail1)
-                            if isinstance(ldm_attribute,ELReference):
-                                the_annotation = ldm_attribute.eAnnotations
-                                if the_annotation is None:
-                                    the_annotation = ELAnnotation()
-                                    ldm_attribute.eAnnotations = the_annotation
-                                
-                                details = the_annotation.details
+
+                        # annotate entites
+                        if logical_object_name == entity_name:
+                            ldm_entity = InputLayerLinkEnricher.get_ldm_entity(
+                                self, 
+                                context,
+                                Utils.make_valid_id(entity_name))
+
+                            the_annotation = ldm_entity.eAnnotations
+                            if the_annotation is None:
+                                the_annotation = ELAnnotation()
+                                ldm_entity.eAnnotations = the_annotation
                             
-                                detail1 = ELStringToStringMapEntry()
-                                detail1.key = "il_column"
-                                detail1.value = relational_object_Name
-                                details.append(detail1)
+                            details = the_annotation.details
+                            detail1 = ELStringToStringMapEntry()
+                            detail1.key = "il_table"
+                            detail1.value = table_name
+                            details.append(detail1)
+                        else:
+                            # annotate attributes
+                            ldm_attribute = InputLayerLinkEnricher.get_ldm_attribute(
+                                self, 
+                                context,
+                                Utils.make_valid_id(entity_name),
+                                Utils.make_valid_id(logical_object_name))
+                            # logical_attribute_to_relational_name[ldm_attribute] =  table_name + "." + relational_object_Name
+                            if not(ldm_attribute is None):
+                                if isinstance(ldm_attribute,ELAttribute):
+                                    the_annotation = ldm_attribute.eAnnotations
+                                    if the_annotation is None:
+                                        the_annotation = ELAnnotation()
+                                        ldm_attribute.eAnnotations = the_annotation
+                                    
+                                    details = the_annotation.details
+                                    detail1 = ELStringToStringMapEntry()
+                                    detail1.key = "il_column"
+                                    detail1.value = table_name + "." + relational_object_Name
+                                    details.append(detail1)
+                                if isinstance(ldm_attribute,ELReference):
+                                    the_annotation = ldm_attribute.eAnnotations
+                                    if the_annotation is None:
+                                        the_annotation = ELAnnotation()
+                                        ldm_attribute.eAnnotations = the_annotation
+                                    
+                                    details = the_annotation.details
                                 
-                        
+                                    detail1 = ELStringToStringMapEntry()
+                                    detail1.key = "il_column"
+                                    detail1.value = relational_object_Name
+                                    details.append(detail1)
+                                    
+                            
 
     def get_ldm_attribute(self, context,entity_name,attribute_name):
         for eClassifier in context.input_tables_package.eClassifiers:
@@ -95,4 +115,10 @@ class InputLayerLinkEnricher(object):
                     if isinstance(feature,ELReference):
                         if feature.name == attribute_name:
                             return feature 
+
+    def get_ldm_entity(self, context,entity_name):
+        for eClassifier in context.input_tables_package.eClassifiers:
+            if isinstance(eClassifier,ELClass):
+                if eClassifier.name == entity_name:
+                    return eClassifier 
                         
