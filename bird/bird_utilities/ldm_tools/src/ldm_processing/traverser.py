@@ -305,7 +305,7 @@ class SubtypeExploder(object):
                 if ref.containment:
                     # if we are refering to an entity in a differnt hierarchy then
                     # we don't consider it a discriminator.
-                    if not(SubtypeExploder.different_hirarchies(self, context, entity,ref.eType)):
+                    if not(SubtypeExploder.different_il_tables(self, context, entity,ref.eType)):
                         reference_list.append(ref)
                     
         # if there are any direct subclasses of this entity 
@@ -319,7 +319,7 @@ class SubtypeExploder(object):
             reference_list.append(dummy_discrimitory);
         return reference_list
     
-    def different_hirarchies(self, context, class1, class2):
+    def different_hierarchies(self, context, class1, class2):
         annotations1 = class1.eAnnotations
         annotations2 = class2.eAnnotations
         hierarchy1 = "NA"
@@ -342,7 +342,28 @@ class SubtypeExploder(object):
         else:
             return True
                 
-         
+    def different_il_tables(self, context, class1, class2):
+        annotations1 = class1.eAnnotations
+        annotations2 = class2.eAnnotations
+        il_table1 = "NA"
+        il_table2 = "NA"
+        if not (annotations1 is None):
+            details1 = annotations1.details
+            for map_entry in details1:
+                if map_entry.key == 'il_table':
+                    il_table1 = map_entry.value
+        if not (annotations2 is None):
+            details2 = annotations2.details
+            for map_entry in details2:
+                if map_entry.key == 'il_table':
+                    il_table2 = map_entry.value
+                    
+        if (il_table1 == "NA") or (il_table2 == "NA"):
+            return False
+        elif il_table1 == il_table2:
+            return False
+        else:
+            return True
         
         
     def get_possible_entities(self,context, discriminator):
