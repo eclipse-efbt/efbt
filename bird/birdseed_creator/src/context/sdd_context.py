@@ -79,6 +79,7 @@ class SDDContext(object):
     combinations_dictionary = {}
     member_dictionary = {}
     domain_dictionary = {}
+    subdomain_dictionary = {}
     member_hierarchy_dictionary = {}
     member_hierarchy_node_dictionary = {}
     cube_structure_dictionary = {}
