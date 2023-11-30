@@ -61,6 +61,7 @@ class ColumnIndexes(object):
     cube_structure_id_index = 1
     cube_structure_name_index = 2
     cube_structure_valid_to_index = 6
+    cube_structure_version = 7
     cube_structure_description_index = 4
     cube_structure_maintenance_agency = 0
     
