@@ -366,6 +366,39 @@ class PersistToFile:
                 f.write("\t}\r")
                 f.write("}\r")
                 f.close()
+
+    def create_example_reports(self, context):
+        '''
+        Documentation for create_example_reports
+        '''
+        reports = context.reports_module.reports
+        for report in reports:
+            
+            if not(report.outputLayer is None):
+                f = open(context.output_directory + os.sep + 'csv' +
+                         os.sep + report.outputLayer.name +
+                         '.csv', "a",  encoding='utf-8')
+                f.write("report,datapoint,row,column,sheet,value")
+                 
+                for cell in report.reportCells:
+                    report_name = "None"
+                    if not (report.outputLayer is None):
+                        report_name= report.outputLayer.name
+                    
+                    data_point_id = "None"
+                    if not (cell.datapointID is None):
+                        data_point_id= cell.datapointID
+                        
+                    row_name = "None"
+                    if not (cell.row is None):
+                        row_name= cell.row.name
+                        
+                    col_name = "None"
+                    if not (cell.column is None):
+                        col_name= cell.column.name
+
+                    f.write(report_name + "," + data_point_id + "," + row_name + "," + col_name + ",,100\r")                                       
+                f.close()
                 
     def remove_comment_chars(self, the_string):
         '''

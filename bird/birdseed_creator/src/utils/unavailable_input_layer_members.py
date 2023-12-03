@@ -42,7 +42,8 @@ class MemberFinder(object):
                     
                     for item in subdomain.items:
                         member = item.member_id
-
+                        # if  item.member_id.member_id == "TYP_INSTRMNT_114":
+                        # import pdb;pdb.set_trace()
                         member_exists_in_input_layer = MemberFinder.member_exists_in_input_layer(self,sdd_context,member,variable)
 
                         if not (member_exists_in_input_layer):
@@ -98,19 +99,18 @@ class MemberFinder(object):
             if node.member_hierarchy_id.domain_id.domain_id == domain_id:
                 if node.member_id == member:
                     parent_member_name = "None"
-                    if not(node.parent_member_id is None):
-                        parent_member_name = node.parent_member_id.member_id
-                    node_contains_only_bird_framework_children = MemberFinder.node_contains_only_bird_framework_children(self,sdd_context,node,variable,node.member_hierarchy_id)
-                    if not(node_contains_only_bird_framework_children):
-                        print(member.member_id + ",hierachy node does not contain only input layer leafs," + node.member_hierarchy_id.name + "," + cube_structure_name) 
-                        output_file.write(member.member_id + ",hierachy node does not contain only input layer leafs," + node.member_hierarchy_id.name + "," + cube_structure_name + "\n") 
-                    else:
-                        pass
+                    # if its a leaf in the hierarchy do nothing 
+                    if MemberFinder.member_has_children_in_hierarchy(self,sdd_context,node.member_id,node.member_hierarchy_id):
+                        node_contains_only_bird_framework_children = MemberFinder.node_contains_only_bird_framework_children(self,sdd_context,node,variable,node.member_hierarchy_id,cube_structure_name,output_file)
+                        if not(node_contains_only_bird_framework_children):
+                            print(member.member_id + ",hierachy node does not contain only input layer leafs," + node.member_hierarchy_id.name + "," + cube_structure_name) 
+                            output_file.write(member.member_id + ",hierachy node does not contain only input layer leafs," + node.member_hierarchy_id.name + "," + cube_structure_name + "\n") 
+                        else:
+                            exists = True
 
-                    exists = True
         return exists
     
-    def node_contains_only_bird_framework_children(self,sdd_context,the_node, variable, member_hierarchy):
+    def node_contains_only_bird_framework_children(self,sdd_context,the_node, variable, member_hierarchy,cube_structure_name,output_file):
         contains_only_bird_framework_children = True
         child_list = []
         # get all child nodes transitivley
@@ -126,19 +126,21 @@ class MemberFinder(object):
                         if not (MemberFinder.member_has_children_in_hierarchy(self,sdd_context,node.member_id,member_hierarchy)):
                             contains_only_bird_framework_children = False
                         if node.member_id is None:
-                            pass #print("node.member_id is None")
+                            pass
                         else:
-                            pass # print(node.member_id.member_id + "is not in BIRD framework")
+                            pass
 
                     child_list.append(node)
                     again = True
                     try:
-                        again = MemberFinder.node_contains_only_bird_framework_children(self,sdd_context,node,variable,member_hierarchy)
+                        again = MemberFinder.node_contains_only_bird_framework_children(self,sdd_context,node,variable,member_hierarchy,cube_structure_name,output_file)
                     except RecursionError:
                         text = "None"
                         if not( node.member_id is None):
                             text = node.member_id.member_id
-                        print("RecursionError for " + text + " : " + member_hierarchy.member_hierarchy_id)
+                            
+                        print(text +", Technical RecursionError, " + member_hierarchy.member_hierarchy_id + "," + cube_structure_name)
+                        output_file.write(text +", Technical RecursionError, " + member_hierarchy.member_hierarchy_id + "," + cube_structure_name + "\n")
 
                     if not(again):
                         contains_only_bird_framework_children = False
