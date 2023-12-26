@@ -10,18 +10,8 @@ Require-Bundle: org.eclipse.efbt.regdna.model;bundle-version="1.2.0",
  org.eclipse.emf.ecore,
  org.eclipse.xtext,
  org.eclipse.xtext.xbase,
- org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.equinox.common;bundle-version="3.16.0",
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
  org.eclipse.xtext.util,
  org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: org.eclipse.efbt.regdna.dsl.serializer,
- org.eclipse.efbt.regdna.dsl.generator,
- org.eclipse.efbt.regdna.dsl.services,
- org.eclipse.efbt.regdna.dsl.parser.antlr.internal,
- org.eclipse.efbt.regdna.dsl.parser.antlr,
- org.eclipse.efbt.regdna.dsl,
- org.eclipse.efbt.regdna.dsl.validation,
- org.eclipse.efbt.regdna.dsl.formatting2,
- org.eclipse.efbt.regdna.dsl.scoping
-Import-Package: org.apache.log4j
