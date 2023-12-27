@@ -187,8 +187,6 @@
       <requirement
           name="org.eclipse.xsd.sdk.feature.group"/>
       <requirement
-          name="org.eclipse.eclemma.feature.feature.group"/>
-      <requirement
           name="org.eclipse.m2e.feature.feature.group"/>
       <requirement
           name="org.eclipse.xtend.sdk.feature.group"/>
@@ -197,23 +195,17 @@
       <requirement
           name="org.eclipse.sirius.specifier.feature.group"/>
       <requirement
-          name="org.apache.commons.csv"/>
-      <requirement
           name="org.eclipse.xtext.sdk.feature.group"/>
       <requirement
           name="hu.bme.mit.ecoredocgen.feature.feature.group"/>
       <requirement
           name="org.python.pydev.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/releases/2023-06"/>
+          url="http://download.eclipse.org/releases/2023-12"/>
       <repository
-          url="http://download.eclipse.org/technology/epp/packages/2023-06"/>
+          url="http://download.eclipse.org/technology/epp/packages/2023-12"/>
       <repository
           url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
-      <repository
-          url="https://download.eclipse.org/tools/orbit/downloads/2023-06"/>
-      <repository
-          url="https://download.eclipse.org/efbt/snapshots/"/>
       <repository
           url="http://static.incquerylabs.com/projects/ecoredocgen/release/"/>
       <repository
