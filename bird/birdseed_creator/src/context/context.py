@@ -37,6 +37,7 @@ class Context(object):
     file_directory = ""
     # the directory where we save our outputs.
     output_directory = ""
+    use_sub_domains_in_input_layer = True
 
     types = EcoreLiteTypes()
     # create the moduleList to hold all the modules
