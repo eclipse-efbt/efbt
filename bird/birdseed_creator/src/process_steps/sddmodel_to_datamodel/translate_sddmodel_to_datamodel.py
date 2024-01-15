@@ -17,8 +17,7 @@ Created on 22 Jan 2022
 
 @author: Neil
 '''
-import os
-import csv
+
 from utils.utils import Utils
 from regdna import ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAttribute
 
@@ -29,10 +28,11 @@ class TranslateSDDModelToDataModel(object):
 
     def do_import(self, context,sdd_context):
         '''
-        import the items from the Output layer csv files
+        import the items from the Input and Output layer csv files
         '''
         TranslateSDDModelToDataModel.add_classes_to_package(self, context,sdd_context)
-        TranslateSDDModelToDataModel.add_enums_and_literals_to_package(self, context,sdd_context)
+        TranslateSDDModelToDataModel.add_enums_and_literals_to_package_for_input_layer(self, context,sdd_context)
+        TranslateSDDModelToDataModel.add_enums_and_literals_to_package_for_output_layer(self, context,sdd_context)
         TranslateSDDModelToDataModel.add_attributes_to_classes(self, context,sdd_context)
 
     def add_classes_to_package(self, context,sdd_context):
@@ -91,102 +91,162 @@ class TranslateSDDModelToDataModel(object):
                 context.classes_map[object_id] = eclass
 
 
-
-
-    def add_enums_and_literals_to_package(self, context,sdd_context):
+    def add_enums_and_literals_to_package_for_input_layer(self, context,sdd_context):
         '''
-        Add the Enums and Literals to the package
-        '''
-       
+        Add the Enums and Literals to the package from the input layer
+        ''' 
         for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
             
             
             class_id = cube_structure_item.cube_structure_id.cube_structure_id
             try: 
-                the_class = context.classes_map[class_id]               
-                variable = cube_structure_item.variable_id.code
-                attribute_list = [variable]
-                if (variable=="MTRCS"):
-                    variable_set = cube_structure_item.variable_set_id
-                    attribute_list = TranslateSDDModelToDataModel.get_attribute_list_from_variable_set(self,variable_set)
-                if (variable == "VALUE_DECIMAL") or (variable == "OBSERVATION_VALUE"):
-                    attribute_list = []
-                    
-                for attribute_name in attribute_list:
-                    try: 
-
-                        domain_id = sdd_context.variable_to_domain_map[attribute_name]
-                        amended_domain_name = Utils.make_valid_id(domain_id)
-                        the_enum = Utils.find_enum(
-                            amended_domain_name+"_domain", context.enum_map)
-                        if the_enum is None:
-                            if not domain_id in context.missing_domains:
-                                context.missing_domains.append(domain_id)
-                    except:
-                        print("missing  class2: ")
-                        print(class_id)
+                the_class = context.classes_map[class_id]
+                if the_class in context.input_tables_package.eClassifiers:
+                    TranslateSDDModelToDataModel.add_enums_and_literals_to_package_for_cube_structure_item(self,
+                                                                    context,
+                                                                    sdd_context,
+                                                                    cube_structure_item,
+                                                                    True)
             except:
-                        print( "missing  class2: " )
-                        print(class_id)
+                print("missing  class2: ")
+                print(class_id)
 
-        for the_domain in context.missing_domains:
-    
-            amended_domain_name = Utils.make_valid_id(the_domain) + "_domain"
-            if not ((amended_domain_name == "String") or (amended_domain_name == "Date")):
-                the_enum = ELEnum()
-                the_enum.name = amended_domain_name
-                # maintain a map of enum IDS to ELEnum objects
-                context.enum_map[amended_domain_name] = the_enum
-                context.sdd_domains_package.eClassifiers.extend([the_enum])
-                the_domain_members = Utils.get_members_of_the_domain(
-                    the_domain, sdd_context.member_id_to_domain_map)
-                counter1 = 0
-                for member in the_domain_members:
-                    enum_literal = ELEnumLiteral()
-                    enum_used_name = Utils.make_valid_id_but_keep_minus_sign(
-                        sdd_context.member_id_to_member_code_map[member])
-                    adapted_value = Utils.make_valid_id(
-                        sdd_context.member_id_to_member_name_map[member])
-                    new_adapted_value = Utils.unique_value(the_enum, adapted_value)
-                    new_adapted_name = Utils.unique_name(the_enum, enum_used_name)
-    
-                    enum_literal.name = new_adapted_value
-                    enum_literal.literal = new_adapted_name
-                    counter1 = counter1 + 1
-                    enum_literal.value = counter1
-                    the_enum.eLiterals.extend([enum_literal])
-                    context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
+    def add_enums_and_literals_to_package_for_output_layer(self, context,sdd_context):
+        '''
+        Add the Enums and Literals to the package fom the output layer
+        '''
+        for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
+            
+            
+            class_id = cube_structure_item.cube_structure_id.cube_structure_id
+            try: 
+                the_class = context.classes_map[class_id]
+                if the_class in context.output_tables_package.eClassifiers:
+                    TranslateSDDModelToDataModel.add_enums_and_literals_to_package_for_cube_structure_item(self,
+                                                                    context,
+                                                                    sdd_context,
+                                                                    cube_structure_item,
+                                                                    False)
+            except:
+                print("missing  class2: ")
+                print(class_id)
 
+    def add_enums_and_literals_to_package_for_cube_structure_item(self,
+                                                                    context,
+                                                                    sdd_context,
+                                                                    cube_structure_item,
+                                                                    is_input_layer):
+        '''
+        Add the Enums and Literals to the package
+        '''  
     
-                            
+        variable = cube_structure_item.variable_id
+        subdomain = cube_structure_item.subdomain_id
+        attribute_list = [(variable,subdomain)]
+        if (variable.code =="MTRCS"):
+            variable_set = cube_structure_item.variable_set_id
+            attribute_list = TranslateSDDModelToDataModel.get_attribute_and_subdomain_list_from_variable_set(self,variable_set)
+        if (variable.code == "VALUE_DECIMAL") or (variable.code == "OBSERVATION_VALUE"):
+            attribute_list = []
+            
+        for attribute_subdomain_tuple in attribute_list:
+            attribute =attribute_subdomain_tuple[0]
+            subdomain = attribute_subdomain_tuple[1]
+            try: 
+                domain = sdd_context.variable_to_domain_map[attribute.code]
+                domain_id = domain.domain_id
+                amended_domain_name = Utils.make_valid_id(domain_id)
+                the_enum = Utils.find_enum(
+                    amended_domain_name+"_domain", context.enum_map)
+                if the_enum is None:
+                    amended_domain_name = Utils.make_valid_id(domain_id) + "_domain"
+                    if not ((amended_domain_name == "String") or (amended_domain_name == "Date")):
+                        the_enum = ELEnum()
+                        the_enum.name = amended_domain_name
+                        # maintain a map of enum IDS to ELEnum objects
+                        context.enum_map[amended_domain_name] = the_enum
+                        context.sdd_domains_package.eClassifiers.extend([the_enum])
+                        the_domain_members = []
+                        # in the usual case we get the members from subdomains in the input layer
+                        if is_input_layer and context.use_sub_domains_in_input_layer:
+                            the_domain_members = Utils.get_members_of_the_subdomain(
+                                subdomain)
+                        else:
+                            the_domain_members = Utils.get_members_of_the_domain(
+                                domain, sdd_context.member_id_to_domain_map)
+                        counter1 = 0
+                        for member in the_domain_members:
+                            enum_literal = ELEnumLiteral()
+                            enum_used_name = Utils.make_valid_id_but_keep_minus_sign(member.code)
+                            adapted_value = Utils.make_valid_id(member.displayName)
+                            new_adapted_value = Utils.unique_value(the_enum, adapted_value)
+                            new_adapted_name = Utils.unique_name(the_enum, enum_used_name)
+            
+                            enum_literal.name = new_adapted_value
+                            enum_literal.literal = new_adapted_name
+                            counter1 = counter1 + 1
+                            enum_literal.value = counter1
+                            the_enum.eLiterals.extend([enum_literal])
+                            context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
+                else:
+                    # if use_sub_domains_in_input_layer = True then we add any literals
+                    # from the columns subdomain that were not added before.
+                    # This covers the rare situation where 2 columns in the input
+                    # layer have the same domain but different subdomains
+                    if is_input_layer and context.use_sub_domains_in_input_layer:
+
+                        the_domain_members = Utils.get_members_of_the_subdomain(
+                            subdomain)
+                    
+                        counter1 = len(the_enum.eLiterals)
+                        for member in the_domain_members:
+                            enum_used_name = Utils.make_valid_id_but_keep_minus_sign(member.code)
+                            if not (Utils.contains_literal(the_enum.eLiterals, enum_used_name)):
+                                enum_literal = ELEnumLiteral()
+                                adapted_value = Utils.make_valid_id(member.displayName)
+                                enum_literal.name = adapted_value
+                                enum_literal.literal = enum_used_name
+                                counter1 = counter1 + 1
+                                enum_literal.value = counter1
+                                the_enum.eLiterals.extend([enum_literal])
+                                context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
+        
+
+            except:
+                print("missing domain: " + domain.domain_id)
+
+                           
     def add_attributes_to_classes(self, context,sdd_context):
         '''
-        For each attribute add an XAttribute to the correct ELClass representing the Entity
+        For each attribute add an ELAttribute to the correct ELClass representing the Entity
         the attribute should have the correct type, which may be a specific
         enumeration
         '''
-        
+
         for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
             class_id = cube_structure_item.cube_structure_id.cube_structure_id
             try:
                 the_class = context.classes_map[class_id]
-                the_attribute_name1 = cube_structure_item.variable_id.variable_id
+                the_attribute1 = cube_structure_item.variable_id
                 long_name=None
-                variable = cube_structure_item.variable_id.variable_id
-                attribute_list = [the_attribute_name1]
-                if (the_attribute_name1=="MTRCS"):
+                variable = cube_structure_item.variable_id
+                attribute_list = [(the_attribute1,None)]
+                if (the_attribute1.code=="MTRCS"):
                     variable_set = cube_structure_item.variable_set_id
-                    attribute_list = TranslateSDDModelToDataModel.get_attribute_list_from_variable_set(self,variable_set)
-                if (the_attribute_name1 == "VALUE_DECIMAL") or (the_attribute_name1 == "OBSERVATION_VALUE"):
+                    attribute_list = TranslateSDDModelToDataModel.get_attribute_and_subdomain_list_from_variable_set(self,variable_set)
+                if (the_attribute1.code== "VALUE_DECIMAL") or (the_attribute1.code == "OBSERVATION_VALUE"):
                     attribute_list = []
-                for attribute_name in attribute_list: 
-                
+                for attribute_subdomain_tuple in attribute_list:
+                    attribute =attribute_subdomain_tuple[0]
+                    subdomain = attribute_subdomain_tuple[1]
+                    
+                    print("attribute.code: " + attribute.code )
                     try: 
                         try:
-                            long_name = sdd_context.variable_to_long_names_map[attribute_name]
+                            long_name = sdd_context.variable_to_long_names_map[attribute.code]
                         except:
-                            long_name = attribute_name
-                        amended_attribute_name = Utils.make_valid_id(attribute_name)
+                            long_name = attribute.code
+                        amended_attribute_name = Utils.make_valid_id(attribute.code)
                         amended_attribute_long_name = Utils.make_valid_id(long_name)
                         
                         the_class = context.classes_map[class_id]
@@ -201,11 +261,11 @@ class TranslateSDDModelToDataModel(object):
                             the_attribute_name = amended_attribute_long_name
                         
                         amended_domain_name = None
-                        if (the_attribute_name1=="MTRCS"):
-                            domain_id = sdd_context.variable_to_domain_map[attribute_name]
+                        if (the_attribute1.code=="MTRCS"):
+                            domain_id = sdd_context.variable_to_domain_map[attribute.code].domain_id
                             amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
                         else:   
-                            domain_id = sdd_context.variable_to_domain_map[variable]
+                            domain_id = sdd_context.variable_to_domain_map[variable.code].domain_id
                             amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
 
                       
@@ -362,8 +422,7 @@ class TranslateSDDModelToDataModel(object):
                             print( "XXXXX missing domainID: " )
                             print(domain_id)
                             print(class_id)
-                            if not(domain_id in context.missing_domains):
-                                context.missing_domains.append(domain_id)
+                            
                     except:
                             print( "XX missing class1: " )
                             print(class_id) 
@@ -371,11 +430,14 @@ class TranslateSDDModelToDataModel(object):
                 print("XX missing class1: ")
                 print(class_id)
                 
-    def get_attribute_list_from_variable_set(self,variable_set):
-        attribute_code_list = []
+    def get_attribute_and_subdomain_list_from_variable_set(self,variable_set):
+        attribute_subdomain_tuple_list = []
         variable_set_items = variable_set.variable_set_items
         for item in variable_set_items:
             variable = item.variable_id
-            attribute_code_list.append(variable.code)
+            subdomain = item.subdomain_id
+            attribute_subdomain_tuple_list.append((variable,subdomain))
              
-        return attribute_code_list
+        return attribute_subdomain_tuple_list
+
+    

@@ -192,7 +192,7 @@ class ImportWebsiteToSDDModel(object):
                     
                     #create a dictionary that is useful later
                     if not (domain_id is None) and not (domain_id == ""):
-                        context.member_id_to_domain_map[member_id] = domain_id
+                        context.member_id_to_domain_map[member] = domain
                         context.member_id_to_member_name_map[member_id] = member_name
                         context.member_id_to_member_code_map[member_id] = code
 
@@ -230,7 +230,7 @@ class ImportWebsiteToSDDModel(object):
                     context.variable_dictionary[variable_id] = variable
                     
                     #set up some useful dictionaries for later.
-                    context.variable_to_domain_map[variable_id] = domain_id
+                    context.variable_to_domain_map[variable_id] = domain
                     context.variable_to_long_names_map[variable_id] = name
                     if not((primary_concept == "") or (primary_concept == None)):
                         context.variable_to_primary_concept_map[variable_id] = primary_concept

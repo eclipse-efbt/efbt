@@ -88,10 +88,22 @@ class Utils(object):
         '''
         return a list of members that belong to the domain
         '''
+
         return_list = []
         for key, value in member_id_to_domain_map.items():
             if value == the_domain:
                 return_list.append(key)
+        return return_list
+    
+
+    @classmethod
+    def get_members_of_the_subdomain(cls,  the_subdomain):
+        '''
+        return a list of members that belong to the domain
+        '''
+        return_list = []
+        for item in the_subdomain.items:
+            return_list.append(item.member_id)
         return return_list
 
     @classmethod
