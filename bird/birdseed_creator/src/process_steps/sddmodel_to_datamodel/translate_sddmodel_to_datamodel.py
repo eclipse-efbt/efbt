@@ -168,12 +168,22 @@ class TranslateSDDModelToDataModel(object):
                         context.sdd_domains_package.eClassifiers.extend([the_enum])
                         the_domain_members = []
                         # in the usual case we get the members from subdomains in the input layer
+                        # since we proces the input layer first we should have all of the related 
+                        # domains. 
                         if is_input_layer and context.use_sub_domains_in_input_layer:
                             the_domain_members = Utils.get_members_of_the_subdomain(
                                 subdomain)
                         else:
-                            the_domain_members = Utils.get_members_of_the_domain(
-                                domain, sdd_context.member_id_to_domain_map)
+                            # If a domain is in the output layer, but not in the input
+                            # layer, then this is a problem. output layers are set from 
+                            # the generation rules, so we should be 'collecting' exsting
+                            # domains. Furthermore the filters from the report cell
+                            # combination should filter on members that exist in the input 
+                            # layer domains, and we should record an error if they do not
+                            # so that this can be addressed.
+                            the_domain_members = []
+                            # Utils.get_members_of_the_domain(
+                            #    domain, sdd_context.member_id_to_domain_map)
                         counter1 = 0
                         for member in the_domain_members:
                             enum_literal = ELEnumLiteral()

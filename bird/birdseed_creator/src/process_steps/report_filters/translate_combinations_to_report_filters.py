@@ -25,8 +25,6 @@ class CombinationsToReportFilters:
             table_code  =  table.code
             altered_table_name = Utils.make_valid_id(table_code) +"_OutputItem"
             report_rol = CombinationsToReportFilters.get_report_rol_for_table_code(self, altered_table_name, context)
-            print("report_rol")
-            print(report_rol)
             if not (report_rol is None):
                 report = Report()
                 report.outputLayer = report_rol
@@ -91,7 +89,7 @@ class CombinationsToReportFilters:
                                             if metric is None:
                                                 print("no attribute for " + item.variable_id.variable_id)
                                             else:
-                                                print("Metric=" + item.variable_id.variable_id + ":")
+                                                pass
                                     else:
                                         print("combination" + comb.combination_id + "has no metrics for metrics variable")
                                 elif variable_id == "SUBA_CD" or variable_id == "VALUE_DECIMAL" or variable_id == "DT_RFRNC" or variable_id == "ENTTY_RIAD_CD_RPRTNG_AGNT" :
@@ -108,7 +106,6 @@ class CombinationsToReportFilters:
                                         if(member is not None):
                                             member_id = member.member_id
                                             member_code = member.code
-                                            print(variable_id+"==" +member_code +":")
                                             
                                             domain_id = item.variable_id.domain_id.domain_id
                                             literals = CombinationsToReportFilters.find_literals_with_id(self,context,sdd_context,member_code,member_id,domain_id)
@@ -124,7 +121,6 @@ class CombinationsToReportFilters:
                                         pass
             
                     except:
-                        print("failed to find report")
                         pass
 
       
@@ -145,31 +141,40 @@ class CombinationsToReportFilters:
     def find_literals_with_id(self,context,sdd_context,member_code,member_id,domain_id):
         return_literal = None
         return_literal = CombinationsToReportFilters.find_literal_with_id(self,context,sdd_context,member_code,domain_id)
-        if not (return_literal is None):
-            return CombinationsToReportFilters.get_literal_list_considering_hierarchies(self,context,sdd_context,return_literal,member_id,domain_id)
-        else:
-            return []
+        return CombinationsToReportFilters.get_literal_list_considering_hierarchies(self,context,sdd_context,return_literal,member_id,domain_id)
+
        
     def find_literal_with_id(self,context,sdd_context,member_code,domain_id):
             try:
-                return context.enum_literals_map[domain_id + "_domain" +":" +  "_" + member_code]
+                return context.enum_literals_map[domain_id + "_domain" +":" +  Utils.make_valid_id_but_keep_minus_sign(member_code)]
             except:
-                pass
-            #if isinstance(enum, ELEnum):
-            #    if enum.name == domain_id + "_domain":
-            #        for literal in enum.eLiterals:
-            #            if literal.literal == "_" + member_code:
-            #                return literal
-         
+                return None
+
     def get_literal_list_considering_hierarchies(self,context,sdd_context,literal,member_id,domain_id):
-        return_list = [literal]
+        return_list = []
+        if literal is None:
+            is_node = CombinationsToReportFilters.is_member_a_node(self,context,sdd_context,member_id,domain_id)
+            if not (is_node):
+                print("member " + member_id + "does not exist in input layer, and is not a node")
+            pass
+        else:
+            return_list = [literal]
         for hierarchy in sdd_context.member_hierarchies.memberHierarchies:
             if hierarchy.domain_id.domain_id == domain_id:
                 hierarchy_id = hierarchy.member_hierarchy_id                
                 literal_list = CombinationsToReportFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,member_id,hierarchy_id)
                 if not(literal_list is None):
                     return_list.extend(literal_list)
-        return return_list        
+        if len(return_list) == 0:
+            print(" could not find any input layer members or sub members for " + member_id )
+        return return_list     
+
+    def is_member_a_node(self,context,sdd_context,member_id,domain_id):
+        for node in sdd_context.member_hierarchies.memberHierarchiesNodes:
+            if not (node.parent_member_id is None) and not (node.parent_member_id == ''):
+                if node.parent_member_id.member_id == member_id and node.parent_member_id.domain_id.domain_id == domain_id:
+                    return True
+        return False
             
     def get_literal_list_considering_hierarchy(self,context,sdd_context,member_id,hierarchy):
         return_list = []
@@ -177,7 +182,14 @@ class CombinationsToReportFilters:
             if node.member_hierarchy_id.member_hierarchy_id == hierarchy:
                 if CombinationsToReportFilters.node_is_child_of_member(self,context,sdd_context,node,member_id,hierarchy):
                     literal = CombinationsToReportFilters.find_literal_with_id(self,context,sdd_context,node.member_id.code,node.member_id.domain_id.domain_id)
-                    return_list.append(literal) 
+                    if literal is None:
+                        print("child member " +
+                                 node.member_id.code + 
+                                 " of hierarchy " + 
+                                 node.member_hierarchy_id.member_hierarchy_id + 
+                                 "does not exist in input layer")
+                    else:
+                        return_list.append(literal) 
         return return_list
             
     def node_is_child_of_member(self,context,sdd_context,node,member_id,hierarchy):
