@@ -297,7 +297,7 @@ Filter returns regdna::Filter:
 	'{'
 		('outputLayer' outputLayer=[regdna::ELClass|QualifiedName])?
 		('operation' operation=[regdna::ELOperation|QualifiedName])?
-		('item' '(' member+=[regdna::ELEnumLiteral|QualifiedName] (  member+=[regdna::ELEnumLiteral|QualifiedName])* ')' )?
+		('item' '('(  member+=[regdna::ELEnumLiteral|QualifiedName])* ')' )?
 	'}';
 
 enum Comparitor returns regdna::Comparitor:
