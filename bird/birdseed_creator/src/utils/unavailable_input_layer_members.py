@@ -42,8 +42,6 @@ class MemberFinder(object):
                     
                     for item in subdomain.items:
                         member = item.member_id
-                        # if  item.member_id.member_id == "TYP_INSTRMNT_114":
-                        # import pdb;pdb.set_trace()
                         member_exists_in_input_layer = MemberFinder.member_exists_in_input_layer(self,sdd_context,member,variable)
 
                         if not (member_exists_in_input_layer):

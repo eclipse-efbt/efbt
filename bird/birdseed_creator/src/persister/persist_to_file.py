@@ -231,31 +231,33 @@ class PersistToFile:
                 f.write("Template,Table Part,Main Table,Filter,Lineage type,Source Table,Source Column,Missing,Relevant, Derived,Domain,Member,Value,ROL Cube Item,Notes\n")
 
                 for layer in rules_for_report.rulesForTable:
-                    table = layer.inputLayerTable.name
-                    for table_part in layer.rulesForTablePart:
-                        main_catagory = table_part.main_catagory
-                        main_catagory_name = context.main_catogory_to_name_map[main_catagory]
-                        
-                        table_and_part = table_part.table_and_part_tuple
-                        report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
-                        filter = context.table_parts_to_to_filter_map[table_and_part]
-                        for column in table_part.columns:
-                            if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
-                                entity  = column.attribute.eContainer().name
-                                attribute = column.attribute.name
-                                lineage_type = "attribute"
-                                missing = "Not Missing"
-                            else:  
-                                entity  = ""
-                                attribute = ""
-                                missing = "Missing"
-                                lineage_type = "tbd"
-                                
-                            variable_id = column.asAttribute.name
-
+                    if not(layer.inputLayerTable is None):
+                        table = layer.inputLayerTable.name
+                        for table_part in layer.rulesForTablePart:
+                            main_catagory = table_part.main_catagory
+                            main_catagory_name = context.main_catogory_to_name_map[main_catagory]
                             
-                            f.write(amended_template_name +"," + table_part.name +","  +table+"," + filter + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,," +variable_id + ",\n")
+                            table_and_part = table_part.table_and_part_tuple
+                            report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
+                            filter = context.table_parts_to_to_filter_map[table_and_part]
+                            for column in table_part.columns:
+                                if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
+                                    entity  = column.attribute.eContainer().name
+                                    attribute = column.attribute.name
+                                    lineage_type = "attribute"
+                                    missing = "Not Missing"
+                                else:  
+                                    entity  = ""
+                                    attribute = ""
+                                    missing = "Missing"
+                                    lineage_type = "tbd"
+                                    
+                                variable_id = column.asAttribute.name
 
+                                
+                                f.write(amended_template_name +"," + table_part.name +","  +table+"," + filter + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,," +variable_id + ",\n")
+                    else:
+                        print ("no input layer table for " + rules_for_report.outputLayerCube.name  )
                 f.close()
         report_to_table_parts_file.close
 

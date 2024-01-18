@@ -92,6 +92,7 @@ class MainCatagoryFinder(object):
                         # but there is currently no overlap and it gives us the 
                         # set that we are interested in.
                         if version in context.reporting_framework_version:
+                            
                             if (valid_to == "12/31/9999") or (valid_to == "31/12/9999"):
                                 valid_eba_tables.append(table_id)
         file_location = context.file_directory + os.sep + "axis_ordinate.csv"
