@@ -27,6 +27,6 @@ if __name__ == '__main__':
     sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
     sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'      
     reporting_framework = "FINREP"
-    reporting_framework_version = ["FINREP 3.0","3.0-Ind"]
+    reporting_framework_version = ["3","3.0-Ind","FINREP 3.0-Ind"]
     RunWebsiteToSDDModel().run(sdd_context )
     RunMemberFinder().run(sdd_context, reporting_framework,reporting_framework_version )

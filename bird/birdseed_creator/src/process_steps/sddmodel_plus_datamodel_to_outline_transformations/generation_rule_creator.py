@@ -72,6 +72,7 @@ class GenerationRuleCreator(object):
         For each of those tables create part of the generation transformation
         '''
         try:
+            
             main_catagories = context.report_to_main_catogory_map[report_template]
         
             for mc in main_catagories:

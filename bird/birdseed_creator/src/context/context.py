@@ -30,7 +30,7 @@ class Context(object):
     inScopeFileDirectory = ""
     add_pks_to_input_layer_from_website = True 
     reporting_framework = "FINREP"
-    reporting_framework_version = ["3","3.0-Ind"]
+    reporting_framework_version = ["3","3.0-Ind","FINREP 3.0-Ind"]
     match_domains_in_generation_file = False
     input_layer_name = "Input Layer 6.2"
     # the directory where we get our input files

@@ -24,7 +24,7 @@ class GenerateGenerationRules:
     def run(self,context,sdd_context):
        
         context.reporting_framework = "FINREP"
-        context.reporting_framework_version = ["3","3.0-Ind"]
+        context.reporting_framework_version = ["3","3.0-Ind","FINREP 3.0-Ind"]
         # we will create an ecore4reg representation of BIRD also
         # use codes not long names for columns
         context.use_codes = True

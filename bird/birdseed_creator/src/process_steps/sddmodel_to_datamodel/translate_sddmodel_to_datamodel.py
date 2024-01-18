@@ -434,11 +434,9 @@ class TranslateSDDModelToDataModel(object):
                             print(class_id)
                             
                     except:
-                            print( "XX missing class1: " )
-                            print(class_id) 
+                            pass
             except:
-                print("XX missing class1: ")
-                print(class_id)
+                pass
                 
     def get_attribute_and_subdomain_list_from_variable_set(self,variable_set):
         attribute_subdomain_tuple_list = []
