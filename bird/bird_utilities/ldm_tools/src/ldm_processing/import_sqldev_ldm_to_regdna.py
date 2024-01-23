@@ -65,6 +65,19 @@ class SQLDevLDMImport(object):
 
                     context.input_tables_package.eClassifiers.extend([
                                                                           eclass])
+                    
+                    # if the class is a not a subtype, then we need to add a primary key
+                    # subtypes will inherit the primary key from their supertype
+                    if (num_supertype_entity_id == "") or (num_supertype_entity_id is None):
+                        pk_name = altered_class_name + "_uniqueID"
+                        attribute = ELAttribute()
+                        attribute.name = pk_name
+                        attribute.eType = context.types.e_string
+                        attribute.eAttributeType = context.types.e_string
+                        attribute.iD = True
+                        attribute.lowerBound = 0
+                        attribute.upperBound = 1
+                        eclass.eStructuralFeatures.append(attribute)
 
                     # maintain a map a objectIDs to ELClasses
                     context.classes_map[object_id] = eclass
@@ -113,6 +126,15 @@ class SQLDevLDMImport(object):
                         containment_reference.upperBound = 1
                         containment_reference.lowerBound = 0
                         containment_reference.containment = True
+                        pk_name = altered_arc_name + "_uniqueID"
+                        attribute = ELAttribute()
+                        attribute.name = pk_name
+                        attribute.eType = context.types.e_string
+                        attribute.eAttributeType = context.types.e_string
+                        attribute.iD = True
+                        attribute.lowerBound = 0
+                        attribute.upperBound = 1
+                        arc_class.eStructuralFeatures.append(attribute)
                         source_class.eStructuralFeatures.append(
                             containment_reference)
                         
@@ -305,7 +327,6 @@ class SQLDevLDMImport(object):
 
                         attribute = ELAttribute()
                         if primary_key_or_not == "P":
-                            attribute.iD = True
                             annotation = ELAnnotation()
                             mapentry  = ELStringToStringMapEntry()
                             mapentry.key = "key_type"
@@ -416,15 +437,20 @@ class SQLDevLDMImport(object):
                     target_id = row[18]
                     source_to_target_cardinality = row[10]
                     target_class_name = row[7]
+                    # not that source optional actually means that the target is optional
+                    # which is confusing, we can see that in the SQL developer diagrams
+                    # where we have the circle (meaning options) on the target side
+                    # of the realtionship when source_optional is true
+                    source_optional = row[12]
                     target_optional = row[13]
                     relation_name = row[0]
                     identifying = row[15]
 
                     reference_name = ""
                     if identifying == "Y":
-                        reference_name = Utils.make_valid_id(relation_name)+"_association"
-                    else:
                         reference_name = Utils.make_valid_id(relation_name)+"_composition"
+                    else:
+                        reference_name = Utils.make_valid_id(relation_name)+"_association"
 
                     try:
                         the_class = context.classes_map[source_id]
@@ -445,7 +471,7 @@ class SQLDevLDMImport(object):
                     else:
                         ereference.containment = False
 
-                    if target_optional.strip() == "Y":
+                    if source_optional.strip() == "Y":
                         if source_to_target_cardinality.strip() == "*":                            
                             # upper bound of -1 means there is no upper bounds, 
                             # so represents an open list of reference

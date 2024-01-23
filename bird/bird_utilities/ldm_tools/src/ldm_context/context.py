@@ -83,7 +83,7 @@ class Context(object):
 
     import_logic_strings = []
 
-    input_layer_name = "Input Layer 6.2"
+    input_layer_name = "Input Layer 6.3"
     
     
     
