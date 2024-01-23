@@ -43,12 +43,6 @@ class PersistToFile:
         PersistToFile.persist_types_model(
             self, context, context.types_package, "regdna")
         
-
-        PersistToFile.persist_enum_model(
-            self, context, context.il_domains_package, "regdna")
-
-        PersistToFile.persist_types_model(
-            self, context, context.types_package, "regdna")
         
 
     def persist_entity_model(self, context, the_package, extension, imported_package):

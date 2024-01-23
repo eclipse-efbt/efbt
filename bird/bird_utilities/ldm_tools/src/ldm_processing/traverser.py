@@ -106,7 +106,7 @@ class SubtypeExploder(object):
                     try:
                         f.write(the_row[column])
                     except KeyError:
-                        print ("no col for " +column)
+                        pass
                     counter = 1
                 else:
                     
@@ -114,7 +114,7 @@ class SubtypeExploder(object):
                         f.write(',' + the_row[column])
                     except KeyError:
                         f.write(',')
-                        print ("no col for " +column)
+                        
             f.write("\n")
             
         
@@ -176,17 +176,22 @@ class SubtypeExploder(object):
             # here we work out the possible combinations of entities for the discriminotors
             # these are stored as a set of columns, these reresent a grid that can be read
             # row by row, where 1 row represents one possible combination of entities.
+
             for discriminator in discriminators:
                 SubtypeExploder.enrich_discrimitor_columns(self, context, discriminator,columns)
+                #SubtypeExploder.print_combination_grid(self, columns)
                
+            
+
             if len(columns) > 0:
                 count = 0
                 for each_entity in columns[0]:
                     entity_combination = []
-                    
+
                     for column in columns:
                         # here we get one row form the grid, 
-                        # e.g getting the nth item from each columns 
+                        # e.g getting the nth item from each columns
+
                         entity_combination.append(column[count])
                     
                     # for our row of csv data we have already worked out the value for sme columns
@@ -211,6 +216,18 @@ class SubtypeExploder(object):
                     
             
         rows.append(current_row)
+
+    def print_combination_grid(self, columns):
+        '''
+        print the grid of combinations
+        '''
+        column_count = 0
+        for column in columns:
+            row_count = 0
+            for item in column:
+                print("row " + str(column_count) + ", col " + str(row_count) + ":" + item.name)
+                row_count = row_count + 1
+            column_count = column_count + 1
 
     def enrich_discrimitor_columns(self, context, discriminator, list_of_lists):
         
@@ -237,10 +254,7 @@ class SubtypeExploder(object):
                
         list_of_lists.append(discrimitors_entity_list)
                 
-        
-                
-                
-            
+
     def get_non_discriminator_references(self, context, entity):
         '''
         get any non-containment references from the entity, which are not delegates.
