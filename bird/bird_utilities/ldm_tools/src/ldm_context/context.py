@@ -46,9 +46,9 @@ class Context(object):
         nsPrefix='il_domains')
 
     input_tables_package = ELPackage(
-        name='input_tables',
-        nsURI='http://www.eclipse.org/bird/input_tables',
-        nsPrefix='input_tables')
+        name='ldm_entities',
+        nsURI='http://www.eclipse.org/bird/ldm_entities',
+        nsPrefix='ldm_entities')
 
     module_list = ModuleList()
     
