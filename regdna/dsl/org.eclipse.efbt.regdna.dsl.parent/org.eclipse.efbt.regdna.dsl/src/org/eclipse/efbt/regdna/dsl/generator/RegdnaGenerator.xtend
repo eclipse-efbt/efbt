@@ -258,9 +258,11 @@ class RegdnaGenerator extends AbstractGenerator {
 			}
 			«ENDIF»«ENDFOR» 
 		}
+		«IF elpackage.name.trim != "ldm_entities"»
 		class «elclass.name»_Table {
 			contains  «elclass.name» [] «elclass.name»s 								
 		} 
+		«ENDIF»
 		«ENDFOR»
 		«FOR elEnum : elpackage.EClassifiers.filter(ELEnum)»
 		enum «elEnum.name» {«FOR elliteral : elEnum.ELiterals»  «elliteral.name»  as "«elliteral.literal»"  = «elliteral.value» «ENDFOR»}
