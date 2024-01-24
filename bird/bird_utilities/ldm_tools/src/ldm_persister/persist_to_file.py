@@ -176,7 +176,7 @@ class PersistToFile:
                 for the_literal in classifier.eLiterals:
                     counter = counter+1
 
-                    if counter < 100:
+                    if counter < 1500:
                         f.write(" " + the_literal.name + " as \"" +
                                 the_literal.literal + "\" = " + str(the_literal.value))
                     else:

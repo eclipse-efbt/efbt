@@ -211,9 +211,10 @@ class TranslateSDDModelToDataModel(object):
                         counter1 = len(the_enum.eLiterals)
                         for member in the_domain_members:
                             enum_used_name = Utils.make_valid_id_but_keep_minus_sign(member.code)
-                            if not (Utils.contains_literal(the_enum.eLiterals, enum_used_name)):
+                            adapted_value = Utils.make_valid_id(member.displayName)
+                            if not (Utils.contains_literal(the_enum.eLiterals, adapted_value)):
                                 enum_literal = ELEnumLiteral()
-                                adapted_value = Utils.make_valid_id(member.displayName)
+                                
                                 enum_literal.name = adapted_value
                                 enum_literal.literal = enum_used_name
                                 counter1 = counter1 + 1
