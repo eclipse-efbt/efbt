@@ -84,7 +84,9 @@ class SQLDevLDMImport(object):
 
     def import_disjoint_subtyping_information(self, context):
         '''
-        for each disjoint substype arc, create a class.
+        we first find out which arcs are 'single arcs' , single arcs
+        are ones where an entity has only only one arc and not more than 1.
+        for each single arc, create a class.
         for each arc store its source in a dictionary
         for each arc target store a link from target to the arcs class
         later we will set supertypes of the targets to be the arcs class
@@ -92,7 +94,69 @@ class SQLDevLDMImport(object):
         '''
         file_location = context.file_directory + os.sep + "arcs.csv"
         header_skipped = False
+        # A dictionary from entity to its arcs
+        entity_to_arc_dictionary = SQLDevLDMImport.get_entity_to_arc_dictionary(self,file_location)
 
+        with open(file_location,  encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                # skip the first line which is the header.
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    entity_name = row[0]    
+                    arc_name = row[1]
+                    relation_name = row[2]
+                    target_entity_name = row[3]
+                    
+                    altered_arc_name = Utils.make_valid_id(arc_name)
+                    num_of_siblings_arcs = 0
+                    try:
+                        num_of_siblings_arcs = len(entity_to_arc_dictionary[entity_name]) -1
+                    except KeyError:
+                        pass
+                    
+                    if num_of_siblings_arcs > 0:
+                        arc_class = None
+                        try:
+                            arc_class = context.arc_name_to_arc_class_map[altered_arc_name]
+                        except KeyError:
+                            # if the arc /source entry has not yet been added to the dictionary
+                            # then we add it here, and we add the arc name
+                            # and we create class for the arc
+                            
+                            arc_class = ELClass(name=altered_arc_name)
+                            arc_class.eAbstract = True
+                            source_class = SQLDevLDMImport.find_class_with_name(self, context, Utils.make_valid_id(entity_name))
+                            context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
+                            context.arc_to_source_map[altered_arc_name] = source_class
+                            context.input_tables_package.eClassifiers.extend([arc_class])
+                            containment_reference = ELReference()
+                            containment_reference.name = altered_arc_name + "_delegate"
+                            containment_reference.eType = arc_class
+                            containment_reference.upperBound = 1
+                            containment_reference.lowerBound = 0
+                            containment_reference.containment = True
+                            pk_name = altered_arc_name + "_uniqueID"
+                            attribute = ELAttribute()
+                            attribute.name = pk_name
+                            attribute.eType = context.types.e_string
+                            attribute.eAttributeType = context.types.e_string
+                            attribute.iD = True
+                            attribute.lowerBound = 0
+                            attribute.upperBound = 1
+                            arc_class.eStructuralFeatures.append(attribute)
+                            source_class.eStructuralFeatures.append(
+                                containment_reference)
+                            
+                        
+                        target_class = SQLDevLDMImport.find_class_with_name(self, context,Utils.make_valid_id(target_entity_name))
+                        context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
+                        target_class.eSuperTypes.extend([arc_class])
+
+    def get_entity_to_arc_dictionary(self,file_location) :
+        entity_to_arc_dictionary = {}
+        header_skipped = False
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -108,41 +172,16 @@ class SQLDevLDMImport(object):
                     altered_arc_name = Utils.make_valid_id(arc_name)
                     arc_class = None
                     try:
-                        arc_class = context.arc_name_to_arc_class_map[altered_arc_name]
+                        arc_list = entity_to_arc_dictionary[entity_name]
+                        if not (altered_arc_name in arc_list):
+                            arc_list.append(altered_arc_name)
+                            
                     except KeyError:
-                        # if the arc /source entry has not yet been added to the dictionary
-                        # then we add it here, and we add the arc name
-                        # and we create class for the arc
-                        
-                        arc_class = ELClass(name=altered_arc_name)
-                        arc_class.eAbstract = True
-                        source_class = SQLDevLDMImport.find_class_with_name(self, context, Utils.make_valid_id(entity_name))
-                        context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
-                        context.arc_to_source_map[altered_arc_name] = source_class
-                        context.input_tables_package.eClassifiers.extend([arc_class])
-                        containment_reference = ELReference()
-                        containment_reference.name = altered_arc_name + "_delegate"
-                        containment_reference.eType = arc_class
-                        containment_reference.upperBound = 1
-                        containment_reference.lowerBound = 0
-                        containment_reference.containment = True
-                        pk_name = altered_arc_name + "_uniqueID"
-                        attribute = ELAttribute()
-                        attribute.name = pk_name
-                        attribute.eType = context.types.e_string
-                        attribute.eAttributeType = context.types.e_string
-                        attribute.iD = True
-                        attribute.lowerBound = 0
-                        attribute.upperBound = 1
-                        arc_class.eStructuralFeatures.append(attribute)
-                        source_class.eStructuralFeatures.append(
-                            containment_reference)
-                        
-                    
-                    target_class = SQLDevLDMImport.find_class_with_name(self, context,Utils.make_valid_id(target_entity_name))
-                    context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
-                    target_class.eSuperTypes.extend([arc_class])
-         
+                        arc_list = [altered_arc_name]
+                        entity_to_arc_dictionary[entity_name] = arc_list
+
+            return entity_to_arc_dictionary
+        
     def find_class_with_name(self, context, name):
         '''
         get the class with this name from the input tables package
