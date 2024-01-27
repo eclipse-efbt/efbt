@@ -7,4 +7,4 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi
 Automatic-Module-Name: org.eclipse.efbt.regpot_desktop.orchestrator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: regpot_desktoputils
+Export-Package: org.eclipse.efbt.regpot_desktop.orchestrator
