@@ -4,7 +4,7 @@ cd ..\..
 cd regdna\dsl\org.eclipse.efbt.regdna.dsl.parent
 call mvn install
 cd ..\..\..
-cd regpot_desktop\firstflight
+cd regpot_desktop\components
 call mvn install
 cd ..\..  
 cd regpot_desktop\installation
