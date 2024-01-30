@@ -146,7 +146,7 @@ class CombinationsToReportFilters:
        
     def find_literal_with_id(self,context,sdd_context,member_code,domain_id):
             try:
-                return context.enum_literals_map[domain_id + "_domain" +":" +  Utils.make_valid_id_but_keep_minus_sign(member_code)]
+                return context.enum_literals_map[domain_id + "_domain" +":" +  Utils.make_valid_id_for_literal(member_code)]
             except:
                 return None
 

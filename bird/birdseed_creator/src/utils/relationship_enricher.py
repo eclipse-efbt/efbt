@@ -67,7 +67,9 @@ class RelationshipEnricher(object):
                             if the_reference is None:
                                 the_reference = ELReference()
                                 the_reference.name = relationship_name
-                                if primary_cube_mandatoriness == 'TRUE':
+                                # it does seem a bit counter intuitive to add the reference to the foreign class
+                                # and not the primary class, but this is the correct way to do it.
+                                if foreign_cube_mandatoriness == 'TRUE':
                                     the_reference.lowerBound = 1
                                 else:
                                     the_reference.lowerBound = 0

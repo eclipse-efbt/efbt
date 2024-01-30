@@ -157,7 +157,6 @@ class Utils(object):
         Tranlate text to be a valid id, without special characters, and following
         the rules for valid id's in regdna
         '''
-
         # we do not allow id's to start with  number, if it does then we prepend with an underscore
         if len(input_string) > 0:
             if ((input_string[0] >= '0') and (input_string[0] <= '9')):
@@ -185,16 +184,12 @@ class Utils(object):
         return return_string
     
     @classmethod
-    def make_valid_id_but_keep_minus_sign(cls, input_string):
+    def make_valid_id_for_literal(cls, input_string):
         ''' 
         Tranlate text to be a valid id, without special characters, and following
         the rules for valid id's in regdna
         '''
-
-        # we do not allow id's to start with  number, if it does then we prepend with an underscore
-        if len(input_string) > 0:
-            if ((input_string[0] >= '0') and (input_string[0] <= '9')) or input_string[0:2] == '-1':
-                input_string = "_" + input_string
+        
         # we replace special characters not allowed in id's with an underscore
         amended_input_string = input_string.replace('  ', ' ').replace(' ', '_').replace(')', '_').replace('(', '_') \
             .replace(',', '_').replace('\'', '_').replace('\n', '_').replace('\r', '_').replace('\'t', '_').replace('new', 'New') \
