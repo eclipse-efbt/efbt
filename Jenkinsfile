@@ -14,7 +14,7 @@ pipeline {
 					cd regdna/dsl/org.eclipse.efbt.regdna.dsl.parent
 					mvn install
 					cd ../../..
-					cd regpot_desktop/firstflight
+					cd regpot_desktop/components
 					mvn install
 					cd ../..  
 					cd regpot_desktop/installation

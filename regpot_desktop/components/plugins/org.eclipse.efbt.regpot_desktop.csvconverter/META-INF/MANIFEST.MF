@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CSVConverter
+Bundle-SymbolicName: org.eclipse.efbt.regpot_desktop.csvconverter
+Bundle-Version: 1.2.0.qualifier
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi
+Automatic-Module-Name: org.eclipse.efbt.regpot_desktop.csvconverter
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.eclipse.efbt.regpot_desktop.csvconverter

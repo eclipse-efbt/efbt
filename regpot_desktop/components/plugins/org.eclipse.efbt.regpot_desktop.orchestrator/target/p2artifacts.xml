@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='2'>
+  <artifact classifier='osgi.bundle' id='org.eclipse.efbt.regpot_desktop.orchestrator' version='1.2.0.202401291429'>
+    <properties size='6'>
+      <property name='artifact.size' value='16181'/>
+      <property name='download.size' value='16181'/>
+      <property name='maven-groupId' value='org.eclipse.efbt.regpot_desktop.orchestrator'/>
+      <property name='maven-artifactId' value='org.eclipse.efbt.regpot_desktop.orchestrator'/>
+      <property name='maven-version' value='1.2.0-SNAPSHOT'/>
+      <property name='maven-type' value='eclipse-plugin'/>
+    </properties>
+  </artifact>
+  <artifact classifier='osgi.bundle' id='org.eclipse.efbt.regpot_desktop.orchestrator.source' version='1.2.0.202401291429'>
+    <properties size='7'>
+      <property name='artifact.size' value='8477'/>
+      <property name='download.size' value='8477'/>
+      <property name='maven-groupId' value='org.eclipse.efbt.regpot_desktop.orchestrator'/>
+      <property name='maven-artifactId' value='org.eclipse.efbt.regpot_desktop.orchestrator'/>
+      <property name='maven-version' value='1.2.0-SNAPSHOT'/>
+      <property name='maven-classifier' value='sources'/>
+      <property name='maven-type' value='java-source'/>
+    </properties>
+  </artifact>
+</artifacts>
