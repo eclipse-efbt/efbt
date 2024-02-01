@@ -41,10 +41,7 @@ public static String resourceURI = "";
 			Class inputPackageClass  = Class.forName("input_tables.Input_tablesPackage");
 
 			Field[] fields = inputPackageClass.getDeclaredFields();
-			System.out.println("class = " + inputPackageClass.getName());
-		    for (Field f : fields) {
-		      System.out.println(f.getName());
-		    }
+			
 		 
 		    Field field = inputPackageClass.getDeclaredField("eNS_URI");
 		    Field field2 = inputPackageClass.getDeclaredField("eINSTANCE");
@@ -78,9 +75,12 @@ public static String resourceURI = "";
 		//get the files in the directory
 		String[] filepaths = getXMIFilesUnderDirectory(directoryPath);
 		for (int i = 0; i < filepaths.length; i++) {
-			EObject theObject = EObjectLoader.loadObject(directoryPath + '/' + filepaths[i]);
-			EObjectToCSVConverter.persistObjectAsCSV(theObject,false);
-			EObjectToCSVConverter.persistObjectAsCSV(theObject,true);
+			if (filepaths[i].endsWith(".xmi"))
+			{
+				EObject theObject = EObjectLoader.loadObject(directoryPath + '/' + filepaths[i]);
+				EObjectToCSVConverter.persistObjectAsCSV(theObject,false);
+				EObjectToCSVConverter.persistObjectAsCSV(theObject,true);
+			}
 		}
 	}
 
@@ -94,13 +94,7 @@ public static String resourceURI = "";
             // Get all the names of the files present 
             // in the given directory 
             files = f.list(); 
-  
-            System.out.println("Files are:"); 
-  
-            // Display the names of the files 
-            for (int i = 0; i < files.length; i++) { 
-                System.out.println(files[i]); 
-            } 
+
         } 
         catch (Exception e) { 
             System.err.println(e.getMessage()); 

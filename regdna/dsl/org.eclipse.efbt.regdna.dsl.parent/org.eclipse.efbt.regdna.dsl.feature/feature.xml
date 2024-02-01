@@ -11,25 +11,21 @@
     Contributors:
        Neil Mackenzie - initial API and implementation
  -->
-<feature id="org.eclipse.efbt.regdna.dsl.feature"
-	label="regdna Feature "
-	version="1.2.0.qualifier">
-	<plugin
-			id="org.eclipse.efbt.regdna.dsl"
-			download-size="0"
-			install-size="0"
-			version="0.0.0"
-			unpack="false"/>
-	<plugin
-			id="org.eclipse.efbt.regdna.dsl.ide"
-			download-size="0"
-			install-size="0"
-			version="0.0.0"
-			unpack="false"/>
-	<plugin
-			id="org.eclipse.efbt.regdna.dsl.ui"
-			download-size="0"
-			install-size="0"
-			version="0.0.0"
-			unpack="false"/>
+<feature
+      id="org.eclipse.efbt.regdna.dsl.feature"
+      label="RegDNA Editor"
+      version="1.2.0.qualifier">
+
+   <plugin
+         id="org.eclipse.efbt.regdna.dsl"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.efbt.regdna.dsl.ide"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.efbt.regdna.dsl.ui"
+         version="0.0.0"/>
+
 </feature>

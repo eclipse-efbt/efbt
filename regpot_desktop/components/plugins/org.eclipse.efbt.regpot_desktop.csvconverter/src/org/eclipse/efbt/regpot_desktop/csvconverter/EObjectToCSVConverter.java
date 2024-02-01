@@ -17,12 +17,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EOperation;
@@ -36,17 +38,23 @@ public class EObjectToCSVConverter {
 	
 	public static void persistObjectAsCSV(EObject theObject,boolean useLongNames) {
 		String csvString = createCSVStringForTable(theObject,useLongNames);
-		
+		String fileName = "";
         try {
         	if (useLongNames)
         	{
-        		Files.writeString(Path.of(resourceURI + '/' +theObject.eClass().getName() + "_longnames.csv"),csvString , StandardOpenOption.CREATE_NEW);
+        		fileName = theObject.eClass().getName() + "_longnames.csv";
+        		Files.writeString(Path.of(resourceURI + '/' + fileName),csvString , StandardOpenOption.CREATE_NEW);
         	}
         	else
         	{
-        		Files.writeString(Path.of(resourceURI + '/' +theObject.eClass().getName() + ".csv"),csvString , StandardOpenOption.CREATE_NEW);
+        		fileName = theObject.eClass().getName() + ".csv";
+        		Files.writeString(Path.of(resourceURI + '/' + fileName),csvString , StandardOpenOption.CREATE_NEW);
         	}
-		} catch (IOException e) {
+		} 
+        catch (java.nio.file.FileAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File " + fileName  + " already exists" );
+		}  catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
@@ -225,7 +233,18 @@ public class EObjectToCSVConverter {
 		}
 		else
 		{
-			returnString = referencedItem.toString();
+			if (((EAttribute) eStructuralFeature).getEAttributeType().getInstanceClassName().equals("java.util.Date"))
+			{
+				String pattern = "MM/dd/yyyy";
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+				returnString =  simpleDateFormat.format((java.util.Date) referencedItem);
+
+			}
+			else
+			{
+				returnString = referencedItem.toString();
+			}
 		}
 		return returnString;
 	}
