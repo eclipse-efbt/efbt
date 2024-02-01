@@ -13,7 +13,7 @@
  -->
 <feature
       id="org.eclipse.efbt.regdna.model.feature"
-      label="regdna Model"
+      label="Regdna Model"
       version="1.2.0.qualifier"
       provider-name="BIRD Software Solutions">
 
@@ -37,9 +37,6 @@
 
    <plugin
          id="org.eclipse.efbt.regdna.model"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>

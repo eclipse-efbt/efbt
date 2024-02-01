@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.efbt.regpot_desktop.csvconverter.feature"
-      label="Orchestrator"
+      label="CSV Converter"
       version="1.2.0.qualifier">
 
    <description url="http://www.example.com/description">
@@ -16,16 +16,13 @@
       [Enter License Description here.]
    </license>
 
-   
    <requires>
       <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.ecore.xmi"/>      
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
    </requires>
 
    <plugin
          id="org.eclipse.efbt.regpot_desktop.csvconverter"
-         download-size="0"
-         install-size="0"
          version="0.0.0"/>
 
 </feature>
