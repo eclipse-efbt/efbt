@@ -34,8 +34,6 @@ import java.nio.file.Files
 import org.eclipse.efbt.regdna.model.regdna.ELOperation
 import org.eclipse.efbt.regdna.model.regdna.ELDataType
 import org.eclipse.emf.common.util.BasicEList
-import org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation
-import org.eclipse.efbt.regdna.model.regdna.ELPublicOperation
 import org.eclipse.efbt.regdna.model.regdna.RulesForReport
 import org.eclipse.efbt.regdna.model.regdna.SelectColumnAttributeAs
 import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs
@@ -76,7 +74,7 @@ class RegdnaGenerator extends AbstractGenerator {
 			refers «rulesForReport.outputLayerCube.name»_UnionItem  unionOfLayers 
 		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
 		
-		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation instanceof ELPublicOperation»()«ENDIF»«IF eloperation instanceof ELPrivateOperation»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»«ENDIF»
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»()
 			{
 				unionOfLayers.«eloperation.name»()
 			}
@@ -116,8 +114,7 @@ class RegdnaGenerator extends AbstractGenerator {
 			refers «rulesForReport.outputLayerCube.name»_Base base 
 		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
 		
-		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation instanceof ELPublicOperation»()«ENDIF»«IF eloperation instanceof ELPrivateOperation»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»«ENDIF»
-			{
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»()
 				base.«eloperation.name»()
 			}
 		
@@ -127,7 +124,7 @@ class RegdnaGenerator extends AbstractGenerator {
 			
 		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
 				
-		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation instanceof ELPublicOperation»()«ENDIF»«IF eloperation instanceof ELPrivateOperation»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»«ENDIF»
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» ()
 			{
 			«IF eloperation.EType.name == "double" »return 0
 			«ELSEIF eloperation.EType.name == "int" »return 0
@@ -241,14 +238,26 @@ class RegdnaGenerator extends AbstractGenerator {
 		import «theImport.importedNamespace» 
 		«ENDIF»
 		«ENDFOR»
+		«FOR annotationDirective : elpackage.annotationDirectives»
+				annotation "«annotationDirective.sourceURI»" as «annotationDirective.name»
+		«ENDFOR»
 		«FOR elclass : elpackage.EClassifiers.filter(ELClass)»
+		«FOR annotion : elclass.EAnnotations»
+				@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»=«detail.value»«ENDFOR»)
+		«ENDFOR»
 		«IF elclass.EAbstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
 		«FOR elmember : elclass.EStructuralFeatures»  
+		«FOR annotion : elmember.EAnnotations»
+								@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»=«detail.value»«ENDFOR»)
+		«ENDFOR»
 		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
 		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
 		«ENDFOR»
 		«FOR eloperation : elclass.EOperations»
-		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»«IF eloperation instanceof ELPublicOperation»()«ENDIF»«IF eloperation instanceof ELPrivateOperation»«IF eloperation.EParameters.size() == 0 »()«ENDIF»«FOR eparam : eloperation.EParameters BEFORE '(' SEPARATOR ',' AFTER ')'»«eparam.EType.name» «eparam.name»«ENDFOR»«ENDIF»
+		«FOR annotion : eloperation.EAnnotations»
+			@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»=«detail.value»«ENDFOR»)
+		«ENDFOR»
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»()
 			{
 		«IF eloperation.body !== null »          «findXCoreSubstring(eloperation.body)»
 		«ELSEIF eloperation.EType.name == "double" »        return 0
@@ -302,6 +311,15 @@ class RegdnaGenerator extends AbstractGenerator {
 					e_enum.ELiterals.add(e_enum_literal)					
 				}
 				ecore_package.EClassifiers.add(e_enum)
+				for (anno : classifier.EAnnotations)
+				{
+					var annotation_copy = EcoreFactory.eINSTANCE.createEAnnotation()
+					annotation_copy.source = anno.source.sourceURI
+					for (item: anno.details)
+						annotation_copy.details.put(item.key, item.value)
+					e_enum.EAnnotations.add(annotation_copy)
+					
+				}
 			}
 			if (classifier instanceof ELClass) {
 				var e_class = EcoreFactory.eINSTANCE.createEClass()
@@ -321,6 +339,15 @@ class RegdnaGenerator extends AbstractGenerator {
 					annotation.details.put("superTypeName", superTypeName)
 					// annotation.details.put("superTypePackageName", superTypePackageName)
 					e_class.EAnnotations.add(annotation)
+					for (anno : classifier.EAnnotations)
+					{
+						var annotation_copy = EcoreFactory.eINSTANCE.createEAnnotation()
+						annotation_copy.source = anno.source.sourceURI
+						for (item: anno.details)
+							annotation_copy.details.put(item.key, item.value)
+						e_class.EAnnotations.add(annotation_copy)
+						
+					}
 				}
 
 				for (structural_feature : classifier.EStructuralFeatures) {
@@ -359,6 +386,7 @@ class RegdnaGenerator extends AbstractGenerator {
 								annotation.details.put("attribute_type_name", attribute_type_name)
 								// annotation.details.put("enumsPackageName", enumsPackageName)
 								e_attribute.EAnnotations.add(annotation)
+								
 							} else if (type_name == 'double') {
 								e_attribute.EType = EcorePackage.Literals.EDOUBLE
 							} else if (type_name == 'String') {
@@ -371,6 +399,15 @@ class RegdnaGenerator extends AbstractGenerator {
 								e_attribute.EType = EcorePackage.Literals.EDATE
 							} else if (type_name == 'boolean') {
 								e_attribute.EType = EcorePackage.Literals.EBOOLEAN
+							}
+							for (anno : structural_feature.EAnnotations)
+							{
+								var annotation_copy = EcoreFactory.eINSTANCE.createEAnnotation()
+								annotation_copy.source = anno.source.sourceURI
+								for (item: anno.details)
+									annotation_copy.details.put(item.key, item.value)
+								e_attribute.EAnnotations.add(annotation_copy)
+								
 							}
 						}
 				
@@ -398,6 +435,16 @@ class RegdnaGenerator extends AbstractGenerator {
 						annotation.details.put("type", type_name)
 						// annotation.details.put("types_package", packageName)
 						e_reference.EAnnotations.add(annotation)
+						
+						for (anno : structural_feature.EAnnotations)
+						{
+							var annotation_copy = EcoreFactory.eINSTANCE.createEAnnotation()
+							annotation_copy.source = anno.source.sourceURI
+							for (item: anno.details)
+								annotation_copy.details.put(item.key, item.value)
+							e_reference.EAnnotations.add(annotation_copy)
+							
+						}
 					}
 				}
 				for (operation : classifier.EOperations) {
@@ -423,29 +470,17 @@ class RegdnaGenerator extends AbstractGenerator {
 								}
 								
 					e_operation.EAnnotations.add(annotation)
-					
-					if (operation instanceof ELPrivateOperation)
+					for (anno : operation.EAnnotations)
 					{
-						for (param : operation.EParameters ) {
-							var e_param = EcoreFactory.eINSTANCE.createEParameter()
-							e_param.name = param.name
-							e_operation.EParameters.add(e_param)
-							var param_type_name = param.EType.name
-							// var types_package = operation.EType.package.name
-							var param_annotation = EcoreFactory.eINSTANCE.createEAnnotation()
-							param_annotation.source = "temp"
-							param_annotation.details.put("type_name", param_type_name)
-							var param_types_package = param.EType.EPackage
-	
-							if ((processedELPackages.indexOf(param_types_package) == -1) && (param_types_package !== null) && (param_types_package.name != "types") && (param_types_package != elpackage)) {
-										processedELPackages.add(param_types_package)
-										dependantEcorePackages.add(processPackage(param_types_package,fsa))
-									}
-							e_param.EAnnotations.add(param_annotation)
-							
-						}
-					
+						var annotation_copy = EcoreFactory.eINSTANCE.createEAnnotation()
+						annotation_copy.source = anno.source.sourceURI
+						for (item: anno.details)
+							annotation_copy.details.put(item.key, item.value)
+						e_operation.EAnnotations.add(annotation_copy)
+						
 					}
+					
+					
 
 					
 				}
@@ -472,12 +507,14 @@ class RegdnaGenerator extends AbstractGenerator {
 							var firstAttributeAnnotation = structural_feature.EAnnotations.get(0)
 							var attributeDetails = firstAttributeAnnotation.details
 							var attribute_type_name = attributeDetails.get("attribute_type_name")
-							// var enumsPackageName = attributeDetails.get("enumsPackageName")
-							// structural_feature.EType = findEnum(packages, attribute_type_name, enumsPackageName)
-							var e_type = findEnum(ecore_package, dependantEcorePackages,
-								attribute_type_name)
-							structural_feature.EType = e_type
-							structural_feature.EAnnotations.remove(0)
+							if (attribute_type_name !== null)
+							{
+								var e_type = findEnum(ecore_package, dependantEcorePackages,
+									attribute_type_name)
+								structural_feature.EType = e_type
+								structural_feature.EAnnotations.remove(0)
+								
+							}
 						}
 
 					}

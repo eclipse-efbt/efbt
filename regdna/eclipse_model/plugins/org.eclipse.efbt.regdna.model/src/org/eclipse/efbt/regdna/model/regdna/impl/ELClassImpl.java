@@ -114,6 +114,7 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isEAbstract() {
 		return eAbstract;
 	}
@@ -123,6 +124,7 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEAbstract(boolean newEAbstract) {
 		boolean oldEAbstract = eAbstract;
 		eAbstract = newEAbstract;
@@ -135,6 +137,7 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ELClass> getESuperTypes() {
 		if (eSuperTypes == null) {
 			eSuperTypes = new EObjectResolvingEList.Unsettable<ELClass>(ELClass.class, this, regdnaPackage.EL_CLASS__ESUPER_TYPES);
@@ -165,6 +168,7 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ELStructuralFeature> getEStructuralFeatures() {
 		if (eStructuralFeatures == null) {
 			eStructuralFeatures = new EObjectContainmentEList<ELStructuralFeature>(ELStructuralFeature.class, this, regdnaPackage.EL_CLASS__ESTRUCTURAL_FEATURES);
@@ -177,6 +181,7 @@ public class ELClassImpl extends ELClassifierImpl implements ELClass {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ELOperation> getEOperations() {
 		if (eOperations == null) {
 			eOperations = new EObjectContainmentEList<ELOperation>(ELOperation.class, this, regdnaPackage.EL_CLASS__EOPERATIONS);

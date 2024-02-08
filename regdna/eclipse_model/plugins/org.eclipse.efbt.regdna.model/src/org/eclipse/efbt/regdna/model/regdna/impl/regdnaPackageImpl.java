@@ -233,20 +233,6 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass elPublicOperationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass elPrivateOperationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass elParameterEClass = null;
 
 	/**
@@ -283,6 +269,13 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * @generated
 	 */
 	private EClass elAnnotationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass elAnnotationDirectiveEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -403,6 +396,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getImport() {
 		if (importEClass == null) {
 			importEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(0);
@@ -415,6 +409,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getImport_ImportedNamespace() {
         return (EAttribute)getImport().getEStructuralFeatures().get(0);
 	}
@@ -424,6 +419,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getModule() {
 		if (moduleEClass == null) {
 			moduleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(1);
@@ -436,6 +432,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getModule_Dependencies() {
         return (EReference)getModule().getEStructuralFeatures().get(0);
 	}
@@ -445,6 +442,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModule_TheDescription() {
         return (EAttribute)getModule().getEStructuralFeatures().get(1);
 	}
@@ -454,6 +452,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModule_License() {
         return (EAttribute)getModule().getEStructuralFeatures().get(2);
 	}
@@ -463,6 +462,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModule_Name() {
         return (EAttribute)getModule().getEStructuralFeatures().get(3);
 	}
@@ -472,6 +472,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getModule_Version() {
         return (EAttribute)getModule().getEStructuralFeatures().get(4);
 	}
@@ -481,6 +482,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getModule_Imports() {
         return (EReference)getModule().getEStructuralFeatures().get(5);
 	}
@@ -490,6 +492,17 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EReference getModule_AnnotationDirectives() {
+        return (EReference)getModule().getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getModuleList() {
 		if (moduleListEClass == null) {
 			moduleListEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(2);
@@ -502,6 +515,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getModuleList_Modules() {
         return (EReference)getModuleList().getEStructuralFeatures().get(0);
 	}
@@ -511,6 +525,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRulesForReport() {
 		if (rulesForReportEClass == null) {
 			rulesForReportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(3);
@@ -523,6 +538,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRulesForReport_OutputLayerCube() {
         return (EReference)getRulesForReport().getEStructuralFeatures().get(0);
 	}
@@ -532,6 +548,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRulesForReport_RulesForTable() {
         return (EReference)getRulesForReport().getEStructuralFeatures().get(1);
 	}
@@ -541,6 +558,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRulesForILTable() {
 		if (rulesForILTableEClass == null) {
 			rulesForILTableEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(4);
@@ -553,6 +571,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRulesForILTable_RulesForTablePart() {
         return (EReference)getRulesForILTable().getEStructuralFeatures().get(0);
 	}
@@ -562,6 +581,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRulesForILTable_InputLayerTable() {
         return (EReference)getRulesForILTable().getEStructuralFeatures().get(1);
 	}
@@ -571,6 +591,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSelectColumn() {
 		if (selectColumnEClass == null) {
 			selectColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(5);
@@ -583,6 +604,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSelectColumn_AsAttribute() {
         return (EReference)getSelectColumn().getEStructuralFeatures().get(0);
 	}
@@ -592,6 +614,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSelectColumnMemberAs() {
 		if (selectColumnMemberAsEClass == null) {
 			selectColumnMemberAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(6);
@@ -604,6 +627,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSelectColumnMemberAs_MemberAsConstant() {
         return (EReference)getSelectColumnMemberAs().getEStructuralFeatures().get(0);
 	}
@@ -613,6 +637,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSelectColumnAttributeAs() {
 		if (selectColumnAttributeAsEClass == null) {
 			selectColumnAttributeAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(7);
@@ -625,6 +650,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSelectColumnAttributeAs_Attribute() {
         return (EReference)getSelectColumnAttributeAs().getEStructuralFeatures().get(0);
 	}
@@ -634,6 +660,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSelectDerivedColumnAs() {
 		if (selectDerivedColumnAsEClass == null) {
 			selectDerivedColumnAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(8);
@@ -646,6 +673,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSelectDerivedColumnAs_Attribute() {
         return (EReference)getSelectDerivedColumnAs().getEStructuralFeatures().get(0);
 	}
@@ -655,6 +683,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSelectValueAs() {
 		if (selectValueAsEClass == null) {
 			selectValueAsEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(9);
@@ -667,6 +696,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSelectValueAs_Value() {
         return (EAttribute)getSelectValueAs().getEStructuralFeatures().get(0);
 	}
@@ -676,6 +706,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getTableFilter() {
 		if (tableFilterEClass == null) {
 			tableFilterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(11);
@@ -688,6 +719,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getTableFilter_Predicate() {
         return (EReference)getTableFilter().getEStructuralFeatures().get(0);
 	}
@@ -697,6 +729,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getGenerationRulesModule() {
 		if (generationRulesModuleEClass == null) {
 			generationRulesModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(12);
@@ -709,6 +742,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getGenerationRulesModule_RulesForReport() {
         return (EReference)getGenerationRulesModule().getEStructuralFeatures().get(0);
 	}
@@ -718,6 +752,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRuleForILTablePart() {
 		if (ruleForILTablePartEClass == null) {
 			ruleForILTablePartEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(13);
@@ -730,6 +765,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getRuleForILTablePart_Name() {
         return (EAttribute)getRuleForILTablePart().getEStructuralFeatures().get(0);
 	}
@@ -739,6 +775,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRuleForILTablePart_Columns() {
         return (EReference)getRuleForILTablePart().getEStructuralFeatures().get(1);
 	}
@@ -748,6 +785,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRuleForILTablePart_WhereClause() {
         return (EReference)getRuleForILTablePart().getEStructuralFeatures().get(2);
 	}
@@ -757,6 +795,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getPredicate() {
 		if (predicateEClass == null) {
 			predicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(14);
@@ -769,6 +808,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAndPredicate() {
 		if (andPredicateEClass == null) {
 			andPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(15);
@@ -781,6 +821,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAndPredicate_Operands() {
         return (EReference)getAndPredicate().getEStructuralFeatures().get(0);
 	}
@@ -790,6 +831,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOrPredicate() {
 		if (orPredicateEClass == null) {
 			orPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(16);
@@ -802,6 +844,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOrPredicate_Operands() {
         return (EReference)getOrPredicate().getEStructuralFeatures().get(0);
 	}
@@ -811,6 +854,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getNotPredicate() {
 		if (notPredicateEClass == null) {
 			notPredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(17);
@@ -823,6 +867,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getNotPredicate_Operand() {
         return (EReference)getNotPredicate().getEStructuralFeatures().get(0);
 	}
@@ -832,6 +877,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAttributePredicate() {
 		if (attributePredicateEClass == null) {
 			attributePredicateEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(18);
@@ -844,6 +890,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAttributePredicate_Attribute1() {
         return (EReference)getAttributePredicate().getEStructuralFeatures().get(0);
 	}
@@ -853,6 +900,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAttributePredicate_Comparitor() {
         return (EAttribute)getAttributePredicate().getEStructuralFeatures().get(1);
 	}
@@ -862,6 +910,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAttributePredicate_Member() {
         return (EReference)getAttributePredicate().getEStructuralFeatures().get(2);
 	}
@@ -871,6 +920,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAttributePredicate_Value() {
         return (EAttribute)getAttributePredicate().getEStructuralFeatures().get(3);
 	}
@@ -880,6 +930,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELAttribute() {
 		if (elAttributeEClass == null) {
 			elAttributeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(19);
@@ -892,6 +943,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELAttribute_ID() {
         return (EAttribute)getELAttribute().getEStructuralFeatures().get(0);
 	}
@@ -901,6 +953,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELAttribute_EAttributeType() {
         return (EReference)getELAttribute().getEStructuralFeatures().get(1);
 	}
@@ -910,6 +963,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELClass() {
 		if (elClassEClass == null) {
 			elClassEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(20);
@@ -922,6 +976,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELClass_EAbstract() {
         return (EAttribute)getELClass().getEStructuralFeatures().get(0);
 	}
@@ -931,6 +986,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELClass_ESuperTypes() {
         return (EReference)getELClass().getEStructuralFeatures().get(1);
 	}
@@ -940,6 +996,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELClass_EStructuralFeatures() {
         return (EReference)getELClass().getEStructuralFeatures().get(2);
 	}
@@ -949,6 +1006,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELClass_EOperations() {
         return (EReference)getELClass().getEStructuralFeatures().get(3);
 	}
@@ -958,6 +1016,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELClassifier() {
 		if (elClassifierEClass == null) {
 			elClassifierEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(21);
@@ -970,6 +1029,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELClassifier_EPackage() {
         return (EReference)getELClassifier().getEStructuralFeatures().get(0);
 	}
@@ -979,6 +1039,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELDataType() {
 		if (elDataTypeEClass == null) {
 			elDataTypeEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(22);
@@ -991,6 +1052,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELDataType_IndustryName() {
         return (EAttribute)getELDataType().getEStructuralFeatures().get(0);
 	}
@@ -1000,6 +1062,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELEnum() {
 		if (elEnumEClass == null) {
 			elEnumEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(23);
@@ -1012,6 +1075,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELEnum_ELiterals() {
         return (EReference)getELEnum().getEStructuralFeatures().get(0);
 	}
@@ -1021,6 +1085,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELEnumLiteral() {
 		if (elEnumLiteralEClass == null) {
 			elEnumLiteralEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(24);
@@ -1033,6 +1098,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELEnumLiteral_Value() {
         return (EAttribute)getELEnumLiteral().getEStructuralFeatures().get(0);
 	}
@@ -1042,6 +1108,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELEnumLiteral_Literal() {
         return (EAttribute)getELEnumLiteral().getEStructuralFeatures().get(1);
 	}
@@ -1051,6 +1118,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELModelElement() {
 		if (elModelElementEClass == null) {
 			elModelElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(25);
@@ -1063,6 +1131,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELModelElement_EAnnotations() {
         return (EReference)getELModelElement().getEStructuralFeatures().get(0);
 	}
@@ -1072,6 +1141,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELNamedElement() {
 		if (elNamedElementEClass == null) {
 			elNamedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(26);
@@ -1084,6 +1154,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELNamedElement_Name() {
         return (EAttribute)getELNamedElement().getEStructuralFeatures().get(0);
 	}
@@ -1093,6 +1164,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELOperation() {
 		if (elOperationEClass == null) {
 			elOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(27);
@@ -1105,6 +1177,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELOperation_Body() {
         return (EAttribute)getELOperation().getEStructuralFeatures().get(0);
 	}
@@ -1114,51 +1187,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getELPublicOperation() {
-		if (elPublicOperationEClass == null) {
-			elPublicOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(28);
-		}
-		return elPublicOperationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getELPublicOperation_CalledPrivateOperations() {
-        return (EReference)getELPublicOperation().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getELPrivateOperation() {
-		if (elPrivateOperationEClass == null) {
-			elPrivateOperationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(29);
-		}
-		return elPrivateOperationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getELPrivateOperation_EParameters() {
-        return (EReference)getELPrivateOperation().getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public EClass getELParameter() {
 		if (elParameterEClass == null) {
-			elParameterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(30);
+			elParameterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(28);
 		}
 		return elParameterEClass;
 	}
@@ -1168,9 +1200,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELPackage() {
 		if (elPackageEClass == null) {
-			elPackageEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(31);
+			elPackageEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(29);
 		}
 		return elPackageEClass;
 	}
@@ -1180,6 +1213,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELPackage_EClassifiers() {
         return (EReference)getELPackage().getEStructuralFeatures().get(0);
 	}
@@ -1189,6 +1223,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELPackage_NsURI() {
         return (EAttribute)getELPackage().getEStructuralFeatures().get(1);
 	}
@@ -1198,6 +1233,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELPackage_NsPrefix() {
         return (EAttribute)getELPackage().getEStructuralFeatures().get(2);
 	}
@@ -1207,9 +1243,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELReference() {
 		if (elReferenceEClass == null) {
-			elReferenceEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(32);
+			elReferenceEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(30);
 		}
 		return elReferenceEClass;
 	}
@@ -1219,6 +1256,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELReference_Containment() {
         return (EAttribute)getELReference().getEStructuralFeatures().get(0);
 	}
@@ -1228,6 +1266,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELReference_EReferenceType() {
         return (EReference)getELReference().getEStructuralFeatures().get(1);
 	}
@@ -1237,9 +1276,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELStructuralFeature() {
 		if (elStructuralFeatureEClass == null) {
-			elStructuralFeatureEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(33);
+			elStructuralFeatureEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(31);
 		}
 		return elStructuralFeatureEClass;
 	}
@@ -1249,9 +1289,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELTypedElement() {
 		if (elTypedElementEClass == null) {
-			elTypedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(34);
+			elTypedElementEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(32);
 		}
 		return elTypedElementEClass;
 	}
@@ -1261,6 +1302,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELTypedElement_EType() {
         return (EReference)getELTypedElement().getEStructuralFeatures().get(0);
 	}
@@ -1270,6 +1312,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELTypedElement_UpperBound() {
         return (EAttribute)getELTypedElement().getEStructuralFeatures().get(1);
 	}
@@ -1279,6 +1322,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELTypedElement_LowerBound() {
         return (EAttribute)getELTypedElement().getEStructuralFeatures().get(2);
 	}
@@ -1288,9 +1332,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getELAnnotation() {
 		if (elAnnotationEClass == null) {
-			elAnnotationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(35);
+			elAnnotationEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(33);
 		}
 		return elAnnotationEClass;
 	}
@@ -1300,6 +1345,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getELAnnotation_Details() {
         return (EReference)getELAnnotation().getEStructuralFeatures().get(0);
 	}
@@ -1309,8 +1355,9 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getELAnnotation_Source() {
-        return (EAttribute)getELAnnotation().getEStructuralFeatures().get(1);
+	@Override
+	public EReference getELAnnotation_Source() {
+        return (EReference)getELAnnotation().getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1318,9 +1365,43 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public EClass getELAnnotationDirective() {
+		if (elAnnotationDirectiveEClass == null) {
+			elAnnotationDirectiveEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(34);
+		}
+		return elAnnotationDirectiveEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getELAnnotationDirective_Module() {
+        return (EReference)getELAnnotationDirective().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getELAnnotationDirective_SourceURI() {
+        return (EAttribute)getELAnnotationDirective().getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getELStringToStringMapEntry() {
 		if (elStringToStringMapEntryEClass == null) {
-			elStringToStringMapEntryEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(36);
+			elStringToStringMapEntryEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(35);
 		}
 		return elStringToStringMapEntryEClass;
 	}
@@ -1330,6 +1411,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELStringToStringMapEntry_Key() {
         return (EAttribute)getELStringToStringMapEntry().getEStructuralFeatures().get(0);
 	}
@@ -1339,6 +1421,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getELStringToStringMapEntry_Value() {
         return (EAttribute)getELStringToStringMapEntry().getEStructuralFeatures().get(1);
 	}
@@ -1348,9 +1431,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReport() {
 		if (reportEClass == null) {
-			reportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(37);
+			reportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(36);
 		}
 		return reportEClass;
 	}
@@ -1360,6 +1444,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReport_OutputLayer() {
         return (EReference)getReport().getEStructuralFeatures().get(0);
 	}
@@ -1369,6 +1454,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReport_Rows() {
         return (EReference)getReport().getEStructuralFeatures().get(1);
 	}
@@ -1378,6 +1464,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReport_Columns() {
         return (EReference)getReport().getEStructuralFeatures().get(2);
 	}
@@ -1387,6 +1474,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReport_ReportCells() {
         return (EReference)getReport().getEStructuralFeatures().get(3);
 	}
@@ -1396,6 +1484,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getReport_Name() {
         return (EAttribute)getReport().getEStructuralFeatures().get(4);
 	}
@@ -1405,9 +1494,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReportRow() {
 		if (reportRowEClass == null) {
-			reportRowEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(38);
+			reportRowEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(37);
 		}
 		return reportRowEClass;
 	}
@@ -1417,6 +1507,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getReportRow_Name() {
         return (EAttribute)getReportRow().getEStructuralFeatures().get(0);
 	}
@@ -1426,9 +1517,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReportColumn() {
 		if (reportColumnEClass == null) {
-			reportColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(39);
+			reportColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(38);
 		}
 		return reportColumnEClass;
 	}
@@ -1438,6 +1530,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getReportColumn_Name() {
         return (EAttribute)getReportColumn().getEStructuralFeatures().get(0);
 	}
@@ -1447,9 +1540,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReportCell() {
 		if (reportCellEClass == null) {
-			reportCellEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(40);
+			reportCellEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(39);
 		}
 		return reportCellEClass;
 	}
@@ -1459,6 +1553,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReportCell_Row() {
         return (EReference)getReportCell().getEStructuralFeatures().get(0);
 	}
@@ -1468,6 +1563,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReportCell_Column() {
         return (EReference)getReportCell().getEStructuralFeatures().get(1);
 	}
@@ -1477,6 +1573,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReportCell_Filters() {
         return (EReference)getReportCell().getEStructuralFeatures().get(2);
 	}
@@ -1486,6 +1583,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReportCell_Metric() {
         return (EReference)getReportCell().getEStructuralFeatures().get(3);
 	}
@@ -1495,6 +1593,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getReportCell_DatapointID() {
         return (EAttribute)getReportCell().getEStructuralFeatures().get(4);
 	}
@@ -1504,9 +1603,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getFilter() {
 		if (filterEClass == null) {
-			filterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(41);
+			filterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(40);
 		}
 		return filterEClass;
 	}
@@ -1516,6 +1616,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFilter_OutputLayer() {
         return (EReference)getFilter().getEStructuralFeatures().get(0);
 	}
@@ -1525,6 +1626,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFilter_Operation() {
         return (EReference)getFilter().getEStructuralFeatures().get(1);
 	}
@@ -1534,6 +1636,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getFilter_Member() {
         return (EReference)getFilter().getEStructuralFeatures().get(2);
 	}
@@ -1543,9 +1646,10 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getReportModule() {
 		if (reportModuleEClass == null) {
-			reportModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(42);
+			reportModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(41);
 		}
 		return reportModuleEClass;
 	}
@@ -1555,6 +1659,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getReportModule_Reports() {
         return (EReference)getReportModule().getEStructuralFeatures().get(0);
 	}
@@ -1564,6 +1669,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getComparitor() {
 		if (comparitorEEnum == null) {
 			comparitorEEnum = (EEnum)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(10);
@@ -1576,6 +1682,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public regdnaFactory getregdnaFactory() {
 		return (regdnaFactory)getEFactoryInstance();
 	}

@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Module#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Module#getVersion <em>Version</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Module#getImports <em>Imports</em>}</li>
+ *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Module#getAnnotationDirectives <em>Annotation Directives</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getModule()
@@ -139,5 +140,17 @@ public interface Module extends EObject {
 	 * @generated
 	 */
 	EList<Import> getImports();
+
+	/**
+	 * Returns the value of the '<em><b>Annotation Directives</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Annotation Directives</em>' containment reference list.
+	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getModule_AnnotationDirectives()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<ELAnnotationDirective> getAnnotationDirectives();
 
 } // Module

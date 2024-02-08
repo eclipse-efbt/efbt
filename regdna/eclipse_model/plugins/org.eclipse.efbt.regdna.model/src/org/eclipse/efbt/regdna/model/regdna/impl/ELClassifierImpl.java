@@ -49,6 +49,7 @@ public abstract class ELClassifierImpl extends ELNamedElementImpl implements ELC
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELPackage getEPackage() {
 		if (eContainerFeatureID() != regdnaPackage.EL_CLASSIFIER__EPACKAGE) return null;
 		return (ELPackage)eInternalContainer();

@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.regdna.model.regdna.impl;
 
-import org.eclipse.efbt.regdna.model.regdna.ELPublicOperation;
+import org.eclipse.efbt.regdna.model.regdna.ELOperation;
 import org.eclipse.efbt.regdna.model.regdna.SelectColumn;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
@@ -36,7 +36,7 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	 * @generated
 	 * @ordered
 	 */
-	protected ELPublicOperation asAttribute;
+	protected ELOperation asAttribute;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,10 +62,11 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELPublicOperation getAsAttribute() {
+	@Override
+	public ELOperation getAsAttribute() {
 		if (asAttribute != null && asAttribute.eIsProxy()) {
 			InternalEObject oldAsAttribute = (InternalEObject)asAttribute;
-			asAttribute = (ELPublicOperation)eResolveProxy(oldAsAttribute);
+			asAttribute = (ELOperation)eResolveProxy(oldAsAttribute);
 			if (asAttribute != oldAsAttribute) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, regdnaPackage.SELECT_COLUMN__AS_ATTRIBUTE, oldAsAttribute, asAttribute));
@@ -79,7 +80,7 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELPublicOperation basicGetAsAttribute() {
+	public ELOperation basicGetAsAttribute() {
 		return asAttribute;
 	}
 
@@ -88,8 +89,9 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAsAttribute(ELPublicOperation newAsAttribute) {
-		ELPublicOperation oldAsAttribute = asAttribute;
+	@Override
+	public void setAsAttribute(ELOperation newAsAttribute) {
+		ELOperation oldAsAttribute = asAttribute;
 		asAttribute = newAsAttribute;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, regdnaPackage.SELECT_COLUMN__AS_ATTRIBUTE, oldAsAttribute, asAttribute));
@@ -119,7 +121,7 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case regdnaPackage.SELECT_COLUMN__AS_ATTRIBUTE:
-				setAsAttribute((ELPublicOperation)newValue);
+				setAsAttribute((ELOperation)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -134,7 +136,7 @@ public class SelectColumnImpl extends MinimalEObjectImpl.Container implements Se
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case regdnaPackage.SELECT_COLUMN__AS_ATTRIBUTE:
-				setAsAttribute((ELPublicOperation)null);
+				setAsAttribute((ELOperation)null);
 				return;
 		}
 		super.eUnset(featureID);

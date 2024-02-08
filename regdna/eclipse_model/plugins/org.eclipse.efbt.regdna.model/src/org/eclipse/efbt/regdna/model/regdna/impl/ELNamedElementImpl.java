@@ -69,6 +69,7 @@ public abstract class ELNamedElementImpl extends ELModelElementImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -78,6 +79,7 @@ public abstract class ELNamedElementImpl extends ELModelElementImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;

@@ -66,6 +66,7 @@ public class AndPredicateImpl extends PredicateImpl implements AndPredicate {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Predicate> getOperands() {
 		if (operands == null) {
 			operands = new EObjectContainmentEList<Predicate>(Predicate.class, this, regdnaPackage.AND_PREDICATE__OPERANDS);

@@ -66,6 +66,7 @@ public class ELEnumImpl extends ELDataTypeImpl implements ELEnum {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ELEnumLiteral> getELiterals() {
 		if (eLiterals == null) {
 			eLiterals = new EObjectContainmentEList<ELEnumLiteral>(ELEnumLiteral.class, this, regdnaPackage.EL_ENUM__ELITERALS);

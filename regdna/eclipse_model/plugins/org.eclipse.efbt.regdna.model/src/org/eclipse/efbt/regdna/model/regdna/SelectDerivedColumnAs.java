@@ -25,12 +25,12 @@ public interface SelectDerivedColumnAs extends SelectColumn {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attribute</em>' reference.
-	 * @see #setAttribute(ELPublicOperation)
+	 * @see #setAttribute(ELOperation)
 	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getSelectDerivedColumnAs_Attribute()
 	 * @model
 	 * @generated
 	 */
-	ELPublicOperation getAttribute();
+	ELOperation getAttribute();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs#getAttribute <em>Attribute</em>}' reference.
@@ -40,6 +40,6 @@ public interface SelectDerivedColumnAs extends SelectColumn {
 	 * @see #getAttribute()
 	 * @generated
 	 */
-	void setAttribute(ELPublicOperation value);
+	void setAttribute(ELOperation value);
 
 } // SelectDerivedColumnAs

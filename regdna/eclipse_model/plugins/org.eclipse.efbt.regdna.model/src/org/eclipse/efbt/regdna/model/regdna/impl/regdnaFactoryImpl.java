@@ -6,6 +6,7 @@ import org.eclipse.efbt.regdna.model.regdna.AndPredicate;
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
 import org.eclipse.efbt.regdna.model.regdna.Comparitor;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotation;
+import org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective;
 import org.eclipse.efbt.regdna.model.regdna.ELAttribute;
 import org.eclipse.efbt.regdna.model.regdna.ELClass;
 import org.eclipse.efbt.regdna.model.regdna.ELDataType;
@@ -14,8 +15,6 @@ import org.eclipse.efbt.regdna.model.regdna.ELEnumLiteral;
 import org.eclipse.efbt.regdna.model.regdna.ELOperation;
 import org.eclipse.efbt.regdna.model.regdna.ELPackage;
 import org.eclipse.efbt.regdna.model.regdna.ELParameter;
-import org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation;
-import org.eclipse.efbt.regdna.model.regdna.ELPublicOperation;
 import org.eclipse.efbt.regdna.model.regdna.ELReference;
 import org.eclipse.efbt.regdna.model.regdna.ELStringToStringMapEntry;
 import org.eclipse.efbt.regdna.model.regdna.Filter;
@@ -117,12 +116,11 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 			case regdnaPackage.EL_ENUM: return createELEnum();
 			case regdnaPackage.EL_ENUM_LITERAL: return createELEnumLiteral();
 			case regdnaPackage.EL_OPERATION: return createELOperation();
-			case regdnaPackage.EL_PUBLIC_OPERATION: return createELPublicOperation();
-			case regdnaPackage.EL_PRIVATE_OPERATION: return createELPrivateOperation();
 			case regdnaPackage.EL_PARAMETER: return createELParameter();
 			case regdnaPackage.EL_PACKAGE: return createELPackage();
 			case regdnaPackage.EL_REFERENCE: return createELReference();
 			case regdnaPackage.EL_ANNOTATION: return createELAnnotation();
+			case regdnaPackage.EL_ANNOTATION_DIRECTIVE: return createELAnnotationDirective();
 			case regdnaPackage.EL_STRING_TO_STRING_MAP_ENTRY: return createELStringToStringMapEntry();
 			case regdnaPackage.REPORT: return createReport();
 			case regdnaPackage.REPORT_ROW: return createReportRow();
@@ -170,6 +168,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Import createImport() {
 		ImportImpl import_ = new ImportImpl();
 		return import_;
@@ -180,6 +179,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public org.eclipse.efbt.regdna.model.regdna.Module createModule() {
 		ModuleImpl module = new ModuleImpl();
 		return module;
@@ -190,6 +190,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ModuleList createModuleList() {
 		ModuleListImpl moduleList = new ModuleListImpl();
 		return moduleList;
@@ -200,6 +201,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RulesForReport createRulesForReport() {
 		RulesForReportImpl rulesForReport = new RulesForReportImpl();
 		return rulesForReport;
@@ -210,6 +212,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RulesForILTable createRulesForILTable() {
 		RulesForILTableImpl rulesForILTable = new RulesForILTableImpl();
 		return rulesForILTable;
@@ -220,6 +223,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SelectColumn createSelectColumn() {
 		SelectColumnImpl selectColumn = new SelectColumnImpl();
 		return selectColumn;
@@ -230,6 +234,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SelectColumnMemberAs createSelectColumnMemberAs() {
 		SelectColumnMemberAsImpl selectColumnMemberAs = new SelectColumnMemberAsImpl();
 		return selectColumnMemberAs;
@@ -240,6 +245,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SelectColumnAttributeAs createSelectColumnAttributeAs() {
 		SelectColumnAttributeAsImpl selectColumnAttributeAs = new SelectColumnAttributeAsImpl();
 		return selectColumnAttributeAs;
@@ -250,6 +256,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SelectDerivedColumnAs createSelectDerivedColumnAs() {
 		SelectDerivedColumnAsImpl selectDerivedColumnAs = new SelectDerivedColumnAsImpl();
 		return selectDerivedColumnAs;
@@ -260,6 +267,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SelectValueAs createSelectValueAs() {
 		SelectValueAsImpl selectValueAs = new SelectValueAsImpl();
 		return selectValueAs;
@@ -270,6 +278,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TableFilter createTableFilter() {
 		TableFilterImpl tableFilter = new TableFilterImpl();
 		return tableFilter;
@@ -280,6 +289,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public GenerationRulesModule createGenerationRulesModule() {
 		GenerationRulesModuleImpl generationRulesModule = new GenerationRulesModuleImpl();
 		return generationRulesModule;
@@ -290,6 +300,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RuleForILTablePart createRuleForILTablePart() {
 		RuleForILTablePartImpl ruleForILTablePart = new RuleForILTablePartImpl();
 		return ruleForILTablePart;
@@ -300,6 +311,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AndPredicate createAndPredicate() {
 		AndPredicateImpl andPredicate = new AndPredicateImpl();
 		return andPredicate;
@@ -310,6 +322,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OrPredicate createOrPredicate() {
 		OrPredicateImpl orPredicate = new OrPredicateImpl();
 		return orPredicate;
@@ -320,6 +333,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public NotPredicate createNotPredicate() {
 		NotPredicateImpl notPredicate = new NotPredicateImpl();
 		return notPredicate;
@@ -330,6 +344,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AttributePredicate createAttributePredicate() {
 		AttributePredicateImpl attributePredicate = new AttributePredicateImpl();
 		return attributePredicate;
@@ -340,6 +355,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELAttribute createELAttribute() {
 		ELAttributeImpl elAttribute = new ELAttributeImpl();
 		return elAttribute;
@@ -350,6 +366,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELClass createELClass() {
 		ELClassImpl elClass = new ELClassImpl();
 		return elClass;
@@ -360,6 +377,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELDataType createELDataType() {
 		ELDataTypeImpl elDataType = new ELDataTypeImpl();
 		return elDataType;
@@ -370,6 +388,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELEnum createELEnum() {
 		ELEnumImpl elEnum = new ELEnumImpl();
 		return elEnum;
@@ -380,6 +399,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELEnumLiteral createELEnumLiteral() {
 		ELEnumLiteralImpl elEnumLiteral = new ELEnumLiteralImpl();
 		return elEnumLiteral;
@@ -390,6 +410,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELOperation createELOperation() {
 		ELOperationImpl elOperation = new ELOperationImpl();
 		return elOperation;
@@ -400,26 +421,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELPublicOperation createELPublicOperation() {
-		ELPublicOperationImpl elPublicOperation = new ELPublicOperationImpl();
-		return elPublicOperation;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ELPrivateOperation createELPrivateOperation() {
-		ELPrivateOperationImpl elPrivateOperation = new ELPrivateOperationImpl();
-		return elPrivateOperation;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@Override
 	public ELParameter createELParameter() {
 		ELParameterImpl elParameter = new ELParameterImpl();
 		return elParameter;
@@ -430,6 +432,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELPackage createELPackage() {
 		ELPackageImpl elPackage = new ELPackageImpl();
 		return elPackage;
@@ -440,6 +443,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELReference createELReference() {
 		ELReferenceImpl elReference = new ELReferenceImpl();
 		return elReference;
@@ -450,6 +454,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELAnnotation createELAnnotation() {
 		ELAnnotationImpl elAnnotation = new ELAnnotationImpl();
 		return elAnnotation;
@@ -460,6 +465,18 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public ELAnnotationDirective createELAnnotationDirective() {
+		ELAnnotationDirectiveImpl elAnnotationDirective = new ELAnnotationDirectiveImpl();
+		return elAnnotationDirective;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ELStringToStringMapEntry createELStringToStringMapEntry() {
 		ELStringToStringMapEntryImpl elStringToStringMapEntry = new ELStringToStringMapEntryImpl();
 		return elStringToStringMapEntry;
@@ -470,6 +487,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Report createReport() {
 		ReportImpl report = new ReportImpl();
 		return report;
@@ -480,6 +498,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ReportRow createReportRow() {
 		ReportRowImpl reportRow = new ReportRowImpl();
 		return reportRow;
@@ -490,6 +509,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ReportColumn createReportColumn() {
 		ReportColumnImpl reportColumn = new ReportColumnImpl();
 		return reportColumn;
@@ -500,6 +520,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ReportCell createReportCell() {
 		ReportCellImpl reportCell = new ReportCellImpl();
 		return reportCell;
@@ -510,6 +531,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Filter createFilter() {
 		FilterImpl filter = new FilterImpl();
 		return filter;
@@ -520,6 +542,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ReportModule createReportModule() {
 		ReportModuleImpl reportModule = new ReportModuleImpl();
 		return reportModule;
@@ -550,6 +573,7 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public regdnaPackage getregdnaPackage() {
 		return (regdnaPackage)getEPackage();
 	}

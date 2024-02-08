@@ -82,6 +82,7 @@ public class ELAttributeImpl extends ELStructuralFeatureImpl implements ELAttrib
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isID() {
 		return iD;
 	}
@@ -91,6 +92,7 @@ public class ELAttributeImpl extends ELStructuralFeatureImpl implements ELAttrib
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setID(boolean newID) {
 		boolean oldID = iD;
 		iD = newID;
@@ -103,6 +105,7 @@ public class ELAttributeImpl extends ELStructuralFeatureImpl implements ELAttrib
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELDataType getEAttributeType() {
 		if (eAttributeType != null && eAttributeType.eIsProxy()) {
 			InternalEObject oldEAttributeType = (InternalEObject)eAttributeType;
@@ -129,6 +132,7 @@ public class ELAttributeImpl extends ELStructuralFeatureImpl implements ELAttrib
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEAttributeType(ELDataType newEAttributeType) {
 		ELDataType oldEAttributeType = eAttributeType;
 		eAttributeType = newEAttributeType;

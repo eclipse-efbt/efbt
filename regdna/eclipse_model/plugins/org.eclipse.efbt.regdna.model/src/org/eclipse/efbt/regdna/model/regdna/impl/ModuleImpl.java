@@ -4,6 +4,7 @@ package org.eclipse.efbt.regdna.model.regdna.impl;
 
 import java.util.Collection;
 
+import org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective;
 import org.eclipse.efbt.regdna.model.regdna.Import;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
@@ -36,6 +37,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ModuleImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ModuleImpl#getVersion <em>Version</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ModuleImpl#getImports <em>Imports</em>}</li>
+ *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ModuleImpl#getAnnotationDirectives <em>Annotation Directives</em>}</li>
  * </ul>
  *
  * @generated
@@ -142,6 +144,16 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	protected EList<Import> imports;
 
 	/**
+	 * The cached value of the '{@link #getAnnotationDirectives() <em>Annotation Directives</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAnnotationDirectives()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ELAnnotationDirective> annotationDirectives;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -165,6 +177,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<org.eclipse.efbt.regdna.model.regdna.Module> getDependencies() {
 		if (dependencies == null) {
 			dependencies = new EObjectResolvingEList<org.eclipse.efbt.regdna.model.regdna.Module>(org.eclipse.efbt.regdna.model.regdna.Module.class, this, regdnaPackage.MODULE__DEPENDENCIES);
@@ -177,6 +190,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getTheDescription() {
 		return theDescription;
 	}
@@ -186,6 +200,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTheDescription(String newTheDescription) {
 		String oldTheDescription = theDescription;
 		theDescription = newTheDescription;
@@ -198,6 +213,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLicense() {
 		return license;
 	}
@@ -207,6 +223,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLicense(String newLicense) {
 		String oldLicense = license;
 		license = newLicense;
@@ -219,6 +236,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -228,6 +246,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -240,6 +259,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -249,6 +269,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(String newVersion) {
 		String oldVersion = version;
 		version = newVersion;
@@ -261,6 +282,7 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Import> getImports() {
 		if (imports == null) {
 			imports = new EObjectContainmentEList<Import>(Import.class, this, regdnaPackage.MODULE__IMPORTS);
@@ -274,10 +296,25 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 	 * @generated
 	 */
 	@Override
+	public EList<ELAnnotationDirective> getAnnotationDirectives() {
+		if (annotationDirectives == null) {
+			annotationDirectives = new EObjectContainmentEList<ELAnnotationDirective>(ELAnnotationDirective.class, this, regdnaPackage.MODULE__ANNOTATION_DIRECTIVES);
+		}
+		return annotationDirectives;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case regdnaPackage.MODULE__IMPORTS:
 				return ((InternalEList<?>)getImports()).basicRemove(otherEnd, msgs);
+			case regdnaPackage.MODULE__ANNOTATION_DIRECTIVES:
+				return ((InternalEList<?>)getAnnotationDirectives()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -302,6 +339,8 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 				return getVersion();
 			case regdnaPackage.MODULE__IMPORTS:
 				return getImports();
+			case regdnaPackage.MODULE__ANNOTATION_DIRECTIVES:
+				return getAnnotationDirectives();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -335,6 +374,10 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 				getImports().clear();
 				getImports().addAll((Collection<? extends Import>)newValue);
 				return;
+			case regdnaPackage.MODULE__ANNOTATION_DIRECTIVES:
+				getAnnotationDirectives().clear();
+				getAnnotationDirectives().addAll((Collection<? extends ELAnnotationDirective>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -365,6 +408,9 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 			case regdnaPackage.MODULE__IMPORTS:
 				getImports().clear();
 				return;
+			case regdnaPackage.MODULE__ANNOTATION_DIRECTIVES:
+				getAnnotationDirectives().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -389,6 +435,8 @@ public class ModuleImpl extends MinimalEObjectImpl.Container implements org.ecli
 				return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
 			case regdnaPackage.MODULE__IMPORTS:
 				return imports != null && !imports.isEmpty();
+			case regdnaPackage.MODULE__ANNOTATION_DIRECTIVES:
+				return annotationDirectives != null && !annotationDirectives.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

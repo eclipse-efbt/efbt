@@ -61,6 +61,7 @@ public class SelectColumnAttributeAsImpl extends SelectColumnImpl implements Sel
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELAttribute getAttribute() {
 		if (attribute != null && attribute.eIsProxy()) {
 			InternalEObject oldAttribute = (InternalEObject)attribute;
@@ -87,6 +88,7 @@ public class SelectColumnAttributeAsImpl extends SelectColumnImpl implements Sel
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAttribute(ELAttribute newAttribute) {
 		ELAttribute oldAttribute = attribute;
 		attribute = newAttribute;

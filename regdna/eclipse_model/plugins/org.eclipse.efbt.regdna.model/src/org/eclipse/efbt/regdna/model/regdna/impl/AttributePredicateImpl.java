@@ -116,6 +116,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELAttribute getAttribute1() {
 		if (attribute1 != null && attribute1.eIsProxy()) {
 			InternalEObject oldAttribute1 = (InternalEObject)attribute1;
@@ -142,6 +143,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAttribute1(ELAttribute newAttribute1) {
 		ELAttribute oldAttribute1 = attribute1;
 		attribute1 = newAttribute1;
@@ -154,6 +156,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Comparitor getComparitor() {
 		return comparitor;
 	}
@@ -163,6 +166,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setComparitor(Comparitor newComparitor) {
 		Comparitor oldComparitor = comparitor;
 		comparitor = newComparitor == null ? COMPARITOR_EDEFAULT : newComparitor;
@@ -175,6 +179,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELEnumLiteral getMember() {
 		if (member != null && member.eIsProxy()) {
 			InternalEObject oldMember = (InternalEObject)member;
@@ -201,6 +206,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMember(ELEnumLiteral newMember) {
 		ELEnumLiteral oldMember = member;
 		member = newMember;
@@ -213,6 +219,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValue() {
 		return value;
 	}
@@ -222,6 +229,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;

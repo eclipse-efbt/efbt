@@ -127,6 +127,7 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELClass getOutputLayer() {
 		if (outputLayer != null && outputLayer.eIsProxy()) {
 			InternalEObject oldOutputLayer = (InternalEObject)outputLayer;
@@ -153,6 +154,7 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOutputLayer(ELClass newOutputLayer) {
 		ELClass oldOutputLayer = outputLayer;
 		outputLayer = newOutputLayer;
@@ -165,6 +167,7 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ReportRow> getRows() {
 		if (rows == null) {
 			rows = new EObjectContainmentEList<ReportRow>(ReportRow.class, this, regdnaPackage.REPORT__ROWS);
@@ -177,6 +180,7 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ReportColumn> getColumns() {
 		if (columns == null) {
 			columns = new EObjectContainmentEList<ReportColumn>(ReportColumn.class, this, regdnaPackage.REPORT__COLUMNS);
@@ -189,6 +193,7 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ReportCell> getReportCells() {
 		if (reportCells == null) {
 			reportCells = new EObjectContainmentEList<ReportCell>(ReportCell.class, this, regdnaPackage.REPORT__REPORT_CELLS);
@@ -201,6 +206,7 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -210,6 +216,7 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;

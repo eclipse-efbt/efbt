@@ -17,6 +17,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
         eType="#//Import" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotationDirectives" upperBound="-1"
+        eType="#//ELAnnotationDirective" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModuleList">
     <eStructuralFeatures xsi:type="ecore:EReference" name="modules" upperBound="-1"
@@ -165,7 +167,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="ELAnnotation" eSuperTypes="#//ELModelElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="details" upperBound="-1"
         eType="#//ELStringToStringMapEntry" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//ELAnnotationDirective"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ELAnnotationDirective" eSuperTypes="#//ELNamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="#//Module"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourceURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ELStringToStringMapEntry">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

@@ -66,6 +66,7 @@ public class ReportModuleImpl extends ModuleImpl implements ReportModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Report> getReports() {
 		if (reports == null) {
 			reports = new EObjectContainmentEList<Report>(Report.class, this, regdnaPackage.REPORT_MODULE__REPORTS);

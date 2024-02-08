@@ -19,6 +19,7 @@ import "http://www.eclipse.org/efbt/regdna" as regdna
 
 Module returns regdna::Module:
 	 GenerationRulesModule | ELPackage | ReportModule;
+	 
 	
 ELClassifier returns regdna::ELClassifier:
 	ELClass | ELDataType_Impl | ELEnum ;
@@ -37,13 +38,31 @@ EString returns ecore::EString:
 	STRING ;
 
 
+ELAnnotation returns regdna::ELAnnotation:
+	{regdna::ELAnnotation}
+	'@' source=[regdna::ELAnnotationDirective|QualifiedName]
+	('(' details+=ELStringToStringMapEntry (',' details+=ELStringToStringMapEntry)* ')')?
+;
+
+ELStringToStringMapEntry returns regdna::ELStringToStringMapEntry:
+	{regdna::ELStringToStringMapEntry}
+	key=QualifiedName
+	'='
+	value=STRING
+;
+
+ELAnnotationDirective returns regdna::ELAnnotationDirective:
+	{regdna::ELAnnotationDirective}
+	=>('annotation' sourceURI=STRING) 'as' name=ID
+;
+
 GenerationRulesModule returns regdna::GenerationRulesModule:
 	{regdna::GenerationRulesModule}
 	'generationRuleModule'
 	name=QualifiedName
 	(imports += Import)*
 	'{'
-		('annotation' '"dependency"' 'as' dependencies+=[regdna::Module|QualifiedName])*
+		('dependencies' dependencies+=[regdna::Module|QualifiedName])*
 		('generationRules' '{' rulesForReport+=RulesForReport ( "," rulesForReport+=RulesForReport)* '}' )?
 	'}';
 
@@ -51,6 +70,7 @@ GenerationRulesModule returns regdna::GenerationRulesModule:
 
 ELAttribute returns regdna::ELAttribute:
 	{regdna::ELAttribute}
+	(eAnnotations+=ELAnnotation)*
 	(iD?='id')?
 	eAttributeType=[regdna::ELDataType|QualifiedName] ("[" ((  lowerBound=EInt) ".." ( upperBound=EInt))?   "]")?
 	name=ID 
@@ -59,6 +79,7 @@ ELAttribute returns regdna::ELAttribute:
 
 ELClass returns regdna::ELClass:
 	{regdna::ELClass}
+	(eAnnotations+=ELAnnotation)*
 	((eAbstract?='abstract'? 'class') ) name = ID
 	('extends' eSuperTypes+=[regdna::ELClass|QualifiedName] (',' eSuperTypes+=[regdna::ELClass|QualifiedName])*)?
 	'{'
@@ -76,17 +97,16 @@ ELDataType_Impl returns regdna::ELDataType:
 
 ELEnum returns regdna::ELEnum:
 	{regdna::ELEnum}
+	(eAnnotations+=ELAnnotation)*
 	'enum' name = ID
 	'{'
 	  (eLiterals+=ELEnumLiteral ((',')? eLiterals+=ELEnumLiteral)*)?
 	'}';
 
+	
 ELOperation returns regdna::ELOperation:
-	ELPublicOperation | ELPrivateOperation;
-	
-	
-ELPublicOperation returns regdna::ELPublicOperation:
-	{regdna::ELPublicOperation}
+	{regdna::ELOperation}
+	(eAnnotations+=ELAnnotation)*
 	'op'
 	eType=[regdna::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
 	name=ID
@@ -94,24 +114,10 @@ ELPublicOperation returns regdna::ELPublicOperation:
 	'{'(body=EString)?'}'
 	;
 	
-ELPrivateOperation returns regdna::ELPrivateOperation:
-	{regdna::ELPrivateOperation}
-	'private_op'
-	eType=[regdna::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
-	name=ID
-	'('(eParameters+=ELParameter (',' eParameters+=ELParameter)*)?')'
-	'{'(body=EString)?'}'
-	;
-
-
-ELParameter returns regdna::ELParameter:
-
-    eType=[regdna::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
-    name=ID
-;
 
 ELReference returns regdna::ELReference:
 	{regdna::ELReference}
+	(eAnnotations+=ELAnnotation)*
 	((containment?='contains' ) |
 	 ('refers') 
 	)
@@ -122,6 +128,7 @@ ELReference returns regdna::ELReference:
 
 ELEnumLiteral returns regdna::ELEnumLiteral:
 	{regdna::ELEnumLiteral}
+	(eAnnotations+=ELAnnotation)*
 	name=ID
     ('as' literal=STRING)?
     ('=' value=EInt)?
@@ -151,6 +158,7 @@ ELPackage returns regdna::ELPackage:
 	'package'
 	name = QualifiedName
 	(imports += Import)*
+	(annotationDirectives += ELAnnotationDirective)*
 	(eClassifiers += ELClassifier)*
 	;
 
@@ -223,28 +231,28 @@ SelectColumnMemberAs returns regdna::SelectColumnMemberAs:
 	{regdna::SelectColumnMemberAs}
 	'selectMember'
 		( memberAsConstant=[regdna::ELEnumLiteral|QualifiedName])?
-		('as' asAttribute=[regdna::ELPublicOperation|QualifiedName])?
+		('as' asAttribute=[regdna::ELOperation|QualifiedName])?
 		;
 	
 SelectColumnAttributeAs returns regdna::SelectColumnAttributeAs:
 	{regdna::SelectColumnAttributeAs}
 	'selectAttribute'
 		( attribute=[regdna::ELAttribute|QualifiedName])?
-		('as' asAttribute=[regdna::ELPublicOperation|QualifiedName])?
+		('as' asAttribute=[regdna::ELOperation|QualifiedName])?
 	;
 	
 SelectDerivedColumnAs returns regdna::SelectDerivedColumnAs:
 	{regdna::SelectDerivedColumnAs}
 	'selectDerivedAttribute'
-		( attribute=[regdna::ELPublicOperation|QualifiedName])?
-		('as' asAttribute=[regdna::ELPublicOperation|QualifiedName])?
+		( attribute=[regdna::ELOperation|QualifiedName])?
+		('as' asAttribute=[regdna::ELOperation|QualifiedName])?
 	;
 	
 SelectValueAs returns regdna::SelectValueAs:
 	{regdna::SelectValueAs}
 	'selectValue'
 		( value=EString)?
-		('as' asAttribute=[regdna::ELPublicOperation|QualifiedName])?
+		('as' asAttribute=[regdna::ELOperation|QualifiedName])?
 	;
 	
 ReportModule returns regdna::ReportModule:

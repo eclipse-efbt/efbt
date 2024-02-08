@@ -2,7 +2,7 @@
  */
 package org.eclipse.efbt.regdna.model.regdna.impl;
 
-import org.eclipse.efbt.regdna.model.regdna.ELPublicOperation;
+import org.eclipse.efbt.regdna.model.regdna.ELOperation;
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
@@ -35,7 +35,7 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	 * @generated
 	 * @ordered
 	 */
-	protected ELPublicOperation attribute;
+	protected ELOperation attribute;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -61,10 +61,11 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELPublicOperation getAttribute() {
+	@Override
+	public ELOperation getAttribute() {
 		if (attribute != null && attribute.eIsProxy()) {
 			InternalEObject oldAttribute = (InternalEObject)attribute;
-			attribute = (ELPublicOperation)eResolveProxy(oldAttribute);
+			attribute = (ELOperation)eResolveProxy(oldAttribute);
 			if (attribute != oldAttribute) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, regdnaPackage.SELECT_DERIVED_COLUMN_AS__ATTRIBUTE, oldAttribute, attribute));
@@ -78,7 +79,7 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELPublicOperation basicGetAttribute() {
+	public ELOperation basicGetAttribute() {
 		return attribute;
 	}
 
@@ -87,8 +88,9 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setAttribute(ELPublicOperation newAttribute) {
-		ELPublicOperation oldAttribute = attribute;
+	@Override
+	public void setAttribute(ELOperation newAttribute) {
+		ELOperation oldAttribute = attribute;
 		attribute = newAttribute;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, regdnaPackage.SELECT_DERIVED_COLUMN_AS__ATTRIBUTE, oldAttribute, attribute));
@@ -118,7 +120,7 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case regdnaPackage.SELECT_DERIVED_COLUMN_AS__ATTRIBUTE:
-				setAttribute((ELPublicOperation)newValue);
+				setAttribute((ELOperation)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -133,7 +135,7 @@ public class SelectDerivedColumnAsImpl extends SelectColumnImpl implements Selec
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case regdnaPackage.SELECT_DERIVED_COLUMN_AS__ATTRIBUTE:
-				setAttribute((ELPublicOperation)null);
+				setAttribute((ELOperation)null);
 				return;
 		}
 		super.eUnset(featureID);

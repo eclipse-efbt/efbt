@@ -69,6 +69,7 @@ public class ELOperationImpl extends ELTypedElementImpl implements ELOperation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getBody() {
 		return body;
 	}
@@ -78,6 +79,7 @@ public class ELOperationImpl extends ELTypedElementImpl implements ELOperation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBody(String newBody) {
 		String oldBody = body;
 		body = newBody;

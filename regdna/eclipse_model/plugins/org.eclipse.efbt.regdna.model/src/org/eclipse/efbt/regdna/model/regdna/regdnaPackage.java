@@ -160,13 +160,22 @@ public interface regdnaPackage extends EPackage {
 	int MODULE__IMPORTS = 5;
 
 	/**
+	 * The feature id for the '<em><b>Annotation Directives</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE__ANNOTATION_DIRECTIVES = 6;
+
+	/**
 	 * The number of structural features of the '<em>Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_FEATURE_COUNT = 6;
+	int MODULE_FEATURE_COUNT = 7;
 
 	/**
 	 * The number of operations of the '<em>Module</em>' class.
@@ -629,6 +638,15 @@ public interface regdnaPackage extends EPackage {
 	int GENERATION_RULES_MODULE__IMPORTS = MODULE__IMPORTS;
 
 	/**
+	 * The feature id for the '<em><b>Annotation Directives</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERATION_RULES_MODULE__ANNOTATION_DIRECTIVES = MODULE__ANNOTATION_DIRECTIVES;
+
+	/**
 	 * The feature id for the '<em><b>Rules For Report</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -924,7 +942,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_MODEL_ELEMENT = 24;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -961,7 +979,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_NAMED_ELEMENT = 25;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1004,10 +1022,10 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELTypedElement()
 	 * @generated
 	 */
-	int EL_TYPED_ELEMENT = 33;
+	int EL_TYPED_ELEMENT = 31;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1077,10 +1095,10 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELStructuralFeature()
 	 * @generated
 	 */
-	int EL_STRUCTURAL_FEATURE = 32;
+	int EL_STRUCTURAL_FEATURE = 30;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1153,7 +1171,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_ATTRIBUTE = 18;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1244,7 +1262,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_CLASSIFIER = 20;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1299,7 +1317,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_CLASS = 19;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1390,7 +1408,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_DATA_TYPE = 21;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1454,7 +1472,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_ENUM = 22;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1527,7 +1545,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_ENUM_LITERAL = 23;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1591,7 +1609,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_OPERATION = 26;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1663,188 +1681,6 @@ public interface regdnaPackage extends EPackage {
 	int EL_OPERATION_OPERATION_COUNT = EL_TYPED_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.ELPublicOperationImpl <em>EL Public Operation</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.ELPublicOperationImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELPublicOperation()
-	 * @generated
-	 */
-	int EL_PUBLIC_OPERATION = 27;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION__EANNOTATIONS = EL_OPERATION__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION__NAME = EL_OPERATION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>EType</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION__ETYPE = EL_OPERATION__ETYPE;
-
-	/**
-	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION__UPPER_BOUND = EL_OPERATION__UPPER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION__LOWER_BOUND = EL_OPERATION__LOWER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Body</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION__BODY = EL_OPERATION__BODY;
-
-	/**
-	 * The feature id for the '<em><b>Called Private Operations</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION__CALLED_PRIVATE_OPERATIONS = EL_OPERATION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>EL Public Operation</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION_FEATURE_COUNT = EL_OPERATION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>EL Public Operation</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PUBLIC_OPERATION_OPERATION_COUNT = EL_OPERATION_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.ELPrivateOperationImpl <em>EL Private Operation</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.ELPrivateOperationImpl
-	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELPrivateOperation()
-	 * @generated
-	 */
-	int EL_PRIVATE_OPERATION = 28;
-
-	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION__EANNOTATIONS = EL_OPERATION__EANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION__NAME = EL_OPERATION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>EType</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION__ETYPE = EL_OPERATION__ETYPE;
-
-	/**
-	 * The feature id for the '<em><b>Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION__UPPER_BOUND = EL_OPERATION__UPPER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Lower Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION__LOWER_BOUND = EL_OPERATION__LOWER_BOUND;
-
-	/**
-	 * The feature id for the '<em><b>Body</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION__BODY = EL_OPERATION__BODY;
-
-	/**
-	 * The feature id for the '<em><b>EParameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION__EPARAMETERS = EL_OPERATION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>EL Private Operation</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION_FEATURE_COUNT = EL_OPERATION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>EL Private Operation</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EL_PRIVATE_OPERATION_OPERATION_COUNT = EL_OPERATION_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.ELParameterImpl <em>EL Parameter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1852,10 +1688,10 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELParameter()
 	 * @generated
 	 */
-	int EL_PARAMETER = 29;
+	int EL_PARAMETER = 27;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1925,7 +1761,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELPackage()
 	 * @generated
 	 */
-	int EL_PACKAGE = 30;
+	int EL_PACKAGE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -1982,6 +1818,15 @@ public interface regdnaPackage extends EPackage {
 	int EL_PACKAGE__IMPORTS = MODULE__IMPORTS;
 
 	/**
+	 * The feature id for the '<em><b>Annotation Directives</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_PACKAGE__ANNOTATION_DIRECTIVES = MODULE__ANNOTATION_DIRECTIVES;
+
+	/**
 	 * The feature id for the '<em><b>EClassifiers</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2034,10 +1879,10 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELReference()
 	 * @generated
 	 */
-	int EL_REFERENCE = 31;
+	int EL_REFERENCE = 29;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2125,10 +1970,10 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELAnnotation()
 	 * @generated
 	 */
-	int EL_ANNOTATION = 34;
+	int EL_ANNOTATION = 32;
 
 	/**
-	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference.
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2146,7 +1991,7 @@ public interface regdnaPackage extends EPackage {
 	int EL_ANNOTATION__DETAILS = EL_MODEL_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' attribute.
+	 * The feature id for the '<em><b>Source</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2173,6 +2018,70 @@ public interface regdnaPackage extends EPackage {
 	int EL_ANNOTATION_OPERATION_COUNT = EL_MODEL_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.ELAnnotationDirectiveImpl <em>EL Annotation Directive</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.ELAnnotationDirectiveImpl
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELAnnotationDirective()
+	 * @generated
+	 */
+	int EL_ANNOTATION_DIRECTIVE = 33;
+
+	/**
+	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_ANNOTATION_DIRECTIVE__EANNOTATIONS = EL_NAMED_ELEMENT__EANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_ANNOTATION_DIRECTIVE__NAME = EL_NAMED_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Module</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_ANNOTATION_DIRECTIVE__MODULE = EL_NAMED_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Source URI</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_ANNOTATION_DIRECTIVE__SOURCE_URI = EL_NAMED_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>EL Annotation Directive</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_ANNOTATION_DIRECTIVE_FEATURE_COUNT = EL_NAMED_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>EL Annotation Directive</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_ANNOTATION_DIRECTIVE_OPERATION_COUNT = EL_NAMED_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.ELStringToStringMapEntryImpl <em>EL String To String Map Entry</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2180,7 +2089,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getELStringToStringMapEntry()
 	 * @generated
 	 */
-	int EL_STRING_TO_STRING_MAP_ENTRY = 35;
+	int EL_STRING_TO_STRING_MAP_ENTRY = 34;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -2226,7 +2135,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReport()
 	 * @generated
 	 */
-	int REPORT = 36;
+	int REPORT = 35;
 
 	/**
 	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
@@ -2299,7 +2208,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportRow()
 	 * @generated
 	 */
-	int REPORT_ROW = 37;
+	int REPORT_ROW = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2336,7 +2245,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportColumn()
 	 * @generated
 	 */
-	int REPORT_COLUMN = 38;
+	int REPORT_COLUMN = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2373,7 +2282,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportCell()
 	 * @generated
 	 */
-	int REPORT_CELL = 39;
+	int REPORT_CELL = 38;
 
 	/**
 	 * The feature id for the '<em><b>Row</b></em>' reference.
@@ -2446,7 +2355,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getFilter()
 	 * @generated
 	 */
-	int FILTER = 40;
+	int FILTER = 39;
 
 	/**
 	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
@@ -2501,7 +2410,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportModule()
 	 * @generated
 	 */
-	int REPORT_MODULE = 41;
+	int REPORT_MODULE = 40;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -2558,6 +2467,15 @@ public interface regdnaPackage extends EPackage {
 	int REPORT_MODULE__IMPORTS = MODULE__IMPORTS;
 
 	/**
+	 * The feature id for the '<em><b>Annotation Directives</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT_MODULE__ANNOTATION_DIRECTIVES = MODULE__ANNOTATION_DIRECTIVES;
+
+	/**
 	 * The feature id for the '<em><b>Reports</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2592,7 +2510,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getComparitor()
 	 * @generated
 	 */
-	int COMPARITOR = 42;
+	int COMPARITOR = 41;
 
 
 	/**
@@ -2691,6 +2609,17 @@ public interface regdnaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getModule_Imports();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.Module#getAnnotationDirectives <em>Annotation Directives</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Annotation Directives</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.Module#getAnnotationDirectives()
+	 * @see #getModule()
+	 * @generated
+	 */
+	EReference getModule_AnnotationDirectives();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ModuleList <em>Module List</em>}'.
@@ -3286,10 +3215,10 @@ public interface regdnaPackage extends EPackage {
 	EClass getELModelElement();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.regdna.model.regdna.ELModelElement#getEAnnotations <em>EAnnotations</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.ELModelElement#getEAnnotations <em>EAnnotations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>EAnnotations</em>'.
+	 * @return the meta object for the containment reference list '<em>EAnnotations</em>'.
 	 * @see org.eclipse.efbt.regdna.model.regdna.ELModelElement#getEAnnotations()
 	 * @see #getELModelElement()
 	 * @generated
@@ -3337,48 +3266,6 @@ public interface regdnaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getELOperation_Body();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ELPublicOperation <em>EL Public Operation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>EL Public Operation</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.ELPublicOperation
-	 * @generated
-	 */
-	EClass getELPublicOperation();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.efbt.regdna.model.regdna.ELPublicOperation#getCalledPrivateOperations <em>Called Private Operations</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Called Private Operations</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.ELPublicOperation#getCalledPrivateOperations()
-	 * @see #getELPublicOperation()
-	 * @generated
-	 */
-	EReference getELPublicOperation_CalledPrivateOperations();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation <em>EL Private Operation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>EL Private Operation</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation
-	 * @generated
-	 */
-	EClass getELPrivateOperation();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation#getEParameters <em>EParameters</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>EParameters</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation#getEParameters()
-	 * @see #getELPrivateOperation()
-	 * @generated
-	 */
-	EReference getELPrivateOperation_EParameters();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ELParameter <em>EL Parameter</em>}'.
@@ -3540,15 +3427,47 @@ public interface regdnaPackage extends EPackage {
 	EReference getELAnnotation_Details();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.ELAnnotation#getSource <em>Source</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.ELAnnotation#getSource <em>Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Source</em>'.
+	 * @return the meta object for the reference '<em>Source</em>'.
 	 * @see org.eclipse.efbt.regdna.model.regdna.ELAnnotation#getSource()
 	 * @see #getELAnnotation()
 	 * @generated
 	 */
-	EAttribute getELAnnotation_Source();
+	EReference getELAnnotation_Source();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective <em>EL Annotation Directive</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>EL Annotation Directive</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective
+	 * @generated
+	 */
+	EClass getELAnnotationDirective();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective#getModule <em>Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Module</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective#getModule()
+	 * @see #getELAnnotationDirective()
+	 * @generated
+	 */
+	EReference getELAnnotationDirective_Module();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective#getSourceURI <em>Source URI</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Source URI</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective#getSourceURI()
+	 * @see #getELAnnotationDirective()
+	 * @generated
+	 */
+	EAttribute getELAnnotationDirective_SourceURI();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ELStringToStringMapEntry <em>EL String To String Map Entry</em>}'.

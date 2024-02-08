@@ -103,6 +103,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -112,6 +113,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -124,6 +126,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SelectColumn> getColumns() {
 		if (columns == null) {
 			columns = new EObjectContainmentEList<SelectColumn>(SelectColumn.class, this, regdnaPackage.RULE_FOR_IL_TABLE_PART__COLUMNS);
@@ -136,6 +139,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TableFilter getWhereClause() {
 		return whereClause;
 	}
@@ -160,6 +164,7 @@ public class RuleForILTablePartImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWhereClause(TableFilter newWhereClause) {
 		if (newWhereClause != whereClause) {
 			NotificationChain msgs = null;

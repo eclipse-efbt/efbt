@@ -66,6 +66,7 @@ public class GenerationRulesModuleImpl extends ModuleImpl implements GenerationR
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<RulesForReport> getRulesForReport() {
 		if (rulesForReport == null) {
 			rulesForReport = new EObjectContainmentEList<RulesForReport>(RulesForReport.class, this, regdnaPackage.GENERATION_RULES_MODULE__RULES_FOR_REPORT);

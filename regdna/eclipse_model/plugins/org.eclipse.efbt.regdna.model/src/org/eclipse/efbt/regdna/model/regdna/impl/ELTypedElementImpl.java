@@ -112,6 +112,7 @@ public abstract class ELTypedElementImpl extends ELNamedElementImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELClassifier getEType() {
 		if (eType != null && eType.eIsProxy()) {
 			InternalEObject oldEType = (InternalEObject)eType;
@@ -138,6 +139,7 @@ public abstract class ELTypedElementImpl extends ELNamedElementImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEType(ELClassifier newEType) {
 		ELClassifier oldEType = eType;
 		eType = newEType;
@@ -175,6 +177,7 @@ public abstract class ELTypedElementImpl extends ELNamedElementImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getUpperBound() {
 		return upperBound;
 	}
@@ -184,6 +187,7 @@ public abstract class ELTypedElementImpl extends ELNamedElementImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUpperBound(int newUpperBound) {
 		int oldUpperBound = upperBound;
 		upperBound = newUpperBound;
@@ -196,6 +200,7 @@ public abstract class ELTypedElementImpl extends ELNamedElementImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getLowerBound() {
 		return lowerBound;
 	}
@@ -205,6 +210,7 @@ public abstract class ELTypedElementImpl extends ELNamedElementImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLowerBound(int newLowerBound) {
 		int oldLowerBound = lowerBound;
 		lowerBound = newLowerBound;
