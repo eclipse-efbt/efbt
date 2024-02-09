@@ -63,6 +63,11 @@ class PersistToFile:
                 f.write("\t\t import " + import_string + ".*\r")
         if extension == "regdna":
             f.write("\t\t import types.*\r")
+
+        for annotationDirective in the_package.annotationDirectives:
+            f.write("\t\t annotation \"" + annotationDirective.sourceURI + "\" as " +
+                    annotationDirective.name + "\r")
+
         for classifier in the_package.eClassifiers:
             if isinstance(classifier, ELClass):
                 for annotation in classifier.eAnnotations:
@@ -73,9 +78,9 @@ class PersistToFile:
                     for detail in annotation.details:
                         if first_item:
                             first_item = False
-                            f.write(detail.key + "=" + detail.value)
+                            f.write(detail.key + "=\"" + detail.value + "\"")
                         else:
-                            f.write("," + detail.key + "=" + detail.value )
+                            f.write("," + detail.key + "=\"" + detail.value + "\"" )
                     f.write(")\r")
                 
                 f.write("\t\t\t")
@@ -94,9 +99,9 @@ class PersistToFile:
                         for detail in annotation.details:
                             if first_item:
                                 first_item = False
-                                f.write(detail.key + "=" + detail.value)
+                                f.write(detail.key + "=\"" + detail.value + "\"")
                             else:
-                                f.write("," + detail.key + "=" + detail.value )
+                                f.write("," + detail.key + "=\"" + detail.value + "\"" )
                         f.write(")\r")
                     if isinstance(member, ELReference):
                         if member.containment:
@@ -154,9 +159,9 @@ class PersistToFile:
                         for detail in annotation.details:
                             if first_item:
                                 first_item = False
-                                f.write(detail.key + "=" + detail.value)
+                                f.write(detail.key + "=\"" + detail.value + "\"")
                             else:
-                                f.write("," + detail.key + "=" + detail.value )
+                                f.write("," + detail.key + "=\"" + detail.value + "\"")
                         f.write(")\r")
                     if isinstance(member, ELOperation):
                         f.write("\t\t\t\top ")
