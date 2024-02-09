@@ -16,7 +16,7 @@ from pyecore.resources.json import JsonResource
 from utils.utils import Utils
 
 
-from regdna import ELAttribute, ELClass, ELEnum, ELPublicOperation, ELReference,SelectColumnAttributeAs
+from regdna import ELAttribute, ELClass, ELEnum, ELOperation, ELReference,SelectColumnAttributeAs
 
 
 class PersistToFile:
@@ -63,8 +63,26 @@ class PersistToFile:
                 f.write("\t\t import " + import_string + ".*\r")
         if extension == "regdna":
             f.write("\t\t import types.*\r")
+
+        for annotationDirective in the_package.annotationDirectives:
+            f.write("\t\t annotation \"" + annotationDirective.sourceURI + "\" as " +
+                    annotationDirective.name + "\r")
+
         for classifier in the_package.eClassifiers:
             if isinstance(classifier, ELClass):
+                for annotation in classifier.eAnnotations:
+                    f.write("\t\t\t@")
+                    f.write(annotation.source.name)
+                    f.write("(")
+                    first_item = True
+                    for detail in annotation.details:
+                        if first_item:
+                            first_item = False
+                            f.write(detail.key + "=\"" + detail.value + "\"")
+                        else:
+                            f.write("," + detail.key + "=\"" + detail.value + "\"" )
+                    f.write(")\r")
+                
                 f.write("\t\t\t")
                 if classifier.eAbstract:
                     f.write("abstract ")
@@ -73,7 +91,18 @@ class PersistToFile:
                     f.write(" extends " + classifier.eSuperTypes[0].name)
                 f.write(" {\r")
                 for member in classifier.eStructuralFeatures:
-
+                    for annotation in member.eAnnotations:
+                        f.write("\t\t\t\t@")
+                        f.write(annotation.source.name)
+                        f.write("(")
+                        first_item = True
+                        for detail in annotation.details:
+                            if first_item:
+                                first_item = False
+                                f.write(detail.key + "=\"" + detail.value + "\"")
+                            else:
+                                f.write("," + detail.key + "=\"" + detail.value + "\"" )
+                        f.write(")\r")
                     if isinstance(member, ELReference):
                         if member.containment:
                             f.write("\t\t\t\tcontains ")
@@ -122,7 +151,19 @@ class PersistToFile:
                         f.write(" \r")
 
                 for member in classifier.eOperations:
-                    if isinstance(member, ELPublicOperation):
+                    for annotation in member.eAnnotations:
+                        f.write("\t\t\t\t@")
+                        f.write(annotation.source.name)
+                        f.write("(")
+                        first_item = True
+                        for detail in annotation.details:
+                            if first_item:
+                                first_item = False
+                                f.write(detail.key + "=\"" + detail.value + "\"")
+                            else:
+                                f.write("," + detail.key + "=\"" + detail.value + "\"")
+                        f.write(")\r")
+                    if isinstance(member, ELOperation):
                         f.write("\t\t\t\top ")
 
                         f.write(member.eType.name + " ")

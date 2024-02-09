@@ -66,6 +66,7 @@ public class OrPredicateImpl extends PredicateImpl implements OrPredicate {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Predicate> getOperands() {
 		if (operands == null) {
 			operands = new EObjectContainmentEList<Predicate>(Predicate.class, this, regdnaPackage.OR_PREDICATE__OPERANDS);

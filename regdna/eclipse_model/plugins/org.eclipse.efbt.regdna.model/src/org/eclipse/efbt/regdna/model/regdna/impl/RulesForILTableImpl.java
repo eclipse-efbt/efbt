@@ -82,6 +82,7 @@ public class RulesForILTableImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<RuleForILTablePart> getRulesForTablePart() {
 		if (rulesForTablePart == null) {
 			rulesForTablePart = new EObjectContainmentEList<RuleForILTablePart>(RuleForILTablePart.class, this, regdnaPackage.RULES_FOR_IL_TABLE__RULES_FOR_TABLE_PART);
@@ -94,6 +95,7 @@ public class RulesForILTableImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELClass getInputLayerTable() {
 		if (inputLayerTable != null && inputLayerTable.eIsProxy()) {
 			InternalEObject oldInputLayerTable = (InternalEObject)inputLayerTable;
@@ -120,6 +122,7 @@ public class RulesForILTableImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setInputLayerTable(ELClass newInputLayerTable) {
 		ELClass oldInputLayerTable = inputLayerTable;
 		inputLayerTable = newInputLayerTable;

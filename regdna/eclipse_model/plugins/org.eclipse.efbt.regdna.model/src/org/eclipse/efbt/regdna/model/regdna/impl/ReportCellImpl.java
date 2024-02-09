@@ -127,6 +127,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ReportRow getRow() {
 		if (row != null && row.eIsProxy()) {
 			InternalEObject oldRow = (InternalEObject)row;
@@ -153,6 +154,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRow(ReportRow newRow) {
 		ReportRow oldRow = row;
 		row = newRow;
@@ -165,6 +167,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ReportColumn getColumn() {
 		if (column != null && column.eIsProxy()) {
 			InternalEObject oldColumn = (InternalEObject)column;
@@ -191,6 +194,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setColumn(ReportColumn newColumn) {
 		ReportColumn oldColumn = column;
 		column = newColumn;
@@ -203,6 +207,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Filter> getFilters() {
 		if (filters == null) {
 			filters = new EObjectContainmentEList<Filter>(Filter.class, this, regdnaPackage.REPORT_CELL__FILTERS);
@@ -215,6 +220,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELOperation getMetric() {
 		if (metric != null && metric.eIsProxy()) {
 			InternalEObject oldMetric = (InternalEObject)metric;
@@ -241,6 +247,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMetric(ELOperation newMetric) {
 		ELOperation oldMetric = metric;
 		metric = newMetric;
@@ -253,6 +260,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDatapointID() {
 		return datapointID;
 	}
@@ -262,6 +270,7 @@ public class ReportCellImpl extends MinimalEObjectImpl.Container implements Repo
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDatapointID(String newDatapointID) {
 		String oldDatapointID = datapointID;
 		datapointID = newDatapointID;

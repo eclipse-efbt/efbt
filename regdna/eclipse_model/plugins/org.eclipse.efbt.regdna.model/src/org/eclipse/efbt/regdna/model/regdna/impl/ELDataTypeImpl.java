@@ -69,6 +69,7 @@ public class ELDataTypeImpl extends ELClassifierImpl implements ELDataType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getIndustryName() {
 		return industryName;
 	}
@@ -78,6 +79,7 @@ public class ELDataTypeImpl extends ELClassifierImpl implements ELDataType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIndustryName(String newIndustryName) {
 		String oldIndustryName = industryName;
 		industryName = newIndustryName;

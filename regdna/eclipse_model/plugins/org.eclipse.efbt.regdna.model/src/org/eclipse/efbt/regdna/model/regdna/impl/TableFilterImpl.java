@@ -63,6 +63,7 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Predicate getPredicate() {
 		return predicate;
 	}
@@ -87,6 +88,7 @@ public class TableFilterImpl extends MinimalEObjectImpl.Container implements Tab
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPredicate(Predicate newPredicate) {
 		if (newPredicate != predicate) {
 			NotificationChain msgs = null;

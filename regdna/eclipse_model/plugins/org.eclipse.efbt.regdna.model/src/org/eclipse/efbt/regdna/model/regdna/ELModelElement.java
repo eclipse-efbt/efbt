@@ -2,6 +2,8 @@
  */
 package org.eclipse.efbt.regdna.model.regdna;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -22,25 +24,15 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ELModelElement extends EObject {
 	/**
-	 * Returns the value of the '<em><b>EAnnotations</b></em>' containment reference.
+	 * Returns the value of the '<em><b>EAnnotations</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.efbt.regdna.model.regdna.ELAnnotation}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>EAnnotations</em>' containment reference.
-	 * @see #setEAnnotations(ELAnnotation)
+	 * @return the value of the '<em>EAnnotations</em>' containment reference list.
 	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getELModelElement_EAnnotations()
 	 * @model containment="true"
 	 * @generated
 	 */
-	ELAnnotation getEAnnotations();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.ELModelElement#getEAnnotations <em>EAnnotations</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>EAnnotations</em>' containment reference.
-	 * @see #getEAnnotations()
-	 * @generated
-	 */
-	void setEAnnotations(ELAnnotation value);
+	EList<ELAnnotation> getEAnnotations();
 
 } // ELModelElement

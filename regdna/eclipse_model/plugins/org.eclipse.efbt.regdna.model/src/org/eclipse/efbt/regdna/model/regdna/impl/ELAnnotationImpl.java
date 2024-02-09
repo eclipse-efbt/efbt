@@ -5,6 +5,7 @@ package org.eclipse.efbt.regdna.model.regdna.impl;
 import java.util.Collection;
 
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotation;
+import org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective;
 import org.eclipse.efbt.regdna.model.regdna.ELStringToStringMapEntry;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
@@ -47,24 +48,14 @@ public class ELAnnotationImpl extends ELModelElementImpl implements ELAnnotation
 	protected EList<ELStringToStringMapEntry> details;
 
 	/**
-	 * The default value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getSource()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String SOURCE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getSource() <em>Source</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSource()
-	 * @generated
-	 * @ordered
-	 */
-	protected String source = SOURCE_EDEFAULT;
+	protected ELAnnotationDirective source;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -90,6 +81,7 @@ public class ELAnnotationImpl extends ELModelElementImpl implements ELAnnotation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ELStringToStringMapEntry> getDetails() {
 		if (details == null) {
 			details = new EObjectContainmentEList<ELStringToStringMapEntry>(ELStringToStringMapEntry.class, this, regdnaPackage.EL_ANNOTATION__DETAILS);
@@ -102,7 +94,16 @@ public class ELAnnotationImpl extends ELModelElementImpl implements ELAnnotation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getSource() {
+	@Override
+	public ELAnnotationDirective getSource() {
+		if (source != null && source.eIsProxy()) {
+			InternalEObject oldSource = (InternalEObject)source;
+			source = (ELAnnotationDirective)eResolveProxy(oldSource);
+			if (source != oldSource) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, regdnaPackage.EL_ANNOTATION__SOURCE, oldSource, source));
+			}
+		}
 		return source;
 	}
 
@@ -111,8 +112,18 @@ public class ELAnnotationImpl extends ELModelElementImpl implements ELAnnotation
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setSource(String newSource) {
-		String oldSource = source;
+	public ELAnnotationDirective basicGetSource() {
+		return source;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setSource(ELAnnotationDirective newSource) {
+		ELAnnotationDirective oldSource = source;
 		source = newSource;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, regdnaPackage.EL_ANNOTATION__SOURCE, oldSource, source));
@@ -143,7 +154,8 @@ public class ELAnnotationImpl extends ELModelElementImpl implements ELAnnotation
 			case regdnaPackage.EL_ANNOTATION__DETAILS:
 				return getDetails();
 			case regdnaPackage.EL_ANNOTATION__SOURCE:
-				return getSource();
+				if (resolve) return getSource();
+				return basicGetSource();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -162,7 +174,7 @@ public class ELAnnotationImpl extends ELModelElementImpl implements ELAnnotation
 				getDetails().addAll((Collection<? extends ELStringToStringMapEntry>)newValue);
 				return;
 			case regdnaPackage.EL_ANNOTATION__SOURCE:
-				setSource((String)newValue);
+				setSource((ELAnnotationDirective)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -180,7 +192,7 @@ public class ELAnnotationImpl extends ELModelElementImpl implements ELAnnotation
 				getDetails().clear();
 				return;
 			case regdnaPackage.EL_ANNOTATION__SOURCE:
-				setSource(SOURCE_EDEFAULT);
+				setSource((ELAnnotationDirective)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -197,25 +209,9 @@ public class ELAnnotationImpl extends ELModelElementImpl implements ELAnnotation
 			case regdnaPackage.EL_ANNOTATION__DETAILS:
 				return details != null && !details.isEmpty();
 			case regdnaPackage.EL_ANNOTATION__SOURCE:
-				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
+				return source != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (source: ");
-		result.append(source);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ELAnnotationImpl

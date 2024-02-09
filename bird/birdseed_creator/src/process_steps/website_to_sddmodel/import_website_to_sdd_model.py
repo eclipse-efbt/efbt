@@ -563,6 +563,7 @@ class ImportWebsiteToSDDModel(object):
                     cube_structure_id = row[ColumnIndexes().cube_structure_item_class_id_index]
                     variable_set_id = row[ColumnIndexes().cube_structure_item_variable_set]
                     subdomain_id = row[ColumnIndexes().cube_structure_item_subdomain_index]
+                    role = row[ColumnIndexes().cube_structure_item_role_index]
                     
                     
                     # it is possible that the cube structure item realtes to a cube which is
@@ -578,7 +579,10 @@ class ImportWebsiteToSDDModel(object):
                         
                         variable_set = ImportWebsiteToSDDModel.find_variable_set_with_id(self,context, variable_set_id)
                         cube_structure_item.variable_set_id = variable_set
-
+                        if role == 'D':
+                            cube_structure_item.role = 'D'
+                        if role == 'O':
+                            cube_structure_item.role = 'O'
                         if not (subdomain_id is None) and not(subdomain_id == ""):
                             subdomain = ImportWebsiteToSDDModel.get_subdomain_with_id(self,context, subdomain_id)
                             cube_structure_item.subdomain_id = subdomain

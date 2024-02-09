@@ -229,24 +229,6 @@ public interface regdnaFactory extends EFactory {
 	ELOperation createELOperation();
 
 	/**
-	 * Returns a new object of class '<em>EL Public Operation</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>EL Public Operation</em>'.
-	 * @generated
-	 */
-	ELPublicOperation createELPublicOperation();
-
-	/**
-	 * Returns a new object of class '<em>EL Private Operation</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>EL Private Operation</em>'.
-	 * @generated
-	 */
-	ELPrivateOperation createELPrivateOperation();
-
-	/**
 	 * Returns a new object of class '<em>EL Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -281,6 +263,15 @@ public interface regdnaFactory extends EFactory {
 	 * @generated
 	 */
 	ELAnnotation createELAnnotation();
+
+	/**
+	 * Returns a new object of class '<em>EL Annotation Directive</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EL Annotation Directive</em>'.
+	 * @generated
+	 */
+	ELAnnotationDirective createELAnnotationDirective();
 
 	/**
 	 * Returns a new object of class '<em>EL String To String Map Entry</em>'.

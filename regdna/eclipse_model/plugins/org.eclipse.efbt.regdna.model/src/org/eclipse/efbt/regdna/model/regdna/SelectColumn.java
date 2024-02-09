@@ -26,12 +26,12 @@ public interface SelectColumn extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>As Attribute</em>' reference.
-	 * @see #setAsAttribute(ELPublicOperation)
+	 * @see #setAsAttribute(ELOperation)
 	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getSelectColumn_AsAttribute()
 	 * @model
 	 * @generated
 	 */
-	ELPublicOperation getAsAttribute();
+	ELOperation getAsAttribute();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.SelectColumn#getAsAttribute <em>As Attribute</em>}' reference.
@@ -41,6 +41,6 @@ public interface SelectColumn extends EObject {
 	 * @see #getAsAttribute()
 	 * @generated
 	 */
-	void setAsAttribute(ELPublicOperation value);
+	void setAsAttribute(ELOperation value);
 
 } // SelectColumn

@@ -62,6 +62,7 @@ public class NotPredicateImpl extends PredicateImpl implements NotPredicate {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Predicate getOperand() {
 		return operand;
 	}
@@ -86,6 +87,7 @@ public class NotPredicateImpl extends PredicateImpl implements NotPredicate {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOperand(Predicate newOperand) {
 		if (newOperand != operand) {
 			NotificationChain msgs = null;

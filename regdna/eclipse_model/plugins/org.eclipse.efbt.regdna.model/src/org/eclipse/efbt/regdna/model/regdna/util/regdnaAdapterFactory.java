@@ -5,6 +5,7 @@ package org.eclipse.efbt.regdna.model.regdna.util;
 import org.eclipse.efbt.regdna.model.regdna.AndPredicate;
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotation;
+import org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective;
 import org.eclipse.efbt.regdna.model.regdna.ELAttribute;
 import org.eclipse.efbt.regdna.model.regdna.ELClass;
 import org.eclipse.efbt.regdna.model.regdna.ELClassifier;
@@ -16,8 +17,6 @@ import org.eclipse.efbt.regdna.model.regdna.ELNamedElement;
 import org.eclipse.efbt.regdna.model.regdna.ELOperation;
 import org.eclipse.efbt.regdna.model.regdna.ELPackage;
 import org.eclipse.efbt.regdna.model.regdna.ELParameter;
-import org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation;
-import org.eclipse.efbt.regdna.model.regdna.ELPublicOperation;
 import org.eclipse.efbt.regdna.model.regdna.ELReference;
 import org.eclipse.efbt.regdna.model.regdna.ELStringToStringMapEntry;
 import org.eclipse.efbt.regdna.model.regdna.ELStructuralFeature;
@@ -217,14 +216,6 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 				return createELOperationAdapter();
 			}
 			@Override
-			public Adapter caseELPublicOperation(ELPublicOperation object) {
-				return createELPublicOperationAdapter();
-			}
-			@Override
-			public Adapter caseELPrivateOperation(ELPrivateOperation object) {
-				return createELPrivateOperationAdapter();
-			}
-			@Override
 			public Adapter caseELParameter(ELParameter object) {
 				return createELParameterAdapter();
 			}
@@ -247,6 +238,10 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseELAnnotation(ELAnnotation object) {
 				return createELAnnotationAdapter();
+			}
+			@Override
+			public Adapter caseELAnnotationDirective(ELAnnotationDirective object) {
+				return createELAnnotationDirectiveAdapter();
 			}
 			@Override
 			public Adapter caseELStringToStringMapEntry(ELStringToStringMapEntry object) {
@@ -675,34 +670,6 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.ELPublicOperation <em>EL Public Operation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.ELPublicOperation
-	 * @generated
-	 */
-	public Adapter createELPublicOperationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation <em>EL Private Operation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.efbt.regdna.model.regdna.ELPrivateOperation
-	 * @generated
-	 */
-	public Adapter createELPrivateOperationAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.ELParameter <em>EL Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -783,6 +750,20 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createELAnnotationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective <em>EL Annotation Directive</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective
+	 * @generated
+	 */
+	public Adapter createELAnnotationDirectiveAdapter() {
 		return null;
 	}
 

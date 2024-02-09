@@ -92,6 +92,7 @@ public class FilterImpl extends MinimalEObjectImpl.Container implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELClass getOutputLayer() {
 		if (outputLayer != null && outputLayer.eIsProxy()) {
 			InternalEObject oldOutputLayer = (InternalEObject)outputLayer;
@@ -118,6 +119,7 @@ public class FilterImpl extends MinimalEObjectImpl.Container implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOutputLayer(ELClass newOutputLayer) {
 		ELClass oldOutputLayer = outputLayer;
 		outputLayer = newOutputLayer;
@@ -130,6 +132,7 @@ public class FilterImpl extends MinimalEObjectImpl.Container implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELOperation getOperation() {
 		if (operation != null && operation.eIsProxy()) {
 			InternalEObject oldOperation = (InternalEObject)operation;
@@ -156,6 +159,7 @@ public class FilterImpl extends MinimalEObjectImpl.Container implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOperation(ELOperation newOperation) {
 		ELOperation oldOperation = operation;
 		operation = newOperation;
@@ -168,6 +172,7 @@ public class FilterImpl extends MinimalEObjectImpl.Container implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ELEnumLiteral> getMember() {
 		if (member == null) {
 			member = new EObjectResolvingEList<ELEnumLiteral>(ELEnumLiteral.class, this, regdnaPackage.FILTER__MEMBER);

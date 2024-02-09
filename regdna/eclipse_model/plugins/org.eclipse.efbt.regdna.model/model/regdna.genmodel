@@ -2,7 +2,7 @@
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.efbt.regdna.model/src" modelPluginID="org.eclipse.efbt.regdna.model"
     modelName="regdna" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="17.0" copyrightFields="false"
     operationReflection="true" importOrganizing="true" pluginKey="">
   <foreignModel>regdna.ecore</foreignModel>
   <genPackages prefix="regdna" basePackage="org.eclipse.efbt.regdna.model" resource="XMI"
@@ -24,6 +24,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//Module/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//Module/version"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//Module/imports"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//Module/annotationDirectives"/>
     </genClasses>
     <genClasses ecoreClass="regdna.ecore#//ModuleList">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//ModuleList/modules"/>
@@ -110,12 +111,6 @@
     <genClasses ecoreClass="regdna.ecore#//ELOperation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//ELOperation/body"/>
     </genClasses>
-    <genClasses ecoreClass="regdna.ecore#//ELPublicOperation">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//ELPublicOperation/calledPrivateOperations"/>
-    </genClasses>
-    <genClasses ecoreClass="regdna.ecore#//ELPrivateOperation">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//ELPrivateOperation/eParameters"/>
-    </genClasses>
     <genClasses ecoreClass="regdna.ecore#//ELParameter"/>
     <genClasses ecoreClass="regdna.ecore#//ELPackage">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//ELPackage/eClassifiers"/>
@@ -134,7 +129,11 @@
     </genClasses>
     <genClasses ecoreClass="regdna.ecore#//ELAnnotation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//ELAnnotation/details"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//ELAnnotation/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference regdna.ecore#//ELAnnotation/source"/>
+    </genClasses>
+    <genClasses ecoreClass="regdna.ecore#//ELAnnotationDirective">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//ELAnnotationDirective/module"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//ELAnnotationDirective/sourceURI"/>
     </genClasses>
     <genClasses ecoreClass="regdna.ecore#//ELStringToStringMapEntry">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//ELStringToStringMapEntry/key"/>

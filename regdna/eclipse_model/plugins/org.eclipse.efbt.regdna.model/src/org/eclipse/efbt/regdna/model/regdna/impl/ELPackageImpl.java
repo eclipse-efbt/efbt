@@ -111,6 +111,7 @@ public class ELPackageImpl extends ModuleImpl implements ELPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ELClassifier> getEClassifiers() {
 		if (eClassifiers == null) {
 			eClassifiers = new EObjectContainmentWithInverseEList<ELClassifier>(ELClassifier.class, this, regdnaPackage.EL_PACKAGE__ECLASSIFIERS, regdnaPackage.EL_CLASSIFIER__EPACKAGE);
@@ -123,6 +124,7 @@ public class ELPackageImpl extends ModuleImpl implements ELPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getNsURI() {
 		return nsURI;
 	}
@@ -132,6 +134,7 @@ public class ELPackageImpl extends ModuleImpl implements ELPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNsURI(String newNsURI) {
 		String oldNsURI = nsURI;
 		nsURI = newNsURI;
@@ -144,6 +147,7 @@ public class ELPackageImpl extends ModuleImpl implements ELPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getNsPrefix() {
 		return nsPrefix;
 	}
@@ -153,6 +157,7 @@ public class ELPackageImpl extends ModuleImpl implements ELPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNsPrefix(String newNsPrefix) {
 		String oldNsPrefix = nsPrefix;
 		nsPrefix = newNsPrefix;

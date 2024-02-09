@@ -82,6 +82,7 @@ public class RulesForReportImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELClass getOutputLayerCube() {
 		if (outputLayerCube != null && outputLayerCube.eIsProxy()) {
 			InternalEObject oldOutputLayerCube = (InternalEObject)outputLayerCube;
@@ -108,6 +109,7 @@ public class RulesForReportImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOutputLayerCube(ELClass newOutputLayerCube) {
 		ELClass oldOutputLayerCube = outputLayerCube;
 		outputLayerCube = newOutputLayerCube;
@@ -120,6 +122,7 @@ public class RulesForReportImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<RulesForILTable> getRulesForTable() {
 		if (rulesForTable == null) {
 			rulesForTable = new EObjectContainmentEList<RulesForILTable>(RulesForILTable.class, this, regdnaPackage.RULES_FOR_REPORT__RULES_FOR_TABLE);

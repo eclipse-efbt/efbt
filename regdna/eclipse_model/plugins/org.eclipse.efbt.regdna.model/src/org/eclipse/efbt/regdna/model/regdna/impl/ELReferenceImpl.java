@@ -82,6 +82,7 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isContainment() {
 		return containment;
 	}
@@ -91,6 +92,7 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setContainment(boolean newContainment) {
 		boolean oldContainment = containment;
 		containment = newContainment;
@@ -103,6 +105,7 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELClassifier getEReferenceType() {
 		if (eReferenceType != null && eReferenceType.eIsProxy()) {
 			InternalEObject oldEReferenceType = (InternalEObject)eReferenceType;
@@ -129,6 +132,7 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEReferenceType(ELClassifier newEReferenceType) {
 		ELClassifier oldEReferenceType = eReferenceType;
 		eReferenceType = newEReferenceType;

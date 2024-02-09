@@ -35,25 +35,25 @@ public interface ELAnnotation extends ELModelElement {
 	EList<ELStringToStringMapEntry> getDetails();
 
 	/**
-	 * Returns the value of the '<em><b>Source</b></em>' attribute.
+	 * Returns the value of the '<em><b>Source</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source</em>' attribute.
-	 * @see #setSource(String)
+	 * @return the value of the '<em>Source</em>' reference.
+	 * @see #setSource(ELAnnotationDirective)
 	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getELAnnotation_Source()
 	 * @model
 	 * @generated
 	 */
-	String getSource();
+	ELAnnotationDirective getSource();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.ELAnnotation#getSource <em>Source</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.ELAnnotation#getSource <em>Source</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Source</em>' attribute.
+	 * @param value the new value of the '<em>Source</em>' reference.
 	 * @see #getSource()
 	 * @generated
 	 */
-	void setSource(String value);
+	void setSource(ELAnnotationDirective value);
 
 } // ELAnnotation

@@ -67,6 +67,7 @@ public class ModuleListImpl extends MinimalEObjectImpl.Container implements Modu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<org.eclipse.efbt.regdna.model.regdna.Module> getModules() {
 		if (modules == null) {
 			modules = new EObjectContainmentEList<org.eclipse.efbt.regdna.model.regdna.Module>(org.eclipse.efbt.regdna.model.regdna.Module.class, this, regdnaPackage.MODULE_LIST__MODULES);

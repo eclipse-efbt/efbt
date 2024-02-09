@@ -61,6 +61,7 @@ public class SelectColumnMemberAsImpl extends SelectColumnImpl implements Select
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ELEnumLiteral getMemberAsConstant() {
 		if (memberAsConstant != null && memberAsConstant.eIsProxy()) {
 			InternalEObject oldMemberAsConstant = (InternalEObject)memberAsConstant;
@@ -87,6 +88,7 @@ public class SelectColumnMemberAsImpl extends SelectColumnImpl implements Select
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMemberAsConstant(ELEnumLiteral newMemberAsConstant) {
 		ELEnumLiteral oldMemberAsConstant = memberAsConstant;
 		memberAsConstant = newMemberAsConstant;

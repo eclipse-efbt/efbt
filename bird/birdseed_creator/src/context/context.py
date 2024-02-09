@@ -12,7 +12,7 @@
 #
 
 
-from regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule
+from regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
 
 from context.ecore_lite_types import EcoreLiteTypes
 
@@ -102,6 +102,10 @@ class Context(object):
 
     def __init__(self):
 
+        key_annotation_directive = ELAnnotationDirective(name='keys', sourceURI='keys')
+        dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
+        self.input_tables_package.annotationDirectives.append(key_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(dependency_annotation_directive)
         types = EcoreLiteTypes()
         self.types_package.eClassifiers.append(types.e_string)
         self.types_package.eClassifiers.append(types.e_double)

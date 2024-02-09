@@ -1,7 +1,7 @@
-from ldm_utils.utils import Utils
-import os
 
-from regdna import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
+import os
+from regdna import ELAttribute, ELClass,ELReference
+from ldm_utils.utils import Utils
 
 class SubtypeExploder(object):
     '''
@@ -288,7 +288,8 @@ class SubtypeExploder(object):
         From the annotation find the the link to input layer column
         '''
         return_value = "UNKNOWN"
-        annotation = feature.eAnnotations
+        annotation = Utils.get_annotation_with_source(feature, "il_mapping")
+        
         if not(annotation is None):
             details = annotation.details
             
@@ -334,17 +335,17 @@ class SubtypeExploder(object):
         return reference_list
     
     def different_hierarchies(self, context, class1, class2):
-        annotations1 = class1.eAnnotations
-        annotations2 = class2.eAnnotations
+        annotation1 = Utils.get_annotation_with_source(class1, "entity_hierarchy")
+        annotation2 = Utils.get_annotation_with_source(class2, "entity_hierarchy")
         hierarchy1 = "NA"
         hierarchy2 = "NA"
-        if not (annotations1 is None):
-            details1 = annotations1.details
+        if not (annotation1 is None):
+            details1 = annotation1.details
             for map_entry in details1:
                 if map_entry.key == 'entity_hierarchy':
                     hierarchy1 = map_entry.value
-        if not (annotations2 is None):
-            details2 = annotations2.details
+        if not (annotation2 is None):
+            details2 = annotation2.details
             for map_entry in details2:
                 if map_entry.key == 'entity_hierarchy':
                     hierarchy2 = map_entry.value
@@ -357,17 +358,17 @@ class SubtypeExploder(object):
             return True
                 
     def different_il_tables(self, context, class1, class2):
-        annotations1 = class1.eAnnotations
-        annotations2 = class2.eAnnotations
+        annotation1 = Utils.get_annotation_with_source(class1, "il_mapping")
+        annotation2 = Utils.get_annotation_with_source(class2, "il_mapping")
         il_table1 = "NA"
         il_table2 = "NA"
-        if not (annotations1 is None):
-            details1 = annotations1.details
+        if not (annotation1 is None):
+            details1 = annotation1.details
             for map_entry in details1:
                 if map_entry.key == 'il_table':
                     il_table1 = map_entry.value
-        if not (annotations2 is None):
-            details2 = annotations2.details
+        if not (annotation2 is None):
+            details2 = annotation2.details
             for map_entry in details2:
                 if map_entry.key == 'il_table':
                     il_table2 = map_entry.value
