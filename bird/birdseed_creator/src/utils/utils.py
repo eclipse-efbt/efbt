@@ -302,4 +302,28 @@ class Utils(object):
         if new_adapted_value == "s_p_":
             return_val = "s_p_dup" + str(counter)
         return return_val
+    
+    @classmethod
+    def get_annotation_with_source(cls,element, source):       
+        '''
+        returns the annotation with the source
+        '''
+        return_annotation = None
+        for annotation in element.eAnnotations:
+            if annotation.source.name == source:
+                return_annotation = annotation
+        return return_annotation
+    
+    @classmethod
+    def get_annotation_directive(cls,package, name):      
+        '''
+        returns the annotation directive with the name
+        '''
+        return_annotation_directive = None
+        for annotation_directive in package.annotationDirectives:
+            if annotation_directive.name == name:
+                return_annotation_directive = annotation_directive
+        return return_annotation_directive        
+       
+
         

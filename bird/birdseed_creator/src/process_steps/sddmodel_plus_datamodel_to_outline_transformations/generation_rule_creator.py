@@ -17,7 +17,7 @@
 '''
 import csv
 import os
-from regdna import RulesForILTable,  SelectColumnAttributeAs , ELPublicOperation
+from regdna import RulesForILTable,  SelectColumnAttributeAs , ELOperation
 from regdna import RuleForILTablePart , RulesForReport, ELClass, ELEnum, ELAttribute
 
 
@@ -122,7 +122,7 @@ class GenerationRuleCreator(object):
         '''
         if not output_entity is None:
             for output_item in output_entity.eOperations:
-                if isinstance(output_item, ELPublicOperation):
+                if isinstance(output_item, ELOperation):
                     select_column = SelectColumnAttributeAs()
                     select_column.asAttribute = output_item
                     rules_for_il_table_part.columns.extend([select_column])

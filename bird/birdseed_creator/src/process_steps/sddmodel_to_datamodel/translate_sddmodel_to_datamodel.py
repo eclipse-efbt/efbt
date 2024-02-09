@@ -19,7 +19,10 @@ Created on 22 Jan 2022
 '''
 
 from utils.utils import Utils
-from regdna import ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAttribute
+from regdna import ELClass, ELEnum, ELEnumLiteral, ELOperation 
+from regdna import ELAttribute, ELAnnotation
+from regdna import ELStringToStringMapEntry, ELAnnotationDirective
+from sdd_model import TYP_DMNSN
 
 class TranslateSDDModelToDataModel(object):
     '''
@@ -236,6 +239,7 @@ class TranslateSDDModelToDataModel(object):
 
         for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
             class_id = cube_structure_item.cube_structure_id.cube_structure_id
+            role = cube_structure_item.role
             try:
                 the_class = context.classes_map[class_id]
                 the_attribute1 = cube_structure_item.variable_id
@@ -279,12 +283,12 @@ class TranslateSDDModelToDataModel(object):
                             domain_id = sdd_context.variable_to_domain_map[variable.code].domain_id
                             amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
 
-                      
+
                         the_enum =  Utils.find_enum(amended_domain_name,context.enum_map)
                         if  the_enum is not None:                     
                             
                             if class_is_derived:
-                                operation = ELPublicOperation()
+                                operation = ELOperation()
                                 operation.lowerBound=0
                                 operation.upperBound=1
                                 if(the_enum.name == "String"):
@@ -350,6 +354,7 @@ class TranslateSDDModelToDataModel(object):
                                     
                             else:
                                 attribute = ELAttribute()
+                                
                                 attribute.lowerBound=0
                                 attribute.upperBound=1
                                 if(the_enum.name == "String"):
@@ -423,7 +428,27 @@ class TranslateSDDModelToDataModel(object):
                                 
                                 try:
                                     the_class = context.classes_map[class_id]
-                                    
+
+                                    if role == 'D':
+                                        the_attribute_annotation = Utils.get_annotation_with_source(attribute, "keys")
+                                        if the_attribute_annotation is None: 
+                                            the_attribute_annotation = ELAnnotation()
+                                            the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "keys")
+                                            the_attribute_annotation.source = the_attribute_annotation_directive
+                                            attribute.eAnnotations.append(the_attribute_annotation)
+                                            
+                                        primary_key = None 
+                            
+                                        for key_value_pair in the_attribute_annotation.details.items:
+                                            if key_value_pair.key == 'is_primary_key':
+                                                primary_key = key_value_pair
+                                                
+                                        if primary_key is None:
+                                            primary_key = ELStringToStringMapEntry()
+                                            primary_key.key = "is_primary_key"
+                                            primary_key.value = "true"
+                                            the_attribute_annotation.details.append(primary_key)
+
                                     the_class.eStructuralFeatures.extend([attribute])
                                     
                                 except:

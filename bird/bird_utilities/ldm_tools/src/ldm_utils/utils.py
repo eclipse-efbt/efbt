@@ -140,6 +140,34 @@ class Utils(object):
         return counter
 
     @classmethod
+    def make_valid_id_for_literal(cls, input_string):
+        ''' 
+        Tranlate text to be a valid id, without special characters, and following
+        the rules for valid id's in regdna
+        '''
+
+        amended_input_string = input_string.replace('  ', ' ').replace(' ', '_').replace(')', '_').replace('(', '_') \
+            .replace(',', '_').replace('\'', '_').replace('\n', '_').replace('\r', '_').replace('\'t', '_').replace('new', 'New') \
+            .replace('\\', '_').replace('/', '_').replace(':', '_') \
+            .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_gt') \
+            .replace('<', '_lt').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_eq').replace('#', '_') \
+            .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace('?', '_').replace('–', '_').replace('__', '_').replace('__', '_') \
+            .replace(chr(0x2019), '_').replace(chr(65533), '_') \
+            .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_').replace(chr(0x2026), '_') \
+            .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
+            .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
+            .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
+            .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
+            .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_')
+
+        return_string = Utils.replace_acutes_graves_and_circumflexes(
+            amended_input_string).replace('\'', '_')
+
+        if return_string == "op":
+            return_string = "_op"
+        return return_string
+    
+    @classmethod
     def make_valid_id(cls, input_string):
         ''' 
         Tranlate text to be a valid id, without special characters, and following
@@ -262,4 +290,30 @@ class Utils(object):
         if new_adapted_value == "s_p_":
             return_val = "s_p_dup" + str(counter)
         return return_val
+    
+    @classmethod
+    def get_annotation_with_source(cls,element, source):       
+        '''
+        returns the annotation with the source
+        '''
+        return_annotation = None
+        for annotation in element.eAnnotations:
+            if annotation.source.name == source:
+                return_annotation = annotation
+        return return_annotation
+    
+    @classmethod
+    def get_annotation_directive(cls,package, name):      
+        '''
+        returns the annotation directive with the name
+        '''
+        return_annotation_directive = None
+        for annotation_directive in package.annotationDirectives:
+            if annotation_directive.name == name:
+                return_annotation_directive = annotation_directive
+        return return_annotation_directive        
+       
+
+        
+
         

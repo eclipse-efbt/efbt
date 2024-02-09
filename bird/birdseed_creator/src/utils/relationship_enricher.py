@@ -83,18 +83,15 @@ class RelationshipEnricher(object):
                                 
                                 foreign_class.eStructuralFeatures.append(the_reference)
                                 
-                                
-                                
-                                
-                            
-                            
-        
+
                             # add the foreign_key field list if it does not exist
                             # append to the foreign key list
-                            the_reference_annotation = the_reference.eAnnotations
-                            if the_reference_annotation is None:
+                            the_reference_annotation = Utils.get_annotation_with_source(the_reference, "keys")
+                            if the_reference_annotation is None: 
                                 the_reference_annotation = ELAnnotation()
-                                the_reference.eAnnotations = the_reference_annotation
+                                the_reference_annotation_directive = Utils.get_annotation_directive(foreign_class.eContainer(), "keys")
+                                the_reference_annotation.source = the_reference_annotation_directive
+                                the_reference.eAnnotations.append(the_reference_annotation)
                                 
                             details = the_reference_annotation.details
                             
@@ -110,8 +107,8 @@ class RelationshipEnricher(object):
                                 foreign_key_field_list.key = "foreign_key_field_list"
                                 foreign_key_field_list.value = foreign_cube_variable_code
                                 details.append(foreign_key_field_list)
-        
-                                
+                                    
+                                          
                             primary_key_field_list = None 
                             
                             for key_value_pair in details.items:
@@ -125,27 +122,25 @@ class RelationshipEnricher(object):
                                 primary_key_field_list.value = primary_cube_variable_code
                                 details.append(primary_key_field_list)
         
-                            # find the related attributes and set their FK or PK annotation
+        
+                            # find the related attributes and set their FK  annotation
                             for attribute in foreign_class.eStructuralFeatures:
                                 if attribute.name == foreign_cube_variable_code:
-                                    the_attribute_annotation = attribute.eAnnotations
+                                    the_attribute_annotation = Utils.get_annotation_with_source(attribute, "keys")
                                     if the_attribute_annotation is None:
                                         the_attribute_annotation = ELAnnotation()
-                                        attribute.eAnnotations = the_attribute_annotation
-                                    foreign_key = ELStringToStringMapEntry()
-                                    foreign_key.key = "foreign_key"
-                                    foreign_key.value = "foreign_key"
-                                    the_attribute_annotation.details.append(foreign_key) 
+                                        the_attribute_annotation_directive = Utils.get_annotation_directive(foreign_class.eContainer(), "keys")
+                                        the_attribute_annotation.source = the_attribute_annotation_directive
+                                        attribute.eAnnotations.append(the_attribute_annotation)
                                     
-                            for attribute in primary_class.eStructuralFeatures:
-                                if attribute.name == primary_cube_variable_code:
-                                    the_attribute_annotation = attribute.eAnnotations
-                                    if the_attribute_annotation is None:
-                                        the_attribute_annotation = ELAnnotation()
-                                        attribute.eAnnotations = the_attribute_annotation
-                                    primary_key = ELStringToStringMapEntry()
-                                    primary_key.key = "primary_key"
-                                    primary_key.value = "primary_key"
-                                    the_attribute_annotation.details.append(primary_key)     
-          
-                
+                                    foreign_key = None 
+                            
+                                    for key_value_pair in details.items:
+                                        if key_value_pair.key == 'foreign_key':
+                                            foreign_key = key_value_pair
+                                            
+                                    if foreign_key is None:
+                                        foreign_key = ELStringToStringMapEntry()
+                                        foreign_key.key = "is_foreign_key"
+                                        foreign_key.value = "true"
+                                        the_attribute_annotation.details.append(foreign_key)

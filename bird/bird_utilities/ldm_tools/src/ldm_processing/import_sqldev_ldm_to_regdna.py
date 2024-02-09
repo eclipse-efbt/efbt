@@ -15,7 +15,7 @@ import csv
 from ldm_utils.utils import Utils
 
 from regdna import ELAttribute, ELClass, ELEnum
-from regdna import ELEnumLiteral, ELPublicOperation, ELReference
+from regdna import ELEnumLiteral, ELOperation, ELReference
 from regdna import ELAnnotation, ELStringToStringMapEntry
 from pickle import TRUE
 
@@ -259,9 +259,7 @@ class SQLDevLDMImport(object):
                     try:
                         counter = counter+1
                         enum_id = row[0]
-                        enum_used_name = Utils.make_valid_id( row[3])
-                        # enumName = row[5]
-                        adapted_enum_name = Utils.make_valid_id( enum_used_name)
+                        adapted_enum_name = Utils.make_valid_id_for_literal( row[3])
                         value = row[4]
                         adapted_value = Utils.make_valid_id( value)
                         try:
@@ -366,22 +364,33 @@ class SQLDevLDMImport(object):
 
                         attribute = ELAttribute()
                         if primary_key_or_not == "P":
-                            annotation = ELAnnotation()
+                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "keys")
+                            if the_attribute_annotation is None: 
+                                the_attribute_annotation = ELAnnotation()
+                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "keys")
+                                the_attribute_annotation.source = the_attribute_annotation_directive
+                                attribute.eAnnotations.append(the_attribute_annotation)
+                            
+                            details = the_attribute_annotation.details
                             mapentry  = ELStringToStringMapEntry()
-                            mapentry.key = "key_type"
-                            mapentry.value = "Primary"
-                            annotation.details.append(mapentry)
-                            attribute.eAnnotations = annotation
+                            mapentry.key = "is_primary_key"
+                            mapentry.value = "true"
+                            details.append(mapentry)
+
                         
                         if foreign_key_or_not == "F":
-                            annotation2 = attribute.eAnnotations
-                            if annotation2 is None:
-                                annotation2 = ELAnnotation()
-                            mapentry2  = ELStringToStringMapEntry()
-                            mapentry2.key = "key_type"
-                            mapentry2.value = "Foreign"
-                            annotation2.details.append(mapentry2)
-                            attribute.eAnnotations = annotation2      
+                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "keys")
+                            if the_attribute_annotation is None: 
+                                the_attribute_annotation = ELAnnotation()
+                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "keys")
+                                the_attribute_annotation.source = the_attribute_annotation_directive
+                                attribute.eAnnotations.append(the_attribute_annotation)
+                            
+                            details = the_attribute_annotation.details
+                            mapentry  = ELStringToStringMapEntry()
+                            mapentry.key = "is_foreign_key"
+                            mapentry.value = "true"
+                            details.append(mapentry)      
                                                           
                         attribute.lowerBound = 0
                         attribute.upperBound = 1
@@ -538,23 +547,32 @@ class SQLDevLDMImport(object):
         for the_class in context.classes_map.values():
             ultimate_superclass = SQLDevLDMImport.get_ultimate_superclass(self,context,the_class)
             if not (ultimate_superclass == the_class) :
-                annotation = the_class.eAnnotations
-                if annotation is None:
-                    annotation = ELAnnotation()
+                the_entity_annotation = Utils.get_annotation_with_source(the_class, "entity_hierarchy")
+                if the_entity_annotation is None: 
+                    the_entity_annotation = ELAnnotation()
+                    the_entity_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "entity_hierarchy")
+                    the_entity_annotation.source = the_entity_annotation_directive
+                    the_class.eAnnotations.append(the_entity_annotation)
+                
+                details = the_entity_annotation.details
                 mapentry  = ELStringToStringMapEntry()
                 mapentry.key = "entity_hierarchy"
                 mapentry.value = ultimate_superclass.name
-                annotation.details.append(mapentry)
-                the_class.eAnnotations = annotation   
+                details.append(mapentry)
+
             if (ultimate_superclass == the_class) and ( SQLDevLDMImport.has_subclasses(self,context,the_class) or SQLDevLDMImport.has_delegate(self,context,the_class)):
-                annotation = the_class.eAnnotations
-                if annotation is None:
-                    annotation = ELAnnotation()
+                the_entity_annotation = Utils.get_annotation_with_source(the_class, "entity_hierarchy")
+                if the_entity_annotation is None: 
+                    the_entity_annotation = ELAnnotation() 
+                    the_entity_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "entity_hierarchy")
+                    the_entity_annotation.source = the_entity_annotation_directive
+                    the_class.eAnnotations.append(the_entity_annotation)
+                
+                details = the_entity_annotation.details
                 mapentry  = ELStringToStringMapEntry()
                 mapentry.key = "entity_hierarchy"
                 mapentry.value = ultimate_superclass.name
-                annotation.details.append(mapentry)
-                the_class.eAnnotations = annotation
+                details.append(mapentry)
          
     def get_ultimate_superclass(self,context,the_class):
         

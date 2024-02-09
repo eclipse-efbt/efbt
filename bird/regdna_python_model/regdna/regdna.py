@@ -37,8 +37,10 @@ class Module(EObject, metaclass=MetaEClass):
     version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     dependencies = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
     imports = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    annotationDirectives = EReference(ordered=True, unique=True,
+                                      containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, dependencies=None, theDescription=None, license=None, name=None, version=None, imports=None):
+    def __init__(self, *, dependencies=None, theDescription=None, license=None, name=None, version=None, imports=None, annotationDirectives=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -61,6 +63,9 @@ class Module(EObject, metaclass=MetaEClass):
 
         if imports:
             self.imports.extend(imports)
+
+        if annotationDirectives:
+            self.annotationDirectives.extend(annotationDirectives)
 
 
 class ModuleList(EObject, metaclass=MetaEClass):
@@ -177,7 +182,7 @@ class Predicate(EObject, metaclass=MetaEClass):
 @abstract
 class ELModelElement(EObject, metaclass=MetaEClass):
 
-    eAnnotations = EReference(ordered=True, unique=True, containment=True, derived=False)
+    eAnnotations = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, eAnnotations=None):
         # if kwargs:
@@ -185,8 +190,8 @@ class ELModelElement(EObject, metaclass=MetaEClass):
 
         super().__init__()
 
-        if eAnnotations is not None:
-            self.eAnnotations = eAnnotations
+        if eAnnotations:
+            self.eAnnotations.extend(eAnnotations)
 
 
 class ELStringToStringMapEntry(EObject, metaclass=MetaEClass):
@@ -209,16 +214,20 @@ class ELStringToStringMapEntry(EObject, metaclass=MetaEClass):
 
 class Report(EObject, metaclass=MetaEClass):
 
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
     rows = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     columns = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     reportCells = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, outputLayer=None, rows=None, columns=None, reportCells=None):
+    def __init__(self, *, outputLayer=None, rows=None, columns=None, reportCells=None, name=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
+
+        if name is not None:
+            self.name = name
 
         if outputLayer is not None:
             self.outputLayer = outputLayer
@@ -469,18 +478,18 @@ class ELPackage(Module):
 
 class ELAnnotation(ELModelElement):
 
-    source = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     details = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    source = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, details=None, source=None, **kwargs):
 
         super().__init__(**kwargs)
 
-        if source is not None:
-            self.source = source
-
         if details:
             self.details.extend(details)
+
+        if source is not None:
+            self.source = source
 
 
 class ReportModule(Module):
@@ -544,6 +553,22 @@ class ELTypedElement(ELNamedElement):
 
         if eType is not None:
             self.eType = eType
+
+
+class ELAnnotationDirective(ELNamedElement):
+
+    sourceURI = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    module = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, module=None, sourceURI=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if sourceURI is not None:
+            self.sourceURI = sourceURI
+
+        if module is not None:
+            self.module = module
 
 
 class ELClass(ELClassifier):
@@ -636,31 +661,6 @@ class ELEnum(ELDataType):
 
         if eLiterals:
             self.eLiterals.extend(eLiterals)
-
-
-class ELPublicOperation(ELOperation):
-
-    calledPrivateOperations = EReference(
-        ordered=True, unique=True, containment=False, derived=False, upper=-1)
-
-    def __init__(self, *, calledPrivateOperations=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if calledPrivateOperations:
-            self.calledPrivateOperations.extend(calledPrivateOperations)
-
-
-class ELPrivateOperation(ELOperation):
-
-    eParameters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-
-    def __init__(self, *, eParameters=None, **kwargs):
-
-        super().__init__(**kwargs)
-
-        if eParameters:
-            self.eParameters.extend(eParameters)
 
 
 class ELReference(ELStructuralFeature):

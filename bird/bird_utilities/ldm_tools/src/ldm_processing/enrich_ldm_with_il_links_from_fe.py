@@ -14,7 +14,7 @@ import csv
 from ldm_utils.utils import Utils
 import os
 
-from regdna import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELPublicOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
+from regdna import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
 
 class InputLayerLinkEnricher(object):
     '''
@@ -60,12 +60,15 @@ class InputLayerLinkEnricher(object):
                                 context,
                                 Utils.make_valid_id(entity_name))
 
-                            the_annotation = ldm_entity.eAnnotations
-                            if the_annotation is None:
-                                the_annotation = ELAnnotation()
-                                ldm_entity.eAnnotations = the_annotation
+                            the_entity_annotation = Utils.get_annotation_with_source(ldm_entity, "il_mapping")
+                            if the_entity_annotation is None: 
+                                the_entity_annotation = ELAnnotation()
+                                the_entity_annotation_directive = Utils.get_annotation_directive(ldm_entity.eContainer(), "il_mapping")
+                                the_entity_annotation.source = the_entity_annotation_directive
+                                ldm_entity.eAnnotations.append(the_entity_annotation)
                             
-                            details = the_annotation.details
+                            details = the_entity_annotation.details
+
                             detail1 = ELStringToStringMapEntry()
                             detail1.key = "il_table"
                             detail1.value = table_name
@@ -80,23 +83,28 @@ class InputLayerLinkEnricher(object):
                             # logical_attribute_to_relational_name[ldm_attribute] =  table_name + "." + relational_object_Name
                             if not(ldm_attribute is None):
                                 if isinstance(ldm_attribute,ELAttribute):
-                                    the_annotation = ldm_attribute.eAnnotations
-                                    if the_annotation is None:
-                                        the_annotation = ELAnnotation()
-                                        ldm_attribute.eAnnotations = the_annotation
-                                    
-                                    details = the_annotation.details
+                                    the_attribute_annotation = Utils.get_annotation_with_source(ldm_attribute, "il_mapping")
+                                    if the_attribute_annotation is None: 
+                                        the_attribute_annotation = ELAnnotation()
+                                        the_attribute_annotation_directive = Utils.get_annotation_directive(ldm_attribute.eContainer().eContainer(), "keys")
+                                        the_attribute_annotation.source = the_attribute_annotation_directive
+                                        ldm_attribute.eAnnotations.append(the_attribute_annotation)
+
+                                    details = the_attribute_annotation.details
                                     detail1 = ELStringToStringMapEntry()
                                     detail1.key = "il_column"
                                     detail1.value = table_name + "." + relational_object_Name
                                     details.append(detail1)
+
                                 if isinstance(ldm_attribute,ELReference):
-                                    the_annotation = ldm_attribute.eAnnotations
-                                    if the_annotation is None:
-                                        the_annotation = ELAnnotation()
-                                        ldm_attribute.eAnnotations = the_annotation
+                                    the_reference_annotation = Utils.get_annotation_with_source(ldm_attribute, "keys")
+                                    if the_reference_annotation is None: 
+                                        the_reference_annotation = ELAnnotation()
+                                        the_reference_annotation_directive = Utils.get_annotation_directive(ldm_attribute.eContainer().eContainer(), "keys")
+                                        the_reference_annotation.source = the_reference_annotation_directive
+                                        ldm_attribute.eAnnotations.append(the_reference_annotation)
                                     
-                                    details = the_annotation.details
+                                    details = the_reference_annotation.details
                                 
                                     detail1 = ELStringToStringMapEntry()
                                     detail1.key = "il_column"
