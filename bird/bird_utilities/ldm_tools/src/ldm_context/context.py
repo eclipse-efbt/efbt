@@ -92,7 +92,7 @@ class Context(object):
 
     def __init__(self):
 
-        key_annotation_directive = ELAnnotationDirective(name='keys', sourceURI='keys')
+        key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         il_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
         entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
         self.input_tables_package.annotationDirectives.append(key_annotation_directive)

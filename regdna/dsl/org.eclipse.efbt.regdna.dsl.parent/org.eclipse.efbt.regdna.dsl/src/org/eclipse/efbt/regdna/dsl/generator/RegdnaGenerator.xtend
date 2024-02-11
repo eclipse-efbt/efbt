@@ -38,6 +38,7 @@ import org.eclipse.efbt.regdna.model.regdna.RulesForReport
 import org.eclipse.efbt.regdna.model.regdna.SelectColumnAttributeAs
 import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs
 import org.eclipse.efbt.regdna.model.regdna.SelectValueAs
+import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs
 
 /**
  * Generates code from your model files on save.
@@ -70,7 +71,7 @@ class RegdnaGenerator extends AbstractGenerator {
 		import input_tables.*
 		import output_tables.*
 		import «rulesForReport.outputLayerCube.name»_Logic.*
-		class «rulesForReport.outputLayerCube.name»_UnionItem {
+		class «rulesForReport.outputLayerCube.name» {
 			refers «rulesForReport.outputLayerCube.name»_UnionItem  unionOfLayers 
 		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
 		
@@ -95,7 +96,7 @@ class RegdnaGenerator extends AbstractGenerator {
 						return items
 							} 
 						op String  init() {
-							ecore4regutils.Orchestration.init(this)
+							org.eclipse.efbt.regpot_desktop.orchestrator.Orchestration.init(this)
 						 this.«rulesForReport.outputLayerCube.name»s.addAll(calc_«rulesForReport.outputLayerCube.name»s()) 
 		 				return null
 							}
@@ -110,13 +111,17 @@ class RegdnaGenerator extends AbstractGenerator {
 		import sdd_domains.*
 		import input_tables.*
 		import output_tables.*
+		annotation "dep" as dep
 		class «rulesForReport.outputLayerCube.name»_UnionItem {
 			refers «rulesForReport.outputLayerCube.name»_Base base 
 		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
 		
-		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»()
+		«IF eloperation instanceof ELOperation»		@dep (dep1="base.«eloperation.name»")
+		 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»()
+		 	{
 				base.«eloperation.name»()
 			}
+			
 		
 		«ENDIF»«ENDFOR» 
 		}
@@ -124,13 +129,13 @@ class RegdnaGenerator extends AbstractGenerator {
 			
 		«FOR eloperation : rulesForReport.outputLayerCube.EOperations»
 				
-		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» ()
+		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF»  «eloperation.name»()
 			{
 			«IF eloperation.EType.name == "double" »return 0
 			«ELSEIF eloperation.EType.name == "int" »return 0
 			«ELSEIF eloperation.EType.name == "boolean" »return true
 			«ENDIF»
-			}
+		}
 		
 		«ENDIF»«ENDFOR» 
 		}
@@ -159,7 +164,7 @@ class RegdnaGenerator extends AbstractGenerator {
 						}
 					 	op String  init() 
 						{
-						 	ecore4regutils.Orchestration.init(this) 
+						 	org.eclipse.efbt.regpot_desktop.orchestrator.Orchestration.init(this) 
 			 	 			this.«rulesForReport.outputLayerCube.name.giveSmallFirstLetter»_UnionItems.addAll(calc_«rulesForReport.outputLayerCube.name»_UnionItems)
 			 	 			  return null
 						}
@@ -176,7 +181,13 @@ class RegdnaGenerator extends AbstractGenerator {
 				  refers «(column.attribute.eContainer as ELClass).name» «(column.attribute.eContainer as ELClass).name.giveSmallFirstLetter»
 				«ENDIF»	
 		«ENDFOR»
-		«FOR column : tablePartRules.columns»				
+		«FOR column : tablePartRules.columns»	
+		«IF ( column instanceof SelectDerivedColumnAs) »
+		@dep (dep1="«(column.attribute.eContainer as ELClass).name».«column.attribute.name»")
+		«ENDIF»
+		«IF (column instanceof SelectColumnAttributeAs)  »
+		@dep (dep1="«(column.attribute.eContainer as ELClass).name».«column.attribute.name»")
+		«ENDIF»			
 		op «column.asAttribute.EType.name»  «column.asAttribute.name»() 
 		{
 			«IF (column instanceof SelectColumnMemberAs)»
@@ -184,6 +195,8 @@ class RegdnaGenerator extends AbstractGenerator {
 			«ELSEIF (column instanceof SelectValueAs)»
 			"«column.value»"
 			«ELSEIF (column instanceof SelectColumnAttributeAs)»
+			«(column.attribute.eContainer as ELClass).name».«column.attribute.name»
+			«ELSEIF ( column instanceof SelectDerivedColumnAs) »
 			«(column.attribute.eContainer as ELClass).name».«column.attribute.name»
 			«ENDIF»	
 		}
@@ -209,7 +222,7 @@ class RegdnaGenerator extends AbstractGenerator {
 						}
 					 	op String  init() 
 						{
-						 	ecore4regutils.Orchestration.init(this)
+						 	org.eclipse.efbt.regpot_desktop.orchestrator.Orchestration.init(this)
 				 		 	this.«tablePartRules.name.giveSmallFirstLetter»s.addAll(calc_«tablePartRules.name»s) 		 
 				 		 	return null
 						}
@@ -243,19 +256,19 @@ class RegdnaGenerator extends AbstractGenerator {
 		«ENDFOR»
 		«FOR elclass : elpackage.EClassifiers.filter(ELClass)»
 		«FOR annotion : elclass.EAnnotations»
-				@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»=«detail.value»«ENDFOR»)
+				@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)
 		«ENDFOR»
 		«IF elclass.EAbstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
 		«FOR elmember : elclass.EStructuralFeatures»  
 		«FOR annotion : elmember.EAnnotations»
-								@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»=«detail.value»«ENDFOR»)
+								@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)
 		«ENDFOR»
 		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
 		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
 		«ENDFOR»
 		«FOR eloperation : elclass.EOperations»
 		«FOR annotion : eloperation.EAnnotations»
-			@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»=«detail.value»«ENDFOR»)
+			@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)
 		«ENDFOR»
 		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»()
 			{
