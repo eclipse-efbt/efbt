@@ -364,10 +364,10 @@ class SQLDevLDMImport(object):
 
                         attribute = ELAttribute()
                         if primary_key_or_not == "P":
-                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "keys")
+                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
                             if the_attribute_annotation is None: 
                                 the_attribute_annotation = ELAnnotation()
-                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "keys")
+                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "key")
                                 the_attribute_annotation.source = the_attribute_annotation_directive
                                 attribute.eAnnotations.append(the_attribute_annotation)
                             
@@ -379,10 +379,10 @@ class SQLDevLDMImport(object):
 
                         
                         if foreign_key_or_not == "F":
-                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "keys")
+                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
                             if the_attribute_annotation is None: 
                                 the_attribute_annotation = ELAnnotation()
-                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "keys")
+                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "key")
                                 the_attribute_annotation.source = the_attribute_annotation_directive
                                 attribute.eAnnotations.append(the_attribute_annotation)
                             

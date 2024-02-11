@@ -430,10 +430,10 @@ class TranslateSDDModelToDataModel(object):
                                     the_class = context.classes_map[class_id]
 
                                     if role == 'D':
-                                        the_attribute_annotation = Utils.get_annotation_with_source(attribute, "keys")
+                                        the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
                                         if the_attribute_annotation is None: 
                                             the_attribute_annotation = ELAnnotation()
-                                            the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "keys")
+                                            the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "key")
                                             the_attribute_annotation.source = the_attribute_annotation_directive
                                             attribute.eAnnotations.append(the_attribute_annotation)
                                             

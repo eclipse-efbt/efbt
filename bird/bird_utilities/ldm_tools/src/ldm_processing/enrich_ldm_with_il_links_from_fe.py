@@ -86,7 +86,7 @@ class InputLayerLinkEnricher(object):
                                     the_attribute_annotation = Utils.get_annotation_with_source(ldm_attribute, "il_mapping")
                                     if the_attribute_annotation is None: 
                                         the_attribute_annotation = ELAnnotation()
-                                        the_attribute_annotation_directive = Utils.get_annotation_directive(ldm_attribute.eContainer().eContainer(), "keys")
+                                        the_attribute_annotation_directive = Utils.get_annotation_directive(ldm_attribute.eContainer().eContainer(), "key")
                                         the_attribute_annotation.source = the_attribute_annotation_directive
                                         ldm_attribute.eAnnotations.append(the_attribute_annotation)
 
@@ -100,7 +100,7 @@ class InputLayerLinkEnricher(object):
                                     the_reference_annotation = Utils.get_annotation_with_source(ldm_attribute, "il_mapping")
                                     if the_reference_annotation is None: 
                                         the_reference_annotation = ELAnnotation()
-                                        the_reference_annotation_directive = Utils.get_annotation_directive(ldm_attribute.eContainer().eContainer(), "keys")
+                                        the_reference_annotation_directive = Utils.get_annotation_directive(ldm_attribute.eContainer().eContainer(), "key")
                                         the_reference_annotation.source = the_reference_annotation_directive
                                         ldm_attribute.eAnnotations.append(the_reference_annotation)
                                     

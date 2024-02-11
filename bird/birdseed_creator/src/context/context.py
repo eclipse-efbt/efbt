@@ -102,7 +102,7 @@ class Context(object):
 
     def __init__(self):
 
-        key_annotation_directive = ELAnnotationDirective(name='keys', sourceURI='keys')
+        key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
         self.input_tables_package.annotationDirectives.append(key_annotation_directive)
         self.input_tables_package.annotationDirectives.append(dependency_annotation_directive)

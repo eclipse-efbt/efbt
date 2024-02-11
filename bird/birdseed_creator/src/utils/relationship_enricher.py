@@ -86,10 +86,10 @@ class RelationshipEnricher(object):
 
                             # add the foreign_key field list if it does not exist
                             # append to the foreign key list
-                            the_reference_annotation = Utils.get_annotation_with_source(the_reference, "keys")
+                            the_reference_annotation = Utils.get_annotation_with_source(the_reference, "key")
                             if the_reference_annotation is None: 
                                 the_reference_annotation = ELAnnotation()
-                                the_reference_annotation_directive = Utils.get_annotation_directive(foreign_class.eContainer(), "keys")
+                                the_reference_annotation_directive = Utils.get_annotation_directive(foreign_class.eContainer(), "key")
                                 the_reference_annotation.source = the_reference_annotation_directive
                                 the_reference.eAnnotations.append(the_reference_annotation)
                                 
@@ -126,10 +126,10 @@ class RelationshipEnricher(object):
                             # find the related attributes and set their FK  annotation
                             for attribute in foreign_class.eStructuralFeatures:
                                 if attribute.name == foreign_cube_variable_code:
-                                    the_attribute_annotation = Utils.get_annotation_with_source(attribute, "keys")
+                                    the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
                                     if the_attribute_annotation is None:
                                         the_attribute_annotation = ELAnnotation()
-                                        the_attribute_annotation_directive = Utils.get_annotation_directive(foreign_class.eContainer(), "keys")
+                                        the_attribute_annotation_directive = Utils.get_annotation_directive(foreign_class.eContainer(), "key")
                                         the_attribute_annotation.source = the_attribute_annotation_directive
                                         attribute.eAnnotations.append(the_attribute_annotation)
                                     
