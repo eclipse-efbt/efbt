@@ -84,7 +84,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributePredicate" eSuperTypes="#//Predicate">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute1" eType="#//ELAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute1" eType="#//ELStructuralFeature"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparitor" eType="#//Comparitor"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="member" eType="#//ELEnumLiteral"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

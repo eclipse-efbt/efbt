@@ -4,8 +4,8 @@ package org.eclipse.efbt.regdna.model.regdna.impl;
 
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
 import org.eclipse.efbt.regdna.model.regdna.Comparitor;
-import org.eclipse.efbt.regdna.model.regdna.ELAttribute;
 import org.eclipse.efbt.regdna.model.regdna.ELEnumLiteral;
+import org.eclipse.efbt.regdna.model.regdna.ELStructuralFeature;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -40,7 +40,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * @generated
 	 * @ordered
 	 */
-	protected ELAttribute attribute1;
+	protected ELStructuralFeature attribute1;
 
 	/**
 	 * The default value of the '{@link #getComparitor() <em>Comparitor</em>}' attribute.
@@ -117,10 +117,10 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * @generated
 	 */
 	@Override
-	public ELAttribute getAttribute1() {
+	public ELStructuralFeature getAttribute1() {
 		if (attribute1 != null && attribute1.eIsProxy()) {
 			InternalEObject oldAttribute1 = (InternalEObject)attribute1;
-			attribute1 = (ELAttribute)eResolveProxy(oldAttribute1);
+			attribute1 = (ELStructuralFeature)eResolveProxy(oldAttribute1);
 			if (attribute1 != oldAttribute1) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, regdnaPackage.ATTRIBUTE_PREDICATE__ATTRIBUTE1, oldAttribute1, attribute1));
@@ -134,7 +134,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ELAttribute basicGetAttribute1() {
+	public ELStructuralFeature basicGetAttribute1() {
 		return attribute1;
 	}
 
@@ -144,8 +144,8 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	 * @generated
 	 */
 	@Override
-	public void setAttribute1(ELAttribute newAttribute1) {
-		ELAttribute oldAttribute1 = attribute1;
+	public void setAttribute1(ELStructuralFeature newAttribute1) {
+		ELStructuralFeature oldAttribute1 = attribute1;
 		attribute1 = newAttribute1;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, regdnaPackage.ATTRIBUTE_PREDICATE__ATTRIBUTE1, oldAttribute1, attribute1));
@@ -268,7 +268,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case regdnaPackage.ATTRIBUTE_PREDICATE__ATTRIBUTE1:
-				setAttribute1((ELAttribute)newValue);
+				setAttribute1((ELStructuralFeature)newValue);
 				return;
 			case regdnaPackage.ATTRIBUTE_PREDICATE__COMPARITOR:
 				setComparitor((Comparitor)newValue);
@@ -292,7 +292,7 @@ public class AttributePredicateImpl extends PredicateImpl implements AttributePr
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case regdnaPackage.ATTRIBUTE_PREDICATE__ATTRIBUTE1:
-				setAttribute1((ELAttribute)null);
+				setAttribute1((ELStructuralFeature)null);
 				return;
 			case regdnaPackage.ATTRIBUTE_PREDICATE__COMPARITOR:
 				setComparitor(COMPARITOR_EDEFAULT);
