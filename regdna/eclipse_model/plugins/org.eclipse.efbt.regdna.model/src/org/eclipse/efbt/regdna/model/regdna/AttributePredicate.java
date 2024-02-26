@@ -28,12 +28,12 @@ public interface AttributePredicate extends Predicate {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attribute1</em>' reference.
-	 * @see #setAttribute1(ELAttribute)
+	 * @see #setAttribute1(ELStructuralFeature)
 	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getAttributePredicate_Attribute1()
 	 * @model
 	 * @generated
 	 */
-	ELAttribute getAttribute1();
+	ELStructuralFeature getAttribute1();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.AttributePredicate#getAttribute1 <em>Attribute1</em>}' reference.
@@ -43,7 +43,7 @@ public interface AttributePredicate extends Predicate {
 	 * @see #getAttribute1()
 	 * @generated
 	 */
-	void setAttribute1(ELAttribute value);
+	void setAttribute1(ELStructuralFeature value);
 
 	/**
 	 * Returns the value of the '<em><b>Comparitor</b></em>' attribute.

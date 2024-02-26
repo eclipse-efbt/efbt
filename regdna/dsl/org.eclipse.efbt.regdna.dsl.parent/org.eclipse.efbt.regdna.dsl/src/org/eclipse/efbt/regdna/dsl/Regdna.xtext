@@ -164,21 +164,21 @@ ELPackage returns regdna::ELPackage:
 
 RulesForReport returns regdna::RulesForReport:
 	{regdna::RulesForReport}
-	'report' outputLayerCube=[regdna::ELClass|QualifiedName]
+	'outputLayerEntity' outputLayerCube=[regdna::ELClass|QualifiedName]
 	'{'
 		(rulesForTable+=RulesForILTable (rulesForTable+=RulesForILTable)*  )?
 	'}';
 	
 RulesForILTable returns regdna::RulesForILTable:
 	{regdna::RulesForILTable}
-	'ILTable' inputLayerTable=[regdna::ELClass|QualifiedName]
+	'mainEntity' inputLayerTable=[regdna::ELClass|QualifiedName]
 	'{'
 		(rulesForTablePart+=RuleForILTablePart (rulesForTablePart+=RuleForILTablePart)*  )?
 	'}';
 	
 RuleForILTablePart returns regdna::RuleForILTablePart:
 	{regdna::RuleForILTablePart}
-	'tablePart'
+	'inputSlice'
 	name=ID
 	'{'
 		( columns+=SelectColumn ( columns+=SelectColumn)*  )?
@@ -221,7 +221,7 @@ AttributePredicate returns regdna::AttributePredicate:
 	{regdna::AttributePredicate}
 	'filter'
 
-		( attribute1=[regdna::ELAttribute|QualifiedName])?
+		( attribute1=[regdna::ELStructuralFeature|QualifiedName])?
 		( comparitor=Comparitor)?
 		('theMember' member=[regdna::ELEnumLiteral|QualifiedName])?
 		('theValue' value=EString)?

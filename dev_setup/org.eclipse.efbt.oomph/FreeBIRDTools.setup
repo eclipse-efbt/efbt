@@ -10,7 +10,7 @@
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 https://raw.githubusercontent.com/eclipse-oomph/oomph/master/setups/models/SetupWorkingSets.ecore"
     name="freebirdtools"
     label="freebirdtools">
   <setupTask
@@ -128,29 +128,13 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="examples"
-        id="examples">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:OrPredicate">
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.regdna.examples.*"/>
-          <operand
-              xsi:type="predicates:NamePredicate"
-              pattern=".*\.eclipse.efbt.examples.*"/>
-        </operand>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="python"
-        id="python">
+        name="bird_utilities_python"
+        id="bird_utilities_python">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.regdna.python*"/>
+            pattern="birdseedcreator"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -184,19 +168,6 @@
       </predicate>
     </workingSet>
     <workingSet
-        name="sirius_ui"
-        id="sirius_ui">
-      <predicate
-          xsi:type="predicates:OrPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.regdna.sirius_ui.*"/>
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.regdna.testing.ui.sirius.*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
         name="wiki_images"
         id="wiki_images">
       <predicate
@@ -204,24 +175,16 @@
           pattern="*.eclipse.efbt.wiki_images"/>
     </workingSet>
     <workingSet
-        name="xcorelite"
-        id="xcorelite">
+        name="regpot_desktop_components"
+        id="regpot_desktop_components">
       <predicate
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.xcorelite.*"/>
+            pattern=".*\.org.eclipse.efbt.regpot_desktop.*"/>
       </predicate>
-    </workingSet>
-    <workingSet
-        name="orchestrator"
-        id="orchestrator">
       <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.regdna.orchestrator.*"/>
-      </predicate>
+          xsi:type="predicates:OrPredicate"/>
     </workingSet>
     <description>efbt_working_sets</description>
   </setupTask>
