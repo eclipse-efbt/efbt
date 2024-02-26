@@ -134,7 +134,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern="birdseedcreator"/>
+            pattern="ldm_tools"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -183,8 +183,19 @@
             xsi:type="predicates:NamePredicate"
             pattern=".*\.org.eclipse.efbt.regpot_desktop.*"/>
       </predicate>
+    </workingSet>
+    <workingSet
+        name="pyecore_models"
+        id="pyecore_models">
       <predicate
-          xsi:type="predicates:OrPredicate"/>
+          xsi:type="predicates:OrPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern="org.eclipse.efbt.regdna.model.sdd_model"/>
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern="bird.regdna_python_model.regdna"/>
+      </predicate>
     </workingSet>
     <description>efbt_working_sets</description>
   </setupTask>
