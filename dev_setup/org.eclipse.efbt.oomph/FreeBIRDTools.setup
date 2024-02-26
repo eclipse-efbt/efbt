@@ -112,6 +112,16 @@
       </predicate>
     </workingSet>
     <workingSet
+        name="sdd_model"
+        id="sdd_model">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern=".*\.eclipse.efbt.regdna.model.sdd_model*"/>
+      </predicate>
+    </workingSet>
+    <workingSet
         name="regdna_model"
         id="regdna_model">
       <predicate
