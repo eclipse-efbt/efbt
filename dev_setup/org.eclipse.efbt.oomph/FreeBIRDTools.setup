@@ -92,6 +92,26 @@
       xsi:type="setup.workingsets:WorkingSetTask"
       id="efbt_working_sets">
     <workingSet
+        name="bird_seed_creator"
+        id="bird_seed_creator">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern="birdseed_creator"/>
+      </predicate>
+    </workingSet>
+    <workingSet
+        name="bird_utilities_python"
+        id="bird_utilities_python">
+      <predicate
+          xsi:type="predicates:AndPredicate">
+        <operand
+            xsi:type="predicates:NamePredicate"
+            pattern="ldm_tools"/>
+      </predicate>
+    </workingSet>
+    <workingSet
         name="regdna_model"
         id="regdna_model">
       <predicate
@@ -104,6 +124,12 @@
           <operand
               xsi:type="predicates:NamePredicate"
               pattern=".*\.eclipse.efbt.regdna.model.core_model*"/>
+        </operand>
+        <operand
+            xsi:type="predicates:NotPredicate">
+          <operand
+              xsi:type="predicates:NamePredicate"
+              pattern=".*\.eclipse.efbt.regdna.model.sdd_model*"/>
         </operand>
       </predicate>
     </workingSet>
@@ -125,16 +151,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern=".*\.eclipse.efbt.regdna.model.core_model*"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="bird_utilities_python"
-        id="bird_utilities_python">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern="ldm_tools"/>
       </predicate>
     </workingSet>
     <workingSet
@@ -172,7 +188,7 @@
         id="wiki_images">
       <predicate
           xsi:type="predicates:NamePredicate"
-          pattern="*.eclipse.efbt.wiki_images"/>
+          pattern=".*\.eclipse.efbt.wiki_images*"/>
     </workingSet>
     <workingSet
         name="regpot_desktop_components"
@@ -181,7 +197,7 @@
           xsi:type="predicates:AndPredicate">
         <operand
             xsi:type="predicates:NamePredicate"
-            pattern=".*\.org.eclipse.efbt.regpot_desktop.*"/>
+            pattern=".*\.eclipse.efbt.regpot_desktop.*"/>
       </predicate>
     </workingSet>
     <workingSet
