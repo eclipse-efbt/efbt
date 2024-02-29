@@ -29,8 +29,6 @@ public static String resourceURI = "";
 	
 	public static boolean isSetUp = false;
 	
-	public static Path filePath = Path.of("logfile.txt");
-	
 	public static String directoryPath = null;
 	
 	public static void main(String args[])

@@ -31,8 +31,6 @@ public class EObjectLoader {
 	
 	public static ResourceSet resSet  = new ResourceSetImpl();
 	
-	public static Path logFilePath = Path.of("logfile.txt");
-	
 	public static boolean resourceFactoryInitialised = false;
 
 	public static EObject loadObject(String fullFileURI) {
@@ -65,19 +63,9 @@ public class EObjectLoader {
 		returnVal = resource1.getContents().get(0);
 		}
 		catch (Exception e) {
-			try {
-				Files.writeString(logFilePath, e.toString() , StandardOpenOption.CREATE);
-				
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			
 		}
-	
-		try {
-			Files.writeString(logFilePath, "returnVal" + returnVal , StandardOpenOption.CREATE);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		return returnVal;
 	}
 
