@@ -1,17 +1,13 @@
 #!/bin/bash
 
 # clear results script
+export PYTHONPATH="/workspaces/efbt/bird/birdseed_creator/src:/workspaces/efbt/bird/regdna_python_model:/workspaces/efbt/bird/sdd_python_model"
+rm -rf bird/birdseed_creator/results/generations_transformations_csv/*
+rm -rf bird/birdseed_creator/results/regdna/*
+rm -rf bird/birdseed_creator/results/csv/*
+rm -rf bird/birdseed_creator/results/xmi/*
 
-rm -rf ecore4reg/python/results/ecore/*
-rm -rf ecore4reg/python/results/ecore4reg/*
-rm -rf ecore4reg/python/results/json/*
-rm -rf ecore4reg/python/results/matches/*
-rm -rf ecore4reg/python/results/xcore/*
-rm -rf ecore4reg/python/results/sdd/*
-rm -rf ecore4reg/python/results/xmi/*
-rm -rf ecore4reg/python/results/generations_transformations_csv/*
-
-cd ecore4reg/python/src/
+cd bird/birdseed_creator/src/entry_points
 pip install pyecore
 pip install unidecode
-python generate_generation_rules.py
+python create_outline_transformations.py

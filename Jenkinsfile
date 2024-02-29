@@ -8,22 +8,18 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''                                     
-                    cd ecore4reg/eclipse_model
+                    cd regdna/eclipse_model
 					mvn install
 					cd ../..
-					cd ecore4reg/eclipse_examples
+					cd regdna/dsl/org.eclipse.efbt.regdna.dsl.parent
+					mvn install
+					cd ../../..
+					cd regpot_desktop/components
+					mvn install
+					cd ../..  
+					cd regpot_desktop/installation
 					mvn install
 					cd ../..
-					cd ecore4reg/dsl/org.eclipse.efbt.ecore4reg.dsl.parent
-					mvn install
-					cd ../../..  
-					cd ecore4reg/firstflight
-					mvn install
-					cd ../..		
-					cd installations/complete_repo/
-					mvn install
-					cd ../..
-                    
                 '''
             }
         }
@@ -33,7 +29,7 @@ pipeline {
 	          sh '''
 	            ssh genie.efbt@projects-storage.eclipse.org rm -rf /home/data/httpd/download.eclipse.org/efbt/snapshots
 	            ssh genie.efbt@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/efbt/snapshots	            	            	         
-	            scp -r installations/complete_repo/releng/org.eclipse.efbt.repository/target/repository/* genie.efbt@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/efbt/snapshots
+	            scp -r regpot_desktop/installation/releng/org.eclipse.efbt.repository/target/repository/* genie.efbt@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/efbt/snapshots
 	           '''
 	        }
 	      }
