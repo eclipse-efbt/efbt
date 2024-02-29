@@ -39,6 +39,8 @@ import org.eclipse.efbt.regdna.model.regdna.SelectColumnAttributeAs
 import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs
 import org.eclipse.efbt.regdna.model.regdna.SelectValueAs
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs
+import org.eclipse.efbt.regdna.model.regdna.Report
+import org.eclipse.efbt.regdna.model.regdna.ReportModule
 
 /**
  * Generates code from your model files on save.
@@ -62,6 +64,65 @@ class RegdnaGenerator extends AbstractGenerator {
 			createOutputTablesAmendment(rulesForReport,fsa)
 			
 		}
+		for (reportModule : resource.allContents.toIterable.filter(ReportModule)) {
+
+			processReportModule(reportModule,fsa)
+
+		}
+	}
+	
+	def processReportModule(ReportModule reportModule, IFileSystemAccess2 fsa) {
+		fsa.generateFile("report_cells.xcore",  '''
+		package report_cells
+		
+		import output_tables.*
+		import sdd_domains.* 
+		
+		«FOR report : reportModule.reports»
+		«FOR cell : report.reportCells»
+		class Cell_«report.outputLayer.name»_«cell.row.name»_«cell.column.name»
+		{
+			refers «report.outputLayer.name»_Table «report.outputLayer.name.giveSmallFirstLetter»_Table
+			refers «report.outputLayer.name»[] «report.outputLayer.name.giveSmallFirstLetter»s
+			
+			op String metric_value() {
+					var metric_total = 0.0
+					for( «report.outputLayer.name» item : «report.outputLayer.name.giveSmallFirstLetter»s) 
+					{
+						var metric = item.«cell.metric.name»()
+						metric_total = metric_total + metric
+						
+					}
+					return Double.toString(metric_total)
+					
+				}
+			op  void calc_referenced_items() {
+						
+					
+					for( «report.outputLayer.name» item : «report.outputLayer.name.giveSmallFirstLetter»_Table.«report.outputLayer.name.giveSmallFirstLetter»s) 
+					{
+						var filter_passed = true
+						«FOR filter : cell.filters»
+						«IF filter.member.size > 0»
+						if (!(«FOR literal : filter.member SEPARATOR ' || '»(item.«filter.operation.name».equals(sdd_domains.«(literal.eContainer() as ELEnum).name».«literal.name.toUpperCase» ))«ENDFOR»))
+							filter_passed = false
+						«ENDIF»
+						«ENDFOR»
+						if (filter_passed)
+							f_05_01_REF_OutputItems.add(item)
+					}
+					
+				}
+			op String  init() {
+					org.eclipse.efbt.regpot_desktop.orchestrator.Orchestration.init(this)
+				 	calc_referenced_items() 
+				return null
+					}
+		}
+		«ENDFOR»
+		«ENDFOR»
+		
+		''')
 	}
 	
 	def createOutputTablesAmendment(RulesForReport rulesForReport, IFileSystemAccess2 fsa) {
@@ -144,7 +205,7 @@ class RegdnaGenerator extends AbstractGenerator {
 					 	contains  «rulesForReport.outputLayerCube.name»_UnionItem []   «rulesForReport.outputLayerCube.name»_UnionItems	
 					 	«FOR tableRules : rulesForReport.rulesForTable»
 					 	«FOR tablePartRules : tableRules.rulesForTablePart»
-					 	refers «tablePartRules.name»_Table  «tablePartRules.name»_table
+					 	refers «tablePartRules.name»_Table  «tablePartRules.name»_Table
 					 	«ENDFOR»
 					 	«ENDFOR»
 					 	op «rulesForReport.outputLayerCube.name»_UnionItem []   calc_«rulesForReport.outputLayerCube.name»_UnionItems() 
@@ -152,7 +213,7 @@ class RegdnaGenerator extends AbstractGenerator {
 						 	var items = new org.eclipse.emf.common.util.BasicEList<«rulesForReport.outputLayerCube.name»_UnionItem>()
 						 	«FOR tableRules : rulesForReport.rulesForTable»
 						 	«FOR tablePartRules : tableRules.rulesForTablePart»
-		 		 		 	for(«tablePartRules.name» item : «tablePartRules.name.giveSmallFirstLetter»_table.«tablePartRules.name.giveSmallFirstLetter»s)
+		 		 		 	for(«tablePartRules.name» item : «tablePartRules.name.giveSmallFirstLetter»_Table.«tablePartRules.name.giveSmallFirstLetter»s)
 		 		 		 	{
 		 		 		 		var newItem = «rulesForReport.outputLayerCube.name»_LogicFactory.eINSTANCE.create«rulesForReport.outputLayerCube.name»_UnionItem
 		 		 		 		newItem.base = item
@@ -261,14 +322,14 @@ class RegdnaGenerator extends AbstractGenerator {
 		«IF elclass.EAbstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
 		«FOR elmember : elclass.EStructuralFeatures»  
 		«FOR annotion : elmember.EAnnotations»
-								@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)
+			«IF true»	@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)«ENDIF»
 		«ENDFOR»
 		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
 		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
 		«ENDFOR»
 		«FOR eloperation : elclass.EOperations»
 		«FOR annotion : eloperation.EAnnotations»
-			@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)
+			«IF true»	@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)«ENDIF»
 		«ENDFOR»
 		«IF eloperation instanceof ELOperation» 	op «eloperation.EType.name» «IF eloperation.upperBound == -1»[]  «ELSEIF !((eloperation.lowerBound == 0) && ( (eloperation.upperBound == 1) || (eloperation.upperBound == 0)) ) »[«eloperation.lowerBound»..«eloperation.upperBound»]«ENDIF» «eloperation.name»()
 			{

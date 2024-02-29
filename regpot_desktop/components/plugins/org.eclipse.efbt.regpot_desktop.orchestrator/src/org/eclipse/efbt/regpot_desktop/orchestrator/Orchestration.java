@@ -57,8 +57,6 @@ public class Orchestration {
 	
 	public static boolean isSetUp = false;
 	
-	public static Path logFilePath = Path.of("logfile.txt");
-	
 	public static void main(String args[])
 	{
 		try {
@@ -91,10 +89,26 @@ public class Orchestration {
 			field4.setAccessible(true);
 			Object nsuri2 = field3.get(outputPackageClass);
 			Object iPackage2 = field4.get(outputPackageClass);
+			
+			Class reportcellsPackageClass  = Class.forName("report_cells.Report_cellsPackage");
+
+			Field[] fields3 = reportcellsPackageClass.getDeclaredFields();
+			System.out.println("class = " + reportcellsPackageClass.getName());
+		    for (Field f3 : fields3) {
+		      System.out.println(f3.getName());
+		    }
+		 
+		    Field field5 = reportcellsPackageClass.getDeclaredField("eNS_URI");
+		    Field field6 = reportcellsPackageClass.getDeclaredField("eINSTANCE");
+		    field5.setAccessible(true);
+			field6.setAccessible(true);
+			Object nsuri3 = field5.get(reportcellsPackageClass);
+			Object iPackage3 = field6.get(reportcellsPackageClass);
 
 			
 			EPackage.Registry.INSTANCE.put((String)nsuri,iPackage );
 			EPackage.Registry.INSTANCE.put((String)nsuri2,iPackage2 );
+			EPackage.Registry.INSTANCE.put((String)nsuri3,iPackage3 );
 
 			} catch (ClassNotFoundException e) {
 
@@ -128,16 +142,7 @@ public class Orchestration {
 			String fileSeparator = FileSystems.getDefault().getSeparator();
 			resourceURI = platformURI.substring(0,platformURI.lastIndexOf(fileSeparator) );
 			EObjectToCSVConverter.resourceURI = resourceURI;
-		
-			Files.writeString(logFilePath, "resourceURI.toPlatformString2()= " + resourceURI + "\n", StandardOpenOption.CREATE);
 		} catch (Exception e) {
-
-			try {
-				Files.writeString(logFilePath, "resourceURI toPlatformString2 FAILED " + e.toString()  +"\n");
-			} catch (IOException e1) {
-
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 
@@ -196,7 +201,7 @@ public class Orchestration {
 			EList<EReference> references = eclass.getEAllReferences();
 			for (Iterator iterator = references.iterator(); iterator.hasNext();) {
 				EReference eReference = (EReference) iterator.next();
-				if (!eReference.isContainment())
+				if (!eReference.isContainment() && eReference.getName().endsWith("Table"))
 				{
 					EObject newObject = EObjectLoader.findTableInXMIFile(eReference.getEType(), resourceURI);
 					if(newObject != null) { 
@@ -223,13 +228,7 @@ public class Orchestration {
 								
 						}
 						persistObject(newObject);
-						EObjectToCSVConverter.persistObjectAsCSV(newObject,true);
-						try {
-							Files.writeString(logFilePath, "newObject" + newObject + "theObject" + theObject + "eReference" + eReference + "eReference.etype" + eReference , StandardOpenOption.CREATE);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						EObjectToCSVConverter.persistObjectAsCSV(newObject,true);						
 
 						theObject.eSet(eReference, newObject);
 					}
