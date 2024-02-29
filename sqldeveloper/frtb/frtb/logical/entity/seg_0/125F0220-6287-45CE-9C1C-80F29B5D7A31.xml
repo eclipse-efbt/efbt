@@ -1,0 +1,22 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="125F0220-6287-45CE-9C1C-80F29B5D7A31" name="Securitisation CTP risk factor ">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 08:01:16 UTC</createdTime>
+<comment><![CDATA[BCBS497 : 10.9 : Risk factor: a principal determinant of the change in value of an securitisation based   instrument with credit spread risk,traded in a correlation tradin portfolio]]></comment>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="false"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<hierarchicalParent>E7C4E383-AABB-082F-EAE7-A59D01E27340</hierarchicalParent>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<preferredAbbreviation>SCRTSTN_RSK_FCTR</preferredAbbreviation>
+</Entity>

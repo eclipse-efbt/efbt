@@ -1,0 +1,89 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A4E1F026-BF8E-548C-4A9D-C0B863F89F47" name="Risk measure">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:52:50 UTC</createdTime>
+<comment><![CDATA[A measured risk of a position against a particular risk factor]]></comment>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Risk measure identifier" id="2CEEE7DA-CBD4-26D2-1EF9-EC7DD4E1E251">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:54:02 UTC</createdTime>
+<comment><![CDATA[The risk measure identifier]]></comment>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Risk factor Identifier" id="4A5E6818-D579-ADEC-3C56-7425F98DB037">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 06:12:32 UTC</createdTime>
+<comment><![CDATA[The risk factor we are measuring risk against]]></comment>
+<generatorID>61F68422-DB16-E699-396E-7F7E05929587</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>6F905B6C-EC99-1422-CBA1-C8E591102FAE</referedAttribute>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Position identifier" id="F7A033E7-52FB-25CB-1289-A5AED88A0247">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 06:13:10 UTC</createdTime>
+<comment><![CDATA[The position we are measuring risk for.]]></comment>
+<generatorID>C5D7EE96-E799-F6F8-6B9D-E05B4B34EE4A</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>F905716C-56AA-D854-32B3-33220A5D482E</referedAttribute>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="39C5F6E1-A7F6-E0E8-40FF-791D2727CD8B" name="Risk measure PK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 05:54:17 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>2CEEE7DA-CBD4-26D2-1EF9-EC7DD4E1E251</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

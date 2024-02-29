@@ -1,0 +1,84 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="F2D81DCE-7AD1-477B-2250-0BF1F698CEAC" name="Organisation">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 07:07:40 UTC</createdTime>
+<generatorID>2BCD02A6-76DC-6E84-FA25-9778097C621E</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Organisation_identifier" id="FB335654-98D3-2EA2-BE25-D1006569C312">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 07:07:40 UTC</createdTime>
+<generatorID>44B2D652-92E9-5FAE-AA89-6B63EB4037CA</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Ratings_grade" id="8A53C252-7206-9C4E-7268-DDAFCE3DD0BE">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 07:07:40 UTC</createdTime>
+<generatorID>3E34C83C-FDFE-AF02-6168-CF2D934F2A03</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>EAE9AB06-8C26-B8CC-733E-02CAD25C9CC8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Sector" id="04FE3731-25CA-162E-716D-B91EE13CDAFA">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 07:07:40 UTC</createdTime>
+<generatorID>E3BFB1FC-D269-D908-9391-2EE812FBA660</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>C764DB9F-3245-FA18-0477-2FED20796BBA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Market_cap" id="B7702D9E-D5E2-0B40-3ACC-89AC980670EF">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 07:07:40 UTC</createdTime>
+<generatorID>CE182A53-0975-F2C4-1770-0FFC28116F78</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>7F63E47C-D3DB-4A93-6AC8-9AEB283E41DA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Economy" id="F36270C6-CC3E-14DF-2AE4-94CF863789E1">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 07:07:40 UTC</createdTime>
+<generatorID>B2C2F53E-496F-89F3-969F-513A64D30062</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<domain>99DE0662-BAB5-5473-EAD0-5714FAC4965C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="89B75079-E76C-4325-9DDF-7A86616807DD" name="Organisation_PK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-16 07:07:40 UTC</createdTime>
+<generatorID>FA4A56F0-635A-EC13-4921-6495DBBAB9D2</generatorID>
+<ownerDesignName>frtb</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FB335654-98D3-2EA2-BE25-D1006569C312"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

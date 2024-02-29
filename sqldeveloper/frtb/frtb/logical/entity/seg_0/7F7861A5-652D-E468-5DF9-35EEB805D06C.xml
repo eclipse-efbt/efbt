@@ -1,0 +1,53 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="7F7861A5-652D-E468-5DF9-35EEB805D06C" name="Security or exchange tradable derivative position">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 09:04:05 UTC</createdTime>
+<comment><![CDATA[The position which has risks measured and provided against different risk factors.]]></comment>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Position identifier" id="F905716C-56AA-D854-32B3-33220A5D482E">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 09:14:37 UTC</createdTime>
+<comment><![CDATA[the positions identifier]]></comment>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>6FBEB348-B901-2CC5-03F9-29A90524DCDA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="266FA0A5-BEAD-6550-2E8E-73D04F5170B0" name="Security or exchange tradable derivative position PK">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 09:14:50 UTC</createdTime>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>F905716C-56AA-D854-32B3-33220A5D482E</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
