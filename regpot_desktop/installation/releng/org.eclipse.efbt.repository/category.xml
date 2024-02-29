@@ -33,5 +33,11 @@
    <feature id="org.eclipse.efbt.regpot_desktop.csvconverter.feature">
       <category name="efbt"/>
    </feature>
+   <feature id="org.eclipse.pde">
+      <category name="efbt"/>
+   </feature>
+   <feature id="org.eclipse.sirius.specifier">
+      <category name="efbt"/>
+   </feature>
    <category-def name="efbt" label="Complete EFBT Repository"/>
 </site>
