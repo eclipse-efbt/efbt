@@ -1,0 +1,78 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="74FDE155-399A-5886-2419-C144B9B3EE90" name="Delta sensitivity">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 09:06:11 UTC</createdTime>
+<comment><![CDATA[bcbs d457 
+10.13 Sensitivity: a bank’s estimate of the change in value of an instrument due to a small change in
+one of its underlying risk factors. Delta and vega risks are sensitivities.
+10.14 Delta risk: the linear estimate of the change in value of a financial instrument due to a movement
+in the value of a risk factor. The risk factor could be the price of an equity or commodity, or a
+change in an interest rate, credit spread or FX rate
+]]></comment>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="false"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<hierarchicalParent>A4E1F026-BF8E-548C-4A9D-C0B863F89F47</hierarchicalParent>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<preferredAbbreviation>DLT_SNSTVTY</preferredAbbreviation>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Currency of record" id="D5B3996B-06CA-56BA-F55E-E69B2B7F74AF">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 09:07:12 UTC</createdTime>
+<commentInRDBMS><![CDATA[The currency in which this risk is measure]]></commentInRDBMS>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<domain>61D993CB-3857-0254-82CE-4524A856851C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Tenor" id="13CF1FA0-C647-3234-6F6E-FDC0F2BCC893">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 09:07:31 UTC</createdTime>
+<commentInRDBMS><![CDATA[The tenor point of the related curve if this is a risk to a curve based risk factor]]></commentInRDBMS>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EF979509-4418-5FAC-812C-8FD0322FE1D6</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Delta sensitivity" id="0F81F010-9963-4B44-5A1A-79B5859E6669">
+<createdBy>Neil</createdBy>
+<createdTime>2022-04-14 09:07:52 UTC</createdTime>
+<commentInRDBMS><![CDATA[The delta sensitivity, this is an amount interprted in the curency of record, e.g. 100 dollars]]></commentInRDBMS>
+<ownerDesignName>frtb</ownerDesignName>
+<engineerTo>
+<item key="481613B2-72DC-147B-D544-3088451C2A1D" value="true"/>
+<item key="70F13CD1-1626-C0DF-DD93-774769AED5DC" value="true"/>
+<item key="BEC051E3-3FE9-A559-4EC2-9F83E629BB21" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EF979509-4418-5FAC-812C-8FD0322FE1D6</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>
