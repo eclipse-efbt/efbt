@@ -39,5 +39,8 @@
    <feature id="org.eclipse.sirius.specifier">
       <category name="efbt"/>
    </feature>
+   <feature id="org.eclipse.egit">
+      <category name="efbt"/>
+   </feature>
    <category-def name="efbt" label="Complete EFBT Repository"/>
 </site>
