@@ -135,8 +135,8 @@ class RelationshipEnricher(object):
                                     
                                     foreign_key = None 
                             
-                                    for key_value_pair in details.items:
-                                        if key_value_pair.key == 'foreign_key':
+                                    for key_value_pair in the_attribute_annotation.details.items:
+                                        if key_value_pair.key == 'is_foreign_key':
                                             foreign_key = key_value_pair
                                             
                                     if foreign_key is None:
