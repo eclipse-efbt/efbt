@@ -30,6 +30,14 @@
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.xtext.sdk.feature.group" version="0.0.0"/>
 			<repository location="https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.33.0/"/>
-		</location>		
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/releases/2023-12"/>
+			<unit id="org.eclipse.pde.feature.group" version="3.15.200.v20231201-0110"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/releases/2023-12"/>
+			<unit id="org.eclipse.sirius.specifier.feature.group" version="7.3.0.202311270829"/>
+		</location>
 	</locations>
 </target>
