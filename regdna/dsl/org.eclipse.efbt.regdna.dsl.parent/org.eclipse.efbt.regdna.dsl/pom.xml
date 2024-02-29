@@ -16,7 +16,7 @@
 	<parent>
 		<groupId>org.eclipse.efbt.regdna.dsl</groupId>
 		<artifactId>org.eclipse.efbt.regdna.dsl.parent</artifactId>
-		<version>1.2.0-SNAPSHOT</version>
+		<version>1.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.eclipse.efbt.regdna.dsl</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -56,7 +56,7 @@
 					<dependency>
 						<groupId>org.eclipse.efbt.regdna.model</groupId>
 						<artifactId>org.eclipse.efbt.regdna.model</artifactId>
-						<version>1.2.0-SNAPSHOT</version>
+						<version>1.3.0-SNAPSHOT</version>
 					</dependency>
 					
 					

@@ -3,7 +3,7 @@ Automatic-Module-Name: org.eclipse.efbt.regdna.dsl.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.efbt.regdna.dsl.ui
 Bundle-Vendor: Eclipse Free BIRD Tools
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.3.0.qualifier
 Bundle-SymbolicName: org.eclipse.efbt.regdna.dsl.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.efbt.regdna.dsl,
