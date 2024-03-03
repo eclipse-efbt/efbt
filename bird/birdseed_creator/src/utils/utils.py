@@ -168,13 +168,24 @@ class Utils(object):
             .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_gt') \
             .replace('<', '_lt').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_eq').replace('#', '_') \
             .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace('?', '_').replace('–', '_').replace('__', '_').replace('__', '_') \
-            .replace(chr(0x2019), '_').replace(chr(65533), '_') \
+            .replace(chr(0x2019), '_').replace(chr(65533), '_').replace(chr(0x00A8), '_').replace(chr(0x00A9), '_')  \
+            .replace(chr(0x00A4), '_').replace(chr(0x00B6), '_').replace(chr(0x00D0), '_').replace(chr(0x00BA), '_') \
+            .replace(chr(0x2020), '_').replace(chr(0x00B5), '_').replace(chr(0x20AC), '_').replace(chr(0x00B4), '_') \
+            .replace(chr(0x0192), '_').replace(chr(0x00B2), '_').replace(chr(0x00BF), '_').replace(chr(0x00B0), '_') \
+            .replace(chr(0x00A6), '_').replace(chr(0x203A), '_').replace(chr(0x00A2), '_').replace(chr(0x2122), '_') \
+            .replace(chr(0x00B1), '_').replace(chr(0x00B9), '_').replace(chr(0x00AE), '_').replace(chr(0x2014), '_') \
+            .replace(chr(0x02DC), '_').replace(chr(0x201E), '_').replace(chr(0x2026), '_').replace(chr(0x00BF), '_') \
+            .replace(chr(0x00BB), '_').replace(chr(0x00AB), '_').replace(chr(0x2022), '_').replace(chr(0x00AC), '_') \
+            .replace(chr(0x2021), '_').replace(chr(0x00A5), '_').replace(chr(0x201E), '_').replace(chr(0x201C), '_') \
+            .replace(chr(0x00AF), '_').replace(chr(0x201D), '_').replace(chr(0x00A3), '_').replace(chr(0x2030), '_') \
+            .replace(chr(0x00BD), '_').replace(chr(0x00BC), '_').replace(chr(0x00BE), '_').replace(chr(0x00A1), '_') \
             .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_').replace(chr(0x2026), '_') \
             .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
             .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
             .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
             .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
-            .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_')
+            .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_').replace(chr(0x201A), '_').replace(chr(0x00B7), '_')
+
 
         return_string = Utils.replace_acutes_graves_and_circumflexes(
             amended_input_string).replace('\'', '_')
@@ -197,13 +208,24 @@ class Utils(object):
             .replace('+', '_').replace('.', '_').replace('?', '_').replace('\'', '_').replace('>', '_gt') \
             .replace('<', '_lt').replace('\"', '_').replace(';', '_').replace('$', '_').replace('=', '_eq').replace('#', '_') \
             .replace('&', '_').replace('%', '_').replace('[', '_').replace(']', '_').replace('?', '_').replace('–', '_').replace('__', '_').replace('__', '_') \
-            .replace(chr(0x2019), '_').replace(chr(65533), '_') \
+            .replace(chr(0x2019), '_').replace(chr(65533), '_').replace(chr(0x00A8), '_').replace(chr(0x00A9), '_')  \
+            .replace(chr(0x00A4), '_').replace(chr(0x00B6), '_').replace(chr(0x00D0), '_').replace(chr(0x00BA), '_') \
+            .replace(chr(0x2020), '_').replace(chr(0x00B5), '_').replace(chr(0x20AC), '_').replace(chr(0x00B4), '_') \
+            .replace(chr(0x0192), '_').replace(chr(0x00B2), '_').replace(chr(0x00BF), '_').replace(chr(0x00B0), '_') \
+            .replace(chr(0x00A6), '_').replace(chr(0x203A), '_').replace(chr(0x00A2), '_').replace(chr(0x2122), '_') \
+            .replace(chr(0x00B1), '_').replace(chr(0x00B9), '_').replace(chr(0x00AE), '_').replace(chr(0x2014), '_') \
+            .replace(chr(0x02DC), '_').replace(chr(0x201E), '_').replace(chr(0x2026), '_').replace(chr(0x00BF), '_') \
+            .replace(chr(0x00BB), '_').replace(chr(0x00AB), '_').replace(chr(0x2022), '_').replace(chr(0x00AC), '_') \
+            .replace(chr(0x2021), '_').replace(chr(0x00A5), '_').replace(chr(0x201E), '_').replace(chr(0x201C), '_') \
+            .replace(chr(0x00AF), '_').replace(chr(0x201D), '_').replace(chr(0x00A3), '_').replace(chr(0x2030), '_') \
+            .replace(chr(0x00BD), '_').replace(chr(0x00BC), '_').replace(chr(0x00BE), '_').replace(chr(0x00A1), '_') \
             .replace(chr(0x2018), '_').replace(chr(0x0060), '_').replace(chr(0x00B4), '_').replace(chr(0x2026), '_') \
             .replace(chr(0x200B), '_').replace(chr(0x202F), '_').replace(chr(0x205F), '_').replace(chr(0x3000), '_') \
             .replace(chr(0x2000), '_').replace(chr(0x2001), '_').replace(chr(0x2002), '_').replace(chr(0x2003), '_') \
             .replace(chr(0x2004), '_').replace(chr(0x2005), '_').replace(chr(0x2006), '_').replace(chr(0x2007), '_') \
             .replace(chr(0x2008), '_').replace(chr(0x2009), '_').replace(chr(0x200A), '_').replace(chr(0x00A0), '_') \
-            .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_')
+            .replace(chr(0x0027), '_').replace(chr(0x2019), '_').replace(chr(0x2018), '_').replace(chr(0x201A), '_').replace(chr(0x00B7), '_')
+
 
         return_string = Utils.replace_acutes_graves_and_circumflexes(
             amended_input_string).replace('\'', '_')
