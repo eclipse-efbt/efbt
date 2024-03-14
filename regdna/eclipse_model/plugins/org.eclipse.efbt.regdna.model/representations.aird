@@ -10,4 +10,5 @@
   <semanticResources>src/org/eclipse/efbt/regdna/model/generate/GenerateRegdnaModel.mwe2</semanticResources>
   <semanticResources>target/classes/org/eclipse/efbt/regdna/model/generate/GenerateRegdnaModel.mwe2</semanticResources>
   <semanticResources>src/org/eclipse/efbt/regdna/model/regdna/impl/regdna.ecore</semanticResources>
+  <semanticResources>target/classes/org/eclipse/efbt/regdna/model/regdna/impl/regdna.ecore</semanticResources>
 </viewpoint:DAnalysis>
