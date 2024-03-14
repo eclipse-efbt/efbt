@@ -16,7 +16,7 @@
   <setupTask
       xsi:type="setup:EclipseIniTask"
       option="-Xmx"
-      value="2048m"
+      value="4048m"
       vm="true">
     <description>Set the heap space needed to work with the projects of ${scope.project.label}</description>
   </setupTask>
@@ -44,7 +44,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="2023-12"
+      defaultValue="2024-03"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup.p2:P2Task">
@@ -109,16 +109,6 @@
         <operand
             xsi:type="predicates:NamePredicate"
             pattern="ldm_tools"/>
-      </predicate>
-    </workingSet>
-    <workingSet
-        name="sdd_model"
-        id="sdd_model">
-      <predicate
-          xsi:type="predicates:AndPredicate">
-        <operand
-            xsi:type="predicates:NamePredicate"
-            pattern=".*\.eclipse.efbt.regdna.model.sdd_model*"/>
       </predicate>
     </workingSet>
     <workingSet

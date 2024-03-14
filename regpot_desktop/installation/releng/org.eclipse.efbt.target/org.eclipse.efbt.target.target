@@ -9,39 +9,31 @@
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>	
 			<unit id="org.eclipse.emf.ecoretools.design.feature.group" version="0.0.0"/>	
 			<unit id="org.eclipse.emf.ecore.xcore.sdk.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/releases/2023-12"/>
+			<repository location="https://download.eclipse.org/releases/2024-03"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.sirius.runtime.ide.xtext.feature.group" version="0.0.0"/>	
-			<repository location="https://download.eclipse.org/sirius/updates/releases/7.3.0/2023-03/"/>
+			<repository location="https://download.eclipse.org/sirius/updates/releases/7.4.0/2023-03/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.emf.mwe2.launcher.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.16.0/"/>
+			<repository location="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.17.0/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.xtext.sdk.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.33.0/"/>
+			<repository location="https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.34.0/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="org.eclipse.emf.mwe2.launcher.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/modeling/emft/mwe/updates/releases/2.16.0/"/>
+			<repository location="https://download.eclipse.org/releases/2024-03"/>
+			<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="org.eclipse.xtext.sdk.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.33.0/"/>
+			<repository location="https://download.eclipse.org/releases/2024-03"/>
+			<unit id="org.eclipse.sirius.specifier.feature.group" version="0.0.0"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/releases/2023-12"/>
-			<unit id="org.eclipse.pde.feature.group" version="3.15.200.v20231201-0110"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/releases/2023-12"/>
-			<unit id="org.eclipse.sirius.specifier.feature.group" version="7.3.0.202311270829"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/releases/2023-12"/>
-			<unit id="org.eclipse.egit.feature.group" version="6.8.0.202311291450-r"/>
+			<repository location="https://download.eclipse.org/releases/2024-03"/>
+			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 		</location>
 	</locations>
 </target>

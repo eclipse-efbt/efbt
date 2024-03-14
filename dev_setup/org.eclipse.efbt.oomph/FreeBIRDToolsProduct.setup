@@ -143,13 +143,13 @@
         label="Modeling Edition">
       <requirement
           name="epp.package.modeling"
-          versionRange="[4.25.0,5.0.0)"/>
+          versionRange="[4.31.0,5.0.0)"/>
       <requirement
           name="org.eclipse.platform.feature.group"
-          versionRange="[4.25.0,5.0.0)"/>
+          versionRange="[4.31.0,5.0.0)"/>
       <requirement
           name="org.eclipse.rcp.feature.group"
-          versionRange="[4.25.0,5.0.0)"/>
+          versionRange="[4.31.0,5.0.0)"/>
       <requirement
           name="org.eclipse.egit.feature.group"/>
       <requirement
@@ -201,9 +201,9 @@
       <requirement
           name="org.python.pydev.feature.feature.group"/>
       <repository
-          url="http://download.eclipse.org/releases/2023-12"/>
+          url="http://download.eclipse.org/releases/2024-03"/>
       <repository
-          url="http://download.eclipse.org/technology/epp/packages/2023-12"/>
+          url="http://download.eclipse.org/technology/epp/packages/2024-03"/>
       <repository
           url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
       <repository
