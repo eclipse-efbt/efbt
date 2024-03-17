@@ -86,32 +86,21 @@ class RegdnaGenerator extends AbstractGenerator {
 			refers «report.outputLayer.name»[] «report.outputLayer.name.giveSmallFirstLetter»s
 			
 			op String metric_value() {
-					var metric_total = 0.0
-					for( «report.outputLayer.name» item : «report.outputLayer.name.giveSmallFirstLetter»s) 
-					{
-						var metric = item.«cell.metric.name»()
-						metric_total = metric_total + metric
-						
-					}
-					return Double.toString(metric_total)
-					
+				«report.outputLayer.name.giveSmallFirstLetter»s.fold(0, [  a, b |  a + b.«cell.metric.name»() ]).toString				
 				}
 			op  void calc_referenced_items() {
 						
-					
-					for( «report.outputLayer.name» item : «report.outputLayer.name.giveSmallFirstLetter»_Table.«report.outputLayer.name.giveSmallFirstLetter»s) 
-					{
-						var filter_passed = true
-						«FOR filter : cell.filters»
-						«IF filter.member.size > 0»
-						if (!(«FOR literal : filter.member SEPARATOR ' || '»(item.«filter.operation.name».equals(sdd_domains.«(literal.eContainer() as ELEnum).name».«literal.name.toUpperCase» ))«ENDFOR»))
-							filter_passed = false
-						«ENDIF»
-						«ENDFOR»
-						if (filter_passed)
-							f_05_01_REF_OutputItems.add(item)
-					}
-					
+					val items = «report.outputLayer.name.giveSmallFirstLetter»_Table.«report.outputLayer.name.giveSmallFirstLetter»s.filter(item | 
+					«FOR filter : cell.filters SEPARATOR ' && '»
+					«IF filter.member.size > 0»(«FOR literal : filter.member SEPARATOR ' || '»(item.«filter.operation.name».value == (sdd_domains.«(literal.eContainer() as ELEnum).name».«literal.name.toUpperCase».value ))«ENDFOR»)«ELSE» true
+					«ENDIF»
+					«ENDFOR»	
+					)			
+						for( «report.outputLayer.name» item : items )
+								{
+									
+										«report.outputLayer.name.giveSmallFirstLetter»s.add(item)
+								}				
 				}
 			op String  init() {
 					org.eclipse.efbt.regpot_desktop.orchestrator.Orchestration.init(this)
