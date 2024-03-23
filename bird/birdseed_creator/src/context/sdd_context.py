@@ -76,6 +76,9 @@ class SDDContext(object):
     
     sdd_model = SMCubesModel(name = 'smcubesModel') 
 
+    members_that_are_nodes = []
+    member_plus_hierarchy_to_child_literals = {}
+    domain_to_hierarchy_dictionary = {}
     combinations_dictionary = {}
     member_dictionary = {}
     domain_dictionary = {}

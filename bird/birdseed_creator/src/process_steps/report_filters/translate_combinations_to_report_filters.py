@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 from utils.utils import Utils
-from regdna import Report,ReportRow,ReportColumn,ReportCell,Filter,ELEnum
+from regdna import Report,ReportRow,ReportColumn,ReportCell,Filter
 import os
 import csv
 
@@ -19,8 +19,9 @@ class CombinationsToReportFilters:
     '''
     Documentation for CombinationsToReportFilters
     '''
-
     def translate_combinations_to_report_filters(self, context,sdd_context):
+        
+        CombinationsToReportFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
         file_location = context.file_directory + os.sep + "in_scope_reports.csv"
         in_scope_reports = []
         header_skipped = False
@@ -33,8 +34,7 @@ class CombinationsToReportFilters:
                     header_skipped = True
                 else:
                     report_template = row[0]
-                    print("report_template")
-                    print(report_template)
+
                     in_scope_reports.append(report_template)
         
         warning_list = []
@@ -50,16 +50,13 @@ class CombinationsToReportFilters:
                 
         
         for cell_position in sdd_context.cell_positions.cellPositions:
-            x_axis = "None"
-            y_axis = "None"
             cell = cell_position.cell_id
             if not(cell is None):
                 template = cell.table_id
                 if not(template is None):
                     
                     template_code = template.code
-                    print("template_code")
-                    print(template_code[0:template_code.index("_REF")].replace('.','_'))
+
                     
                     report_cell = ReportCell()
                     try:
@@ -87,8 +84,7 @@ class CombinationsToReportFilters:
                                 if not (col_exists_in_columns):
                                     related_report.columns.append(col)
 
-                        
-                        
+
                         comb = cell_position.cell_id.combination_id
                         # if there is no combination, this is because the combination is not
                         # current, according to its valid_to date.
@@ -104,7 +100,7 @@ class CombinationsToReportFilters:
                                     variable_set = item.variable_set_id
                                     if not(variable_set is None):
                                         for item in variable_set.variable_set_items:
-                                            metric = CombinationsToReportFilters.find_operation_with_id(self,context,related_report,item.variable_id.variable_id)
+                                            metric = CombinationsToReportFilters.find_operation_with_id(self,related_report,item.variable_id.variable_id)
                                             report_cell.metric = metric
                                             if metric is None:
                                                 warning_list.append( ("error", "no output layer item for metric", template_code, comb.combination_id, item.variable_id.variable_id, None , None, None ))
@@ -119,35 +115,32 @@ class CombinationsToReportFilters:
                                 else:
                                     
                                     try:
-                                        filter = Filter()
+                                        the_filter = Filter()
                                     
-                                        operation = CombinationsToReportFilters.find_operation_with_id(self,context,related_report,item.variable_id.variable_id)
+                                        operation = CombinationsToReportFilters.find_operation_with_id(self,related_report,item.variable_id.variable_id)
                                         
                                         member = item.member_id
                                         if(member is not None):
-                                            member_id = member.member_id
-                                            member_code = member.code
-                                            
+                                           
                                             domain_id = item.variable_id.domain_id.domain_id
-                                            literals = CombinationsToReportFilters.find_literals_with_id(self,context,sdd_context,member_code,member_id,domain_id,warning_list, template_code, comb.combination_id, item.variable_id.variable_id )
-                                            filter.operation = operation
+                                            literals = CombinationsToReportFilters.find_literals_with_id(self,context,sdd_context,member,domain_id,warning_list, template_code, comb.combination_id, item.variable_id.variable_id )
+                                            the_filter.operation = operation
                                             for literal in literals:
-                                                filter.member.append(literal)
+                                                the_filter.member.append(literal)
                                                 
                                             if not(operation is None):
-                                                report_cell.filters.append(filter)    
+                                                report_cell.filters.append(the_filter)    
                                                 
-                                    except:
-                                        warning_list.append( ("error","failed making a filter ",template_code, comb.combination_id,   item.variable_id.variable_id, None, None, None))
+                                    except Exception as e:
+                                        print(e)
+                                        warning_list.append( ("error","failed making a filter ",template_code, comb.combination_id,   item.variable_id.variable_id, None, None, str(e)))
                                         
                                         pass
             
                     except:
                         pass
         
-        
-        
-        
+
         f = open(context.output_directory + os.sep + "warnings.csv",
                  "a",  encoding='utf-8')  
         f.write("warning_type,message,cube,combination,variable,member, hierarchy, domain\r")    
@@ -175,13 +168,8 @@ class CombinationsToReportFilters:
             
         f2.close()
             
-              
-             
-    
             
-            
-            
-    def find_operation_with_id(self,context,related_report,op_id):
+    def find_operation_with_id(self,related_report,op_id):
 
         for op in related_report.outputLayer.eOperations:
             if op.name == op_id:
@@ -195,70 +183,94 @@ class CombinationsToReportFilters:
                 return rol_class
         return None   
     
-    def find_literals_with_id(self,context,sdd_context,member_code,member_id,domain_id,warning_list, template_code, combination_id, variable_id):
+    def find_literals_with_id(self,context,sdd_context,member,domain_id,warning_list, template_code, combination_id, variable_id):
         return_literal = None
-        return_literal = CombinationsToReportFilters.find_literal_with_id(self,context,sdd_context,member_code,domain_id)
-        return CombinationsToReportFilters.get_literal_list_considering_hierarchies(self,context,sdd_context,return_literal,member_id,domain_id,warning_list, template_code,combination_id, variable_id)
+        return_literal = CombinationsToReportFilters.find_literal_with_id(self,context,member,domain_id)
+        return CombinationsToReportFilters.get_literal_list_considering_hierarchies(self,context,sdd_context,return_literal,member,domain_id,warning_list, template_code,combination_id, variable_id)
 
        
-    def find_literal_with_id(self,context,sdd_context,member_code,domain_id):
+    def find_literal_with_id(self,context,member,domain_id):
             try:
-                return context.enum_literals_map[domain_id + "_domain" +":" +  Utils.make_valid_id_for_literal(member_code)]
+                return context.enum_literals_map[domain_id + "_domain" +":" +  Utils.make_valid_id_for_literal(member.code)]
             except:
                 return None
 
-    def get_literal_list_considering_hierarchies(self,context,sdd_context,literal,member_id,domain_id, warning_list, template_code,combination_id, variable_id):
+    def get_literal_list_considering_hierarchies(self,context,sdd_context,literal,member,domain_id, warning_list, template_code,combination_id, variable_id):
         return_list = []
         if literal is None:
-            is_node = CombinationsToReportFilters.is_member_a_node(self,context,sdd_context,member_id,domain_id)
+            is_node = CombinationsToReportFilters.is_member_a_node(self,sdd_context,member)
             if not (is_node):
-                warning_list.append( ("error", "member does not exist in input layer and is not a node", template_code,combination_id, variable_id, member_id, None,domain_id))
+                warning_list.append( ("error", "member does not exist in input layer and is not a node", template_code,combination_id, variable_id, member.member_id, None,domain_id))
             pass
         else:
             return_list = [literal]
-        for hierarchy in sdd_context.member_hierarchies.memberHierarchies:
-            if hierarchy.domain_id.domain_id == domain_id:
-                hierarchy_id = hierarchy.member_hierarchy_id                
-                literal_list = CombinationsToReportFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,member_id,hierarchy_id, warning_list, template_code,combination_id, variable_id)
-                if not(literal_list is None):
+            
+        for domain,hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
+            if domain.domain_id == domain_id:
+                for hierarchy in hierarchy_list:
+                    hierarchy_id = hierarchy.member_hierarchy_id                
+                    literal_list = []
+                    CombinationsToReportFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy_id,literal_list)
                     return_list.extend(literal_list)
+                    
         if len(return_list) == 0:
-            warning_list.append( ("error","could not find any input layer members or sub members for member", template_code,combination_id, variable_id, member_id, None,domain_id))
+            warning_list.append( ("error","could not find any input layer members or sub members for member", template_code,combination_id, variable_id, member.member_id, None,domain_id))
         return return_list     
 
-    def is_member_a_node(self,context,sdd_context,member_id,domain_id):
+    def prepare_node_dictionaries_and_lists (self,sdd_context):
+        
         for node in sdd_context.member_hierarchies.memberHierarchiesNodes:
             if not (node.parent_member_id is None) and not (node.parent_member_id == ''):
-                if node.parent_member_id.member_id == member_id and node.parent_member_id.domain_id.domain_id == domain_id:
-                    return True
-        return False
+                sdd_context.members_that_are_nodes.append(node.parent_member_id)
+                member_plus_hierarchy = node.parent_member_id.member_id + ":" +  node.member_hierarchy_id.member_hierarchy_id
+                # ad the parent node to the dictionary of nodes that have children
+                if not(member_plus_hierarchy in sdd_context.member_plus_hierarchy_to_child_literals.keys() ):
+                    initial_member_list = []
+                    initial_member_list.append(node.member_id)
+                    sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy] = initial_member_list
+                else:
+                    member_list =  sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy]
+                    if not(node.member_id in member_list):
+                            member_list.append(node.member_id)
+                            
+        for hierarchy in sdd_context.member_hierarchies.memberHierarchies:
+            try:
+                hierarchy_list = sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id]
+                hierarchy_list.append(hierarchy)
+            except KeyError:
+                hierarchy_list = []
+                hierarchy_list.append(hierarchy)
+                sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id] = hierarchy_list
+                
+
+    def get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy,literal_list):
+        
+        key = member.member_id + ":" + hierarchy
+        child_members = []
+        try:
+            child_members = sdd_context.member_plus_hierarchy_to_child_literals[key]
+            for item in child_members:
+                literal = CombinationsToReportFilters.find_literal_with_id(self,context,item,item.domain_id.domain_id)
+                if not(literal is None):
+                    if not(literal in literal_list):
+                        literal_list.append(literal)
+                    
+            for item in child_members:
+                CombinationsToReportFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,item,hierarchy, literal_list)
+        except KeyError:
+            pass
+        
             
-    def get_literal_list_considering_hierarchy(self,context,sdd_context,member_id,hierarchy, warning_list, template_code,combination_id, variable_id):
-        return_list = []
-        for node in sdd_context.member_hierarchies.memberHierarchiesNodes:
-            if node.member_hierarchy_id.member_hierarchy_id == hierarchy:
-                if CombinationsToReportFilters.node_is_child_of_member(self,context,sdd_context,node,member_id,hierarchy, warning_list, template_code,combination_id, variable_id):
-                    literal = CombinationsToReportFilters.find_literal_with_id(self,context,sdd_context,node.member_id.code,node.member_id.domain_id.domain_id)
-                    if literal is None:
-                        pass
-                        #warning_list.append( ("notice","child member x of hierarchy y does not exist in input layer",template_code,combination_id, variable_id, node.member_id.code, node.member_hierarchy_id.member_hierarchy_id,node.member_id.domain_id.domain_id))
-                    else:
-                        return_list.append(literal) 
-        return return_list
-            
-    def node_is_child_of_member(self,context,sdd_context,node,member_id,hierarchy, warning_list, template_code,combination_id, variable_id):
-        parent_member_id = node.parent_member_id
-        if parent_member_id is None:
-            return False
-        elif parent_member_id.member_id == member_id:
+    def is_member_a_node(self,sdd_context,member):
+
+        if member in sdd_context.members_that_are_nodes:
             return True
         else:
-            parent_node = CombinationsToReportFilters.find_member_node(self,sdd_context,parent_member_id,hierarchy, warning_list, template_code,combination_id, variable_id)
-            return CombinationsToReportFilters.node_is_child_of_member(self,context,sdd_context,parent_node,member_id,hierarchy, warning_list, template_code,combination_id, variable_id)
+            return False
+
         
-    def find_member_node(self,sdd_context,member_id,hierarchy, warning_list, template_code,combination_id, variable_id):
+    def find_member_node(self,sdd_context,member_id,hierarchy):
         try:
             return sdd_context.member_hierarchy_node_dictionary[hierarchy + ":" + member_id.member_id]
         except:
             pass
-            #warning_list.append(("notice","couldnt find member_hierarchy_node ", template_code,combination_id, variable_id, member_id.code, hierarchy,None))
