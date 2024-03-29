@@ -4,6 +4,8 @@ package org.eclipse.efbt.regdna.model.regdna.util;
 
 import org.eclipse.efbt.regdna.model.regdna.AndPredicate;
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
+import org.eclipse.efbt.regdna.model.regdna.CellBasedReport;
+import org.eclipse.efbt.regdna.model.regdna.ColumnFilters;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotation;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective;
 import org.eclipse.efbt.regdna.model.regdna.ELAttribute;
@@ -33,6 +35,8 @@ import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.ReportColumn;
 import org.eclipse.efbt.regdna.model.regdna.ReportModule;
 import org.eclipse.efbt.regdna.model.regdna.ReportRow;
+import org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport;
+import org.eclipse.efbt.regdna.model.regdna.RowFilters;
 import org.eclipse.efbt.regdna.model.regdna.RuleForILTablePart;
 import org.eclipse.efbt.regdna.model.regdna.RulesForILTable;
 import org.eclipse.efbt.regdna.model.regdna.RulesForReport;
@@ -42,6 +46,7 @@ import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectValueAs;
 import org.eclipse.efbt.regdna.model.regdna.TableFilter;
+import org.eclipse.efbt.regdna.model.regdna.WholeReportFilters;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
 import org.eclipse.emf.ecore.EObject;
@@ -369,6 +374,13 @@ public class regdnaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case regdnaPackage.CELL_BASED_REPORT: {
+				CellBasedReport cellBasedReport = (CellBasedReport)theEObject;
+				T result = caseCellBasedReport(cellBasedReport);
+				if (result == null) result = caseReport(cellBasedReport);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case regdnaPackage.REPORT_ROW: {
 				ReportRow reportRow = (ReportRow)theEObject;
 				T result = caseReportRow(reportRow);
@@ -397,6 +409,31 @@ public class regdnaSwitch<T> extends Switch<T> {
 				ReportModule reportModule = (ReportModule)theEObject;
 				T result = caseReportModule(reportModule);
 				if (result == null) result = caseModule(reportModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case regdnaPackage.ROW_COLUMN_BASED_REPORT: {
+				RowColumnBasedReport rowColumnBasedReport = (RowColumnBasedReport)theEObject;
+				T result = caseRowColumnBasedReport(rowColumnBasedReport);
+				if (result == null) result = caseReport(rowColumnBasedReport);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case regdnaPackage.ROW_FILTERS: {
+				RowFilters rowFilters = (RowFilters)theEObject;
+				T result = caseRowFilters(rowFilters);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case regdnaPackage.COLUMN_FILTERS: {
+				ColumnFilters columnFilters = (ColumnFilters)theEObject;
+				T result = caseColumnFilters(columnFilters);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case regdnaPackage.WHOLE_REPORT_FILTERS: {
+				WholeReportFilters wholeReportFilters = (WholeReportFilters)theEObject;
+				T result = caseWholeReportFilters(wholeReportFilters);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -945,6 +982,21 @@ public class regdnaSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Cell Based Report</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Cell Based Report</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCellBasedReport(CellBasedReport object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Report Row</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1016,6 +1068,66 @@ public class regdnaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseReportModule(ReportModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Row Column Based Report</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Row Column Based Report</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRowColumnBasedReport(RowColumnBasedReport object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Row Filters</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Row Filters</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRowFilters(RowFilters object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Column Filters</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Column Filters</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseColumnFilters(ColumnFilters object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Whole Report Filters</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Whole Report Filters</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseWholeReportFilters(WholeReportFilters object) {
 		return null;
 	}
 

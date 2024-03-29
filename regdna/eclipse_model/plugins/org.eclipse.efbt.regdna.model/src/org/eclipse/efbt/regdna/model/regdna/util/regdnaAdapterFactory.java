@@ -4,6 +4,8 @@ package org.eclipse.efbt.regdna.model.regdna.util;
 
 import org.eclipse.efbt.regdna.model.regdna.AndPredicate;
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
+import org.eclipse.efbt.regdna.model.regdna.CellBasedReport;
+import org.eclipse.efbt.regdna.model.regdna.ColumnFilters;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotation;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective;
 import org.eclipse.efbt.regdna.model.regdna.ELAttribute;
@@ -33,6 +35,8 @@ import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.ReportColumn;
 import org.eclipse.efbt.regdna.model.regdna.ReportModule;
 import org.eclipse.efbt.regdna.model.regdna.ReportRow;
+import org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport;
+import org.eclipse.efbt.regdna.model.regdna.RowFilters;
 import org.eclipse.efbt.regdna.model.regdna.RuleForILTablePart;
 import org.eclipse.efbt.regdna.model.regdna.RulesForILTable;
 import org.eclipse.efbt.regdna.model.regdna.RulesForReport;
@@ -42,6 +46,7 @@ import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectValueAs;
 import org.eclipse.efbt.regdna.model.regdna.TableFilter;
+import org.eclipse.efbt.regdna.model.regdna.WholeReportFilters;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -252,6 +257,10 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 				return createReportAdapter();
 			}
 			@Override
+			public Adapter caseCellBasedReport(CellBasedReport object) {
+				return createCellBasedReportAdapter();
+			}
+			@Override
 			public Adapter caseReportRow(ReportRow object) {
 				return createReportRowAdapter();
 			}
@@ -270,6 +279,22 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseReportModule(ReportModule object) {
 				return createReportModuleAdapter();
+			}
+			@Override
+			public Adapter caseRowColumnBasedReport(RowColumnBasedReport object) {
+				return createRowColumnBasedReportAdapter();
+			}
+			@Override
+			public Adapter caseRowFilters(RowFilters object) {
+				return createRowFiltersAdapter();
+			}
+			@Override
+			public Adapter caseColumnFilters(ColumnFilters object) {
+				return createColumnFiltersAdapter();
+			}
+			@Override
+			public Adapter caseWholeReportFilters(WholeReportFilters object) {
+				return createWholeReportFiltersAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -796,6 +821,20 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.CellBasedReport <em>Cell Based Report</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.regdna.model.regdna.CellBasedReport
+	 * @generated
+	 */
+	public Adapter createCellBasedReportAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.ReportRow <em>Report Row</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -862,6 +901,62 @@ public class regdnaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createReportModuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport <em>Row Column Based Report</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport
+	 * @generated
+	 */
+	public Adapter createRowColumnBasedReportAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.RowFilters <em>Row Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowFilters
+	 * @generated
+	 */
+	public Adapter createRowFiltersAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.ColumnFilters <em>Column Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ColumnFilters
+	 * @generated
+	 */
+	public Adapter createColumnFiltersAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.efbt.regdna.model.regdna.WholeReportFilters <em>Whole Report Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.efbt.regdna.model.regdna.WholeReportFilters
+	 * @generated
+	 */
+	public Adapter createWholeReportFiltersAdapter() {
 		return null;
 	}
 

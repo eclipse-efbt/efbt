@@ -13,20 +13,19 @@
 # This script creates an analysis model from an SDD file and saves it as a CSV filegit add 
 
 
-
+from entry_points.create_reports_info import RunCreateReports
 from entry_points.website_to_sddmodel import RunWebsiteToSDDModel
 from entry_points.sddmodel_to_datamodel import RunSDDModelToDataModel 
 from context.context import Context
 from context.sdd_context import SDDContext
-from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_datamodel import TranslateSDDModelToDataModel
 from persister.persist_to_file import PersistToFile
-from process_steps.report_filters.translate_combinations_to_report_filters import CombinationsToReportFilters
+from process_steps.report_filters.translate_to_row_column_reports import TranslateToRowColumnReports
 
 
-class RunCreateReports:
+class RunCreateRowColumnReports:
     
     def run(self,context,sdd_context):
-        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context)
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context)
         
         
 if __name__ == '__main__':
@@ -39,8 +38,9 @@ if __name__ == '__main__':
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModel().run(context,sdd_context)
     RunCreateReports().run(context,sdd_context)
+    RunCreateRowColumnReports().run(context,sdd_context)
     persister = PersistToFile()
     persister.save_model_as_regdna_file(context)
     persister.save_model_as_xmi_file(context)
     persister.persist_cell_based_reports(context)
-    persister.create_example_reports(context)
+    persister.persist_row_column_based_reports(context)

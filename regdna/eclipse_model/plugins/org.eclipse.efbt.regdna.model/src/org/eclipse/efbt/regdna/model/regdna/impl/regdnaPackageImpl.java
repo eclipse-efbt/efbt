@@ -296,6 +296,13 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass cellBasedReportEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass reportRowEClass = null;
 
 	/**
@@ -325,6 +332,34 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * @generated
 	 */
 	private EClass reportModuleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass rowColumnBasedReportEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass rowFiltersEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass columnFiltersEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass wholeReportFiltersEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1475,8 +1510,11 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getReport_ReportCells() {
-        return (EReference)getReport().getEStructuralFeatures().get(3);
+	public EClass getCellBasedReport() {
+		if (cellBasedReportEClass == null) {
+			cellBasedReportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(37);
+		}
+		return cellBasedReportEClass;
 	}
 
 	/**
@@ -1485,8 +1523,8 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getReport_Name() {
-        return (EAttribute)getReport().getEStructuralFeatures().get(4);
+	public EReference getCellBasedReport_ReportCells() {
+        return (EReference)getCellBasedReport().getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1497,7 +1535,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	@Override
 	public EClass getReportRow() {
 		if (reportRowEClass == null) {
-			reportRowEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(37);
+			reportRowEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(38);
 		}
 		return reportRowEClass;
 	}
@@ -1520,7 +1558,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	@Override
 	public EClass getReportColumn() {
 		if (reportColumnEClass == null) {
-			reportColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(38);
+			reportColumnEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(39);
 		}
 		return reportColumnEClass;
 	}
@@ -1543,7 +1581,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	@Override
 	public EClass getReportCell() {
 		if (reportCellEClass == null) {
-			reportCellEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(39);
+			reportCellEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(40);
 		}
 		return reportCellEClass;
 	}
@@ -1606,7 +1644,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	@Override
 	public EClass getFilter() {
 		if (filterEClass == null) {
-			filterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(40);
+			filterEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(41);
 		}
 		return filterEClass;
 	}
@@ -1649,7 +1687,7 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	@Override
 	public EClass getReportModule() {
 		if (reportModuleEClass == null) {
-			reportModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(41);
+			reportModuleEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(42);
 		}
 		return reportModuleEClass;
 	}
@@ -1662,6 +1700,158 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	@Override
 	public EReference getReportModule_Reports() {
         return (EReference)getReportModule().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getRowColumnBasedReport() {
+		if (rowColumnBasedReportEClass == null) {
+			rowColumnBasedReportEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(43);
+		}
+		return rowColumnBasedReportEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getRowColumnBasedReport_ColumnFilters() {
+        return (EReference)getRowColumnBasedReport().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getRowColumnBasedReport_RowFilters() {
+        return (EReference)getRowColumnBasedReport().getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getRowColumnBasedReport_WholeReportFilters() {
+        return (EReference)getRowColumnBasedReport().getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getRowFilters() {
+		if (rowFiltersEClass == null) {
+			rowFiltersEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(44);
+		}
+		return rowFiltersEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getRowFilters_Row() {
+        return (EReference)getRowFilters().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getRowFilters_Filters() {
+        return (EReference)getRowFilters().getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getRowFilters_Metric() {
+        return (EReference)getRowFilters().getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getColumnFilters() {
+		if (columnFiltersEClass == null) {
+			columnFiltersEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(45);
+		}
+		return columnFiltersEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getColumnFilters_Column() {
+        return (EReference)getColumnFilters().getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getColumnFilters_Filters() {
+        return (EReference)getColumnFilters().getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getColumnFilters_Metric() {
+        return (EReference)getColumnFilters().getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getWholeReportFilters() {
+		if (wholeReportFiltersEClass == null) {
+			wholeReportFiltersEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(46);
+		}
+		return wholeReportFiltersEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getWholeReportFilters_Filters() {
+        return (EReference)getWholeReportFilters().getEStructuralFeatures().get(0);
 	}
 
 	/**

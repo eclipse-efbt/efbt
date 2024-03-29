@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 from utils.utils import Utils
-from regdna import Report,ReportRow,ReportColumn,ReportCell,Filter
+from regdna import CellBasedReport,ReportRow,ReportColumn,ReportCell,Filter
 import os
 import csv
 
@@ -43,7 +43,7 @@ class CombinationsToReportFilters:
             altered_table_name = Utils.make_valid_id(table_code) +"_OutputItem"
             report_rol = CombinationsToReportFilters.get_report_rol_for_table_code(self, altered_table_name, context)
             if not (report_rol is None):
-                report = Report()
+                report = CellBasedReport()
                 report.outputLayer = report_rol
                 context.reports_module.reports.append(report)
                 context.reports_dictionary[altered_table_name] = report
