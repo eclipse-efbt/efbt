@@ -4,7 +4,7 @@ package org.eclipse.efbt.regdna.model.regdna.impl;
 
 import java.util.Collection;
 
-import org.eclipse.efbt.regdna.model.regdna.CellBaseReport;
+import org.eclipse.efbt.regdna.model.regdna.CellBasedReport;
 import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
@@ -20,18 +20,18 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Cell Base Report</b></em>'.
+ * An implementation of the model object '<em><b>Cell Based Report</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.CellBaseReportImpl#getReportCells <em>Report Cells</em>}</li>
+ *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.CellBasedReportImpl#getReportCells <em>Report Cells</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
+public class CellBasedReportImpl extends ReportImpl implements CellBasedReport {
 	/**
 	 * The cached value of the '{@link #getReportCells() <em>Report Cells</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -47,7 +47,7 @@ public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected CellBaseReportImpl() {
+	protected CellBasedReportImpl() {
 		super();
 	}
 
@@ -58,7 +58,7 @@ public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return regdnaPackage.eINSTANCE.getCellBaseReport();
+		return regdnaPackage.eINSTANCE.getCellBasedReport();
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
 	@Override
 	public EList<ReportCell> getReportCells() {
 		if (reportCells == null) {
-			reportCells = new EObjectContainmentEList<ReportCell>(ReportCell.class, this, regdnaPackage.CELL_BASE_REPORT__REPORT_CELLS);
+			reportCells = new EObjectContainmentEList<ReportCell>(ReportCell.class, this, regdnaPackage.CELL_BASED_REPORT__REPORT_CELLS);
 		}
 		return reportCells;
 	}
@@ -82,7 +82,7 @@ public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case regdnaPackage.CELL_BASE_REPORT__REPORT_CELLS:
+			case regdnaPackage.CELL_BASED_REPORT__REPORT_CELLS:
 				return ((InternalEList<?>)getReportCells()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -96,7 +96,7 @@ public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case regdnaPackage.CELL_BASE_REPORT__REPORT_CELLS:
+			case regdnaPackage.CELL_BASED_REPORT__REPORT_CELLS:
 				return getReportCells();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -111,7 +111,7 @@ public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case regdnaPackage.CELL_BASE_REPORT__REPORT_CELLS:
+			case regdnaPackage.CELL_BASED_REPORT__REPORT_CELLS:
 				getReportCells().clear();
 				getReportCells().addAll((Collection<? extends ReportCell>)newValue);
 				return;
@@ -127,7 +127,7 @@ public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case regdnaPackage.CELL_BASE_REPORT__REPORT_CELLS:
+			case regdnaPackage.CELL_BASED_REPORT__REPORT_CELLS:
 				getReportCells().clear();
 				return;
 		}
@@ -142,10 +142,10 @@ public class CellBaseReportImpl extends ReportImpl implements CellBaseReport {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case regdnaPackage.CELL_BASE_REPORT__REPORT_CELLS:
+			case regdnaPackage.CELL_BASED_REPORT__REPORT_CELLS:
 				return reportCells != null && !reportCells.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //CellBaseReportImpl
+} //CellBasedReportImpl
