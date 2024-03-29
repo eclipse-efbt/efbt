@@ -31,6 +31,9 @@ ELStructuralFeature returns regdna::ELStructuralFeature:
 
 SelectColumn returns regdna::SelectColumn:
 	 SelectColumnMemberAs | SelectColumnAttributeAs | SelectDerivedColumnAs | SelectValueAs;
+	 
+Report returns 	regdna::Report:
+	CellBasedReport | RowColumnBasedReport ;
 
 
 
@@ -268,15 +271,54 @@ ReportModule returns regdna::ReportModule:
 		('reports' '{' reports+=Report ( "," reports+=Report)* '}' )?
 	'}';
 	
-Report returns regdna::Report:
-	{regdna::Report}
-	'Report'
+CellBasedReport returns regdna::CellBasedReport:
+	{regdna::CellBasedReport}
+	'CellBasedReport'
 	'{'
 		('outputLayer' outputLayer=[regdna::ELClass|QualifiedName])?
 		('rows' '{' rows+=ReportRow (  rows+=ReportRow)* '}' )?
 		('columns' '{' columns+=ReportColumn (  columns+=ReportColumn)* '}' )?
 		('reportCells' '{' reportCells+=ReportCell (  reportCells+=ReportCell)* '}' )?
 	'}';
+	
+RowColumnBasedReport returns regdna::RowColumnBasedReport:
+	{regdna::RowColumnBasedReport}
+	'RowColumnBasedReport'
+	'{'
+		('outputLayer' outputLayer=[regdna::ELClass|QualifiedName])?
+		('rows' '{' rows+=ReportRow (  rows+=ReportRow)* '}' )?
+		('columns' '{' columns+=ReportColumn (  columns+=ReportColumn)* '}' )?
+		('wholeReportFilters' '{' wholeReportFilters=WholeReportFilters '}' )?
+		('rowFilters' '{' rowFilters+=RowFilters (  rowFilters+=RowFilters)* '}' )?
+		('columnFilters' '{' columnFilters+=ColumnFilters (  columnFilters+=ColumnFilters )* '}' )?
+		
+	'}';
+	
+RowFilters returns regdna::RowFilters:
+	{regdna::RowFilters}
+	'RowFilters'
+	'{'
+		('row' row=[regdna::ReportRow|QualifiedName])?
+		('metric' metric=[regdna::ELOperation|QualifiedName])?
+		('filters' '{' filters+=Filter (  filters+=Filter)* '}' )?
+	'}';
+
+ColumnFilters returns regdna::ColumnFilters:
+	{regdna::ColumnFilters}
+	'ColumnFilters'
+	'{'
+		('column' column=[regdna::ReportColumn|QualifiedName])?
+		('metric' metric=[regdna::ELOperation|QualifiedName])?
+		('filters' '{' filters+=Filter (  filters+=Filter)* '}' )?
+	'}';
+	
+WholeReportFilters returns regdna::WholeReportFilters:
+	{regdna::WholeReportFilters}
+	'WholeReportFilters'
+	'{'
+		('filters' '{' filters+=Filter (  filters+=Filter)* '}' )?
+	'}';
+
 
 ReportRow returns regdna::ReportRow:
 	{regdna::ReportRow}

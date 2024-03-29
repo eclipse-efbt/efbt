@@ -16,8 +16,8 @@ from pyecore.resources.json import JsonResource
 from utils.utils import Utils
 
 
-from regdna import ELAttribute, ELClass, ELEnum, ELOperation, ELReference,SelectColumnAttributeAs
-
+from regdna import ELAttribute, ELClass, ELEnum, ELOperation, ELReference 
+from regdna import SelectColumnAttributeAs,RowColumnBasedReport,CellBasedReport
 
 class PersistToFile:
     '''
@@ -341,66 +341,171 @@ class PersistToFile:
                
                 f.close()
     
-    def persist_reports(self, context):
+    def persist_cell_based_reports(self, context):
         '''
         Documentation for persist_generation_transformations
         '''
         reports = context.reports_module.reports
         for report in reports:
-            if not(report.outputLayer is None):
-                f = open(context.output_directory + os.sep + 'regdna' +
-                         os.sep + report.outputLayer.name +
-                         '.regdna', "a",  encoding='utf-8')
-                f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
-                f.write("\treports " + "{\r")
-                f.write("\t\tReport " + "{\r")
-                f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
-                f.write("\t\t\trows{\r")
-                for row in report.rows:                    
-                    f.write("\t\t\t\tReportRow " + row.name + "\r")
-                f.write("\t\t\t}\r")
-                f.write("\t\t\tcolumns{\r")
-                for col in report.columns:                    
-                    f.write("\t\t\tReportColumn " + col.name + "\r")
-                f.write("\t\t\t}\r")
-                f.write("\t\t\treportCells{\r")  
-                for cell in report.reportCells:                    
-                    f.write("\t\t\t\tReportCell{\r")
-                    
-                    data_point_id = "None"
-                    if not (cell.datapointID is None):
-                        data_point_id= cell.datapointID
-                        
-                    row_name = "None"
-                    if not (cell.row is None):
-                        row_name= cell.row.name
-                        
-                    col_name = "None"
-                    if not (cell.column is None):
-                        col_name= cell.column.name
-
-                    metric_name = "None"
-                    if not (cell.metric is None):
-                        metric_name = "output_tables." + cell.metric.eContainer().name + "." + cell.metric.name
-                        
-                    
-                    
-                    f.write("\t\t\t\t\tdatapointID \"" + data_point_id + "\" row " + row_name + " column " + col_name  + " metric " + metric_name+ " filters {\r")
-                    for filter in cell.filters:
-                        operation_name = "none"
-                        if not(filter.operation is None):
-                            operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
-                        f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
-                        for item in filter.member:
-                            f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
-                        f.write(")\r")   
-                        f.write("\t\t\t\t\t\t}\r") 
-                    f.write("\t\t\t\t\t}\r")  
+            if isinstance(report, CellBasedReport): 
+                if not(report.outputLayer is None):
+                    f = open(context.output_directory + os.sep + 'regdna' +
+                             os.sep + report.outputLayer.name +
+                             '.regdna', "a",  encoding='utf-8')
+                    f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
+                    f.write("\treports " + "{\r")
+                    f.write("\t\tCellBasedReport " + "{\r")
+                    f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
+                    f.write("\t\t\trows{\r")
+                    for row in report.rows:                    
+                        f.write("\t\t\t\tReportRow " + row.name + "\r")
                     f.write("\t\t\t}\r")
-                f.write("\t\t}\r")
-                f.write("\t}\r")
-                f.write("}\r")
-                f.close()
+                    f.write("\t\t\tcolumns{\r")
+                    for col in report.columns:                    
+                        f.write("\t\t\tReportColumn " + col.name + "\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\treportCells{\r")  
+                    for cell in report.reportCells:                    
+                        f.write("\t\t\t\tReportCell{\r")
+                        
+                        data_point_id = "None"
+                        if not (cell.datapointID is None):
+                            data_point_id= cell.datapointID
+                            
+                        row_name = "None"
+                        if not (cell.row is None):
+                            row_name= cell.row.name
+                            
+                        col_name = "None"
+                        if not (cell.column is None):
+                            col_name= cell.column.name
+    
+                        metric_name = "None"
+                        if not (cell.metric is None):
+                            metric_name = "output_tables." + cell.metric.eContainer().name + "." + cell.metric.name
+                            
+                        
+                        
+                        f.write("\t\t\t\t\tdatapointID \"" + data_point_id + "\" row " + row_name + " column " + col_name  + " metric " + metric_name+ " filters {\r")
+                        for filter in cell.filters:
+                            operation_name = "none"
+                            if not(filter.operation is None):
+                                operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                            f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                            for item in filter.member:
+                                f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                            f.write(")\r")   
+                            f.write("\t\t\t\t\t\t}\r") 
+                        f.write("\t\t\t\t\t}\r")  
+                        f.write("\t\t\t}\r")
+                    f.write("\t\t}\r")
+                    f.write("\t}\r")
+                    f.write("}\r")
+                    f.close()
+                
+    def persist_row_column_based_reports(self, context):
+        '''
+        Documentation for persist_generation_transformations
+        '''
+        reports = context.reports_module.reports
+        for report in reports:
+            if isinstance(report, RowColumnBasedReport): 
+                if not(report.outputLayer is None):
+                    f = open(context.output_directory + os.sep + 'regdna' +
+                             os.sep + report.outputLayer.name +
+                             '_row_column.regdna', "a",  encoding='utf-8')
+                    f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
+                    f.write("\treports " + "{\r")
+                    f.write("\t\tRowColumnBasedReport " + "{\r")
+                    f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
+                    f.write("\t\t\trows{\r")
+                    for row in report.rows:                    
+                        f.write("\t\t\t\tReportRow " + row.name + "\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\tcolumns{\r")
+                    for col in report.columns:                    
+                        f.write("\t\t\tReportColumn " + col.name + "\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\twholeReportFilters{\r")  
+                    if not(report.wholeReportFilters is None):                    
+                        f.write("\t\t\t\tWholeReportFilters{\r")
+                        if len(report.wholeReportFilters.filters) > 0:
+                            f.write("\t\t\t\t\tfilters {\r")
+                            for filter in report.wholeReportFilters.filters:
+                                operation_name = "none"
+                                if not(filter.operation is None):
+                                    operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                                f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                                for item in filter.member:
+                                    f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                                f.write(")\r")   
+                                f.write("\t\t\t\t\t\t}\r") 
+                            f.write("\t\t\t\t\t}\r")  
+                        f.write("\t\t\t\t}\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\trowFilters{\r")  
+                    for row_filter in report.rowFilters:                    
+                        f.write("\t\t\t\tRowFilters{\r")
+      
+                        row_name = "None"
+                        if not (row_filter.row is None):
+                            row_name= row_filter.row.name
+    
+                        metric_name = "None"
+                        if not (row_filter.metric is None):
+                            metric_name = "output_tables." + row_filter.metric.eContainer().name + "." + row_filter.metric.name
+    
+                        f.write("\t\t\t\t\trow " + row_name + "\r")
+                        if not(metric_name == "None"):
+                            f.write("\t\t\t\t\tmetric " + metric_name+ "\r")
+                        if len(row_filter.filters) > 0:
+                            f.write("\t\t\t\t\tfilters {\r")
+                            for filter in row_filter.filters:
+                                operation_name = "none"
+                                if not(filter.operation is None):
+                                    operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                                f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                                for item in filter.member:
+                                    f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                                f.write(")\r")   
+                                f.write("\t\t\t\t\t\t}\r") 
+                            f.write("\t\t\t\t\t}\r")  
+                        f.write("\t\t\t\t}\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\tcolumnFilters{\r")  
+                    for column_filter in report.columnFilters:                    
+                        f.write("\t\t\t\tColumnFilters{\r")
+      
+                        column_name = "None"
+                        if not (column_filter.column is None):
+                            column_name= column_filter.column.name
+    
+                        metric_name = "None"
+                        if not (column_filter.metric is None):
+                            metric_name = "output_tables." + column_filter.metric.eContainer().name + "." + column_filter.metric.name
+    
+                        f.write("\t\t\t\t\tcolumn " + column_name + "\r")
+                        if not(metric_name == "None"):
+                            f.write("\t\t\t\t\tmetric " + metric_name+ "\r")
+                        if len(column_filter.filters) > 0:
+                            f.write("\t\t\t\t\tfilters {\r")
+                            for filter in column_filter.filters:
+                                operation_name = "none"
+                                if not(filter.operation is None):
+                                    operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                                f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                                for item in filter.member:
+                                    f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                                f.write(")\r")   
+                                f.write("\t\t\t\t\t\t}\r") 
+                            f.write("\t\t\t\t\t}\r")  
+                        f.write("\t\t\t\t}\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t}\r")
+                    f.write("\t}\r")
+                    f.write("}\r")
+                    f.close()
+
 
     def create_example_reports(self, context):
         '''

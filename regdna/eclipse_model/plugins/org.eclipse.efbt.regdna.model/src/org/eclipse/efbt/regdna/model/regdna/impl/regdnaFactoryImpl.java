@@ -4,6 +4,8 @@ package org.eclipse.efbt.regdna.model.regdna.impl;
 
 import org.eclipse.efbt.regdna.model.regdna.AndPredicate;
 import org.eclipse.efbt.regdna.model.regdna.AttributePredicate;
+import org.eclipse.efbt.regdna.model.regdna.CellBasedReport;
+import org.eclipse.efbt.regdna.model.regdna.ColumnFilters;
 import org.eclipse.efbt.regdna.model.regdna.Comparitor;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotation;
 import org.eclipse.efbt.regdna.model.regdna.ELAnnotationDirective;
@@ -28,6 +30,8 @@ import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.ReportColumn;
 import org.eclipse.efbt.regdna.model.regdna.ReportModule;
 import org.eclipse.efbt.regdna.model.regdna.ReportRow;
+import org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport;
+import org.eclipse.efbt.regdna.model.regdna.RowFilters;
 import org.eclipse.efbt.regdna.model.regdna.RuleForILTablePart;
 import org.eclipse.efbt.regdna.model.regdna.RulesForILTable;
 import org.eclipse.efbt.regdna.model.regdna.RulesForReport;
@@ -37,6 +41,7 @@ import org.eclipse.efbt.regdna.model.regdna.SelectColumnMemberAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs;
 import org.eclipse.efbt.regdna.model.regdna.SelectValueAs;
 import org.eclipse.efbt.regdna.model.regdna.TableFilter;
+import org.eclipse.efbt.regdna.model.regdna.WholeReportFilters;
 import org.eclipse.efbt.regdna.model.regdna.regdnaFactory;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
 
@@ -123,11 +128,16 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 			case regdnaPackage.EL_ANNOTATION_DIRECTIVE: return createELAnnotationDirective();
 			case regdnaPackage.EL_STRING_TO_STRING_MAP_ENTRY: return createELStringToStringMapEntry();
 			case regdnaPackage.REPORT: return createReport();
+			case regdnaPackage.CELL_BASED_REPORT: return createCellBasedReport();
 			case regdnaPackage.REPORT_ROW: return createReportRow();
 			case regdnaPackage.REPORT_COLUMN: return createReportColumn();
 			case regdnaPackage.REPORT_CELL: return createReportCell();
 			case regdnaPackage.FILTER: return createFilter();
 			case regdnaPackage.REPORT_MODULE: return createReportModule();
+			case regdnaPackage.ROW_COLUMN_BASED_REPORT: return createRowColumnBasedReport();
+			case regdnaPackage.ROW_FILTERS: return createRowFilters();
+			case regdnaPackage.COLUMN_FILTERS: return createColumnFilters();
+			case regdnaPackage.WHOLE_REPORT_FILTERS: return createWholeReportFilters();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -499,6 +509,17 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	 * @generated
 	 */
 	@Override
+	public CellBasedReport createCellBasedReport() {
+		CellBasedReportImpl cellBasedReport = new CellBasedReportImpl();
+		return cellBasedReport;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public ReportRow createReportRow() {
 		ReportRowImpl reportRow = new ReportRowImpl();
 		return reportRow;
@@ -546,6 +567,50 @@ public class regdnaFactoryImpl extends EFactoryImpl implements regdnaFactory {
 	public ReportModule createReportModule() {
 		ReportModuleImpl reportModule = new ReportModuleImpl();
 		return reportModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public RowColumnBasedReport createRowColumnBasedReport() {
+		RowColumnBasedReportImpl rowColumnBasedReport = new RowColumnBasedReportImpl();
+		return rowColumnBasedReport;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public RowFilters createRowFilters() {
+		RowFiltersImpl rowFilters = new RowFiltersImpl();
+		return rowFilters;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ColumnFilters createColumnFilters() {
+		ColumnFiltersImpl columnFilters = new ColumnFiltersImpl();
+		return columnFilters;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public WholeReportFilters createWholeReportFilters() {
+		WholeReportFiltersImpl wholeReportFilters = new WholeReportFiltersImpl();
+		return wholeReportFilters;
 	}
 
 	/**

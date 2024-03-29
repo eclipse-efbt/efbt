@@ -175,10 +175,10 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//ReportColumn" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CellBasedReport" eSuperTypes="#//Report">
     <eStructuralFeatures xsi:type="ecore:EReference" name="reportCells" upperBound="-1"
         eType="#//ReportCell" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReportRow">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -205,5 +205,29 @@
   <eClassifiers xsi:type="ecore:EClass" name="ReportModule" eSuperTypes="#//Module">
     <eStructuralFeatures xsi:type="ecore:EReference" name="reports" upperBound="-1"
         eType="#//Report" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RowColumnBasedReport" eSuperTypes="#//Report">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columnFilters" upperBound="-1"
+        eType="#//ColumnFilters" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rowFilters" upperBound="-1"
+        eType="#//RowFilters" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wholeReportFilters" eType="#//WholeReportFilters"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RowFilters">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="row" eType="#//ReportRow"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filters" upperBound="-1"
+        eType="#//Filter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metric" eType="#//ELOperation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ColumnFilters">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="#//ReportColumn"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filters" upperBound="-1"
+        eType="#//Filter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metric" eType="#//ELOperation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WholeReportFilters">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filters" upperBound="-1"
+        eType="#//Filter" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

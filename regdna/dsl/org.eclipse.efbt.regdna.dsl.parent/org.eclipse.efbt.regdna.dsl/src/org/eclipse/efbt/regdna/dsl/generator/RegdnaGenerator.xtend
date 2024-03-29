@@ -41,6 +41,7 @@ import org.eclipse.efbt.regdna.model.regdna.SelectValueAs
 import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs
 import org.eclipse.efbt.regdna.model.regdna.Report
 import org.eclipse.efbt.regdna.model.regdna.ReportModule
+import org.eclipse.efbt.regdna.model.regdna.CellBasedReport
 
 /**
  * Generates code from your model files on save.
@@ -79,7 +80,8 @@ class RegdnaGenerator extends AbstractGenerator {
 		import sdd_domains.* 
 		
 		«FOR report : reportModule.reports»
-		«FOR cell : report.reportCells»
+		«IF report instanceof CellBasedReport»
+		«FOR cell : (report as CellBasedReport).reportCells»
 		class Cell_«report.outputLayer.name»_«cell.row.name»_«cell.column.name»
 		{
 			refers «report.outputLayer.name»_Table «report.outputLayer.name.giveSmallFirstLetter»_Table
@@ -109,6 +111,7 @@ class RegdnaGenerator extends AbstractGenerator {
 					}
 		}
 		«ENDFOR»
+		«ENDIF»
 		«ENDFOR»
 		
 		''')

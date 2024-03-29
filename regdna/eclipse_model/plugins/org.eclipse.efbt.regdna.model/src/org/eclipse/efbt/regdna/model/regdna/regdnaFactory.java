@@ -292,6 +292,15 @@ public interface regdnaFactory extends EFactory {
 	Report createReport();
 
 	/**
+	 * Returns a new object of class '<em>Cell Based Report</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Cell Based Report</em>'.
+	 * @generated
+	 */
+	CellBasedReport createCellBasedReport();
+
+	/**
 	 * Returns a new object of class '<em>Report Row</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -335,6 +344,42 @@ public interface regdnaFactory extends EFactory {
 	 * @generated
 	 */
 	ReportModule createReportModule();
+
+	/**
+	 * Returns a new object of class '<em>Row Column Based Report</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Row Column Based Report</em>'.
+	 * @generated
+	 */
+	RowColumnBasedReport createRowColumnBasedReport();
+
+	/**
+	 * Returns a new object of class '<em>Row Filters</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Row Filters</em>'.
+	 * @generated
+	 */
+	RowFilters createRowFilters();
+
+	/**
+	 * Returns a new object of class '<em>Column Filters</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Column Filters</em>'.
+	 * @generated
+	 */
+	ColumnFilters createColumnFilters();
+
+	/**
+	 * Returns a new object of class '<em>Whole Report Filters</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Whole Report Filters</em>'.
+	 * @generated
+	 */
+	WholeReportFilters createWholeReportFilters();
 
 	/**
 	 * Returns the package supported by this factory.

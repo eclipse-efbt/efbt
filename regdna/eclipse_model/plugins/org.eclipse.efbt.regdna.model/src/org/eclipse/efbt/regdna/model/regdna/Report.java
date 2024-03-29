@@ -18,8 +18,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Report#getOutputLayer <em>Output Layer</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Report#getRows <em>Rows</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Report#getColumns <em>Columns</em>}</li>
- *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Report#getReportCells <em>Report Cells</em>}</li>
- *   <li>{@link org.eclipse.efbt.regdna.model.regdna.Report#getName <em>Name</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getReport()
@@ -72,39 +70,5 @@ public interface Report extends EObject {
 	 * @generated
 	 */
 	EList<ReportColumn> getColumns();
-
-	/**
-	 * Returns the value of the '<em><b>Report Cells</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.efbt.regdna.model.regdna.ReportCell}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Report Cells</em>' containment reference list.
-	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getReport_ReportCells()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<ReportCell> getReportCells();
-
-	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getReport_Name()
-	 * @model id="true"
-	 * @generated
-	 */
-	String getName();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.Report#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
-	void setName(String value);
 
 } // Report
