@@ -68,9 +68,19 @@ class InputLayerLinkEnricher(object):
                                 ldm_entity.eAnnotations.append(the_entity_annotation)
                             
                             details = the_entity_annotation.details
-
+                            
+                            il_tables_count = 0
+                            
+                            for detail in details:
+                                if detail.key.startswith("il_table"):
+                                    il_tables_count = il_tables_count + 1
+                                
                             detail1 = ELStringToStringMapEntry()
-                            detail1.key = "il_table"
+                            if il_tables_count ==0:
+                                detail1.key = "il_table"
+                            else:
+                                detail1.key = "il_table" + str(il_tables_count)
+                                
                             detail1.value = table_name
                             details.append(detail1)
                         else:
