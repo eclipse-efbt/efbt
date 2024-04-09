@@ -275,11 +275,27 @@ class SubtypeExploder(object):
         reference_list = []
         for ref in entity.eStructuralFeatures:
             if isinstance(ref,ELReference):
-                if not(ref.name.endswith('_delegate')) and not(ref.containment):
+                if not(ref.name.endswith('_delegate')) and not(SubtypeExploder.reference_is_containment(self,ref)):
                         reference_list.append(ref)
             
         return reference_list
     
+    def reference_is_containment(self,ref):
+        '''
+        check if the reference is a containment reference
+        '''
+        return_value = False
+        annotation = Utils.get_annotation_with_source(ref, "relationship_type")
+        
+        if not(annotation is None):
+            details = annotation.details
+            
+            for detail in details.items:
+                if detail.key == "is_identifying_relationship":
+                    return_value = True
+
+        return return_value
+
     def get_non_discriminator_containment_references(self, context, entity):
         '''
         get any containment references from the entity, which are not delegates.
@@ -288,7 +304,7 @@ class SubtypeExploder(object):
         '''
         reference_list = []
         for ref in entity.eStructuralFeatures:
-            if isinstance(ref,ELReference) and ref.containment:
+            if isinstance(ref,ELReference) and SubtypeExploder.reference_is_containment(self,ref):
                 if not(ref.name.endswith('_delegate')):
                     reference_list.append(ref)
             
@@ -328,7 +344,7 @@ class SubtypeExploder(object):
         reference_list = []
         for ref in entity.eStructuralFeatures:
             if isinstance(ref,ELReference):
-                if ref.containment:
+                if SubtypeExploder.reference_is_containment(self,ref):
                     # if we are refering to an entity in a differnt hierarchy then
                     # we don't consider it a discriminator.
                     if not(SubtypeExploder.different_il_tables(self, context, entity,ref.eType)):

@@ -42,6 +42,8 @@ import org.eclipse.efbt.regdna.model.regdna.SelectDerivedColumnAs
 import org.eclipse.efbt.regdna.model.regdna.Report
 import org.eclipse.efbt.regdna.model.regdna.ReportModule
 import org.eclipse.efbt.regdna.model.regdna.CellBasedReport
+import org.eclipse.efbt.regdna.model.regdna.ELStructuralFeature
+import org.eclipse.efbt.regdna.model.regdna.ELAnnotation
 
 /**
  * Generates code from your model files on save.
@@ -312,12 +314,18 @@ class RegdnaGenerator extends AbstractGenerator {
 				@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)
 		«ENDFOR»
 		«IF elclass.EAbstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
+		«FOR annotation : elclass.EAnnotations»
+				«IF annotation.identifying_class() !== null »	refers «annotation.identifying_class()» [1..1] parent_«annotation.identifying_class()» opposite «annotation.identifying_feature()»«ENDIF»
+				«IF annotation.associated_class() !== null »	refers «annotation.associated_class()»  linked_«annotation.associated_class()»_«annotation.associated_feature()» opposite «annotation.associated_feature()»«ENDIF»
+		«ENDFOR»
+		
 		«FOR elmember : elclass.EStructuralFeatures»  
 		«FOR annotion : elmember.EAnnotations»
 			«IF true»	@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)«ENDIF»
 		«ENDFOR»
 		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
-		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF»	
+		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF» «IF elmember.is_identifying_relationship() »	opposite parent_«elclass.name»«ENDIF»«IF elmember.is_association_relationship() »	opposite linked_«elclass.name»_«elmember.name»«ENDIF»
+		
 		«ENDFOR»
 		«FOR eloperation : elclass.EOperations»
 		«FOR annotion : eloperation.EAnnotations»
@@ -351,6 +359,86 @@ class RegdnaGenerator extends AbstractGenerator {
 		«ENDIF»
 		        ''')
 		         }
+	
+	def String identifying_feature(ELAnnotation annotation) {
+		var String value = null
+		var String return_value = null
+		for (detail : annotation.details)
+		{
+			if (detail.key == "is_identified_by") {
+				value = detail.value
+				return_value = value.substring(value.indexOf('.')+1,value.length)
+			}
+		}
+		return return_value
+	}
+	
+	def String associated_feature(ELAnnotation annotation) {
+		var String value = null
+		var String return_value = null
+		for (detail : annotation.details)
+		{
+			if (detail.key == "is_associated_with") {
+				value = detail.value
+				return_value = value.substring(value.indexOf('.')+1,value.length)
+			}
+		}
+		return return_value
+	}
+	
+	def String identifying_class(ELAnnotation annotation)
+	{
+		var String value = null
+		var String return_value = null
+		for (detail : annotation.details)
+		{
+			if (detail.key == "is_identified_by") {
+				value = detail.value
+				return_value = value.substring(0,detail.value.indexOf('.'))
+			}
+		}
+		return return_value
+	}
+	
+	def String associated_class(ELAnnotation annotation)
+	{
+		var String value = null
+		var String return_value = null
+		for (detail : annotation.details)
+		{
+			if (detail.key == "is_associated_with") {
+				value = detail.value
+				return_value = value.substring(0,detail.value.indexOf('.'))
+			}
+		}
+		return return_value
+	}
+	
+	def boolean is_identifying_relationship(ELStructuralFeature feature) {
+		var return_value = false
+		for (annotation : feature.EAnnotations) { 
+			for (detail : annotation.details)
+			{
+				if (detail.key == "is_identifying_relationship") {
+					return_value = true
+				}
+			}
+		}
+		return return_value
+	}
+	
+	def boolean is_association_relationship(ELStructuralFeature feature) {
+		var return_value = false
+		for (annotation : feature.EAnnotations) { 
+			for (detail : annotation.details)
+			{
+				if (detail.key == "is_association_relationship") {
+					return_value = true
+				}
+			}
+		}
+		return return_value
+	}
 	
 
 	def EPackage processPackage(ELPackage elpackage,IFileSystemAccess2 fsa ) {
