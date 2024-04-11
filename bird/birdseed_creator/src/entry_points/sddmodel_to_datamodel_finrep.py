@@ -17,19 +17,20 @@ Created on 25 April 2022
 from entry_points.website_to_sddmodel import RunWebsiteToSDDModel 
 from context.context import Context
 from context.sdd_context import SDDContext
-from persister.persist_sdd import PersistSDD
 from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_datamodel import TranslateSDDModelToDataModel
 from persister.persist_to_file import PersistToFile
 from utils.relationship_enricher import RelationshipEnricher
 
-
-class RunSDDModelToDataModel:
+class RunSDDModelToDataModelFinrep:
     
     def run(self,context,sdd_context):
         context.persist_to_regdna = True
         context.load_eil_from_website  = True
+        context.reporting_framework = "FINREP"
+        context.reporting_framework_version = ["3","3.0-Ind","FINREP 3.0-Ind"]
         TranslateSDDModelToDataModel().do_import(context,sdd_context)
         RelationshipEnricher().enrich(context)
+        
         
         
 if __name__ == '__main__':
@@ -40,10 +41,13 @@ if __name__ == '__main__':
     sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
     sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
     RunWebsiteToSDDModel().run(sdd_context)
-    RunSDDModelToDataModel().run(context,sdd_context)
+    RunSDDModelToDataModelFinrep().run(context,sdd_context)
     persister = PersistToFile()
     persister.save_model_as_regdna_file(context)
     persister.save_model_as_xmi_file(context)
+    
+    
+
  
 
     

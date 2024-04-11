@@ -254,7 +254,7 @@ class ImportWebsiteToSDDModel(object):
                     subdomain_id = row[ColumnIndexes().variable_set_enumeration_subdomain_id]
                     variable_set = row[ColumnIndexes().variable_set_enumeration_valid_set]
 
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "9999-12-31")\
                             or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         variable_set_enumeration = VARIABLE_SET_ENUMERATION()
                         variable_set_enumeration.variable_id = \
@@ -341,7 +341,7 @@ class ImportWebsiteToSDDModel(object):
                     member_id = row[ColumnIndexes().subdomain_enumeration_member_id_index]
                     subdomain_id = row[ColumnIndexes().subdomain_enumeration_subdomain_id_index]
                     valid_to = row[ColumnIndexes().subdomain_enumeration_valid_to_index]
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "9999-12-31")\
                             or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                     
                         subdomain = ImportWebsiteToSDDModel.get_subdomain_with_id(self, context, subdomain_id)
@@ -369,7 +369,7 @@ class ImportWebsiteToSDDModel(object):
                     combination_combination_maintenance_agency = row[ColumnIndexes().combination_combination_maintenance_agency]
 
                     if (combination_combination_maintenance_agency == 'ECB') \
-                            and (combination_valid_to == '12/31/9999'):
+                            and ((combination_valid_to == '12/31/9999') or (combination_valid_to == '9999-12-31')):
                         comb = COMBINATION()
                         comb.code = combination_code
                         comb.combination_id = combination_id
@@ -424,7 +424,7 @@ class ImportWebsiteToSDDModel(object):
                     cube_type = row[ColumnIndexes().cube_cube_type_index]
                     valid_to = row[ColumnIndexes().cube_valid_to_index]
                     
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "9999-12-31") or (valid_to == "9999-12-31")\
                             or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         cube_structure_id = row[ColumnIndexes().cube_cube_structure_id_index] 
                         framework = ImportWebsiteToSDDModel.find_framework_with_id(self,context, framework_id)
@@ -497,7 +497,7 @@ class ImportWebsiteToSDDModel(object):
                     member = ImportWebsiteToSDDModel.find_member_with_id(self,member_id,context)
                     parent_member = ImportWebsiteToSDDModel.find_member_with_id(self,parent_member_id,context)
                     
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "9999-12-31") \
                             or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         hierarchy = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
                         hierarchy_node = MEMBER_HIERARCHY_NODE()
@@ -531,9 +531,8 @@ class ImportWebsiteToSDDModel(object):
                     version = row[ColumnIndexes().cube_structure_version]
                     description = row[ColumnIndexes().cube_structure_description_index]
                     maintenance_agency_id = row[ColumnIndexes().cube_structure_maintenance_agency]
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "9999-12-31")\
                             or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
-                    
                         maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id) 
                         cube_structure = CUBE_STRUCTURE(name=ImportWebsiteToSDDModel.replace_dots(self, code))
                         cube_structure.cube_structure_id = ImportWebsiteToSDDModel.replace_dots(self, id)
@@ -624,7 +623,7 @@ class ImportWebsiteToSDDModel(object):
                     table.version = version
                     # not needed yet table.valid_from = valid_from
                     # not needed yet table.valid_to = valid_to
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") \
+                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "9999-12-31") \
                             or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
                         context.report_tables.reportTables.append(table)
                     

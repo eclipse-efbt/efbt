@@ -93,7 +93,7 @@ class MainCatagoryFinder(object):
                         # set that we are interested in.
                         if version in context.reporting_framework_version:
                             
-                            if (valid_to == "12/31/9999") or (valid_to == "31/12/9999"):
+                            if (valid_to == "12/31/9999") or (valid_to == "31/12/9999") or (valid_to == "9999-12-31"):
                                 valid_eba_tables.append(table_id)
         file_location = context.file_directory + os.sep + "axis_ordinate.csv"
         header_skipped = False
@@ -126,14 +126,17 @@ class MainCatagoryFinder(object):
                     header_skipped = True
                 else:
                     axis_ordinate_id = row[0]
-                    if axis_ordinate_id.startswith("EBA_" + context.reporting_framework + "_EBA_"):
+                    axis_ordinate_id_string_prefix = "EBA_" + context.reporting_framework + "_EBA_"
+                    axis_ordinate_id_string_prefix_short = "EBA_" + context.reporting_framework 
+                    if axis_ordinate_id.startswith(axis_ordinate_id_string_prefix):
                         if axis_ordinate_id in valid_eba_axis_ordinates:
                             variable_id = row[1]
                             if variable_id == "EBA_MCY":
                                 # we find the report name by looking for the second
-                                # instance of the string FINREP_
-                                report_name = axis_ordinate_id[15:axis_ordinate_id.\
-                                              index("_" + context.reporting_framework,10)]
+                                # instance of the string FINREP_ or AE_ 
+                                axis_ordinate_id_string_prefix = "EBA_" + context.reporting_framework + "_EBA_"
+                                report_name = axis_ordinate_id[len(axis_ordinate_id_string_prefix):axis_ordinate_id.\
+                                              index("_" + context.reporting_framework,len(axis_ordinate_id_string_prefix_short))]
                                 member_id = row[2]
                                 amemnded_report_name = Utils.make_valid_id(report_name)
                                 if not(member_id in context.main_catagories_in_scope):
