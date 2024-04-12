@@ -10,22 +10,27 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-# This script creates an analysis model from an SDD file and saves it as a CSV filegit add 
+'''
+Created on 25 April 2022
+'''
 
-
-
-from entry_points.website_to_sddmodel import RunWebsiteToSDDModel
-from entry_points.sddmodel_to_datamodel_finrep import RunSDDModelToDataModelFinrep 
+from entry_points.website_to_sddmodel import RunWebsiteToSDDModel 
 from context.context import Context
 from context.sdd_context import SDDContext
+from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_datamodel import TranslateSDDModelToDataModel
 from persister.persist_to_file import PersistToFile
-from process_steps.report_filters.translate_combinations_to_report_filters import CombinationsToReportFilters
+from utils.ldm_relationship_enricher import LDMRelationshipEnricher
 
 
-class RunCreateReports:
+class RunSDDModelToDataModelLDM:
     
     def run(self,context,sdd_context):
-        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context)
+        context.persist_to_regdna = True
+        context.load_eil_from_website  = True
+        context.load_ldm = True
+        TranslateSDDModelToDataModel().do_import(context,sdd_context)
+        LDMRelationshipEnricher.enrich(self,context)
+        
         
         
 if __name__ == '__main__':
@@ -34,12 +39,17 @@ if __name__ == '__main__':
     context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
     context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results' 
     sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'   
     RunWebsiteToSDDModel().run(sdd_context)
-    RunSDDModelToDataModelFinrep().run(context,sdd_context)
-    RunCreateReports().run(context,sdd_context)
+    RunSDDModelToDataModelLDM().run(context,sdd_context)
     persister = PersistToFile()
     persister.save_model_as_regdna_file(context)
     persister.save_model_as_xmi_file(context)
-    persister.persist_cell_based_reports(context)
-    persister.create_example_reports(context)
+    
+
+    
+    
+
+ 
+
+    

@@ -44,54 +44,73 @@ class TranslateSDDModelToDataModel(object):
         '''
         for cube  in sdd_context.cubes.cubes:
             framework = cube.framework_id.framework_id
-            if (framework == context.reporting_framework + "_REF"):
-                class_name = cube.code
+            if not(context.load_ldm):
+                if (framework == context.reporting_framework + "_REF"):
+                    class_name = cube.code
+                else:
+                    if (context.use_codes):
+                        class_name = cube.code
+                    else:
+                        class_name = cube.name
             else:
                 if (context.use_codes):
                     class_name = cube.code
                 else:
                     class_name = cube.name
+                
                     
             altered_class_name = Utils.make_valid_id(class_name)
             object_id = cube.cube_id
             cube_type = cube.cube_type
             derived = True
 
-            if ((((framework == context.reporting_framework +"_REF") and (cube_type == "RC")) or ( context.load_eil_from_website and ((cube_type == "EIL"))) )):
-
-                altered_class_name = Utils.make_valid_id(class_name)
-                fullName = None
-                if cube_type == "EIL" : 
-                    fullName=altered_class_name
-                else:
-                    fullName=altered_class_name+"_OutputItem"
-                
-                if cube_type == "EIL":
-                    derived = False
+            if not(context.load_ldm):
+                if ((((framework == context.reporting_framework +"_REF") and (cube_type == "RC")) or ( context.load_eil_from_website and ((cube_type == "EIL"))) )):
+    
+                    altered_class_name = Utils.make_valid_id(class_name)
+                    fullName = None
+                    if cube_type == "EIL" : 
+                        fullName=altered_class_name
+                    else:
+                        fullName=altered_class_name+"_OutputItem"
                     
-                eclass = ELClass(name=fullName)
-                eclass.isDerived = derived
-                if context.add_pks_to_input_layer_from_website:
                     if cube_type == "EIL":
-                        pk_name = fullName + "_uniqueID"
-                        attribute = ELAttribute()
-                        attribute.name = pk_name
-                        attribute.eType = context.types.e_string
-                        attribute.eAttributeType = context.types.e_string
-                        attribute.iD = True
-                        attribute.lowerBound = 0
-                        attribute.upperBound = 1
-                        eclass.eStructuralFeatures.append(attribute)
-
-                if not (cube_type == "EIL"):
-                    context.output_tables_package.eClassifiers.extend([
-                                                                       eclass])
-                else:
+                        derived = False
+                        
+                    eclass = ELClass(name=fullName)
+                    eclass.isDerived = derived
+                    if context.add_pks_to_input_layer_from_website:
+                        if cube_type == "EIL":
+                            pk_name = fullName + "_uniqueID"
+                            attribute = ELAttribute()
+                            attribute.name = pk_name
+                            attribute.eType = context.types.e_string
+                            attribute.eAttributeType = context.types.e_string
+                            attribute.iD = True
+                            attribute.lowerBound = 0
+                            attribute.upperBound = 1
+                            eclass.eStructuralFeatures.append(attribute)
+    
+                    if not (cube_type == "EIL"):
+                        context.output_tables_package.eClassifiers.extend([
+                                                                           eclass])
+                    else:
+                        context.input_tables_package.eClassifiers.extend([
+                                                                           eclass])
+    
+                    # maintain a map a objectIDs to ELClasses
+                    context.classes_map[object_id] = eclass
+            else:
+                if cube_type == "LDM":
+                    altered_class_name = Utils.make_valid_id(class_name)
+                    fullName = altered_class_name
+                    derived = False
+                    eclass = ELClass(name=fullName)
+                    eclass.isDerived = derived
                     context.input_tables_package.eClassifiers.extend([
-                                                                       eclass])
-
-                # maintain a map a objectIDs to ELClasses
-                context.classes_map[object_id] = eclass
+                                                                           eclass])
+                    # maintain a map a objectIDs to ELClasses
+                    context.classes_map[object_id] = eclass
 
 
     def add_enums_and_literals_to_package_for_input_layer(self, context,sdd_context):

@@ -302,6 +302,25 @@ class PersistToFile:
                 
                 f.close()
         report_to_table_parts_file.close
+        f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
+                        os.sep + 
+                        'generation_rules_summary.csv', "a",  encoding='utf-8')
+        f.write("Key,Table Part, Main Table, ROL cube Item, Source Table,Source Column,ROL Cube Item,Notes\n")
+
+        for key,value in context.table_part_varaible_transformation_map.items():
+            
+            column_name = 'None'
+            table_name= 'None'
+            
+            if not(value is None):
+                table_name = value.eContainer().name
+                column_name = value.name
+                
+            f.write(key +"," + table_name +","  + column_name +",\n")
+                
+            
+        f.close()
+            
 
     def persist_generation_transformations(self, context):
         '''
