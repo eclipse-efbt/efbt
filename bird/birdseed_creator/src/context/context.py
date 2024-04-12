@@ -24,6 +24,7 @@ class Context(object):
     # variables to configure the behaviour
     
     use_codes = True
+    load_ldm = False
     load_eil_from_website = False
     use_variable_long_name = True
     persist_to_regdna = True
@@ -50,6 +51,7 @@ class Context(object):
     #table_parts_to_to_filter_items_map = {}
     table_parts_to_main_catagory_map = {}
     main_catagories_in_scope = []
+    table_part_varaible_transformation_map = {}
 
     # create  regdna  packages
     types_package = ELPackage(name='types')
