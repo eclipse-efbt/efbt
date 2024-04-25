@@ -106,11 +106,24 @@ class TranslateSDDModelToDataModel(object):
                     fullName = altered_class_name
                     derived = False
                     eclass = ELClass(name=fullName)
-                    eclass.isDerived = derived
                     context.input_tables_package.eClassifiers.extend([
                                                                            eclass])
                     # maintain a map a objectIDs to ELClasses
                     context.classes_map[object_id] = eclass
+                    # add an annotation to LDM cubes with the display name
+                    the_long_name_annotation = ELAnnotation()
+                    the_long_name_directive = Utils.get_annotation_directive(eclass.eContainer(), "long_name")
+                    the_long_name_annotation.source = the_long_name_directive
+                    details = the_long_name_annotation.details
+                    mapentry  = ELStringToStringMapEntry()
+                    mapentry.key = "long_name"
+                    mapentry.value = cube.displayName
+                    details.append(mapentry)
+                    eclass.eAnnotations.append(the_long_name_annotation)
+                    
+                    cube.displayName
+                    eclass.isDerived = derived
+                    
 
 
     def add_enums_and_literals_to_package_for_input_layer(self, context,sdd_context):

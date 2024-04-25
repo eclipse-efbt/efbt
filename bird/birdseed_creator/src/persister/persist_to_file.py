@@ -120,6 +120,8 @@ class PersistToFile:
                                     ".." + upperBoundString + "] ")
 
                         f.write(member.name)
+                        if not(member.eOpposite is None):
+                            f.write(" opposite " + member.eOpposite.eContainer().name + "." + member.eOpposite.name)
                         f.write(" \r")
                     elif isinstance(member, ELAttribute):
                         f.write("\t\t\t\t")

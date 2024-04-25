@@ -1945,13 +1945,22 @@ public interface regdnaPackage extends EPackage {
 	int EL_REFERENCE__EREFERENCE_TYPE = EL_STRUCTURAL_FEATURE_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>EOpposite</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_REFERENCE__EOPPOSITE = EL_STRUCTURAL_FEATURE_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>EL Reference</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_REFERENCE_FEATURE_COUNT = EL_STRUCTURAL_FEATURE_FEATURE_COUNT + 2;
+	int EL_REFERENCE_FEATURE_COUNT = EL_STRUCTURAL_FEATURE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>EL Reference</em>' class.
@@ -3626,6 +3635,17 @@ public interface regdnaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getELReference_EReferenceType();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.ELReference#getEOpposite <em>EOpposite</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>EOpposite</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ELReference#getEOpposite()
+	 * @see #getELReference()
+	 * @generated
+	 */
+	EReference getELReference_EOpposite();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ELStructuralFeature <em>EL Structural Feature</em>}'.

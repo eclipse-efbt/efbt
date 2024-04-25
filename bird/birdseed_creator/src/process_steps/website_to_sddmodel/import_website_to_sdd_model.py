@@ -429,7 +429,7 @@ class ImportWebsiteToSDDModel(object):
                         cube_structure_id = row[ColumnIndexes().cube_cube_structure_id_index] 
                         framework = ImportWebsiteToSDDModel.find_framework_with_id(self,context, framework_id)
                         cube_structure = ImportWebsiteToSDDModel.find_cube_structure_with_id(self,context, cube_structure_id)
-                        cube = CUBE(name=ImportWebsiteToSDDModel.replace_dots(self, cube_name))
+                        cube = CUBE(name=ImportWebsiteToSDDModel.replace_dots(self, cube_code))
                         cube.cube_id = ImportWebsiteToSDDModel.replace_dots(self, object_id)
                         cube.displayName = cube_name
                         cube.framework_id = framework

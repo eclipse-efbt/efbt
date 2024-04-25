@@ -314,17 +314,14 @@ class RegdnaGenerator extends AbstractGenerator {
 				@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)
 		«ENDFOR»
 		«IF elclass.EAbstract»abstract «ENDIF»class «elclass.name» «IF elclass.ESuperTypes.length == 1» extends «elclass.ESuperTypes.get(0).name» «ENDIF»{
-		«FOR annotation : elclass.EAnnotations»
-				«IF annotation.identifying_class() !== null »	refers «annotation.identifying_class()» [1..1] parent_«annotation.identifying_class()» opposite «annotation.identifying_feature()»«ENDIF»
-				«IF annotation.associated_class() !== null »	refers «annotation.associated_class()»  linked_«annotation.associated_class()»_«annotation.associated_feature()» opposite «annotation.associated_feature()»«ENDIF»
-		«ENDFOR»
+		
 		
 		«FOR elmember : elclass.EStructuralFeatures»  
 		«FOR annotion : elmember.EAnnotations»
 			«IF true»	@«annotion.source.name» («FOR detail : annotion.details SEPARATOR ","» «detail.key»="«detail.value»"«ENDFOR»)«ENDIF»
 		«ENDFOR»
 		«IF elmember instanceof ELAttribute» 	«IF elmember.ID»id «ENDIF»«elmember.EAttributeType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «ENDIF»
-		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name»«ENDIF» «IF elmember.is_identifying_relationship() »	opposite parent_«elclass.name»«ENDIF»«IF elmember.is_association_relationship() »	opposite linked_«elclass.name»_«elmember.name»«ENDIF»
+		«IF elmember instanceof ELReference» 	«IF elmember.containment»contains «ELSE»refers«ENDIF» «elmember.EType.name» «IF elmember.upperBound == -1»[]  «ELSEIF !((elmember.lowerBound == 0) && ( (elmember.upperBound == 1) || (elmember.upperBound == 0)) ) »[«elmember.lowerBound»..«elmember.upperBound»]«ENDIF» «elmember.name» «IF elmember.EOpposite !== null »	opposite «elmember.EOpposite.name»«ENDIF»«ENDIF»
 		
 		«ENDFOR»
 		«FOR eloperation : elclass.EOperations»

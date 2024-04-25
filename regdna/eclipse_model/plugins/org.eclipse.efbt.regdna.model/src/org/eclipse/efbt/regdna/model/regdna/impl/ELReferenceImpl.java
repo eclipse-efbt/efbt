@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <ul>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ELReferenceImpl#isContainment <em>Containment</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ELReferenceImpl#getEReferenceType <em>EReference Type</em>}</li>
+ *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ELReferenceImpl#getEOpposite <em>EOpposite</em>}</li>
  * </ul>
  *
  * @generated
@@ -57,6 +58,16 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 	 * @ordered
 	 */
 	protected ELClassifier eReferenceType;
+
+	/**
+	 * The cached value of the '{@link #getEOpposite() <em>EOpposite</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEOpposite()
+	 * @generated
+	 * @ordered
+	 */
+	protected ELReference eOpposite;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -146,6 +157,46 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 	 * @generated
 	 */
 	@Override
+	public ELReference getEOpposite() {
+		if (eOpposite != null && eOpposite.eIsProxy()) {
+			InternalEObject oldEOpposite = (InternalEObject)eOpposite;
+			eOpposite = (ELReference)eResolveProxy(oldEOpposite);
+			if (eOpposite != oldEOpposite) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, regdnaPackage.EL_REFERENCE__EOPPOSITE, oldEOpposite, eOpposite));
+			}
+		}
+		return eOpposite;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ELReference basicGetEOpposite() {
+		return eOpposite;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setEOpposite(ELReference newEOpposite) {
+		ELReference oldEOpposite = eOpposite;
+		eOpposite = newEOpposite;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, regdnaPackage.EL_REFERENCE__EOPPOSITE, oldEOpposite, eOpposite));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case regdnaPackage.EL_REFERENCE__CONTAINMENT:
@@ -153,6 +204,9 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 			case regdnaPackage.EL_REFERENCE__EREFERENCE_TYPE:
 				if (resolve) return getEReferenceType();
 				return basicGetEReferenceType();
+			case regdnaPackage.EL_REFERENCE__EOPPOSITE:
+				if (resolve) return getEOpposite();
+				return basicGetEOpposite();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -170,6 +224,9 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 				return;
 			case regdnaPackage.EL_REFERENCE__EREFERENCE_TYPE:
 				setEReferenceType((ELClassifier)newValue);
+				return;
+			case regdnaPackage.EL_REFERENCE__EOPPOSITE:
+				setEOpposite((ELReference)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -189,6 +246,9 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 			case regdnaPackage.EL_REFERENCE__EREFERENCE_TYPE:
 				setEReferenceType((ELClassifier)null);
 				return;
+			case regdnaPackage.EL_REFERENCE__EOPPOSITE:
+				setEOpposite((ELReference)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -205,6 +265,8 @@ public class ELReferenceImpl extends ELStructuralFeatureImpl implements ELRefere
 				return containment != CONTAINMENT_EDEFAULT;
 			case regdnaPackage.EL_REFERENCE__EREFERENCE_TYPE:
 				return eReferenceType != null;
+			case regdnaPackage.EL_REFERENCE__EOPPOSITE:
+				return eOpposite != null;
 		}
 		return super.eIsSet(featureID);
 	}

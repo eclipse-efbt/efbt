@@ -99,13 +99,24 @@ class Context(object):
     enum_map = {}
     enum_id_enum_name_map = {}
     import_logic_strings = []
+    
+    arc_to_source_map = {}
+    arc_name_to_arc_class_map = {}
+    
+    arc_target_to_arc_map = {}
 
     def __init__(self):
 
         key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
+        entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
+        relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
+        long_name_directive = ELAnnotationDirective(name='long_name', sourceURI='long_name')
         self.input_tables_package.annotationDirectives.append(key_annotation_directive)
         self.input_tables_package.annotationDirectives.append(dependency_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(entity_hierarchy_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(relationship_type_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(long_name_directive)
         types = EcoreLiteTypes()
         self.types_package.eClassifiers.append(types.e_string)
         self.types_package.eClassifiers.append(types.e_double)

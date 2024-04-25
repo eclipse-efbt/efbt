@@ -1312,6 +1312,16 @@ public class regdnaPackageImpl extends EPackageImpl implements regdnaPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getELReference_EOpposite() {
+        return (EReference)getELReference().getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getELStructuralFeature() {
 		if (elStructuralFeatureEClass == null) {
 			elStructuralFeatureEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(regdnaPackage.eNS_URI).getEClassifiers().get(31);

@@ -139,6 +139,14 @@ class GenerationRuleCreator(object):
 
                     if not(input_column is None):
                         select_column.attribute = input_column
+                        
+                    key= rules_for_il_table_part.name + ":" + rules_for_il_table_part.table_and_part_tuple[0] + ":" + output_item.name + "," + rules_for_il_table_part.name + "," + rules_for_il_table_part.table_and_part_tuple[0] + "," + output_item.name
+                    try:
+                        value = context.table_part_varaible_transformation_map[key]
+                        if (value is None) and not(input_column is None):
+                            context.table_part_varaible_transformation_map[key] = input_column
+                    except KeyError:
+                        context.table_part_varaible_transformation_map[key] = input_column
 
 
     def find_related_variable(self,context,sdd_context,output_item,input_entity_list):
