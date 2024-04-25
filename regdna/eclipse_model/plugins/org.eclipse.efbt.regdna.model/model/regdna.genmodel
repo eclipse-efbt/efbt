@@ -120,6 +120,7 @@
     <genClasses ecoreClass="regdna.ecore#//ELReference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//ELReference/containment"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//ELReference/eReferenceType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//ELReference/eOpposite"/>
     </genClasses>
     <genClasses image="false" ecoreClass="regdna.ecore#//ELStructuralFeature"/>
     <genClasses image="false" ecoreClass="regdna.ecore#//ELTypedElement">

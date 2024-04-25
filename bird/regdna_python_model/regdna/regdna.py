@@ -749,8 +749,9 @@ class ELReference(ELStructuralFeature):
 
     containment = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     eReferenceType = EReference(ordered=True, unique=True, containment=False, derived=False)
+    eOpposite = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, containment=None, eReferenceType=None, **kwargs):
+    def __init__(self, *, containment=None, eReferenceType=None, eOpposite=None, **kwargs):
 
         super().__init__(**kwargs)
 
@@ -759,3 +760,6 @@ class ELReference(ELStructuralFeature):
 
         if eReferenceType is not None:
             self.eReferenceType = eReferenceType
+
+        if eOpposite is not None:
+            self.eOpposite = eOpposite

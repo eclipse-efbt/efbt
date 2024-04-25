@@ -42,6 +42,7 @@ ELClass.eOperations.eType = ELOperation
 ELEnum.eLiterals.eType = ELEnumLiteral
 ELModelElement.eAnnotations.eType = ELAnnotation
 ELReference.eReferenceType.eType = ELClassifier
+ELReference.eOpposite.eType = ELReference
 ELTypedElement.eType.eType = ELClassifier
 ELAnnotation.details.eType = ELStringToStringMapEntry
 ELAnnotation.source.eType = ELAnnotationDirective

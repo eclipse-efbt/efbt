@@ -124,8 +124,9 @@ ELReference returns regdna::ELReference:
 	((containment?='contains' ) |
 	 ('refers') 
 	)
-	eType=[regdna::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")?
+	eType=[regdna::ELClassifier|QualifiedName] ("["((  lowerBound=EInt) ".." ( upperBound=EInt))?  "]")? 
 	name=ID
+	('opposite' eOpposite=[regdna::ELReference|QualifiedName])?
 	;
 
 

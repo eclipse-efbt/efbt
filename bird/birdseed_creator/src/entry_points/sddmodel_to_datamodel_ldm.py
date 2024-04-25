@@ -39,7 +39,7 @@ if __name__ == '__main__':
     context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
     context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results' 
     sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'   
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModelLDM().run(context,sdd_context)
     persister = PersistToFile()
