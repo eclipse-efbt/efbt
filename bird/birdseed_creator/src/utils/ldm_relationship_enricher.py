@@ -95,7 +95,7 @@ class LDMRelationshipEnricher(object):
                             # and we create class for the arc
                             
                             
-                            source_class = LDMRelationshipEnricher.find_class_with_long_name(self, context, entity_name)
+                            source_class = LDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(entity_name))
                             if (source_class is None):
                                 print("could not find source class " + entity_name  + " of arc : " + altered_arc_name)
                             else:
@@ -128,7 +128,7 @@ class LDMRelationshipEnricher(object):
                                     non_containment_reference)
                             
                         if not(arc_class is None):
-                            target_class = LDMRelationshipEnricher.find_class_with_long_name(self, context,target_entity_name)
+                            target_class = LDMRelationshipEnricher.find_class_with_long_name(self, context,Utils.make_valid_id(target_entity_name))
                             context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
                             target_class.eSuperTypes.extend([arc_class])
 
@@ -279,9 +279,9 @@ class LDMRelationshipEnricher(object):
                         reference_name = Utils.make_valid_id(relation_name)+"_association"
 
 
-                    the_class =  LDMRelationshipEnricher.find_class_with_long_name(self, context, source_class_name)
+                    the_class =  LDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(source_class_name))
 
-                    target_class = LDMRelationshipEnricher.find_class_with_long_name(self, context, target_class_name)
+                    target_class = LDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(target_class_name))
 
                     if (not (the_class is None) ) and (not (target_class is None)):
                         ereference = ELReference()
