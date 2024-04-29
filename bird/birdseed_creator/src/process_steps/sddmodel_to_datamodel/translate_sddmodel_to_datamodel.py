@@ -100,6 +100,16 @@ class TranslateSDDModelToDataModel(object):
     
                     # maintain a map a objectIDs to ELClasses
                     context.classes_map[object_id] = eclass
+                    the_long_name_annotation = ELAnnotation()
+                    the_long_name_directive = Utils.get_annotation_directive(eclass.eContainer(), "long_name")
+                    the_long_name_annotation.source = the_long_name_directive
+                    details = the_long_name_annotation.details
+                    mapentry  = ELStringToStringMapEntry()
+                    mapentry.key = "long_name"
+                    mapentry.value = Utils.make_valid_id(cube.displayName)
+                    details.append(mapentry)
+                    eclass.eAnnotations.append(the_long_name_annotation)
+                    eclass.isDerived = derived
             else:
                 if cube_type == "LDM":
                     altered_class_name = Utils.make_valid_id(class_name)
@@ -117,11 +127,9 @@ class TranslateSDDModelToDataModel(object):
                     details = the_long_name_annotation.details
                     mapentry  = ELStringToStringMapEntry()
                     mapentry.key = "long_name"
-                    mapentry.value = cube.displayName
+                    mapentry.value = Utils.make_valid_id(cube.displayName)
                     details.append(mapentry)
                     eclass.eAnnotations.append(the_long_name_annotation)
-                    
-                    cube.displayName
                     eclass.isDerived = derived
                     
 
@@ -378,6 +386,17 @@ class TranslateSDDModelToDataModel(object):
                                 
                                 try:
                                     the_class = context.classes_map[class_id]
+                                    the_long_name_annotation = ELAnnotation()
+                                    the_long_name_directive = Utils.get_annotation_directive(the_class.eContainer(), "long_name")
+                                    the_long_name_annotation.source = the_long_name_directive
+                                    details = the_long_name_annotation.details
+                                    mapentry  = ELStringToStringMapEntry()
+                                    mapentry.key = "long_name"
+                                    mapentry.value = amended_attribute_long_name
+                                    details.append(mapentry)
+                                    operation.eAnnotations.append(the_long_name_annotation)
+                                    
+                    
                                     
                                     if class_is_derived:
                                         the_class.eOperations.extend([operation])
@@ -460,7 +479,7 @@ class TranslateSDDModelToDataModel(object):
                                 
                                 try:
                                     the_class = context.classes_map[class_id]
-
+                                        
                                     if role == 'D':
                                         the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
                                         if the_attribute_annotation is None: 
@@ -480,7 +499,18 @@ class TranslateSDDModelToDataModel(object):
                                             primary_key.key = "is_primary_key"
                                             primary_key.value = "true"
                                             the_attribute_annotation.details.append(primary_key)
-
+                                    
+                                    the_class = context.classes_map[class_id]
+                                    the_long_name_annotation = ELAnnotation()
+                                    the_long_name_directive = Utils.get_annotation_directive(the_class.eContainer(), "long_name")
+                                    the_long_name_annotation.source = the_long_name_directive
+                                    details = the_long_name_annotation.details
+                                    mapentry  = ELStringToStringMapEntry()
+                                    mapentry.key = "long_name"
+                                    mapentry.value = amended_attribute_long_name
+                                    details.append(mapentry)
+                                    attribute.eAnnotations.append(the_long_name_annotation)
+                                    
                                     the_class.eStructuralFeatures.extend([attribute])
                                     
                                 except:
