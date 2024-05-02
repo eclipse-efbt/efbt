@@ -97,19 +97,28 @@ public class EObjectToCSVConverter {
 		EList<EStructuralFeature> sfs = eClass.getEAllStructuralFeatures();
 		boolean firstItem = true;
 		for (EStructuralFeature eStructuralFeature : sfs) {
-			if (firstItem)
-			{   
-				Object referencedItem = theObject.eGet(eStructuralFeature, true);
-				String referencedItemString = getReferencedItemString(eStructuralFeature, referencedItem,useLongNames);
-				csvString = csvString + referencedItemString;
-				firstItem = false;
+			boolean relationship = (eStructuralFeature instanceof EReference);
+			int cardinality = 1;
+			if (relationship) {
+				cardinality = ((EReference) eStructuralFeature).getUpperBound();
 			}
-			else
+			//dont show any items in the inout data that have  cardinality	of -1
+			if(cardinality != -1)
 			{
-				Object referencedItem = theObject.eGet(eStructuralFeature, true);
-				String referencedItemString = getReferencedItemString(eStructuralFeature, referencedItem,useLongNames);
-				csvString = csvString + "," + referencedItemString;
-				
+				if (firstItem)
+				{   
+					Object referencedItem = theObject.eGet(eStructuralFeature, true);
+					String referencedItemString = getReferencedItemString(eStructuralFeature, referencedItem,useLongNames);
+					csvString = csvString + referencedItemString;
+					firstItem = false;
+				}
+				else
+				{
+					Object referencedItem = theObject.eGet(eStructuralFeature, true);
+					String referencedItemString = getReferencedItemString(eStructuralFeature, referencedItem,useLongNames);
+					csvString = csvString + "," + referencedItemString;
+					
+				}
 			}
 		}
 		EList<EOperation> ops = eClass.getEAllOperations();
@@ -160,14 +169,23 @@ public class EObjectToCSVConverter {
 		EList<EStructuralFeature> sfs = eClass.getEAllStructuralFeatures();
 		boolean firstItem = true;
 		for (EStructuralFeature eStructuralFeature : sfs) {
-			if (firstItem)
-			{
-				csvString = csvString + eStructuralFeature.getName();
-				firstItem = false;
+			boolean relationship = (eStructuralFeature instanceof EReference);
+			int cardinality = 1;
+			if (relationship) {
+				cardinality = ((EReference) eStructuralFeature).getUpperBound();
 			}
-			else
+			//dont show any items in the inout data that have  cardinality	of -1
+			if(cardinality != -1)
 			{
-				csvString = csvString + "," + eStructuralFeature.getName();
+				if (firstItem)
+				{
+					csvString = csvString + eStructuralFeature.getName();
+					firstItem = false;
+				}
+				else
+				{
+					csvString = csvString + "," + eStructuralFeature.getName();
+				}
 			}
 		}
 		EList<EOperation> ops = eClass.getEAllOperations();
