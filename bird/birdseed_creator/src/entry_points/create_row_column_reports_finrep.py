@@ -15,7 +15,7 @@
 
 from entry_points.create_reports_info import RunCreateReports
 from entry_points.website_to_sddmodel import RunWebsiteToSDDModel
-from entry_points.sddmodel_to_datamodel import RunSDDModelToDataModel 
+from entry_points.sddmodel_to_datamodel_finrep import RunSDDModelToDataModelFinrep 
 from context.context import Context
 from context.sdd_context import SDDContext
 from persister.persist_to_file import PersistToFile
@@ -31,12 +31,12 @@ class RunCreateRowColumnReports:
 if __name__ == '__main__':
     sdd_context = SDDContext()
     context = Context()
-    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results' 
-    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
+    context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources'
+    context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results' 
+    sdd_context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources'
+    sdd_context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results'
     RunWebsiteToSDDModel().run(sdd_context)
-    RunSDDModelToDataModel().run(context,sdd_context)
+    RunSDDModelToDataModelFinrep().run(context,sdd_context)
     RunCreateReports().run(context,sdd_context)
     RunCreateRowColumnReports().run(context,sdd_context)
     persister = PersistToFile()
