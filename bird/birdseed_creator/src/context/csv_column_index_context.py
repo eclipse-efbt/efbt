@@ -130,7 +130,7 @@ class ColumnIndexes(object):
     table_table_name = 1 
     table_code = 2 
     table_description = 3
-    table_maintenance_ageny = 4
+    table_maintenance_agency_id = 4
     table_version = 5
     table_valid_from = 6
     table_valid_to = 7 

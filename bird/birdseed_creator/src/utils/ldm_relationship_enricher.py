@@ -166,7 +166,7 @@ class LDMRelationshipEnricher(object):
         '''
         print("find_class_with_long_name")
         print(name)
-        for eclassifier in context.input_tables_package.eClassifiers:
+        for eclassifier in context.ldm_entities_package.eClassifiers:
             if isinstance(eclassifier, ELClass):
                 for annotation in  eclassifier.eAnnotations:
                     for detail in annotation.details: 

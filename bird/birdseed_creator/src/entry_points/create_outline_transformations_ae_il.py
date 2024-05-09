@@ -13,13 +13,13 @@
 from context.context import Context
 from context.sdd_context import SDDContext
 from entry_points.website_to_sddmodel import RunWebsiteToSDDModel
-from entry_points.sddmodel_to_datamodel_finrep import RunSDDModelToDataModelFinrep 
+from birdseed_creator.src.entry_points.sddmodel_to_datamodel_ae_il import RunSDDModelToDataModelAE_IL 
 from persister.persist_to_file import PersistToFile
 from process_steps.sddmodel_plus_datamodel_to_outline_transformations.main_catagory_finder import MainCatagoryFinder
 from process_steps.sddmodel_plus_datamodel_to_outline_transformations.generation_rule_creator import GenerationRuleCreator
 
 
-class GenerateGenerationRulesFinrep:
+class GenerateGenerationRulesAE_IL:
     
     def run(self,context,sdd_context):
        
@@ -46,10 +46,12 @@ if __name__ == '__main__':
     context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
     context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results' 
     sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'   
+    
+
     RunWebsiteToSDDModel().run(sdd_context)
-    RunSDDModelToDataModelFinrep().run(context,sdd_context)
-    GenerateGenerationRulesFinrep().run(context,sdd_context)
+    RunSDDModelToDataModelAE_IL().run(context,sdd_context)
+    GenerateGenerationRulesAE_IL().run(context,sdd_context)
     persister = PersistToFile()
     persister.save_model_as_regdna_file(context)
     persister.persist_generation_transformations(context)

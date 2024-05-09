@@ -25,9 +25,7 @@ class Context(object):
     
     use_codes = True
     load_ldm = False
-    load_eil_from_website = False
     use_variable_long_name = True
-    persist_to_regdna = True
     inScopeFileDirectory = ""
     add_pks_to_input_layer_from_website = True 
     match_domains_in_generation_file = False
@@ -43,34 +41,61 @@ class Context(object):
     module_list = ModuleList()
     
     main_catogory_to_name_map = {}
+    typ_instrmnt_to_name_map = {}
+    typ_instrmnt_to_name_map = {}
+    
     report_to_main_catogory_map = {}
+    report_to_typ_instrmnt_map = {}
     tables_for_main_catagory_map = {}
+    entities_for_typ_instrmnt_map = {}
+    ldm_entity_to_first_linked_entities_map = {}
     table_and_part_tuple_map = {}
     table_parts_to_linked_tables_map = {}
     table_parts_to_to_filter_map = {}
     #table_parts_to_to_filter_items_map = {}
     table_parts_to_main_catagory_map = {}
+    table_parts_to_typ_instrmnt_map = {}
+    ldm_entity_to_linked_tables_map = {}
     main_catagories_in_scope = []
+    typ_instrmnt_in_scope = []
     table_part_varaible_transformation_map = {}
+
+    
 
     # create  regdna  packages
     types_package = ELPackage(name='types')
+    ldm_domains_package = ELPackage(
+        name='ldm_domains',
+        nsURI='http://www.eclipse.org/bird/ldm_domains',
+        nsPrefix='ldm_domains')
     il_domains_package = ELPackage(
         name='il_domains',
         nsURI='http://www.eclipse.org/bird/il_domains',
         nsPrefix='il_domains')
-    sdd_domains_package = ELPackage(
-        name='sdd_domains',
-        nsURI='http://www.eclipse.org/bird/sdd_domains',
-        nsPrefix='sdd_domains')
+    finrep_domains_package = ELPackage(
+        name='finrep_domains_package',
+        nsURI='http://www.eclipse.org/bird/finrep_domains',
+        nsPrefix='finrep_domains')
+    ae_domains_package = ELPackage(
+        name='ae_domains',
+        nsURI='http://www.eclipse.org/bird/ae_domains',
+        nsPrefix='ae_domains')
     input_tables_package = ELPackage(
         name='input_tables',
         nsURI='http://www.eclipse.org/bird/input_tables',
         nsPrefix='input_tables')
-    output_tables_package = ELPackage(
-        name='output_tables',
-        nsURI='http://www.eclipse.org/bird/output_tables',
-        nsPrefix='output_tables')
+    ldm_entities_package = ELPackage(
+        name='input_tables',
+        nsURI='http://www.eclipse.org/bird/ldm_entities',
+        nsPrefix='input_tables')
+    finrep_output_tables_package = ELPackage(
+        name='ldm_entities',
+        nsURI='http://www.eclipse.org/bird/finrep_output_tables',
+        nsPrefix='ldm_entities')
+    ae_output_tables_package = ELPackage(
+        name='ae_output_tables',
+        nsURI='http://www.eclipse.org/bird/ae_output_tables',
+        nsPrefix='ae_output_tables')
     
     generation_rules_module = GenerationRulesModule(name='generations')
     reports_module = ReportModule(name='report')
@@ -107,27 +132,43 @@ class Context(object):
 
     def __init__(self):
 
-        key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
-        dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
-        entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
-        relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
-        long_name_directive = ELAnnotationDirective(name='long_name', sourceURI='long_name')
-        long_name_directive_output_tables = ELAnnotationDirective(name='long_name', sourceURI='long_name')
-        self.input_tables_package.annotationDirectives.append(key_annotation_directive)
-        self.input_tables_package.annotationDirectives.append(dependency_annotation_directive)
-        self.input_tables_package.annotationDirectives.append(entity_hierarchy_annotation_directive)
-        self.input_tables_package.annotationDirectives.append(relationship_type_annotation_directive)
-        self.input_tables_package.annotationDirectives.append(long_name_directive)
-        self.output_tables_package.annotationDirectives.append(long_name_directive_output_tables)
+        il_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
+        il_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
+        il_entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
+        il_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
+        ldm_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
+        ldm_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
+        ldm_entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
+        ldm_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
+        long_name_directive_input_tables = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        long_name_directive_ldm_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        long_name_directive_finrep_output_tables = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        long_name_directive_ae_output_tables = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        self.input_tables_package.annotationDirectives.append(il_key_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(il_dependency_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(il_entity_hierarchy_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(il_relationship_type_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(long_name_directive_input_tables)
+        self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
+        self.ldm_entities_package.annotationDirectives.append(ldm_dependency_annotation_directive)
+        self.ldm_entities_package.annotationDirectives.append(ldm_entity_hierarchy_annotation_directive)
+        self.ldm_entities_package.annotationDirectives.append(ldm_relationship_type_annotation_directive)
+        self.ldm_entities_package.annotationDirectives.append(long_name_directive_ldm_entities)
+        self.finrep_output_tables_package.annotationDirectives.append(long_name_directive_finrep_output_tables)
+        self.ae_output_tables_package.annotationDirectives.append(long_name_directive_ae_output_tables)
         types = EcoreLiteTypes()
         self.types_package.eClassifiers.append(types.e_string)
         self.types_package.eClassifiers.append(types.e_double)
         self.types_package.eClassifiers.append(types.e_int)
         self.module_list.modules.append(self.types_package)
+        self.module_list.modules.append(self.ldm_domains_package)
         self.module_list.modules.append(self.il_domains_package)
-        self.module_list.modules.append(self.sdd_domains_package)
+        self.module_list.modules.append(self.finrep_domains_package)
+        self.module_list.modules.append(self.ae_domains_package)
         self.module_list.modules.append(self.input_tables_package)
-        self.module_list.modules.append(self.output_tables_package)
+        self.module_list.modules.append(self.ldm_entities_package)
+        self.module_list.modules.append(self.finrep_output_tables_package)
+        self.module_list.modules.append(self.ae_output_tables_package)
         self.module_list.modules.append(self.generation_rules_module)
         self.module_list.modules.append(self.reports_module)
         

@@ -403,6 +403,12 @@ class ImportWebsiteToSDDModel(object):
                                                             self,context,variable_set)
                             item.variable_set_id = variable_set
                         com.combination_items.append(item)
+                        if variable.variable_id == 'TYP_INSTRMNT':
+                            try:
+                                context.combination_to_typ_instrmnt_map[mem.member_id].append(com)
+                            except KeyError:
+                                context.combination_to_typ_instrmnt_map[mem.member_id] = [com]
+
                         
     def create_all_cubes(self, context):
         file_location = context.file_directory + os.sep + "cube.csv"
@@ -436,7 +442,7 @@ class ImportWebsiteToSDDModel(object):
                         cube.code = cube_code
                         cube.cube_type = cube_type
                         cube.cube_structure_id = cube_structure
-                        context.cube_dictionary[id] = cube
+                        context.cube_dictionary[cube_structure_id] = cube
                         context.cubes.cubes.append(cube)
 
     def create_all_member_hierarchies(self, context):
@@ -608,7 +614,7 @@ class ImportWebsiteToSDDModel(object):
                     display_name = row[ColumnIndexes().table_table_name]
                     code = row[ColumnIndexes().table_code]
                     description = row[ColumnIndexes().table_description]
-                    maintenance_ageny = row[ColumnIndexes().table_maintenance_ageny]
+                    maintenance_agency_id = row[ColumnIndexes().table_maintenance_agency_id]
                     version = row[ColumnIndexes().table_version]
                     valid_from = row[ColumnIndexes().table_valid_from]
                     valid_to = row[ColumnIndexes().table_valid_to]
@@ -619,7 +625,8 @@ class ImportWebsiteToSDDModel(object):
                     table.displayName = display_name
                     table.code = code
                     table.description = description
-                    table.maintenance_ageny = maintenance_ageny
+                    maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id)
+                    table.maintenance_agency_id = maintenance_agency
                     table.version = version
                     # not needed yet table.valid_from = valid_from
                     # not needed yet table.valid_to = valid_to
@@ -737,6 +744,20 @@ class ImportWebsiteToSDDModel(object):
 
                         context.table_cells.tableCells.append(table_cell)
                         context.table_cell_dictionary[table_cell_cell_id] = table_cell
+                        try:
+                            if not(table_cell.table_id is None):
+                                context.table_to_combination_dictionary[ImportWebsiteToSDDModel.replace_dots(self,table_cell.table_id.code)].append(table_cell.combination_id)
+                        except KeyError:
+                            context.table_to_combination_dictionary[ImportWebsiteToSDDModel.replace_dots(self,table_cell.table_id.code)] = [table_cell.combination_id]
+
+                        table_cell_list = []
+                        try:
+                            table_cell_list = context.table_to_table_cell_dictionary[table_cell.table_id]
+                        except KeyError:
+                            context.table_to_table_cell_dictionary[table_cell.table_id] = table_cell_list
+
+                        table_cell_list.append(table_cell)
+                        
 
     def create_cell_positions(self, context):
         '''

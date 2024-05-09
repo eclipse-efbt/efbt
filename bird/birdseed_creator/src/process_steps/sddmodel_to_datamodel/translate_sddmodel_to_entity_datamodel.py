@@ -29,58 +29,64 @@ class TranslateSDDModelToDataModel(object):
     Documentation for TranslateSDDModelToDataModel
     '''
 
-    def do_import(self, context,sdd_context):
+    def do_import(self, context,sdd_context,framework,cube_type):
         '''
         import the items from the Input and Output layer csv files
         '''
-        TranslateSDDModelToDataModel.add_classes_to_package(self, context,sdd_context)
-        TranslateSDDModelToDataModel.add_enums_and_literals_to_package_for_input_layer(self, context,sdd_context)
-        TranslateSDDModelToDataModel.add_enums_and_literals_to_package_for_output_layer(self, context,sdd_context)
-        TranslateSDDModelToDataModel.add_attributes_to_classes(self, context,sdd_context)
+        TranslateSDDModelToDataModel.add_classes_to_package(self, context,sdd_context,framework,cube_type)
+        TranslateSDDModelToDataModel.add_attributes_to_classes(self, context,sdd_context,framework,cube_type)
 
-    def add_classes_to_package(self, context,sdd_context):
+    def add_classes_to_package(self, context,sdd_context,framework,cube_type):
         '''
         Add the classes to the package
         '''
-        for cube  in sdd_context.cubes.cubes:
-            framework = cube.framework_id.framework_id
-            if not(context.load_ldm):
-                if (framework == context.reporting_framework + "_REF"):
-                    class_name = cube.code
-                else:
-                    if (context.use_codes):
-                        class_name = cube.code
-                    else:
-                        class_name = cube.name
+        for cube  in sdd_context.cubes.cubes:  
+            cube_framework = cube.framework_id.framework_id
+            cube_cube_type = cube.cube_type
+            class_name = None
+            if (context.use_codes):
+                class_name = cube.code
             else:
-                if (context.use_codes):
-                    class_name = cube.code
-                else:
-                    class_name = cube.name
-                
-                    
-            altered_class_name = Utils.make_valid_id(class_name)
-            object_id = cube.cube_id
-            cube_type = cube.cube_type
-            derived = True
+                class_name = cube.name
 
-            if not(context.load_ldm):
-                if ((((framework == context.reporting_framework +"_REF") and (cube_type == "RC")) or ( context.load_eil_from_website and ((cube_type == "EIL"))) )):
-    
+            
+            if (cube_framework == framework) and (cube_cube_type == cube_type):
+                package = None
+                if framework == "FINREP":
+                    package = context.finrep_output_tables_package
+                elif framework == "AE":
+                    package = context.ae_output_tables_package
+                elif framework == "BIRD":      
+                    if cube_type == "EIL":
+                        package = context.input_tables_package
+                    elif cube_type == "LDM":
+                        package = context.ldm_entities_package   
+
+                altered_class_name = Utils.make_valid_id(class_name)
+                object_id = cube.cube_id
+                cube_type = cube.cube_type
+                derived = True
+                eclass = None
+                # Process output layer cubes
+                if not(framework == "BIRD"):
                     altered_class_name = Utils.make_valid_id(class_name)
                     fullName = None
-                    if cube_type == "EIL" : 
-                        fullName=altered_class_name
-                    else:
-                        fullName=altered_class_name+"_OutputItem"
+                    fullName=altered_class_name+"_OutputItem"
                     
-                    if cube_type == "EIL":
-                        derived = False
-                        
                     eclass = ELClass(name=fullName)
-                    eclass.isDerived = derived
-                    if context.add_pks_to_input_layer_from_website:
-                        if cube_type == "EIL":
+                    eclass.isDerived = True
+
+                    package.eClassifiers.extend([eclass])
+
+                else:
+                    if cube_type == "EIL":
+                        altered_class_name = Utils.make_valid_id(class_name)
+                        fullName=altered_class_name
+                        eclass = ELClass(name=fullName)
+                        eclass.isDerived = False
+                        package.eClassifiers.extend([
+                                                                        eclass])
+                        if context.add_pks_to_input_layer_from_website:
                             pk_name = fullName + "_uniqueID"
                             attribute = ELAttribute()
                             attribute.name = pk_name
@@ -89,35 +95,18 @@ class TranslateSDDModelToDataModel(object):
                             attribute.iD = True
                             attribute.lowerBound = 0
                             attribute.upperBound = 1
-                            eclass.eStructuralFeatures.append(attribute)
-    
-                    if not (cube_type == "EIL"):
-                        context.output_tables_package.eClassifiers.extend([
-                                                                           eclass])
+                            eclass.eStructuralFeatures.append(attribute)           
                     else:
-                        context.input_tables_package.eClassifiers.extend([
-                                                                           eclass])
-    
-                    # maintain a map a objectIDs to ELClasses
-                    context.classes_map[object_id] = eclass
-                    the_long_name_annotation = ELAnnotation()
-                    the_long_name_directive = Utils.get_annotation_directive(eclass.eContainer(), "long_name")
-                    the_long_name_annotation.source = the_long_name_directive
-                    details = the_long_name_annotation.details
-                    mapentry  = ELStringToStringMapEntry()
-                    mapentry.key = "long_name"
-                    mapentry.value = Utils.make_valid_id(cube.displayName)
-                    details.append(mapentry)
-                    eclass.eAnnotations.append(the_long_name_annotation)
-                    eclass.isDerived = derived
-            else:
-                if cube_type == "LDM":
-                    altered_class_name = Utils.make_valid_id(class_name)
-                    fullName = altered_class_name
-                    derived = False
-                    eclass = ELClass(name=fullName)
-                    context.input_tables_package.eClassifiers.extend([
-                                                                           eclass])
+                        if cube_type == "LDM":                    
+                            altered_class_name = Utils.make_valid_id(class_name)
+                            fullName = altered_class_name
+                            derived = False
+                            eclass = ELClass(name=fullName)
+                            package.eClassifiers.extend([
+                                                            eclass])
+                    eclass.isDerived = False
+                    
+                if not(eclass is None):
                     # maintain a map a objectIDs to ELClasses
                     context.classes_map[object_id] = eclass
                     # add an annotation to LDM cubes with the display name
@@ -130,147 +119,10 @@ class TranslateSDDModelToDataModel(object):
                     mapentry.value = Utils.make_valid_id(cube.displayName)
                     details.append(mapentry)
                     eclass.eAnnotations.append(the_long_name_annotation)
-                    eclass.isDerived = derived
-                    
-
-
-    def add_enums_and_literals_to_package_for_input_layer(self, context,sdd_context):
-        '''
-        Add the Enums and Literals to the package from the input layer
-        ''' 
-        for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
-            
-            
-            class_id = cube_structure_item.cube_structure_id.cube_structure_id
-            try: 
-                the_class = context.classes_map[class_id]
-                if the_class in context.input_tables_package.eClassifiers:
-                    TranslateSDDModelToDataModel.add_enums_and_literals_to_package_for_cube_structure_item(self,
-                                                                    context,
-                                                                    sdd_context,
-                                                                    cube_structure_item,
-                                                                    True)
-            except:
-                print("missing  class2: ")
-                print(class_id)
-
-    def add_enums_and_literals_to_package_for_output_layer(self, context,sdd_context):
-        '''
-        Add the Enums and Literals to the package fom the output layer
-        '''
-        for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
-            
-            
-            class_id = cube_structure_item.cube_structure_id.cube_structure_id
-            try: 
-                the_class = context.classes_map[class_id]
-                if the_class in context.output_tables_package.eClassifiers:
-                    TranslateSDDModelToDataModel.add_enums_and_literals_to_package_for_cube_structure_item(self,
-                                                                    context,
-                                                                    sdd_context,
-                                                                    cube_structure_item,
-                                                                    False)
-            except:
-                print("missing  class2: ")
-                print(class_id)
-
-    def add_enums_and_literals_to_package_for_cube_structure_item(self,
-                                                                    context,
-                                                                    sdd_context,
-                                                                    cube_structure_item,
-                                                                    is_input_layer):
-        '''
-        Add the Enums and Literals to the package
-        '''  
-    
-        variable = cube_structure_item.variable_id
-        subdomain = cube_structure_item.subdomain_id
-        attribute_list = [(variable,subdomain)]
-        if (variable.code =="MTRCS"):
-            variable_set = cube_structure_item.variable_set_id
-            attribute_list = TranslateSDDModelToDataModel.get_attribute_and_subdomain_list_from_variable_set(self,variable_set)
-        if (variable.code == "VALUE_DECIMAL") or (variable.code == "OBSERVATION_VALUE"):
-            attribute_list = []
-            
-        for attribute_subdomain_tuple in attribute_list:
-            attribute =attribute_subdomain_tuple[0]
-            subdomain = attribute_subdomain_tuple[1]
-            try: 
-                domain = sdd_context.variable_to_domain_map[attribute.code]
-                domain_id = domain.domain_id
-                amended_domain_name = Utils.make_valid_id(domain_id)
-                the_enum = Utils.find_enum(
-                    amended_domain_name+"_domain", context.enum_map)
-                if the_enum is None:
-                    amended_domain_name = Utils.make_valid_id(domain_id) + "_domain"
-                    if not ((amended_domain_name == "String") or (amended_domain_name == "Date")):
-                        the_enum = ELEnum()
-                        the_enum.name = amended_domain_name
-                        # maintain a map of enum IDS to ELEnum objects
-                        context.enum_map[amended_domain_name] = the_enum
-                        context.sdd_domains_package.eClassifiers.extend([the_enum])
-                        the_domain_members = []
-                        # in the usual case we get the members from subdomains in the input layer
-                        # since we proces the input layer first we should have all of the related 
-                        # domains. 
-                        if is_input_layer and context.use_sub_domains_in_input_layer:
-                            the_domain_members = Utils.get_members_of_the_subdomain(
-                                subdomain)
-                        else:
-                            # If a domain is in the output layer, but not in the input
-                            # layer, then this is a problem. output layers are set from 
-                            # the generation rules, so we should be 'collecting' exsting
-                            # domains. Furthermore the filters from the report cell
-                            # combination should filter on members that exist in the input 
-                            # layer domains, and we should record an error if they do not
-                            # so that this can be addressed.
-                            the_domain_members = []
-                            # Utils.get_members_of_the_domain(
-                            #    domain, sdd_context.member_id_to_domain_map)
-                        counter1 = 0
-                        for member in the_domain_members:
-                            enum_literal = ELEnumLiteral()
-                            enum_used_name = Utils.make_valid_id_for_literal(member.code)
-                            adapted_value = Utils.make_valid_id(member.displayName)
-                            new_adapted_value = Utils.unique_value(the_enum, adapted_value)
-                            new_adapted_name = Utils.unique_name(the_enum, enum_used_name)
-            
-                            enum_literal.name = new_adapted_value
-                            enum_literal.literal = new_adapted_name
-                            counter1 = counter1 + 1
-                            enum_literal.value = counter1
-                            the_enum.eLiterals.extend([enum_literal])
-                            context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
-                else:
-                    # if use_sub_domains_in_input_layer = True then we add any literals
-                    # from the columns subdomain that were not added before.
-                    # This covers the rare situation where 2 columns in the input
-                    # layer have the same domain but different subdomains
-                    if is_input_layer and context.use_sub_domains_in_input_layer:
-
-                        the_domain_members = Utils.get_members_of_the_subdomain(
-                            subdomain)
-                    
-                        counter1 = len(the_enum.eLiterals)
-                        for member in the_domain_members:
-                            enum_used_name = Utils.make_valid_id_for_literal(member.code)
-                            adapted_value = Utils.make_valid_id(member.displayName)
-                            if not (Utils.contains_literal(the_enum.eLiterals, adapted_value)):
-                                enum_literal = ELEnumLiteral()
-                                
-                                enum_literal.name = adapted_value
-                                enum_literal.literal = enum_used_name
-                                counter1 = counter1 + 1
-                                enum_literal.value = counter1
-                                the_enum.eLiterals.extend([enum_literal])
-                                context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
-        
-
-            except:
-                print("missing domain: " + domain.domain_id)
+                
 
                            
-    def add_attributes_to_classes(self, context,sdd_context):
+    def add_attributes_to_classes(self, context,sdd_context,framework,cube_type):
         '''
         For each attribute add an ELAttribute to the correct ELClass representing the Entity
         the attribute should have the correct type, which may be a specific
@@ -307,9 +159,7 @@ class TranslateSDDModelToDataModel(object):
                         the_class = context.classes_map[class_id]
                         
                         class_is_derived = the_class.isDerived
-                        
-                        
-                        
+
                         if(context.use_codes):   
                             the_attribute_name = amended_attribute_name  
                         else:
@@ -324,7 +174,7 @@ class TranslateSDDModelToDataModel(object):
                             amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
 
 
-                        the_enum =  Utils.find_enum(amended_domain_name,context.enum_map)
+                        the_enum =  Utils.find_enum(framework+":" + cube_type+":" + amended_domain_name,context.enum_map)
                         if  the_enum is not None:                     
                             
                             if class_is_derived:

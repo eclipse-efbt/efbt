@@ -177,7 +177,7 @@ class CombinationsToReportFilters:
             
         
     def get_report_rol_for_table_code(self, table_code, context):
-        for rol_class in context.output_tables_package.eClassifiers:
+        for rol_class in context.finrep_output_tables_package.eClassifiers:
 
             if table_code == rol_class.name:
                 return rol_class

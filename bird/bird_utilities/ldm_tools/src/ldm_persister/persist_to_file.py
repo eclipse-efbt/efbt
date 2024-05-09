@@ -30,15 +30,15 @@ class PersistToFile:
         if context.load_eil_from_website:
             PersistToFile.persist_entity_model(
                 self, context, context.input_tables_package,
-                "regdna", context.sdd_domains_package)
+                "regdna", context.il_domains_package)
         else:        
             PersistToFile.persist_entity_model(
                 self, context, context.input_tables_package,
-                "regdna", context.il_domains_package)
+                "regdna", context.ldm_domains_package)
 
         
         PersistToFile.persist_enum_model(
-            self, context, context.il_domains_package, "regdna")
+            self, context, context.ldm_domains_package, "regdna")
         
         PersistToFile.persist_types_model(
             self, context, context.types_package, "regdna")

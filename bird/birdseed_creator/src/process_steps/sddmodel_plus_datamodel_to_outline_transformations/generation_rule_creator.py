@@ -62,8 +62,12 @@ class GenerationRuleCreator(object):
                         GenerationRuleCreator.add_table_parts(
                                                     self, context,sdd_context,
                                                     rules_for_report,report_template)
-                        
+
     def add_table_parts(self, context, sdd_context, rules_for_report,report_template):
+
+        GenerationRuleCreator.add_table_parts_il(self, context, sdd_context, rules_for_report,report_template)    
+
+    def add_table_parts_il(self, context, sdd_context, rules_for_report,report_template):
         '''
         For each report, check which main catagories are applicable 
         (e.g loans and advances)
@@ -109,54 +113,54 @@ class GenerationRuleCreator(object):
                                     add_field_to_field_lineage_to_rules_for_table_part(
                                                     self, context,sdd_context, rules_for_il_table_part,
                                                      rules_for_report.outputLayerCube,
-                                                     input_entity_list)
+                                                     input_entity_list,mc,report_template)
                 except KeyError:
                     print ("no tables for main catagory:" + mc)
 
         except KeyError:
                     print ("no main catagory for report :" + report_template)
 
-    def add_field_to_field_lineage_to_rules_for_table_part(self, context,sdd_context, rules_for_il_table_part, output_entity, input_entity_list):
+    def add_field_to_field_lineage_to_rules_for_table_part(self, context,sdd_context, rules_for_il_table_part, output_entity, input_entity_list,mc,report_template):
         '''
         Add field to field lineage entries to the rules for the table part
         '''
         if not output_entity is None:
             for output_item in output_entity.eOperations:
                 if isinstance(output_item, ELOperation):
-                    select_column = SelectColumnAttributeAs()
-                    select_column.asAttribute = output_item
-                    rules_for_il_table_part.columns.extend([select_column])
-                    input_column = None
-                    if context.match_domains_in_generation_file:
-                        input_column = GenerationRuleCreator.\
-                            find_variable_with_same_domain(
-                            self,output_item,
-                            input_entity_list)
-                    else:
-                        input_column = GenerationRuleCreator.\
-                            find_related_variable( 
+                    input_columns = GenerationRuleCreator.\
+                            find_related_variables( 
                             self,context,sdd_context,output_item,input_entity_list)
 
-                    if not(input_column is None):
-                        select_column.attribute = input_column
-                        
-                    key= rules_for_il_table_part.name + ":" + rules_for_il_table_part.table_and_part_tuple[0] + ":" + output_item.name + "," + rules_for_il_table_part.name + "," + rules_for_il_table_part.table_and_part_tuple[0] + "," + output_item.name
-                    try:
-                        value = context.table_part_varaible_transformation_map[key]
-                        if (value is None) and not(input_column is None):
-                            context.table_part_varaible_transformation_map[key] = input_column
-                    except KeyError:
-                        context.table_part_varaible_transformation_map[key] = input_column
+                    if len(input_columns) == 0:
+                        select_column = SelectColumnAttributeAs()
+                        select_column.asAttribute = output_item
+                        rules_for_il_table_part.columns.extend([select_column])
+                    else:                        
+                        for input_column in input_columns:
+                            select_column = SelectColumnAttributeAs()
+                            select_column.asAttribute = output_item
+                            select_column.attribute = input_column
+                            rules_for_il_table_part.columns.extend([select_column])
+                            
+                            key= rules_for_il_table_part.name + ":" + rules_for_il_table_part.table_and_part_tuple[0] + ":" + output_item.name + "," + rules_for_il_table_part.name + "," + rules_for_il_table_part.table_and_part_tuple[0] + "," + output_item.name
+                            try:
+                                values = context.table_part_varaible_transformation_map[key]
+                                values.append(input_column)
+                            except KeyError:
+                                values = []
+                                values.append(input_column)
+                                context.table_part_varaible_transformation_map[key] = values
 
+    
 
-    def find_related_variable(self,context,sdd_context,output_item,input_entity_list):
+    def find_related_variables(self,context,sdd_context,output_item,input_entity_list):
         '''
         when we have an ROL item it has a specific domain.
         We want to find any column in the limited related input tables
         which has the same domain
         '''
         output_variable_name = output_item.name
-           
+        related_variables = []   
         if not (output_variable_name is None):
             for input_entity in input_entity_list:
                 if not (input_entity is None):
@@ -164,43 +168,23 @@ class GenerationRuleCreator(object):
                         if isinstance(input_item, ELAttribute):
                             input_item_name = input_item.name
                             if input_item_name == output_variable_name:
-                                return input_item
+                                related_variables= []
+                                related_variables.append(input_item)
                             try:
                                 primary_concept = sdd_context.\
                                     variable_to_primary_concept_map[input_item_name]
                                 if primary_concept == output_variable_name:
-                                    return input_item
+                                    related_variables= []
+                                    related_variables.append(input_item)
                             except KeyError:
                                 pass
-        return None
+        return related_variables
     
-    def find_variable_with_same_domain(self,output_item,input_entity_list):
-        '''
-        when we have an ROL item it has a specific domain.
-        We want to find any column in the limited related input tables
-        which has the same domain
-        '''
-        target_domain = None
-        etype = output_item.eType
-        if isinstance(etype, ELEnum):
-            target_domain = etype
-
-        if not (target_domain is None):
-            for input_entity in input_entity_list:
-                if not (input_entity is None):
-                    for input_item in input_entity.eStructuralFeatures:
-                        if isinstance(input_item, ELAttribute):
-                            input_item_etype = input_item.eAttributeType
-                            if isinstance(etype, ELEnum):
-                                if input_item_etype == target_domain:
-                                    return input_item
-        return None
-
     def find_output_layer_cube(self, context, output_layer_name):
         '''
         Find the ELClass for the related output layer cube given the cube name
         '''
-        for classifier in context.output_tables_package.eClassifiers:
+        for classifier in context.finrep_output_tables_package.eClassifiers:
             if isinstance(classifier, ELClass):
                 if classifier.name == output_layer_name:
                     return classifier

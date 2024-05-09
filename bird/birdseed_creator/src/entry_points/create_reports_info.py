@@ -15,7 +15,7 @@
 
 
 from entry_points.website_to_sddmodel import RunWebsiteToSDDModel
-from entry_points.sddmodel_to_datamodel_finrep import RunSDDModelToDataModelFinrep 
+from birdseed_creator.src.entry_points.sddmodel_to_datamodel_finrep_il import RunSDDModelToDataModelFinrep 
 from context.context import Context
 from context.sdd_context import SDDContext
 from persister.persist_to_file import PersistToFile

@@ -27,22 +27,32 @@ class PersistToFile:
         '''
         Save resources as regdna files
         '''
-        if context.load_eil_from_website:
-            PersistToFile.persist_entity_model(
-                self, context, context.input_tables_package,
-                "regdna", context.sdd_domains_package)
-        else:        
-            PersistToFile.persist_entity_model(
+        PersistToFile.persist_entity_model(
                 self, context, context.input_tables_package,
                 "regdna", context.il_domains_package)
+        
+        PersistToFile.persist_entity_model(
+                self, context, context.ldm_entities_package,
+                "regdna", context.ldm_domains_package)
 
         PersistToFile.persist_entity_model(
-            self, context, context.output_tables_package,
-            "regdna", context.sdd_domains_package)
+            self, context, context.finrep_output_tables_package,
+            "regdna", context.finrep_domains_package)
+        
+        PersistToFile.persist_entity_model(
+            self, context, context.ae_output_tables_package,
+            "regdna", context.ae_domains_package)
+        
+
+        PersistToFile.persist_enum_model(
+            self, context, context.ldm_domains_package, "regdna")
         PersistToFile.persist_enum_model(
             self, context, context.il_domains_package, "regdna")
         PersistToFile.persist_enum_model(
-            self, context, context.sdd_domains_package, "regdna")
+            self, context, context.finrep_domains_package, "regdna")
+        PersistToFile.persist_enum_model(
+            self, context, context.ae_domains_package, "regdna")
+        
         PersistToFile.persist_types_model(
             self, context, context.types_package, "regdna")
         
@@ -57,7 +67,7 @@ class PersistToFile:
                  "a",  encoding='utf-8')
         f.write("\t\t package " + the_package.name + "\r")
         f.write("\t\t import " + imported_package.name + ".*\r")
-        if the_package == context.output_tables_package:
+        if the_package == context.finrep_output_tables_package:
             for import_string in context.import_logic_strings:
                 f.write("\t\t import " + import_string + ".*\r")
         if extension == "regdna":
@@ -71,6 +81,7 @@ class PersistToFile:
             if isinstance(classifier, ELClass):
                 for annotation in classifier.eAnnotations:
                     f.write("\t\t\t@")
+                    
                     f.write(annotation.source.name)
                     f.write("(")
                     first_item = True
@@ -92,6 +103,7 @@ class PersistToFile:
                 for member in classifier.eStructuralFeatures:
                     for annotation in member.eAnnotations:
                         f.write("\t\t\t\t@")
+
                         f.write(annotation.source.name)
                         f.write("(")
                         first_item = True
@@ -284,7 +296,11 @@ class PersistToFile:
                         
                         table_and_part = table_part.table_and_part_tuple
                         report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
-                        filter = context.table_parts_to_to_filter_map[table_and_part]
+                        filter = ''
+                        try:
+                            filter = context.table_parts_to_to_filter_map[table_and_part]
+                        except:
+                            filter = ''
                         for column in table_part.columns:
                             if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
                                 entity  = column.attribute.eContainer().name
@@ -309,16 +325,17 @@ class PersistToFile:
                         'generation_rules_summary.csv', "a",  encoding='utf-8')
         f.write("Key,Table Part, Main Table, ROL cube Item, Source Table,Source Column,ROL Cube Item,Notes\n")
 
-        for key,value in context.table_part_varaible_transformation_map.items():
+        for key,values in context.table_part_varaible_transformation_map.items():
             
-            column_name = 'None'
-            table_name= 'None'
-            
-            if not(value is None):
-                table_name = value.eContainer().name
-                column_name = value.name
+            for value in values:
+                column_name = 'None'
+                table_name= 'None'
                 
-            f.write(key +"," + table_name +","  + column_name +",\n")
+                if not(value is None):
+                    table_name = value.eContainer().name
+                    column_name = value.name
+                    
+                f.write(key +"," + table_name +","  + column_name +",\n")
                 
             
         f.close()
