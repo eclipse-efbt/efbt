@@ -23,12 +23,30 @@ class TranslateToRowColumnReports:
     '''
     Documentation for CombinationsToReportFilters
     '''
-    def translate_to_row_column_reports(self, context,sdd_context):        
-        for report in context.reports_module.reports:
+    def translate_to_row_column_reports(self, context,sdd_context, framework,input_cube_type):  
+
+        if framework == 'FINREP_REF':
+            if input_cube_type == 'RC':
+                reports_module = context.finrep_on_sdd_reports_module
+            elif input_cube_type == 'EIL':
+                reports_module = context.finrep_on_il_reports_module
+            elif input_cube_type == 'LDM':
+                reports_module = context.finrep_on_ldm_reports_module
+
+        elif framework == 'AE':
+            if input_cube_type == 'RC':
+                reports_module = context.ae_on_sdd_reports_module
+            elif input_cube_type == 'EIL':
+                reports_module = context.ae_on_il_reports_module
+            elif input_cube_type == 'LDM':
+                reports_module = context.ae_on_ldm_reports_module
+
+
+        for report in reports_module.reports:
             if isinstance(report, CellBasedReport):
                 row_column_based_report = TranslateToRowColumnReports.calculate_whole_report_filters(self,report)
                 TranslateToRowColumnReports.calculate_row_and_column_filters(self,report,row_column_based_report)
-                context.reports_module.reports.append(row_column_based_report)
+                reports_module.reports.append(row_column_based_report)
             
     def calculate_whole_report_filters(self,report):
         print("calculate_whole_report_filter for " + report.outputLayer.name)

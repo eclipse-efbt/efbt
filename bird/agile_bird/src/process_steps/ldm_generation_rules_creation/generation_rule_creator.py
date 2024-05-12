@@ -217,6 +217,26 @@ class GenerationRuleCreator(object):
                                     values = []
                                     values.append(input_column)
                                     context.table_part_varaible_transformation_map[key] = values
+                                    
+    def operation_exists_in_combination_for_report_and_typ_instrmnt(self,sdd_context,typ_instrmt,output_item,report_template):
+        '''
+        Check if the operation exists in the combination of the report and typ_instrmnt
+        '''
+        try:
+            combinations_for_typ_instrmnt = sdd_context.combination_to_typ_instrmnt_map[typ_instrmt]
+            combinations_for_report = sdd_context.table_to_combination_dictionary[report_template+'_REF']
+            for combination in combinations_for_report:
+                if combination in combinations_for_typ_instrmnt:
+                    if not (combination is None):
+                        for item in combination.combination_items:
+                            if not (item.variable_id is None):
+                                if item.variable_id.variable_id == output_item.name:
+                                    return True
+
+            return False
+        except KeyError:
+            return False
+        
 
     def operation_exists_in_combination_for_report_and_typ_instrmnt(self,sdd_context,typ_instrmt,output_item,report_template):
         '''

@@ -265,12 +265,19 @@ class PersistToFile:
         resource.save()
     
     def persist_generation_transformations_to_csv(self, context):
+
+        PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
+                                                      context.finrep_generation_rules_module)
+        PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
+                                                      context.ae_generation_rules_module)        
+    
+    def persist_generation_transformations_to_csv_for_module(self, context,module):
         '''
         Documentation for persist_generation_transformations
         '''
-        rules_for_reports = context.generation_rules_module.rulesForReport
+        rules_for_reports = module.rulesForReport
         report_to_table_parts_file = open(context.output_directory + os.sep + 'generations_transformations_csv' +
-                         os.sep + 
+                         os.sep + module.name + os.sep +
                          'report_to_table_parts.csv', "a",  encoding='utf-8')
         report_to_table_parts_file.write("Report,Table Part,Notes\n")
 
@@ -280,7 +287,7 @@ class PersistToFile:
                 template = rules_for_report.outputLayerCube.name
                 amended_template_name =  template[0:len(template) - 11]
                 f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
-                         os.sep + 
+                         os.sep + module.name + os.sep + 
                          amended_template_name + '.csv', "a",  encoding='utf-8')
                 f.write("Template,Table Part,Main Table,Filter,Lineage type,Source Table,Source Column,Missing,Relevant, Derived,Domain,Member,Value,ROL Cube Item,Notes\n")
 
@@ -292,7 +299,11 @@ class PersistToFile:
                         table = "Null"
                     for table_part in layer.rulesForTablePart:
                         main_catagory = table_part.main_catagory
-                        main_catagory_name = context.main_catogory_to_name_map[main_catagory]
+                        main_catagory_name = 'None'
+                        if module.name == "finrep_generation_rules":
+                            main_catagory_name = context.main_catogory_to_name_map_finrep[main_catagory]
+                        elif module.name == "ae_generation_rules":
+                            main_catagory_name = context.main_catogory_to_name_map_ae[main_catagory]
                         
                         table_and_part = table_part.table_and_part_tuple
                         report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
@@ -321,7 +332,7 @@ class PersistToFile:
                 f.close()
         report_to_table_parts_file.close
         f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
-                        os.sep + 
+                        os.sep + module.name + os.sep + 
                         'generation_rules_summary.csv', "a",  encoding='utf-8')
         f.write("Key,Table Part, Main Table, ROL cube Item, Source Table,Source Column,ROL Cube Item,Notes\n")
 
@@ -342,14 +353,21 @@ class PersistToFile:
             
 
     def persist_generation_transformations(self, context):
+        PersistToFile.persist_generation_transformations_for_module(self, context,
+                                                      context.finrep_generation_rules_module)
+        PersistToFile.persist_generation_transformations_for_module(self, context,
+                                                      context.ae_generation_rules_module)        
+     
+    def persist_generation_transformations_for_module(self, context,
+                                                      module):
         '''
         Documentation for persist_generation_transformations
         '''
-        rules_for_reports = context.generation_rules_module.rulesForReport
-        for rules_for_report in rules_for_reports:
+        
+        for rules_for_report in module.rulesForReport:
             if not(rules_for_report.outputLayerCube is None):
                 f = open(context.output_directory + os.sep + 'regdna' +
-                         os.sep + rules_for_report.outputLayerCube.name +
+                         os.sep +module.name + os.sep + rules_for_report.outputLayerCube.name +
                          '.regdna', "a",  encoding='utf-8')
                 f.write("generationRuleModule " + rules_for_report.outputLayerCube.name + "_generationModule\r{\r")
                 f.write("\tgenerationRules " + "{\r")
@@ -381,15 +399,24 @@ class PersistToFile:
                 f.close()
     
     def persist_cell_based_reports(self, context):
+
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.finrep_on_sdd_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.ae_on_sdd_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.finrep_on_ldm_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.ae_on_ldm_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.finrep_on_il_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.ae_on_il_reports_module)
+        
+    def persist_cell_based_reports_for_module(self, context,module):
         '''
         Documentation for persist_generation_transformations
         '''
-        reports = context.reports_module.reports
+        reports = module.reports
         for report in reports:
             if isinstance(report, CellBasedReport): 
                 if not(report.outputLayer is None):
                     f = open(context.output_directory + os.sep + 'regdna' +
-                             os.sep + report.outputLayer.name +
+                             os.sep + module.name + os.sep + report.outputLayer.name +
                              '.regdna', "a",  encoding='utf-8')
                     f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
                     f.write("\treports " + "{\r")
@@ -550,7 +577,7 @@ class PersistToFile:
         '''
         Documentation for create_example_reports
         '''
-        reports = context.reports_module.reports
+        reports = context.finrep_on_il_reports_module.reports
         for report in reports:
             
             if not(report.outputLayer is None):

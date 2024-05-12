@@ -43,7 +43,7 @@ class TranslateSDDModelToDomainsDataModel(object):
 
         for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
             try:   
-                cube = sdd_context.cube_dictionary[cube_structure_item.cube_structure_id.cube_structure_id]  
+                cube = sdd_context.cube_dictionary[cube_structure_item.cube_structure_id.cube_structure_id] 
                 cube_framework = cube.framework_id.framework_id
                 cube_cube_type = cube.cube_type
 
@@ -68,7 +68,7 @@ class TranslateSDDModelToDomainsDataModel(object):
         Add the Enums and Literals to the package
         '''
         package = None
-        if framework == "FINREP":
+        if framework == "FINREP_REF":
             package = context.finrep_domains_package
         elif framework == "AE":
             package = context.ae_domains_package
@@ -93,17 +93,17 @@ class TranslateSDDModelToDomainsDataModel(object):
             try: 
                 domain = sdd_context.variable_to_domain_map[attribute.code]
                 domain_id = domain.domain_id
-                amended_domain_name = Utils.make_valid_id(domain_id)
+                amended_domain_name = Utils.make_valid_id(domain_id)+"_domain"
+   
                 the_enum = Utils.find_enum(
-                    framework+":" + cube_type + ":" + amended_domain_name+"_domain", context.enum_map)
-                if the_enum is None:
-                    amended_domain_name = Utils.make_valid_id(domain_id) + "_domain"
-                    if not ((amended_domain_name == "String") or (amended_domain_name == "Date")):
+                    framework+":" + cube_type + ":" + amended_domain_name, context.enum_map)
+                if the_enum is None:                    
+                    if not ((amended_domain_name == "String_domain") or (amended_domain_name == "Date_domain")):
                         the_enum = ELEnum()
                         the_enum.name = amended_domain_name
                         # maintain a map of enum IDS to ELEnum objects
                         context.enum_map[ framework+":" + cube_type + ":" +amended_domain_name] = the_enum
-                        context.package.eClassifiers.extend([the_enum])
+                        package.eClassifiers.extend([the_enum])
                         the_domain_members = []
                         the_domain_members = Utils.get_members_of_the_subdomain(
                                 subdomain)
@@ -121,7 +121,7 @@ class TranslateSDDModelToDomainsDataModel(object):
                             counter1 = counter1 + 1
                             enum_literal.value = counter1
                             the_enum.eLiterals.extend([enum_literal])
-                            context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
+                            context.enum_literals_map[framework+":" + cube_type + ":" + the_enum.name+":" + enum_literal.literal] = enum_literal
                 else:
                     # the enum already exists, but we might find that a cube_structure_item has 
                     # members taht have not yet been added, since to items might have the same domain
@@ -140,7 +140,7 @@ class TranslateSDDModelToDomainsDataModel(object):
                             counter1 = counter1 + 1
                             enum_literal.value = counter1
                             the_enum.eLiterals.extend([enum_literal])
-                            context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
+                            context.enum_literals_map[framework+":" + cube_type + ":" + the_enum.name+":" + enum_literal.literal] = enum_literal
 
             except:
                 print("missing domain: " + domain.domain_id)

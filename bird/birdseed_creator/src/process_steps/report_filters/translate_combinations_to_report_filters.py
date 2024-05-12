@@ -19,10 +19,28 @@ class CombinationsToReportFilters:
     '''
     Documentation for CombinationsToReportFilters
     '''
-    def translate_combinations_to_report_filters(self, context,sdd_context):
+    def translate_combinations_to_report_filters(self, context,sdd_context,framework,cube_type,input_cube_type):
         
+        reports_module = None
+
+        if framework == 'FINREP_REF':
+            if input_cube_type == 'RC':
+                reports_module = context.finrep_on_sdd_reports_module
+            elif input_cube_type == 'EIL':
+                reports_module = context.finrep_on_il_reports_module
+            elif input_cube_type == 'LDM':
+                reports_module = context.finrep_on_ldm_reports_module
+
+        elif framework == 'AE':
+            if input_cube_type == 'RC':
+                reports_module = context.ae_on_sdd_reports_module
+            elif input_cube_type == 'EIL':
+                reports_module = context.ae_on_il_reports_module
+            elif input_cube_type == 'LDM':
+                reports_module = context.ae_on_ldm_reports_module
+
         CombinationsToReportFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
-        file_location = context.file_directory + os.sep + "in_scope_reports.csv"
+        file_location = context.file_directory + os.sep + "in_scope_reports_" + framework + ".csv"
         in_scope_reports = []
         header_skipped = False
         # Loop through the list of in scope reports
@@ -41,12 +59,12 @@ class CombinationsToReportFilters:
         for table in sdd_context.report_tables.reportTables:
             table_code  =  table.code
             altered_table_name = Utils.make_valid_id(table_code) +"_OutputItem"
-            report_rol = CombinationsToReportFilters.get_report_rol_for_table_code(self, altered_table_name, context)
+            report_rol = CombinationsToReportFilters.get_report_rol_for_table_code(self, altered_table_name, context,framework)
             if not (report_rol is None):
                 report = CellBasedReport()
                 report.outputLayer = report_rol
-                context.reports_module.reports.append(report)
-                context.reports_dictionary[altered_table_name] = report
+                reports_module.reports.append(report)
+                context.reports_dictionary[framework + ":" + cube_type+ ":" + input_cube_type+ ":" + altered_table_name] = report
                 
         
         for cell_position in sdd_context.cell_positions.cellPositions:
@@ -61,7 +79,7 @@ class CombinationsToReportFilters:
                     report_cell = ReportCell()
                     try:
                         altered_template_name = Utils.make_valid_id(template_code) +"_OutputItem"
-                        related_report = context.reports_dictionary[altered_template_name]
+                        related_report = context.reports_dictionary[framework + ":" + cube_type+ ":" + input_cube_type+ ":" +altered_template_name]
                         for axis_ordinate in cell_position.axis_ordinate_id:
                             axis=axis_ordinate.axis_id
                             orientation = axis.orientation
@@ -123,7 +141,7 @@ class CombinationsToReportFilters:
                                         if(member is not None):
                                            
                                             domain_id = item.variable_id.domain_id.domain_id
-                                            literals = CombinationsToReportFilters.find_literals_with_id(self,context,sdd_context,member,domain_id,warning_list, template_code, comb.combination_id, item.variable_id.variable_id )
+                                            literals = CombinationsToReportFilters.find_literals_with_id(self,context,sdd_context,member,domain_id,warning_list, template_code, comb.combination_id, item.variable_id.variable_id ,framework,cube_type,input_cube_type)
                                             the_filter.operation = operation
                                             for literal in literals:
                                                 the_filter.member.append(literal)
@@ -141,7 +159,7 @@ class CombinationsToReportFilters:
                         pass
         
 
-        f = open(context.output_directory + os.sep + "warnings.csv",
+        f = open(context.output_directory + os.sep + "warnings_" + framework +".csv",
                  "a",  encoding='utf-8')  
         f.write("warning_type,message,cube,combination,variable,member, hierarchy, domain\r")    
         
@@ -160,7 +178,7 @@ class CombinationsToReportFilters:
                             problem_member_list.append(problem_member)
                     
         f.close()        
-        f2 = open(context.output_directory + os.sep + "warnings_summary.csv",
+        f2 = open(context.output_directory + os.sep + "warnings_summary_" + framework +".csv",
                  "a",  encoding='utf-8')  
           
         for item in problem_member_list:
@@ -176,26 +194,39 @@ class CombinationsToReportFilters:
                 return op
             
         
-    def get_report_rol_for_table_code(self, table_code, context):
-        for rol_class in context.finrep_output_tables_package.eClassifiers:
+    def get_report_rol_for_table_code(self, table_code, context, framework):
 
+        output_tables_package = None
+        if framework == 'FINREP_REF':
+            output_tables_package = context.finrep_output_tables_package
+        elif framework == 'AE':
+            output_tables_package = context.ae_output_tables_package
+
+        for rol_class in output_tables_package.eClassifiers:
             if table_code == rol_class.name:
                 return rol_class
+            
         return None   
     
-    def find_literals_with_id(self,context,sdd_context,member,domain_id,warning_list, template_code, combination_id, variable_id):
+    def find_literals_with_id(self,context,sdd_context,member,domain_id,warning_list, template_code, combination_id, variable_id,framework,cube_type,input_cube_type):
         return_literal = None
-        return_literal = CombinationsToReportFilters.find_literal_with_id(self,context,member,domain_id)
-        return CombinationsToReportFilters.get_literal_list_considering_hierarchies(self,context,sdd_context,return_literal,member,domain_id,warning_list, template_code,combination_id, variable_id)
+        return_literal = CombinationsToReportFilters.find_literal_with_id(self,context,member,domain_id,framework,cube_type,input_cube_type)
+        return CombinationsToReportFilters.get_literal_list_considering_hierarchies(self,context,sdd_context,return_literal,member,domain_id,warning_list, template_code,combination_id, variable_id,framework,cube_type,input_cube_type)
 
        
-    def find_literal_with_id(self,context,member,domain_id):
+    def find_literal_with_id(self,context,member,domain_id,framework,cube_type,input_cube_type):
             try:
-                return context.enum_literals_map[domain_id + "_domain" +":" +  Utils.make_valid_id_for_literal(member.code)]
+                enum_source = None
+                if input_cube_type == "RC":
+                    enum_source =  framework + ":" + cube_type
+                else:
+                    enum_source =  "BIRD:" + input_cube_type 
+
+                return context.enum_literals_map[enum_source +":" + domain_id + "_domain" +":" +  Utils.make_valid_id_for_literal(member.code)]
             except:
                 return None
 
-    def get_literal_list_considering_hierarchies(self,context,sdd_context,literal,member,domain_id, warning_list, template_code,combination_id, variable_id):
+    def get_literal_list_considering_hierarchies(self,context,sdd_context,literal,member,domain_id, warning_list, template_code,combination_id, variable_id,framework,cube_type,input_cube_type):
         return_list = []
         if literal is None:
             is_node = CombinationsToReportFilters.is_member_a_node(self,sdd_context,member)
@@ -210,7 +241,7 @@ class CombinationsToReportFilters:
                 for hierarchy in hierarchy_list:
                     hierarchy_id = hierarchy.member_hierarchy_id                
                     literal_list = []
-                    CombinationsToReportFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy_id,literal_list)
+                    CombinationsToReportFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy_id,literal_list,framework,cube_type,input_cube_type)
                     return_list.extend(literal_list)
                     
         if len(return_list) == 0:
@@ -243,20 +274,20 @@ class CombinationsToReportFilters:
                 sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id] = hierarchy_list
                 
 
-    def get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy,literal_list):
+    def get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy,literal_list,framework,cube_type,input_cube_type):
         
         key = member.member_id + ":" + hierarchy
         child_members = []
         try:
             child_members = sdd_context.member_plus_hierarchy_to_child_literals[key]
             for item in child_members:
-                literal = CombinationsToReportFilters.find_literal_with_id(self,context,item,item.domain_id.domain_id)
+                literal = CombinationsToReportFilters.find_literal_with_id(self,context,item,item.domain_id.domain_id,framework,cube_type,input_cube_type)
                 if not(literal is None):
                     if not(literal in literal_list):
                         literal_list.append(literal)
                     
             for item in child_members:
-                CombinationsToReportFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,item,hierarchy, literal_list)
+                CombinationsToReportFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,item,hierarchy, literal_list,framework,cube_type,input_cube_type)
         except KeyError:
             pass
         

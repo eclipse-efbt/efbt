@@ -307,7 +307,7 @@ class Utils(object):
 
         return_val = None
         for key, value in enum_map.items():
-            if value.name.lower() == enum_name.lower():
+            if key.lower() == enum_name.lower():
                 return_val = value
 
         return return_val

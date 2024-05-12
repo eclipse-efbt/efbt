@@ -442,7 +442,7 @@ class ImportWebsiteToSDDModel(object):
                         cube.code = cube_code
                         cube.cube_type = cube_type
                         cube.cube_structure_id = cube_structure
-                        context.cube_dictionary[cube_structure_id] = cube
+                        context.cube_dictionary[ImportWebsiteToSDDModel.replace_dots(self, cube_structure_id)] = cube
                         context.cubes.cubes.append(cube)
 
     def create_all_member_hierarchies(self, context):
@@ -809,11 +809,11 @@ class ImportWebsiteToSDDModel(object):
 
                     member_id = row[ColumnIndexes().member_mapping_member_id]
                     if ((variable_id == source_variable_filter) and \
-                        (is_source == 'TRUE')) or \
+                        (is_source == 'true')) or \
                         ((variable_id == target_variable_filter) and \
-                        (is_source == 'FALSE')) or \
+                        (is_source == 'false')) or \
                         ((variable_id == target_variable_filter2) and \
-                        (is_source == 'FALSE')):
+                        (is_source == 'false')):
                         member_mapping_item = MEMBER_MAPPING_ITEM()
                         member_mapping_item.isSource = is_source
                         member_mapping_item.member = ImportWebsiteToSDDModel.find_member_with_id(
@@ -1013,16 +1013,16 @@ class ImportWebsiteToSDDModel(object):
             member_mapping_items = []
             mapping_items = mapping.memberMappingItems
             for item in mapping_items:
-                if (item.member == member) and (item.isSource == 'TRUE'):
+                if (item.member == member) and (item.isSource == 'true'):
                     member_mapping_items.append(item)
-                if (item.variable == target_variable) and (item.isSource == 'FALSE'):
+                if (item.variable == target_variable) and (item.isSource == 'false'):
                     member_mapping_items.append(item)
 
             for item in member_mapping_items:
-                if item.isSource == 'TRUE':
+                if item.isSource == 'true':
                     row_id = item.row
                     for item2 in member_mapping_items:
-                        if (item2.isSource == 'FALSE') and (item2.row == row_id) \
+                        if (item2.isSource == 'false') and (item2.row == row_id) \
                             and not(item2.member.name.endswith("_0")):
                             return_target_items.append(item2)
  

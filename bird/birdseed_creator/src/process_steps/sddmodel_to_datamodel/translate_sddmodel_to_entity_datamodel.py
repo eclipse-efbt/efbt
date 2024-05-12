@@ -52,7 +52,7 @@ class TranslateSDDModelToDataModel(object):
             
             if (cube_framework == framework) and (cube_cube_type == cube_type):
                 package = None
-                if framework == "FINREP":
+                if framework == "FINREP_REF":
                     package = context.finrep_output_tables_package
                 elif framework == "AE":
                     package = context.ae_output_tables_package
@@ -100,7 +100,6 @@ class TranslateSDDModelToDataModel(object):
                         if cube_type == "LDM":                    
                             altered_class_name = Utils.make_valid_id(class_name)
                             fullName = altered_class_name
-                            derived = False
                             eclass = ELClass(name=fullName)
                             package.eClassifiers.extend([
                                                             eclass])
@@ -132,249 +131,254 @@ class TranslateSDDModelToDataModel(object):
         for cube_structure_item in sdd_context.cube_structure_items.cubeStructureItems:
             class_id = cube_structure_item.cube_structure_id.cube_structure_id
             role = cube_structure_item.role
-            try:
-                the_class = context.classes_map[class_id]
-                the_attribute1 = cube_structure_item.variable_id
-                long_name=None
-                variable = cube_structure_item.variable_id
-                attribute_list = [(the_attribute1,None)]
-                if (the_attribute1.code=="MTRCS"):
-                    variable_set = cube_structure_item.variable_set_id
-                    attribute_list = TranslateSDDModelToDataModel.get_attribute_and_subdomain_list_from_variable_set(self,variable_set)
-                if (the_attribute1.code== "VALUE_DECIMAL") or (the_attribute1.code == "OBSERVATION_VALUE"):
-                    attribute_list = []
-                for attribute_subdomain_tuple in attribute_list:
-                    attribute =attribute_subdomain_tuple[0]
-                    subdomain = attribute_subdomain_tuple[1]
-                    
-                    print("attribute.code: " + attribute.code )
-                    try: 
-                        try:
-                            long_name = sdd_context.variable_to_long_names_map[attribute.code]
-                        except:
-                            long_name = attribute.code
-                        amended_attribute_name = Utils.make_valid_id(attribute.code)
-                        amended_attribute_long_name = Utils.make_valid_id(long_name)
-                        
-                        the_class = context.classes_map[class_id]
-                        
-                        class_is_derived = the_class.isDerived
+            cube = sdd_context.cube_dictionary[cube_structure_item.cube_structure_id.cube_structure_id] 
+            cube_framework = cube.framework_id.framework_id
+            cube_cube_type = cube.cube_type
 
-                        if(context.use_codes):   
-                            the_attribute_name = amended_attribute_name  
-                        else:
-                            the_attribute_name = amended_attribute_long_name
+            if (cube_framework == framework) and (cube_cube_type == cube_type):  
+                try:
+                    the_class = context.classes_map[class_id]
+                    the_attribute1 = cube_structure_item.variable_id
+                    long_name=None
+                    variable = cube_structure_item.variable_id
+                    attribute_list = [(the_attribute1,None)]
+                    if (the_attribute1.code=="MTRCS"):
+                        variable_set = cube_structure_item.variable_set_id
+                        attribute_list = TranslateSDDModelToDataModel.get_attribute_and_subdomain_list_from_variable_set(self,variable_set)
+                    if (the_attribute1.code== "VALUE_DECIMAL") or (the_attribute1.code == "OBSERVATION_VALUE"):
+                        attribute_list = []
+                    for attribute_subdomain_tuple in attribute_list:
+                        attribute =attribute_subdomain_tuple[0]
+                        subdomain = attribute_subdomain_tuple[1]
                         
-                        amended_domain_name = None
-                        if (the_attribute1.code=="MTRCS"):
-                            domain_id = sdd_context.variable_to_domain_map[attribute.code].domain_id
-                            amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
-                        else:   
-                            domain_id = sdd_context.variable_to_domain_map[variable.code].domain_id
-                            amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
-
-
-                        the_enum =  Utils.find_enum(framework+":" + cube_type+":" + amended_domain_name,context.enum_map)
-                        if  the_enum is not None:                     
+                        print("attribute.code: " + attribute.code )
+                        try: 
+                            try:
+                                long_name = sdd_context.variable_to_long_names_map[attribute.code]
+                            except:
+                                long_name = attribute.code
+                            amended_attribute_name = Utils.make_valid_id(attribute.code)
+                            amended_attribute_long_name = Utils.make_valid_id(long_name)
                             
-                            if class_is_derived:
-                                operation = ELOperation()
-                                operation.lowerBound=0
-                                operation.upperBound=1
-                                if(the_enum.name == "String"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_string
-                                elif(the_enum.name == "Date"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_date
-                                elif(the_enum.name.startswith("String_")):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_string
-                                elif(the_enum.name == "STRNG_domain"):
+                            the_class = context.classes_map[class_id]
+                            
+                            class_is_derived = the_class.isDerived
+
+                            if(context.use_codes):   
+                                the_attribute_name = amended_attribute_name  
+                            else:
+                                the_attribute_name = amended_attribute_long_name
+                            
+                            amended_domain_name = None
+                            if (the_attribute1.code=="MTRCS"):
+                                domain_id = sdd_context.variable_to_domain_map[attribute.code].domain_id
+                                amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
+                            else:   
+                                domain_id = sdd_context.variable_to_domain_map[variable.code].domain_id
+                                amended_domain_name = Utils.make_valid_id(domain_id+"_domain")
+
+
+                            the_enum =  Utils.find_enum(framework+":" + cube_type+":" + amended_domain_name,context.enum_map)
+                            if  the_enum is not None:                     
+                                
+                                if class_is_derived:
+                                    operation = ELOperation()
+                                    operation.lowerBound=0
+                                    operation.upperBound=1
+                                    if(the_enum.name == "String"):
                                         operation.name = the_attribute_name
                                         operation.eType = context.types.e_string
-                                elif(the_enum.name == "EBA_String_domain"):
-                                        operation.name = the_attribute_name
-                                        operation.eType = context.types.e_string
-                                elif(the_enum.name == "DT_domain"):
+                                    elif(the_enum.name == "Date"):
                                         operation.name = the_attribute_name
                                         operation.eType = context.types.e_date
-                                elif(the_enum.name == "Number"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_double
-                                elif(the_enum.name == "RL_domain"):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_double
-                                
-                                elif(the_enum.name.startswith("Real_")):
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_double
-                                elif(the_enum.name.startswith("Monetary")): 
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_int
-                                elif(the_enum.name.startswith("INTGR_domain")): 
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_int
-                                elif(the_enum.name.startswith("MNTRY")): 
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_int
-                                elif(the_enum.name.startswith("Monetary_domain")): 
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_int
-                                elif(the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_int
-                                elif(the_enum.name.startswith("Non_negative_integers")): 
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_int
-                                elif(the_enum.name.startswith("All_possible_dates")):   
-                                    operation.name = the_attribute_name
-                                    operation.eType = context.types.e_date  
+                                    elif(the_enum.name.startswith("String_")):
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_string
+                                    elif(the_enum.name == "STRNG_domain"):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.types.e_string
+                                    elif(the_enum.name == "EBA_String_domain"):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.types.e_string
+                                    elif(the_enum.name == "DT_domain"):
+                                            operation.name = the_attribute_name
+                                            operation.eType = context.types.e_date
+                                    elif(the_enum.name == "Number"):
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_double
+                                    elif(the_enum.name == "RL_domain"):
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_double
+                                    
+                                    elif(the_enum.name.startswith("Real_")):
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_double
+                                    elif(the_enum.name.startswith("Monetary")): 
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_int
+                                    elif(the_enum.name.startswith("INTGR_domain")): 
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_int
+                                    elif(the_enum.name.startswith("MNTRY")): 
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_int
+                                    elif(the_enum.name.startswith("Monetary_domain")): 
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_int
+                                    elif(the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_int
+                                    elif(the_enum.name.startswith("Non_negative_integers")): 
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_int
+                                    elif(the_enum.name.startswith("All_possible_dates")):   
+                                        operation.name = the_attribute_name
+                                        operation.eType = context.types.e_date  
+                                    else:
+                                        operation.name = the_attribute_name
+                                        operation.eType = the_enum  
+                                    
+                                    try:
+                                        the_class = context.classes_map[class_id]
+                                        the_long_name_annotation = ELAnnotation()
+                                        the_long_name_directive = Utils.get_annotation_directive(the_class.eContainer(), "long_name")
+                                        the_long_name_annotation.source = the_long_name_directive
+                                        details = the_long_name_annotation.details
+                                        mapentry  = ELStringToStringMapEntry()
+                                        mapentry.key = "long_name"
+                                        mapentry.value = amended_attribute_long_name
+                                        details.append(mapentry)
+                                        operation.eAnnotations.append(the_long_name_annotation)
+                                        
+                        
+                                        
+                                        if class_is_derived:
+                                            the_class.eOperations.extend([operation])
+                                    except:
+                                        print( "missing class2: " )
+                                        
                                 else:
-                                    operation.name = the_attribute_name
-                                    operation.eType = the_enum  
-                                
-                                try:
-                                    the_class = context.classes_map[class_id]
-                                    the_long_name_annotation = ELAnnotation()
-                                    the_long_name_directive = Utils.get_annotation_directive(the_class.eContainer(), "long_name")
-                                    the_long_name_annotation.source = the_long_name_directive
-                                    details = the_long_name_annotation.details
-                                    mapentry  = ELStringToStringMapEntry()
-                                    mapentry.key = "long_name"
-                                    mapentry.value = amended_attribute_long_name
-                                    details.append(mapentry)
-                                    operation.eAnnotations.append(the_long_name_annotation)
+                                    attribute = ELAttribute()
                                     
-                    
-                                    
-                                    if class_is_derived:
-                                        the_class.eOperations.extend([operation])
-                                except:
-                                    print( "missing class2: " )
-                                    
-                            else:
-                                attribute = ELAttribute()
-                                
-                                attribute.lowerBound=0
-                                attribute.upperBound=1
-                                if(the_enum.name == "String"):
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_string
-                                    attribute.eAttributeType = context.types.e_string
-                                elif(the_enum.name == "Date"):
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_date
-                                    attribute.eAttributeType = context.types.e_string
-                                elif(the_enum.name.startswith("String_")):
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_string
-                                    attribute.eAttributeType = context.types.e_string
-                                elif(the_enum.name == "STRNG_domain"):
+                                    attribute.lowerBound=0
+                                    attribute.upperBound=1
+                                    if(the_enum.name == "String"):
                                         attribute.name = the_attribute_name
                                         attribute.eType = context.types.e_string
                                         attribute.eAttributeType = context.types.e_string
-                                elif(the_enum.name == "EBA_String_domain"):
-                                        attribute.name = the_attribute_name
-                                        attribute.eType = context.types.e_string
-                                        attribute.eAttributeType = context.types.e_string
-                                elif(the_enum.name == "DT_domain"):
+                                    elif(the_enum.name == "Date"):
                                         attribute.name = the_attribute_name
                                         attribute.eType = context.types.e_date
+                                        attribute.eAttributeType = context.types.e_string
+                                    elif(the_enum.name.startswith("String_")):
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_string
+                                        attribute.eAttributeType = context.types.e_string
+                                    elif(the_enum.name == "STRNG_domain"):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.types.e_string
+                                            attribute.eAttributeType = context.types.e_string
+                                    elif(the_enum.name == "EBA_String_domain"):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.types.e_string
+                                            attribute.eAttributeType = context.types.e_string
+                                    elif(the_enum.name == "DT_domain"):
+                                            attribute.name = the_attribute_name
+                                            attribute.eType = context.types.e_date
+                                            attribute.eAttributeType = context.types.e_date
+                                    elif(the_enum.name == "Number"):
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_double
+                                        attribute.eAttributeType = context.types.e_double
+                                    elif(the_enum.name == "RL_domain"):
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_double
+                                        attribute.eAttributeType = context.types.e_double
+                                    
+                                    elif(the_enum.name.startswith("Real_")):
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_double
+                                        attribute.eAttributeType = context.types.e_double
+                                    elif(the_enum.name.startswith("Monetary")): 
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_int
+                                        attribute.eAttributeType = context.types.e_int
+                                    elif(the_enum.name.startswith("MNTRY")): 
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_int
+                                    elif(the_enum.name.startswith("INTGR_domain")): 
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_int 
+                                        attribute.eAttributeType = context.types.e_int
+                                    elif(the_enum.name.startswith("Monetary_domain")): 
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_int
+                                        attribute.eAttributeType = context.types.e_int
+                                    elif(the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_int
+                                        attribute.eAttributeType = context.types.e_int
+                                    elif(the_enum.name.startswith("Non_negative_integers")): 
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_int
+                                        attribute.eAttributeType = context.types.e_int
+                                    elif(the_enum.name.startswith("All_possible_dates")):   
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = context.types.e_date  
                                         attribute.eAttributeType = context.types.e_date
-                                elif(the_enum.name == "Number"):
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_double
-                                    attribute.eAttributeType = context.types.e_double
-                                elif(the_enum.name == "RL_domain"):
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_double
-                                    attribute.eAttributeType = context.types.e_double
-                                
-                                elif(the_enum.name.startswith("Real_")):
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_double
-                                    attribute.eAttributeType = context.types.e_double
-                                elif(the_enum.name.startswith("Monetary")): 
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_int
-                                    attribute.eAttributeType = context.types.e_int
-                                elif(the_enum.name.startswith("MNTRY")): 
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_int
-                                elif(the_enum.name.startswith("INTGR_domain")): 
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_int 
-                                    attribute.eAttributeType = context.types.e_int
-                                elif(the_enum.name.startswith("Monetary_domain")): 
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_int
-                                    attribute.eAttributeType = context.types.e_int
-                                elif(the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")): 
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_int
-                                    attribute.eAttributeType = context.types.e_int
-                                elif(the_enum.name.startswith("Non_negative_integers")): 
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_int
-                                    attribute.eAttributeType = context.types.e_int
-                                elif(the_enum.name.startswith("All_possible_dates")):   
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = context.types.e_date  
-                                    attribute.eAttributeType = context.types.e_date
-                                else:
-                                    attribute.name = the_attribute_name
-                                    attribute.eType = the_enum  
-                                    attribute.eAttributeType = the_enum
-                                
-                                try:
-                                    the_class = context.classes_map[class_id]
-                                        
-                                    if role == 'D':
-                                        the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
-                                        if the_attribute_annotation is None: 
-                                            the_attribute_annotation = ELAnnotation()
-                                            the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "key")
-                                            the_attribute_annotation.source = the_attribute_annotation_directive
-                                            attribute.eAnnotations.append(the_attribute_annotation)
+                                    else:
+                                        attribute.name = the_attribute_name
+                                        attribute.eType = the_enum  
+                                        attribute.eAttributeType = the_enum
+                                    
+                                    try:
+                                        the_class = context.classes_map[class_id]
                                             
-                                        primary_key = None 
-                            
-                                        for key_value_pair in the_attribute_annotation.details.items:
-                                            if key_value_pair.key == 'is_primary_key':
-                                                primary_key = key_value_pair
+                                        if role == 'D':
+                                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
+                                            if the_attribute_annotation is None: 
+                                                the_attribute_annotation = ELAnnotation()
+                                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "key")
+                                                the_attribute_annotation.source = the_attribute_annotation_directive
+                                                attribute.eAnnotations.append(the_attribute_annotation)
                                                 
-                                        if primary_key is None:
-                                            primary_key = ELStringToStringMapEntry()
-                                            primary_key.key = "is_primary_key"
-                                            primary_key.value = "true"
-                                            the_attribute_annotation.details.append(primary_key)
-                                    
-                                    the_class = context.classes_map[class_id]
-                                    the_long_name_annotation = ELAnnotation()
-                                    the_long_name_directive = Utils.get_annotation_directive(the_class.eContainer(), "long_name")
-                                    the_long_name_annotation.source = the_long_name_directive
-                                    details = the_long_name_annotation.details
-                                    mapentry  = ELStringToStringMapEntry()
-                                    mapentry.key = "long_name"
-                                    mapentry.value = amended_attribute_long_name
-                                    details.append(mapentry)
-                                    attribute.eAnnotations.append(the_long_name_annotation)
-                                    
-                                    the_class.eStructuralFeatures.extend([attribute])
-                                    
-                                except:
-                                    print( "missing class2: " )
+                                            primary_key = None 
+                                
+                                            for key_value_pair in the_attribute_annotation.details.items:
+                                                if key_value_pair.key == 'is_primary_key':
+                                                    primary_key = key_value_pair
+                                                    
+                                            if primary_key is None:
+                                                primary_key = ELStringToStringMapEntry()
+                                                primary_key.key = "is_primary_key"
+                                                primary_key.value = "true"
+                                                the_attribute_annotation.details.append(primary_key)
+                                        
+                                        the_class = context.classes_map[class_id]
+                                        the_long_name_annotation = ELAnnotation()
+                                        the_long_name_directive = Utils.get_annotation_directive(the_class.eContainer(), "long_name")
+                                        the_long_name_annotation.source = the_long_name_directive
+                                        details = the_long_name_annotation.details
+                                        mapentry  = ELStringToStringMapEntry()
+                                        mapentry.key = "long_name"
+                                        mapentry.value = amended_attribute_long_name
+                                        details.append(mapentry)
+                                        attribute.eAnnotations.append(the_long_name_annotation)
+                                        
+                                        the_class.eStructuralFeatures.extend([attribute])
+                                        
+                                    except:
+                                        print( "missing class2: " )
 
-                        else:
-                            print( "XXXXX missing domainID: " )
-                            print(domain_id)
-                            print(class_id)
-                            
-                    except:
-                            pass
-            except:
-                pass
+                            else:
+                                print( "XXXXX missing domainID: " )
+                                print(domain_id)
+                                print(class_id)
+                                
+                        except:
+                                pass
+                except:
+                    pass
                 
     def get_attribute_and_subdomain_list_from_variable_set(self,variable_set):
         attribute_subdomain_tuple_list = []

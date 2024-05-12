@@ -15,7 +15,7 @@
 
 from entry_points.create_reports_info import RunCreateReports
 from entry_points.website_to_sddmodel import RunWebsiteToSDDModel
-from entry_points.sddmodel_to_datamodel_finrep import RunSDDModelToDataModelFinrep 
+from sddmodel_to_datamodel import RunSDDModelToDataModel 
 from context.context import Context
 from context.sdd_context import SDDContext
 from persister.persist_to_file import PersistToFile
@@ -25,7 +25,13 @@ from process_steps.report_filters.translate_to_row_column_reports import Transla
 class RunCreateRowColumnReports:
     
     def run(self,context,sdd_context):
-        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context)
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"FINREP_REF","RC","RC")
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"FINREP_REF","RC","EIL")
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"FINREP_REF","RC","LDM")
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE","RC","RC")
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE","RC","EIL")
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE","RC","LDM"
+                                                                      
         
         
 if __name__ == '__main__':
@@ -36,7 +42,7 @@ if __name__ == '__main__':
     sdd_context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources'
     sdd_context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results'
     RunWebsiteToSDDModel().run(sdd_context)
-    RunSDDModelToDataModelFinrep().run(context,sdd_context)
+    RunSDDModelToDataModel().run(context,sdd_context)
     RunCreateReports().run(context,sdd_context)
     RunCreateRowColumnReports().run(context,sdd_context)
     persister = PersistToFile()
