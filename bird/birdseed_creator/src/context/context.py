@@ -24,6 +24,7 @@ class Context(object):
     # variables to configure the behaviour
     
     input_layer_name_has_EIL_postfix = False
+    enrich_ldm_relationships = False
     use_codes = True
     load_ldm = False
     use_variable_long_name = True

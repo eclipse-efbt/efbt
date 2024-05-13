@@ -199,9 +199,15 @@ class MainCatagoryFinder(object):
         create a draft of the table part file, this should be reviewed and edited
         and the edited version used as an input for processing
         '''
+        if framework == "FINREP_REF":
+            main_catagories_in_scope = context.main_catagories_in_scope_finrep
+            subdirectory = "finrep_generation_rules"
+        elif framework == "AE_REF":
+            main_catagories_in_scope = context.main_catagories_in_scope_ae
+            subdirectory = "ae_generation_rules"
 
         f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
-                         os.sep + 
+                         os.sep + subdirectory + os.sep +
                          'table_parts_draft_' + framework + '.csv', "a",  encoding='utf-8')
 
         f.write("description,classifier,value,description,Main Catagory\n")
@@ -209,10 +215,7 @@ class MainCatagoryFinder(object):
         sdd_context.file_directory = context.file_directory
         sdd_context.output_directory = context.output_directory
 
-        if framework == "FINREP_REF":
-            main_catagories_in_scope = context.main_catagories_in_scope_finrep
-        elif framework == "AE_REF":
-            main_catagories_in_scope = context.main_catagories_in_scope_ae
+        
 
         for mc in main_catagories_in_scope:
             mc_member = ImportWebsiteToSDDModel.find_member_with_id(self, mc, sdd_context)

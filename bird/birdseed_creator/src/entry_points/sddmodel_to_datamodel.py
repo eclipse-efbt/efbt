@@ -36,7 +36,8 @@ class RunSDDModelToDataModel:
         TranslateSDDModelToDataModel().do_import(context,sdd_context,"BIRD","EIL")
         TranslateSDDModelToDataModel().do_import(context,sdd_context,"BIRD","LDM")
         RelationshipEnricher().enrich(context)
-        LDMRelationshipEnricher().enrich(context)
+        if context.enrich_ldm_relationships:
+            LDMRelationshipEnricher().enrich(context)
         
 
 if __name__ == '__main__':
