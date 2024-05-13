@@ -31,7 +31,7 @@ class CombinationsToReportFilters:
             elif input_cube_type == 'LDM':
                 reports_module = context.finrep_on_ldm_reports_module
 
-        elif framework == 'AE':
+        elif framework == 'AE_REF':
             if input_cube_type == 'RC':
                 reports_module = context.ae_on_sdd_reports_module
             elif input_cube_type == 'EIL':
@@ -199,7 +199,7 @@ class CombinationsToReportFilters:
         output_tables_package = None
         if framework == 'FINREP_REF':
             output_tables_package = context.finrep_output_tables_package
-        elif framework == 'AE':
+        elif framework == 'AE_REF':
             output_tables_package = context.ae_output_tables_package
 
         for rol_class in output_tables_package.eClassifiers:

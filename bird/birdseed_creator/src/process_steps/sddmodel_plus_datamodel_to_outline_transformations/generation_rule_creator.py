@@ -41,7 +41,7 @@ class GenerationRuleCreator(object):
 
         if framework == "FINREP_REF":
             generation_rules_module = context.finrep_generation_rules_module
-        elif framework == "AE":
+        elif framework == "AE_REF":
             generation_rules_module = context.ae_generation_rules_module
 
         header_skipped = False
@@ -92,7 +92,7 @@ class GenerationRuleCreator(object):
             tables_for_main_catagory_map = context.tables_for_main_catagory_map_finrep
             table_parts_to_linked_tables_map = context.table_parts_to_linked_tables_map_finrep
             table_and_part_tuple_map = context.table_and_part_tuple_map_finrep
-        elif framework == "AE":
+        elif framework == "AE_REF":
             tables_for_main_catagory_map = context.tables_for_main_catagory_map_ae
             table_parts_to_linked_tables_map = context.table_parts_to_linked_tables_map_ae
             table_and_part_tuple_map = context.table_and_part_tuple_map_ae
@@ -152,7 +152,6 @@ class GenerationRuleCreator(object):
         '''
         Add field to field lineage entries to the rules for the table part
         '''
-        
         if not output_entity is None:
             for output_item in output_entity.eOperations:
                 if isinstance(output_item, ELOperation):
@@ -216,7 +215,7 @@ class GenerationRuleCreator(object):
         '''
         if framework == 'FINREP_REF':
             package = context.finrep_output_tables_package
-        elif framework == 'AE':
+        elif framework == 'AE_REF':
             package = context.ae_output_tables_package  
             
         for classifier in package.eClassifiers:
@@ -235,5 +234,11 @@ class GenerationRuleCreator(object):
 
         for classifier in package.eClassifiers:
             if isinstance(classifier, ELClass):
-                if classifier.name == input_layer_name + "_" + cube_type:
+                input_layer_name_to_compare = None
+                if context.input_layer_name_has_EIL_postfix:
+                    input_layer_name_to_compare = input_layer_name + "_" + cube_type
+                else:
+                    input_layer_name_to_compare = input_layer_name 
+
+                if classifier.name == input_layer_name_to_compare:
                     return classifier

@@ -58,7 +58,7 @@ class MainCatagoryFinder(object):
                     main_catagory_name = row[1]
                     if framework == "FINREP_REF":
                         context.main_catogory_to_name_map_finrep[main_catagory] = main_catagory_name
-                    elif framework == "AE":
+                    elif framework == "AE_REF":
                         context.main_catogory_to_name_map_ae[main_catagory] = main_catagory_name                   
 
     def create_report_to_main_catogory_map(self, context,sdd_context,full_framework_name,reporting_framework_version  ):
@@ -68,7 +68,7 @@ class MainCatagoryFinder(object):
         '''
         if full_framework_name == "FINREP_REF":
             framework = "FINREP"
-        elif full_framework_name == "AE":
+        elif full_framework_name == "AE_REF":
             framework = "AE"
 
 
@@ -171,7 +171,7 @@ class MainCatagoryFinder(object):
 
                                 if full_framework_name == "FINREP_REF":
                                     main_catagories_in_scope = context.main_catagories_in_scope_finrep
-                                elif full_framework_name == "AE":
+                                elif full_framework_name == "AE_REF":
                                     main_catagories_in_scope = context.main_catagories_in_scope_ae
                         
 
@@ -211,7 +211,7 @@ class MainCatagoryFinder(object):
 
         if framework == "FINREP_REF":
             main_catagories_in_scope = context.main_catagories_in_scope_finrep
-        elif framework == "AE":
+        elif framework == "AE_REF":
             main_catagories_in_scope = context.main_catagories_in_scope_ae
 
         for mc in main_catagories_in_scope:
@@ -313,7 +313,7 @@ class MainCatagoryFinder(object):
         file_location = context.file_directory + os.sep + "table_part_main_catagory_" + framework + ".csv"
         if framework == "FINREP_REF":
             table_parts_to_main_catagory_map = context.table_parts_to_main_catagory_map_finrep
-        elif framework == "AE":
+        elif framework == "AE_REF":
             table_parts_to_main_catagory_map = context.table_parts_to_main_catagory_map_ae
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity, 
@@ -343,7 +343,7 @@ class MainCatagoryFinder(object):
         if framework == "FINREP_REF":
             table_parts_to_main_catagory_map = context.table_parts_to_main_catagory_map_finrep
             tables_for_main_catagory_map = context.tables_for_main_catagory_map_finrep
-        elif framework == "AE":
+        elif framework == "AE_REF":
             table_parts_to_main_catagory_map = context.table_parts_to_main_catagory_map_ae
             tables_for_main_catagory_map = context.tables_for_main_catagory_map_ae
         # Load all the entities from the csv file,
@@ -384,7 +384,7 @@ class MainCatagoryFinder(object):
             table_parts_to_linked_tables_map = context.table_parts_to_linked_tables_map_finrep
             table_parts_to_to_filter_map = context.table_parts_to_to_filter_map_finrep
             table_and_part_tuple_map = context.table_and_part_tuple_map_finrep
-        elif framework == "AE":
+        elif framework == "AE_REF":
             table_parts_to_main_catagory_map = context.table_parts_to_main_catagory_map_ae
             table_parts_to_linked_tables_map = context.table_parts_to_linked_tables_map_ae
             table_parts_to_to_filter_map = context.table_parts_to_to_filter_map_ae

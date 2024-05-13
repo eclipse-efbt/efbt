@@ -33,7 +33,7 @@ class TranslateToRowColumnReports:
             elif input_cube_type == 'LDM':
                 reports_module = context.finrep_on_ldm_reports_module
 
-        elif framework == 'AE':
+        elif framework == 'AE_REF':
             if input_cube_type == 'RC':
                 reports_module = context.ae_on_sdd_reports_module
             elif input_cube_type == 'EIL':

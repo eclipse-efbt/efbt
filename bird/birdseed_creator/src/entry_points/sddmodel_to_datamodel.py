@@ -27,11 +27,11 @@ from utils. ldm_relationship_enricher import LDMRelationshipEnricher
 class RunSDDModelToDataModel:
     
     def run(self,context,sdd_context):
-        TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"AE","RC")
+        TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"AE_REF","RC")
         TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"FINREP_REF","RC")
         TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"BIRD","EIL")
         TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"BIRD","LDM")
-        TranslateSDDModelToDataModel().do_import(context,sdd_context,"AE","RC")
+        TranslateSDDModelToDataModel().do_import(context,sdd_context,"AE_REF","RC")
         TranslateSDDModelToDataModel().do_import(context,sdd_context,"FINREP_REF","RC")
         TranslateSDDModelToDataModel().do_import(context,sdd_context,"BIRD","EIL")
         TranslateSDDModelToDataModel().do_import(context,sdd_context,"BIRD","LDM")
@@ -42,10 +42,10 @@ class RunSDDModelToDataModel:
 if __name__ == '__main__':
     sdd_context = SDDContext()
     context = Context()
-    context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources'
-    context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results' 
-    sdd_context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources'
-    sdd_context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results'   
+    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'  
+    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModel().run(context,sdd_context)
     persister = PersistToFile()

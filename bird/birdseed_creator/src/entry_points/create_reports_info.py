@@ -28,17 +28,17 @@ class RunCreateReports:
         CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"FINREP_REF","RC","RC")
         CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"FINREP_REF","RC","EIL")
         CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"FINREP_REF","RC","LDM")
-        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE","RC","RC")
-        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE","RC","EIL")
-        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE","RC","LDM")
+        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE_REF","RC","RC")
+        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE_REF","RC","EIL")
+        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE_REF","RC","LDM")
         
 if __name__ == '__main__':
     sdd_context = SDDContext()
     context = Context()
-    context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources'
-    context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results' 
-    sdd_context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources'
-    sdd_context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results'  
+    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'  
+    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModel().run(context,sdd_context)
     RunCreateReports().run(context,sdd_context)

@@ -54,7 +54,7 @@ class TranslateSDDModelToDataModel(object):
                 package = None
                 if framework == "FINREP_REF":
                     package = context.finrep_output_tables_package
-                elif framework == "AE":
+                elif framework == "AE_REF":
                     package = context.ae_output_tables_package
                 elif framework == "BIRD":      
                     if cube_type == "EIL":
