@@ -259,7 +259,7 @@ class SQLDevLDMImport(object):
                         the_enum.name = adapted_enum_name
                         # maintain a map of enum IDS to ELEnum objects
                         context.enum_map[enum_id] = the_enum
-                        context.il_domains_package.eClassifiers.extend([
+                        context.ldm_domains_package.eClassifiers.extend([
                                                                            the_enum])
 
     def add_ldm_literals_to_enums(self, context):

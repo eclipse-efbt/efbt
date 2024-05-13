@@ -26,7 +26,6 @@ class Context(object):
     use_codes = True
     load_eil_from_website = False
     use_variable_long_name = True
-    persist_to_regdna = True
 
     # the directory where we get our input files
     file_directory = ""
@@ -40,7 +39,7 @@ class Context(object):
 
     # create  regdna  packages
     types_package = ELPackage(name='types')
-    il_domains_package = ELPackage(
+    ldm_domains_package = ELPackage(
         name='il_domains',
         nsURI='http://www.eclipse.org/bird/il_domains',
         nsPrefix='il_domains')
@@ -105,7 +104,7 @@ class Context(object):
         self.types_package.eClassifiers.append(types.e_double)
         self.types_package.eClassifiers.append(types.e_int)
         self.module_list.modules.append(self.types_package)
-        self.module_list.modules.append(self.il_domains_package)
+        self.module_list.modules.append(self.ldm_domains_package)
         self.module_list.modules.append(self.input_tables_package)
 
 

@@ -107,7 +107,7 @@ class PersistSDD:
                         variable_name = item.variable.name
                         member_name = item.member.name
                         choice = variable_name + ":" + member_name
-                        if is_source == "TRUE":
+                        if is_source == "true":
                             source_mapping_item_dict[row] = member_name
                         else:
                             target_row_details = None

@@ -13,17 +13,15 @@
 from context.context import Context
 from context.sdd_context import SDDContext
 from entry_points.website_to_sddmodel import RunWebsiteToSDDModel
-from entry_points.sddmodel_to_datamodel_ae import RunSDDModelToDataModelAE 
+from entry_points.sddmodel_to_datamodel import RunSDDModelToDataModel
 from persister.persist_to_file import PersistToFile
 from process_steps.sddmodel_plus_datamodel_to_outline_transformations.main_catagory_finder import MainCatagoryFinder
 from process_steps.sddmodel_plus_datamodel_to_outline_transformations.generation_rule_creator import GenerationRuleCreator
 
 
-class GenerateGenerationRulesAE:
+class GenerateGenerationRules:
     
     def run(self,context,sdd_context):
-       
-
         # we will create an ecore4reg representation of BIRD also
         # use codes not long names for columns
         context.use_codes = True
@@ -32,26 +30,24 @@ class GenerateGenerationRulesAE:
         # variables not matching domains
         context.find_variable_with_same_domain = False
         # find the main catagories related with reports.
-        MainCatagoryFinder().create_report_to_main_catogory_maps(context,sdd_context)
+        MainCatagoryFinder().create_report_to_main_catogory_maps(context,sdd_context,"FINREP_REF", ["3","3.0-Ind","FINREP 3.0-Ind"])
+        # find the main catagories related with reports.
+        MainCatagoryFinder().create_report_to_main_catogory_maps(context,sdd_context,"AE_REF",["AE 3.2"])
         # create the generation rules
-        GenerationRuleCreator().generate_generation_rules(context,sdd_context)
+        GenerationRuleCreator().generate_generation_rules(context,sdd_context,"FINREP_REF","EIL")
+        GenerationRuleCreator().generate_generation_rules(context,sdd_context,"AE_REF","EIL")
         # save the generated  files in useful formats
 
-
-        
-        
 if __name__ == '__main__':
     sdd_context = SDDContext()
     context = Context()
     context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results' 
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'  
     sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'   
-    
-
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
     RunWebsiteToSDDModel().run(sdd_context)
-    RunSDDModelToDataModelAE().run(context,sdd_context)
-    GenerateGenerationRulesAE().run(context,sdd_context)
+    RunSDDModelToDataModel().run(context,sdd_context)
+    GenerateGenerationRules().run(context,sdd_context)
     persister = PersistToFile()
     persister.save_model_as_regdna_file(context)
     persister.persist_generation_transformations(context)

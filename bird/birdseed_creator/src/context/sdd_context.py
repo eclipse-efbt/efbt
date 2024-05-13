@@ -90,6 +90,7 @@ class SDDContext(object):
     variable_dictionary= {}
     axis_ordinate_dictionary= {}
     table_cell_dictionary= {}
+    table_to_table_cell_dictionary= {}
     member_mapping_dictionary = {}
     cell_positions_dictionary = {}
     variable_set_enumeration_dictionary = {}
@@ -98,6 +99,9 @@ class SDDContext(object):
     variable_to_domain_map = {}
     variable_to_long_names_map = {}
     variable_to_primary_concept_map = {}
+
+    combination_to_typ_instrmnt_map = {}
+    table_to_combination_dictionary = {}
 
     # For the reference output layers we record a map between domains
     # and domain names
