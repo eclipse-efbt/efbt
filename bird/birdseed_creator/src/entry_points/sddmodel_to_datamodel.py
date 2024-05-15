@@ -21,7 +21,7 @@ from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_domains_datamodel
 from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_entity_datamodel import TranslateSDDModelToDataModel
 from persister.persist_to_file import PersistToFile
 from utils.relationship_enricher import RelationshipEnricher
-from utils. ldm_relationship_enricher import LDMRelationshipEnricher
+from utils.ldm_relationship_enricher import LDMRelationshipEnricher
 
 
 class RunSDDModelToDataModel:

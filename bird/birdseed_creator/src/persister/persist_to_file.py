@@ -267,9 +267,14 @@ class PersistToFile:
     def persist_generation_transformations_to_csv(self, context):
 
         PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
-                                                      context.finrep_generation_rules_module)
+                                                      context.finrep_generation_rules_module_il)
         PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
-                                                      context.ae_generation_rules_module)        
+                                                      context.ae_generation_rules_module_il)
+        PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
+                                                      context.finrep_generation_rules_module_ldm) 
+        PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
+                                                      context.ae_generation_rules_module_ldm) 
+             
     
     def persist_generation_transformations_to_csv_for_module(self, context,module):
         '''
@@ -354,9 +359,14 @@ class PersistToFile:
 
     def persist_generation_transformations(self, context):
         PersistToFile.persist_generation_transformations_for_module(self, context,
-                                                      context.finrep_generation_rules_module)
+                                                      context.finrep_generation_rules_module_il)
         PersistToFile.persist_generation_transformations_for_module(self, context,
-                                                      context.ae_generation_rules_module)        
+                                                      context.ae_generation_rules_module_il)
+        PersistToFile.persist_generation_transformations_for_module(self, context,
+                                                      context.finrep_generation_rules_module_ldm)
+        PersistToFile.persist_generation_transformations_for_module(self, context,
+                                                      context.ae_generation_rules_module_ldm)  
+          
      
     def persist_generation_transformations_for_module(self, context,
                                                       module):
