@@ -416,6 +416,15 @@ class PersistToFile:
         PersistToFile.persist_cell_based_reports_for_module(self,context,context.ae_on_ldm_reports_module)
         PersistToFile.persist_cell_based_reports_for_module(self,context,context.finrep_on_il_reports_module)
         PersistToFile.persist_cell_based_reports_for_module(self,context,context.ae_on_il_reports_module)
+
+    def persist_row_column_based_reports(self, context):
+
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.finrep_on_sdd_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.ae_on_sdd_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.finrep_on_ldm_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.ae_on_ldm_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.finrep_on_il_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.ae_on_il_reports_module)
         
     def persist_cell_based_reports_for_module(self, context,module):
         '''
@@ -479,16 +488,16 @@ class PersistToFile:
                     f.write("}\r")
                     f.close()
                 
-    def persist_row_column_based_reports(self, context):
+    def persist_row_column_based_reports_module(self, context,module):
         '''
         Documentation for persist_generation_transformations
         '''
-        reports = context.reports_module.reports
+        reports = module.reports
         for report in reports:
             if isinstance(report, RowColumnBasedReport): 
                 if not(report.outputLayer is None):
                     f = open(context.output_directory + os.sep + 'regdna' +
-                             os.sep + report.outputLayer.name +
+                             os.sep + module.name + os.sep + report.outputLayer.name +
                              '_row_column.regdna', "a",  encoding='utf-8')
                     f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
                     f.write("\treports " + "{\r")

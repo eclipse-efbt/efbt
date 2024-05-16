@@ -34,24 +34,23 @@ class GenerateGenerationRulesLDM:
         context.main_catagory_approach = "typ_instrmnt_typ_accntng_item_pair"
         context.enrich_ldm_relationships = True
 
-
         # find the main catagories related with reports.
         MainCatagoryFinder().create_report_to_main_catogory_maps(context,sdd_context,"FINREP_REF", ["3","3.0-Ind","FINREP 3.0-Ind"])
         # find the main catagories related with reports.
-        #MainCatagoryFinder().create_report_to_main_catogory_maps(context,sdd_context,"AE_REF",["AE 3.2"])
+        MainCatagoryFinder().create_report_to_main_catogory_maps(context,sdd_context,"AE_REF",["AE 3.2"])
         # create the generation rules
         GenerationRuleCreator().generate_generation_rules(context,sdd_context,"FINREP_REF","LDM")
-        #GenerationRuleCreator().generate_generation_rules(context,sdd_context,"AE_REF","LDM")
+        GenerationRuleCreator().generate_generation_rules(context,sdd_context,"AE_REF","LDM")
         # save the generated  files in useful formats
 
 if __name__ == '__main__':
     
     sdd_context = SDDContext()
     context = Context()
-    context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources_ae'
-    context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results'  
-    sdd_context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources_ae'
-    sdd_context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results'    
+    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'  
+    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'     
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModel().run(context,sdd_context)
     RunCreateReports().run(context,sdd_context)

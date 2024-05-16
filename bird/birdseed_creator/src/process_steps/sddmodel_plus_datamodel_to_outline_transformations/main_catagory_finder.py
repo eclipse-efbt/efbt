@@ -45,8 +45,6 @@ class MainCatagoryFinder(object):
             MainCatagoryFinder.alternative_create_il_tables_for_main_catagory_map(self, context,sdd_context,framework)
             MainCatagoryFinder.alternative_create_table_parts_for_main_catagory_map(self, context,sdd_context,framework)
 
-        
-
     def create_main_catogory_to_name_map(self, context,sdd_context,framework):
         '''
         create a map of EBA main catagory code such as EBA_MC_EBA_x469 

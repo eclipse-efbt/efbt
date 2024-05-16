@@ -216,7 +216,7 @@ class GenerationRuleCreator(object):
         '''
         if not output_entity is None:
             for output_item in output_entity.eOperations:
-
+                
                 if isinstance(output_item, ELOperation):
                     if GenerationRuleCreator.valid_operation(self,context, output_item,framework,cube_type,catagory,report_template):
                         if cube_type == 'LDM':
