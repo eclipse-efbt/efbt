@@ -18,7 +18,7 @@
 import csv
 import os
 from regdna import RulesForILTable,  SelectColumnAttributeAs , ELOperation
-from regdna import RuleForILTablePart , RulesForReport, ELClass, ELEnum, ELAttribute
+from regdna import RuleForILTablePart , RulesForReport, ELClass, ELEnum, ELAttribute,CellBasedReport
 from utils.ldm_search import LDMSearch
 
 
@@ -280,14 +280,15 @@ class GenerationRuleCreator(object):
                 reports_module = context.ae_on_ldm_reports_module
 
         for report in reports_module.reports:
-                if report.outputLayer.name == report_template:
-                    for cell in report.reportCells:
-                        if cell in context.cell_to_typ_instrmnt_map[catagory]:
-                            for filter in cell.filters:
-                                if filter.operation.name == output_item.name:
-                                    for memeber_id in filter.member:
-                                        if memeber_id.name == catagory:
-                                            return True
+                if isinstance(report, CellBasedReport):
+                    if report.outputLayer.name == report_template:
+                        for cell in report.reportCells:
+                            if cell in context.cell_to_typ_instrmnt_map[catagory]:
+                                for filter in cell.filters:
+                                    if filter.operation.name == output_item.name:
+                                        for memeber_id in filter.member:
+                                            if memeber_id.name == catagory:
+                                                return True
         return False
         
     def find_related_variables(self,context,sdd_context,output_item,input_entity_list):

@@ -130,6 +130,7 @@ class LDMRelationshipEnricher(object):
                         if not(arc_class is None):
                             target_class = LDMRelationshipEnricher.find_class_with_long_name(self, context,Utils.make_valid_id(target_entity_name))
                             context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
+                            context.ldm_entities_package.eClassifiers.extend([arc_class])
                             target_class.eSuperTypes.extend([arc_class])
 
     def get_entity_to_arc_dictionary(self,file_location) :

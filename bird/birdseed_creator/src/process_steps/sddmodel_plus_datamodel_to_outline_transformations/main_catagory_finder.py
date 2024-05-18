@@ -18,6 +18,7 @@ import os
 from utils.utils import Utils
 from context.sdd_context import SDDContext
 from process_steps.website_to_sddmodel.import_website_to_sdd_model import ImportWebsiteToSDDModel
+from regdna import CellBasedReport
 
 
 class MainCatagoryFinder(object):
@@ -467,53 +468,54 @@ class MainCatagoryFinder(object):
 
 
         for report in reports_module.reports:
-            for cell in report.reportCells:
-                cell_instrmnt_ids_list =[]
-                for filter in cell.filters: 
-                    
-                    if filter.operation.name == "TYP_INSTRMNT":
-                        cell_instrmnt_ids_list = filter.member
-                        for member_id in cell_instrmnt_ids_list:
-                            catagory = 'TYP_INSTRMNT_' + member_id.literal
-                            if not(catagory in main_catagories_in_scope):
-                                    main_catagories_in_scope.append(catagory)
-                            try:
-                                catagory_list = context.\
-                                    report_to_main_catogory_map[report.outputLayer.name]                                
-                                if not(catagory in catagory_list):
-                                    catagory_list.append(catagory)
-                            except KeyError:
-                                # if we could not find a list of main
-                                # catagories for  report , create a new list
-                                catagory_list  = []                                
-                                catagory_list.append(catagory)
-                                context.\
-                                    report_to_main_catogory_map[report.outputLayer.name] = catagory_list
-                                
-                    
-                if cell_instrmnt_ids_list ==[]:
+            if isinstance(report, CellBasedReport):
+                for cell in report.reportCells:
+                    cell_instrmnt_ids_list =[]
                     for filter in cell.filters: 
-                        if filter.operation.name == "TYP_ACCNTNG_ITM":
-                            cell_accntng_itm_ids_list = filter.member
-                            for member_id in cell_accntng_itm_ids_list:
-                                catagory = 'TYP_ACCNTNG_ITM_' + member_id.literal
+                        
+                        if filter.operation.name == "TYP_INSTRMNT":
+                            cell_instrmnt_ids_list = filter.member
+                            for member_id in cell_instrmnt_ids_list:
+                                catagory = 'TYP_INSTRMNT_' + member_id.literal
                                 if not(catagory in main_catagories_in_scope):
-                                    main_catagories_in_scope.append(catagory)
+                                        main_catagories_in_scope.append(catagory)
                                 try:
                                     catagory_list = context.\
-                                        report_to_main_catogory_map[report.outputLayer.name]
-                                    
+                                        report_to_main_catogory_map[report.outputLayer.name]                                
                                     if not(catagory in catagory_list):
                                         catagory_list.append(catagory)
                                 except KeyError:
                                     # if we could not find a list of main
                                     # catagories for  report , create a new list
-                                    catagory_list  = []
+                                    catagory_list  = []                                
                                     catagory_list.append(catagory)
                                     context.\
                                         report_to_main_catogory_map[report.outputLayer.name] = catagory_list
-    
+                                    
+                        
+                    if cell_instrmnt_ids_list ==[]:
+                        for filter in cell.filters: 
+                            if filter.operation.name == "TYP_ACCNTNG_ITM":
+                                cell_accntng_itm_ids_list = filter.member
+                                for member_id in cell_accntng_itm_ids_list:
+                                    catagory = 'TYP_ACCNTNG_ITM_' + member_id.literal
+                                    if not(catagory in main_catagories_in_scope):
+                                        main_catagories_in_scope.append(catagory)
+                                    try:
+                                        catagory_list = context.\
+                                            report_to_main_catogory_map[report.outputLayer.name]
+                                        
+                                        if not(catagory in catagory_list):
+                                            catagory_list.append(catagory)
+                                    except KeyError:
+                                        # if we could not find a list of main
+                                        # catagories for  report , create a new list
+                                        catagory_list  = []
+                                        catagory_list.append(catagory)
+                                        context.\
+                                            report_to_main_catogory_map[report.outputLayer.name] = catagory_list
         
+            
                     
         
         

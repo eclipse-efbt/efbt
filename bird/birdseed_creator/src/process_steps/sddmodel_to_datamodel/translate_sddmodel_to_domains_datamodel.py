@@ -110,8 +110,13 @@ class TranslateSDDModelToDomainsDataModel(object):
                             context.enum_map[ framework+":" + cube_type + ":" +amended_domain_name] = the_enum
                             package.eClassifiers.extend([the_enum])
                             the_domain_members = []
-                            the_domain_members = Utils.get_members_of_the_subdomain(
+                            if not (subdomain is None):
+                                the_domain_members = Utils.get_members_of_the_subdomain(
                                     subdomain)
+                            else:
+                                if not (cube_structure_item.member_id is None):
+                                    the_domain_members = [cube_structure_item.member_id]
+                                
                         
                             counter1 = 0
                             for domain_member in the_domain_members:
@@ -133,22 +138,28 @@ class TranslateSDDModelToDomainsDataModel(object):
                         # the enum already exists, but we might find that a cube_structure_item has 
                         # members taht have not yet been added, since to items might have the same domain
                         # but different subdomains
-                        the_domain_members = Utils.get_members_of_the_subdomain(
-                            subdomain)
+                        the_domain_members = []
+                        if not (subdomain is None):
+                            the_domain_members = Utils.get_members_of_the_subdomain(
+                                subdomain)
+                        else:
+                            if not (cube_structure_item.member_id is None):
+                                the_domain_members = [cube_structure_item.member_id]
                     
                         counter1 = len(the_enum.eLiterals)
-                        for member in the_domain_members:
-                            child_non_node_members = TranslateSDDModelToDomainsDataModel.get_child_non_node_members(self,member)
-                            enum_used_name = Utils.make_valid_id_for_literal(member.code)
-                            adapted_value = Utils.make_valid_id(member.displayName)
-                            if not (Utils.contains_literal(the_enum.eLiterals, adapted_value)):
-                                enum_literal = ELEnumLiteral()
-                                enum_literal.name = adapted_value
-                                enum_literal.literal = enum_used_name
-                                counter1 = counter1 + 1
-                                enum_literal.value = counter1
-                                the_enum.eLiterals.extend([enum_literal])
-                                context.enum_literals_map[framework+":" + cube_type + ":" + the_enum.name+":" + enum_literal.literal] = enum_literal
+                        for domain_member in the_domain_members:
+                            child_leaf_member_list = TranslateSDDModelToDomainsDataModel.get_child_non_node_members(self, sdd_context, domain_member)
+                            for member in child_leaf_member_list:
+                                enum_used_name = Utils.make_valid_id_for_literal(member.code)
+                                adapted_value = Utils.make_valid_id(member.displayName)
+                                if not (Utils.contains_literal(the_enum.eLiterals, adapted_value)):
+                                    enum_literal = ELEnumLiteral()
+                                    enum_literal.name = adapted_value
+                                    enum_literal.literal = enum_used_name
+                                    counter1 = counter1 + 1
+                                    enum_literal.value = counter1
+                                    the_enum.eLiterals.extend([enum_literal])
+                                    context.enum_literals_map[framework+":" + cube_type + ":" + the_enum.name+":" + enum_literal.literal] = enum_literal
 
                 except:
                     print("missing domain: " + domain.domain_id)
