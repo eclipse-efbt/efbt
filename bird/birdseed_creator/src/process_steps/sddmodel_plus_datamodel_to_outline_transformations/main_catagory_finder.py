@@ -475,6 +475,12 @@ class MainCatagoryFinder(object):
                         
                         if filter.operation.name == "TYP_INSTRMNT":
                             cell_instrmnt_ids_list = filter.member
+                            # if the only member of the list is '0' (i.e. not applicable) then we 
+                            # set the list to be empty
+                            if len(cell_instrmnt_ids_list) == 1 :
+                                if cell_instrmnt_ids_list[0].literal == "0":
+                                    cell_instrmnt_ids_list = []
+
                             for member_id in cell_instrmnt_ids_list:
                                 catagory = 'TYP_INSTRMNT_' + member_id.literal
                                 if not(catagory in main_catagories_in_scope):

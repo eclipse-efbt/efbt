@@ -23,7 +23,7 @@ class Context(object):
     '''
     # variables to configure the behaviour
     
-    input_layer_name_has_EIL_postfix = False
+    input_layer_name_has_EIL_postfix = True
     main_catagory_approach = "eba_main_catagory"
     #main_catagory_approach = "typ_instrmnt_typ_accntng_item_pair"
     enrich_ldm_relationships = False
