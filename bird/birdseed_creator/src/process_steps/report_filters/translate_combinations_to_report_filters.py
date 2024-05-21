@@ -39,7 +39,7 @@ class CombinationsToReportFilters:
             elif input_cube_type == 'LDM':
                 reports_module = context.ae_on_ldm_reports_module
 
-        CombinationsToReportFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
+        
         file_location = context.file_directory + os.sep + "in_scope_reports_" + framework + ".csv"
         in_scope_reports = []
         header_skipped = False
@@ -139,11 +139,22 @@ class CombinationsToReportFilters:
                                         
                                         member = item.member_id
                                         if(member is not None):
-                                           
+                                            if item.variable_id == None:
+                                                print("item.variable_id is None for " + member.member_id)
                                             domain_id = item.variable_id.domain_id.domain_id
                                             literals = CombinationsToReportFilters.find_literals_with_id(self,context,sdd_context,member,domain_id,warning_list, template_code, comb.combination_id, item.variable_id.variable_id ,framework,cube_type,input_cube_type)
+                                            
                                             the_filter.operation = operation
                                             for literal in literals:
+                                                if operation.name == 'TYP_INSTRMNT':
+                                                    try:
+                                                        cell_list = context.cell_to_typ_instrmnt_map["TYP_INSTRMNT_" + literal.name]
+                                                        cell_list.append(report_cell)
+                                                    except KeyError:
+                                                        cell_list = []
+                                                        cell_list.append(report_cell)
+                                                        context.cell_to_typ_instrmnt_map[literal.name] = cell_list
+                                                    
                                                 the_filter.member.append(literal)
                                                 
                                             if not(operation is None):
@@ -237,6 +248,8 @@ class CombinationsToReportFilters:
             return_list = [literal]
             
         for domain,hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
+            if domain is None:
+                print("domain is None in hierarchy_list")
             if domain.domain_id == domain_id:
                 for hierarchy in hierarchy_list:
                     hierarchy_id = hierarchy.member_hierarchy_id                
@@ -248,30 +261,7 @@ class CombinationsToReportFilters:
             warning_list.append( ("error","could not find any input layer members or sub members for member", template_code,combination_id, variable_id, member.member_id, None,domain_id))
         return return_list     
 
-    def prepare_node_dictionaries_and_lists (self,sdd_context):
-        
-        for node in sdd_context.member_hierarchies.memberHierarchiesNodes:
-            if not (node.parent_member_id is None) and not (node.parent_member_id == ''):
-                sdd_context.members_that_are_nodes.append(node.parent_member_id)
-                member_plus_hierarchy = node.parent_member_id.member_id + ":" +  node.member_hierarchy_id.member_hierarchy_id
-                # ad the parent node to the dictionary of nodes that have children
-                if not(member_plus_hierarchy in sdd_context.member_plus_hierarchy_to_child_literals.keys() ):
-                    initial_member_list = []
-                    initial_member_list.append(node.member_id)
-                    sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy] = initial_member_list
-                else:
-                    member_list =  sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy]
-                    if not(node.member_id in member_list):
-                            member_list.append(node.member_id)
-                            
-        for hierarchy in sdd_context.member_hierarchies.memberHierarchies:
-            try:
-                hierarchy_list = sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id]
-                hierarchy_list.append(hierarchy)
-            except KeyError:
-                hierarchy_list = []
-                hierarchy_list.append(hierarchy)
-                sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id] = hierarchy_list
+    
                 
 
     def get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy,literal_list,framework,cube_type,input_cube_type):
@@ -281,6 +271,10 @@ class CombinationsToReportFilters:
         try:
             child_members = sdd_context.member_plus_hierarchy_to_child_literals[key]
             for item in child_members:
+                if item.domain_id is None:
+                    print("domain_id is None for " + item.member_id)
+                if item is None:
+                    print("item is None for " + item.member_id)
                 literal = CombinationsToReportFilters.find_literal_with_id(self,context,item,item.domain_id.domain_id,framework,cube_type,input_cube_type)
                 if not(literal is None):
                     if not(literal in literal_list):

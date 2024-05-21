@@ -37,7 +37,7 @@ class LDMRelationshipEnricher(object):
         '''
         for each entity in the LDM, create a class and add it to the package
         '''
-        for classifier in context.input_tables_package.eClassifiers:
+        for classifier in context.ldm_entities_package.eClassifiers:
             if isinstance(classifier, ELClass): 
                 if len(classifier.eSuperTypes) == 0:
                     pk_name = classifier.name + "_uniqueID"
@@ -103,7 +103,7 @@ class LDMRelationshipEnricher(object):
                                 arc_class.eAbstract = True
                                 context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
                                 context.arc_to_source_map[altered_arc_name] = source_class
-                                context.input_tables_package.eClassifiers.extend([arc_class])
+                                context.ldm_entities_package.eClassifiers.extend([arc_class])
                                 non_containment_reference = ELReference()
                                 non_containment_reference.name = altered_arc_name + "_delegate"
                                 non_containment_reference.eType = arc_class
@@ -129,7 +129,7 @@ class LDMRelationshipEnricher(object):
                             
                         if not(arc_class is None):
                             target_class = LDMRelationshipEnricher.find_class_with_long_name(self, context,Utils.make_valid_id(target_entity_name))
-                            context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
+                            context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class                            
                             target_class.eSuperTypes.extend([arc_class])
 
     def get_entity_to_arc_dictionary(self,file_location) :
@@ -216,7 +216,7 @@ class LDMRelationshipEnricher(object):
 
     def remove_duplicate_attributes_in_subclasses(self, context):
         
-        for classifier in context.input_tables_package.eClassifiers:
+        for classifier in context.ldm_entities_package.eClassifiers:
             if isinstance(classifier, ELClass):
                 feaures_to_remove = []
                 for feature in  classifier.eStructuralFeatures:
@@ -225,8 +225,7 @@ class LDMRelationshipEnricher(object):
                             feaures_to_remove.append(feature)
                             
                 for feature_to_remove in feaures_to_remove:
-                    classifier.eStructuralFeatures.remove(feature_to_remove)
-                    
+                    classifier.eStructuralFeatures.remove(feature_to_remove)                                    
 
     def attribute_exists_in_any_superclass(self, el_class,attribute, context):
         return_value = False

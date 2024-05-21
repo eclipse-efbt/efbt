@@ -23,7 +23,7 @@ class TranslateToRowColumnReports:
     '''
     Documentation for CombinationsToReportFilters
     '''
-    def translate_to_row_column_reports(self, context,sdd_context, framework,input_cube_type):  
+    def translate_to_row_column_reports(self, context,sdd_context, framework,cube_type, input_cube_type):  
 
         if framework == 'FINREP_REF':
             if input_cube_type == 'RC':

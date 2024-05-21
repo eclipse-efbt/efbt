@@ -23,7 +23,9 @@ class Context(object):
     '''
     # variables to configure the behaviour
     
-    input_layer_name_has_EIL_postfix = False
+    input_layer_code_has_EIL_postfix = False
+    main_catagory_approach = "eba_main_catagory"
+    #main_catagory_approach = "typ_instrmnt_typ_accntng_item_pair"
     enrich_ldm_relationships = False
     use_codes = True
     load_ldm = False
@@ -45,10 +47,11 @@ class Context(object):
     main_catogory_to_name_map_finrep = {}
     main_catogory_to_name_map_ae = {}
     typ_instrmnt_to_name_map = {}
-    typ_instrmnt_to_name_map = {}
-    
+
+    cell_to_typ_instrmnt_map = {}
     report_to_main_catogory_map = {}
     report_to_typ_instrmnt_map = {}
+    report_to_typ_accntng_itm_map = {}
     tables_for_main_catagory_map_finrep = {}
     tables_for_main_catagory_map_ae = {}
     entities_for_typ_instrmnt_map = {}
@@ -106,8 +109,10 @@ class Context(object):
 
     
     
-    finrep_generation_rules_module = GenerationRulesModule(name='finrep_generation_rules')
-    ae_generation_rules_module = GenerationRulesModule(name='ae_generation_rules')
+    finrep_generation_rules_module_il = GenerationRulesModule(name='finrep_generation_rules_il')
+    ae_generation_rules_module_il = GenerationRulesModule(name='ae_generation_rules_il')
+    finrep_generation_rules_module_ldm = GenerationRulesModule(name='finrep_generation_rules_ldm')
+    ae_generation_rules_module_ldm = GenerationRulesModule(name='ae_generation_rules_ldm')
     finrep_on_sdd_reports_module = ReportModule(name='finrep_report_sdd')
     ae_on_sdd_reports_module = ReportModule(name='ae_report_sdd')
     finrep_on_il_reports_module = ReportModule(name='finrep_report_il')
@@ -184,8 +189,10 @@ class Context(object):
         self.module_list.modules.append(self.ldm_entities_package)
         self.module_list.modules.append(self.finrep_output_tables_package)
         self.module_list.modules.append(self.ae_output_tables_package)
-        self.module_list.modules.append(self.finrep_generation_rules_module)
-        self.module_list.modules.append(self.ae_generation_rules_module)
+        self.module_list.modules.append(self.finrep_generation_rules_module_il)
+        self.module_list.modules.append(self.ae_generation_rules_module_il)
+        self.module_list.modules.append(self.finrep_generation_rules_module_ldm)
+        self.module_list.modules.append(self.ae_generation_rules_module_ldm)
         self.module_list.modules.append(self.finrep_on_sdd_reports_module)
         self.module_list.modules.append(self.ae_on_sdd_reports_module)
 

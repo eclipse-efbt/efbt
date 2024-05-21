@@ -30,7 +30,7 @@ class RunCreateRowColumnReports:
         TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"FINREP_REF","RC","LDM")
         TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE_REF","RC","RC")
         TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE_REF","RC","EIL")
-        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE_REF","RC","LDM"
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE_REF","RC","LDM")
                                                                       
         
         
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
     context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'  
     sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'    
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'            
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModel().run(context,sdd_context)
     RunCreateReports().run(context,sdd_context)
