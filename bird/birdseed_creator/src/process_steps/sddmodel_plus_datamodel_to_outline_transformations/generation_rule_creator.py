@@ -159,13 +159,19 @@ class GenerationRuleCreator(object):
                             # defined such as Party or Collateral
                             linked_tables = table_parts_to_linked_tables_map[table_part]
                             linked_tables_list = linked_tables.split(":")
-                            
+                            if not (rules_for_table.inputLayerTable is None):
+                                if not (rules_for_table.inputLayerTable.name in linked_tables_list):
+                                    linked_tables_list.append(rules_for_table.inputLayerTable.name)
                             extra_tables = []
                             for the_table in linked_tables_list:
                                 extra_linked_tables = []
                                 try:
-                                    extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table]
-                                    extra_linked_tables = extra_linked_tables_string.split(":")
+                                    if the_table.endswith("_LDM"):
+                                        extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table]
+                                        extra_linked_tables = extra_linked_tables_string.split(":")
+                                    else:
+                                        extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table+"_LDM"]
+                                        extra_linked_tables = extra_linked_tables_string.split(":")
                                 except KeyError:
                                     pass
 
@@ -174,7 +180,10 @@ class GenerationRuleCreator(object):
                                         extra_tables.append(extra_table)
 
                             for extra_table in extra_tables:
-                                linked_tables_list.append(extra_table)
+                                if extra_table.endswith("_LDM"):
+                                    extra_table = linked_tables_list.append(extra_table[0:len(extra_table)-4])
+                                else:
+                                    extra_table = linked_tables_list.append(extra_table)
 
 
                             for the_table in linked_tables_list:
@@ -337,9 +346,12 @@ class GenerationRuleCreator(object):
                         if isinstance(input_item, ELAttribute):
                             input_item_etype = input_item.eAttributeType
                             if isinstance(etype, ELEnum):
-                                if input_item_etype == target_domain:
-                                    if not (input_item in related_variables):
-                                        related_variables.append(input_item)
+                                if not (input_item_etype is None):
+                                    if input_item_etype.name == target_domain.name:
+                                        if not (input_item in related_variables):
+                                            related_variables.append(input_item)
+                                else:
+                                    print("input_item_etype is None for " + input_item.name)
         else:
             output_variable_name = output_item.name
            
@@ -390,7 +402,7 @@ class GenerationRuleCreator(object):
         for classifier in package.eClassifiers:
             if isinstance(classifier, ELClass):
                 input_layer_name_to_compare = None
-                if context.input_layer_name_has_EIL_postfix:
+                if not(context.input_layer_code_has_EIL_postfix):
                     input_layer_name_to_compare = input_layer_name + "_" + cube_type
                 else:
                     input_layer_name_to_compare = input_layer_name 
