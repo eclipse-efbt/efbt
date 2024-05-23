@@ -16,7 +16,7 @@ from utils.utils import Utils
 import os
 from pickle import TRUE
 
-class LDMRelationshipEnricher(object):
+class ELDMRelationshipEnricher(object):
     '''
     Enrich a model which can from the SDD website,
     Create references for each relationship, mark the references
@@ -27,15 +27,15 @@ class LDMRelationshipEnricher(object):
     '''
     def enrich(self, context):
         
-        LDMRelationshipEnricher.add_ldm_relationships_between_classes(self,context)
-        LDMRelationshipEnricher.import_disjoint_subtyping_information(self,context)
-        LDMRelationshipEnricher.set_ldm_super_classes(self,context)
-        LDMRelationshipEnricher.set_unique_ids(self,context)
-        LDMRelationshipEnricher.remove_duplicate_attributes_in_subclasses(self,context)
+        ELDMRelationshipEnricher.add_ldm_relationships_between_classes(self,context)
+        ELDMRelationshipEnricher.import_disjoint_subtyping_information(self,context)
+        ELDMRelationshipEnricher.set_ldm_super_classes(self,context)
+        ELDMRelationshipEnricher.set_unique_ids(self,context)
+        ELDMRelationshipEnricher.remove_duplicate_attributes_in_subclasses(self,context)
     
     def set_unique_ids(self, context):
         '''
-        for each entity in the LDM, create a class and add it to the package
+        for each entity in the ELDM, create a class and add it to the package
         '''
         for classifier in context.ldm_entities_package.eClassifiers:
             if isinstance(classifier, ELClass): 
@@ -64,7 +64,7 @@ class LDMRelationshipEnricher(object):
         file_location = context.file_directory + os.sep + "arcs.csv"
         header_skipped = False
         # A dictionary from entity to its arcs
-        entity_to_arc_dictionary = LDMRelationshipEnricher.get_entity_to_arc_dictionary(self,file_location)
+        entity_to_arc_dictionary = ELDMRelationshipEnricher.get_entity_to_arc_dictionary(self,file_location)
 
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -95,7 +95,7 @@ class LDMRelationshipEnricher(object):
                             # and we create class for the arc
                             
                             
-                            source_class = LDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(entity_name))
+                            source_class = ELDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(entity_name))
                             if (source_class is None):
                                 print("could not find source class " + entity_name  + " of arc : " + altered_arc_name)
                             else:
@@ -128,7 +128,7 @@ class LDMRelationshipEnricher(object):
                                     non_containment_reference)
                             
                         if not(arc_class is None):
-                            target_class = LDMRelationshipEnricher.find_class_with_long_name(self, context,Utils.make_valid_id(target_entity_name))
+                            target_class = ELDMRelationshipEnricher.find_class_with_long_name(self, context,Utils.make_valid_id(target_entity_name))
                             context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class                            
                             target_class.eSuperTypes.extend([arc_class])
 
@@ -177,7 +177,7 @@ class LDMRelationshipEnricher(object):
                 
     def set_ldm_super_classes(self, context):
         '''
-        for each entity in the LDM, set the superclass of the class,
+        for each entity in the ELDM, set the superclass of the class,
         but not if it already has a super class set by the disjoint subtyping
         processing
         '''
@@ -221,7 +221,7 @@ class LDMRelationshipEnricher(object):
                 feaures_to_remove = []
                 for feature in  classifier.eStructuralFeatures:
                     if isinstance(feature, ELAttribute):
-                        if LDMRelationshipEnricher.attribute_exists_in_any_superclass(self, classifier,feature, context):
+                        if ELDMRelationshipEnricher.attribute_exists_in_any_superclass(self, classifier,feature, context):
                             feaures_to_remove.append(feature)
                             
                 for feature_to_remove in feaures_to_remove:
@@ -237,7 +237,7 @@ class LDMRelationshipEnricher(object):
                         return_value = True 
         
             if return_value == False:
-                return LDMRelationshipEnricher.attribute_exists_in_any_superclass(self, super_class,attribute, context)
+                return ELDMRelationshipEnricher.attribute_exists_in_any_superclass(self, super_class,attribute, context)
             else:
                 return True
                          
@@ -248,7 +248,7 @@ class LDMRelationshipEnricher(object):
         
     def add_ldm_relationships_between_classes(self, context):
         '''
-        For each relationship in the LDM, add a reference between the relevant classes
+        For each relationship in the ELDM, add a reference between the relevant classes
         '''
         file_location = context.file_directory + os.sep + "DM_Relations.csv"
         header_skipped = False
@@ -278,9 +278,9 @@ class LDMRelationshipEnricher(object):
                         reference_name = Utils.make_valid_id(relation_name)+"_association"
 
 
-                    the_class =  LDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(source_class_name))
+                    the_class =  ELDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(source_class_name))
 
-                    target_class = LDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(target_class_name))
+                    target_class = ELDMRelationshipEnricher.find_class_with_long_name(self, context, Utils.make_valid_id(target_class_name))
 
                     if (not (the_class is None) ) and (not (target_class is None)):
                         ereference = ELReference()

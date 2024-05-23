@@ -28,10 +28,10 @@ class RunCreateReports:
         # temporary commnets to speed up testing
         CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"FINREP_REF","RC","RC")
         CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"FINREP_REF","RC","EIL")
-        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"FINREP_REF","RC","LDM")
+        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"FINREP_REF","RC","ELDM")
         CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE_REF","RC","RC")
         CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE_REF","RC","EIL")
-        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE_REF","RC","LDM")
+        CombinationsToReportFilters().translate_combinations_to_report_filters(context,sdd_context,"AE_REF","RC","ELDM")
         
 if __name__ == '__main__':
     sdd_context = SDDContext()

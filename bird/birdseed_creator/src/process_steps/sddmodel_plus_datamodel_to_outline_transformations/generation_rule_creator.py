@@ -19,7 +19,7 @@ import csv
 import os
 from regdna import RulesForILTable,  SelectColumnAttributeAs , ELOperation
 from regdna import RuleForILTablePart , RulesForReport, ELClass, ELEnum, ELAttribute,CellBasedReport
-from utils.ldm_search import LDMSearch
+from utils.ldm_search import ELDMSearch
 
 
 class GenerationRuleCreator(object):
@@ -44,15 +44,15 @@ class GenerationRuleCreator(object):
         if framework == "FINREP_REF":
             if cube_type == 'EIL':
                 generation_rules_module = context.finrep_generation_rules_module_il
-            elif cube_type == 'LDM':
+            elif cube_type == 'ELDM':
                 generation_rules_module = context.finrep_generation_rules_module_ldm            
         elif framework == "AE_REF":
             if cube_type == 'EIL':
                 generation_rules_module = context.ae_generation_rules_module_il
-            elif cube_type == 'LDM':
+            elif cube_type == 'ELDM':
                 generation_rules_module = context.ae_generation_rules_module_ldm
 
-        if cube_type == 'LDM':
+        if cube_type == 'ELDM':
 
             GenerationRuleCreator.create_ldm_entity_to_linked_entities_map(self, context, sdd_context)
         
@@ -93,7 +93,7 @@ class GenerationRuleCreator(object):
         f.write("ldm_entity, related_entites\r")
         for elclass in context.ldm_entities_package.eClassifiers:
             if isinstance(elclass, ELClass):                 
-                entities = LDMSearch.get_all_related_entities(self, context, elclass)
+                entities = ELDMSearch.get_all_related_entities(self, context, elclass)
                 related_entities_string = ""
                 first = True
                 for entity in entities:
@@ -139,7 +139,7 @@ class GenerationRuleCreator(object):
 
         
         try:
-            if cube_type == 'LDM':
+            if cube_type == 'ELDM':
                 report_template = report_template + "_REF_OutputItem"
             main_catagories = context.report_to_main_catogory_map[report_template]
             for mc in main_catagories:
@@ -166,11 +166,11 @@ class GenerationRuleCreator(object):
                             for the_table in linked_tables_list:
                                 extra_linked_tables = []
                                 try:
-                                    if the_table.endswith("_LDM"):
+                                    if the_table.endswith("_ELDM"):
                                         extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table]
                                         extra_linked_tables = extra_linked_tables_string.split(":")
                                     else:
-                                        extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table+"_LDM"]
+                                        extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table+"_ELDM"]
                                         extra_linked_tables = extra_linked_tables_string.split(":")
                                 except KeyError:
                                     pass
@@ -180,7 +180,7 @@ class GenerationRuleCreator(object):
                                         extra_tables.append(extra_table)
 
                             for extra_table in extra_tables:
-                                if extra_table.endswith("_LDM"):
+                                if extra_table.endswith("_ELDM"):
                                     extra_table = linked_tables_list.append(extra_table[0:len(extra_table)-4])
                                 else:
                                     extra_table = linked_tables_list.append(extra_table)
@@ -228,7 +228,7 @@ class GenerationRuleCreator(object):
                 
                 if isinstance(output_item, ELOperation):
                     if GenerationRuleCreator.valid_operation(self,context, output_item,framework,cube_type,catagory,report_template):
-                        if cube_type == 'LDM':
+                        if cube_type == 'ELDM':
                             input_columns = GenerationRuleCreator.\
                                 find_variables_with_same_domain_then_name(
                                 self,sdd_context,output_item,input_entity_list)
@@ -262,7 +262,7 @@ class GenerationRuleCreator(object):
         '''
         check if the operation is valid for the cube type
         '''
-        if cube_type == 'LDM':
+        if cube_type == 'ELDM':
             return True
             #return GenerationRuleCreator.operation_exists_in_cell_for_report_with_catagory(self,context, output_item,framework,cube_type,catagory,report_template)
         else:
@@ -277,7 +277,7 @@ class GenerationRuleCreator(object):
                 reports_module = context.finrep_on_sdd_reports_module
             elif input_cube_type == 'EIL':
                 reports_module = context.finrep_on_il_reports_module
-            elif input_cube_type == 'LDM':
+            elif input_cube_type == 'ELDM':
                 reports_module = context.finrep_on_ldm_reports_module
 
         elif framework == 'AE_REF':
@@ -285,7 +285,7 @@ class GenerationRuleCreator(object):
                 reports_module = context.ae_on_sdd_reports_module
             elif input_cube_type == 'EIL':
                 reports_module = context.ae_on_il_reports_module
-            elif input_cube_type == 'LDM':
+            elif input_cube_type == 'ELDM':
                 reports_module = context.ae_on_ldm_reports_module
 
         for report in reports_module.reports:
@@ -396,7 +396,7 @@ class GenerationRuleCreator(object):
         '''
         if cube_type == 'EIL':
             package = context.input_tables_package
-        elif cube_type == 'LDM':    
+        elif cube_type == 'ELDM':    
             package = context.ldm_entities_package  
 
         for classifier in package.eClassifiers:
