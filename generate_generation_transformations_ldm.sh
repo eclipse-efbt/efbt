@@ -19,4 +19,4 @@ rm -rf bird/birdseed_creator/results/xmi/*
 cd bird/birdseed_creator/src/entry_points
 pip install pyecore
 pip install unidecode
-python create_outline_transformations.py
+python create_outline_transformations_ldm.py
