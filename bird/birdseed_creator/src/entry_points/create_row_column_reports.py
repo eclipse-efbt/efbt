@@ -27,10 +27,10 @@ class RunCreateRowColumnReports:
     def run(self,context,sdd_context):
         TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"FINREP_REF","RC","RC")
         TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"FINREP_REF","RC","EIL")
-        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"FINREP_REF","RC","LDM")
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"FINREP_REF","RC","ELDM")
         TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE_REF","RC","RC")
         TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE_REF","RC","EIL")
-        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE_REF","RC","LDM")
+        TranslateToRowColumnReports().translate_to_row_column_reports(context,sdd_context,"AE_REF","RC","ELDM")
                                                                       
         
         

@@ -14,9 +14,9 @@ from regdna import ELAttribute, ELClass, ELReference
 
 
 
-class LDMSearch(object):
+class ELDMSearch(object):
     '''
-    Given a LDM Entity, this class will search for all the attributes related to it
+    Given a ELDM Entity, this class will search for all the attributes related to it
     and return a list of all the attributes that are related to the entity.
     This can mean that the attribute is directly related to the entity, 
     or it is related to an entity that is related to the entity.
@@ -28,9 +28,9 @@ class LDMSearch(object):
         that are related to the entity.
         '''
         entities = []
-        LDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, entity, entities, 0, 4)
-        LDMSearch.get_associated_entities(self, context, entity, entities, 0, 4)
-        #LDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, entity, entities, 0, 4)
+        ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, entity, entities, 0, 4)
+        ELDMSearch.get_associated_entities(self, context, entity, entities, 0, 4)
+        #ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, entity, entities, 0, 4)
         return entities
 
     def get_associated_entities(self, context, entity, entities, link_count, link_limit):
@@ -47,9 +47,9 @@ class LDMSearch(object):
                         if not(feature.eType in entities):
                             entities.append(feature.eType)
 
-                        #LDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
-                        LDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
-                        LDMSearch.get_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
+                        #ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
+                        ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
+                        ELDMSearch.get_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
 
     def get_superclasses_of_entity_and_their_associated_entities(self, context, entity, entities, link_count, link_limit):
         '''
@@ -61,8 +61,8 @@ class LDMSearch(object):
             if not(super_entity in entities):
                 if not (super_entity.eAbstract):
                     entities.append(super_entity)
-            LDMSearch.get_associated_entities(self,context, super_entity, entities,  link_count, link_limit)
-            LDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, super_entity, entities, link_count, link_limit)
+            ELDMSearch.get_associated_entities(self,context, super_entity, entities,  link_count, link_limit)
+            ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, super_entity, entities, link_count, link_limit)
 
 
         for feature in entity.eStructuralFeatures:
@@ -71,8 +71,8 @@ class LDMSearch(object):
                     super_entity = feature.eType
                     if not(super_entity in entities):
                         entities.append(super_entity)
-                    LDMSearch.get_associated_entities(self, context, super_entity, entities, link_count, link_limit)
-                    LDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, super_entity, entities, link_count, link_limit)
+                    ELDMSearch.get_associated_entities(self, context, super_entity, entities, link_count, link_limit)
+                    ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, super_entity, entities, link_count, link_limit)
 
 
 
@@ -88,10 +88,10 @@ class LDMSearch(object):
                         sub_type_entity    = elclass
                         if not(sub_type_entity in entities):
                             entities.append(sub_type_entity)
-                        LDMSearch.get_associated_entities(self,context, sub_type_entity, entities,  link_count, link_limit)
-                        LDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, sub_type_entity, entities, link_count, link_limit)
+                        ELDMSearch.get_associated_entities(self,context, sub_type_entity, entities,  link_count, link_limit)
+                        ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, sub_type_entity, entities, link_count, link_limit)
 
         for feature in entity.eStructuralFeatures:
             if isinstance(feature, ELReference):
                 if feature.name.endswith("_delegate"):
-                        LDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities, link_count, link_limit)
+                        ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities, link_count, link_limit)

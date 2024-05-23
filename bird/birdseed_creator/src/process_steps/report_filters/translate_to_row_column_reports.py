@@ -30,7 +30,7 @@ class TranslateToRowColumnReports:
                 reports_module = context.finrep_on_sdd_reports_module
             elif input_cube_type == 'EIL':
                 reports_module = context.finrep_on_il_reports_module
-            elif input_cube_type == 'LDM':
+            elif input_cube_type == 'ELDM':
                 reports_module = context.finrep_on_ldm_reports_module
 
         elif framework == 'AE_REF':
@@ -38,7 +38,7 @@ class TranslateToRowColumnReports:
                 reports_module = context.ae_on_sdd_reports_module
             elif input_cube_type == 'EIL':
                 reports_module = context.ae_on_il_reports_module
-            elif input_cube_type == 'LDM':
+            elif input_cube_type == 'ELDM':
                 reports_module = context.ae_on_ldm_reports_module
 
 

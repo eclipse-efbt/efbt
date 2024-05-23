@@ -21,7 +21,7 @@ from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_domains_datamodel
 from process_steps.sddmodel_to_datamodel.translate_sddmodel_to_entity_datamodel import TranslateSDDModelToDataModel
 from persister.persist_to_file import PersistToFile
 from utils.relationship_enricher import RelationshipEnricher
-from utils.ldm_relationship_enricher import LDMRelationshipEnricher
+from utils.ldm_relationship_enricher import ELDMRelationshipEnricher
 
 
 class RunSDDModelToDataModel:
@@ -30,14 +30,14 @@ class RunSDDModelToDataModel:
         TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"AE_REF","RC")
         TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"FINREP_REF","RC")
         TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"BIRD","EIL")
-        TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"BIRD","LDM")
+        TranslateSDDModelToDomainsDataModel().do_import(context,sdd_context,"BIRD","ELDM")
         TranslateSDDModelToDataModel().do_import(context,sdd_context,"AE_REF","RC")
         TranslateSDDModelToDataModel().do_import(context,sdd_context,"FINREP_REF","RC")
         TranslateSDDModelToDataModel().do_import(context,sdd_context,"BIRD","EIL")
-        TranslateSDDModelToDataModel().do_import(context,sdd_context,"BIRD","LDM")
+        TranslateSDDModelToDataModel().do_import(context,sdd_context,"BIRD","ELDM")
         
         if context.enrich_ldm_relationships:
-            LDMRelationshipEnricher().enrich(context)
+            ELDMRelationshipEnricher().enrich(context)
         else:
             RelationshipEnricher().enrich(context)
         

@@ -75,7 +75,7 @@ class TranslateSDDModelToDomainsDataModel(object):
         elif framework == "BIRD":      
             if cube_type == "EIL":
                 package = context.il_domains_package
-            elif cube_type == "LDM":
+            elif cube_type == "ELDM":
                 package = context.ldm_domains_package
 
         variable = cube_structure_item.variable_id

@@ -128,7 +128,7 @@ class Context(object):
     # classesMap keeps a reference between ldm ID's for classes and
     # the list of these classes that we call tables
     table_map = {}
-    # A map between the LDM names for primitive types types, and
+    # A map between the ELDM names for primitive types types, and
     # our standard primitive types such as EString
     datatype_map = {}
     # For the reference output layers we record a map between domains

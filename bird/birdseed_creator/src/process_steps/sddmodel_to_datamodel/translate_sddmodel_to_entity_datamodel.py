@@ -59,7 +59,7 @@ class TranslateSDDModelToDataModel(object):
                 elif framework == "BIRD":      
                     if cube_type == "EIL":
                         package = context.input_tables_package
-                    elif cube_type == "LDM":
+                    elif cube_type == "ELDM":
                         package = context.ldm_entities_package   
 
                 altered_class_name = Utils.make_valid_id(class_name)
@@ -97,7 +97,7 @@ class TranslateSDDModelToDataModel(object):
                             attribute.upperBound = 1
                             eclass.eStructuralFeatures.append(attribute)           
                     else:
-                        if cube_type == "LDM":                    
+                        if cube_type == "ELDM":                    
                             altered_class_name = Utils.make_valid_id(class_name)
                             fullName = altered_class_name
                             eclass = ELClass(name=fullName)
@@ -108,7 +108,7 @@ class TranslateSDDModelToDataModel(object):
                 if not(eclass is None):
                     # maintain a map a objectIDs to ELClasses
                     context.classes_map[object_id] = eclass
-                    # add an annotation to LDM cubes with the display name
+                    # add an annotation to ELDM cubes with the display name
                     the_long_name_annotation = ELAnnotation()
                     the_long_name_directive = Utils.get_annotation_directive(eclass.eContainer(), "long_name")
                     the_long_name_annotation.source = the_long_name_directive
