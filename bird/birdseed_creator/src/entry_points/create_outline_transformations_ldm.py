@@ -51,10 +51,10 @@ if __name__ == '__main__':
 
     context.enrich_ldm_relationships = True
 
-    context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources_live_18May'
-    context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results'  
-    sdd_context.file_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\resources_live_18May'
-    sdd_context.output_directory = 'C:\\Users\\neil\\freebirdtools-develop_may\\git\\efbt\\bird\\birdseed_creator\\results'     
+    context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'  
+    sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
+    sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'      
       
     RunWebsiteToSDDModel().run(sdd_context)
     RunSDDModelToDataModel().run(context,sdd_context)
