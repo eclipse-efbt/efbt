@@ -181,7 +181,7 @@ class GenerationRuleCreator(object):
 
                             for extra_table in extra_tables:
                                 if extra_table.endswith("_ELDM"):
-                                    extra_table = linked_tables_list.append(extra_table[0:len(extra_table)-4])
+                                    extra_table = linked_tables_list.append(extra_table[0:len(extra_table)-5])
                                 else:
                                     extra_table = linked_tables_list.append(extra_table)
 
