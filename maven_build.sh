@@ -6,7 +6,10 @@ mvn install
 cd ../../..
 cd regpot_desktop/components
 mvn install
-cd ../..  
+cd ../..
+cd sirius_ui
+mvn install
+cd ..
 cd regpot_desktop/installation
 mvn install
 cd ../..

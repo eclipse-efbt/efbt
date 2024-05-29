@@ -214,20 +214,15 @@ class ELStringToStringMapEntry(EObject, metaclass=MetaEClass):
 
 class Report(EObject, metaclass=MetaEClass):
 
-    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
     outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
     rows = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     columns = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
-    reportCells = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
-    def __init__(self, *, outputLayer=None, rows=None, columns=None, reportCells=None, name=None):
+    def __init__(self, *, outputLayer=None, rows=None, columns=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
         super().__init__()
-
-        if name is not None:
-            self.name = name
 
         if outputLayer is not None:
             self.outputLayer = outputLayer
@@ -237,9 +232,6 @@ class Report(EObject, metaclass=MetaEClass):
 
         if columns:
             self.columns.extend(columns)
-
-        if reportCells:
-            self.reportCells.extend(reportCells)
 
 
 class ReportRow(EObject, metaclass=MetaEClass):
@@ -320,6 +312,64 @@ class Filter(EObject, metaclass=MetaEClass):
 
         if member:
             self.member.extend(member)
+
+
+class RowFilters(EObject, metaclass=MetaEClass):
+
+    row = EReference(ordered=True, unique=True, containment=False, derived=False)
+    filters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    metric = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, row=None, filters=None, metric=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if row is not None:
+            self.row = row
+
+        if filters:
+            self.filters.extend(filters)
+
+        if metric is not None:
+            self.metric = metric
+
+
+class ColumnFilters(EObject, metaclass=MetaEClass):
+
+    column = EReference(ordered=True, unique=True, containment=False, derived=False)
+    filters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    metric = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, column=None, filters=None, metric=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if column is not None:
+            self.column = column
+
+        if filters:
+            self.filters.extend(filters)
+
+        if metric is not None:
+            self.metric = metric
+
+
+class WholeReportFilters(EObject, metaclass=MetaEClass):
+
+    filters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, filters=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if filters:
+            self.filters.extend(filters)
 
 
 class SelectColumnMemberAs(SelectColumn):
@@ -492,6 +542,18 @@ class ELAnnotation(ELModelElement):
             self.source = source
 
 
+class CellBasedReport(Report):
+
+    reportCells = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, reportCells=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if reportCells:
+            self.reportCells.extend(reportCells)
+
+
 class ReportModule(Module):
 
     reports = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
@@ -502,6 +564,26 @@ class ReportModule(Module):
 
         if reports:
             self.reports.extend(reports)
+
+
+class RowColumnBasedReport(Report):
+
+    columnFilters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    rowFilters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    wholeReportFilters = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, columnFilters=None, rowFilters=None, wholeReportFilters=None, **kwargs):
+
+        super().__init__(**kwargs)
+
+        if columnFilters:
+            self.columnFilters.extend(columnFilters)
+
+        if rowFilters:
+            self.rowFilters.extend(rowFilters)
+
+        if wholeReportFilters is not None:
+            self.wholeReportFilters = wholeReportFilters
 
 
 @abstract
@@ -667,8 +749,9 @@ class ELReference(ELStructuralFeature):
 
     containment = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
     eReferenceType = EReference(ordered=True, unique=True, containment=False, derived=False)
+    eOpposite = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, containment=None, eReferenceType=None, **kwargs):
+    def __init__(self, *, containment=None, eReferenceType=None, eOpposite=None, **kwargs):
 
         super().__init__(**kwargs)
 
@@ -677,3 +760,6 @@ class ELReference(ELStructuralFeature):
 
         if eReferenceType is not None:
             self.eReferenceType = eReferenceType
+
+        if eOpposite is not None:
+            self.eOpposite = eOpposite

@@ -131,12 +131,12 @@ class SQLDevLDMImport(object):
                             context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
                             context.arc_to_source_map[altered_arc_name] = source_class
                             context.input_tables_package.eClassifiers.extend([arc_class])
-                            containment_reference = ELReference()
-                            containment_reference.name = altered_arc_name + "_delegate"
-                            containment_reference.eType = arc_class
-                            containment_reference.upperBound = 1
-                            containment_reference.lowerBound = 0
-                            containment_reference.containment = True
+                            non_containment_reference = ELReference()
+                            non_containment_reference.name = altered_arc_name + "_delegate"
+                            non_containment_reference.eType = arc_class
+                            non_containment_reference.upperBound = 1
+                            non_containment_reference.lowerBound = 0
+                            non_containment_reference.containment = False
                             pk_name = altered_arc_name + "_uniqueID"
                             attribute = ELAttribute()
                             attribute.name = pk_name
@@ -145,9 +145,29 @@ class SQLDevLDMImport(object):
                             attribute.iD = True
                             attribute.lowerBound = 0
                             attribute.upperBound = 1
+                            the_reference_annotation = ELAnnotation()
+                            the_reference_annotation_directive = Utils.get_annotation_directive(source_class.eContainer(), "relationship_type")
+                            the_reference_annotation.source = the_reference_annotation_directive
+                            details = the_reference_annotation.details
+                            mapentry  = ELStringToStringMapEntry()
+                            mapentry.key = "is_identifying_relationship"
+                            mapentry.value = "true"
+                            details.append(mapentry)
+                            non_containment_reference.eAnnotations.append(the_reference_annotation)
+
                             arc_class.eStructuralFeatures.append(attribute)
+                            the_identified_class_annotation = ELAnnotation()
+                            the_identified_class_directive = Utils.get_annotation_directive(source_class.eContainer(), "relationship_type")
+                            the_identified_class_annotation.source = the_identified_class_directive
+                            details = the_identified_class_annotation.details
+                            mapentry  = ELStringToStringMapEntry()
+                            mapentry.key = "is_identified_by"
+                            mapentry.value = source_class.name + "." + non_containment_reference.name
+                            details.append(mapentry)
+                            arc_class.eAnnotations.append(the_identified_class_annotation)
+
                             source_class.eStructuralFeatures.append(
-                                containment_reference)
+                                non_containment_reference)
                             
                         
                         target_class = SQLDevLDMImport.find_class_with_name(self, context,Utils.make_valid_id(target_entity_name))
@@ -239,7 +259,7 @@ class SQLDevLDMImport(object):
                         the_enum.name = adapted_enum_name
                         # maintain a map of enum IDS to ELEnum objects
                         context.enum_map[enum_id] = the_enum
-                        context.il_domains_package.eClassifiers.extend([
+                        context.ldm_domains_package.eClassifiers.extend([
                                                                            the_enum])
 
     def add_ldm_literals_to_enums(self, context):
@@ -515,9 +535,48 @@ class SQLDevLDMImport(object):
                     ereference.eType = target_class
 
                     if identifying == "Y":
-                        ereference.containment = True
+                        ereference.containment = False
+                        the_reference_annotation = ELAnnotation()
+                        the_reference_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "relationship_type")
+                        the_reference_annotation.source = the_reference_annotation_directive
+                        details = the_reference_annotation.details
+                        mapentry  = ELStringToStringMapEntry()
+                        mapentry.key = "is_identifying_relationship"
+                        mapentry.value = "true"
+                        details.append(mapentry)
+                        ereference.eAnnotations.append(the_reference_annotation)
+
+                        the_identified_class_annotation = ELAnnotation()
+                        the_identified_class_directive = Utils.get_annotation_directive(the_class.eContainer(), "relationship_type")
+                        the_identified_class_annotation.source = the_identified_class_directive
+                        details = the_identified_class_annotation.details
+                        mapentry  = ELStringToStringMapEntry()
+                        mapentry.key = "is_identified_by"
+                        mapentry.value = the_class.name + "." + ereference.name
+                        details.append(mapentry)
+                        target_class.eAnnotations.append(the_identified_class_annotation)
+
                     else:
                         ereference.containment = False
+                        the_reference_annotation = ELAnnotation()
+                        the_reference_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "relationship_type")
+                        the_reference_annotation.source = the_reference_annotation_directive
+                        details = the_reference_annotation.details
+                        mapentry  = ELStringToStringMapEntry()
+                        mapentry.key = "is_association_relationship"
+                        mapentry.value = "true"
+                        details.append(mapentry)
+                        ereference.eAnnotations.append(the_reference_annotation)
+                        
+                        the_associated_class_annotation = ELAnnotation()
+                        the_associated_class_directive = Utils.get_annotation_directive(the_class.eContainer(), "relationship_type")
+                        the_associated_class_annotation.source = the_associated_class_directive
+                        details = the_associated_class_annotation.details
+                        mapentry  = ELStringToStringMapEntry()
+                        mapentry.key = "is_associated_with"
+                        mapentry.value = the_class.name + "." + ereference.name
+                        details.append(mapentry)
+                        target_class.eAnnotations.append(the_associated_class_annotation)
 
                     if source_optional.strip() == "Y":
                         if source_to_target_cardinality.strip() == "*":                            

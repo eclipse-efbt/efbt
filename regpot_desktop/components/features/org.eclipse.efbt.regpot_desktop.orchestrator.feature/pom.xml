@@ -16,7 +16,7 @@
 	<parent>
 		<groupId>org.eclipse.efbt.regpot_desktop.components</groupId>
 		<artifactId>org.eclipse.efbt.regpot_desktop.components.parent</artifactId>
-		<version>1.3.0-SNAPSHOT</version>  <relativePath>../../pom.xml</relativePath>
+		<version>1.4.0-SNAPSHOT</version>  <relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>org.eclipse.efbt.regpot_desktop.orchestrator.feature</artifactId>
 	<packaging>eclipse-feature</packaging>

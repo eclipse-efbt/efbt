@@ -120,6 +120,7 @@
     <genClasses ecoreClass="regdna.ecore#//ELReference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//ELReference/containment"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//ELReference/eReferenceType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//ELReference/eOpposite"/>
     </genClasses>
     <genClasses image="false" ecoreClass="regdna.ecore#//ELStructuralFeature"/>
     <genClasses image="false" ecoreClass="regdna.ecore#//ELTypedElement">
@@ -143,8 +144,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//Report/outputLayer"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//Report/rows"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//Report/columns"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//Report/reportCells"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//Report/name"/>
+    </genClasses>
+    <genClasses ecoreClass="regdna.ecore#//CellBasedReport">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//CellBasedReport/reportCells"/>
     </genClasses>
     <genClasses ecoreClass="regdna.ecore#//ReportRow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute regdna.ecore#//ReportRow/name"/>
@@ -166,6 +168,24 @@
     </genClasses>
     <genClasses ecoreClass="regdna.ecore#//ReportModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//ReportModule/reports"/>
+    </genClasses>
+    <genClasses ecoreClass="regdna.ecore#//RowColumnBasedReport">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//RowColumnBasedReport/columnFilters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//RowColumnBasedReport/rowFilters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//RowColumnBasedReport/wholeReportFilters"/>
+    </genClasses>
+    <genClasses ecoreClass="regdna.ecore#//RowFilters">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//RowFilters/row"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//RowFilters/filters"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//RowFilters/metric"/>
+    </genClasses>
+    <genClasses ecoreClass="regdna.ecore#//ColumnFilters">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//ColumnFilters/column"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//ColumnFilters/filters"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference regdna.ecore#//ColumnFilters/metric"/>
+    </genClasses>
+    <genClasses ecoreClass="regdna.ecore#//WholeReportFilters">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference regdna.ecore#//WholeReportFilters/filters"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

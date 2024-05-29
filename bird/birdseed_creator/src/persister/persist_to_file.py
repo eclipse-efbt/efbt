@@ -12,12 +12,11 @@
 #
 import os
 from pyecore.resources import ResourceSet, URI
-from pyecore.resources.json import JsonResource
 from utils.utils import Utils
 
 
-from regdna import ELAttribute, ELClass, ELEnum, ELOperation, ELReference,SelectColumnAttributeAs
-
+from regdna import ELAttribute, ELClass, ELEnum, ELOperation, ELReference 
+from regdna import SelectColumnAttributeAs,RowColumnBasedReport,CellBasedReport
 
 class PersistToFile:
     '''
@@ -28,22 +27,32 @@ class PersistToFile:
         '''
         Save resources as regdna files
         '''
-        if context.load_eil_from_website:
-            PersistToFile.persist_entity_model(
-                self, context, context.input_tables_package,
-                "regdna", context.sdd_domains_package)
-        else:        
-            PersistToFile.persist_entity_model(
+        PersistToFile.persist_entity_model(
                 self, context, context.input_tables_package,
                 "regdna", context.il_domains_package)
+        
+        PersistToFile.persist_entity_model(
+                self, context, context.ldm_entities_package,
+                "regdna", context.ldm_domains_package)
 
         PersistToFile.persist_entity_model(
-            self, context, context.output_tables_package,
-            "regdna", context.sdd_domains_package)
+            self, context, context.finrep_output_tables_package,
+            "regdna", context.finrep_domains_package)
+        
+        PersistToFile.persist_entity_model(
+            self, context, context.ae_output_tables_package,
+            "regdna", context.ae_domains_package)
+        
+
+        PersistToFile.persist_enum_model(
+            self, context, context.ldm_domains_package, "regdna")
         PersistToFile.persist_enum_model(
             self, context, context.il_domains_package, "regdna")
         PersistToFile.persist_enum_model(
-            self, context, context.sdd_domains_package, "regdna")
+            self, context, context.finrep_domains_package, "regdna")
+        PersistToFile.persist_enum_model(
+            self, context, context.ae_domains_package, "regdna")
+        
         PersistToFile.persist_types_model(
             self, context, context.types_package, "regdna")
         
@@ -58,7 +67,7 @@ class PersistToFile:
                  "a",  encoding='utf-8')
         f.write("\t\t package " + the_package.name + "\r")
         f.write("\t\t import " + imported_package.name + ".*\r")
-        if the_package == context.output_tables_package:
+        if the_package == context.finrep_output_tables_package:
             for import_string in context.import_logic_strings:
                 f.write("\t\t import " + import_string + ".*\r")
         if extension == "regdna":
@@ -72,6 +81,7 @@ class PersistToFile:
             if isinstance(classifier, ELClass):
                 for annotation in classifier.eAnnotations:
                     f.write("\t\t\t@")
+                    
                     f.write(annotation.source.name)
                     f.write("(")
                     first_item = True
@@ -93,6 +103,7 @@ class PersistToFile:
                 for member in classifier.eStructuralFeatures:
                     for annotation in member.eAnnotations:
                         f.write("\t\t\t\t@")
+
                         f.write(annotation.source.name)
                         f.write("(")
                         first_item = True
@@ -121,6 +132,8 @@ class PersistToFile:
                                     ".." + upperBoundString + "] ")
 
                         f.write(member.name)
+                        if not(member.eOpposite is None):
+                            f.write(" opposite " + member.eOpposite.eContainer().name + "." + member.eOpposite.name)
                         f.write(" \r")
                     elif isinstance(member, ELAttribute):
                         f.write("\t\t\t\t")
@@ -252,12 +265,24 @@ class PersistToFile:
         resource.save()
     
     def persist_generation_transformations_to_csv(self, context):
+
+        PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
+                                                      context.finrep_generation_rules_module_il)
+        PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
+                                                      context.ae_generation_rules_module_il)
+        PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
+                                                      context.finrep_generation_rules_module_ldm) 
+        PersistToFile.persist_generation_transformations_to_csv_for_module(self, context,
+                                                      context.ae_generation_rules_module_ldm) 
+             
+    
+    def persist_generation_transformations_to_csv_for_module(self, context,module):
         '''
         Documentation for persist_generation_transformations
         '''
-        rules_for_reports = context.generation_rules_module.rulesForReport
+        rules_for_reports = module.rulesForReport
         report_to_table_parts_file = open(context.output_directory + os.sep + 'generations_transformations_csv' +
-                         os.sep + 
+                         os.sep + module.name + os.sep +
                          'report_to_table_parts.csv', "a",  encoding='utf-8')
         report_to_table_parts_file.write("Report,Table Part,Notes\n")
 
@@ -267,50 +292,92 @@ class PersistToFile:
                 template = rules_for_report.outputLayerCube.name
                 amended_template_name =  template[0:len(template) - 11]
                 f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
-                         os.sep + 
+                         os.sep + module.name + os.sep + 
                          amended_template_name + '.csv', "a",  encoding='utf-8')
                 f.write("Template,Table Part,Main Table,Filter,Lineage type,Source Table,Source Column,Missing,Relevant, Derived,Domain,Member,Value,ROL Cube Item,Notes\n")
 
                 for layer in rules_for_report.rulesForTable:
                     if not(layer.inputLayerTable is None):
                         table = layer.inputLayerTable.name
-                        for table_part in layer.rulesForTablePart:
-                            main_catagory = table_part.main_catagory
-                            main_catagory_name = context.main_catogory_to_name_map[main_catagory]
-                            
-                            table_and_part = table_part.table_and_part_tuple
-                            report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
-                            filter = context.table_parts_to_to_filter_map[table_and_part]
-                            for column in table_part.columns:
-                                if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
-                                    entity  = column.attribute.eContainer().name
-                                    attribute = column.attribute.name
-                                    lineage_type = "attribute"
-                                    missing = "Not Missing"
-                                else:  
-                                    entity  = ""
-                                    attribute = ""
-                                    missing = "Missing"
-                                    lineage_type = "tbd"
-                                    
-                                variable_id = column.asAttribute.name
-
-                                
-                                f.write(amended_template_name +"," + table_part.name +","  +table+"," + filter + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,," +variable_id + ",\n")
                     else:
                         print ("no input layer table for " + rules_for_report.outputLayerCube.name  )
+                        table = "Null"
+                    for table_part in layer.rulesForTablePart:
+                        main_catagory = table_part.main_catagory
+                        main_catagory_name = 'None'
+                        if module.name == "finrep_generation_rules":
+                            main_catagory_name = context.main_catogory_to_name_map_finrep[main_catagory]
+                        elif module.name == "ae_generation_rules":
+                            main_catagory_name = context.main_catogory_to_name_map_ae[main_catagory]
+                        
+                        table_and_part = table_part.table_and_part_tuple
+                        report_to_table_parts_file.write(amended_template_name + "," + table_part.name + ",\n")
+                        filter = ''
+                        try:
+                            filter = context.table_parts_to_to_filter_map[table_and_part]
+                        except:
+                            filter = ''
+                        for column in table_part.columns:
+                            if isinstance(column, SelectColumnAttributeAs) and not(column.attribute is None):
+                                entity  = column.attribute.eContainer().name
+                                attribute = column.attribute.name
+                                lineage_type = "attribute"
+                                missing = "Not Missing"
+                            else:  
+                                entity  = ""
+                                attribute = ""
+                                missing = "Missing"
+                                lineage_type = "tbd"
+                                
+                            variable_id = column.asAttribute.name
+
+                            
+                            f.write(amended_template_name +"," + table_part.name +","  +table+"," + filter + ","  +lineage_type+"," +entity+"," +attribute+"," +missing+",,,,,," +variable_id + ",\n")
+                
                 f.close()
         report_to_table_parts_file.close
+        f = open(context.output_directory + os.sep + 'generations_transformations_csv' +
+                        os.sep + module.name + os.sep + 
+                        'generation_rules_summary.csv', "a",  encoding='utf-8')
+        f.write("Key,Table Part, Main Table, ROL cube Item, Source Table,Source Column,ROL Cube Item,Notes\n")
+
+        for key,values in context.table_part_varaible_transformation_map.items():
+            
+            for value in values:
+                column_name = 'None'
+                table_name= 'None'
+                
+                if not(value is None):
+                    table_name = value.eContainer().name
+                    column_name = value.name
+                    
+                f.write(key +"," + table_name +","  + column_name +",\n")
+                
+            
+        f.close()
+            
 
     def persist_generation_transformations(self, context):
+        PersistToFile.persist_generation_transformations_for_module(self, context,
+                                                      context.finrep_generation_rules_module_il)
+        PersistToFile.persist_generation_transformations_for_module(self, context,
+                                                      context.ae_generation_rules_module_il)
+        PersistToFile.persist_generation_transformations_for_module(self, context,
+                                                      context.finrep_generation_rules_module_ldm)
+        PersistToFile.persist_generation_transformations_for_module(self, context,
+                                                      context.ae_generation_rules_module_ldm)  
+          
+     
+    def persist_generation_transformations_for_module(self, context,
+                                                      module):
         '''
         Documentation for persist_generation_transformations
         '''
-        rules_for_reports = context.generation_rules_module.rulesForReport
-        for rules_for_report in rules_for_reports:
+        
+        for rules_for_report in module.rulesForReport:
             if not(rules_for_report.outputLayerCube is None):
                 f = open(context.output_directory + os.sep + 'regdna' +
-                         os.sep + rules_for_report.outputLayerCube.name +
+                         os.sep +module.name + os.sep + rules_for_report.outputLayerCube.name +
                          '.regdna', "a",  encoding='utf-8')
                 f.write("generationRuleModule " + rules_for_report.outputLayerCube.name + "_generationModule\r{\r")
                 f.write("\tgenerationRules " + "{\r")
@@ -341,72 +408,195 @@ class PersistToFile:
                
                 f.close()
     
-    def persist_reports(self, context):
+    def persist_cell_based_reports(self, context):
+
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.finrep_on_sdd_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.ae_on_sdd_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.finrep_on_ldm_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.ae_on_ldm_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.finrep_on_il_reports_module)
+        PersistToFile.persist_cell_based_reports_for_module(self,context,context.ae_on_il_reports_module)
+
+    def persist_row_column_based_reports(self, context):
+
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.finrep_on_sdd_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.ae_on_sdd_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.finrep_on_ldm_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.ae_on_ldm_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.finrep_on_il_reports_module)
+        PersistToFile.persist_row_column_based_reports_module(self,context,context.ae_on_il_reports_module)
+        
+    def persist_cell_based_reports_for_module(self, context,module):
         '''
         Documentation for persist_generation_transformations
         '''
-        reports = context.reports_module.reports
+        reports = module.reports
         for report in reports:
-            if not(report.outputLayer is None):
-                f = open(context.output_directory + os.sep + 'regdna' +
-                         os.sep + report.outputLayer.name +
-                         '.regdna', "a",  encoding='utf-8')
-                f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
-                f.write("\treports " + "{\r")
-                f.write("\t\tReport " + "{\r")
-                f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
-                f.write("\t\t\trows{\r")
-                for row in report.rows:                    
-                    f.write("\t\t\t\tReportRow " + row.name + "\r")
-                f.write("\t\t\t}\r")
-                f.write("\t\t\tcolumns{\r")
-                for col in report.columns:                    
-                    f.write("\t\t\tReportColumn " + col.name + "\r")
-                f.write("\t\t\t}\r")
-                f.write("\t\t\treportCells{\r")  
-                for cell in report.reportCells:                    
-                    f.write("\t\t\t\tReportCell{\r")
-                    
-                    data_point_id = "None"
-                    if not (cell.datapointID is None):
-                        data_point_id= cell.datapointID
-                        
-                    row_name = "None"
-                    if not (cell.row is None):
-                        row_name= cell.row.name
-                        
-                    col_name = "None"
-                    if not (cell.column is None):
-                        col_name= cell.column.name
-
-                    metric_name = "None"
-                    if not (cell.metric is None):
-                        metric_name = "output_tables." + cell.metric.eContainer().name + "." + cell.metric.name
-                        
-                    
-                    
-                    f.write("\t\t\t\t\tdatapointID \"" + data_point_id + "\" row " + row_name + " column " + col_name  + " metric " + metric_name+ " filters {\r")
-                    for filter in cell.filters:
-                        operation_name = "none"
-                        if not(filter.operation is None):
-                            operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
-                        f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
-                        for item in filter.member:
-                            f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
-                        f.write(")\r")   
-                        f.write("\t\t\t\t\t\t}\r") 
-                    f.write("\t\t\t\t\t}\r")  
+            if isinstance(report, CellBasedReport): 
+                if not(report.outputLayer is None):
+                    f = open(context.output_directory + os.sep + 'regdna' +
+                             os.sep + module.name + os.sep + report.outputLayer.name +
+                             '.regdna', "a",  encoding='utf-8')
+                    f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
+                    f.write("\treports " + "{\r")
+                    f.write("\t\tCellBasedReport " + "{\r")
+                    f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
+                    f.write("\t\t\trows{\r")
+                    for row in report.rows:                    
+                        f.write("\t\t\t\tReportRow " + row.name + "\r")
                     f.write("\t\t\t}\r")
-                f.write("\t\t}\r")
-                f.write("\t}\r")
-                f.write("}\r")
-                f.close()
+                    f.write("\t\t\tcolumns{\r")
+                    for col in report.columns:                    
+                        f.write("\t\t\tReportColumn " + col.name + "\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\treportCells{\r")  
+                    for cell in report.reportCells:                    
+                        f.write("\t\t\t\tReportCell{\r")
+                        
+                        data_point_id = "None"
+                        if not (cell.datapointID is None):
+                            data_point_id= cell.datapointID
+                            
+                        row_name = "None"
+                        if not (cell.row is None):
+                            row_name= cell.row.name
+                            
+                        col_name = "None"
+                        if not (cell.column is None):
+                            col_name= cell.column.name
+    
+                        metric_name = "None"
+                        if not (cell.metric is None):
+                            metric_name = "output_tables." + cell.metric.eContainer().name + "." + cell.metric.name
+                            
+                        
+                        
+                        f.write("\t\t\t\t\tdatapointID \"" + data_point_id + "\" row " + row_name + " column " + col_name  + " metric " + metric_name+ " filters {\r")
+                        for filter in cell.filters:
+                            operation_name = "none"
+                            if not(filter.operation is None):
+                                operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                            f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                            for item in filter.member:
+                                f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                            f.write(")\r")   
+                            f.write("\t\t\t\t\t\t}\r") 
+                        f.write("\t\t\t\t\t}\r")  
+                        f.write("\t\t\t}\r")
+                    f.write("\t\t}\r")
+                    f.write("\t}\r")
+                    f.write("}\r")
+                    f.close()
+                
+    def persist_row_column_based_reports_module(self, context,module):
+        '''
+        Documentation for persist_generation_transformations
+        '''
+        reports = module.reports
+        for report in reports:
+            if isinstance(report, RowColumnBasedReport): 
+                if not(report.outputLayer is None):
+                    f = open(context.output_directory + os.sep + 'regdna' +
+                             os.sep + module.name + os.sep + report.outputLayer.name +
+                             '_row_column.regdna', "a",  encoding='utf-8')
+                    f.write("ReportModule " + report.outputLayer.name + "_reportModule\r{\r")
+                    f.write("\treports " + "{\r")
+                    f.write("\t\tRowColumnBasedReport " + "{\r")
+                    f.write("\t\t\toutputLayer output_tables." + report.outputLayer.name + "\r")
+                    f.write("\t\t\trows{\r")
+                    for row in report.rows:                    
+                        f.write("\t\t\t\tReportRow " + row.name + "\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\tcolumns{\r")
+                    for col in report.columns:                    
+                        f.write("\t\t\tReportColumn " + col.name + "\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\twholeReportFilters{\r")  
+                    if not(report.wholeReportFilters is None):                    
+                        f.write("\t\t\t\tWholeReportFilters{\r")
+                        if len(report.wholeReportFilters.filters) > 0:
+                            f.write("\t\t\t\t\tfilters {\r")
+                            for filter in report.wholeReportFilters.filters:
+                                operation_name = "none"
+                                if not(filter.operation is None):
+                                    operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                                f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                                for item in filter.member:
+                                    f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                                f.write(")\r")   
+                                f.write("\t\t\t\t\t\t}\r") 
+                            f.write("\t\t\t\t\t}\r")  
+                        f.write("\t\t\t\t}\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\trowFilters{\r")  
+                    for row_filter in report.rowFilters:                    
+                        f.write("\t\t\t\tRowFilters{\r")
+      
+                        row_name = "None"
+                        if not (row_filter.row is None):
+                            row_name= row_filter.row.name
+    
+                        metric_name = "None"
+                        if not (row_filter.metric is None):
+                            metric_name = "output_tables." + row_filter.metric.eContainer().name + "." + row_filter.metric.name
+    
+                        f.write("\t\t\t\t\trow " + row_name + "\r")
+                        if not(metric_name == "None"):
+                            f.write("\t\t\t\t\tmetric " + metric_name+ "\r")
+                        if len(row_filter.filters) > 0:
+                            f.write("\t\t\t\t\tfilters {\r")
+                            for filter in row_filter.filters:
+                                operation_name = "none"
+                                if not(filter.operation is None):
+                                    operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                                f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                                for item in filter.member:
+                                    f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                                f.write(")\r")   
+                                f.write("\t\t\t\t\t\t}\r") 
+                            f.write("\t\t\t\t\t}\r")  
+                        f.write("\t\t\t\t}\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t\tcolumnFilters{\r")  
+                    for column_filter in report.columnFilters:                    
+                        f.write("\t\t\t\tColumnFilters{\r")
+      
+                        column_name = "None"
+                        if not (column_filter.column is None):
+                            column_name= column_filter.column.name
+    
+                        metric_name = "None"
+                        if not (column_filter.metric is None):
+                            metric_name = "output_tables." + column_filter.metric.eContainer().name + "." + column_filter.metric.name
+    
+                        f.write("\t\t\t\t\tcolumn " + column_name + "\r")
+                        if not(metric_name == "None"):
+                            f.write("\t\t\t\t\tmetric " + metric_name+ "\r")
+                        if len(column_filter.filters) > 0:
+                            f.write("\t\t\t\t\tfilters {\r")
+                            for filter in column_filter.filters:
+                                operation_name = "none"
+                                if not(filter.operation is None):
+                                    operation_name = "output_tables." +filter.operation.eContainer().name + "." + filter.operation.name
+                                f.write("\t\t\t\t\t\tFilter {operation " + operation_name + "  item ( ")
+                                for item in filter.member:
+                                    f.write("sdd_domains." + item.eContainer().name + "." + item.name + " " ) 
+                                f.write(")\r")   
+                                f.write("\t\t\t\t\t\t}\r") 
+                            f.write("\t\t\t\t\t}\r")  
+                        f.write("\t\t\t\t}\r")
+                    f.write("\t\t\t}\r")
+                    f.write("\t\t}\r")
+                    f.write("\t}\r")
+                    f.write("}\r")
+                    f.close()
+
 
     def create_example_reports(self, context):
         '''
         Documentation for create_example_reports
         '''
-        reports = context.reports_module.reports
+        reports = context.finrep_on_il_reports_module.reports
         for report in reports:
             
             if not(report.outputLayer is None):

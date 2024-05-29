@@ -14,6 +14,7 @@ package org.eclipse.efbt.regdna.model.regdna;
  * <ul>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.ELReference#isContainment <em>Containment</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.ELReference#getEReferenceType <em>EReference Type</em>}</li>
+ *   <li>{@link org.eclipse.efbt.regdna.model.regdna.ELReference#getEOpposite <em>EOpposite</em>}</li>
  * </ul>
  *
  * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getELReference()
@@ -64,5 +65,27 @@ public interface ELReference extends ELStructuralFeature {
 	 * @generated
 	 */
 	void setEReferenceType(ELClassifier value);
+
+	/**
+	 * Returns the value of the '<em><b>EOpposite</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>EOpposite</em>' reference.
+	 * @see #setEOpposite(ELReference)
+	 * @see org.eclipse.efbt.regdna.model.regdna.regdnaPackage#getELReference_EOpposite()
+	 * @model
+	 * @generated
+	 */
+	ELReference getEOpposite();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.efbt.regdna.model.regdna.ELReference#getEOpposite <em>EOpposite</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>EOpposite</em>' reference.
+	 * @see #getEOpposite()
+	 * @generated
+	 */
+	void setEOpposite(ELReference value);
 
 } // ELReference

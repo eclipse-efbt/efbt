@@ -307,7 +307,7 @@ class Utils(object):
 
         return_val = None
         for key, value in enum_map.items():
-            if value.name.lower() == enum_name.lower():
+            if key.lower() == enum_name.lower():
                 return_val = value
 
         return return_val
@@ -332,8 +332,9 @@ class Utils(object):
         '''
         return_annotation = None
         for annotation in element.eAnnotations:
-            if annotation.source.name == source:
-                return_annotation = annotation
+            if not (annotation.source is None):
+                if annotation.source.name == source:
+                    return_annotation = annotation
         return return_annotation
     
     @classmethod

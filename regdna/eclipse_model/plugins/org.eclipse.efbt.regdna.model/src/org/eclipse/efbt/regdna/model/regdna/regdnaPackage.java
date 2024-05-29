@@ -1945,13 +1945,22 @@ public interface regdnaPackage extends EPackage {
 	int EL_REFERENCE__EREFERENCE_TYPE = EL_STRUCTURAL_FEATURE_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>EOpposite</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EL_REFERENCE__EOPPOSITE = EL_STRUCTURAL_FEATURE_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>EL Reference</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EL_REFERENCE_FEATURE_COUNT = EL_STRUCTURAL_FEATURE_FEATURE_COUNT + 2;
+	int EL_REFERENCE_FEATURE_COUNT = EL_STRUCTURAL_FEATURE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>EL Reference</em>' class.
@@ -2165,31 +2174,13 @@ public interface regdnaPackage extends EPackage {
 	int REPORT__COLUMNS = 2;
 
 	/**
-	 * The feature id for the '<em><b>Report Cells</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPORT__REPORT_CELLS = 3;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REPORT__NAME = 4;
-
-	/**
 	 * The number of structural features of the '<em>Report</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPORT_FEATURE_COUNT = 5;
+	int REPORT_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Report</em>' class.
@@ -2201,6 +2192,70 @@ public interface regdnaPackage extends EPackage {
 	int REPORT_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.CellBasedReportImpl <em>Cell Based Report</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.CellBasedReportImpl
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getCellBasedReport()
+	 * @generated
+	 */
+	int CELL_BASED_REPORT = 36;
+
+	/**
+	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELL_BASED_REPORT__OUTPUT_LAYER = REPORT__OUTPUT_LAYER;
+
+	/**
+	 * The feature id for the '<em><b>Rows</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELL_BASED_REPORT__ROWS = REPORT__ROWS;
+
+	/**
+	 * The feature id for the '<em><b>Columns</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELL_BASED_REPORT__COLUMNS = REPORT__COLUMNS;
+
+	/**
+	 * The feature id for the '<em><b>Report Cells</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELL_BASED_REPORT__REPORT_CELLS = REPORT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Cell Based Report</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELL_BASED_REPORT_FEATURE_COUNT = REPORT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Cell Based Report</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CELL_BASED_REPORT_OPERATION_COUNT = REPORT_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.ReportRowImpl <em>Report Row</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2208,7 +2263,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportRow()
 	 * @generated
 	 */
-	int REPORT_ROW = 36;
+	int REPORT_ROW = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2245,7 +2300,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportColumn()
 	 * @generated
 	 */
-	int REPORT_COLUMN = 37;
+	int REPORT_COLUMN = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2282,7 +2337,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportCell()
 	 * @generated
 	 */
-	int REPORT_CELL = 38;
+	int REPORT_CELL = 39;
 
 	/**
 	 * The feature id for the '<em><b>Row</b></em>' reference.
@@ -2355,7 +2410,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getFilter()
 	 * @generated
 	 */
-	int FILTER = 39;
+	int FILTER = 40;
 
 	/**
 	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
@@ -2410,7 +2465,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getReportModule()
 	 * @generated
 	 */
-	int REPORT_MODULE = 40;
+	int REPORT_MODULE = 41;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
@@ -2503,6 +2558,235 @@ public interface regdnaPackage extends EPackage {
 	int REPORT_MODULE_OPERATION_COUNT = MODULE_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RowColumnBasedReportImpl <em>Row Column Based Report</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.RowColumnBasedReportImpl
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRowColumnBasedReport()
+	 * @generated
+	 */
+	int ROW_COLUMN_BASED_REPORT = 42;
+
+	/**
+	 * The feature id for the '<em><b>Output Layer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_COLUMN_BASED_REPORT__OUTPUT_LAYER = REPORT__OUTPUT_LAYER;
+
+	/**
+	 * The feature id for the '<em><b>Rows</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_COLUMN_BASED_REPORT__ROWS = REPORT__ROWS;
+
+	/**
+	 * The feature id for the '<em><b>Columns</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_COLUMN_BASED_REPORT__COLUMNS = REPORT__COLUMNS;
+
+	/**
+	 * The feature id for the '<em><b>Column Filters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_COLUMN_BASED_REPORT__COLUMN_FILTERS = REPORT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Row Filters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_COLUMN_BASED_REPORT__ROW_FILTERS = REPORT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Whole Report Filters</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_COLUMN_BASED_REPORT__WHOLE_REPORT_FILTERS = REPORT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Row Column Based Report</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_COLUMN_BASED_REPORT_FEATURE_COUNT = REPORT_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of operations of the '<em>Row Column Based Report</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_COLUMN_BASED_REPORT_OPERATION_COUNT = REPORT_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.RowFiltersImpl <em>Row Filters</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.RowFiltersImpl
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getRowFilters()
+	 * @generated
+	 */
+	int ROW_FILTERS = 43;
+
+	/**
+	 * The feature id for the '<em><b>Row</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_FILTERS__ROW = 0;
+
+	/**
+	 * The feature id for the '<em><b>Filters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_FILTERS__FILTERS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Metric</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_FILTERS__METRIC = 2;
+
+	/**
+	 * The number of structural features of the '<em>Row Filters</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_FILTERS_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Row Filters</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ROW_FILTERS_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.ColumnFiltersImpl <em>Column Filters</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.ColumnFiltersImpl
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getColumnFilters()
+	 * @generated
+	 */
+	int COLUMN_FILTERS = 44;
+
+	/**
+	 * The feature id for the '<em><b>Column</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COLUMN_FILTERS__COLUMN = 0;
+
+	/**
+	 * The feature id for the '<em><b>Filters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COLUMN_FILTERS__FILTERS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Metric</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COLUMN_FILTERS__METRIC = 2;
+
+	/**
+	 * The number of structural features of the '<em>Column Filters</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COLUMN_FILTERS_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Column Filters</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COLUMN_FILTERS_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.impl.WholeReportFiltersImpl <em>Whole Report Filters</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.WholeReportFiltersImpl
+	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getWholeReportFilters()
+	 * @generated
+	 */
+	int WHOLE_REPORT_FILTERS = 45;
+
+	/**
+	 * The feature id for the '<em><b>Filters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WHOLE_REPORT_FILTERS__FILTERS = 0;
+
+	/**
+	 * The number of structural features of the '<em>Whole Report Filters</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WHOLE_REPORT_FILTERS_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Whole Report Filters</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WHOLE_REPORT_FILTERS_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.efbt.regdna.model.regdna.Comparitor <em>Comparitor</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2510,7 +2794,7 @@ public interface regdnaPackage extends EPackage {
 	 * @see org.eclipse.efbt.regdna.model.regdna.impl.regdnaPackageImpl#getComparitor()
 	 * @generated
 	 */
-	int COMPARITOR = 41;
+	int COMPARITOR = 46;
 
 
 	/**
@@ -3353,6 +3637,17 @@ public interface regdnaPackage extends EPackage {
 	EReference getELReference_EReferenceType();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.ELReference#getEOpposite <em>EOpposite</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>EOpposite</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ELReference#getEOpposite()
+	 * @see #getELReference()
+	 * @generated
+	 */
+	EReference getELReference_EOpposite();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ELStructuralFeature <em>EL Structural Feature</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3545,26 +3840,25 @@ public interface regdnaPackage extends EPackage {
 	EReference getReport_Columns();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.Report#getReportCells <em>Report Cells</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.CellBasedReport <em>Cell Based Report</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Cell Based Report</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.CellBasedReport
+	 * @generated
+	 */
+	EClass getCellBasedReport();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.CellBasedReport#getReportCells <em>Report Cells</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Report Cells</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.Report#getReportCells()
-	 * @see #getReport()
+	 * @see org.eclipse.efbt.regdna.model.regdna.CellBasedReport#getReportCells()
+	 * @see #getCellBasedReport()
 	 * @generated
 	 */
-	EReference getReport_ReportCells();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.efbt.regdna.model.regdna.Report#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.efbt.regdna.model.regdna.Report#getName()
-	 * @see #getReport()
-	 * @generated
-	 */
-	EAttribute getReport_Name();
+	EReference getCellBasedReport_ReportCells();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ReportRow <em>Report Row</em>}'.
@@ -3736,6 +4030,156 @@ public interface regdnaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getReportModule_Reports();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport <em>Row Column Based Report</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Row Column Based Report</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport
+	 * @generated
+	 */
+	EClass getRowColumnBasedReport();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport#getColumnFilters <em>Column Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Column Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport#getColumnFilters()
+	 * @see #getRowColumnBasedReport()
+	 * @generated
+	 */
+	EReference getRowColumnBasedReport_ColumnFilters();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport#getRowFilters <em>Row Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Row Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport#getRowFilters()
+	 * @see #getRowColumnBasedReport()
+	 * @generated
+	 */
+	EReference getRowColumnBasedReport_RowFilters();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport#getWholeReportFilters <em>Whole Report Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Whole Report Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowColumnBasedReport#getWholeReportFilters()
+	 * @see #getRowColumnBasedReport()
+	 * @generated
+	 */
+	EReference getRowColumnBasedReport_WholeReportFilters();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.RowFilters <em>Row Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Row Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowFilters
+	 * @generated
+	 */
+	EClass getRowFilters();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.RowFilters#getRow <em>Row</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Row</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowFilters#getRow()
+	 * @see #getRowFilters()
+	 * @generated
+	 */
+	EReference getRowFilters_Row();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.RowFilters#getFilters <em>Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowFilters#getFilters()
+	 * @see #getRowFilters()
+	 * @generated
+	 */
+	EReference getRowFilters_Filters();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.RowFilters#getMetric <em>Metric</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Metric</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.RowFilters#getMetric()
+	 * @see #getRowFilters()
+	 * @generated
+	 */
+	EReference getRowFilters_Metric();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.ColumnFilters <em>Column Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Column Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ColumnFilters
+	 * @generated
+	 */
+	EClass getColumnFilters();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.ColumnFilters#getColumn <em>Column</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Column</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ColumnFilters#getColumn()
+	 * @see #getColumnFilters()
+	 * @generated
+	 */
+	EReference getColumnFilters_Column();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.ColumnFilters#getFilters <em>Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ColumnFilters#getFilters()
+	 * @see #getColumnFilters()
+	 * @generated
+	 */
+	EReference getColumnFilters_Filters();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.efbt.regdna.model.regdna.ColumnFilters#getMetric <em>Metric</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Metric</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.ColumnFilters#getMetric()
+	 * @see #getColumnFilters()
+	 * @generated
+	 */
+	EReference getColumnFilters_Metric();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.efbt.regdna.model.regdna.WholeReportFilters <em>Whole Report Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Whole Report Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.WholeReportFilters
+	 * @generated
+	 */
+	EClass getWholeReportFilters();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.efbt.regdna.model.regdna.WholeReportFilters#getFilters <em>Filters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Filters</em>'.
+	 * @see org.eclipse.efbt.regdna.model.regdna.WholeReportFilters#getFilters()
+	 * @see #getWholeReportFilters()
+	 * @generated
+	 */
+	EReference getWholeReportFilters_Filters();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.efbt.regdna.model.regdna.Comparitor <em>Comparitor</em>}'.

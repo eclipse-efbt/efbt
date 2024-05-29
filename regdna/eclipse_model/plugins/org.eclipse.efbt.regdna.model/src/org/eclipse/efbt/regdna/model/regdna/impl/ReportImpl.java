@@ -6,7 +6,6 @@ import java.util.Collection;
 
 import org.eclipse.efbt.regdna.model.regdna.ELClass;
 import org.eclipse.efbt.regdna.model.regdna.Report;
-import org.eclipse.efbt.regdna.model.regdna.ReportCell;
 import org.eclipse.efbt.regdna.model.regdna.ReportColumn;
 import org.eclipse.efbt.regdna.model.regdna.ReportRow;
 import org.eclipse.efbt.regdna.model.regdna.regdnaPackage;
@@ -36,8 +35,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ReportImpl#getOutputLayer <em>Output Layer</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ReportImpl#getRows <em>Rows</em>}</li>
  *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ReportImpl#getColumns <em>Columns</em>}</li>
- *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ReportImpl#getReportCells <em>Report Cells</em>}</li>
- *   <li>{@link org.eclipse.efbt.regdna.model.regdna.impl.ReportImpl#getName <em>Name</em>}</li>
  * </ul>
  *
  * @generated
@@ -72,36 +69,6 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * @ordered
 	 */
 	protected EList<ReportColumn> columns;
-
-	/**
-	 * The cached value of the '{@link #getReportCells() <em>Report Cells</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getReportCells()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ReportCell> reportCells;
-
-	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String NAME_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -194,50 +161,12 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 	 * @generated
 	 */
 	@Override
-	public EList<ReportCell> getReportCells() {
-		if (reportCells == null) {
-			reportCells = new EObjectContainmentEList<ReportCell>(ReportCell.class, this, regdnaPackage.REPORT__REPORT_CELLS);
-		}
-		return reportCells;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, regdnaPackage.REPORT__NAME, oldName, name));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case regdnaPackage.REPORT__ROWS:
 				return ((InternalEList<?>)getRows()).basicRemove(otherEnd, msgs);
 			case regdnaPackage.REPORT__COLUMNS:
 				return ((InternalEList<?>)getColumns()).basicRemove(otherEnd, msgs);
-			case regdnaPackage.REPORT__REPORT_CELLS:
-				return ((InternalEList<?>)getReportCells()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -257,10 +186,6 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 				return getRows();
 			case regdnaPackage.REPORT__COLUMNS:
 				return getColumns();
-			case regdnaPackage.REPORT__REPORT_CELLS:
-				return getReportCells();
-			case regdnaPackage.REPORT__NAME:
-				return getName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -285,13 +210,6 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 				getColumns().clear();
 				getColumns().addAll((Collection<? extends ReportColumn>)newValue);
 				return;
-			case regdnaPackage.REPORT__REPORT_CELLS:
-				getReportCells().clear();
-				getReportCells().addAll((Collection<? extends ReportCell>)newValue);
-				return;
-			case regdnaPackage.REPORT__NAME:
-				setName((String)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -313,12 +231,6 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 			case regdnaPackage.REPORT__COLUMNS:
 				getColumns().clear();
 				return;
-			case regdnaPackage.REPORT__REPORT_CELLS:
-				getReportCells().clear();
-				return;
-			case regdnaPackage.REPORT__NAME:
-				setName(NAME_EDEFAULT);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -337,28 +249,8 @@ public class ReportImpl extends MinimalEObjectImpl.Container implements Report {
 				return rows != null && !rows.isEmpty();
 			case regdnaPackage.REPORT__COLUMNS:
 				return columns != null && !columns.isEmpty();
-			case regdnaPackage.REPORT__REPORT_CELLS:
-				return reportCells != null && !reportCells.isEmpty();
-			case regdnaPackage.REPORT__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (name: ");
-		result.append(name);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ReportImpl

@@ -26,7 +26,6 @@ class Context(object):
     use_codes = True
     load_eil_from_website = False
     use_variable_long_name = True
-    persist_to_regdna = True
 
     # the directory where we get our input files
     file_directory = ""
@@ -40,7 +39,7 @@ class Context(object):
 
     # create  regdna  packages
     types_package = ELPackage(name='types')
-    il_domains_package = ELPackage(
+    ldm_domains_package = ELPackage(
         name='il_domains',
         nsURI='http://www.eclipse.org/bird/il_domains',
         nsPrefix='il_domains')
@@ -95,15 +94,17 @@ class Context(object):
         key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         il_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
         entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
+        relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
         self.input_tables_package.annotationDirectives.append(key_annotation_directive)
         self.input_tables_package.annotationDirectives.append(il_mapping_annotation_directive)
         self.input_tables_package.annotationDirectives.append(entity_hierarchy_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(relationship_type_annotation_directive)
         types = EcoreLiteTypes()
         self.types_package.eClassifiers.append(types.e_string)
         self.types_package.eClassifiers.append(types.e_double)
         self.types_package.eClassifiers.append(types.e_int)
         self.module_list.modules.append(self.types_package)
-        self.module_list.modules.append(self.il_domains_package)
+        self.module_list.modules.append(self.ldm_domains_package)
         self.module_list.modules.append(self.input_tables_package)
 
 

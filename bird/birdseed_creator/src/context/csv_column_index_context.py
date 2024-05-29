@@ -42,10 +42,14 @@ class ColumnIndexes(object):
     domain_domain_is_enumerated = 3
     domain_domain_is_reference = 8
     
+
+    
     member_member_id_index = 1
     member_member_code_index = 2
     member_member_name_index = 3
     member_domain_id_index = 4
+    
+
     
     subdomain_domain_id_index = 3
     subdomain_subdomain_id_index = 1
@@ -56,6 +60,7 @@ class ColumnIndexes(object):
     subdomain_enumeration_member_id_index = 0
     subdomain_enumeration_subdomain_id_index = 1
     subdomain_enumeration_valid_to_index = 3
+    
     
     cube_structure_code_index = 3
     cube_structure_id_index = 1
@@ -84,12 +89,7 @@ class ColumnIndexes(object):
     combination_variable_set=3
     combination_member_id = 4
     
-    cube_class_name_index = 3
-    cube_object_id_index = 1
-    cube_cube_type_index = 6
-    cube_valid_to_index = 9
-    cube_framework_index = 4
-    
+   
     variable_set_enumeration_valid_to = 3
     variable_set_enumeration_variable_id = 1
     variable_set_enumeration_valid_set = 0
@@ -97,35 +97,9 @@ class ColumnIndexes(object):
     
     variable_set_variable_set_id = 1
     
-    variable_variable_name_index = 1
-    variable_long_name_index = 3
-    variable_domain_index = 4
-    variable_code_index = 2
-    variable_variable_description = 5
-    variable_variable_true_id = 1
     
-    domain_domain_id_index = 6
-    domain_domain_name_index = 2
-    domain_domain_data_type = 5
-    domain_domain_description = 4
-    domain_domain_true_id = 1
-    domain_domain_is_enumerated = 3
-    domain_domain_is_reference = 8
     
-    member_member_id_index = 1
-    member_member_code_index = 2
-    member_member_name_index = 3
-    member_domain_id_index = 4
-    
-    subdomain_domain_id_index = 3
-    subdomain_subdomain_id_index = 1
-    subdomain_subdomain_code = 0
-    subdomain_subdomain_description = 1
-    subdomain_subdomain_name = 7
-
-    subdomain_enumeration_member_id_index = 0
-    subdomain_enumeration_subdomain_id_index = 1
-    subdomain_enumeration_valid_to_index = 3
+   
     
     cube_structure_item_variable_index = 1
     cube_structure_item_class_id_index = 0
@@ -156,7 +130,7 @@ class ColumnIndexes(object):
     table_table_name = 1 
     table_code = 2 
     table_description = 3
-    table_maintenance_ageny = 4
+    table_maintenance_agency_id = 4
     table_version = 5
     table_valid_from = 6
     table_valid_to = 7 

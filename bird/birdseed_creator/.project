@@ -3,6 +3,8 @@
 	<name>birdseed_creator</name>
 	<comment></comment>
 	<projects>
+		<project>bird.regdna_python_model.regdna</project>
+		<project>bird.regdna_python_model.sdd_model</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
