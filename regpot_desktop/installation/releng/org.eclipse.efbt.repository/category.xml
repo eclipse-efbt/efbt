@@ -42,5 +42,8 @@
    <feature id="org.eclipse.egit">
       <category name="efbt"/>
    </feature>
+   <feature id="org.eclipse.efbt.regpot_desktop.sirius_ui.feature">
+      <category name="efbt"/>
+   </feature>
    <category-def name="efbt" label="Complete EFBT Repository"/>
 </site>
