@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.efbt.regpot_desktop.sirius_ui.feature"
       label="regpot_desktop Sirius UI"
-      version="1.3.0.qualifier"
+      version="1.4.0.qualifier"
       provider-name="BIRD Software Solutions">
 
    <description url="http://www.example.com/description">
