@@ -60,6 +60,9 @@ class RegdnaGenerator extends AbstractGenerator {
 
 			processPackage(elpackage,fsa)
 			createXCoreForPackage(elpackage,fsa,resource)
+			createDjangoForPackage(elpackage,fsa,resource)
+			createDjangoAdminForPackage(elpackage,fsa,resource)
+			
 		}
 		for (rulesForReport : resource.allContents.toIterable.filter(RulesForReport)) {
 
@@ -74,6 +77,18 @@ class RegdnaGenerator extends AbstractGenerator {
 		}
 	}
 	
+	def createDjangoAdminForPackage(ELPackage elpackage, IFileSystemAccess2 fsa,Resource resource) {
+		fsa.generateFile(elpackage.name + 'admin.py',  '''
+		
+		from django.contrib import admin
+
+		«FOR elclass : elpackage.EClassifiers.filter(ELClass)»
+		from .models import «elclass.name»				
+		admin.site.register(«elclass.name»)
+		«ENDFOR»
+		        ''')
+		         }
+		         
 	def processReportModule(ReportModule reportModule, IFileSystemAccess2 fsa) {
 		fsa.generateFile("report_cells.xcore",  '''
 		package report_cells
@@ -356,85 +371,93 @@ class RegdnaGenerator extends AbstractGenerator {
 		«ENDIF»
 		        ''')
 		         }
+		         
+	def createDjangoForPackage(ELPackage elpackage, IFileSystemAccess2 fsa,Resource resource) {
+		fsa.generateFile(elpackage.name + '.py',  '''
+		
+		from django.db import models
+		
+		
+		«IF elpackage.name.trim != "types"»
+		«FOR theImport : elpackage.imports»
+		
+		«IF theImport.importedNamespace.trim != "types.*"»
+		
+		«ENDIF»
+		«ENDFOR»
+		
+		«FOR elclass : elpackage.EClassifiers.filter(ELClass)»
+		
+		class «elclass.name»(models.Model):
+
+		«FOR elmember : elclass.EStructuralFeatures»  
+
+		«IF elmember instanceof ELAttribute» 
+		«IF elmember.EAttributeType instanceof ELEnum»    «(elmember.EAttributeType as ELEnum).djangoChoices»«ENDIF» 
+		    «elmember.name» = «elmember.djangoType()»   «ENDIF»
+		«IF elmember instanceof ELReference»    «elmember.name» = models.ForeignKey("«elmember.EType.name»", models.SET_NULL,blank=True,null=True,)«ENDIF» 
+		«ENDFOR»
+		«FOR eloperation : elclass.EOperations»
+		
+		«IF eloperation instanceof ELOperation» 	def  «eloperation.name»(self):
+
+		«IF eloperation.body !== null »          «findXCoreSubstring(eloperation.body)»
+		«ELSEIF eloperation.EType.name == "double" »        return 0
+		«ELSEIF eloperation.EType.name == "int" »        return 0
+		«ELSEIF eloperation.EType.name == "boolean" »        return true
+			«ENDIF»
+
+			«ENDIF»«ENDFOR» 
+			«FOR annotion : elclass.EAnnotations»
+				«IF annotion.source.name == "long_name"»
+			
+			    class Meta:
+			        verbose_name = '«annotion.details.get(0).value»'
+			        verbose_name_plural = '«annotion.details.get(0).value»s'
+			«ENDIF»
+			«ENDFOR»
+		«ENDFOR»
+		
+		«ENDIF»
+		        ''')
+		         }
 	
-	def String identifying_feature(ELAnnotation annotation) {
-		var String value = null
-		var String return_value = null
-		for (detail : annotation.details)
-		{
-			if (detail.key == "is_identified_by") {
-				value = detail.value
-				return_value = value.substring(value.indexOf('.')+1,value.length)
-			}
-		}
-		return return_value
-	}
-	
-	def String associated_feature(ELAnnotation annotation) {
-		var String value = null
-		var String return_value = null
-		for (detail : annotation.details)
-		{
-			if (detail.key == "is_associated_with") {
-				value = detail.value
-				return_value = value.substring(value.indexOf('.')+1,value.length)
-			}
-		}
-		return return_value
-	}
-	
-	def String identifying_class(ELAnnotation annotation)
+	def String djangoChoices(ELEnum theEnum)
 	{
-		var String value = null
-		var String return_value = null
-		for (detail : annotation.details)
-		{
-			if (detail.key == "is_identified_by") {
-				value = detail.value
-				return_value = value.substring(0,detail.value.indexOf('.'))
-			}
+		var returnString = theEnum.name + " = {"
+
+		for (literal : theEnum.ELiterals) {
+			returnString  = returnString  + "\""+ literal.literal + "\":\""+literal.name + "\",\n"
 		}
-		return return_value
+	    
+		returnString  = returnString  + "}"
+		return returnString
 	}
 	
-	def String associated_class(ELAnnotation annotation)
-	{
-		var String value = null
-		var String return_value = null
-		for (detail : annotation.details)
-		{
-			if (detail.key == "is_associated_with") {
-				value = detail.value
-				return_value = value.substring(0,detail.value.indexOf('.'))
+	def djangoType(ELAttribute attribute) {
+		val type = attribute.EAttributeType
+		val pk = attribute.ID
+		var display_name = attribute.name
+		for (annotation : attribute.EAnnotations) {
+			if (annotation.source.name == "long_name") {
+				display_name = annotation.details.get(0).value
 			}
 		}
-		return return_value
-	}
 	
-	def boolean is_identifying_relationship(ELStructuralFeature feature) {
-		var return_value = false
-		for (annotation : feature.EAnnotations) { 
-			for (detail : annotation.details)
-			{
-				if (detail.key == "is_identifying_relationship") {
-					return_value = true
-				}
-			}
-		}
-		return return_value
-	}
-	
-	def boolean is_association_relationship(ELStructuralFeature feature) {
-		var return_value = false
-		for (annotation : feature.EAnnotations) { 
-			for (detail : annotation.details)
-			{
-				if (detail.key == "is_association_relationship") {
-					return_value = true
-				}
-			}
-		}
-		return return_value
+		if (type instanceof ELEnum)
+			return "models.CharField(\"" + display_name + "\",max_length=255, choices=" + type.name +")"
+		else if ((type.name == "String") && pk)
+			return "models.CharField(\"" + display_name + "\",max_length=255, primary_key=True)"
+		else if (type.name == "String")
+			return "models.CharField(\"" + display_name + "\",max_length=255)"
+		else if (type.name == "double")
+			return "models.FloatField(\"" + display_name + "\")"
+		else if (type.name == "int")
+			return "models.BigIntegerField(\"" + display_name + "\")"
+		else if (type.name == "Date")
+			return "models.DateTimeField(\"" + display_name + "\")"
+		else if (type.name == "boolean")
+			return "models.BooleanField(\"" + display_name + "\")"
 	}
 	
 
