@@ -387,9 +387,14 @@ class RegdnaGenerator extends AbstractGenerator {
 		«ENDFOR»
 		
 		«FOR elclass : elpackage.EClassifiers.filter(ELClass)»
-		
+		«IF elclass.ESuperTypes.size > 0»
+				
 		class «elclass.name»(models.Model):
-
+		«ELSE»
+				
+		class «elclass.name»(«elclass.ESuperTypes.get(0).name»):
+		«ENDIF»
+		
 		«FOR elmember : elclass.EStructuralFeatures»  
 
 		«IF elmember instanceof ELAttribute» 
