@@ -44,7 +44,7 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="eclipse.target.platform"
-      defaultValue="2024-03"
+      defaultValue="2024-06"
       storageURI="scope://Workspace"/>
   <setupTask
       xsi:type="setup.p2:P2Task">
@@ -56,7 +56,7 @@
       value="anonymous"/>
   <setupTask
       xsi:type="jdt:JRETask"
-      version="JavaSE-17"
+      version="JavaSE-22"
       location="${jre.location-17}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>
