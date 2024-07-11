@@ -56,7 +56,7 @@
       value="anonymous"/>
   <setupTask
       xsi:type="jdt:JRETask"
-      version="JavaSE-22"
+      version="JavaSE-21"
       location="${jre.location-17}">
     <description>Define the JRE needed to compile and run the Java projects of ${scope.project.label}</description>
   </setupTask>

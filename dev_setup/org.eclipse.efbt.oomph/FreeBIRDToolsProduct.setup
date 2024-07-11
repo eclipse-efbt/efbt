@@ -163,8 +163,6 @@
       <requirement
           name="org.eclipse.emf.ecoretools.design.feature.group"/>
       <requirement
-          name="org.eclipse.emf.query.sdk.feature.group"/>
-      <requirement
           name="org.eclipse.emf.sdk.feature.group"/>
       <requirement
           name="org.eclipse.emf.transaction.sdk.feature.group"/>
@@ -197,8 +195,6 @@
       <requirement
           name="org.eclipse.xtext.sdk.feature.group"/>
       <requirement
-          name="hu.bme.mit.ecoredocgen.feature.feature.group"/>
-      <requirement
           name="org.python.pydev.feature.feature.group"/>
       <repository
           url="http://download.eclipse.org/releases/2024-06"/>
@@ -206,8 +202,6 @@
           url="http://download.eclipse.org/technology/epp/packages/2024-06"/>
       <repository
           url="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/"/>
-      <repository
-          url="http://static.incquerylabs.com/projects/ecoredocgen/release/"/>
       <repository
           url="http://update.liclipse.com/latest"/>
     </setupTask>

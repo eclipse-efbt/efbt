@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.ui,
  com.google.guava,
  org.eclipse.efbt.regdna.model
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-22
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: %providerName
 Automatic-Module-Name: org.eclipse.efbt.regpot_desktop.ui.sirius.core
