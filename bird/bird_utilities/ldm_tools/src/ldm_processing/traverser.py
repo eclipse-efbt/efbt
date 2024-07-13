@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 import os
-from regdna import ELAttribute, ELClass,ELReference
+from regdna import ELAttribute, ELClass,ELReference,ELEnum
 from ldm_utils.utils import Utils
 
 class SubtypeExploder(object):
@@ -150,7 +150,7 @@ class SubtypeExploder(object):
                 column_headers.append(qualified_attribute_name)
                 input_layer_column_name = SubtypeExploder.get_input_layer_column(self,discriminator)
                 input_layer_column_headers.append(input_layer_column_name)  
-            current_row[qualified_attribute_name] = entity_combination[count].name
+            current_row[qualified_attribute_name] = str(SubtypeExploder.get_entity_domain_code(self,context, entity_combination[count])) + ":" + entity_combination[count].name
             count = count +1
         for entity in entity_combination:
             if show_all_columns_for_subtype_explosion:
@@ -166,7 +166,8 @@ class SubtypeExploder(object):
                         column_headers.append(qualified_attribute_name)
                         input_layer_column_name = SubtypeExploder.get_input_layer_column(self,ref)
                         input_layer_column_headers.append(input_layer_column_name)
-                        current_row[qualified_attribute_name] = 'X'
+                        #current_row[qualified_attribute_name] = 'X'
+                        current_row[qualified_attribute_name] = SubtypeExploder.get_valid_example_value(self,ref)
     
                 attributes = SubtypeExploder.get_attributes(self, context, entity)
                 
@@ -180,7 +181,8 @@ class SubtypeExploder(object):
                         column_headers.append(qualified_attribute_name)
                         input_layer_column_name = SubtypeExploder.get_input_layer_column(self,attribute)
                         input_layer_column_headers.append(input_layer_column_name)
-                        current_row[qualified_attribute_name] = 'X'
+                        #current_row[qualified_attribute_name] = 'X'
+                        current_row[qualified_attribute_name] = SubtypeExploder.get_valid_example_value(self,attribute)
 
             discriminators = SubtypeExploder.get_discriminators(self, context, entity)
             columns = []
@@ -227,6 +229,29 @@ class SubtypeExploder(object):
                     
             
         rows.append(current_row)
+
+
+    def get_entity_domain_code(self, context, entity):
+        for domain in context.ldm_domains_package.eClassifiers:
+            if domain.name.endswith('Input_Layer__domain'):
+                for member in domain.eLiterals:
+                    if member.name ==  entity.name:
+                        return member.value
+        for domain in context.ldm_domains_package.eClassifiers:
+            for member in domain.eLiterals:
+                if member.name ==  entity.name:
+                    return member.value
+        for domain in context.ldm_domains_package.eClassifiers:
+            if domain.name.endswith('Input_Layer__domain'):
+                for member in domain.eLiterals:
+                    if member.name ==  entity.name + 's':
+                        return member.value
+        for domain in context.ldm_domains_package.eClassifiers:
+            for member in domain.eLiterals:
+                if member.name ==  entity.name + 's':
+                    return member.value
+        return 'X'
+        
 
     def print_combination_grid(self, columns):
         '''
@@ -325,7 +350,36 @@ class SubtypeExploder(object):
                     return_value = detail.value
             
         return return_value
-            
+    
+    def get_valid_example_value(self,feature):
+        '''
+        From the annotation find the the link to input layer column
+        '''
+        if isinstance(feature, ELAttribute):
+            type = feature.eType
+            if isinstance(type, ELEnum):
+                if len(type.eLiterals)>0:
+                    return str(type.eLiterals[0].value) + '$' +  type.eLiterals[0].name
+                else:
+                    return 'X'
+            else:
+                if type.name == "String" :
+                    return "EXAMPLE"
+                elif type.name == "double" :
+                    return "123.00"
+                elif type.name == "int" :
+                    return "345"
+                elif type.name == "Date" :
+                    return "2018-30-01"
+                elif type.name == "boolean" :
+                    return "True"
+                else:
+                    return 'X'
+        else:
+            return 'X'
+        
+        
+
     def get_attributes(self, context, entity):
         '''
         get the attributes of an entity

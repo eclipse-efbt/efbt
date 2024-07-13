@@ -82,21 +82,18 @@ class Context(object):
 
     import_logic_strings = []
 
-    input_layer_name = "Input Layer 6.3"
+    input_layer_name = "Input Layer 6.4"
     
-    
-    
-    
-    
-
     def __init__(self):
 
         key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         il_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
+        code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
         entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
         relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
         self.input_tables_package.annotationDirectives.append(key_annotation_directive)
         self.input_tables_package.annotationDirectives.append(il_mapping_annotation_directive)
+        self.input_tables_package.annotationDirectives.append(code_annotation_directive)
         self.input_tables_package.annotationDirectives.append(entity_hierarchy_annotation_directive)
         self.input_tables_package.annotationDirectives.append(relationship_type_annotation_directive)
         types = EcoreLiteTypes()
