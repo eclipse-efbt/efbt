@@ -17,7 +17,6 @@ from ldm_utils.utils import Utils
 from regdna import ELAttribute, ELClass, ELEnum
 from regdna import ELEnumLiteral, ELOperation, ELReference
 from regdna import ELAnnotation, ELStringToStringMapEntry
-from pickle import TRUE
 
 class SQLDevLDMImport(object):
     '''
@@ -55,16 +54,40 @@ class SQLDevLDMImport(object):
                     header_skipped = True
                 else:
 
-                    class_name = row[0]
+                    
+                    entity_name = row[0] 
                     object_id = row[1]
                     engineering_type = row[27]
                     num_supertype_entity_id = row[26]
-
+                    preferred_abbreviation = row[24]
+                    class_name = entity_name
+                    #class_name = None
+                    #if context.use_codes:
+                    #    class_name = preferred_abbreviation
+                    #else:
+                    #    class_name = entity_name
+                    
+                    
+                    
+                        
                     altered_class_name = Utils.make_valid_id(class_name)
-                    eclass = ELClass(name=altered_class_name)         
+                    eclass = ELClass(name=altered_class_name)  
+                    eclass.original_name = entity_name
+                       
 
                     context.input_tables_package.eClassifiers.extend([
                                                                           eclass])
+                    the_code_annotation = ELAnnotation()
+                    the_code_directive = Utils.get_annotation_directive(eclass.eContainer(), "code")
+                    the_code_annotation.source = the_code_directive
+                    details = the_code_annotation.details
+                    mapentry  = ELStringToStringMapEntry()
+                    mapentry.key = "code"
+                    mapentry.value = preferred_abbreviation
+                    details.append(mapentry)
+                    eclass.eAnnotations.append(the_code_annotation)
+                    
+                 
                     
                     # if the class is a not a subtype, then we need to add a primary key
                     # subtypes will inherit the primary key from their supertype
@@ -95,7 +118,7 @@ class SQLDevLDMImport(object):
         file_location = context.file_directory + os.sep + "arcs.csv"
         header_skipped = False
         # A dictionary from entity to its arcs
-        entity_to_arc_dictionary = SQLDevLDMImport.get_entity_to_arc_dictionary(self,file_location)
+        entity_to_arc_dictionary = SQLDevLDMImport.get_entity_to_arc_dictionary(self,context,file_location)
 
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -174,7 +197,7 @@ class SQLDevLDMImport(object):
                         context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
                         target_class.eSuperTypes.extend([arc_class])
 
-    def get_entity_to_arc_dictionary(self,file_location) :
+    def get_entity_to_arc_dictionary(self,context,file_location) :
         entity_to_arc_dictionary = {}
         header_skipped = False
         with open(file_location,  encoding='utf-8') as csvfile:
@@ -200,6 +223,7 @@ class SQLDevLDMImport(object):
                         arc_list = [altered_arc_name]
                         entity_to_arc_dictionary[entity_name] = arc_list
 
+            context.entity_to_arc_dictionary = entity_to_arc_dictionary
             return entity_to_arc_dictionary
         
     def find_class_with_name(self, context, name):
@@ -370,7 +394,12 @@ class SQLDevLDMImport(object):
                          attribute_name)
                     attribute_kind = row[7]
 
+                    preferred_abbreviation = row[31]
                     class_id = row[4]
+
+                    
+                    
+                        
                     relation_id = row[32]
                     primary_key_or_not = row[35]
                     foreign_key_or_not = row[36]
@@ -479,9 +508,19 @@ class SQLDevLDMImport(object):
                             print(datatype_id)
 
                     try:
-
+                        
+                        
                         the_class = context.classes_map[class_id]
                         the_class.eStructuralFeatures.extend([attribute])
+                        the_code_annotation = ELAnnotation()
+                        the_code_directive = Utils.get_annotation_directive(the_class.eContainer(), "code")
+                        the_code_annotation.source = the_code_directive
+                        details = the_code_annotation.details
+                        mapentry  = ELStringToStringMapEntry()
+                        mapentry.key = "code"
+                        mapentry.value = preferred_abbreviation
+                        details.append(mapentry)
+                        attribute.eAnnotations.append(the_code_annotation)
 
                     except:
                         print("missing class2: ")
