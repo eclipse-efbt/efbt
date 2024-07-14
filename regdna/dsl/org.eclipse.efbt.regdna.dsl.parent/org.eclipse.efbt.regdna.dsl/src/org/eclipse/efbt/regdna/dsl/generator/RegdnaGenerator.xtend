@@ -450,19 +450,19 @@ class RegdnaGenerator extends AbstractGenerator {
 		}
 	
 		if (type instanceof ELEnum)
-			return "models.CharField(\"" + display_name + "\",max_length=255, choices=" + type.name +")"
+			return "models.CharField(\"" + display_name + "\",max_length=255, choices=" + type.name +",default=None, blank=True, null=True)"
 		else if ((type.name == "String") && pk)
 			return "models.CharField(\"" + display_name + "\",max_length=255, primary_key=True)"
 		else if (type.name == "String")
-			return "models.CharField(\"" + display_name + "\",max_length=255)"
+			return "models.CharField(\"" + display_name + "\",max_length=255,default=None, blank=True, null=True)"
 		else if (type.name == "double")
-			return "models.FloatField(\"" + display_name + "\")"
+			return "models.FloatField(\"" + display_name + "\",default=None, blank=True, null=True)"
 		else if (type.name == "int")
-			return "models.BigIntegerField(\"" + display_name + "\")"
+			return "models.BigIntegerField(\"" + display_name + "\",default=None, blank=True, null=True)"
 		else if (type.name == "Date")
-			return "models.DateTimeField(\"" + display_name + "\")"
+			return "models.DateTimeField(\"" + display_name + "\",default=None, blank=True, null=True)"
 		else if (type.name == "boolean")
-			return "models.BooleanField(\"" + display_name + "\")"
+			return "models.BooleanField(\"" + display_name + "\",default=None, blank=True, null=True)"
 	}
 	
 
