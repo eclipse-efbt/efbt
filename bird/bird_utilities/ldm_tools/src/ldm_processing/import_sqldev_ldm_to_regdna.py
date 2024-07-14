@@ -72,6 +72,7 @@ class SQLDevLDMImport(object):
                         
                     altered_class_name = Utils.make_valid_id(class_name)
                     eclass = ELClass(name=altered_class_name)  
+                    eclass.original_name = entity_name
                        
 
                     context.input_tables_package.eClassifiers.extend([
@@ -84,7 +85,9 @@ class SQLDevLDMImport(object):
                     mapentry.key = "code"
                     mapentry.value = preferred_abbreviation
                     details.append(mapentry)
-                    eclass.eAnnotations.append(the_code_annotation)    
+                    eclass.eAnnotations.append(the_code_annotation)
+                    
+                 
                     
                     # if the class is a not a subtype, then we need to add a primary key
                     # subtypes will inherit the primary key from their supertype
@@ -115,7 +118,7 @@ class SQLDevLDMImport(object):
         file_location = context.file_directory + os.sep + "arcs.csv"
         header_skipped = False
         # A dictionary from entity to its arcs
-        entity_to_arc_dictionary = SQLDevLDMImport.get_entity_to_arc_dictionary(self,file_location)
+        entity_to_arc_dictionary = SQLDevLDMImport.get_entity_to_arc_dictionary(self,context,file_location)
 
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -194,7 +197,7 @@ class SQLDevLDMImport(object):
                         context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
                         target_class.eSuperTypes.extend([arc_class])
 
-    def get_entity_to_arc_dictionary(self,file_location) :
+    def get_entity_to_arc_dictionary(self,context,file_location) :
         entity_to_arc_dictionary = {}
         header_skipped = False
         with open(file_location,  encoding='utf-8') as csvfile:
@@ -220,6 +223,7 @@ class SQLDevLDMImport(object):
                         arc_list = [altered_arc_name]
                         entity_to_arc_dictionary[entity_name] = arc_list
 
+            context.entity_to_arc_dictionary = entity_to_arc_dictionary
             return entity_to_arc_dictionary
         
     def find_class_with_name(self, context, name):

@@ -87,6 +87,8 @@ class SubtypeExploder(object):
         if show_all_columns_for_subtype_explosion:
             full_or_summary = "_full"
             
+        
+         
         f = open(context.output_directory + os.sep + 'csv' +
                  os.sep + entity_name + '_discrimitor_combinations' +
                  full_or_summary + '.csv',
@@ -128,6 +130,74 @@ class SubtypeExploder(object):
                         
             f.write("\n")
             
+        f = open(context.output_directory + os.sep + 'csv' +
+                 os.sep + entity_name + '_discrimitor_combinations_il_columns' +
+                 full_or_summary + '.csv',
+                 "a",  encoding='utf-8')
+        counter = 0
+        written_columns = []
+        f.write('IDENTIFIER')
+        for column in input_layer_column_headers:
+            if not (column == 'UNKNOWN'):
+                if not (column in written_columns):
+                    f.write(',' + column)
+                    written_columns.append(column)
+                    
+        f.write("\n")        
+        for the_row  in rows:
+            map = SubtypeExploder.post_process_row(self, context,column_headers,
+                                       input_layer_column_headers, the_row) 
+            counter = 0
+            f.write(map['IDENTIFIER'])
+            for column in written_columns:
+                if not (column == 'UNKNOWN'):
+                    try:
+                        f.write(',' + map[column])
+                    except KeyError:
+                        f.write(',')
+                        
+            f.write("\n")
+        
+          
+        
+    def post_process_row(self, context,column_headers,
+                                       input_layer_column_headers, the_row):
+    
+        map = {}
+        identifier = ''
+        for column in column_headers:
+            if column.endswith('_delegate'):
+                
+                column_prefix = column[0:column.index('_delegate')]
+                try:
+                    identifier = identifier + the_row[column]
+                    the_row[column_prefix] = the_row[column]
+                except KeyError:
+                        pass
+                    
+        for column in column_headers:
+            if column.endswith('_disc'):
+                
+                column_prefix = column[0:column.index('_disc')]
+                try:
+                    identifier = identifier + the_row[column]
+                    the_row[column_prefix] = the_row[column]
+                except KeyError:
+                        pass
+            
+        counter =0        
+        for column in column_headers:
+                input_layer_column_header = input_layer_column_headers[counter]
+                try:
+                    map[input_layer_column_header] = the_row[column]
+                except KeyError:
+                        pass
+                counter = counter +1
+        map['IDENTIFIER'] = identifier      
+        return map
+                
+        
+    
         
     def process_entity(self, context, discriminator_list, parent_entity, parent_entity_prefix, entity_combination,column_headers,input_layer_column_headers,
                        row,rows,show_all_columns_for_subtype_explosion):
@@ -236,20 +306,20 @@ class SubtypeExploder(object):
             if domain.name.endswith('Input_Layer__domain'):
                 for member in domain.eLiterals:
                     if member.name ==  entity.name:
-                        return member.value
+                        return member.literal
         for domain in context.ldm_domains_package.eClassifiers:
             for member in domain.eLiterals:
                 if member.name ==  entity.name:
-                    return member.value
+                    return member.literal
         for domain in context.ldm_domains_package.eClassifiers:
             if domain.name.endswith('Input_Layer__domain'):
                 for member in domain.eLiterals:
                     if member.name ==  entity.name + 's':
-                        return member.value
+                        return member.literal
         for domain in context.ldm_domains_package.eClassifiers:
             for member in domain.eLiterals:
                 if member.name ==  entity.name + 's':
-                    return member.value
+                    return member.literal
         return 'X'
         
 
@@ -359,7 +429,7 @@ class SubtypeExploder(object):
             type = feature.eType
             if isinstance(type, ELEnum):
                 if len(type.eLiterals)>0:
-                    return str(type.eLiterals[0].value) + '$' +  type.eLiterals[0].name
+                    return str(type.eLiterals[0].literal) + '$' +  type.eLiterals[0].name
                 else:
                     return 'X'
             else:
@@ -410,7 +480,10 @@ class SubtypeExploder(object):
         direct_subclasses = SubtypeExploder.get_subclasses(self,context,entity);
         if len(direct_subclasses) > 0:
             dummy_discrimitory = ELReference()
-            dummy_discrimitory.name = entity.name + "_disc"
+            try:
+                dummy_discrimitory.name = context.entity_to_arc_dictionary[entity.original_name.replace(',','_')][0] + "_disc"
+            except KeyError:
+                dummy_discrimitory.name = entity.name + "_disc"
             dummy_discrimitory.eType = entity
             reference_list.append(dummy_discrimitory);
         return reference_list

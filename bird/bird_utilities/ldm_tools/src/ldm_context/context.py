@@ -84,6 +84,8 @@ class Context(object):
 
     input_layer_name = "Input Layer 6.4"
     
+    entity_to_arc_dictionary = {}
+    
     def __init__(self):
 
         key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
