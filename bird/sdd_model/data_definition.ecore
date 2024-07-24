@@ -702,4 +702,39 @@
       <details key="baseType" value="TYP_RL"/>
     </eAnnotations>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CUBE_LINK">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="maintenance_agency_id"
+        eType="ecore:EClass core.ecore#//MAINTENANCE_AGENCY"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cube_link_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valid_from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valid_to" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="order_relevance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="primary_cube_id" eType="#//CUBE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="foreign_cube_id" eType="#//CUBE"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cube_link_type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CUBE_STRUCTURE_ITEM_LINK">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cube_structure_item_link_id"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube_link_id" eType="#//CUBE_LINK"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="foreign_cube_variable_code"
+        eType="#//CUBE_STRUCTURE_ITEM"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="primary_cube_variable_code"
+        eType="#//CUBE_STRUCTURE_ITEM"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="product_identifier" eType="ecore:EClass core.ecore#//MEMBER"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MEMBER_LINK">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cube_structure_item_link_id"
+        eType="#//CUBE_STRUCTURE_ITEM_LINK"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="foreign_member_id" eType="ecore:EClass core.ecore#//MEMBER"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="primary_member_id" eType="ecore:EClass core.ecore#//MEMBER"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valid_from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valid_to" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="is_linked" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+  </eClassifiers>
 </ecore:EPackage>
