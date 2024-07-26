@@ -30,9 +30,7 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_all_domains(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_members(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_subdomains(self, sdd_context)
-        print("start create_all_subdomain_enumerations")
         ImportWebsiteToSDDModel.create_all_subdomain_enumerations(self, sdd_context)
-        print("finished create_all_subdomain_enumerations")
         ImportWebsiteToSDDModel.create_all_variables(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_variable_sets(self, sdd_context)
 
@@ -40,9 +38,11 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_all_member_hierarchies(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_member_hierarchies_nodes(self, sdd_context)
         
+        ImportWebsiteToSDDModel.create_all_member_mappings(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_cube_structures(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_cubes(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_cube_structure_items(self, sdd_context)
+        
         
         ImportWebsiteToSDDModel.create_report_tables(self, sdd_context)
         ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
@@ -50,7 +50,7 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
         ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
         
-        ImportWebsiteToSDDModel.create_all_member_mappings(self, sdd_context)
+        
         
     def create_maintenance_agencies(self, context):
         
@@ -517,38 +517,43 @@ class ImportWebsiteToSDDModel(object):
                         context.member_hierarchies.memberHierarchiesNodes.append(hierarchy_node)
                         
     def create_all_cube_structures(self, context):
-        file_location = context.file_directory + os.sep + "cube_structure.csv"
-        header_skipped = False
-        # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
-        # the attribute should have the correct type, which may be a specific
-        # enumeration
+        if context.recreate_rol_from_mappings:
+            ImportWebsiteToSDDModel.create_all_cube_structures_from_mappings(self, context)
+        else:
+            file_location = context.file_directory + os.sep + "cube_structure.csv"
+            header_skipped = False
+            # or each attribute add an Xattribute to the correct ELClass represtnting the Entity
+            # the attribute should have the correct type, which may be a specific
+            # enumeration
 
-        with open(file_location,  encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            for row in filereader:
-                if not header_skipped:
-                    header_skipped = True
-                else:
+            with open(file_location,  encoding='utf-8') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+                for row in filereader:
+                    if not header_skipped:
+                        header_skipped = True
+                    else:
 
-                    code = row[ColumnIndexes().cube_structure_code_index]
-                    id = row[ColumnIndexes().cube_structure_id_index]
-                    name = row[ColumnIndexes().cube_structure_name_index]
-                    valid_to = row[ColumnIndexes().cube_structure_valid_to_index]
-                    version = row[ColumnIndexes().cube_structure_version]
-                    description = row[ColumnIndexes().cube_structure_description_index]
-                    maintenance_agency_id = row[ColumnIndexes().cube_structure_maintenance_agency]
-                    if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "9999-12-31")\
-                            or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
-                        maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id) 
-                        cube_structure = CUBE_STRUCTURE(name=ImportWebsiteToSDDModel.replace_dots(self, code))
-                        cube_structure.cube_structure_id = ImportWebsiteToSDDModel.replace_dots(self, id)
-                        
-                        cube_structure.code = code
-                        cube_structure.description = description
-                        cube_structure.maintenance_agency_id = maintenance_agency
-                        cube_structure.version = version
-                        context.cube_structure_dictionary[id] = cube_structure
-                        context.cube_structures.cubeStructures.append(cube_structure)
+                        code = row[ColumnIndexes().cube_structure_code_index]
+                        id = row[ColumnIndexes().cube_structure_id_index]
+                        name = row[ColumnIndexes().cube_structure_name_index]
+                        valid_to = row[ColumnIndexes().cube_structure_valid_to_index]
+                        version = row[ColumnIndexes().cube_structure_version]
+                        description = row[ColumnIndexes().cube_structure_description_index]
+                        maintenance_agency_id = row[ColumnIndexes().cube_structure_maintenance_agency]
+                        if (valid_to == "12/31/9999") or (valid_to == "12/31/2999") or (valid_to == "9999-12-31")\
+                                or (valid_to == "31/12/9999") or (valid_to == "31/12/2999"):
+                            maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id) 
+                            cube_structure = CUBE_STRUCTURE(name=ImportWebsiteToSDDModel.replace_dots(self, code))
+                            cube_structure.cube_structure_id = ImportWebsiteToSDDModel.replace_dots(self, id)
+                            
+                            cube_structure.code = code
+                            cube_structure.description = description
+                            cube_structure.maintenance_agency_id = maintenance_agency
+                            cube_structure.version = version
+                            context.cube_structure_dictionary[id] = cube_structure
+                            context.cube_structures.cubeStructures.append(cube_structure)
+
+
 
     def create_all_cube_structure_items(self, context):
         file_location = context.file_directory + os.sep + "cube_structure_item.csv"
