@@ -119,6 +119,8 @@ class SDDContext(object):
     
     variable_set_to_variable_map = {}
 
+    recreate_rol_from_mappings = False
+
 
     
     def __init__(self):

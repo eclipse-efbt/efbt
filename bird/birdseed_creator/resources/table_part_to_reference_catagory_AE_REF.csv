@@ -1,0 +1,161 @@
+﻿Main Category,Name,slice_name
+TYP_INSTRMNT_1003,Reverse repurchase agreements,Reverse repurchase agreements
+TYP_INSTRMNT_114,"Term loans Other than Trade receivables, Credit card balance, Finance leases, Reverse repurchase agreements, on demand and short notice.","Term loans Other than Trade receivables, Credit card balance, Finance leases, Reverse repurchase agreements, on demand and short notice."
+TYP_INSTRMNT_114,"Term loans Other than Trade receivables, Credit card balance, Finance leases, Reverse repurchase agreements, on demand and short notice.","Term loans Other than Trade receivables, Credit card balance, Finance leases, Reverse repurchase agreements, on demand and short notice."
+TYP_INSTRMNT_141,Advances that are not loans,Advances that are not loans
+TYP_INSTRMNT_149,Loans and advances,Deposits
+TYP_INSTRMNT_149,Loans and advances,Loans and advances
+TYP_INSTRMNT_149,Loans and advances,Non_negotiable_bonds
+TYP_INSTRMNT_1491,Commercial real estate (CRE) loans,Commercial real estate (CRE) loans
+TYP_INSTRMNT_210,Debt securities,Debt securities
+TYP_INSTRMNT_2102,Certificates of deposits,Certificates of deposits
+TYP_INSTRMNT_2104,Hybrid contracts,Hybrid contracts
+TYP_INSTRMNT_2105,Other debt securities issued,Other debt securities issued
+TYP_INSTRMNT_2106,Other debt securities issued - convertible compound financial instruments,Other debt securities issued - convertible compound financial instruments
+TYP_INSTRMNT_2107,Other debt securities issued - non-convertible,Other debt securities issued - non-convertible
+TYP_INSTRMNT_211,Debt securities - Asset backed securities (ABS),Debt securities - Asset backed securities (ABS)
+TYP_INSTRMNT_212,Debt securities - Covered bonds,Debt securities - Covered bonds
+TYP_INSTRMNT_241,Equity instruments,Equity instruments
+TYP_INSTRMNT_241,Equity instruments,Equity instruments
+TYP_INSTRMNT_260,Current accounts,Current accounts
+TYP_INSTRMNT_300,Repurchase agreements,Repurchase agreements
+TYP_INSTRMNT_310,Derivatives,Derivatives
+TYP_INSTRMNT_310,Derivatives,Derivatives
+TYP_INSTRMNT_3101,Credit default swap,Credit default swap
+TYP_INSTRMNT_3102,Credit spread option,Credit spread option
+TYP_INSTRMNT_3103,Total return swap,Total return swap
+TYP_INSTRMNT_329,Other than option,Other than option
+TYP_INSTRMNT_390,Option,Option
+TYP_INSTRMNT_390,Option,Option
+TYP_INSTRMNT_51,Credit card debt,Credit card debt
+TYP_INSTRMNT_547,"Deposits other than current accounts (liabilities), repurchase agreements","Deposits other than current accounts (liabilities), repurchase agreements"
+TYP_INSTRMNT_549,Deposits,Deposits
+TYP_INSTRMNT_670,Other financial liabilities,Other financial liabilities
+TYP_INSTRMNT_71,Trade receivables,Trade receivables
+TYP_INSTRMNT_80,Finance leases,Finance leases
+TYP_INSTRMNT_910,Loan commitments given,Loan commitments given
+TYP_INSTRMNT_920,Financial guarantees given,Financial guarantees given
+TYP_INSTRMNT_930,Other commitments given,Other commitments given
+TYP_INSTRMNT_949,Off-balance sheet exposures subject to credit risk,Off-balance sheet exposures subject to credit risk
+TYP_INSTRMNT_950,Loan commitments received,Loan commitments received
+TYP_INSTRMNT_960,Financial guarantees received,Financial guarantees received
+TYP_INSTRMNT_970,Other commitments received,Other commitments received
+TYP_ACCNTNG_ITM_10,Cash on hands,Cash on hands
+TYP_ACCNTNG_ITM_101,Cash contributions to resolution funds and deposit guarantee schemes,Cash contributions to resolution funds and deposit guarantee schemes
+TYP_ACCNTNG_ITM_1100,Financial liabilities,Financial liabilities
+TYP_ACCNTNG_ITM_125,Dividend income,Dividend income
+TYP_ACCNTNG_ITM_150,Exchange differences,Exchange differences
+TYP_ACCNTNG_ITM_151,Expenses on equity instruments issued,Expenses on equity instruments issued
+TYP_ACCNTNG_ITM_180,Gains and losses on derecognition,Gains and losses on derecognition
+TYP_ACCNTNG_ITM_182,Gains and losses other comprehensive income,Gains and losses other comprehensive income
+TYP_ACCNTNG_ITM_183,Gains and losses other comprehensive income. Foreign currency translation,Gains and losses other comprehensive income. Foreign currency translation
+TYP_ACCNTNG_ITM_187,Impairment,Impairment
+TYP_ACCNTNG_ITM_20,Administrative expenses,Administrative expenses
+TYP_ACCNTNG_ITM_201,Administrative expenses. Other than staff,Administrative expenses. Other than staff
+TYP_ACCNTNG_ITM_202,Administrative expenses. Staff,Administrative expenses. Staff
+TYP_ACCNTNG_ITM_21,Interest. Income,Interest. Income
+TYP_ACCNTNG_ITM_22,Fee and commission. Expenses,Fee and commission. Expenses
+TYP_ACCNTNG_ITM_224,Gains and losses other comprehensive income. Non-current assets,Gains and losses other comprehensive income. Non-current assets
+TYP_ACCNTNG_ITM_23,Other operating. Expenses,Other operating. Expenses
+TYP_ACCNTNG_ITM_24,Fee and commission. Income,Fee and commission. Income
+TYP_ACCNTNG_ITM_241,Income. Negative goodwill,Income. Negative goodwill
+TYP_ACCNTNG_ITM_25,Other operating. Income,Other operating. Income
+TYP_ACCNTNG_ITM_260,Income or expenses. Tax from continuing operations,Income or expenses. Tax from continuing operations
+TYP_ACCNTNG_ITM_261,Profit or loss from discontinued operations,Profit or loss from discontinued operations
+TYP_ACCNTNG_ITM_262,Profit or loss after tax from extraordinary operations,Profit or loss after tax from extraordinary operations
+TYP_ACCNTNG_ITM_263,Other operating. Income. Generated by tangible assets. Other than changes in fair value.,Other operating. Income. Generated by tangible assets. Other than changes in fair value.
+TYP_ACCNTNG_ITM_264,Other operating. Expenses. Generated by tangible assets. Other than changes in fair value.,Other operating. Expenses. Generated by tangible assets. Other than changes in fair value.
+TYP_ACCNTNG_ITM_265,Profit or loss before tax from extraordinary operations,Profit or loss before tax from extraordinary operations
+TYP_ACCNTNG_ITM_277,Profit or loss before tax from continuing operations,Profit or loss before tax from continuing operations
+TYP_ACCNTNG_ITM_278,Profit or loss before tax from discontinued operations,Profit or loss before tax from discontinued operations
+TYP_ACCNTNG_ITM_279,Profit or loss from continuing operations,Profit or loss from continuing operations
+TYP_ACCNTNG_ITM_28,Modifications. Without derecognition,Modifications. Without derecognition
+TYP_ACCNTNG_ITM_280,Tax other comprehensive income,Tax other comprehensive income
+TYP_ACCNTNG_ITM_281,Other comprehensive income (net),Other comprehensive income (net)
+TYP_ACCNTNG_ITM_29,Gains and losses from hedge accounting,Gains and losses from hedge accounting
+TYP_ACCNTNG_ITM_30,Interest. Expenses,Interest. Expenses
+TYP_ACCNTNG_ITM_31,Gains or losses from reclassifications,Gains or losses from reclassifications
+TYP_ACCNTNG_ITM_321,Share of profit or loss,Share of profit or loss
+TYP_ACCNTNG_ITM_33,Other operating. Expenses. Other than generated by tangible assets,Other operating. Expenses. Other than generated by tangible assets
+TYP_ACCNTNG_ITM_331,Other operating. Income. Generated by tangible assets. Changes in fair value.,Other operating. Income. Generated by tangible assets. Changes in fair value.
+TYP_ACCNTNG_ITM_337,Income or expenses. Tax from discontinued operations,Income or expenses. Tax from discontinued operations
+TYP_ACCNTNG_ITM_34,Other operating. Income . Other than generated by tangible assets,Other operating. Income . Other than generated by tangible assets
+TYP_ACCNTNG_ITM_341,Other operating Expenses. Generated by tangible assets. Changes in fair value.,Other operating Expenses. Generated by tangible assets. Changes in fair value.
+TYP_ACCNTNG_ITM_40,Financial assets,Financial assets
+TYP_ACCNTNG_ITM_401,Fair value changes of the hedged items in portfolio hedge of interest rate risk - Financial assets,Fair value changes of the hedged items in portfolio hedge of interest rate risk - Financial assets
+TYP_ACCNTNG_ITM_402,Fair value changes of the hedged items in portfolio hedge of interest rate risk - Financial liabilities,Fair value changes of the hedged items in portfolio hedge of interest rate risk - Financial liabilities
+TYP_ACCNTNG_ITM_405,Assets under reinsurance and insurance contracts,Assets under reinsurance and insurance contracts
+TYP_ACCNTNG_ITM_410,Tangible assets,Tangible assets
+TYP_ACCNTNG_ITM_413,Tangible assets. Investment property,Tangible assets. Investment property
+TYP_ACCNTNG_ITM_414,Tangible assets. Investment property. Cost model,Tangible assets. Investment property. Cost model
+TYP_ACCNTNG_ITM_415,Tangible assets. Investment property. Fair value model,Tangible assets. Investment property. Fair value model
+TYP_ACCNTNG_ITM_420,Intangible assets. Goodwill,Intangible assets. Goodwill
+TYP_ACCNTNG_ITM_430,Intangible assets other than Goodwill,Intangible assets other than Goodwill
+TYP_ACCNTNG_ITM_4301,Intangible assets other than Goodwill. Revaluation model,Intangible assets other than Goodwill. Revaluation model
+TYP_ACCNTNG_ITM_4302,Intangible assets other than Goodwill. Cost model,Intangible assets other than Goodwill. Cost model
+TYP_ACCNTNG_ITM_4303,Intangible assets other than Goodwill. Software assets,Intangible assets other than Goodwill. Software assets
+TYP_ACCNTNG_ITM_431,Intangible assets,Intangible assets
+TYP_ACCNTNG_ITM_440,Current tax assets,Current tax assets
+TYP_ACCNTNG_ITM_450,Deferred tax assets,Deferred tax assets
+TYP_ACCNTNG_ITM_451,Tax assets,Tax assets
+TYP_ACCNTNG_ITM_501,Total operating income (net),Total operating income (net)
+TYP_ACCNTNG_ITM_503,Income or expenses. Tax from extraordinary operations,Income or expenses. Tax from extraordinary operations
+TYP_ACCNTNG_ITM_504,Non-current assets and disposal groups classified as held for sale,Non-current assets and disposal groups classified as held for sale
+TYP_ACCNTNG_ITM_512,Gains and losses from remeasurements. Changes in fair value attributable to changes in credit risk,Gains and losses from remeasurements. Changes in fair value attributable to changes in credit risk
+TYP_ACCNTNG_ITM_6,Accounting Hedges. Ineffectiveness in profit or loss,Accounting Hedges. Ineffectiveness in profit or loss
+TYP_ACCNTNG_ITM_60,Haircuts for trading assets at fair value,Haircuts for trading assets at fair value
+TYP_ACCNTNG_ITM_61,Haircuts for trading liabilities at fair value,Haircuts for trading liabilities at fair value
+TYP_ACCNTNG_ITM_700,Provisions,Provisions
+TYP_ACCNTNG_ITM_701,Provisions. Funds for general banking risks,Provisions. Funds for general banking risks
+TYP_ACCNTNG_ITM_702,Provisions. Employee benefits. Other than pension and other post-employment defined benefit obligations,Provisions. Employee benefits. Other than pension and other post-employment defined benefit obligations
+TYP_ACCNTNG_ITM_703,Provisions. Employee benefits. Pension and other post-employment defined benefit obligations,Provisions. Employee benefits. Pension and other post-employment defined benefit obligations
+TYP_ACCNTNG_ITM_704,Provisions. Restructuring,Provisions. Restructuring
+TYP_ACCNTNG_ITM_705,Provisions. Pending legal issues and tax litigation,Provisions. Pending legal issues and tax litigation
+TYP_ACCNTNG_ITM_710,Provisions. Other than commitments and guarantees given and payment commitments to resolution funds and deposit guarantee schemes,Provisions. Other than commitments and guarantees given and payment commitments to resolution funds and deposit guarantee schemes
+TYP_ACCNTNG_ITM_720,Deferred tax liabilities,Deferred tax liabilities
+TYP_ACCNTNG_ITM_721,Tax liabilities,Tax liabilities
+TYP_ACCNTNG_ITM_725,Liabilities under reinsurance and insurance contracts,Liabilities under reinsurance and insurance contracts
+TYP_ACCNTNG_ITM_730,Share capital repayable on demand,Share capital repayable on demand
+TYP_ACCNTNG_ITM_750,Equity instruments issued. Capital,Equity instruments issued. Capital
+TYP_ACCNTNG_ITM_751,Equity instruments issued. Capital. Paid up,Equity instruments issued. Capital. Paid up
+TYP_ACCNTNG_ITM_752,Equity instruments issued. Capital. Unpaid which has been called up,Equity instruments issued. Capital. Unpaid which has been called up
+TYP_ACCNTNG_ITM_760,Share premium,Share premium
+TYP_ACCNTNG_ITM_770,Equity instruments issued other than capital,Equity instruments issued other than capital
+TYP_ACCNTNG_ITM_771,Equity instruments issued other than capital. Equity component of compound financial instruments,Equity instruments issued other than capital. Equity component of compound financial instruments
+TYP_ACCNTNG_ITM_772,Equity instruments issued other than capital. Other than equity component of compound financial instruments,Equity instruments issued other than capital. Other than equity component of compound financial instruments
+TYP_ACCNTNG_ITM_780,Equity issued other than Equity instruments issued,Equity issued other than Equity instruments issued
+TYP_ACCNTNG_ITM_790,Accumulated other comprehensive income,Accumulated other comprehensive income
+TYP_ACCNTNG_ITM_791,Accumulated other comprehensive income. Items that will not be reclassified to profit and loss,Accumulated other comprehensive income. Items that will not be reclassified to profit and loss
+TYP_ACCNTNG_ITM_792,Accumulated other comprehensive income. Tangible assets,Accumulated other comprehensive income. Tangible assets
+TYP_ACCNTNG_ITM_793,Accumulated other comprehensive income. Intangible assets,Accumulated other comprehensive income. Intangible assets
+TYP_ACCNTNG_ITM_794,Accumulated other comprehensive income. Defined benefit plans,Accumulated other comprehensive income. Defined benefit plans
+TYP_ACCNTNG_ITM_795,Accumulated other comprehensive income. Non-current assets and disposal groups classified as held for sale,Accumulated other comprehensive income. Non-current assets and disposal groups classified as held for sale
+TYP_ACCNTNG_ITM_797,Accumulated other comprehensive income. Fair value changes of equity instruments,Accumulated other comprehensive income. Fair value changes of equity instruments
+TYP_ACCNTNG_ITM_798,Accumulated other comprehensive income. Hedge ineffectiveness for equity instruments,Accumulated other comprehensive income. Hedge ineffectiveness for equity instruments
+TYP_ACCNTNG_ITM_799,Accumulated other comprehensive income. Fair value changes of a financial liability attributable to changes in its credit risk,Accumulated other comprehensive income. Fair value changes of a financial liability attributable to changes in its credit risk
+TYP_ACCNTNG_ITM_800,Equity other than Accumulated other comprehensive income,Equity other than Accumulated other comprehensive income
+TYP_ACCNTNG_ITM_801,Accumulated other comprehensive income. Items that may be reclassified to profit and loss,Accumulated other comprehensive income. Items that may be reclassified to profit and loss
+TYP_ACCNTNG_ITM_803,Accumulated other comprehensive income. Foreign currency translation,Accumulated other comprehensive income. Foreign currency translation
+TYP_ACCNTNG_ITM_808,Accumulated other comprehensive income. Fair value changes of debt instruments,Accumulated other comprehensive income. Fair value changes of debt instruments
+TYP_ACCNTNG_ITM_809,Accumulated other comprehensive income. Hedging instruments [not designated elements],Accumulated other comprehensive income. Hedging instruments [not designated elements]
+TYP_ACCNTNG_ITM_810,Retained earnings,Retained earnings
+TYP_ACCNTNG_ITM_820,Revaluation reserves,Revaluation reserves
+TYP_ACCNTNG_ITM_821,Revaluation reserves. Tangible assets,Revaluation reserves. Tangible assets
+TYP_ACCNTNG_ITM_822,Revaluation reserves. Equity instruments,Revaluation reserves. Equity instruments
+TYP_ACCNTNG_ITM_823,Revaluation reserves. Debt securities,Revaluation reserves. Debt securities
+TYP_ACCNTNG_ITM_830,Fair value reserves,Fair value reserves
+TYP_ACCNTNG_ITM_841,Other reserves. Funds for general banking risks,Other reserves. Funds for general banking risks
+TYP_ACCNTNG_ITM_850,First consolidation differences,First consolidation differences
+TYP_ACCNTNG_ITM_860,Treasury shares,Treasury shares
+TYP_ACCNTNG_ITM_870,Profit or loss,Profit or loss
+TYP_ACCNTNG_ITM_880,Interim dividends,Interim dividends
+TYP_ACCNTNG_ITM_889,All equity,All equity
+TYP_ACCNTNG_ITM_896,Equity instruments issued,Equity instruments issued
+TYP_ACCNTNG_ITM_901,Defined benefit obligations,Defined benefit obligations
+TYP_ACCNTNG_ITM_902,Defined benefit plan assets,Defined benefit plan assets
+TYP_ACCNTNG_ITM_903,Defined benefit plans,Defined benefit plans
+TYP_ACCNTNG_ITM_905,Right to reimbursement of the expenditure required to settled a defined benefit obligation,Right to reimbursement of the expenditure required to settled a defined benefit obligation
+TYP_ACCNTNG_ITM_945,Provisions. Off-balance sheet exposures subject to credit risk,Provisions. Off-balance sheet exposures subject to credit risk
+TYP_ACCNTNG_ITM_98,Depreciation,Depreciation
+TYP_ACCNTNG_ITM_980,Losses,Losses
+TYP_ACCNTNG_ITM_988,Off-balance sheet items,Off-balance sheet items
