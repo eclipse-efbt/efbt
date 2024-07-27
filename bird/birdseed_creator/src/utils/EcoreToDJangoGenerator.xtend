@@ -74,8 +74,9 @@ class EcoreToDJangoGenerator {
 		    «emember.name» = «emember.djangoType()»   «ENDIF»
 		«IF emember instanceof EReference»    «emember.name» = models.ForeignKey("«emember.EType.name»", models.SET_NULL,blank=True,null=True,)«ENDIF» 
 		«ENDFOR»
-		
-			
+		    class Meta:
+		        verbose_name = '«eclass.name»'
+		        verbose_name_plural = '«eclass.name»s'
 		«ENDFOR»
 		
 	
