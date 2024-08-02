@@ -1162,8 +1162,9 @@ class MEMBER_MAPPING_ITEM(EObject, metaclass=MetaEClass):
     row = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     member = EReference(ordered=True, unique=True, containment=False, derived=False)
     variable = EReference(ordered=True, unique=True, containment=False, derived=False)
+    member_hierarchy = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(self, *, isSource=None, member=None, variable=None, row=None):
+    def __init__(self, *, isSource=None, member=None, variable=None, row=None, member_hierarchy=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -1180,6 +1181,9 @@ class MEMBER_MAPPING_ITEM(EObject, metaclass=MetaEClass):
 
         if variable is not None:
             self.variable = variable
+
+        if member_hierarchy is not None:
+            self.member_hierarchy = member_hierarchy
 
 
 class VARIABLE_MAPPING_ITEM(EObject, metaclass=MetaEClass):
@@ -1532,6 +1536,132 @@ class TABLE_CELL(EObject, metaclass=MetaEClass):
 
         if table_id is not None:
             self.table_id = table_id
+
+
+class CUBE_LINK(EObject, metaclass=MetaEClass):
+
+    cube_link_id = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    code = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    description = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
+    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
+    version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    order_relevance = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
+    cube_link_type = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    maintenance_agency_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+    primary_cube_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+    foreign_cube_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, maintenance_agency_id=None, cube_link_id=None, code=None, name=None, description=None, valid_from=None, valid_to=None, version=None, order_relevance=None, primary_cube_id=None, foreign_cube_id=None, cube_link_type=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if cube_link_id is not None:
+            self.cube_link_id = cube_link_id
+
+        if code is not None:
+            self.code = code
+
+        if name is not None:
+            self.name = name
+
+        if description is not None:
+            self.description = description
+
+        if valid_from is not None:
+            self.valid_from = valid_from
+
+        if valid_to is not None:
+            self.valid_to = valid_to
+
+        if version is not None:
+            self.version = version
+
+        if order_relevance is not None:
+            self.order_relevance = order_relevance
+
+        if cube_link_type is not None:
+            self.cube_link_type = cube_link_type
+
+        if maintenance_agency_id is not None:
+            self.maintenance_agency_id = maintenance_agency_id
+
+        if primary_cube_id is not None:
+            self.primary_cube_id = primary_cube_id
+
+        if foreign_cube_id is not None:
+            self.foreign_cube_id = foreign_cube_id
+
+
+class CUBE_STRUCTURE_ITEM_LINK(EObject, metaclass=MetaEClass):
+
+    cube_structure_item_link_id = EAttribute(
+        eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    cube_link_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+    foreign_cube_variable_code = EReference(
+        ordered=True, unique=True, containment=False, derived=False)
+    primary_cube_variable_code = EReference(
+        ordered=True, unique=True, containment=False, derived=False)
+    product_identifier = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, cube_structure_item_link_id=None, cube_link_id=None, foreign_cube_variable_code=None, primary_cube_variable_code=None, product_identifier=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if cube_structure_item_link_id is not None:
+            self.cube_structure_item_link_id = cube_structure_item_link_id
+
+        if cube_link_id is not None:
+            self.cube_link_id = cube_link_id
+
+        if foreign_cube_variable_code is not None:
+            self.foreign_cube_variable_code = foreign_cube_variable_code
+
+        if primary_cube_variable_code is not None:
+            self.primary_cube_variable_code = primary_cube_variable_code
+
+        if product_identifier is not None:
+            self.product_identifier = product_identifier
+
+
+class MEMBER_LINK(EObject, metaclass=MetaEClass):
+
+    valid_from = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
+    valid_to = EAttribute(eType=EDate, unique=True, derived=False, changeable=True)
+    is_linked = EAttribute(eType=EBooleanObject, unique=True, derived=False, changeable=True)
+    cube_structure_item_link_id = EReference(
+        ordered=True, unique=True, containment=False, derived=False)
+    foreign_member_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+    primary_member_id = EReference(ordered=True, unique=True, containment=False, derived=False)
+
+    def __init__(self, *, cube_structure_item_link_id=None, foreign_member_id=None, primary_member_id=None, valid_from=None, valid_to=None, is_linked=None):
+        # if kwargs:
+        #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
+
+        super().__init__()
+
+        if valid_from is not None:
+            self.valid_from = valid_from
+
+        if valid_to is not None:
+            self.valid_to = valid_to
+
+        if is_linked is not None:
+            self.is_linked = is_linked
+
+        if cube_structure_item_link_id is not None:
+            self.cube_structure_item_link_id = cube_structure_item_link_id
+
+        if foreign_member_id is not None:
+            self.foreign_member_id = foreign_member_id
+
+        if primary_member_id is not None:
+            self.primary_member_id = primary_member_id
 
 
 class DomainModule(SDDModule):

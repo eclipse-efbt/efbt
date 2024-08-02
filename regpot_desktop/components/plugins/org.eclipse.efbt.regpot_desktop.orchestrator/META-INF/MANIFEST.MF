@@ -7,5 +7,5 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.efbt.regpot_desktop.csvconverter
 Automatic-Module-Name: org.eclipse.efbt.regpot_desktop.orchestrator
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.eclipse.efbt.regpot_desktop.orchestrator

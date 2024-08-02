@@ -242,7 +242,8 @@ public class EObjectToCSVConverter {
 		{
 			if (useLongNames)
 			{
-				returnString = ((Enumerator) referencedItem).getLiteral() + "_" +  ((Enumerator) referencedItem).getName();
+				//returnString = ((Enumerator) referencedItem).getLiteral() + "_" +  ((Enumerator) referencedItem).getName();
+				returnString = "\"" + ((Enumerator) referencedItem).getName().replace('_',' ') + " (" + ((Enumerator) referencedItem).getLiteral() + ")\"" ;
 			}
 			else
 			{
