@@ -34,8 +34,6 @@ class Context(object):
     # create the moduleList to hold all the modules
     module_list = ModuleList()
 
-
-
     # create  regdna  packages
     types_package = ELPackage(name='types')
     ldm_domains_package = ELPackage(
@@ -47,9 +45,21 @@ class Context(object):
         name='ldm_entities',
         nsURI='http://www.eclipse.org/bird/ldm_entities',
         nsPrefix='ldm_entities')
+    
+    finrep_output_tables_package = ELPackage(
+        name='finrep_output_tables',
+        nsURI='http://www.eclipse.org/bird/finrep_output_tables',
+        nsPrefix='finrep_output_tables')
+    ae_output_tables_package = ELPackage(
+        name='ae_output_tables',
+        nsURI='http://www.eclipse.org/bird/ae_output_tables',
+        nsPrefix='ae_output_tables')
 
+    finrep_on_ldm_reports_module = ReportModule(name='finrep_report_ldm')
+    ae_on_ldm_reports_module = ReportModule(name='ae_report_ldm')
+    reports_dictionary = {}
 
-
+    enum_literals_map = {}
 
     module_list = ModuleList()
     # classesMap keeps a reference between ldm ID's for classes and
@@ -82,6 +92,8 @@ class Context(object):
         ldm_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
         code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
         long_name_directive_ldm_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        long_name_directive_finrep_output_tables_sdd = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        long_name_directive_ae_output_tables_sdd = ELAnnotationDirective(name='long_name', sourceURI='long_name')
        
         self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(ldm_dependency_annotation_directive)
@@ -89,6 +101,8 @@ class Context(object):
         self.ldm_entities_package.annotationDirectives.append(ldm_relationship_type_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(long_name_directive_ldm_entities)
         self.ldm_entities_package.annotationDirectives.append(code_annotation_directive)
+        self.finrep_output_tables_package.annotationDirectives.append(long_name_directive_finrep_output_tables_sdd)
+        self.ae_output_tables_package.annotationDirectives.append(long_name_directive_ae_output_tables_sdd)
         types = EcoreLiteTypes()
         self.types_package.eClassifiers.append(types.e_string)
         self.types_package.eClassifiers.append(types.e_double)
@@ -96,6 +110,9 @@ class Context(object):
         self.module_list.modules.append(self.types_package)
         self.module_list.modules.append(self.ldm_domains_package)
         self.module_list.modules.append(self.ldm_entities_package)
+        self.module_list.modules.append(self.finrep_output_tables_package)
+        self.module_list.modules.append(self.ae_output_tables_package)
+        
 
 
 

@@ -269,10 +269,10 @@ class ImportDatabaseToSDDModel(object):
         ''' import all the member mappings from the rendering package'''
         for member_mapping_item in MEMBER_MAPPING_ITEM.objects.all():
             try:
-                member_mapping_list = context.member_mapping_items_dictionary[member_mapping_item.member_mapping_id]
+                member_mapping_list = context.member_mapping_items_dictionary[member_mapping_item.member_mapping_id.member_mapping_id]
                 member_mapping_list.append(member_mapping_item)
             except KeyError:
-                context.member_mapping_items_dictionary[member_mapping_item.member_mapping_id] = [member_mapping_item]
+                context.member_mapping_items_dictionary[member_mapping_item.member_mapping_id.member_mapping_id] = [member_mapping_item]
                 
         
        

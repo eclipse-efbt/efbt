@@ -322,7 +322,7 @@ class SQLDevLDMImport(object):
                             enum_literal.literal = new_adapted_name
                             enum_literal.value = counter
                             the_enum.eLiterals.extend([enum_literal])
-
+                            context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
                         except KeyError:
                             print("missing domain: " + enum_id)
 

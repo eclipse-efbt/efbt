@@ -551,7 +551,7 @@ class ImportWebsiteToSDDModel(object):
                     # not needed yet axis_ordinate.order = axis_ordinate_order
                     axis_ordinate.path = axis_ordinate_path
                     axis_ordinate.axis_id = ImportWebsiteToSDDModel.find_axis_with_id(self,
-                                                    context, axis_ordinate_axis_id)
+                                                    context, ImportWebsiteToSDDModel.replace_dots(self,axis_ordinate_axis_id))
                     # we don't need the parent axis yet in our processing.
                     # axis_ordinate.axis_ordinate_id = 
                     # axis_ordinate_parent_axis_ordinate_id
