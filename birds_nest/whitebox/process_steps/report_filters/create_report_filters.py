@@ -21,6 +21,7 @@ class CreateReportFilters:
     '''
     def create_report_filters(self, context,sdd_context,framework,cube_type,input_cube_type,version):
         
+        CreateReportFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
         reports_module = None
 
         if framework == 'FINREP_REF':
@@ -157,6 +158,7 @@ class CreateReportFilters:
     def get_reference_tuple_list(self,sdd_context,non_ref_tuple_list,relevant_mappings):
         # for each member_ mapping, apply the mappings to the non_ref_tuple_list
         # and output a reference tuple
+        ref_tuple_list = []
         for mapping in relevant_mappings:
             member_mapping = mapping.mapping.memberMapping
             if not(member_mapping is None):
@@ -170,13 +172,13 @@ class CreateReportFilters:
                                 match = False
                                 break
                     if match:
-                        ref_tuple_list = []
+                        
                         for member_mapping_item in member_mapping_items:
                             if not (member_mapping_item.isSource =='true' ):
                                 ref_tuple_list.append((member_mapping_item.variable,member_mapping_item.member))
-                        return ref_tuple_list 
+        return ref_tuple_list 
                             
-        return None
+        
     def create_member_mapping_item_row_dict(self,sdd_context,member_mapping):
         member_mapping_item_row_dict = {}
         member_mapping_items = sdd_context.member_mapping_items_dictionary[member_mapping.member_mapping_id]
@@ -290,3 +292,29 @@ class CreateReportFilters:
             return sdd_context.member_hierarchy_node_dictionary[hierarchy + ":" + member_id.member_id]
         except:
             pass
+
+
+    def prepare_node_dictionaries_and_lists (self,sdd_context):
+        
+        for node in sdd_context.member_hierarchy_node_dictionary.values():
+            if not (node.parent_member_id is None) and not (node.parent_member_id == ''):
+                sdd_context.members_that_are_nodes.append(node.parent_member_id)
+                member_plus_hierarchy = node.parent_member_id.member_id + ":" +  node.member_hierarchy_id.member_hierarchy_id
+                # ad the parent node to the dictionary of nodes that have children
+                if not(member_plus_hierarchy in sdd_context.member_plus_hierarchy_to_child_literals.keys() ):
+                    initial_member_list = []
+                    initial_member_list.append(node.member_id)
+                    sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy] = initial_member_list
+                else:
+                    member_list =  sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy]
+                    if not(node.member_id in member_list):
+                            member_list.append(node.member_id)
+                            
+        for hierarchy in sdd_context.member_hierarchy_dictionary.values():
+            try:
+                hierarchy_list = sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id]
+                hierarchy_list.append(hierarchy)
+            except KeyError:
+                hierarchy_list = []
+                hierarchy_list.append(hierarchy)
+                sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id] = hierarchy_list
