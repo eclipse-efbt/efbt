@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 urlpatterns = [
-    path("whitebox/", include("whitebox.urls")),
+    path("birdbox/", include("birdbox.urls")),
     path('admin/', admin.site.urls),
     
 ]
