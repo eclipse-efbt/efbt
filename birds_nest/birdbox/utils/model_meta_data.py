@@ -11,8 +11,7 @@ class ModelMetaDataUtils(AppConfig):
         model_list = apps.get_models()
 
         for model in model_list:
-            if model.__name__ == 'VG_SNSTVTY':
-                import pdb;pdb.set_trace()
+
             print(f"{model._meta.app_label}  -> {model.__name__}")
             print("superclasses are ")
             print(model._meta.get_parent_list())

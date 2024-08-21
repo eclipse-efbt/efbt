@@ -90,8 +90,9 @@ class CreateOutputLayers(object):
 
         sdd_context.rol_cube_structure_dictionary[output_layer_cube_cube_structure.name] = output_layer_cube_cube_structure
         sdd_context.rol_cube_dictionary[output_layer_cube.name] = output_layer_cube
-        output_layer_cube_cube_structure.save()
-        output_layer_cube.save()
+        if context.save_derived_sdd_items:
+            output_layer_cube_cube_structure.save()
+            output_layer_cube.save()
         
         
         if framework == 'FINREP_REF':
@@ -104,7 +105,8 @@ class CreateOutputLayers(object):
             csi.cube_structure_id = output_layer_cube_cube_structure
             csi.variable_id = variable
             sdd_context.rol_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id + ":" + csi.variable_id.variable_id] = csi
-            csi.save()
+            if context.save_derived_sdd_items:
+                csi.save()
 
            
         

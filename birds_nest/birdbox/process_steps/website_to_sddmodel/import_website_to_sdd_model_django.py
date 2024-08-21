@@ -328,44 +328,6 @@ class ImportWebsiteToSDDModel(object):
                         sub_domain.save()
                     context.subnonref_domain_dictionary[subdomain_id] = sub_domain
 
-    def create_all_subdomain_enumerations(self, context):
-        '''
-        import all the subdomain enumerations
-        '''
-        file_location = context.file_directory + os.sep + "subdomain_enumeration.csv"
-        header_skipped = False
-
-        with open(file_location,  encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            for row in filereader:
-                if not header_skipped:
-                    header_skipped = True
-                else:
-                    member_id = row[ColumnIndexes().subdomain_enumeration_member_id_index]
-                    subdomain_id = row[ColumnIndexes().subdomain_enumeration_subdomain_id_index]
-                    valid_to = row[ColumnIndexes().subdomain_enumeration_valid_to_index]
-
-                    
-                    subdomain = ImportWebsiteToSDDModel.get_subdomain_with_id(self, context, subdomain_id)
-                    domain = subdomain.domain_id
-                    member = ImportWebsiteToSDDModel.find_member_with_id(
-                        self, member_id, context)
-                    subdomain_enum = SUBDOMAIN_ENUMERATION()
-                    subdomain_enum.member_id = member
-                    subdomain_enum.subdomain_id = subdomain
-                    subdomain_to_items_map = context.subdomain_to_items_map
-                    try:
-                        items = subdomain_to_items_map[subdomain_id]
-                    except KeyError:
-                        items = []
-                        subdomain_to_items_map[subdomain_id] = items
-                    if not member in items:
-                        items.append(member)
-                        
-                    if context.save_sdd_to_db:  
-                        subdomain_enum.save()
-        
-    
 
                         
     
@@ -877,8 +839,11 @@ class ImportWebsiteToSDDModel(object):
         ''' find an existing member with this id'''
         try:
             return context.nonref_member_dictionary[element_id]
-        except KeyError:
-            return None
+        except:
+            try:
+                return context.ref_member_dictionary[element_id]
+            except KeyError:
+                return None
         
     def find_member_hierarchy_with_id(self,element_id,context):
         ''' find an existing member with this id'''
@@ -892,7 +857,10 @@ class ImportWebsiteToSDDModel(object):
         try:
             return context.nonref_variable_dictionary[element_id]
         except KeyError:
-            return None
+            try:
+                return context.ref_variable_dictionary[element_id]
+            except KeyError:
+                return None
 
     
 

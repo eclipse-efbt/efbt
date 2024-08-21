@@ -48,35 +48,31 @@ class CreateReportFilters:
             if not(cell is None) and not (cell.table_id is None):
                 cube_mapping_id  = CreateReportFilters.get_report_cube_mapping_id_for_table_id(self,cell.table_id.table_id,framework)
                 relevant_mappings = sdd_context.mapping_to_cube_dictionary[cube_mapping_id]
-                report_rol_cube = CreateReportFilters.get_rol_cube_for_table_id(self, cell.table_id.table_id, sdd_context,framework,version)
+                
+
                 if not(cell is None):
                     table = cell.table_id
                     if not(table is None):               
                         template_code = table.table_id
-                        report_cell = COMBINATION()
-                        report_cell.combination_id = cell_id
-                        report_cell.save()
-
-                        cube_to_comb = CUBE_TO_COMBINATION()
-                        cube_to_comb.combination_id = report_cell
-                        cube_to_comb.cube_id = report_rol_cube
-                        cube_to_comb.save()
 
                         try:
-                            altered_template_code = Utils.make_valid_id(template_code)
-                            rol = CreateReportFilters.get_rol_cube_for_table_id(self, altered_template_code, sdd_context,framework,version)
-                            if not (rol is None):
+                            report_rol_cube = CreateReportFilters.get_rol_cube_for_table_id(self, Utils.make_valid_id(cell.table_id.table_id), sdd_context,framework,version)
+                            if not (report_rol_cube is None):
                                 
                                 
                                 for cell_position in sdd_context.cell_positions_dictionary[cell_id]:
                                     # get the row and column for the cell
                                     axis_ordinate = cell_position.axis_ordinate_id
                                     axis=axis_ordinate.axis_id
-                                    orientation = axis.orientation
+                                    
                                     
                                     
                                     # get the variables and members from the axis.
-                                    ordinate_items = sdd_context.axis_ordinate_to_ordinate_items_map[axis_ordinate.axis_ordinate_id] 
+                                    ordinate_items = []
+                                    try:
+                                        ordinate_items = sdd_context.axis_ordinate_to_ordinate_items_map[axis_ordinate.axis_ordinate_id] 
+                                    except KeyError:
+                                        pass
                                     for ordinate_item in ordinate_items:
                                         variable = ordinate_item.variable_id
                                         member = ordinate_item.member_id
@@ -85,23 +81,50 @@ class CreateReportFilters:
                                         except KeyError:
                                             cell_to_variable_member_tuple_map[cell_id] = [(variable,member)]
 
-                                    tuples = []
-                                    try:
-                                        tuples = cell_to_variable_member_tuple_map[cell_id]
-                                    except KeyError:
-                                        pass
-                                    
-                                    ref_tuple_list = CreateReportFilters.get_reference_tuple_list(self,sdd_context,tuples,relevant_mappings)
-                                    if not(ref_tuple_list is None):
-                                        for ref_tuple_in in ref_tuple_list:
-                                            ref_variable = ref_tuple_in[0]
-                                            ref_member = ref_tuple_in[1]
-                                            
-                                            the_filter = COMBINATION_ITEM()
-                                            the_filter.combination_id = report_cell
-                                            the_filter.variable_id = ref_variable
-                                            the_filter.member_id = ref_member
+
+                                tuples = []
+                                try:
+                                    tuples = cell_to_variable_member_tuple_map[cell_id]
+                                except KeyError:
+                                    pass
+                                report_cell = COMBINATION()
+                                report_cell.combination_id = cell_id
+                                metric = CreateReportFilters.get_metric(self,sdd_context,tuples,relevant_mappings)
+                                report_cell.metric = metric
+                                sdd_context.combination_dictionary[cell_id] = report_cell
+                                if context.save_derived_sdd_items:
+                                    report_cell.save()
+
+                                cube_to_comb = CUBE_TO_COMBINATION()
+                                cube_to_comb.combination_id = report_cell
+                                cube_to_comb.cube_id = report_rol_cube
+                                sdd_context.combination_to_rol_cube_map[cell_id + ":" + report_rol_cube.cube_id] = cube_to_comb
+                                if context.save_derived_sdd_items:
+                                    cube_to_comb.save()
+                                
+
+                                ref_tuple_list = CreateReportFilters.get_reference_tuple_list(self,sdd_context,tuples,relevant_mappings)
+                                if not(ref_tuple_list is None):
+                                    for ref_tuple_in in ref_tuple_list:
+                                        ref_variable = ref_tuple_in[0]
+                                        ref_member = ref_tuple_in[1]
+                                        
+                                        the_filter = COMBINATION_ITEM()
+                                        the_filter.combination_id = report_cell
+                                        the_filter.variable_id = ref_variable
+                                        the_filter.member_id = ref_member
+                                        var_string = 'None'
+                                        if not(ref_variable is None):
+                                            var_string = ref_variable.variable_id
+
+                                        member_string = 'None'
+                                        if not(ref_member is None):
+                                            member_string = ref_member.member_id
+
+                                        sdd_context.combination_item_dictionary[report_cell.combination_id + ":" + str(var_string) + ":" + str(member_string)] = the_filter
+                                        if context.save_derived_sdd_items:
                                             the_filter.save()
+                            
 
                             else:
                                 print("could not find report for " + template_code)
@@ -109,7 +132,45 @@ class CreateReportFilters:
                             print("could not find report for " + template_code)  
                             
                                             
-                        
+    def get_metric(self,sdd_context,tuples,relevant_mappings):
+        # for each member_ mapping, apply the mappings to the non_ref_tuple_list
+        # and output a reference tuple
+        print("get_metric")
+        print(len(tuples))
+        for tuple in tuples:
+            print(tuple)
+            if tuple[1] is None:
+                print("member is none, probly a metric")
+                try:
+                    variable_mapping_items = sdd_context.variable_mapping_item_dictionary[tuple[0].variable_id.replace('EBA_', 'DPM_')]
+                    
+                    for variable_mapping_item in variable_mapping_items:
+                        if variable_mapping_item.isSource =='false':
+                            return variable_mapping_item.variable
+                except KeyError:
+                    print("could not find variable mapping for " + str(tuple[0].variable_id))
+        
+        #for mapping in relevant_mappings:
+        #    if mapping.mapping.mapping_type == 'V':
+        #        import pdb; pdb.set_trace()
+        #        variable_mapping = mapping.mapping.variableMapping
+        #        if not(variable_mapping is None):
+        #            variable_mapping_item_row_dict = CreateReportFilters.create_variable_mapping_row_dict(self,sdd_context,variable_mapping)
+        #            for row,variable_mapping_items in variable_mapping_item_row_dict.items():
+        #                match = True
+        #                for variable_mapping_item in variable_mapping_items:
+        #                    if variable_mapping_item.isSource =='true':
+        #                       if not ((variable_mapping_item.variable,None) in tuples):
+        #                            # set match to false if any of the source items in this row do not match
+        #                            match = False
+        #                            break
+        #                if match:
+        #                    for variable_mapping_item in variable_mapping_items:
+        #                        if not (variable_mapping_item.isSource =='true' ):
+        #                            print ("metric = " + str(variable_mapping_item.variable.variable_id))
+        #                            return variable_mapping_item.variable
+        return None  
+                          
     def get_reference_tuple_list(self,sdd_context,non_ref_tuple_list,relevant_mappings):
         # for each member_ mapping, apply the mappings to the non_ref_tuple_list
         # and output a reference tuple
@@ -146,6 +207,17 @@ class CreateReportFilters:
 
         return member_mapping_item_row_dict
     
+    def create_variable_mapping_row_dict(self,sdd_context,variable_mapping):
+        variable_mapping_item_row_dict = {}
+        variable_mapping_items = sdd_context.variable_mapping_item_dictionary[variable_mapping.variable_mapping_id]
+            
+        for variable_mapping_item in variable_mapping_items:
+            try:
+                variable_mapping_item_row_dict[0].append(variable_mapping_item)
+            except KeyError:
+                variable_mapping_item_row_dict[0] = [variable_mapping_item]
+
+        return variable_mapping_item_row_dict
     
             
     def get_report_cube_mapping_id_for_table_id(self, table_id,framework):
@@ -160,7 +232,11 @@ class CreateReportFilters:
     def get_rol_cube_for_table_id(self, table_id, sdd_context, framework,version):
  
         try:
-            return sdd_context.rol_cube_dictionary[(framework + "_" + table_id + "_" + version).replace(' ','_').replace('.','_')]
+            
+            key = table_id[11:len(table_id)]
+            returnval =  sdd_context.rol_cube_dictionary[key]
+            return returnval
+
         except KeyError:
             return None
 

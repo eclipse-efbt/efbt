@@ -62,7 +62,8 @@ class CreateRefDomainsAndVariables(object):
                                 domain.domain_id = domain_id
                                 domain.name = domain_id
                                 sdd_context.ref_domain_dictionary[domain_id] = domain
-                                domain.save()
+                                if sdd_context.save_sdd_to_db:
+                                    domain.save()
                                 print("adding domain : " +domain_id)
                                 choices = field.choices
                                 if not(choices is None):
@@ -72,7 +73,8 @@ class CreateRefDomainsAndVariables(object):
                                         member.displayName = choice[1]
                                         member.domain_id = domain
                                         sdd_context.ref_member_dictionary[member.member_id] = member
-                                        member.save()
+                                        if sdd_context.save_sdd_to_db:
+                                            member.save()
                                         print("adding member " + member.member_id + ":" + member.displayName)
                     except:
                         pass
@@ -92,7 +94,8 @@ class CreateRefDomainsAndVariables(object):
                             #todo find the domain type from django type, makes sure those
                             # primitive types exist as domains in the sdd
                         sdd_context.ref_variable_dictionary[variable_id] = variable
-                        variable.save()
+                        if sdd_context.save_sdd_to_db:
+                            variable.save()
                         print("adding variable "  + variable_id)
                     
         

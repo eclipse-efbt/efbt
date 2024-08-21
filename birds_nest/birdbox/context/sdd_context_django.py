@@ -43,6 +43,9 @@ class SDDContext(object):
     rol_cube_structure_dictionary = {}
     rol_cube_dictionary = {}
     rol_cube_structure_item_dictionary = {}
+    combination_dictionary = {}
+    combination_item_dictionary = {}
+    combination_to_rol_cube_map = {}
 
     
     axis_ordinate_dictionary= {}

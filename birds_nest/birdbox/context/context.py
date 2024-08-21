@@ -75,6 +75,8 @@ class Context(object):
 
     load_sdd_from_website =False
 
+    save_derived_sdd_items = True
+
     def __init__(self):
 
         ldm_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')

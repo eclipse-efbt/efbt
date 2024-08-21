@@ -376,7 +376,7 @@ class AXIS_ORDINATE(models.Model):
 
     axis_id = models.ForeignKey("AXIS", models.SET_NULL,blank=True,null=True,) 
 
-    axis_ordinate_id = models.CharField("axis_ordinate_id",max_length=255,default=None, blank=True, null=True)   
+    axis_ordinate_id = models.CharField("axis_ordinate_id",max_length=255, primary_key=True)   
 
     code = models.CharField("code",max_length=255,default=None, blank=True, null=True)   
 
@@ -386,7 +386,7 @@ class AXIS_ORDINATE(models.Model):
 
     level = models.BigIntegerField("level",default=None, blank=True, null=True)   
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
 
     order = models.BigIntegerField("order",default=None, blank=True, null=True)   
 
@@ -436,9 +436,9 @@ class TABLE(models.Model):
 
     maintenance_agency_id = models.ForeignKey("MAINTENANCE_AGENCY", models.SET_NULL,blank=True,null=True,) 
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
 
-    table_id = models.CharField("table_id",max_length=255,default=None, blank=True, null=True)   
+    table_id = models.CharField("table_id",max_length=255, primary_key=True)   
 
     valid_from = models.DateTimeField("valid_from",default=None, blank=True, null=True)   
 
@@ -454,13 +454,13 @@ class TABLE(models.Model):
 class TABLE_CELL(models.Model):
 
 
-    cell_id = models.CharField("cell_id",max_length=255,default=None, blank=True, null=True)   
+    cell_id = models.CharField("cell_id",max_length=255, primary_key=True)   
 
     is_shaded =  models.BooleanField("is_open_axis",default=None, blank=True, null=True)  
 
     table_id = models.ForeignKey("TABLE", models.SET_NULL,blank=True,null=True,) 
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
     class Meta:
         verbose_name = 'TABLE_CELL'
         verbose_name_plural = 'TABLE_CELLs'
@@ -470,13 +470,13 @@ class CUBE_STRUCTURE(models.Model):
 
     code = models.CharField("code",max_length=255,default=None, blank=True, null=True)   
 
-    cube_structure_id = models.CharField("cube_structure_id",max_length=255,default=None, blank=True, null=True)   
+    cube_structure_id = models.CharField("cube_structure_id",max_length=255, primary_key=True)   
 
     description = models.CharField("description",max_length=255,default=None, blank=True, null=True)   
 
     maintenance_agency_id = models.ForeignKey("MAINTENANCE_AGENCY", models.SET_NULL,blank=True,null=True,) 
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
 
     valid_from = models.DateTimeField("valid_from",default=None, blank=True, null=True)   
 
@@ -485,8 +485,9 @@ class CUBE_STRUCTURE(models.Model):
     version = models.CharField("version",max_length=255,default=None, blank=True, null=True)   
 
     displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
-
-	
+    class Meta:
+        verbose_name = 'CUBE_STRUCTURE'
+        verbose_name_plural = 'CUBE_STRUCTUREs'
 		
 class CUBE_STRUCTURE_ITEM(models.Model):
 
@@ -522,14 +523,17 @@ class CUBE_STRUCTURE_ITEM(models.Model):
 
     isIdentifier = models.BooleanField("isIdentifier",default=None, blank=True, null=True)   
 
-    cube_variable_code = models.CharField("cube_variable_code",max_length=255,default=None, blank=True, null=True)   
+    cube_variable_code = models.CharField("cube_variable_code",max_length=255,default=None, blank=True, null=True) 
+    class Meta:
+        verbose_name = 'CUBE_STRUCTURE_ITEM'
+        verbose_name_plural = 'CUBE_STRUCTURE_ITEMs'
     
 class CUBE(models.Model):
 
 
     code = models.CharField("code",max_length=255,default=None, blank=True, null=True)   
 
-    cube_id = models.CharField("cube_id",max_length=255,default=None, blank=True, null=True)   
+    cube_id = models.CharField("cube_id",max_length=255, primary_key=True)   
 
     cube_structure_id = models.ForeignKey("CUBE_STRUCTURE", models.SET_NULL,blank=True,null=True,) 
 
@@ -543,7 +547,7 @@ class CUBE(models.Model):
 
     maintenance_agency_id = models.ForeignKey("MAINTENANCE_AGENCY", models.SET_NULL,blank=True,null=True,) 
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
 
     published = models.BooleanField("published",default=None, blank=True, null=True)   
 
@@ -553,7 +557,10 @@ class CUBE(models.Model):
 
     version = models.CharField("version",max_length=255,default=None, blank=True, null=True)   
 
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
+    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)
+    class Meta:
+        verbose_name = 'CUBE'
+        verbose_name_plural = 'CUBEs'   
 
         
 class CUBE_LINK(models.Model):
@@ -581,7 +588,10 @@ class CUBE_LINK(models.Model):
 
     foreign_cube_id = models.ForeignKey("CUBE", models.SET_NULL,blank=True,null=True,related_name='foreign_cube_in_cube_link') 
 
-    cube_link_type = models.CharField("cube_link_type",max_length=255,default=None, blank=True, null=True)   
+    cube_link_type = models.CharField("cube_link_type",max_length=255,default=None, blank=True, null=True)
+    class Meta:
+        verbose_name = 'CUBE_LINK'
+        verbose_name_plural = 'CUBE_LINKs'  
 
 	
 		
@@ -596,7 +606,10 @@ class CUBE_STRUCTURE_ITEM_LINK(models.Model):
 
     primary_cube_variable_code = models.ForeignKey("CUBE_STRUCTURE_ITEM", models.SET_NULL,blank=True,null=True,related_name='primary_cube_variable_code') 
 
-    product_identifier = models.ForeignKey("MEMBER", models.SET_NULL,blank=True,null=True,) 
+    product_identifier = models.ForeignKey("MEMBER", models.SET_NULL,blank=True,null=True,)
+    class Meta:
+        verbose_name = 'CUBE_STRUCTURE_ITEM_LINK'
+        verbose_name_plural = 'CUBE_STRUCTURE_ITEM_LINKs'  
 
 	
 class COMBINATION(models.Model):
@@ -604,17 +617,23 @@ class COMBINATION(models.Model):
 
     code = models.CharField("code",max_length=255,default=None, blank=True, null=True)   
 
-    combination_id = models.CharField("combination_id",max_length=255,default=None, blank=True, null=True)   
+    combination_id = models.CharField("combination_id",max_length=255, primary_key=True)   
 
     maintenance_agency_id = models.ForeignKey("MAINTENANCE_AGENCY", models.SET_NULL,blank=True,null=True,) 
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
 
     valid_from = models.DateTimeField("valid_from",default=None, blank=True, null=True)   
 
     valid_to = models.DateTimeField("valid_to",default=None, blank=True, null=True)   
 
-    version = models.CharField("version",max_length=255,default=None, blank=True, null=True)   
+    version = models.CharField("version",max_length=255,default=None, blank=True, null=True) 
+
+    metric = models.ForeignKey("VARIABLE", models.SET_NULL,blank=True,null=True,) 
+    
+    class Meta:
+        verbose_name = 'COMBINATION'
+        verbose_name_plural = 'COMBINATIONs'  
 
 
 		
@@ -625,7 +644,9 @@ class COMBINATION_ITEM(models.Model):
     member_id = models.ForeignKey("MEMBER", models.SET_NULL,blank=True,null=True,) 
 
     variable_id = models.ForeignKey("VARIABLE", models.SET_NULL,blank=True,null=True,) 
-
+    class Meta:
+        verbose_name = 'COMBINATION_ITEM'
+        verbose_name_plural = 'COMBINATION_ITEMs'  
 
 
 class CUBE_TO_COMBINATION(models.Model):
@@ -633,5 +654,8 @@ class CUBE_TO_COMBINATION(models.Model):
 
     combination_id = models.ForeignKey("COMBINATION", models.SET_NULL,blank=True,null=True,) 
 
-    cube_id = models.ForeignKey("CUBE", models.SET_NULL,blank=True,null=True,) 
+    cube_id = models.ForeignKey("CUBE", models.SET_NULL,blank=True,null=True,)
+    class Meta:
+        verbose_name = 'CUBE_TO_COMBINATION'
+        verbose_name_plural = 'CUBE_TO_COMBINATIONs'  
 

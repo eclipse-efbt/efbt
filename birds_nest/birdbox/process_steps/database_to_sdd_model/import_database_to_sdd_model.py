@@ -148,23 +148,7 @@ class ImportDatabaseToSDDModel(object):
             context.variable_to_long_names_map[variable.variable_id] = variable.displayName
             context.variable_to_primary_concept_map[variable.variable_id] = variable.primary_concept
        
-    def create_all_variable_sets(self, context):
-        '''
-        import all the variables
-        '''
-        for variable_set in VARIABLE_SET.objects.all():
-            context.variable_set_dictionary[variable_set.variable_set_id] = variable_set
-
-        for variable_set_enumeration in VARIABLE_SET_ENUMERATION.objects.all():
-            variable_set = variable_set_enumeration.variable_set_id
-            variable = variable_set_enumeration.variable_id
-            try:
-                variable_list = context.variable_set_to_variable_map[variable_set]
-            except KeyError:
-                variable_list = []
-                context.variable_set_to_variable_map[variable_set] = variable_list
-            if not variable in variable_list:
-                variable_list.append(variable)
+    
 
     def create_all_subdomains(self, context):
         '''
