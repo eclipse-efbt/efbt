@@ -33,7 +33,7 @@ class ProcessRefVariablesAndDomains(AppConfig):
         context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
         context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
         
-        CreateRefDomainsAndVariables.create_ref_domains_and_variables(self,sdd_context)
+        CreateRefDomainsAndVariables.create_ref_domains_and_variables_and_cubes(self,sdd_context,context)
 
         # Do whatever processign we wish to do here
         pass

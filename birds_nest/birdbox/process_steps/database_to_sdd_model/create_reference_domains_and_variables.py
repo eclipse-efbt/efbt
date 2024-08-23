@@ -10,28 +10,25 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from birdbox.utils.utils import Utils
+
 from birdbox.sdd_models import *
-from birdbox.regdna import ELClass,ELOperation,ELAnnotation,ELStringToStringMapEntry
-import os
-import csv
+
 
 class CreateRefDomainsAndVariables(object):
     '''
     Documentation for CombinationsToReportFilters
     '''
-    def create_ref_domains_and_variables(self, sdd_context):
+    def create_ref_domains_and_variables_and_cubes(self, sdd_context,context):
         '''
        
         '''
         maintenance_agency = MAINTENANCE_AGENCY(name="REF")
         maintenance_agency.code = "REF"
-
         maintenance_agency.description = "REFERENCE"
         maintenance_agency.maintenance_agency_id = "REF"
         maintenance_agency.save()
         sdd_context.agency_dictionary["REF"] = maintenance_agency
-        print("create_ref_domains_and_variables")
+        print("create_ref_domains_and_variables_and_cubes")
         from django.apps import apps
         model_list = apps.get_models()
         sdd_context.ref_domain_dictionary['String'] = DOMAIN()
@@ -41,12 +38,23 @@ class CreateRefDomainsAndVariables(object):
         sdd_context.ref_domain_dictionary['String'].type = 'String'
         sdd_context.ref_domain_dictionary['String'].save()
 
-        
         for model in model_list:
             print(f"{model._meta.app_label}  -> {model.__name__}")
             if model._meta.app_label == 'birdbox':
                 
+                bird_cube = CUBE()
+                bird_cube_cube_structure = CUBE_STRUCTURE()
+                bird_cube.cube_id = model.__name__
+                bird_cube.name = model.__name__
+                bird_cube_cube_structure.cube_structure_id = model.__name__
+                bird_cube_cube_structure.name = model.__name__
+                bird_cube.cube_structure_id = bird_cube_cube_structure
 
+                sdd_context.bird_cube_structure_dictionary[bird_cube_cube_structure.name] = bird_cube_cube_structure
+                sdd_context.bird_cube_dictionary[bird_cube.name] = bird_cube
+                if context.save_derived_sdd_items:
+                    bird_cube_cube_structure.save()
+                    bird_cube.save()
                 field_list = model._meta.get_fields()
                 for field in field_list:
                     variable_id = field.name
@@ -54,9 +62,7 @@ class CreateRefDomainsAndVariables(object):
                     domain_id = None
                     try:
                         domain_id = field.db_comment
-                    
                         if not(domain_id is None):
-
                             if not(domain_id in sdd_context.ref_domain_dictionary.keys()):
                                 domain = DOMAIN()
                                 domain.domain_id = domain_id
@@ -97,6 +103,13 @@ class CreateRefDomainsAndVariables(object):
                         if sdd_context.save_sdd_to_db:
                             variable.save()
                         print("adding variable "  + variable_id)
+
+                    csi = CUBE_STRUCTURE_ITEM()
+                    csi.cube_structure_id = bird_cube_cube_structure
+                    csi.variable_id = sdd_context.ref_variable_dictionary[variable_id]
+                    sdd_context.bird_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id + ":" + csi.variable_id.variable_id] = csi
+                    if context.save_derived_sdd_items:
+                        csi.save()
                     
         
 

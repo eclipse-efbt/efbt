@@ -26,8 +26,6 @@ class SDDContext(object):
     # the directory where we save our outputs.
     output_directory = ""
 
-    
-
     members_that_are_nodes = []
     member_plus_hierarchy_to_child_literals = {}
     domain_to_hierarchy_dictionary = {}
@@ -43,6 +41,9 @@ class SDDContext(object):
     rol_cube_structure_dictionary = {}
     rol_cube_dictionary = {}
     rol_cube_structure_item_dictionary = {}
+    bird_cube_structure_dictionary = {}
+    bird_cube_dictionary = {}
+    bird_cube_structure_item_dictionary = {}
     combination_dictionary = {}
     combination_item_dictionary = {}
     combination_to_rol_cube_map = {}
@@ -95,6 +96,9 @@ class SDDContext(object):
 
     finrep_output_cubes = {}
     ae_output_cubes = {}
+
+    cube_links = []
+    cube_structure_item_links_dictionary = {}
 
  
     save_sdd_to_db = True

@@ -94,7 +94,10 @@ class ImportDatabaseToSDDModel(object):
         import all the rol cube structure items
         '''
         for rol_cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
-            context.rol_cube_structure_item_dictionary[rol_cube_structure_item.cube_structure_id.cube_structure_id + ":" + rol_cube_structure_item.variable_id.variable_id] = rol_cube_structure_item
+            try:
+                context.rol_cube_structure_item_dictionary[rol_cube_structure_item.cube_structure_id.cube_structure_id].append(rol_cube_structure_item)
+            except KeyError:
+                context.rol_cube_structure_item_dictionary[rol_cube_structure_item.cube_structure_id.cube_structure_id] = [rol_cube_structure_item]
 
 
     def create_all_mapping_to_cubes(self, context):
@@ -147,34 +150,7 @@ class ImportDatabaseToSDDModel(object):
             context.variable_to_domain_map[variable.variable_id] = variable.domain_id
             context.variable_to_long_names_map[variable.variable_id] = variable.displayName
             context.variable_to_primary_concept_map[variable.variable_id] = variable.primary_concept
-       
-    
-
-    def create_all_subdomains(self, context):
-        '''
-        import all the subdomains
-        '''
-
-        for subdomain in SUBDOMAIN.objects.all():
-            context.subnonref_domain_dictionary[subdomain.subdomain_id] = subdomain
-
-    def create_all_subdomain_enumerations(self, context):
-        '''
-        import all the subdomain enumerations
-        '''
-
-        for subdomain_enum in SUBDOMAIN_ENUMERATION.objects.all():
-            member = subdomain_enum.member_id
-            subdomain = subdomain_enum.subdomain_id
-            try:
-                items = context.subdomain_to_items_map[subdomain.subdomain_id]
-            except KeyError:
-                items = []
-                context.subdomain_to_items_map[subdomain.subdomain_id] = items
-            if not member in items:
-                items.append(member)
-
-
+   
     def create_all_nonref_member_hierarchies(self, context):
         
         for hierarchy in MEMBER_HIERARCHY.objects.all():

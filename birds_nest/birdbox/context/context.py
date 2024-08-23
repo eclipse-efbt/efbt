@@ -73,6 +73,9 @@ class Context(object):
 
     enums_used = []
 
+    main_catagories_in_scope_finrep = []
+    main_catagories_in_scope_ae = []
+
     load_sdd_from_website =False
 
     save_derived_sdd_items = True

@@ -1,5 +1,6 @@
 import django
 from django.apps import AppConfig
+from django.db.models.fields.related import ForeignKey
 
 class ModelMetaDataUtils(AppConfig):
     
@@ -18,8 +19,13 @@ class ModelMetaDataUtils(AppConfig):
             field_list = model._meta.get_fields()
             for field in field_list:
                 print(field.name)
+                print("class")
+                print(field.__class__)
+                if isinstance(field, ForeignKey):
+                    import pdb; pdb.set_trace()
                 try:
                     print(field.db_column)
+                    print(field.db_comment)
                 except:
                     pass
 

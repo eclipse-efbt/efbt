@@ -104,7 +104,10 @@ class CreateOutputLayers(object):
             csi = CUBE_STRUCTURE_ITEM()
             csi.cube_structure_id = output_layer_cube_cube_structure
             csi.variable_id = variable
-            sdd_context.rol_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id + ":" + csi.variable_id.variable_id] = csi
+            try:
+                sdd_context.rol_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id].append(csi)
+            except KeyError:
+                sdd_context.rol_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id] = [csi]
             if context.save_derived_sdd_items:
                 csi.save()
 

@@ -98,7 +98,10 @@ class CreateReportFilters:
                                 cube_to_comb = CUBE_TO_COMBINATION()
                                 cube_to_comb.combination_id = report_cell
                                 cube_to_comb.cube_id = report_rol_cube
-                                sdd_context.combination_to_rol_cube_map[cell_id + ":" + report_rol_cube.cube_id] = cube_to_comb
+                                try:
+                                    sdd_context.combination_to_rol_cube_map[report_rol_cube.cube_id].append(cube_to_comb)
+                                except KeyError:
+                                    sdd_context.combination_to_rol_cube_map[report_rol_cube.cube_id] = [cube_to_comb]
                                 if context.save_derived_sdd_items:
                                     cube_to_comb.save()
                                 
@@ -121,7 +124,10 @@ class CreateReportFilters:
                                         if not(ref_member is None):
                                             member_string = ref_member.member_id
 
-                                        sdd_context.combination_item_dictionary[report_cell.combination_id + ":" + str(var_string) + ":" + str(member_string)] = the_filter
+                                        try:
+                                            sdd_context.combination_item_dictionary[report_cell.combination_id].append(the_filter)
+                                        except KeyError:
+                                            sdd_context.combination_item_dictionary[report_cell.combination_id] = [the_filter]
                                         if context.save_derived_sdd_items:
                                             the_filter.save()
                             

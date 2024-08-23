@@ -10,9 +10,8 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from regdna import ELAttribute, ELClass, ELReference
 
-
+from django.db.models.fields.related import ForeignKey
 
 class ELDMSearch(object):
     '''
@@ -40,12 +39,13 @@ class ELDMSearch(object):
         '''
         link_count = link_count + 1
         if link_count < link_limit:
-            for feature in entity.eStructuralFeatures:
-                if isinstance(feature, ELReference):
+            field_list = entity._meta.get_fields()
+            for feature in field_list:
+                if isinstance(feature, ForeignKey):
                     if not(feature.name.startswith("parent_")) and not(feature.name.endswith("_delegate")):
                         # get the class that the reference points to and all subclasses of that class
-                        if not(feature.eType in entities):
-                            entities.append(feature.eType)
+                        if not(feature.related_model in entities):
+                            entities.append(feature.related_model)
 
                         #ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
                         ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
@@ -56,19 +56,20 @@ class ELDMSearch(object):
         Given a context and an entity, this function will return a list of all the superclasses
         that are related to the entity.
         '''
-        if len(entity.eSuperTypes) > 0:
-            super_entity = entity.eSuperTypes[0]
+        if len(print(entity._meta.get_parent_list())) > 0:
+            super_entity = entity.get_parent_list()[0]
             if not(super_entity in entities):
-                if not (super_entity.eAbstract):
-                    entities.append(super_entity)
+                #if not (super_entity.eAbstract):  SHOULD WE KEEP THIS LINE?
+                entities.append(super_entity)
             ELDMSearch.get_associated_entities(self,context, super_entity, entities,  link_count, link_limit)
             ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, super_entity, entities, link_count, link_limit)
 
 
-        for feature in entity.eStructuralFeatures:
-            if isinstance(feature, ELReference):
+        field_list = entity._meta.get_fields()
+        for feature in field_list:
+            if isinstance(feature, ForeignKey):
                 if feature.name.startswith("parent_"):
-                    super_entity = feature.eType
+                    super_entity = feature.related_model
                     if not(super_entity in entities):
                         entities.append(super_entity)
                     ELDMSearch.get_associated_entities(self, context, super_entity, entities, link_count, link_limit)
@@ -76,22 +77,4 @@ class ELDMSearch(object):
 
 
 
-    def get_subclasses_of_entity_and_their_associated_entities(self, context, entity,  entities, link_count, link_limit):
-        '''
-        Given a context and an entity, this function will return a list of all the subclasses
-        of the entity. this will include the dubclass of any delegated classes.
-        '''
-        for elclass in context.input_tables_package.eClassifiers:
-            if isinstance(elclass, ELClass):
-                if len(elclass.eSuperTypes) > 0:
-                    if elclass.eSuperTypes[0] == entity:
-                        sub_type_entity    = elclass
-                        if not(sub_type_entity in entities):
-                            entities.append(sub_type_entity)
-                        ELDMSearch.get_associated_entities(self,context, sub_type_entity, entities,  link_count, link_limit)
-                        ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, sub_type_entity, entities, link_count, link_limit)
-
-        for feature in entity.eStructuralFeatures:
-            if isinstance(feature, ELReference):
-                if feature.name.endswith("_delegate"):
-                        ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities, link_count, link_limit)
+    
