@@ -121,7 +121,7 @@ class ImportWebsiteToSDDModel(object):
                     is_reference = row[ColumnIndexes().domain_domain_is_reference]
                     # domainName = Utils.make_valid_id(row[3])
                     domain_name = row[ColumnIndexes().domain_domain_name_index]
-                    context.domain_to_domain_name_map[domain_id] = domain_name
+
 
                     # creat the Domain abject and set its fields
                     domain = DOMAIN(
@@ -130,7 +130,7 @@ class ImportWebsiteToSDDModel(object):
 
                     domain.description = description
                     domain.domain_id = ImportWebsiteToSDDModel.replace_dots(self, domain_id)
-                    domain.displayName = domain_name
+                    domain.name = domain_name
                     if is_enumerated:
                         domain.is_enumerated = True
                     else:
@@ -171,7 +171,7 @@ class ImportWebsiteToSDDModel(object):
                     member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
                     member.code = code
                     member.description = description
-                    member.displayName = member_name
+                    member.name = member_name
                     domain = ImportWebsiteToSDDModel.get_domain_with_id(
                         self, context, domain_id)
                     member.domain_id = domain
@@ -182,7 +182,6 @@ class ImportWebsiteToSDDModel(object):
                     #create a dictionary that is useful later
                     if not (domain_id is None) and not (domain_id == ""):
                         context.member_id_to_domain_map[member] = domain
-                        context.member_id_to_member_name_map[member_id] = member_name
                         context.member_id_to_member_code_map[member_id] = code
 
     def create_all_nonref_variables(self, context):
@@ -212,7 +211,7 @@ class ImportWebsiteToSDDModel(object):
                     variable.code = code
                     variable.variable_id = ImportWebsiteToSDDModel.replace_dots(
                         self, variable_id)
-                    variable.displayName = name
+                    variable.name = name
                     domain = ImportWebsiteToSDDModel.get_domain_with_id(self, context, domain_id)
                     variable.domain_id =domain
                     variable.description = description
@@ -296,41 +295,6 @@ class ImportWebsiteToSDDModel(object):
                             variable_set_enumeration.save()
                         
 
-    def create_all_subdomains(self, context):
-        '''
-        import all the subdomains
-        '''
-        file_location = context.file_directory + os.sep + "subdomain.csv"
-        header_skipped = False
-
-        with open(file_location,  encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            for row in filereader:
-                if not header_skipped:
-                    header_skipped = True
-                else:
-                    code = row[ColumnIndexes().subdomain_subdomain_code]
-                    description = row[ColumnIndexes().subdomain_subdomain_description]
-                    domain_id = row[ColumnIndexes().subdomain_domain_id_index]
-                    name = row[ColumnIndexes().subdomain_subdomain_name]
-                    subdomain_id = row[ColumnIndexes().subdomain_subdomain_id_index]
-
-                    sub_domain = SUBDOMAIN()
-                    sub_domain.code = code
-                    sub_domain.subdomain_id = ImportWebsiteToSDDModel.replace_dots(
-                        self, subdomain_id)
-                    sub_domain.displayName = name
-                    sub_domain.description = description
-
-                    domain = ImportWebsiteToSDDModel.get_domain_with_id(self, context, domain_id)
-                    sub_domain.domain_id = domain
-                    if context.save_sdd_to_db:  
-                        sub_domain.save()
-                    context.subnonref_domain_dictionary[subdomain_id] = sub_domain
-
-
-                        
-    
     def create_all_member_hierarchies(self, context):
         file_location = context.file_directory + os.sep + "member_hierarchy.csv"
         header_skipped = False
@@ -417,7 +381,6 @@ class ImportWebsiteToSDDModel(object):
                     header_skipped = True
                 else:
                     table_id = row[ColumnIndexes().table_table_id]
-                    name = row[ColumnIndexes().table_table_id]
                     display_name = row[ColumnIndexes().table_table_name]
                     code = row[ColumnIndexes().table_code]
                     description = row[ColumnIndexes().table_description]
@@ -429,7 +392,7 @@ class ImportWebsiteToSDDModel(object):
                     table = TABLE(
                         name=ImportWebsiteToSDDModel.replace_dots(self, table_id))
                     table.table_id = ImportWebsiteToSDDModel.replace_dots(self, table_id)
-                    table.displayName = display_name
+                    table.name = display_name
                     table.code = code
                     table.description = description
                     maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id)
@@ -514,7 +477,7 @@ class ImportWebsiteToSDDModel(object):
                     # we don't need the parent axis yet in our processing.
                     # axis_ordinate.axis_ordinate_id = 
                     # axis_ordinate_parent_axis_ordinate_id
-                    axis_ordinate.displayName = axis_ordinate_name
+                    axis_ordinate.name = axis_ordinate_name
                     axis_ordinate.description = axis_ordinate_description
                     if context.save_sdd_to_db:  
                         axis_ordinate.save()
@@ -688,7 +651,7 @@ class ImportWebsiteToSDDModel(object):
                     member_id = row[ColumnIndexes().member_mapping_member_id]
                     
                     member_mapping_item = MEMBER_MAPPING_ITEM()
-                    member_mapping_item.isSource = is_source
+                    member_mapping_item.is_source = is_source
                     member_mapping_item.member = ImportWebsiteToSDDModel.find_member_with_id(
                                                         self,member_id,context)
                     member_mapping_item.variable = ImportWebsiteToSDDModel.find_variable_with_id(
@@ -731,9 +694,9 @@ class ImportWebsiteToSDDModel(object):
                     mapping_definition.code = mapping_definition_code
                     mapping_definition.mapping_type = mapping_definition_mapping_type
                    
-                    mapping_definition.memberMapping = ImportWebsiteToSDDModel.find_member_mapping_with_id(
+                    mapping_definition.member_mapping_id = ImportWebsiteToSDDModel.find_member_mapping_with_id(
                         self,context,mapping_definition_member_mapping_id)
-                    mapping_definition.variableMapping = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
+                    mapping_definition.variable_mapping_id = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
                         self,context,mapping_definition_variable_mapping_id)
 
                     if context.save_sdd_to_db:  
@@ -814,7 +777,7 @@ class ImportWebsiteToSDDModel(object):
                         self,context,variable_mapping_item_variable_mapping_id)
                     variable_mapping_item.variable = ImportWebsiteToSDDModel.find_variable_with_id(
                         self,context,variable_mapping_item_variable_id)
-                    variable_mapping_item.isSource = variable_mapping_item_is_source
+                    variable_mapping_item.is_source = variable_mapping_item_is_source
                     variable_mapping_item.valid_from = variable_mapping_item_valid_from
                     variable_mapping_item.valid_to = variable_mapping_item_valid_to
 

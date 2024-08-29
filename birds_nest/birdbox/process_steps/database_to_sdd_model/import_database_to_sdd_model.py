@@ -128,7 +128,7 @@ class ImportDatabaseToSDDModel(object):
         '''
         for domain in DOMAIN.objects.all():
             context.nonref_domain_dictionary[domain.domain_id] = domain
-            context.domain_to_domain_name_map[domain.domain_id] = domain.displayName
+
         
     def create_all_members(self, context):
         '''
@@ -137,7 +137,6 @@ class ImportDatabaseToSDDModel(object):
         for member in MEMBER.objects.all():
             context.nonref_member_dictionary[member.member_id] = member
             context.member_id_to_domain_map[member] = member.domain_id
-            context.member_id_to_member_name_map[member.member_id] = member.displayName
             context.member_id_to_member_code_map[member.member_id] = member.code
 
     def create_all_variables(self, context):
@@ -148,7 +147,7 @@ class ImportDatabaseToSDDModel(object):
         for variable in VARIABLE.objects.all():
             context.nonref_variable_dictionary[variable.variable_id] = variable
             context.variable_to_domain_map[variable.variable_id] = variable.domain_id
-            context.variable_to_long_names_map[variable.variable_id] = variable.displayName
+            context.variable_to_long_names_map[variable.variable_id] = variable.name
             context.variable_to_primary_concept_map[variable.variable_id] = variable.primary_concept
    
     def create_all_nonref_member_hierarchies(self, context):

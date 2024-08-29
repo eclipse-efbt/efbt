@@ -76,16 +76,12 @@ class SDDContext(object):
     combination_to_typ_instrmnt_map = {}
     table_to_combination_dictionary = {}
 
-    # For the reference output layers we record a map between domains
-    # and domain names
-    domain_to_domain_name_map = {}
+
     
      # For the reference output layers we record a map between members ids
     # andtheir containing domains
     member_id_to_domain_map = {}
-    # For the reference output layers we record a map between members ids
-    # and their names
-    member_id_to_member_name_map = {}
+
     # For the reference output layers we record a map between members ids
     # and their codes
     member_id_to_member_code_map = {}

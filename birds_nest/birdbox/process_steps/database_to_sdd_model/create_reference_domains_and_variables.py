@@ -76,12 +76,12 @@ class CreateRefDomainsAndVariables(object):
                                     for choice in choices:
                                         member = MEMBER()
                                         member.member_id = domain_id + "_" + choice[0]
-                                        member.displayName = choice[1]
+                                        member.name = choice[1]
                                         member.domain_id = domain
                                         sdd_context.ref_member_dictionary[member.member_id] = member
                                         if sdd_context.save_sdd_to_db:
                                             member.save()
-                                        print("adding member " + member.member_id + ":" + member.displayName)
+                                        print("adding member " + member.member_id + ":" + member.name)
                     except:
                         pass
 
@@ -90,7 +90,7 @@ class CreateRefDomainsAndVariables(object):
                         variable.maintenance_agency_id = maintenance_agency
                         variable.variable_id = variable_id
                         try:
-                            variable.displayName = field.verbose_name
+                            variable.name = field.verbose_name
                         except:
                             pass
                         if not(domain is None):

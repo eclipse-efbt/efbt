@@ -30,7 +30,7 @@ class DOMAIN(models.Model):
 
     description = models.CharField("description",max_length=255,default=None, blank=True, null=True)   
 
-    domain_id = models.CharField("domain_id",max_length=255,default=None, blank=True, null=True)   
+    domain_id = models.CharField("domain_id",max_length=255, primary_key=True)   
 
     facet_id = models.ForeignKey("FACET_COLLECTION", models.SET_NULL,blank=True,null=True,) 
 
@@ -40,9 +40,8 @@ class DOMAIN(models.Model):
 
     maintenance_agency_id = models.ForeignKey("MAINTENANCE_AGENCY", models.SET_NULL,blank=True,null=True,) 
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True ) 
 
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
     class Meta:
         verbose_name = 'DOMAIN'
         verbose_name_plural = 'DOMAINs'
@@ -81,58 +80,16 @@ class FACET_COLLECTION(models.Model):
         verbose_name = 'FACET_COLLECTION'
         verbose_name_plural = 'FACET_COLLECTIONs'
         
-class FACET_ENUMERATION(models.Model):
 
-
-    facet_id = models.ForeignKey("FACET_COLLECTION", models.SET_NULL,blank=True,null=True,) 
-
-    facet_type = models.ForeignKey("facet_type", models.SET_NULL,blank=True,null=True,) 
-
-    observation_value = models.CharField("observation_value",max_length=255,default=None, blank=True, null=True)   
-    class Meta:
-        verbose_name = 'FACET_ENUMERATION'
-        verbose_name_plural = 'FACET_ENUMERATIONs'
-        
-class facet_type(models.Model):
-
-
-    decimals = models.BigIntegerField("decimals",default=None, blank=True, null=True)   
-
-    endTime = models.CharField("endTime",max_length=255,default=None, blank=True, null=True)   
-
-    endValue = models.BigIntegerField("endValue",default=None, blank=True, null=True)   
-
-    interval = models.CharField("interval",max_length=255,default=None, blank=True, null=True)   
-
-    isSequence = models.CharField("isSequence",max_length=255,default=None, blank=True, null=True)   
-
-    maxLength = models.BigIntegerField("maxLength",default=None, blank=True, null=True)   
-
-    maxValue = models.BigIntegerField("maxValue",default=None, blank=True, null=True)   
-
-    minLength = models.BigIntegerField("minLength",default=None, blank=True, null=True)   
-
-    minValue = models.BigIntegerField("minValue",default=None, blank=True, null=True)   
-
-    pattern = models.CharField("pattern",max_length=255,default=None, blank=True, null=True)   
-
-    startTime = models.CharField("startTime",max_length=255,default=None, blank=True, null=True)   
-
-    startValue = models.BigIntegerField("startValue",default=None, blank=True, null=True)   
-
-    timeInterval = models.CharField("timeInterval",max_length=255,default=None, blank=True, null=True)   
-    class Meta:
-        verbose_name = 'facet_type'
-        verbose_name_plural = 'facet_types'
         
 class MAINTENANCE_AGENCY(models.Model):
 
 
     code = models.CharField("code",max_length=255,default=None, blank=True, null=True)   
 
-    maintenance_agency_id = models.CharField("maintenance_agency_id",max_length=255,default=None, blank=True, null=True)   
+    maintenance_agency_id = models.CharField("maintenance_agency_id", max_length=255, primary_key=True)   
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True )   
     class Meta:
         verbose_name = 'MAINTENANCE_AGENCY'
         verbose_name_plural = 'MAINTENANCE_AGENCYs'
@@ -148,11 +105,10 @@ class MEMBER(models.Model):
 
     maintenance_agency_id = models.ForeignKey("MAINTENANCE_AGENCY", models.SET_NULL,blank=True,null=True,) 
 
-    member_id = models.CharField("member_id",max_length=255,default=None, blank=True, null=True)   
+    member_id = models.CharField("member_id",max_length=255, primary_key=True)   
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
 
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
     class Meta:
         verbose_name = 'MEMBER'
         verbose_name_plural = 'MEMBERs'
@@ -168,9 +124,9 @@ class MEMBER_HIERARCHY(models.Model):
 
     maintenance_agency_id = models.ForeignKey("MAINTENANCE_AGENCY", models.SET_NULL,blank=True,null=True,) 
 
-    member_hierarchy_id = models.CharField("member_hierarchy_id",max_length=255,default=None, blank=True, null=True)   
+    member_hierarchy_id = models.CharField("member_hierarchy_id",max_length=255, primary_key=True)   
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
     class Meta:
         verbose_name = 'MEMBER_HIERARCHY'
         verbose_name_plural = 'MEMBER_HIERARCHYs'
@@ -212,11 +168,10 @@ class VARIABLE(models.Model):
 
     primary_concept = models.CharField("primary_concept",max_length=255,default=None, blank=True, null=True)   
 
-    variable_id = models.CharField("variable_id",max_length=255,default=None, blank=True, null=True)   
+    variable_id = models.CharField("variable_id",max_length=255, primary_key=True)   
 
-    name = models.CharField("name",max_length=255, primary_key=True)   
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
 
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
     class Meta:
         verbose_name = 'VARIABLE'
         verbose_name_plural = 'VARIABLEs'
@@ -263,7 +218,7 @@ class MEMBER_MAPPING(models.Model):
 class MEMBER_MAPPING_ITEM(models.Model):
 
 
-    isSource = models.CharField("isSource",max_length=255,default=None, blank=True, null=True)   
+    is_source = models.CharField("is_source",max_length=255,default=None, blank=True, null=True)   
 
     member = models.ForeignKey("MEMBER", models.SET_NULL,blank=True,null=True,) 
 
@@ -287,7 +242,7 @@ class VARIABLE_MAPPING_ITEM(models.Model):
 
     variable_mapping_id = models.ForeignKey("VARIABLE_MAPPING", models.SET_NULL,blank=True,null=True,)
     
-    isSource = models.CharField("isSource",max_length=255,default=None, blank=True, null=True)   
+    is_source = models.CharField("is_source",max_length=255,default=None, blank=True, null=True)   
 
     variable = models.ForeignKey("VARIABLE", models.SET_NULL,blank=True,null=True,) 
 
@@ -340,9 +295,9 @@ class MAPPING_DEFINITION(models.Model):
 
     mapping_type = models.CharField("mapping_type",max_length=255,default=None, blank=True, null=True)   
 
-    memberMapping = models.ForeignKey("MEMBER_MAPPING", models.SET_NULL,blank=True,null=True,) 
+    member_mapping_id = models.ForeignKey("MEMBER_MAPPING", models.SET_NULL,blank=True,null=True,) 
 
-    variableMapping = models.ForeignKey("VARIABLE_MAPPING", models.SET_NULL,blank=True,null=True,) 
+    variable_mapping_id = models.ForeignKey("VARIABLE_MAPPING", models.SET_NULL,blank=True,null=True,) 
     class Meta:
         verbose_name = 'MAPPING_DEFINITION'
         verbose_name_plural = 'MAPPING_DEFINITIONs'
@@ -366,7 +321,6 @@ class AXIS(models.Model):
 
     table_id = models.ForeignKey("TABLE", models.SET_NULL,blank=True,null=True,) 
 
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
     class Meta:
         verbose_name = 'AXIS'
         verbose_name_plural = 'AXISs'
@@ -394,7 +348,7 @@ class AXIS_ORDINATE(models.Model):
 
     path = models.CharField("path",max_length=255,default=None, blank=True, null=True)   
 
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
+       
     class Meta:
         verbose_name = 'AXIS_ORDINATE'
         verbose_name_plural = 'AXIS_ORDINATEs'
@@ -445,8 +399,7 @@ class TABLE(models.Model):
     valid_to = models.DateTimeField("valid_to",default=None, blank=True, null=True)   
 
     version = models.CharField("version",max_length=255,default=None, blank=True, null=True)   
-
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
+ 
     class Meta:
         verbose_name = 'TABLE'
         verbose_name_plural = 'TABLEs'
@@ -483,8 +436,7 @@ class CUBE_STRUCTURE(models.Model):
     valid_to = models.DateTimeField("valid_to",default=None, blank=True, null=True)   
 
     version = models.CharField("version",max_length=255,default=None, blank=True, null=True)   
-
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)   
+ 
     class Meta:
         verbose_name = 'CUBE_STRUCTURE'
         verbose_name_plural = 'CUBE_STRUCTUREs'
@@ -521,7 +473,7 @@ class CUBE_STRUCTURE_ITEM(models.Model):
 
     variable_id = models.ForeignKey("VARIABLE", models.SET_NULL,blank=True,null=True,) 
 
-    isIdentifier = models.BooleanField("isIdentifier",default=None, blank=True, null=True)   
+    is_identifier = models.BooleanField("is_identifier",default=None, blank=True, null=True)   
 
     cube_variable_code = models.CharField("cube_variable_code",max_length=255,default=None, blank=True, null=True) 
     class Meta:
@@ -557,7 +509,6 @@ class CUBE(models.Model):
 
     version = models.CharField("version",max_length=255,default=None, blank=True, null=True)   
 
-    displayName = models.CharField("displayName",max_length=255,default=None, blank=True, null=True)
     class Meta:
         verbose_name = 'CUBE'
         verbose_name_plural = 'CUBEs'   
@@ -589,12 +540,13 @@ class CUBE_LINK(models.Model):
     foreign_cube_id = models.ForeignKey("CUBE", models.SET_NULL,blank=True,null=True,related_name='foreign_cube_in_cube_link') 
 
     cube_link_type = models.CharField("cube_link_type",max_length=255,default=None, blank=True, null=True)
+
+    product_identifier = models.ForeignKey("CUBE", models.SET_NULL,blank=True,null=True,related_name='product_identifier')
     class Meta:
         verbose_name = 'CUBE_LINK'
         verbose_name_plural = 'CUBE_LINKs'  
 
-	
-		
+
 class CUBE_STRUCTURE_ITEM_LINK(models.Model):
 
 
@@ -606,7 +558,7 @@ class CUBE_STRUCTURE_ITEM_LINK(models.Model):
 
     primary_cube_variable_code = models.ForeignKey("CUBE_STRUCTURE_ITEM", models.SET_NULL,blank=True,null=True,related_name='primary_cube_variable_code') 
 
-    product_identifier = models.ForeignKey("MEMBER", models.SET_NULL,blank=True,null=True,)
+    
     class Meta:
         verbose_name = 'CUBE_STRUCTURE_ITEM_LINK'
         verbose_name_plural = 'CUBE_STRUCTURE_ITEM_LINKs'  

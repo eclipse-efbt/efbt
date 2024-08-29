@@ -58,10 +58,10 @@ class CreateOutputLayers(object):
                 
                 for mapping_to_cube in sdd_context.mapping_to_cube_dictionary[destination_cube]:
                     mapping_def = mapping_to_cube.mapping
-                    variable_mapping = mapping_def.variableMapping
+                    variable_mapping = mapping_def.variable_mapping_id
                     variable_mapping_items = sdd_context.variable_mapping_item_dictionary[variable_mapping.variable_mapping_id]
                     for item in variable_mapping_items:
-                        if item.isSource == 'false':
+                        if item.is_source == 'false':
                             variable = item.variable
                             try:
                                 if not (variable in rol_variables[destination_cube]):

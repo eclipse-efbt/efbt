@@ -232,7 +232,7 @@ class MainCatagoryFinder(object):
 
         for mc in main_catagories_in_scope:
             mc_member = ImportWebsiteToSDDModel.find_member_with_id(self, mc, sdd_context)
-            definition = mc_member.displayName
+            definition = mc_member.name
             if ',' in definition :
                 print(mc_member.name + " : " + definition  + \
                        " is a composite catagory")
@@ -271,20 +271,20 @@ class MainCatagoryFinder(object):
         unique_member_list = MainCatagoryFinder.\
             remove_duplicates(self,member_mapping_items)
         if len(unique_member_list) == 0:
-            print(mc_member.name + " : "  + mc_member.displayName + \
+            print(mc_member.name + " : "  + mc_member.name + \
                   " has NO instrument types: " )
             return None
         if len(unique_member_list) == 1:
-            print(mc_member.name + " : "  + mc_member.displayName + \
+            print(mc_member.name + " : "  + mc_member.name + \
                   " has INSTRMNT_TYP: " + unique_member_list[0].name)
             return unique_member_list[0].name + "_" + \
-                unique_member_list[0].displayName 
+                unique_member_list[0].name 
         if len(unique_member_list) > 1:
 
             return_string = ""
             for item in unique_member_list:
                  return_string = return_string + item.name + \
-                    "_" + item.displayName  + ":"
+                    "_" + item.name  + ":"
             return return_string
    
     def get_target_accounting_type_from_mapping(self,sdd_context,mc_member):
@@ -299,17 +299,17 @@ class MainCatagoryFinder(object):
             self,member_mapping_items)
         
         if len(unique_member_list) == 0:
-            print(mc_member.name + " : "  + mc_member.displayName + \
+            print(mc_member.name + " : "  + mc_member.name + \
                   " has NO accounting types: " )
             return None
         if len(unique_member_list) == 1 :
-            print(mc_member.name + " : "  + mc_member.displayName + \
+            print(mc_member.name + " : "  + mc_member.name + \
                   " has TYP_ACCNTNG_ITM: " + unique_member_list[0].name)
-            return unique_member_list[0].name + "_" + unique_member_list[0].displayName
+            return unique_member_list[0].name + "_" + unique_member_list[0].name
         if len(unique_member_list) > 1:
             return_string = ""
             for item in unique_member_list:
-                return_string = return_string + item.name + "_" + item.displayName + ":"
+                return_string = return_string + item.name + "_" + item.name + ":"
             return return_string
         return None
 

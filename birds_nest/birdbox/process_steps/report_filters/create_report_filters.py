@@ -151,7 +151,7 @@ class CreateReportFilters:
                     variable_mapping_items = sdd_context.variable_mapping_item_dictionary[tuple[0].variable_id.replace('EBA_', 'DPM_')]
                     
                     for variable_mapping_item in variable_mapping_items:
-                        if variable_mapping_item.isSource =='false':
+                        if variable_mapping_item.is_source =='false':
                             return variable_mapping_item.variable
                 except KeyError:
                     print("could not find variable mapping for " + str(tuple[0].variable_id))
@@ -159,20 +159,20 @@ class CreateReportFilters:
         #for mapping in relevant_mappings:
         #    if mapping.mapping.mapping_type == 'V':
         #        import pdb; pdb.set_trace()
-        #        variable_mapping = mapping.mapping.variableMapping
+        #        variable_mapping = mapping.mapping.variable_mapping_id
         #        if not(variable_mapping is None):
         #            variable_mapping_item_row_dict = CreateReportFilters.create_variable_mapping_row_dict(self,sdd_context,variable_mapping)
         #            for row,variable_mapping_items in variable_mapping_item_row_dict.items():
         #                match = True
         #                for variable_mapping_item in variable_mapping_items:
-        #                    if variable_mapping_item.isSource =='true':
+        #                    if variable_mapping_item.is_source =='true':
         #                       if not ((variable_mapping_item.variable,None) in tuples):
         #                            # set match to false if any of the source items in this row do not match
         #                            match = False
         #                            break
         #                if match:
         #                    for variable_mapping_item in variable_mapping_items:
-        #                        if not (variable_mapping_item.isSource =='true' ):
+        #                        if not (variable_mapping_item.is_source =='true' ):
         #                            print ("metric = " + str(variable_mapping_item.variable.variable_id))
         #                            return variable_mapping_item.variable
         return None  
@@ -182,13 +182,13 @@ class CreateReportFilters:
         # and output a reference tuple
         ref_tuple_list = []
         for mapping in relevant_mappings:
-            member_mapping = mapping.mapping.memberMapping
+            member_mapping = mapping.mapping.member_mapping_id
             if not(member_mapping is None):
                 member_mapping_item_row_dict = CreateReportFilters.create_member_mapping_item_row_dict(self,sdd_context,member_mapping)
                 for row,member_mapping_items in member_mapping_item_row_dict.items():
                     match = True
                     for member_mapping_item in member_mapping_items:
-                        if member_mapping_item.isSource =='true':
+                        if member_mapping_item.is_source =='true':
                             if not ((member_mapping_item.variable,member_mapping_item.member) in non_ref_tuple_list):
                                 # set match to false if any of the source items in this row do not match
                                 match = False
@@ -196,7 +196,7 @@ class CreateReportFilters:
                     if match:
                         
                         for member_mapping_item in member_mapping_items:
-                            if not (member_mapping_item.isSource =='true' ):
+                            if not (member_mapping_item.is_source =='true' ):
                                 ref_tuple_list.append((member_mapping_item.variable,member_mapping_item.member))
         return ref_tuple_list 
                             
