@@ -42,33 +42,33 @@ class ELDMSearch(object):
             field_list = entity._meta.get_fields()
             for feature in field_list:
                 if isinstance(feature, ForeignKey):
-                    if not(feature.name.startswith("parent_")) and not(feature.name.endswith("_delegate")):
+                    if not(feature.name.startswith("parent_")) and not(feature.name.endswith("_delegate")) :
                         # get the class that the reference points to and all subclasses of that class
                         if not(feature.related_model in entities):
                             entities.append(feature.related_model)
 
                         #ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
-                        ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
-                        ELDMSearch.get_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
+                        ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, feature.related_model, entities,  link_count, link_limit)
+                        ELDMSearch.get_associated_entities(self, context, feature.related_model, entities,  link_count, link_limit)
 
     def get_superclasses_of_entity_and_their_associated_entities(self, context, entity, entities, link_count, link_limit):
         '''
         Given a context and an entity, this function will return a list of all the superclasses
         that are related to the entity.
         '''
-        if len(print(entity._meta.get_parent_list())) > 0:
-            super_entity = entity.get_parent_list()[0]
+
+        if len((entity._meta.get_parent_list())) > 0:
+            super_entity = entity._meta.get_parent_list()[0]
             if not(super_entity in entities):
                 #if not (super_entity.eAbstract):  SHOULD WE KEEP THIS LINE?
                 entities.append(super_entity)
             ELDMSearch.get_associated_entities(self,context, super_entity, entities,  link_count, link_limit)
             ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, super_entity, entities, link_count, link_limit)
 
-
         field_list = entity._meta.get_fields()
         for feature in field_list:
             if isinstance(feature, ForeignKey):
-                if feature.name.startswith("parent_"):
+                if feature.name.startswith("parent_") and not(feature.name == "parent_member_id") and not(feature.name == "parent_axis_ordinate_id"):
                     super_entity = feature.related_model
                     if not(super_entity in entities):
                         entities.append(super_entity)

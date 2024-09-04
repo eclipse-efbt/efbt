@@ -48,6 +48,12 @@ class ImportDatabaseToSDDModel(object):
         ImportDatabaseToSDDModel.create_ordinate_items(self, sdd_context)
         ImportDatabaseToSDDModel.create_cell_positions(self, sdd_context)
 
+        ImportDatabaseToSDDModel.create_combinations(self, sdd_context)
+        ImportDatabaseToSDDModel.create_combination_items(self, sdd_context)
+        ImportDatabaseToSDDModel.create_cube_to_combination(self, sdd_context)  # Add this line
+
+
+
     
     def create_all_mapping_definitions(self, context):
         '''
@@ -246,4 +252,31 @@ class ImportDatabaseToSDDModel(object):
                 context.member_mapping_items_dictionary[member_mapping_item.member_mapping_id.member_mapping_id] = [member_mapping_item]
                 
         
-       
+    def create_combination_items(self, context):
+        '''
+        Import all the combination items
+        '''
+        for combination_item in COMBINATION_ITEM.objects.all():
+            try:
+                combination_item_list = context.combination_item_dictionary[combination_item.combination_id.combination_id]
+                combination_item_list.append(combination_item)
+            except KeyError:
+                context.combination_item_dictionary[combination_item.combination_id.combination_id] = [combination_item]
+
+
+    def create_combinations(self, context):
+        '''
+        Import all the combinations
+        '''
+        for combination in COMBINATION.objects.all():
+            context.combination_dictionary[combination.combination_id] = combination
+
+    def create_cube_to_combination(self, context):
+        '''
+        Import all the cube to combination
+        '''
+        for cube_to_combination in CUBE_TO_COMBINATION.objects.all():
+            try:
+                context.combination_to_rol_cube_map[cube_to_combination.cube_id.cube_id].append(cube_to_combination)
+            except KeyError:
+                context.combination_to_rol_cube_map[cube_to_combination.cube_id.cube_id] = [cube_to_combination]

@@ -18,15 +18,19 @@ from birdbox.context.sdd_context_django import SDDContext
 
 class RunWebsiteToSDDModel(AppConfig):
 
-    path = '/workspaces/efbt/bird/birdseed_creator/birds_nest'
+    path = 'C:\\Users\\neil\\freebirdtools-develop-July11\\git\\efbt\\birds_nest\\birds_nest'
     def ready(self):
         from birdbox.sdd_models import MAINTENANCE_AGENCY
         from birdbox.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import ImportWebsiteToSDDModel
         from birdbox.process_steps.database_to_sdd_model.create_reference_domains_and_variables import CreateRefDomainsAndVariables
+        from birdbox.context.context import Context
         sdd_context = SDDContext()
         sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
         sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
-        CreateRefDomainsAndVariables.create_ref_domains_and_variables(self,sdd_context)
+        context = Context()
+        context.file_directory = '/workspaces/efbt/birdsnest/resources'
+        context.output_directory = '/workspaces/efbt/birdsnest/results'
+        CreateRefDomainsAndVariables.create_ref_domains_and_variables_and_cubes(self,sdd_context,context)
         ImportWebsiteToSDDModel().import_sdd(sdd_context)
         
 

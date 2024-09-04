@@ -52,9 +52,10 @@ class GenerationRuleCreator(object):
                     header_skipped = True
                 else:
                     report_template = row[0]
+
                     generated_output_layer = GenerationRuleCreator.\
                         find_output_layer_cube(self, sdd_context,
-                                               report_template)
+                                               report_template,framework)
                     if not (generated_output_layer is None):
                         GenerationRuleCreator.add_table_parts(
                                                     self, context,sdd_context,
@@ -81,7 +82,7 @@ class GenerationRuleCreator(object):
                     if not(first):
                         related_entities_string = related_entities_string + ":"
                     first = False
-                    related_entities_string = related_entities_string + entity.cube_id
+                    related_entities_string = related_entities_string + entity.__name__
 
                 f.write(model.__name__ + "," + related_entities_string + "\r")
                 context.ldm_entity_to_linked_tables_map[model.__name__] = related_entities_string
@@ -93,8 +94,6 @@ class GenerationRuleCreator(object):
         GenerationRuleCreator.add_table_parts_il(self, context, sdd_context,
                                                  generated_output_layer,framework) 
         
-
- 
 
     def add_table_parts_il(self, context, sdd_context,
                             generated_output_layer,framework):
@@ -116,7 +115,7 @@ class GenerationRuleCreator(object):
 
         
         try:
-            report_template = report_template + "_REF_OutputItem"
+            report_template = generated_output_layer.name 
             main_catagories = context.report_to_main_catogory_map[report_template]
             for mc in main_catagories:
                 try:
@@ -175,7 +174,12 @@ class GenerationRuleCreator(object):
                                 
                                 cube_link.description = mc
                                 cube_link.name = table_part[1]
-                                cube_link.primary_cube_id = table
+                                primary_cube = None
+                                try:
+                                    primary_cube = sdd_context.rol_cube_dictionary[table[5:len(table)]]
+                                    cube_link.primary_cube_id = primary_cube
+                                except KeyError:
+                                    print("cube_link.primary_cube_id not found for " + table)
                                 cube_link.foreign_cube_id = generated_output_layer
                                 sdd_context.cube_links.append(cube_link)
                                 
@@ -185,6 +189,12 @@ class GenerationRuleCreator(object):
                                                      generated_output_layer,
                                                      input_entity_list,mc,report_template,
                                                      framework)
+                                print(cube_link)
+                                print(cube_link.name)
+                                print(cube_link.description)
+                                print(cube_link.primary_cube_id)
+                                print(cube_link.foreign_cube_id)
+                                
                 except KeyError:
                     print ("no tables for main catagory:" + mc)
 
@@ -201,24 +211,29 @@ class GenerationRuleCreator(object):
         '''
         Add field to field lineage entries to the rules for the table part
         '''
-        for output_entity in sdd_context.rol_cube_dictionary:
-            for output_item in sdd_context.rol_cube_structure_item_dictionary[output_entity.cube_id]:
 
-                if GenerationRuleCreator.valid_operation(self,context, output_item,framework,catagory,report_template):
+        for output_item in sdd_context.rol_cube_structure_item_dictionary[output_entity.cube_id + '_cube_structure']:
 
-                    input_columns = GenerationRuleCreator.\
-                        find_variables_with_same_domain_then_name(
-                        self,sdd_context,output_item,input_entity_list)
+            if GenerationRuleCreator.valid_operation(self,context, output_item,framework,catagory,report_template):
 
-                    if len(input_columns) == 0:
+                input_columns = GenerationRuleCreator.\
+                    find_variables_with_same_domain_then_name(
+                    self,sdd_context,output_item,input_entity_list)
+
+                if len(input_columns) == 0:
+                    csil = CUBE_STRUCTURE_ITEM_LINK()
+                    csil.foreign_cube_variable_code = output_item
+                    print(csil)
+                    print(csil.foreign_cube_variable_code)
+
+                else:                        
+                    for input_column in input_columns:
                         csil = CUBE_STRUCTURE_ITEM_LINK()
                         csil.foreign_cube_variable_code = output_item
-
-                    else:                        
-                        for input_column in input_columns:
-                            csil = CUBE_STRUCTURE_ITEM_LINK()
-                            csil.foreign_cube_variable_code = output_item
-                            csil.primary_cube_variable_code = input_column
+                        csil.primary_cube_variable_code = input_column
+                        print(csil)
+                        print(csil.foreign_cube_variable_code)
+                        print(csil.primary_cube_variable_code)  
 
 
     
@@ -275,9 +290,10 @@ class GenerationRuleCreator(object):
         We want to find any column in the limited related input tables
         which has the same domain
         '''
+        import pdb; pdb.set_trace()
         related_variables = []   
         target_domain = None
-        etype = output_item.varaible_id
+        etype = output_item.variable_id
         target_domain = etype.domain_id
 
         if not (target_domain is None):
@@ -319,24 +335,23 @@ class GenerationRuleCreator(object):
 
         return related_variables
     
-    def find_output_layer_cube(self, sdd_context, output_layer_name, framework, cube_type):
+    def find_output_layer_cube(self, sdd_context, output_layer_name,framework):
         '''
         Find the ELClass for the related output layer cube given the cube name
         '''
+        if framework == "FINREP_REF":
+            output_layer_name = output_layer_name + "_REF_FINREP_3_0"
         try:
             return sdd_context.rol_cube_dictionary[output_layer_name]
         except:
             return None
 
-    def find_input_layer_cube(self, context, input_layer_name, framework, cube_type):
+    def find_input_layer_cube(self, context, input_layer_name, framework):
         '''
         Find the ELClass for the related output layer cube given the cube name
         '''
-        
-
         model_list = apps.get_models()
         for model in model_list:
-            print(f"{model._meta.app_label}  -> {model.__name__}")
             if model._meta.app_label == 'birdbox':
                 if model.__name__ == input_layer_name:
                     return model

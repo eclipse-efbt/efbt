@@ -22,7 +22,7 @@ class ModelMetaDataUtils(AppConfig):
                 print("class")
                 print(field.__class__)
                 if isinstance(field, ForeignKey):
-                    import pdb; pdb.set_trace()
+                    pass
                 try:
                     print(field.db_column)
                     print(field.db_comment)

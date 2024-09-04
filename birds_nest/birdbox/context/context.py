@@ -61,7 +61,26 @@ class Context(object):
     # our standard primitive types such as EString
     datatype_map = {}
 
+    main_catogory_to_name_map_finrep = {}
+    main_catogory_to_name_map_ae = {}
+
+    table_parts_to_main_catagory_map_finrep = {}
+    table_parts_to_main_catagory_map_ae = {}
     
+    tables_for_main_catagory_map_finrep = {}
+    tables_for_main_catagory_map_ae = {}
+
+    table_parts_to_linked_tables_map_finrep = {}
+    table_parts_to_linked_tables_map_ae = {}
+
+    table_parts_to_to_filter_map_finrep = {}
+    table_parts_to_to_filter_map_ae = {}
+
+    table_and_part_tuple_map_finrep = {}
+    table_and_part_tuple_map_ae = {}
+
+    ldm_entity_to_linked_tables_map = {}
+    report_to_main_catogory_map = {}
     enum_map = {}
     
     arc_to_source_map = {}

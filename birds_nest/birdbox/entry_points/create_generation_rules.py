@@ -43,7 +43,7 @@ class RunCreateGenerationRules(AppConfig):
 
         SQLDevLDMImport.do_import(self,context)
         MainCatagoryFinder().create_report_to_main_catogory_maps(context,sdd_context,"FINREP_REF", ["3","3.0-Ind","FINREP 3.0-Ind"])
-        GenerationRuleCreator().generate_generation_rules( context,sdd_context,"FINREP_REF","3.0")
+        GenerationRuleCreator().generate_generation_rules( context,sdd_context,"FINREP_REF")
         
 if __name__ == '__main__':
     django.setup()
