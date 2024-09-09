@@ -13,345 +13,352 @@
 
 from birdbox.sdd_models import *
 from django.apps import apps
-
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
-
-
 import os
 import csv
+from typing import List, Any
 
 from birdbox.process_steps.generation_rules.ldm_search import ELDMSearch
 
-class GenerationRuleCreator(object):
-    '''
-    Documentation for CombinationsToReportFilters
-    '''
-    
-    def generate_generation_rules(self, context,sdd_context, framework):
-        '''
-        generate generation rules
-        '''
-        GenerationRuleCreator.add_reports(self, context,sdd_context, framework)
-    
-    def add_reports(self, context,sdd_context, framework):
-        '''
-        Create the generation rule for each report that is in scope.
-        '''
-        file_location = context.file_directory + os.sep + "in_scope_reports_" + framework + ".csv"
+class GenerationRuleCreator:
+    """
+    A class for creating generation rules for reports and tables.
+    """
 
-        GenerationRuleCreator.create_ldm_entity_to_linked_entities_map(self, context, sdd_context)
-        
+    def generate_generation_rules(self, context: Any, sdd_context: Any, framework: str) -> None:
+        """
+        Generate generation rules for the given context and framework.
 
-        header_skipped = False
-        # Loop through the list of in scope reports
-        with open(file_location,  encoding='utf-8') as csvfile:
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+        """
+        self.add_reports(context, sdd_context, framework)
+    
+    def add_reports(self, context: Any, sdd_context: Any, framework: str) -> None:
+        """
+        Add reports based on the given context and framework.
+
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+        """
+        file_location = os.path.join(context.file_directory, 
+                                     f"in_scope_reports_{framework}.csv")
+        self.create_ldm_entity_to_linked_entities_map(context, sdd_context)
+
+        with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            next(filereader)  # Skip header
             for row in filereader:
-                # skip the first line which is the header.
-                if (not header_skipped):
-                    header_skipped = True
-                else:
-                    report_template = row[0]
+                report_template = row[0]
+                generated_output_layer = self.find_output_layer_cube(
+                    sdd_context, report_template, framework)
+                if generated_output_layer:
+                    self.add_table_parts_il(context, sdd_context, 
+                                         generated_output_layer, framework)
 
-                    generated_output_layer = GenerationRuleCreator.\
-                        find_output_layer_cube(self, sdd_context,
-                                               report_template,framework)
-                    if not (generated_output_layer is None):
-                        GenerationRuleCreator.add_table_parts(
-                                                    self, context,sdd_context,
-                                                    generated_output_layer,
-                                                    framework)
+    def create_ldm_entity_to_linked_entities_map(self, context: Any, 
+                                                 sdd_context: Any) -> None:
+        """
+        Create a mapping of LDM entities to their linked entities.
 
-    def create_ldm_entity_to_linked_entities_map(self, context, sdd_context):
-        '''
-        '''
-        extension = "csv"
-        f = open(context.output_directory + os.sep + extension +
-                 os.sep + "ldm_entity_related_entities" + '.' + extension,
-                 "a",  encoding='utf-8')
-        f.write("ldm_entity, related_entites\r")
-        model_list = apps.get_models()
-        for model in model_list:
-            print(f"{model._meta.app_label}  -> {model.__name__}")
-            if model._meta.app_label == 'birdbox':
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+        """
+        output_file = os.path.join(context.output_directory, "csv", 
+                                   "ldm_entity_related_entities.csv")
+        with open(output_file, "w", encoding='utf-8') as f:
+            f.write("ldm_entity,related_entities\n")
+            for model in apps.get_models():
+                if model._meta.app_label == 'birdbox':
+                    entities = ELDMSearch.get_all_related_entities(
+                        self, context, model
+                    )
+                    related_entities_string = ":".join(
+                        entity.__name__ for entity in entities
+                    )
+                    f.write(f"{model.__name__},{related_entities_string}\n")
+                    context.ldm_entity_to_linked_tables_map[model.__name__] = \
+                        related_entities_string
 
-                entities = ELDMSearch.get_all_related_entities(self, context, model)
-                related_entities_string = ""
-                first = True
-                for entity in entities:
-                    if not(first):
-                        related_entities_string = related_entities_string + ":"
-                    first = False
-                    related_entities_string = related_entities_string + entity.__name__
+    def add_table_parts_il(self, context: Any, sdd_context: Any, 
+                           generated_output_layer: Any, 
+                           framework: str) -> None:
+        """
+        Add table parts for the input layer.
 
-                f.write(model.__name__ + "," + related_entities_string + "\r")
-                context.ldm_entity_to_linked_tables_map[model.__name__] = related_entities_string
-        f.close()
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+            generated_output_layer (Any): The generated output layer.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+        """
+        tables_for_main_category_map = (
+            context.tables_for_main_category_map_finrep 
+            if framework == "FINREP_REF" 
+            else context.tables_for_main_category_map_ae
+        )
+        table_parts_to_linked_tables_map = (
+            context.table_parts_to_linked_tables_map_finrep 
+            if framework == "FINREP_REF" 
+            else context.table_parts_to_linked_tables_map_ae
+        )
+        table_and_part_tuple_map = (
+            context.table_and_part_tuple_map_finrep 
+            if framework == "FINREP_REF" 
+            else context.table_and_part_tuple_map_ae
+        )
 
-
-    def add_table_parts(self, context, sdd_context, generated_output_layer,framework):
-
-        GenerationRuleCreator.add_table_parts_il(self, context, sdd_context,
-                                                 generated_output_layer,framework) 
-        
-
-    def add_table_parts_il(self, context, sdd_context,
-                            generated_output_layer,framework):
-        '''
-        For each report, check which main catagories are applicable 
-        (e.g loans and advances)
-        For each main catagory check what EIL tables are relevant
-        (e.g. Instrument)
-        For each of those tables create part of the generation transformation
-        '''
-        if framework == "FINREP_REF":
-            tables_for_main_catagory_map = context.tables_for_main_catagory_map_finrep
-            table_parts_to_linked_tables_map = context.table_parts_to_linked_tables_map_finrep
-            table_and_part_tuple_map = context.table_and_part_tuple_map_finrep
-        elif framework == "AE_REF":
-            tables_for_main_catagory_map = context.tables_for_main_catagory_map_ae
-            table_parts_to_linked_tables_map = context.table_parts_to_linked_tables_map_ae
-            table_and_part_tuple_map = context.table_and_part_tuple_map_ae
-
-        
         try:
-            report_template = generated_output_layer.name 
-            main_catagories = context.report_to_main_catogory_map[report_template]
-            for mc in main_catagories:
+            report_template = generated_output_layer.name
+            main_categories = context.report_to_main_category_map[report_template]
+            for mc in main_categories:
                 try:
-                    tables = tables_for_main_catagory_map[mc]
+                    tables = tables_for_main_category_map[mc]
                     for table in tables:
-                
-                        #rules_for_table = RulesForILTable()
-                        inputLayerTable = GenerationRuleCreator.\
-                                        find_input_layer_cube (self,context,table,framework)
-                        #rules_for_report.rulesForTable.extend([rules_for_table])
+                        inputLayerTable = self.find_input_layer_cube(
+                            sdd_context, table[5:], framework
+                        )
                         table_parts = table_and_part_tuple_map[mc]
 
                         for table_part in table_parts:
                             input_entity_list = [inputLayerTable]
-                            # a table like instrument might have linked tables
-                            # defined such as Party or Collateral
                             linked_tables = table_parts_to_linked_tables_map[table_part]
                             linked_tables_list = linked_tables.split(":")
-                            if not (inputLayerTable is None):
-                                if not (inputLayerTable.name in linked_tables_list):
-                                    linked_tables_list.append(inputLayerTable.name)
+                            if (inputLayerTable and 
+                                inputLayerTable.cube_structure_id not in linked_tables_list):
+                                linked_tables_list.append(inputLayerTable.cube_structure_id)
                             extra_tables = []
                             for the_table in linked_tables_list:
                                 extra_linked_tables = []
                                 try:
                                     if the_table.endswith("_ELDM"):
                                         extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table]
-                                        extra_linked_tables = extra_linked_tables_string.split(":")
                                     else:
-                                        extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table+"_ELDM"]
-                                        extra_linked_tables = extra_linked_tables_string.split(":")
+                                        extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table + "_ELDM"]
+                                    extra_linked_tables = extra_linked_tables_string.split(":")
                                 except KeyError:
                                     pass
 
                                 for extra_table in extra_linked_tables:
-                                    if not extra_table in linked_tables_list:
+                                    if extra_table not in linked_tables_list:
                                         extra_tables.append(extra_table)
 
                             for extra_table in extra_tables:
                                 if extra_table.endswith("_ELDM"):
-                                    extra_table = linked_tables_list.append(extra_table[0:len(extra_table)-5])
+                                    linked_tables_list.append(extra_table[:-5])
                                 else:
-                                    extra_table = linked_tables_list.append(extra_table)
-
+                                    linked_tables_list.append(extra_table)
 
                             for the_table in linked_tables_list:
-                                
-                                the_input_table  = GenerationRuleCreator.\
-                                                    find_input_layer_cube (
-                                                    self,context,the_table,framework)
-                                if not (the_input_table is None):
+                                the_input_table = self.find_input_layer_cube(
+                                    sdd_context, the_table[5:], framework
+                                )
+                                if the_input_table:
                                     input_entity_list.append(the_input_table)
 
                             if table_part[0] == table:
                                 cube_link = CUBE_LINK()
-                                
                                 cube_link.description = mc
                                 cube_link.name = table_part[1]
-                                primary_cube = None
-                                try:
-                                    primary_cube = sdd_context.rol_cube_dictionary[table[5:len(table)]]
+                                primary_cube = sdd_context.rol_cube_dictionary.get(table[5:])
+                                if primary_cube:
                                     cube_link.primary_cube_id = primary_cube
-                                except KeyError:
-                                    print("cube_link.primary_cube_id not found for " + table)
+                                    cube_link.cube_link_id = (
+                                        f"{report_template}:"
+                                        f"{table_part[0]}:{table_part[1]}"
+                                    )
+                                else:
+                                    cube_link.cube_link_id = f"{table_part[0]}:{table_part[1]}"
+                                    print(f"cube_link.primary_cube_id not found for {table}")
                                 cube_link.foreign_cube_id = generated_output_layer
                                 sdd_context.cube_links.append(cube_link)
-                                
-                                GenerationRuleCreator.\
-                                    add_field_to_field_lineage_to_rules_for_table_part(
-                                                    self, context,sdd_context, 
-                                                     generated_output_layer,
-                                                     input_entity_list,mc,report_template,
-                                                     framework)
-                                print(cube_link)
-                                print(cube_link.name)
-                                print(cube_link.description)
-                                print(cube_link.primary_cube_id)
-                                print(cube_link.foreign_cube_id)
-                                
+                                self.add_field_to_field_lineage_to_rules_for_table_part(
+                                    context, sdd_context, generated_output_layer, 
+                                    input_entity_list, mc, report_template, 
+                                    framework, cube_link
+                                )
+
+                                if context.save_derived_sdd_items:
+                                    cube_link.save()
                 except KeyError:
-                    print ("no tables for main catagory:" + mc)
-
+                    print(f"no tables for main category:{mc}")
         except KeyError:
-                    print ("no main catagory for report :" + report_template)
+            print(f"no main category for report :{report_template}")
 
-    def add_field_to_field_lineage_to_rules_for_table_part(self, context,
-                                                           sdd_context,
-                                                           output_entity,
-                                                           input_entity_list,
-                                                           catagory,
-                                                           report_template, 
-                                                           framework):
-        '''
-        Add field to field lineage entries to the rules for the table part
-        '''
+    def add_field_to_field_lineage_to_rules_for_table_part(
+            self, context: Any, sdd_context: Any,
+            output_entity: Any, input_entity_list: List[Any],
+            category: str, report_template: str, 
+            framework: str, cube_link: Any) -> None:
+        """
+        Add field-to-field lineage rules for a table part.
 
-        for output_item in sdd_context.rol_cube_structure_item_dictionary[output_entity.cube_id + '_cube_structure']:
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+            output_entity (Any): The output entity.
+            input_entity_list (List[Any]): List of input entities.
+            category (str): The category of the report.
+            report_template (str): The report template name.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+            cube_link (Any): The cube link object.
+        """
+        for output_item in sdd_context.rol_cube_structure_item_dictionary[
+                output_entity.cube_id + '_cube_structure']:
+            if self.valid_operation(context, output_item, framework, 
+                                    category, report_template):
+                input_columns = self.find_variables_with_same_domain_then_name(
+                    sdd_context, output_item, input_entity_list)
 
-            if GenerationRuleCreator.valid_operation(self,context, output_item,framework,catagory,report_template):
-
-                input_columns = GenerationRuleCreator.\
-                    find_variables_with_same_domain_then_name(
-                    self,sdd_context,output_item,input_entity_list)
-
-                if len(input_columns) == 0:
-                    csil = CUBE_STRUCTURE_ITEM_LINK()
-                    csil.foreign_cube_variable_code = output_item
-                    print(csil)
-                    print(csil.foreign_cube_variable_code)
-
-                else:                        
+                if input_columns:
                     for input_column in input_columns:
                         csil = CUBE_STRUCTURE_ITEM_LINK()
                         csil.foreign_cube_variable_code = output_item
+                        csil.cube_structure_item_link_id = (
+                            f"{cube_link.cube_link_id}:"
+                            f"{csil.foreign_cube_variable_code.variable_id.variable_id}"
+                        )
                         csil.primary_cube_variable_code = input_column
-                        print(csil)
-                        print(csil.foreign_cube_variable_code)
-                        print(csil.primary_cube_variable_code)  
+                        if not(csil.primary_cube_variable_code.variable_id is None):                            
+                            csil.cube_structure_item_link_id += (
+                            f":{csil.primary_cube_variable_code.variable_id.variable_id}"
+                        )
+                        csil.cube_link_id = cube_link  
+                        if context.save_derived_sdd_items:
+                            csil.save()
 
+    def valid_operation(self, context: Any, output_item: Any, framework: str, category: str, report_template: str) -> bool:
+        """
+        Check if the operation is valid for the given output item and context.
 
-    
-    def valid_operation(self,context, output_item,framework,catagory,report_template):
-        '''
-        '''
+        Args:
+            context (Any): The context object containing necessary data.
+            output_item (Any): The output item to check.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+            category (str): The category of the report.
+            report_template (str): The report template name.
+
+        Returns:
+            bool: True if the operation is valid, False otherwise.
+        """
         return True
-        
-    def operation_exists_in_cell_for_report_with_catagory(self,context, sdd_context, output_item,framework,input_cube_type,catagory,report_template):
-        '''
-        Check if the operation exists in the combination of the report and typ_instrmnt
-        '''
-        combinations =[]
-        try:
-            combinations = sdd_context.combination_to_rol_cube_map[report_template]
-        except KeyError:
-            pass
+
+    def operation_exists_in_cell_for_report_with_category(self, context: Any, sdd_context: Any, output_item: Any, framework: str, input_cube_type: str, category: str, report_template: str) -> bool:
+        """
+        Check if an operation exists in a cell for a report with a specific category.
+
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+            output_item (Any): The output item to check.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+            input_cube_type (str): The input cube type.
+            category (str): The category of the report.
+            report_template (str): The report template name.
+
+        Returns:
+            bool: True if the operation exists, False otherwise.
+        """
+        combinations = sdd_context.combination_to_rol_cube_map.get(report_template, [])
         for combination in combinations:
-            if combination in context.cell_to_typ_instrmnt_map[catagory]:
-                combination_items = []
-                try:
-                    sdd_context.combination_item_dictionary[combination.combination_id]
-                except KeyError:
-                    pass
+            if combination in context.cell_to_typ_instrmnt_map[category]:
+                combination_items = sdd_context.combination_item_dictionary.get(combination.combination_id, [])
                 for combination_item in combination_items:
-                    if combination_item.variable_id.name == output_item.name:
-                        if combination_item.member_id.member_id == catagory:
-                            return True
+                    if combination_item.variable_id.name == output_item.name and combination_item.member_id.member_id == category:
+                        return True
         return False
-        
-    def find_related_variables(self,context,sdd_context,output_item,input_entity_list):
-        '''
-        when we have an ROL item it has a specific domain.
-        We want to find any column in the limited related input tables
-        which has the same domain
-        '''
+
+    def find_related_variables(self, context: Any, sdd_context: Any, output_item: Any, input_entity_list: List[Any]) -> List[Any]:
+        """
+        Find related variables for a given output item in the input entity list.
+
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+            output_item (Any): The output item to find related variables for.
+            input_entity_list (List[Any]): List of input entities to search.
+
+        Returns:
+            List[Any]: A list of related variables.
+        """
         output_variable_name = output_item.name
         related_variables = []
-        if not (output_variable_name is None):
+        if output_variable_name:
             for input_entity in input_entity_list:
-                if not (input_entity is None):
+                if input_entity:
                     for input_item in input_entity.eStructuralFeatures:
-                        if isinstance(input_item, CharField) or  isinstance(input_item, DateTimeField) or  isinstance(input_item, BigIntegerField) or  isinstance(input_item, BooleanField) or  isinstance(input_item, FloatField) or  isinstance(input_item, CharField) :
+                        if isinstance(input_item, (CharField, DateTimeField, BigIntegerField, BooleanField, FloatField, CharField)):
                             input_item_name = input_item.name
                             if input_item_name == output_variable_name:
-                                related_variables= []
-                                related_variables.append(input_item)
-                            
+                                related_variables = [input_item]
         return related_variables
-    
-    def find_variables_with_same_domain_then_name(self,sdd_context,output_item,input_entity_list):
-        '''
-        when we have an ROL item it has a specific domain.
-        We want to find any column in the limited related input tables
-        which has the same domain
-        '''
-        import pdb; pdb.set_trace()
-        related_variables = []   
-        target_domain = None
-        etype = output_item.variable_id
-        target_domain = etype.domain_id
 
-        if not (target_domain is None):
+    def find_variables_with_same_domain_then_name(self, sdd_context: Any, output_item: Any, input_entity_list: List[Any]) -> List[Any]:
+        """
+        Find variables with the same domain and then name as the output item.
+
+        Args:
+            sdd_context (Any): The SDD context object.
+            output_item (Any): The output item to find matching variables for.
+            input_entity_list (List[Any]): List of input entities to search.
+
+        Returns:
+            List[Any]: A list of matching variables.
+        """
+        related_variables = []
+        target_domain = output_item.variable_id.domain_id
+
+        if target_domain:
             for input_entity in input_entity_list:
-                if not (input_entity is None):
-
-                    field_list = input_entity._meta.get_fields()
-                    for feature in field_list:
-                        #if isinstance(feature, ForeignKey):
-                        if isinstance(input_item, CharField) or  isinstance(input_item, DateTimeField) or  isinstance(input_item, BigIntegerField) or  isinstance(input_item, BooleanField) or  isinstance(input_item, FloatField) or  isinstance(input_item, CharField) :
-                            enum_name = input_item.name.db_comment
-                            if not(enum_name is None):
-                                    if enum_name == target_domain.name:
-                                        if not (input_item in related_variables):
-                                            related_variables.append(input_item)
-                            else:
-                                print("input_item_etype is None for " + input_item.name)
+                if input_entity:
+                    field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                    for csi in field_list:
+                        variable = csi.variable_id
+                        if variable and variable.domain_id.domain_id == target_domain.domain_id:
+                            related_variables.append(csi)
         else:
             output_variable_name = output_item.name
-           
-            if not (output_variable_name is None):
+            if output_variable_name:
                 for input_entity in input_entity_list:
-                    if not (input_entity is None):
-                        for input_item in input_entity.eStructuralFeatures:
-                            if isinstance(input_item, CharField) or  isinstance(input_item, DateTimeField) or  isinstance(input_item, BigIntegerField) or  isinstance(input_item, BooleanField) or  isinstance(input_item, FloatField) or  isinstance(input_item, CharField) :
-                                input_item_name = input_item.name
-                                if input_item_name == output_variable_name:
-                                    if not (input_item in related_variables):
-                                        related_variables.append(input_item)
-                                else:
-                                    try:
-                                        primary_concept = sdd_context.\
-                                            variable_to_primary_concept_map[input_item_name]
-                                        if primary_concept == output_variable_name:
-                                            if not (input_item in related_variables):
-                                                related_variables.append(input_item)
-                                    except KeyError:
-                                        pass
+                    if input_entity:
+                        field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                        for csi in field_list:
+                            variable = csi.variable_id
+                            if variable and variable.name == output_variable_name:
+                                related_variables.append(csi)
 
         return related_variables
-    
-    def find_output_layer_cube(self, sdd_context, output_layer_name,framework):
-        '''
-        Find the ELClass for the related output layer cube given the cube name
-        '''
-        if framework == "FINREP_REF":
-            output_layer_name = output_layer_name + "_REF_FINREP_3_0"
-        try:
-            return sdd_context.rol_cube_dictionary[output_layer_name]
-        except:
-            return None
 
-    def find_input_layer_cube(self, context, input_layer_name, framework):
-        '''
-        Find the ELClass for the related output layer cube given the cube name
-        '''
-        model_list = apps.get_models()
-        for model in model_list:
-            if model._meta.app_label == 'birdbox':
-                if model.__name__ == input_layer_name:
-                    return model
+    def find_output_layer_cube(self, sdd_context: Any, output_layer_name: str, framework: str) -> Any:
+        """
+        Find the output layer cube for a given output layer name and framework.
+
+        Args:
+            sdd_context (Any): The SDD context object.
+            output_layer_name (str): The name of the output layer.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+
+        Returns:
+            Any: The output layer cube if found, None otherwise.
+        """
+        output_layer_name = f"{output_layer_name}_REF_FINREP_3_0" if framework == "FINREP_REF" else output_layer_name
+        return sdd_context.rol_cube_dictionary.get(output_layer_name)
+
+    def find_input_layer_cube(self, sdd_context: Any, input_layer_name: str, framework: str) -> Any:
+        """
+        Find the input layer cube for a given input layer name and framework.
+
+        Args:
+            sdd_context (Any): The SDD context object.
+            input_layer_name (str): The name of the input layer.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+
+        Returns:
+            Any: The input layer cube if found, None otherwise.
+        """
+        return sdd_context.rol_cube_structure_dictionary.get(input_layer_name)

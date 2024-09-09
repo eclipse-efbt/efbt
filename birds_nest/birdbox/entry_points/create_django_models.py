@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2020 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -9,43 +9,41 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
-#
 
-
+import os
 import django
 from django.apps import AppConfig
-
+from birdbox.context.sdd_context_django import SDDContext
+from birdbox.context.context import Context
+from birdbox.process_steps.sqldeveloper_import.import_sqldev_ldm_to_regdna import (
+    SQLDevLDMImport,
+)
+from birdbox.process_steps.sqldeveloper_import.import_sqldev_ldm_to_django import (
+    RegDNAToDJango,
+)
 
 class RunCreateDjangoModels(AppConfig):
-    
-    path = '/workspaces/efbt/bird/birdseed_creator/birds_nest'
+    """AppConfig for creating Django models from SQL Developer Logical Data Model."""
+
+    path = '/workspaces/efbt/bird/birds_nest/birds_nest'
+
+
     def ready(self):
-
-        from birdbox.context.sdd_context_django import SDDContext
-        from birdbox.context.context import Context
-        from birdbox.process_steps.sqldeveloper_import.import_sqldev_ldm_to_regdna import SQLDevLDMImport
-        from birdbox.process_steps.sqldeveloper_import.import_sqldev_ldm_to_django import RegDNAToDJango
-
+        """Prepare the context and run the import and conversion processes."""
+        base_dir = '/workspaces/efbt/bird/birds_nest/' 
+        
         sdd_context = SDDContext()
-        sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-        sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.output_directory = os.path.join(base_dir, 'results')
+        
         context = Context()
-        context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-        context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
+        context.file_directory = sdd_context.file_directory
+        context.output_directory = sdd_context.output_directory
 
-        SQLDevLDMImport.do_import(self,context)
-        RegDNAToDJango.convert(self,context)
-
+        SQLDevLDMImport.do_import(self, context)
+        RegDNAToDJango.convert(self, context)
 
 if __name__ == '__main__':
     django.setup()
-    RunCreateDjangoModels('birdbox','birds_nest').ready()
-    
-    
+    RunCreateDjangoModels('birdbox', 'birds_nest').ready()
 
-    
-    
-
- 
-
-    

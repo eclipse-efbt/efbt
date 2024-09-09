@@ -16,101 +16,129 @@ from birdbox.sdd_models import *
 import os
 import csv
 
-class CreateOutputLayers(object):
-    '''
-    Documentation for CombinationsToReportFilters
-    '''
-    def create_output_layers(self, context,sdd_context,framework,version):
-        '''
-        for each cube mappng, look at eh varaible mappings and expanded 
-        variable set mappings, and create a n output layer with those variables. 
-        '''
-        missing_domains = []
-        # looka t cube mappings
-        # get destination
-        # checkif it is in scope
-        # get the mappings
-        # look at the variables
+class CreateOutputLayers:
+    def create_output_layers(self, context, sdd_context, framework, version):
+        """
+        Create output layers for each cube mapping based on variable mappings
+        and expanded variable set mappings.
 
-        file_location = context.file_directory + os.sep + "in_scope_reports_" + framework + ".csv"
-        in_scope_reports = []
-        header_skipped = False
-        # Loop through the list of in scope reports
-        with open(file_location,  encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            for row in filereader:
-                # skip the first line which is the header.
-                if (not header_skipped):
-                    header_skipped = True
-                else:
-                    report_template = row[0]
-                    if framework == 'FINREP_REF':
-                        in_scope_reports.append('M_' + report_template + '_REF_FINREP' + ' ' + version.replace('.','_'))
-                    elif framework == 'AE_REF': 
-                        in_scope_reports.append('M_' + report_template + '_REF_AE' + framework + ' ' + version.replace('.','_'))
-
-        
-        rol_variables = {}
+        Args:
+            context: The context object containing file directory information.
+            sdd_context: The SDD context object containing mapping information.
+            framework: The reporting framework (e.g., 'FINREP_REF', 'AE_REF').
+            version: The version of the framework.
+        """
+        file_location = os.path.join(
+            context.file_directory, f"in_scope_reports_{framework}.csv"
+        )
+        in_scope_reports = self._get_in_scope_reports(
+            file_location, framework, version
+        )
         
         for destination_cube in sdd_context.mapping_to_cube_dictionary.keys():
+            if destination_cube.replace('.', '_') in in_scope_reports:
+                self.create_output_layer_for_cube_mapping(
+                    context, sdd_context, destination_cube, framework
+                )
 
-            if destination_cube.replace('.','_') in in_scope_reports:
-                
-                for mapping_to_cube in sdd_context.mapping_to_cube_dictionary[destination_cube]:
-                    mapping_def = mapping_to_cube.mapping
-                    variable_mapping = mapping_def.variable_mapping_id
-                    variable_mapping_items = sdd_context.variable_mapping_item_dictionary[variable_mapping.variable_mapping_id]
-                    for item in variable_mapping_items:
-                        if item.is_source == 'false':
-                            variable = item.variable
-                            try:
-                                if not (variable in rol_variables[destination_cube]):
-                                    rol_variables[destination_cube].append(variable)
-                            except KeyError:    
-                                rol_variables[destination_cube] = [variable]
-                    
-        for destination_cube,variables in rol_variables.items():
-            self.create_output_layer_for_cube_mapping(context,sdd_context,destination_cube,variables,framework,missing_domains)
+    def _get_in_scope_reports(self, file_location, framework, version):
+        """
+        Retrieve the list of in-scope reports from a CSV file.
 
-        for name in missing_domains:
-            print("Missing domain: " + name)
+        Args:
+            file_location (str): The path to the CSV file.
+            framework (str): The reporting framework.
+            version (str): The version of the framework.
 
-    def create_output_layer_for_cube_mapping(self,context,sdd_context,destination_cube,rol_variables,framework,missing_domains):
-        ''' 
-        for each cube mapping, create an output layer
-        '''
+        Returns:
+            list: A list of in-scope report names.
+        """
+        in_scope_reports = []
+        with open(file_location, encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            next(filereader)  # Skip header
+            for row in filereader:
+                report_template = row[0]
+                report_name = self._generate_report_name(
+                    report_template, framework, version
+                )
+                in_scope_reports.append(report_name)
+        return in_scope_reports
 
-        output_layer_cube = CUBE()
-        output_layer_cube_cube_structure = CUBE_STRUCTURE()
-        output_layer_cube.cube_id = destination_cube.replace('.','_').replace(' ','_')[2:len(destination_cube)]
-        output_layer_cube.name = destination_cube.replace('.','_').replace(' ','_')[2:len(destination_cube)]
-        output_layer_cube_cube_structure.cube_structure_id = destination_cube.replace('.','_').replace(' ','_')[2:len(destination_cube)] + '_cube_structure'
-        output_layer_cube_cube_structure.name = destination_cube.replace('.','_').replace(' ','_')[2:len(destination_cube)] + '_cube_structure'
-        output_layer_cube.cube_structure_id = output_layer_cube_cube_structure
+    def _generate_report_name(self, report_template, framework, version):
+        """
+        Generate a report name based on the template, framework, and version.
 
-        sdd_context.rol_cube_structure_dictionary[output_layer_cube_cube_structure.name] = output_layer_cube_cube_structure
-        sdd_context.rol_cube_dictionary[output_layer_cube.name] = output_layer_cube
-        if context.save_derived_sdd_items:
-            output_layer_cube_cube_structure.save()
-            output_layer_cube.save()
+        Args:
+            report_template (str): The report template name.
+            framework (str): The reporting framework.
+            version (str): The version of the framework.
+
+        Returns:
+            str: The generated report name.
+        """
+        version_str = version.replace('.', '_')
+        if framework == 'FINREP_REF':
+            return f'M_{report_template}_REF_FINREP {version_str}'
+        elif framework == 'AE_REF':
+            return f'M_{report_template}_REF_AE{framework} {version_str}'
+
+    def create_output_layer_for_cube_mapping(self, context, sdd_context, destination_cube, framework):
+        """
+        Create an output layer for each cube mapping.
+
+        Args:
+            context: The context object.
+            sdd_context: The SDD context object.
+            destination_cube (str): The destination cube name.
+            framework (str): The reporting framework.
+        """
+        output_layer_cube, output_layer_cube_structure = self._create_cube_and_structure(destination_cube)
         
+        sdd_context.rol_cube_structure_dictionary[output_layer_cube_structure.name] = output_layer_cube_structure
+        sdd_context.rol_cube_dictionary[output_layer_cube.name] = output_layer_cube
+        
+        if context.save_derived_sdd_items:
+            output_layer_cube_structure.save()
+            output_layer_cube.save()
         
         if framework == 'FINREP_REF':
             sdd_context.finrep_output_cubes[output_layer_cube.name] = output_layer_cube
-        elif framework == 'AE_REF': 
+        elif framework == 'AE_REF':
             sdd_context.ae_output_cubes[output_layer_cube.name] = output_layer_cube
 
-        for variable in rol_variables:
-            csi = CUBE_STRUCTURE_ITEM()
-            csi.cube_structure_id = output_layer_cube_cube_structure
-            csi.variable_id = variable
-            try:
-                sdd_context.rol_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id].append(csi)
-            except KeyError:
-                sdd_context.rol_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id] = [csi]
-            if context.save_derived_sdd_items:
-                csi.save()
+    def _create_cube_and_structure(self, destination_cube):
+        """
+        Create a cube and its corresponding structure.
 
-           
+        Args:
+            destination_cube (str): The destination cube name.
+
+        Returns:
+            tuple: A tuple containing the created CUBE and CUBE_STRUCTURE objects.
+        """
+        cube_name = self._generate_cube_name(destination_cube)
         
+        output_layer_cube = CUBE()
+        output_layer_cube.cube_id = cube_name
+        output_layer_cube.name = cube_name
 
+        output_layer_cube_structure = CUBE_STRUCTURE()
+        output_layer_cube_structure.cube_structure_id = f"{cube_name}_cube_structure"
+        output_layer_cube_structure.name = f"{cube_name}_cube_structure"
+        
+        output_layer_cube.cube_structure_id = output_layer_cube_structure
+        
+        return output_layer_cube, output_layer_cube_structure
+
+    def _generate_cube_name(self, destination_cube):
+        """
+        Generate a cube name from the destination cube string.
+
+        Args:
+            destination_cube (str): The destination cube name.
+
+        Returns:
+            str: The generated cube name.
+        """
+        return destination_cube.replace('.', '_').replace(' ', '_')[2:]

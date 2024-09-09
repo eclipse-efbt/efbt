@@ -13,68 +13,102 @@
 
 from django.db.models.fields.related import ForeignKey
 
-class ELDMSearch(object):
-    '''
-    Given a ELDM Entity, this class will search for all the attributes related to it
-    and return a list of all the attributes that are related to the entity.
-    This can mean that the attribute is directly related to the entity, 
-    or it is related to an entity that is related to the entity.
-    '''
+class ELDMSearch:
+    """
+    A class for searching and retrieving related entities in a Django model hierarchy.
+    """
 
     def get_all_related_entities(self, context, entity):
-        '''
-        Given a context and an entity, this function will return a list of all the attributes
-        that are related to the entity.
-        '''
+        """
+        Retrieve all related entities for a given entity.
+
+        Args:
+            context: The context in which the search is performed.
+            entity: The entity for which to find related entities.
+
+        Returns:
+            list: A list of related entities.
+        """
         entities = []
-        ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, entity, entities, 0, 4)
-        ELDMSearch.get_associated_entities(self, context, entity, entities, 0, 4)
-        #ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, entity, entities, 0, 4)
+        ELDMSearch._get_superclasses_and_associated_entities(
+            context, entity, entities, 0, 4
+        )
+        ELDMSearch._get_associated_entities(context, entity, entities, 0, 4)
         return entities
 
-    def get_associated_entities(self, context, entity, entities, link_count, link_limit):
-        '''
-        Given a context and an entity, this function will return a list of all the attributes
-        that are related to the entity.
-        '''
-        link_count = link_count + 1
-        if link_count < link_limit:
-            field_list = entity._meta.get_fields()
-            for feature in field_list:
-                if isinstance(feature, ForeignKey):
-                    if not(feature.name.startswith("parent_")) and not(feature.name.endswith("_delegate")) :
-                        # get the class that the reference points to and all subclasses of that class
-                        if not(feature.related_model in entities):
-                            entities.append(feature.related_model)
+    def _get_associated_entities(
+        context, entity, entities, link_count, link_limit
+    ):
+        """
+        Recursively retrieve associated entities through foreign key relationships.
 
-                        #ELDMSearch.get_subclasses_of_entity_and_their_associated_entities(self, context, feature.eType, entities,  link_count, link_limit)
-                        ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, feature.related_model, entities,  link_count, link_limit)
-                        ELDMSearch.get_associated_entities(self, context, feature.related_model, entities,  link_count, link_limit)
+        Args:
+            context: The context in which the search is performed.
+            entity: The entity for which to find associated entities.
+            entities (list): The list to store found entities.
+            link_count (int): The current depth of the recursive search.
+            link_limit (int): The maximum depth of the recursive search.
+        """
+        if link_count >= link_limit:
+            return
 
-    def get_superclasses_of_entity_and_their_associated_entities(self, context, entity, entities, link_count, link_limit):
-        '''
-        Given a context and an entity, this function will return a list of all the superclasses
-        that are related to the entity.
-        '''
+        for feature in entity._meta.get_fields():
+            if (
+                isinstance(feature, ForeignKey)
+                and not feature.name.startswith("parent_")
+                and not feature.name.endswith("_delegate")
+            ):
+                related_model = feature.related_model
+                if related_model not in entities:
+                    entities.append(related_model)
+                
+                ELDMSearch._get_superclasses_and_associated_entities(
+                    context, related_model, entities, link_count + 1, link_limit
+                )
+                ELDMSearch._get_associated_entities(
+                    context, related_model, entities, link_count + 1, link_limit
+                )
 
-        if len((entity._meta.get_parent_list())) > 0:
-            super_entity = entity._meta.get_parent_list()[0]
-            if not(super_entity in entities):
-                #if not (super_entity.eAbstract):  SHOULD WE KEEP THIS LINE?
+    def _get_superclasses_and_associated_entities(
+        context, entity, entities, link_count, link_limit
+    ):
+        """
+        Recursively retrieve superclasses and their associated entities.
+
+        Args:
+            context: The context in which the search is performed.
+            entity: The entity for which to find superclasses and associated entities.
+            entities (list): The list to store found entities.
+            link_count (int): The current depth of the recursive search.
+            link_limit (int): The maximum depth of the recursive search.
+        """
+        parent_list = entity._meta.get_parent_list()
+        if parent_list:
+            super_entity = parent_list[0]
+            if super_entity not in entities:
                 entities.append(super_entity)
-            ELDMSearch.get_associated_entities(self,context, super_entity, entities,  link_count, link_limit)
-            ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, super_entity, entities, link_count, link_limit)
+            ELDMSearch._get_associated_entities(
+                context, super_entity, entities, link_count, link_limit
+            )
+            ELDMSearch._get_superclasses_and_associated_entities(
+                context, super_entity, entities, link_count, link_limit
+            )
 
-        field_list = entity._meta.get_fields()
-        for feature in field_list:
-            if isinstance(feature, ForeignKey):
-                if feature.name.startswith("parent_") and not(feature.name == "parent_member_id") and not(feature.name == "parent_axis_ordinate_id"):
-                    super_entity = feature.related_model
-                    if not(super_entity in entities):
-                        entities.append(super_entity)
-                    ELDMSearch.get_associated_entities(self, context, super_entity, entities, link_count, link_limit)
-                    ELDMSearch.get_superclasses_of_entity_and_their_associated_entities(self, context, super_entity, entities, link_count, link_limit)
+        for feature in entity._meta.get_fields():
+            if (
+                isinstance(feature, ForeignKey)
+                and feature.name.startswith("parent_")
+                and feature.name not in ("parent_member_id", "parent_axis_ordinate_id")
+            ):
+                super_entity = feature.related_model
+                if super_entity not in entities:
+                    entities.append(super_entity)
+                ELDMSearch._get_associated_entities(
+                    context, super_entity, entities, link_count, link_limit
+                )
+                ELDMSearch._get_superclasses_and_associated_entities(
+                    context, super_entity, entities, link_count, link_limit
+                )
 
 
 
-    

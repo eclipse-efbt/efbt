@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2020 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -10,33 +10,59 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-# This script creates an analysis model from an SDD file and saves it as a CSV filegit add 
+# This script creates an analysis model from an SDD file and saves it as a CSV file
 
 import django
+import os
 from django.apps import AppConfig
 from birdbox.context.sdd_context_django import SDDContext
 
 class RunWebsiteToSDDModel(AppConfig):
+    """
+    Django AppConfig for running the website to SDD model conversion process.
 
-    path = 'C:\\Users\\neil\\freebirdtools-develop-July11\\git\\efbt\\birds_nest\\birds_nest'
+    This class sets up the necessary context and runs the import process
+    to convert website data into an SDD (Single Domain Description) model.
+    """
+
+    path = '/workspaces/efbt/bird/birds_nest/birds_nest'
+
     def ready(self):
+        """
+        Prepare and execute the website to SDD model conversion process.
+
+        This method sets up the necessary contexts, creates reference domains
+        and variables, and imports the website data into the SDD model.
+        """
         from birdbox.sdd_models import MAINTENANCE_AGENCY
-        from birdbox.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import ImportWebsiteToSDDModel
-        from birdbox.process_steps.database_to_sdd_model.create_reference_domains_and_variables import CreateRefDomainsAndVariables
+        from birdbox.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
+            ImportWebsiteToSDDModel
+        )
+        from birdbox.process_steps.database_to_sdd_model.create_reference_domains_and_variables import (
+            CreateRefDomainsAndVariables
+        )
         from birdbox.context.context import Context
+
+        base_dir = '/workspaces/efbt/bird/birds_nest/' 
         sdd_context = SDDContext()
-        sdd_context.file_directory = '/workspaces/efbt/bird/birdseed_creator/resources'
-        sdd_context.output_directory = '/workspaces/efbt/bird/birdseed_creator/results'
-        context = Context()
-        context.file_directory = '/workspaces/efbt/birdsnest/resources'
-        context.output_directory = '/workspaces/efbt/birdsnest/results'
-        CreateRefDomainsAndVariables.create_ref_domains_and_variables_and_cubes(self,sdd_context,context)
-        ImportWebsiteToSDDModel().import_sdd(sdd_context)
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.output_directory = os.path.join(base_dir, 'results')
         
+        context = Context()
+        context.file_directory = sdd_context.file_directory
+        context.output_directory = sdd_context.output_directory
+
+        # Create reference domains, variables, and cubes
+        CreateRefDomainsAndVariables.create_ref_domains_and_variables_and_cubes(
+             sdd_context, context
+        )
+
+        # Import website data to SDD model
+        ImportWebsiteToSDDModel().import_sdd(sdd_context)
 
 if __name__ == '__main__':
     django.setup()
-    RunWebsiteToSDDModel('birdbox','birds_nest').ready()
+    RunWebsiteToSDDModel('birdbox', 'birds_nest').ready()
 
 
       

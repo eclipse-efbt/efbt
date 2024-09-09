@@ -61,14 +61,14 @@ class Context(object):
     # our standard primitive types such as EString
     datatype_map = {}
 
-    main_catogory_to_name_map_finrep = {}
-    main_catogory_to_name_map_ae = {}
+    main_category_to_name_map_finrep = {}
+    main_category_to_name_map_ae = {}
 
-    table_parts_to_main_catagory_map_finrep = {}
-    table_parts_to_main_catagory_map_ae = {}
+    table_parts_to_main_category_map_finrep = {}
+    table_parts_to_main_category_map_ae = {}
     
-    tables_for_main_catagory_map_finrep = {}
-    tables_for_main_catagory_map_ae = {}
+    tables_for_main_category_map_finrep = {}
+    tables_for_main_category_map_ae = {}
 
     table_parts_to_linked_tables_map_finrep = {}
     table_parts_to_linked_tables_map_ae = {}
@@ -80,7 +80,7 @@ class Context(object):
     table_and_part_tuple_map_ae = {}
 
     ldm_entity_to_linked_tables_map = {}
-    report_to_main_catogory_map = {}
+    report_to_main_category_map = {}
     enum_map = {}
     
     arc_to_source_map = {}
@@ -90,8 +90,8 @@ class Context(object):
 
     enums_used = []
 
-    main_catagories_in_scope_finrep = []
-    main_catagories_in_scope_ae = []
+    main_categories_in_scope_finrep = []
+    main_categories_in_scope_ae = []
 
     load_sdd_from_website =False
 
