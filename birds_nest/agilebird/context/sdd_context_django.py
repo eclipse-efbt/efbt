@@ -99,6 +99,8 @@ class SDDContext(object):
  
     save_sdd_to_db = True
 
+    exclude_reference_info_from_website = False
+
     def __init__(self):
 
         pass

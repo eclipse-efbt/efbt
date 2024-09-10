@@ -116,6 +116,7 @@ class ImportWebsiteToSDDModel(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
+                    maintenence_agency = row[ColumnIndexes().domain_maintenence_agency]
                     code = row[ColumnIndexes().domain_domain_id_index]
                     data_type = row[ColumnIndexes().domain_domain_data_type]
                     description = row[ColumnIndexes().domain_domain_description]
@@ -123,27 +124,32 @@ class ImportWebsiteToSDDModel(object):
                     is_enumerated = row[ColumnIndexes().domain_domain_is_enumerated]
                     is_reference = row[ColumnIndexes().domain_domain_is_reference]
                     domain_name = row[ColumnIndexes().domain_domain_name_index]
+                    exclude = False
+                    if  context.exclude_reference_info_from_website and (maintenence_agency == "ECB"):
+                        exclude = True
+                    if not exclude:
+                        domain = DOMAIN(
+                            name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
+                        maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
+                        domain.maintenance_agency_id = maintenance_agency
+                        domain.code = code
 
-                    domain = DOMAIN(
-                        name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
-                    domain.code = code
+                        domain.description = description
+                        domain.domain_id = ImportWebsiteToSDDModel.replace_dots(self, domain_id)
+                        domain.name = domain_name
+                        if is_enumerated:
+                            domain.is_enumerated = True
+                        else:
+                            domain.is_enumerated = False
 
-                    domain.description = description
-                    domain.domain_id = ImportWebsiteToSDDModel.replace_dots(self, domain_id)
-                    domain.name = domain_name
-                    if is_enumerated:
-                        domain.is_enumerated = True
-                    else:
-                        domain.is_enumerated = False
+                        if is_enumerated:
+                            domain.is_reference = True
+                        else:
+                            domain.is_reference = False
 
-                    if is_enumerated:
-                        domain.is_reference = True
-                    else:
-                        domain.is_reference = False
-
-                    if context.save_sdd_to_db:  
-                        domain.save()
-                    context.nonref_domain_dictionary[domain_id] = domain
+                        if context.save_sdd_to_db:  
+                            domain.save()
+                        context.nonref_domain_dictionary[domain_id] = domain
 
     def create_all_nonref_members(self, context):
         '''
@@ -163,24 +169,31 @@ class ImportWebsiteToSDDModel(object):
                     domain_id = row[ColumnIndexes().member_domain_id_index]
                     member_id = row[ColumnIndexes().member_member_id_index]
                     member_name = row[ColumnIndexes().member_member_name_index]
+                    maintenence_agency = row[ColumnIndexes().member_member_maintenence_agency]
                     if (member_name is None) or (member_name == ""):
                         member_name = member_id
-                    member = MEMBER(
-                        name=ImportWebsiteToSDDModel.replace_dots(self, member_id))
-                    member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
-                    member.code = code
-                    member.description = description
-                    member.name = member_name
-                    domain = ImportWebsiteToSDDModel.find_domain_with_id(
-                        self, context, domain_id)
-                    member.domain_id = domain
-                    if context.save_sdd_to_db:  
-                        member.save()
-                    context.nonref_member_dictionary[member_id] = member
+                    exclude = False
+                    if  context.exclude_reference_info_from_website and (maintenence_agency == "ECB"):
+                        exclude = True
+                    if not exclude:
+                        member = MEMBER(
+                            name=ImportWebsiteToSDDModel.replace_dots(self, member_id))
+                        member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
+                        member.code = code
+                        member.description = description
+                        member.name = member_name
+                        maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
+                        member.maintenance_agency_id = maintenance_agency
+                        domain = ImportWebsiteToSDDModel.find_domain_with_id(
+                            self, context, domain_id)
+                        member.domain_id = domain
+                        if context.save_sdd_to_db:  
+                            member.save()
+                        context.nonref_member_dictionary[member_id] = member
 
-                    if not (domain_id is None) and not (domain_id == ""):
-                        context.member_id_to_domain_map[member] = domain
-                        context.member_id_to_member_code_map[member_id] = code
+                        if not (domain_id is None) and not (domain_id == ""):
+                            context.member_id_to_domain_map[member] = domain
+                            context.member_id_to_member_code_map[member_id] = code
 
     def create_all_nonref_variables(self, context):
         '''
@@ -202,26 +215,30 @@ class ImportWebsiteToSDDModel(object):
                     name = row[ColumnIndexes().variable_long_name_index]
                     variable_id = row[ColumnIndexes().variable_variable_true_id]
                     primary_concept = row[ColumnIndexes().variable_primary_concept]
+                    exclude = False
+                    if  context.exclude_reference_info_from_website and (maintenence_agency == "ECB"):
+                        exclude = True
+                    if not exclude:
+                        variable = VARIABLE(
+                            name=ImportWebsiteToSDDModel.replace_dots(self, variable_id))
+                        maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
+                        variable.code = code
+                        variable.variable_id = ImportWebsiteToSDDModel.replace_dots(
+                            self, variable_id)
+                        variable.name = name
+                        domain = ImportWebsiteToSDDModel.find_domain_with_id(self, context, domain_id)
+                        variable.domain_id =domain
+                        variable.description = description
+                        variable.maintenance_agency_id = maintenance_agency_id
 
-                    variable = VARIABLE(
-                        name=ImportWebsiteToSDDModel.replace_dots(self, variable_id))
-                    maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
-                    variable.code = code
-                    variable.variable_id = ImportWebsiteToSDDModel.replace_dots(
-                        self, variable_id)
-                    variable.name = name
-                    domain = ImportWebsiteToSDDModel.find_domain_with_id(self, context, domain_id)
-                    variable.domain_id =domain
-                    variable.description = description
+                        if context.save_sdd_to_db:  
+                            variable.save()
+                        context.nonref_variable_dictionary[variable_id] = variable
 
-                    if context.save_sdd_to_db:  
-                        variable.save()
-                    context.nonref_variable_dictionary[variable_id] = variable
-
-                    context.variable_to_domain_map[variable_id] = domain
-                    context.variable_to_long_names_map[variable_id] = name
-                    if not((primary_concept == "") or (primary_concept == None)):
-                        context.variable_to_primary_concept_map[variable_id] = primary_concept
+                        context.variable_to_domain_map[variable_id] = domain
+                        context.variable_to_long_names_map[variable_id] = name
+                        if not((primary_concept == "") or (primary_concept == None)):
+                            context.variable_to_primary_concept_map[variable_id] = primary_concept
 
     def create_all_member_hierarchies(self, context):
         '''

@@ -285,7 +285,7 @@ class SQLDevLDMImport(object):
                     synonym = row[3]
                     adapted_enum_name = Utils.make_valid_id(synonym)
                     the_enum = ELEnum()
-                    the_enum.name = adapted_enum_name
+                    the_enum.name = adapted_enum_name + "_domain"
                     # maintain a map of enum IDS to ELEnum objects
                     context.enum_map[enum_id] = the_enum
                     context.ldm_domains_package.eClassifiers.extend([
@@ -509,7 +509,7 @@ class SQLDevLDMImport(object):
                             attribute.name = the_attribute_name
                             attribute.eType = context.types.e_date
                             attribute.eAttributeType = context.types.e_date
-                        elif the_enum.name.startswith("DT_FLL_"):
+                        elif the_enum.name.startswith("DT_FLL"):
                             attribute.name = the_attribute_name
                             attribute.eType = context.types.e_date
                             attribute.eAttributeType = context.types.e_date

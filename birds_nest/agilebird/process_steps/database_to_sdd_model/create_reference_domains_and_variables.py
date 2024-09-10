@@ -13,6 +13,7 @@
 
 from agilebird.sdd_models import *
 from django.apps import apps
+from django.db.models.fields.related import ForeignKey
 
 
 class CreateRefDomainsAndVariables(object):
@@ -113,7 +114,8 @@ class CreateRefDomainsAndVariables(object):
             context: The context object containing configuration settings.
         """
         for field in model._meta.get_fields():
-            CreateRefDomainsAndVariables._process_field(field, sdd_context, context)
+            if not(isinstance(field, ForeignKey)):
+                CreateRefDomainsAndVariables._process_field(field, sdd_context, context)
 
     def _process_field(field, sdd_context, context):
         """
