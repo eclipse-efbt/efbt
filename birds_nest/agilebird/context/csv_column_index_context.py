@@ -39,6 +39,7 @@ class ColumnIndexes(object):
     variable_variable_true_id = 1
     variable_primary_concept = 6
     
+    domain_maintenence_agency = 0
     domain_domain_id_index = 6
     domain_domain_name_index = 2
     domain_domain_data_type = 5
@@ -48,7 +49,7 @@ class ColumnIndexes(object):
     domain_domain_is_reference = 8
     
 
-    
+    member_member_maintenence_agency = 0
     member_member_id_index = 1
     member_member_code_index = 2
     member_member_name_index = 3
