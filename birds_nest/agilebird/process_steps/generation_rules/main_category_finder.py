@@ -116,7 +116,6 @@ class MainCategoryFinder(object):
         combination_items = sdd_context.combination_item_dictionary.get(
             combination.combination_id.combination_id, []
         )
-        
         cell_instrmnt_ids_list = self._get_cell_instrmnt_ids(combination_items)
         if cell_instrmnt_ids_list:
             self._update_categories(context, cube_name, cell_instrmnt_ids_list,

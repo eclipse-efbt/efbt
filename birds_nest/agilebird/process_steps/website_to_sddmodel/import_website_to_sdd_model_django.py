@@ -20,17 +20,42 @@ class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for importing SDD csv files into an instance of the analysis model
     '''
-
-    def import_sdd(self, sdd_context):
+    def import_basic_info_from_website(self, sdd_context):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
         ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportWebsiteToSDDModel.create_frameworks(self, sdd_context)
-        ImportWebsiteToSDDModel.create_all_nonref_domains(self, sdd_context)
-        ImportWebsiteToSDDModel.create_all_nonref_members(self, sdd_context)
-        ImportWebsiteToSDDModel.create_all_nonref_variables(self, sdd_context)
 
+    def import_reference_info_from_sdd(self, sdd_context):
+        '''
+        Import SDD csv files into an instance of the analysis model
+        '''
+
+        ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,True)
+        ImportWebsiteToSDDModel.create_all_members(self, sdd_context,True)
+        ImportWebsiteToSDDModel.create_all_variables(self, sdd_context,True)
+
+    def import_non_reference_info_from_sdd(self, sdd_context):
+        '''
+        Import SDD csv files into an instance of the analysis model
+        '''
+
+        ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,False)
+        ImportWebsiteToSDDModel.create_all_members(self, sdd_context,False)
+        ImportWebsiteToSDDModel.create_all_variables(self, sdd_context,False)
+
+        ImportWebsiteToSDDModel.create_report_tables(self, sdd_context)
+        ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
+        ImportWebsiteToSDDModel.create_axis(self, sdd_context)
+        ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
+        ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
+        ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
+
+    def import_mappings_from_sdd(self, sdd_context):
+        '''
+        Import SDD csv files into an instance of the analysis model
+        '''
         ImportWebsiteToSDDModel.create_all_member_hierarchies(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_member_hierarchies_nodes(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_variable_mappings(self, sdd_context)
@@ -38,14 +63,7 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_member_mappings(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_member_mappings_items(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_mapping_definitions(self, sdd_context)
-
         ImportWebsiteToSDDModel.create_all_mapping_to_cubes(self, sdd_context)
-        ImportWebsiteToSDDModel.create_report_tables(self, sdd_context)
-        ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
-        ImportWebsiteToSDDModel.create_axis(self, sdd_context)
-        ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
-        ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
-        ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
     def create_maintenance_agencies(self, context):
         '''
@@ -103,7 +121,7 @@ class ImportWebsiteToSDDModel(object):
                         framework.save()
                     context.framework_dictionary[ImportWebsiteToSDDModel.replace_dots(self, id)] = framework
 
-    def create_all_nonref_domains(self, context):
+    def create_all_domains(self, context, ref):
         '''
         Import all domains from CSV file
         '''
@@ -124,10 +142,12 @@ class ImportWebsiteToSDDModel(object):
                     is_enumerated = row[ColumnIndexes().domain_domain_is_enumerated]
                     is_reference = row[ColumnIndexes().domain_domain_is_reference]
                     domain_name = row[ColumnIndexes().domain_domain_name_index]
-                    exclude = False
-                    if  context.exclude_reference_info_from_website and (maintenence_agency == "ECB"):
-                        exclude = True
-                    if not exclude:
+                    include = False
+                    if  (ref) and (maintenence_agency == "ECB"):
+                        include = True
+                    if  ( not ref) and not (maintenence_agency == "ECB"):
+                        include = True
+                    if include:
                         domain = DOMAIN(
                             name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
                         maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
@@ -151,7 +171,7 @@ class ImportWebsiteToSDDModel(object):
                             domain.save()
                         context.nonref_domain_dictionary[domain_id] = domain
 
-    def create_all_nonref_members(self, context):
+    def create_all_members(self, context,ref):
         '''
         Import all members from CSV file
         '''
@@ -172,10 +192,12 @@ class ImportWebsiteToSDDModel(object):
                     maintenence_agency = row[ColumnIndexes().member_member_maintenence_agency]
                     if (member_name is None) or (member_name == ""):
                         member_name = member_id
-                    exclude = False
-                    if  context.exclude_reference_info_from_website and (maintenence_agency == "ECB"):
-                        exclude = True
-                    if not exclude:
+                    include = False
+                    if  (ref) and (maintenence_agency == "ECB"):
+                        include = True
+                    if  ( not ref) and not (maintenence_agency == "ECB"):
+                        include = True
+                    if include:
                         member = MEMBER(
                             name=ImportWebsiteToSDDModel.replace_dots(self, member_id))
                         member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
@@ -195,7 +217,7 @@ class ImportWebsiteToSDDModel(object):
                             context.member_id_to_domain_map[member] = domain
                             context.member_id_to_member_code_map[member_id] = code
 
-    def create_all_nonref_variables(self, context):
+    def create_all_variables(self, context, ref):
         '''
         Import all variables from CSV file
         '''
@@ -215,10 +237,12 @@ class ImportWebsiteToSDDModel(object):
                     name = row[ColumnIndexes().variable_long_name_index]
                     variable_id = row[ColumnIndexes().variable_variable_true_id]
                     primary_concept = row[ColumnIndexes().variable_primary_concept]
-                    exclude = False
-                    if  context.exclude_reference_info_from_website and (maintenence_agency == "ECB"):
-                        exclude = True
-                    if not exclude:
+                    include = False
+                    if  (ref) and (maintenence_agency == "ECB"):
+                        include = True
+                    if  ( not ref) and not (maintenence_agency == "ECB"):
+                        include = True
+                    if include:
                         variable = VARIABLE(
                             name=ImportWebsiteToSDDModel.replace_dots(self, variable_id))
                         maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
@@ -707,6 +731,8 @@ class ImportWebsiteToSDDModel(object):
                         self,context,variable_mapping_item_variable_mapping_id)
                     variable_mapping_item.variable = ImportWebsiteToSDDModel.find_variable_with_id(
                         self,context,variable_mapping_item_variable_id)
+                    if variable_mapping_item.variable is None:
+                        print(f"No Variable mapping item variable id: {variable_mapping_item_variable_id}")
                     variable_mapping_item.is_source = variable_mapping_item_is_source
                     variable_mapping_item.valid_from = variable_mapping_item_valid_from
                     variable_mapping_item.valid_to = variable_mapping_item_valid_to
