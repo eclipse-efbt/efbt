@@ -28,9 +28,6 @@ class RunCreateGenerationRules(AppConfig):
         from agilebird.process_steps.database_to_sdd_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
         )
-        from agilebird.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
-            ImportWebsiteToSDDModel
-        )
         from agilebird.context.sdd_context_django import SDDContext
         from agilebird.context.context import Context
         from agilebird.process_steps.sqldeveloper_import.import_sqldev_ldm_to_regdna import (
@@ -52,10 +49,7 @@ class RunCreateGenerationRules(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        if context.load_sdd_from_website:            
-            ImportWebsiteToSDDModel().import_sdd(sdd_context)
-        else:
-            ImportDatabaseToSDDModel().import_sdd(sdd_context)
+        ImportDatabaseToSDDModel().import_sdd(sdd_context)
 
         SQLDevLDMImport.do_import(self, context)
         MainCategoryFinder().create_report_to_main_category_maps(

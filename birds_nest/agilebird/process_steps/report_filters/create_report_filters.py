@@ -94,7 +94,8 @@ class CreateReportFilters:
 
         report_rol_cube = CreateReportFilters.get_rol_cube_for_table_id(Utils.make_valid_id(cell.table_id.table_id), sdd_context, framework, version)
         if not report_rol_cube:
-            print(f"Could not find report for {cell.table_id.table_id}")
+            #print(f"Could not find report for {cell.table_id.table_id}")
+            pass
             return
 
         CreateReportFilters.create_combination_and_filters(cell_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context)

@@ -13,7 +13,8 @@
 
 from agilebird.sdd_models import *
 from django.apps import apps
-from django.db.models.fields.related import ForeignKey
+
+from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 
 
 class CreateRefDomainsAndVariables(object):
@@ -114,7 +115,7 @@ class CreateRefDomainsAndVariables(object):
             context: The context object containing configuration settings.
         """
         for field in model._meta.get_fields():
-            if not(isinstance(field, ForeignKey)):
+            if isinstance(field, (CharField, DateTimeField, BigIntegerField, BooleanField, FloatField, CharField)):
                 CreateRefDomainsAndVariables._process_field(field, sdd_context, context)
 
     def _process_field(field, sdd_context, context):
@@ -186,6 +187,7 @@ class CreateRefDomainsAndVariables(object):
             variable = VARIABLE()
             variable.maintenance_agency_id = sdd_context.agency_dictionary["REF"]
             variable.variable_id = variable_id
+            variable.code = variable_id
             try:
                 variable.name = field.verbose_name
             except AttributeError:
