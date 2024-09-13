@@ -25,12 +25,12 @@ from agilebird.process_steps.sqldeveloper_import.import_sqldev_ldm_to_django imp
 class RunCreateDjangoModels(AppConfig):
     """AppConfig for creating Django models from SQL Developer Logical Data Model."""
 
-    path = '/workspaces/efbt/bird/birds_nest/birds_nest'
+    path = '/workspaces/efbt/birds_nest/birds_nest'
 
 
     def ready(self):
         """Prepare the context and run the import and conversion processes."""
-        base_dir = '/workspaces/efbt/bird/birds_nest/' 
+        base_dir = '/workspaces/efbt/birds_nest/' 
         
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')

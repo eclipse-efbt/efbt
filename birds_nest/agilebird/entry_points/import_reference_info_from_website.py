@@ -25,7 +25,7 @@ class RunImportRefInfoFromWebsite(AppConfig):
     to convert website data into an SDD  model.
     """
 
-    path = '/workspaces/efbt/bird/birds_nest/birds_nest'
+    path = '/workspaces/efbt/birds_nest/birds_nest'
 
     def ready(self):
         """
@@ -41,7 +41,7 @@ class RunImportRefInfoFromWebsite(AppConfig):
 
         from agilebird.context.context import Context
 
-        base_dir = '/workspaces/efbt/bird/birds_nest/' 
+        base_dir = '/workspaces/efbt/birds_nest/' 
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')

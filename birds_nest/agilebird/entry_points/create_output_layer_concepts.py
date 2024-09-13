@@ -24,7 +24,7 @@ class RunCreateReports(AppConfig):
     output layers, and report filters.
     """
 
-    path = '/workspaces/efbt/bird/birds_nest/birds_nest'
+    path = '/workspaces/efbt/birds_nest/birds_nest'
 
     def ready(self):
         """
@@ -58,7 +58,7 @@ class RunCreateReports(AppConfig):
             ImportDatabaseToSDDModel
         )
 
-        base_dir = '/workspaces/efbt/bird/birds_nest/' 
+        base_dir = '/workspaces/efbt/birds_nest/' 
         
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')

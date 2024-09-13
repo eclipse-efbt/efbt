@@ -21,7 +21,7 @@ from django.apps import AppConfig
 class RunCreateGenerationRules(AppConfig):
     """Django AppConfig for running the creation of generation rules."""
 
-    path = '/workspaces/efbt/bird/birds_nest/birds_nest'
+    path = '/workspaces/efbt/birds_nest/birds_nest'
 
     def ready(self):
         """Execute the process of creating generation rules when the app is ready."""
@@ -40,7 +40,7 @@ class RunCreateGenerationRules(AppConfig):
             MainCategoryFinder
         )
 
-        base_dir = '/workspaces/efbt/bird/birds_nest/'   
+        base_dir = '/workspaces/efbt/birds_nest/'   
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
