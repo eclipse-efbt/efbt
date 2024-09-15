@@ -240,7 +240,25 @@ class Utils(object):
         for annotation_directive in package.annotationDirectives:
             if annotation_directive.name == name:
                 return_annotation_directive = annotation_directive
-        return return_annotation_directive        
+        return return_annotation_directive   
+
+    @classmethod
+    def number_of_relationships_to_this_class(cls, source_class, target_class):
+        '''
+        Checks how many relationships there are between 2 classes
+        It is possible that one class might have 2 different relationships 
+        to the same class.
+        '''
+        features = source_class.eStructuralFeatures
+        counter = 0
+        # do this for relationship attributes only.
+        for feature in features:
+            if isinstance(feature, ELReference):
+                feature_type = feature.eType
+                if feature_type == target_class:
+                    counter = counter+1
+
+        return counter     
        
 
         

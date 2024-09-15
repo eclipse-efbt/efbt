@@ -18,6 +18,9 @@ from agilebird.context.context import Context
 from agilebird.process_steps.sqldeveloper_import.import_sqldev_ldm_to_regdna import (
     SQLDevLDMImport,
 )
+from agilebird.process_steps.sqldeveloper_import.import_sqldev_il_to_regdna import (
+    SQLDeveloperILImport,
+)
 from agilebird.process_steps.sqldeveloper_import.import_sqldev_ldm_to_django import (
     RegDNAToDJango,
 )
@@ -39,8 +42,10 @@ class RunCreateDjangoModels(AppConfig):
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
-
-        SQLDevLDMImport.do_import(self, context)
+        if context.ldm_or_il == 'ldm':
+            SQLDevLDMImport.do_import(self, context)
+        else:
+            SQLDeveloperILImport.do_import(self, context)
         RegDNAToDJango.convert(self, context)
 
 if __name__ == '__main__':

@@ -25,8 +25,12 @@ class RegDNAToDJango(object):
         '''
         models_file = open(context.output_directory + os.sep + 'models.py', "a",  encoding='utf-8') 
         admin_file = open(context.output_directory + os.sep + 'admin.py', "a",  encoding='utf-8') 
-        RegDNAToDJango.createDjangoForPackage(self,context.ldm_entities_package,models_file,context)
-        RegDNAToDJango.createDjangoAdminForPackage(self,context.ldm_entities_package,admin_file,context)
+        if context.ldm_or_il == 'ldm':
+            RegDNAToDJango.createDjangoForPackage(self,context.ldm_entities_package,models_file,context)
+            RegDNAToDJango.createDjangoAdminForPackage(self,context.ldm_entities_package,admin_file,context)
+        else:
+            RegDNAToDJango.createDjangoForPackage(self,context.il_tables_package,models_file,context)
+            RegDNAToDJango.createDjangoAdminForPackage(self,context.il_tables_package,admin_file,context)
         
     def djangoChoices(self, theEnum):
 
@@ -86,7 +90,7 @@ class RegDNAToDJango(object):
                     # only create a foreign key if the upper bound is 1, not that n to 1 relationships have 
                     # a refernce on both sides of the relationship, we only show the one with cardiantlity of 1.
                     if elmember.upperBound == 1:
-                        output_file.write('\t' + elmember.name + ' = models.ForeignKey("' + elmember.eType.name + '", models.SET_NULL,blank=True,null=True,related_name="' + elmember.name + 's")\r\n')
+                        output_file.write('\t' + elmember.name + ' = models.ForeignKey("' + elmember.eType.name + '", models.SET_NULL,blank=True,null=True,related_name="' + elclass.name + '_to_' + elmember.name + 's")\r\n')
                     else:
                         if elmember.eOpposite is not None:
                             pass

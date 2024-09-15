@@ -43,7 +43,7 @@ class SQLDevLDMImport(object):
         '''
         for each entity in the LDM, create a class and add it to the package
         '''
-        file_location = context.file_directory + os.sep + "DM_Entities.csv"
+        file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Entities.csv"
 
         header_skipped = False
         # Load all the entities from the csv file, make an ELClass per entity,
@@ -246,7 +246,7 @@ class SQLDevLDMImport(object):
         but not if it already has a super class set by the disjoint subtyping
         processing
         '''
-        file_location = context.file_directory + os.sep + "DM_Entities.csv"
+        file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Entities.csv"
         header_skipped = False
 
         # Where an entity has a superclass, set the superclass on the ELClass
@@ -269,7 +269,7 @@ class SQLDevLDMImport(object):
         '''
         for each domain in the LDM add an enum to the package
         '''
-        file_location = context.file_directory + os.sep + "DM_Domains.csv"
+        file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Domains.csv"
         header_skipped = False
         counter = 0
         # Create an ELEnum for each domain, and add it to the ELPackage
@@ -295,7 +295,7 @@ class SQLDevLDMImport(object):
         '''
         for each memebr of a domain the LDM, add a literal to the corresponding enum
         '''
-        file_location = context.file_directory + os.sep + "DM_Domain_AVT.csv"
+        file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Domain_AVT.csv"
         header_skipped = False
         counter = 0
         # Add the members of a domain as literals of the related Enum
@@ -338,7 +338,7 @@ class SQLDevLDMImport(object):
         # for each logicalDatatype for orcle 12c, make a Datatype if we have an
         # equivalent
 
-        file_location = context.file_directory + os.sep + "DM_Logical_To_Native.csv"
+        file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Logical_To_Native.csv"
         header_skipped = False
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -382,7 +382,7 @@ class SQLDevLDMImport(object):
         to the relevant class in the package
         '''
 
-        file_location = context.file_directory + os.sep + "DM_Attributes.csv"
+        file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Attributes.csv"
         header_skipped = False
         # For each attribute add an ELAttribute to the correct ELClass representing the Entity
         # the attribute should have the correct type, which may be a specific
@@ -422,34 +422,7 @@ class SQLDevLDMImport(object):
                         the_enum = context.enum_map[enum_id]
 
                         attribute = ELAttribute()
-                        if primary_key_or_not == "P":
-                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
-                            if the_attribute_annotation is None: 
-                                the_attribute_annotation = ELAnnotation()
-                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "key")
-                                the_attribute_annotation.source = the_attribute_annotation_directive
-                                attribute.eAnnotations.append(the_attribute_annotation)
-                            
-                            details = the_attribute_annotation.details
-                            mapentry  = ELStringToStringMapEntry()
-                            mapentry.key = "is_primary_key"
-                            mapentry.value = "true"
-                            details.append(mapentry)
-
-                        
-                        if foreign_key_or_not == "F":
-                            the_attribute_annotation = Utils.get_annotation_with_source(attribute, "key")
-                            if the_attribute_annotation is None: 
-                                the_attribute_annotation = ELAnnotation()
-                                the_attribute_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "key")
-                                the_attribute_annotation.source = the_attribute_annotation_directive
-                                attribute.eAnnotations.append(the_attribute_annotation)
-                            
-                            details = the_attribute_annotation.details
-                            mapentry  = ELStringToStringMapEntry()
-                            mapentry.key = "is_foreign_key"
-                            mapentry.value = "true"
-                            details.append(mapentry)      
+                          
                                                           
                         attribute.lowerBound = 0
                         attribute.upperBound = 1
@@ -572,7 +545,7 @@ class SQLDevLDMImport(object):
         '''
         For each relationship in the LDM, add a reference between the relevant classes
         '''
-        file_location = context.file_directory + os.sep + "DM_Relations.csv"
+        file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Relations.csv"
         header_skipped = False
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')

@@ -21,6 +21,7 @@ class Context(object):
     '''
     # variables to configure the behaviour
     
+    ldm_or_il = 'il'
 
     enrich_ldm_relationships = False
     use_codes = True
@@ -46,6 +47,16 @@ class Context(object):
         nsURI='http://www.eclipse.org/bird/ldm_entities',
         nsPrefix='ldm_entities')
     
+    il_domains_package = ELPackage(
+        name='il_domains',
+        nsURI='http://www.eclipse.org/bird/il_domains',
+        nsPrefix='ldm_domains')
+   
+    il_tables_package = ELPackage(
+        name='il_entities',
+        nsURI='http://www.eclipse.org/bird/il_entities',
+        nsPrefix='il_entities')
+    
 
     
     reports_dictionary = {}
@@ -56,6 +67,12 @@ class Context(object):
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classes_map = {}
+
+    table_map = {}
+
+    fk_to_mandatory_map = {}
+
+    fk_to_column_map = {}
 
     # A map between the ELDM names for primitive types types, and
     # our standard primitive types such as EString
@@ -106,6 +123,13 @@ class Context(object):
         code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
         long_name_directive_ldm_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
 
+        il_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
+        il_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
+        il_entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
+        il_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
+        il_code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
+        long_name_directive_il_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+
        
         self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(ldm_dependency_annotation_directive)
@@ -113,6 +137,13 @@ class Context(object):
         self.ldm_entities_package.annotationDirectives.append(ldm_relationship_type_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(long_name_directive_ldm_entities)
         self.ldm_entities_package.annotationDirectives.append(code_annotation_directive)
+
+        self.il_tables_package.annotationDirectives.append(il_key_annotation_directive)
+        self.il_tables_package.annotationDirectives.append(il_dependency_annotation_directive)
+        self.il_tables_package.annotationDirectives.append(il_entity_hierarchy_annotation_directive)
+        self.il_tables_package.annotationDirectives.append(il_relationship_type_annotation_directive)
+        self.il_tables_package.annotationDirectives.append(long_name_directive_il_entities)
+        self.il_tables_package.annotationDirectives.append(il_code_annotation_directive)
 
         types = EcoreLiteTypes()
         self.types_package.eClassifiers.append(types.e_string)

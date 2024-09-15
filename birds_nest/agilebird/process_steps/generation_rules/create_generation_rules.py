@@ -121,7 +121,7 @@ class GenerationRuleCreator:
                     tables = tables_for_main_category_map[mc]
                     for table in tables:
                         inputLayerTable = self.find_input_layer_cube(
-                            sdd_context, table[5:], framework
+                            sdd_context, table, framework
                         )
                         table_parts = table_and_part_tuple_map[mc]
 
@@ -156,7 +156,7 @@ class GenerationRuleCreator:
 
                             for the_table in linked_tables_list:
                                 the_input_table = self.find_input_layer_cube(
-                                    sdd_context, the_table[5:], framework
+                                    sdd_context, the_table, framework
                                 )
                                 if the_input_table:
                                     input_entity_list.append(the_input_table)

@@ -224,6 +224,9 @@ class MainCategoryFinder(object):
         '''
         file_location = os.path.join(context.file_directory,
                                      f"table_part_ldm_definitions_{framework}.csv")
+        if not (context.ldm_or_il == "ldm"):
+            file_location = os.path.join(context.file_directory,
+                                     f"table_part_il_definitions_{framework}.csv")
         tables_for_main_category_map = (
             context.tables_for_main_category_map_finrep if framework == "FINREP_REF"
             else context.tables_for_main_category_map_ae
