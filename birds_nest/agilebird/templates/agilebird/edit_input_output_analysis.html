@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Edit Input Output Analysis</h1>
+
+<p>Select an option to edit:</p>
+
+<ul>
+    <li><a href="{% url 'agilebird:edit_variable_mappings' %}">Edit Variable Mappings</a></li>
+    <li><a href="{% url 'agilebird:edit_variable_mapping_items' %}">Edit Variable Mapping Items</a></li>
+    <li><a href="{% url 'agilebird:edit_member_mappings' %}">Edit Member Mappings</a></li>
+    <li><a href="{% url 'agilebird:edit_member_mapping_items' %}">Edit Member Mapping Items</a></li>
+    <li><a href="{% url 'agilebird:edit_cube_links' %}">Edit Cube Links</a></li>
+    <li><a href="{% url 'agilebird:edit_cube_structure_item_links' %}">Edit Cube Structure Item Links</a></li>
+    <li><a href="{% url 'agilebird:edit_mapping_to_cubes' %}">Edit Mapping to Cubes</a></li>
+    <li><a href="{% url 'agilebird:edit_mapping_definitions' %}">Edit Mapping Definitions</a></li>
+</ul>
+
+<p><a href="{% url 'agilebird:home' %}">Back to Home</a></p>
+{% endblock %}

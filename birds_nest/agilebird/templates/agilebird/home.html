@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}AgileBird Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to AgileBird</h1>
+
+<ul>
+    <li><a href="{% url 'agilebird:edit_input_output_analysis' %}">Edit Input Output Analysis</a></li>
+    <li><a href="{% url 'agilebird:run_import' %}">Run Import</a></li>
+    <li><a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}">Import Ref Info from SQLDev</a></li>
+    <li><a href="{% url 'agilebird:import_ref_info_from_website' %}">Import Reference Info from Website</a></li>
+</ul>
+
+{% endblock %}

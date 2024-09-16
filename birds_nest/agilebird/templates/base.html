@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AgileBird{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        nav {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+        }
+        nav ul {
+            padding: 0;
+            list-style: none;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .messages {
+            list-style: none;
+            padding: 10px;
+            margin: 10px 0;
+            background: #f4f4f4;
+            border: 1px solid #ccc;
+        }
+        .messages .success {
+            color: green;
+        }
+        .messages .error {
+            color: red;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="{% url 'agilebird:home' %}">Home</a></li>
+                <li><a href="{% url 'agilebird:run_import' %}">Run Import</a></li>
+                <li><a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}">Import Ref Info</a></li>
+                <li><a href="{% url 'agilebird:edit_input_output_analysis' %}">Edit Input Output Analysis</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

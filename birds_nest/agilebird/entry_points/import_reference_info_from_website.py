@@ -16,6 +16,7 @@ import django
 import os
 from django.apps import AppConfig
 from agilebird.context.sdd_context_django import SDDContext
+from django.conf import settings
 
 class RunImportRefInfoFromWebsite(AppConfig):
     """
@@ -25,7 +26,7 @@ class RunImportRefInfoFromWebsite(AppConfig):
     to convert website data into an SDD  model.
     """
 
-    path = '/workspaces/efbt/birds_nest/birds_nest'
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     def ready(self):
         """
@@ -41,7 +42,7 @@ class RunImportRefInfoFromWebsite(AppConfig):
 
         from agilebird.context.context import Context
 
-        base_dir = '/workspaces/efbt/birds_nest/' 
+        base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
@@ -55,10 +56,3 @@ class RunImportRefInfoFromWebsite(AppConfig):
             # Import website data to SDD model
             ImportWebsiteToSDDModel().import_reference_info_from_sdd(sdd_context)
 
-if __name__ == '__main__':
-    django.setup()
-    RunImportRefInfoFromWebsite('agilebird', 'birds_nest').ready()
-
-
-      
-    

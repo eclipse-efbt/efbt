@@ -16,6 +16,7 @@ import django
 import os
 from django.apps import AppConfig
 from agilebird.context.sdd_context_django import SDDContext
+from django.http import HttpResponse
 
 class RunImportBasicInfoFromWebsite(AppConfig):
     """
@@ -25,14 +26,12 @@ class RunImportBasicInfoFromWebsite(AppConfig):
     to convert website data into an SDD  model.
     """
 
-    path = '/workspaces/efbt/birds_nest/birds_nest'
+    from django.conf import settings
 
-    def ready(self):
+    @staticmethod
+    def run_import():
         """
-        Prepare and execute the website to SDD model conversion process.
-
-        This method sets up the necessary contexts, creates reference domains
-        and variables, and imports the website data into the SDD model.
+        Static method to run the import process.
         """
         from agilebird.sdd_models import MAINTENANCE_AGENCY
         from agilebird.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
@@ -40,7 +39,7 @@ class RunImportBasicInfoFromWebsite(AppConfig):
         )
         from agilebird.context.context import Context
 
-        base_dir = '/workspaces/efbt/birds_nest/' 
+        base_dir = 'C:\\Users\\neil\\freebirdtools-develop-July11\\git\\efbt\\birds_nest\\'
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
@@ -49,9 +48,14 @@ class RunImportBasicInfoFromWebsite(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-
         # Import website data to SDD model
         ImportWebsiteToSDDModel().import_basic_info_from_website(sdd_context)
+
+    def ready(self):
+        """
+        Django's ready method, now just a placeholder.
+        """
+        pass
 
 if __name__ == '__main__':
     django.setup()
