@@ -14,6 +14,7 @@
 import os
 import django
 from django.apps import AppConfig
+from django.conf import settings
 
 class RunCreateReports(AppConfig):
     """
@@ -24,9 +25,10 @@ class RunCreateReports(AppConfig):
     output layers, and report filters.
     """
 
-    path = '/workspaces/efbt/birds_nest/birds_nest'
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
-    def ready(self):
+    @staticmethod
+    def run_create_reports():
         """
         Executes the report creation process when the application is ready.
 
@@ -58,7 +60,7 @@ class RunCreateReports(AppConfig):
             ImportDatabaseToSDDModel
         )
 
-        base_dir = '/workspaces/efbt/birds_nest/' 
+        base_dir = settings.BASE_DIR
         
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
@@ -70,7 +72,7 @@ class RunCreateReports(AppConfig):
 
         ImportDatabaseToSDDModel().import_sdd(sdd_context)
 
-        SQLDevLDMImport.do_import(self, context)
+        
         CreateOutputLayers().create_output_layers(
             context, sdd_context, "FINREP_REF", "3.0"
         )
@@ -78,7 +80,9 @@ class RunCreateReports(AppConfig):
             context, sdd_context, "FINREP_REF", "3.0"
         )
 
-if __name__ == '__main__':
-    django.setup()
-    RunCreateReports('agilebird', 'birds_nest').ready()
+def ready(self):
+        # This method is still needed for Django's AppConfig
+        pass
+
+
 

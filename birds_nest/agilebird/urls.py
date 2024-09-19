@@ -26,4 +26,13 @@ urlpatterns = [
     path('edit-mapping-definitions/', views.edit_mapping_definitions, name='edit_mapping_definitions'),
     path('delete-mapping-definition/<str:mapping_id>/', views.delete_mapping_definition, name='delete_mapping_definition'),
     path('import-ref-info-from-website/', views.import_ref_info_from_website, name='import_ref_info_from_website'),
+    path('run-import-non-ref-info/', views.run_import_non_ref_info, name='run_import_non_ref_info'),
+    path('run_import_mappings_from_website/', views.run_import_mappings_from_website, name='run_import_mappings_from_website'),
+    path('run_import_hierarchies/', views.run_import_hierarchies, name='run_import_hierarchies'),
+    path('missing-children/', views.missing_children, name='missing_children'),
+    path('missing-members/', views.missing_members, name='missing_members'),
+    path('mappings-missing-members/', views.mappings_missing_members, name='mappings_missing_members'),
+    path('mappings-missing-variables/', views.mappings_missing_variables, name='mappings_missing_variables'),
+    path('run-create-reports/', views.run_create_reports, name='run_create_reports'),
+    path('run-create-generation-rules/', views.run_create_generation_rules, name='run_create_generation_rules'),
 ]

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Missing Members CSV</title>
+</head>
+<body>
+    <h1>Missing Members CSV Contents</h1>
+    <table border="1">
+        {% for row in csv_contents %}
+            <tr>
+                {% for cell in row %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

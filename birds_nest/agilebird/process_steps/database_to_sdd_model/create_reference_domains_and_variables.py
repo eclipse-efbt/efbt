@@ -48,6 +48,13 @@ class CreateRefDomainsAndVariables(object):
         maintenance_agency.description = "REFERENCE"
         maintenance_agency.maintenance_agency_id = "REF"
         maintenance_agency.save()
+
+        maintenance_agency = MAINTENANCE_AGENCY(name="NODE")
+        maintenance_agency.code = "NODE"
+        maintenance_agency.description = "Member Hierarchy Node"
+        maintenance_agency.maintenance_agency_id = "NODE"
+        maintenance_agency.save()
+
         sdd_context.agency_dictionary["REF"] = maintenance_agency
 
     def _create_string_domain(sdd_context):

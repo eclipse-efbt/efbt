@@ -27,6 +27,8 @@ class RunImportRefInfoFromSQLDev(AppConfig):
     """
 
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    #path = os.path.join(settings.BASE_DIR, 'birds_nest')
+
 
     def ready(self):
         """

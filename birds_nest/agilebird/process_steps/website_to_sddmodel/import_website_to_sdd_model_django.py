@@ -36,7 +36,7 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_all_members(self, sdd_context,True)
         ImportWebsiteToSDDModel.create_all_variables(self, sdd_context,True)
 
-    def import_non_reference_info_from_sdd(self, sdd_context):
+    def import_non_ref_info_from_sdd(self, sdd_context):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
@@ -56,14 +56,21 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
-        ImportWebsiteToSDDModel.create_all_member_hierarchies(self, sdd_context)
-        ImportWebsiteToSDDModel.create_all_member_hierarchies_nodes(self, sdd_context)
+        
         ImportWebsiteToSDDModel.create_all_variable_mappings(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_variable_mapping_items(self, sdd_context)
         ImportWebsiteToSDDModel.create_member_mappings(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_member_mappings_items(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_mapping_definitions(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_mapping_to_cubes(self, sdd_context)
+
+    def import_hierarchies_from_sdd(self, sdd_context):
+        '''
+        Import hierarchies from CSV file
+        '''
+        ImportWebsiteToSDDModel.create_all_parent_members_with_children_locally(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_member_hierarchies(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_member_hierarchies_nodes(self, sdd_context)
 
     def create_maintenance_agencies(self, context):
         '''
@@ -264,6 +271,64 @@ class ImportWebsiteToSDDModel(object):
                         if not((primary_concept == "") or (primary_concept == None)):
                             context.variable_to_primary_concept_map[variable_id] = primary_concept
 
+    def create_all_parent_members_with_children_locally(self, context):
+        print("Creating all parent members with children locally")
+        file_location = context.file_directory + os.sep + "member_hierarchy_node.csv"
+        header_skipped = False
+        parent_members = []
+        parent_members_child_pairs = []
+        missing_children = []
+        with open(file_location, encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id]
+                    member_id = row[ColumnIndexes().member_hierarchy_node_member_id]
+                    if not (parent_member_id is None) and not (parent_member_id == ""):                 
+                            parent_members_child_pairs.append((
+                                    parent_member_id,member_id)
+                                )
+                    if not (parent_member_id in parent_members):
+                        parent_members.append(parent_member_id)
+                        
+                            
+        for parent_member_id,member_id in parent_members_child_pairs:
+            # checkif child is a parent node
+            # if the node has a child that is a parent node, we ad it to the database
+            if member_id in parent_members:
+                if not (parent_member_id in context.members_that_are_nodes.keys()):
+                    parent_member = MEMBER(name=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id))
+                    parent_member.member_id = ImportWebsiteToSDDModel.replace_dots(self, parent_member_id)
+                    parent_member.maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"NODE")
+                    if context.save_sdd_to_db:  
+                        parent_member.save()
+                        context.members_that_are_nodes[parent_member_id] = parent_member
+            else:
+                # if the node has a child that is a EXISTING member node, we add it to the database
+                member = ImportWebsiteToSDDModel.find_member_with_id(self,member_id,context)
+                if not (member is None):
+                    if not (parent_member_id in context.members_that_are_nodes.keys()):
+                        parent_member = MEMBER(name=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id))
+                        parent_member.member_id = ImportWebsiteToSDDModel.replace_dots(self, parent_member_id)
+                        parent_member.maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"NODE")
+                        if context.save_sdd_to_db:  
+                            parent_member.save()
+                            context.members_that_are_nodes[parent_member_id] = parent_member
+                else:
+                    # if the node has a child that is a not a parent  member node, 
+                    # or existing member then we record a warning
+                    missing_children.append((
+                        parent_member_id,member_id)
+                    )   
+
+            
+        for missing_member in missing_children:
+            print(f"Parent member {missing_member[0]} has missing child {missing_member[1]}")
+
+        ImportWebsiteToSDDModel.save_missing_children_to_csv(context,missing_children)
+
     def create_all_member_hierarchies(self, context):
         '''
         Import all member hierarchies from CSV file
@@ -296,13 +361,34 @@ class ImportWebsiteToSDDModel(object):
                     if context.save_sdd_to_db:  
                         hierarchy.save()
 
+    def save_missing_members_to_csv(context,missing_members):
+        filename = context.output_directory + os.sep + "missing_members.csv"
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(missing_members)
+
+    def save_missing_variables_to_csv(context,missing_variables):
+        filename = context.output_directory + os.sep + "missing_variables.csv"
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(missing_variables)
+
+    def save_missing_children_to_csv(context,missing_children):
+        filename = context.output_directory + os.sep + "missing_children.csv"
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(missing_children)
+
+    
+        
+
     def create_all_member_hierarchies_nodes(self, context):
         '''
         Import all member hierarchy nodes from CSV file
         '''
         file_location = context.file_directory + os.sep + "member_hierarchy_node.csv"
         header_skipped = False
-
+        missing_members = []
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -319,19 +405,26 @@ class ImportWebsiteToSDDModel(object):
                     valid_to = row[ColumnIndexes().member_hierarchy_node_valid_to]
 
                     member = ImportWebsiteToSDDModel.find_member_with_id(self,member_id,context)
-                    parent_member = ImportWebsiteToSDDModel.find_member_with_id(self,parent_member_id,context)
+                    if member is None:
+                        missing_members.append((hierarchy_id,member_id))
+                        print(f"Member {member_id} not found in the database for hierarchy {hierarchy_id}")
+                    else:
+                        parent_member = ImportWebsiteToSDDModel.find_member_with_id(self,parent_member_id,context)
 
-                    hierarchy = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
-                    hierarchy_node = MEMBER_HIERARCHY_NODE()
-                    hierarchy_node.member_hierarchy_id = hierarchy
-                    hierarchy_node.comparator = comparator
-                    hierarchy_node.operator = operator
-                    hierarchy_node.member_id = member
-                    hierarchy_node.level = int(node_level)
-                    hierarchy_node.parent_member_id = parent_member
-                    context.member_hierarchy_node_dictionary[hierarchy_id + ":" + member_id] = hierarchy_node
-                    if context.save_sdd_to_db:  
-                        hierarchy_node.save()
+                        hierarchy = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
+                        
+
+                        hierarchy_node = MEMBER_HIERARCHY_NODE()
+                        hierarchy_node.member_hierarchy_id = hierarchy
+                        hierarchy_node.comparator = comparator
+                        hierarchy_node.operator = operator
+                        hierarchy_node.member_id = member
+                        hierarchy_node.level = int(node_level)
+                        hierarchy_node.parent_member_id = parent_member
+                        context.member_hierarchy_node_dictionary[hierarchy_id + ":" + member_id] = hierarchy_node
+                        if context.save_sdd_to_db:  
+                            hierarchy_node.save()
+        ImportWebsiteToSDDModel.save_missing_members_to_csv(context,missing_members)
 
     def create_report_tables(self, context):
         '''
@@ -584,7 +677,8 @@ class ImportWebsiteToSDDModel(object):
         '''
         file_location = context.file_directory + os.sep + "member_mapping_item.csv"
         header_skipped = False
-
+        missing_members = []
+        missing_variables = []
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -597,23 +691,56 @@ class ImportWebsiteToSDDModel(object):
                     is_source = row[ColumnIndexes().member_mapping_is_source]
                     member_id = row[ColumnIndexes().member_mapping_member_id]
 
-                    member_mapping_item = MEMBER_MAPPING_ITEM()
-                    member_mapping_item.is_source = is_source
-                    member_mapping_item.member = ImportWebsiteToSDDModel.find_member_with_id(
+                    member = ImportWebsiteToSDDModel.find_member_with_id(
                                                         self,member_id,context)
-                    member_mapping_item.variable = ImportWebsiteToSDDModel.find_variable_with_id(
+                    variable = ImportWebsiteToSDDModel.find_variable_with_id(
                                                         self,context,variable_id)
-                    member_mapping_item.row = row_number
-                    member_mapping_item.member_mapping_id  = ImportWebsiteToSDDModel.find_member_mapping_with_id(
-                                        self,context,member_mapping_id)
+                    
+                    if member is None:
+                        if member_id not in missing_members:
+                            missing_members.append(member_id)
+                    if variable is None:
+                        if variable_id not in missing_variables:
+                            missing_variables.append(variable_id)
 
-                    if context.save_sdd_to_db:  
-                        member_mapping_item.save()
-                    try:
-                        member_mapping_items_list = context.member_mapping_items_dictionary[member_mapping_id]
-                        member_mapping_items_list.append(member_mapping_item)
-                    except KeyError:
-                        context.member_mapping_items_dictionary[member_mapping_id] = [member_mapping_item]
+                    if member is None or variable is None:
+                        pass
+                    else:
+                        member_mapping_item = MEMBER_MAPPING_ITEM()
+                        member_mapping_item.is_source = is_source
+                        member_mapping_item.member = member
+                        member_mapping_item.variable = variable
+                        member_mapping_item.row = row_number
+                        member_mapping_item.member_mapping_id  = ImportWebsiteToSDDModel.find_member_mapping_with_id(
+                                            self,context,member_mapping_id)
+
+                        if context.save_sdd_to_db:  
+                            member_mapping_item.save()
+                        try:
+                            member_mapping_items_list = context.member_mapping_items_dictionary[member_mapping_id]
+                            member_mapping_items_list.append(member_mapping_item)
+                        except KeyError:
+                            context.member_mapping_items_dictionary[member_mapping_id] = [member_mapping_item]
+        for missing_member in missing_members:
+            print(f"Missing member {missing_member}")
+        for missing_variable in missing_variables:
+            print(f"Missing variable {missing_variable}")
+        ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context,missing_variables)
+        ImportWebsiteToSDDModel.save_missing_mapping_members_to_csv(context,missing_members)
+
+    def save_missing_mapping_variables_to_csv(context,missing_variables):
+        filename = context.output_directory + os.sep + "mappings_missing_variables.csv"
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            for var in missing_variables:
+                writer.writerow([var])
+
+    def save_missing_mapping_members_to_csv(context,missing_members):   
+        filename = context.output_directory + os.sep + "mappings_missing_members.csv"
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            for mem in missing_members:
+                writer.writerow([mem])
 
     def create_all_mapping_definitions(self, context):
         '''
@@ -707,11 +834,13 @@ class ImportWebsiteToSDDModel(object):
                     if context.save_sdd_to_db:
                         variable_mapping.save()
                     context.variable_mapping_dictionary[variable_mapping_id] = variable_mapping
+            
 
     def create_all_variable_mapping_items(self, context):
         '''
         Import all variable mapping items from the rendering package CSV file
         '''
+        missing_variables = []
         fileloacation = context.file_directory + os.sep + "variable_mapping_item.csv"
         header_skipped = False
         with open(fileloacation, encoding='utf-8') as csvfile:
@@ -725,25 +854,35 @@ class ImportWebsiteToSDDModel(object):
                     variable_mapping_item_is_source = row[ColumnIndexes().variable_mapping_item_is_source]
                     variable_mapping_item_valid_from = row[ColumnIndexes().variable_mapping_item_valid_from]
                     variable_mapping_item_valid_to = row[ColumnIndexes().variable_mapping_item_valid_to]
-
-                    variable_mapping_item = VARIABLE_MAPPING_ITEM()
-                    variable_mapping_item.variable_mapping_id = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
-                        self,context,variable_mapping_item_variable_mapping_id)
-                    variable_mapping_item.variable = ImportWebsiteToSDDModel.find_variable_with_id(
+                    variable = ImportWebsiteToSDDModel.find_variable_with_id(
                         self,context,variable_mapping_item_variable_id)
-                    if variable_mapping_item.variable is None:
-                        print(f"No Variable mapping item variable id: {variable_mapping_item_variable_id}")
-                    variable_mapping_item.is_source = variable_mapping_item_is_source
-                    variable_mapping_item.valid_from = variable_mapping_item_valid_from
-                    variable_mapping_item.valid_to = variable_mapping_item_valid_to
+                    if variable is None:
+                        missing_variables.append(variable_mapping_item_variable_id)
+                    else:  
+                        variable_mapping_item = VARIABLE_MAPPING_ITEM()
+                        variable_mapping_item.variable = variable
+                        variable_mapping_item.variable_mapping_id = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
+                            self,context,variable_mapping_item_variable_mapping_id)
+                        
+                        if variable_mapping_item.variable is None:
+                            print(f"No Variable mapping item variable id: {variable_mapping_item_variable_id}")
+                        variable_mapping_item.is_source = variable_mapping_item_is_source
+                        variable_mapping_item.valid_from = variable_mapping_item_valid_from
+                        variable_mapping_item.valid_to = variable_mapping_item_valid_to
 
-                    if context.save_sdd_to_db:
-                        variable_mapping_item.save()
-                    try:
-                        variable_mapping_items_list = context.variable_mapping_item_dictionary[variable_mapping_item_variable_mapping_id]
-                        variable_mapping_items_list.append(variable_mapping_item)
-                    except KeyError:
-                        context.variable_mapping_item_dictionary[variable_mapping_item_variable_mapping_id] = [variable_mapping_item]
+                        if context.save_sdd_to_db:
+                            variable_mapping_item.save()
+                        try:
+                            variable_mapping_items_list = context.variable_mapping_item_dictionary[variable_mapping_item_variable_mapping_id]
+                            variable_mapping_items_list.append(variable_mapping_item)
+                        except KeyError:
+                            context.variable_mapping_item_dictionary[variable_mapping_item_variable_mapping_id] = [variable_mapping_item]
+        for missing_variable in missing_variables:
+            print(f"Misssing Varaible {missing_variable}")
+
+        ImportWebsiteToSDDModel.save_missing_variables_to_csv(context,missing_variable)
+
+    
 
     def find_member_mapping_with_id(self,context,member_mapping_id):
         '''
@@ -764,7 +903,10 @@ class ImportWebsiteToSDDModel(object):
             try:
                 return context.ref_member_dictionary[element_id]
             except KeyError:
-                return None
+                try:
+                    return context.members_that_are_nodes[element_id]
+                except KeyError:
+                    return None
 
     def find_member_hierarchy_with_id(self,element_id,context):
         '''

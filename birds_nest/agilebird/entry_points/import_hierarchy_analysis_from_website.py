@@ -18,7 +18,7 @@ from django.apps import AppConfig
 from agilebird.context.sdd_context_django import SDDContext
 from django.conf import settings
 
-class RunImportMappingsFromWebsite(AppConfig):
+class RunImportHierarchiesFromWebsite(AppConfig):
     """
     Django AppConfig for running the website to SDD model conversion process.
 
@@ -29,7 +29,7 @@ class RunImportMappingsFromWebsite(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def import_mappings_from_website():
+    def import_hierarchies():
         """
         Prepare and execute the website to SDD model conversion process.
 
@@ -55,11 +55,15 @@ class RunImportMappingsFromWebsite(AppConfig):
         context.output_directory = sdd_context.output_directory
 
         ImportDatabaseToSDDModel().import_sdd(sdd_context)
-        ImportWebsiteToSDDModel().import_mappings_from_sdd(sdd_context)
+        ImportWebsiteToSDDModel().import_hierarchies_from_sdd(sdd_context)
 
-def ready(self):
+    def ready(self):
         # This method is still needed for Django's AppConfig
         pass
+
+if __name__ == '__main__':
+    django.setup()
+    RunImportHierarchiesFromWebsite('agilebird', 'birds_nest').ready()
 
 
       

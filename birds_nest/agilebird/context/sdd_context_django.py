@@ -26,7 +26,7 @@ class SDDContext(object):
     # the directory where we save our outputs.
     output_directory = ""
 
-    members_that_are_nodes = []
+    members_that_are_nodes = {}
     member_plus_hierarchy_to_child_literals = {}
     domain_to_hierarchy_dictionary = {}
     combinations_dictionary = {}

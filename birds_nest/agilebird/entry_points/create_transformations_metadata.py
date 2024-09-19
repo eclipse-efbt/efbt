@@ -17,13 +17,15 @@ from pathlib import Path
 
 import django
 from django.apps import AppConfig
+from django.conf import settings
 
 class RunCreateGenerationRules(AppConfig):
     """Django AppConfig for running the creation of generation rules."""
 
-    path = '/workspaces/efbt/birds_nest/birds_nest'
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
-    def ready(self):
+    @staticmethod
+    def run_create_generation_rules():
         """Execute the process of creating generation rules when the app is ready."""
         from agilebird.process_steps.database_to_sdd_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
@@ -40,7 +42,7 @@ class RunCreateGenerationRules(AppConfig):
             MainCategoryFinder
         )
 
-        base_dir = '/workspaces/efbt/birds_nest/'   
+        base_dir = settings.BASE_DIR 
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
@@ -51,7 +53,6 @@ class RunCreateGenerationRules(AppConfig):
 
         ImportDatabaseToSDDModel().import_sdd(sdd_context)
 
-        SQLDevLDMImport.do_import(self, context)
         MainCategoryFinder().create_report_to_main_category_maps(
             context,
             sdd_context,
@@ -64,7 +65,6 @@ class RunCreateGenerationRules(AppConfig):
             "FINREP_REF"
         )
 
-if __name__ == '__main__':
-    django.setup()
-    RunCreateGenerationRules('agilebird', 'birds_nest').ready()
-
+def ready(self):
+        # This method is still needed for Django's AppConfig
+        pass

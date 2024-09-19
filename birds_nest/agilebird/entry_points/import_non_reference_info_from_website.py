@@ -16,6 +16,7 @@ import django
 import os
 from django.apps import AppConfig
 from agilebird.context.sdd_context_django import SDDContext
+from django.conf import settings
 
 class RunImportNonRefInfoFromWebsite(AppConfig):
     """
@@ -25,23 +26,19 @@ class RunImportNonRefInfoFromWebsite(AppConfig):
     to convert website data into an SDD  model.
     """
 
-    path = '/workspaces/efbt/birds_nest/birds_nest'
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
-    def ready(self):
-        """
-        Prepare and execute the website to SDD model conversion process.
-
-        This method sets up the necessary contexts, creates reference domains
-        and variables, and imports the website data into the SDD model.
-        """
+    @staticmethod
+    def run_import():
+        # Move the content of the ready() method here
         from agilebird.sdd_models import MAINTENANCE_AGENCY
         from agilebird.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
             ImportWebsiteToSDDModel
         )
-
         from agilebird.context.context import Context
+        from django.conf import settings
 
-        base_dir = '/workspaces/efbt/birds_nest/' 
+        base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
@@ -50,15 +47,9 @@ class RunImportNonRefInfoFromWebsite(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-
         if not sdd_context.exclude_reference_info_from_website:
-            # Import website data to SDD model
-            ImportWebsiteToSDDModel().import_non_reference_info_from_sdd(sdd_context)
+            ImportWebsiteToSDDModel().import_non_ref_info_from_sdd(sdd_context)
 
-if __name__ == '__main__':
-    django.setup()
-    RunImportNonRefInfoFromWebsite('agilebird', 'birds_nest').ready()
-
-
-      
-    
+    def ready(self):
+        # This method is still needed for Django's AppConfig
+        pass

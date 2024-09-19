@@ -17,6 +17,7 @@ import os
 from django.apps import AppConfig
 from agilebird.context.sdd_context_django import SDDContext
 from django.http import HttpResponse
+from django.conf import settings
 
 class RunImportBasicInfoFromWebsite(AppConfig):
     """
@@ -27,7 +28,8 @@ class RunImportBasicInfoFromWebsite(AppConfig):
     """
 
     from django.conf import settings
-
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    
     @staticmethod
     def run_import():
         """
@@ -39,7 +41,7 @@ class RunImportBasicInfoFromWebsite(AppConfig):
         )
         from agilebird.context.context import Context
 
-        base_dir = 'C:\\Users\\neil\\freebirdtools-develop-July11\\git\\efbt\\birds_nest\\'
+        base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
