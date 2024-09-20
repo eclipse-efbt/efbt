@@ -25,20 +25,18 @@ class RunCreateGenerationRules(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_create_generation_rules():
+    def run_create_transformation_meta_data():
         """Execute the process of creating generation rules when the app is ready."""
         from agilebird.process_steps.database_to_sdd_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
         )
         from agilebird.context.sdd_context_django import SDDContext
         from agilebird.context.context import Context
-        from agilebird.process_steps.sqldeveloper_import.import_sqldev_ldm_to_regdna import (
-            SQLDevLDMImport
-        )
-        from agilebird.process_steps.generation_rules.create_generation_rules import (
+
+        from agilebird.process_steps.transformation_meta_data.create_transformation_meta_data import (
             GenerationRuleCreator
         )
-        from agilebird.process_steps.generation_rules.main_category_finder import (
+        from agilebird.process_steps.transformation_meta_data.main_category_finder import (
             MainCategoryFinder
         )
 
@@ -59,7 +57,7 @@ class RunCreateGenerationRules(AppConfig):
             "FINREP_REF",
             ["3", "3.0-Ind", "FINREP 3.0-Ind"]
         )
-        GenerationRuleCreator().generate_generation_rules(
+        GenerationRuleCreator().generate_transformation_meta_data(
             context,
             sdd_context,
             "FINREP_REF"

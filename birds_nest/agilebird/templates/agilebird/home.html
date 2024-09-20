@@ -6,19 +6,21 @@
 <h1>Welcome to AgileBird</h1>
 
 <ul>
-    <li><a href="{% url 'agilebird:edit_input_output_analysis' %}">Edit Input Output Analysis</a></li>
-    <li><a href="{% url 'agilebird:run_import' %}">Run Import</a></li>
-    <li><a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}">Import Ref Info from SQLDev</a></li>
-    <li><a href="{% url 'agilebird:import_ref_info_from_website' %}">Import Reference Info from Website</a></li>
-    <li><a href="{% url 'agilebird:run_import_non_ref_info' %}">Import Non Ref Info</a></li>
-    <li><a href="{% url 'agilebird:run_import_mappings_from_website' %}">run input output analysis from website</a></li>
-    <li><a href="{% url 'agilebird:run_import_hierarchies' %}">run input Hierarchies</a></li>
-    <li><a href="{% url 'agilebird:missing_children' %}">Show missing children in Hierarchies</a></li>
-    <li><a href="{% url 'agilebird:missing_members' %}">Show missing leaf memebrs in Hierarchies</a></li>
-    <li><a href="{% url 'agilebird:mappings_missing_members' %}">Show missing members in mappings</a></li>
-    <li><a href="{% url 'agilebird:mappings_missing_variables' %}">Show missing variables in mappings</a></li>
-    <li><a href="{% url 'agilebird:run_create_reports' %}">Creat outpu layer concepts</a></li>
-    
+
+    <li><a href="{% url 'agilebird:run_import' %}"> Import  Basic Info (Maintenance Agencies)</a></li>
+    <li><a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}">Import Reference Information from SQLDev</a></li>
+    <li><a href="{% url 'agilebird:import_ref_info_from_website' %}">Import Reference Info from Website (Optional, Not Recomended)</a></li>
+    <li><a href="{% url 'agilebird:run_import_non_ref_info' %}">Import Non Reference Info from Website</a></li>
+    <li><a href="{% url 'agilebird:run_import_hierarchies' %}">Import Hierarchies from Website</a></li>
+    <li><a href="{% url 'agilebird:review_import_hierarchies' %}">Review Hierarchies</a></li>
+    <li><a href="{% url 'agilebird:run_import_mappings_from_website' %}">Import Input/Output Analysis from Website</a></li>
+    <li><a href="{% url 'agilebird:review_input_output_analysis' %}">Review Input/Output Analysis </a></li>
+    <li><a href="{% url 'agilebird:run_create_output_concepts' %}">Create output concepts</a></li>
+    <li><a href="{% url 'agilebird:run_create_transformation_meta_data' %}">Create Transformation Metadata</a></li>
+    <li><a href="{% url 'agilebird:review_transformation_meta_data' %}">Review Transformation Metadata</a></li>
+    <li>Create Executable Transformations Python/Django</li>
+
+
 </ul>
 
 {% endblock %}

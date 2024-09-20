@@ -943,7 +943,7 @@ class ImportWebsiteToSDDModel(object):
         Find an existing domain with this id
         '''
         try:
-            return context.nonref_domain_dictionary[element_id]
+            return context.ref_domain_dictionary[element_id]
         except KeyError:
             try:
                 return context.nonref_domain_dictionary[element_id]

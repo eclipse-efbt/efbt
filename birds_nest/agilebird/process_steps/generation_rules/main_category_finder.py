@@ -95,7 +95,6 @@ class MainCategoryFinder(object):
             context.main_categories_in_scope_finrep if full_framework_name == "FINREP_REF"
             else context.main_categories_in_scope_ae
         )
-
         for cube_name, combination_list in sdd_context.combination_to_rol_cube_map.items():
             for combination in combination_list:
                 self._process_combination(context, sdd_context, combination,
@@ -116,6 +115,7 @@ class MainCategoryFinder(object):
         combination_items = sdd_context.combination_item_dictionary.get(
             combination.combination_id.combination_id, []
         )
+
         cell_instrmnt_ids_list = self._get_cell_instrmnt_ids(combination_items)
         if cell_instrmnt_ids_list:
             self._update_categories(context, cube_name, cell_instrmnt_ids_list,
@@ -123,6 +123,7 @@ class MainCategoryFinder(object):
         else:
             self._process_accounting_items(context, combination_items,
                                            cube_name, main_categories_in_scope)
+            
 
     def _get_cell_instrmnt_ids(self, combination_items):
         """
@@ -137,10 +138,8 @@ class MainCategoryFinder(object):
         cell_instrmnt_ids_list = []
         for combination_item in combination_items:
             if combination_item.variable_id and combination_item.variable_id.variable_id == "TYP_INSTRMNT":
-                cell_instrmnt_ids_list = [combination_item.member_id]
-                if len(cell_instrmnt_ids_list) == 1 and cell_instrmnt_ids_list[0].code == "0":
-                    cell_instrmnt_ids_list = []
-                break
+                if combination_item.member_id not in cell_instrmnt_ids_list:
+                    cell_instrmnt_ids_list.append(combination_item.member_id)
         return cell_instrmnt_ids_list
 
     def _update_categories(self, context, cube_name, ids_list, main_categories_in_scope, prefix):
@@ -155,7 +154,7 @@ class MainCategoryFinder(object):
             prefix (str): Prefix to use for category names.
         """
         for member_id in ids_list:
-            category = f"{prefix}_{member_id.code}"
+            category = member_id.member_id
             if category not in main_categories_in_scope:
                 main_categories_in_scope.append(category)
             try:
@@ -175,10 +174,13 @@ class MainCategoryFinder(object):
             cube_name (str): The name of the cube.
             main_categories_in_scope (list): List of main categories in scope.
         """
+        cell_accntng_itm_ids_list = []
         for combination_item in combination_items:
             if combination_item.variable_id and combination_item.variable_id.variable_id == "TYP_ACCNTNG_ITM":
-                cell_accntng_itm_ids_list = [combination_item.member_id]
-                self._update_categories(context, cube_name, cell_accntng_itm_ids_list, main_categories_in_scope, "TYP_ACCNTNG_ITM")
+                if combination_item.member_id not in cell_accntng_itm_ids_list:
+                    cell_accntng_itm_ids_list.append(combination_item.member_id)
+                
+        self._update_categories(context, cube_name, cell_accntng_itm_ids_list, main_categories_in_scope, "TYP_ACCNTNG_ITM")
 
     def create_draft_table_part_file(self, context, sdd_context, framework):
         '''
@@ -189,8 +191,8 @@ class MainCategoryFinder(object):
             context.main_categories_in_scope_finrep if framework == "FINREP_REF"
             else context.main_categories_in_scope_ae
         )
-        subdirectory = ("finrep_generation_rules_ldm" if framework == "FINREP_REF"
-                        else "ae_generation_rules_ldm")
+        subdirectory = ("finrep_transformation_meta_data_ldm" if framework == "FINREP_REF"
+                        else "ae_transformation_meta_data_ldm")
 
         output_file = os.path.join(context.output_directory,
                                    'generations_transformations_csv',

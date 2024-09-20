@@ -18,14 +18,14 @@ import os
 import csv
 from typing import List, Any
 
-from agilebird.process_steps.generation_rules.ldm_search import ELDMSearch
+from agilebird.process_steps.transformation_meta_data.ldm_search import ELDMSearch
 
 class GenerationRuleCreator:
     """
     A class for creating generation rules for reports and tables.
     """
 
-    def generate_generation_rules(self, context: Any, sdd_context: Any, framework: str) -> None:
+    def generate_transformation_meta_data(self, context: Any, sdd_context: Any, framework: str) -> None:
         """
         Generate generation rules for the given context and framework.
 
@@ -112,7 +112,6 @@ class GenerationRuleCreator:
             if framework == "FINREP_REF" 
             else context.table_and_part_tuple_map_ae
         )
-
         try:
             report_template = generated_output_layer.name
             main_categories = context.report_to_main_category_map[report_template]
@@ -165,7 +164,7 @@ class GenerationRuleCreator:
                                 cube_link = CUBE_LINK()
                                 cube_link.description = mc
                                 cube_link.name = table_part[1]
-                                primary_cube = sdd_context.rol_cube_dictionary.get(table[5:])
+                                primary_cube = sdd_context.rol_cube_dictionary.get(table)
                                 if primary_cube:
                                     cube_link.primary_cube_id = primary_cube
                                     cube_link.cube_link_id = (

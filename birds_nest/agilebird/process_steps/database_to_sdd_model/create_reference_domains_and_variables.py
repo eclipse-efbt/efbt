@@ -168,8 +168,9 @@ class CreateRefDomainsAndVariables(object):
                 if choices:
                     for choice in choices:
                         member = MEMBER()
-                        member.member_id = f"{domain_id}_{choice[0]}"
+                        member.member_id = f"{domain_id[0:len(domain_id)-7]}_{choice[0]}"
                         member.name = choice[1]
+                        member.code = choice[0]
                         member.domain_id = domain
                         sdd_context.ref_member_dictionary[member.member_id] = member
                         if sdd_context.save_sdd_to_db:

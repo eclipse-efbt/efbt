@@ -21,9 +21,10 @@ from django.conf import settings
 from .entry_points.create_output_layer_concepts import RunCreateReports
 from .entry_points.create_transformations_metadata import RunCreateGenerationRules
 
-def run_create_generation_rules(request):
+
+def run_create_transformation_meta_data(request):
     app_config = RunCreateGenerationRules('agilebird', 'birds_nest')
-    app_config.run_create_generation_rules()
+    app_config.run_create_transformation_meta_data()
     return HttpResponse("Created Transformation Metadata")
 
 def import_ref_info_from_website(request):
@@ -136,8 +137,7 @@ def delete_variable_mapping_item(request, item_id):
         messages.error(request, 'Invalid request for deletion.')
     return redirect('agilebird:edit_variable_mapping_items')
 
-def edit_input_output_analysis(request):
-    return render(request, 'agilebird/edit_input_output_analysis.html')
+
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -368,10 +368,7 @@ def run_import_ref_info_from_sqldev(request):
     app_config.ready()
     return HttpResponse("Import reference info from SQLDev process completed successfully.")
 
-def run_import_hierarchies(request):
-    app_config = RunImportHierarchiesFromWebsite('agilebird', 'birds_nest')
-    app_config.import_hierarchies()
-    return HttpResponse("Import hierarchies successfully.")
+
 
 def run_import_non_ref_info(request):
     app_config = RunImportNonRefInfoFromWebsite('agilebird', 'birds_nest')
@@ -458,8 +455,14 @@ def delete_variable_mapping_item(request, item_id):
         messages.error(request, 'Invalid request for deletion.')
     return redirect('agilebird:edit_variable_mapping_items')
 
-def edit_input_output_analysis(request):
-    return render(request, 'agilebird/edit_input_output_analysis.html')
+def review_input_output_analysis(request):
+    return render(request, 'agilebird/review_input_output_analysis.html')
+
+def review_import_hierarchies(request):
+    return render(request, 'agilebird/review_import_hierarchies.html')
+
+def review_transformation_meta_data(request):
+    return render(request, 'agilebird/review_transformation_meta_data.html')
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -679,9 +682,9 @@ def run_import_mappings_from_website(request):
     app_config.import_mappings_from_website()
     return JsonResponse({"status": "success", "message": "Import completed successfully"})
 
-def run_create_reports(request):
+def run_create_output_concepts(request):
     app_config = RunCreateReports('agilebird', 'birds_nest')
-    app_config.run_create_reports()
+    app_config.run_create_output_concepts()
     return JsonResponse({"status": "success", "message": "Created output artefacts successfully"})
     
 def run_import_view(request):
@@ -693,10 +696,7 @@ def run_import_ref_info_from_sqldev(request):
     app_config.ready()
     return HttpResponse("Import reference info from SQLDev process completed successfully.")
 
-def run_import_hierarchies(request):
-    app_config = RunImportHierarchiesFromWebsite('agilebird', 'birds_nest')
-    app_config.import_hierarchies()
-    return HttpResponse("Import hierarchies successfully.")
+
 
 def run_import_non_ref_info(request):
     app_config = RunImportNonRefInfoFromWebsite('agilebird', 'birds_nest')
@@ -783,8 +783,7 @@ def delete_variable_mapping_item(request, item_id):
         messages.error(request, 'Invalid request for deletion.')
     return redirect('agilebird:edit_variable_mapping_items')
 
-def edit_input_output_analysis(request):
-    return render(request, 'agilebird/edit_input_output_analysis.html')
+
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages

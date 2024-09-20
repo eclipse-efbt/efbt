@@ -28,7 +28,7 @@ class RunCreateReports(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_create_reports():
+    def run_create_output_concepts():
         """
         Executes the report creation process when the application is ready.
 
