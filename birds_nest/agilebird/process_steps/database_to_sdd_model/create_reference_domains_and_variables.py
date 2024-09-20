@@ -32,7 +32,7 @@ class CreateRefDomainsAndVariables(object):
             context: The context object containing configuration settings.
         """
         CreateRefDomainsAndVariables._create_maintenance_agency(sdd_context)
-        CreateRefDomainsAndVariables._create_string_domain(sdd_context)
+        CreateRefDomainsAndVariables._create_primitive_domains(sdd_context)
         CreateRefDomainsAndVariables._process_models(sdd_context, context)
 
     def _create_maintenance_agency( sdd_context):
@@ -57,7 +57,7 @@ class CreateRefDomainsAndVariables(object):
 
         sdd_context.agency_dictionary["REF"] = maintenance_agency
 
-    def _create_string_domain(sdd_context):
+    def _create_primitive_domains(sdd_context):
         """
         Create a 'String' domain and add it to the SDD context.
 
@@ -71,6 +71,31 @@ class CreateRefDomainsAndVariables(object):
         sdd_context.ref_domain_dictionary['String'].description = 'String'
         sdd_context.ref_domain_dictionary['String'].type = 'String'
         sdd_context.ref_domain_dictionary['String'].save()
+        sdd_context.ref_domain_dictionary['Integer'] = DOMAIN()
+        sdd_context.ref_domain_dictionary['Integer'].domain_id = 'Integer'
+        sdd_context.ref_domain_dictionary['Integer'].name = 'Integer'
+        sdd_context.ref_domain_dictionary['Integer'].description = 'Integer'
+        sdd_context.ref_domain_dictionary['Integer'].type = 'Integer'
+        sdd_context.ref_domain_dictionary['Integer'].save()
+        sdd_context.ref_domain_dictionary['Date'] = DOMAIN()
+        sdd_context.ref_domain_dictionary['Date'].domain_id = 'Date'
+        sdd_context.ref_domain_dictionary['Date'].name = 'Date'
+        sdd_context.ref_domain_dictionary['Date'].description = 'Date'
+        sdd_context.ref_domain_dictionary['Date'].type = 'Date'
+        sdd_context.ref_domain_dictionary['Date'].save()
+        sdd_context.ref_domain_dictionary['Float'] = DOMAIN()
+        sdd_context.ref_domain_dictionary['Float'].domain_id = 'Float'
+        sdd_context.ref_domain_dictionary['Float'].name = 'Float'
+        sdd_context.ref_domain_dictionary['Float'].description = 'Float'
+        sdd_context.ref_domain_dictionary['Float'].type = 'Float'
+        sdd_context.ref_domain_dictionary['Float'].save()
+        sdd_context.ref_domain_dictionary['Boolean'] = DOMAIN()
+        sdd_context.ref_domain_dictionary['Boolean'].domain_id = 'Boolean'
+        sdd_context.ref_domain_dictionary['Boolean'].name = 'Boolean'
+        sdd_context.ref_domain_dictionary['Boolean'].description = 'Boolean'
+        sdd_context.ref_domain_dictionary['Boolean'].type = 'Boolean'
+        sdd_context.ref_domain_dictionary['Boolean'].save()
+
 
     def _process_models(sdd_context, context):
         """
@@ -200,7 +225,20 @@ class CreateRefDomainsAndVariables(object):
                 variable.name = field.verbose_name
             except AttributeError:
                 pass
-            variable.domain_id = domain if domain else sdd_context.ref_domain_dictionary['String']
+            if domain:
+                variable.domain_id = domain
+            else:
+                if isinstance(field, (CharField)):
+                    variable.domain_id = sdd_context.ref_domain_dictionary['String']
+                if isinstance(field, (DateTimeField)):
+                    variable.domain_id = sdd_context.ref_domain_dictionary['Date']
+                if isinstance(field, (BigIntegerField)):
+                    variable.domain_id = sdd_context.ref_domain_dictionary['Integer']
+                if isinstance(field, ( BooleanField)):
+                    variable.domain_id = sdd_context.ref_domain_dictionary['Boolean']
+                if isinstance(field, (FloatField)):
+                    variable.domain_id = sdd_context.ref_domain_dictionary['Float']
+
             sdd_context.ref_variable_dictionary[variable_id] = variable
             if sdd_context.save_sdd_to_db:
                 variable.save()

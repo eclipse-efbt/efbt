@@ -19,13 +19,21 @@ import csv
 import os
 from django.conf import settings
 from .entry_points.create_output_layer_concepts import RunCreateReports
-from .entry_points.create_transformations_metadata import RunCreateGenerationRules
+from .entry_points.create_transformations_metadata import RunCreateTransformationMetadata
+from .entry_points.delete_transformations_metadata import RunDeleteTransformationMetadata
+
 
 
 def run_create_transformation_meta_data(request):
-    app_config = RunCreateGenerationRules('agilebird', 'birds_nest')
+    app_config = RunCreateTransformationMetadata('agilebird', 'birds_nest')
     app_config.run_create_transformation_meta_data()
     return HttpResponse("Created Transformation Metadata")
+
+
+def run_delete_transformation_meta_data(request):
+    app_config = RunDeleteTransformationMetadata('agilebird', 'birds_nest')
+    app_config.run_delete_transformation_meta_data()
+    return HttpResponse("Deleted Transformation Metadata")
 
 def import_ref_info_from_website(request):
     app_config = RunImportRefInfoFromWebsite('agilebird', 'birds_nest')

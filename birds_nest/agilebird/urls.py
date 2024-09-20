@@ -37,4 +37,6 @@ urlpatterns = [
     path('run-create-output-concepts/', views.run_create_output_concepts, name='run_create_output_concepts'),
     path('run-create-transformation-meta-data/', views.run_create_transformation_meta_data, name='run_create_transformation_meta_data'),
     path('review-transformation-meta-data/', views.review_transformation_meta_data, name='review_transformation_meta_data'),
+    path('run-delete-transformation-meta-data/', views.run_delete_transformation_meta_data, name='run_delete_transformation_meta_data'),
+    
 ]

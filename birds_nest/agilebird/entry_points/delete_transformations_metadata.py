@@ -19,26 +19,22 @@ import django
 from django.apps import AppConfig
 from django.conf import settings
 
-class RunCreateTransformationMetadata(AppConfig):
+class RunDeleteTransformationMetadata(AppConfig):
     """Django AppConfig for running the creation of generation rules."""
 
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_create_transformation_meta_data():
+    def run_delete_transformation_meta_data():
         """Execute the process of creating generation rules when the app is ready."""
-        from agilebird.process_steps.database_to_sdd_model.import_database_to_sdd_model import (
-            ImportDatabaseToSDDModel
-        )
+
         from agilebird.context.sdd_context_django import SDDContext
         from agilebird.context.context import Context
 
-        from agilebird.process_steps.transformation_meta_data.create_transformation_meta_data import (
-            TransformationMetaDataCreator
+        from agilebird.process_steps.transformation_meta_data.delete_transformation_meta_data import (
+            TransformationMetaDataDestroyer
         )
-        from agilebird.process_steps.transformation_meta_data.main_category_finder import (
-            MainCategoryFinder
-        )
+
 
         base_dir = settings.BASE_DIR 
         sdd_context = SDDContext()
@@ -49,15 +45,8 @@ class RunCreateTransformationMetadata(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        ImportDatabaseToSDDModel().import_sdd(sdd_context)
 
-        MainCategoryFinder().create_report_to_main_category_maps(
-            context,
-            sdd_context,
-            "FINREP_REF",
-            ["3", "3.0-Ind", "FINREP 3.0-Ind"]
-        )
-        TransformationMetaDataCreator().generate_transformation_meta_data(
+        TransformationMetaDataDestroyer().delete_transformation_meta_data(
             context,
             sdd_context,
             "FINREP_REF"

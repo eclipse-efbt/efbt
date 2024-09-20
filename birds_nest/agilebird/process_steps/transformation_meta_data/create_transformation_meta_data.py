@@ -331,7 +331,7 @@ class TransformationMetaDataCreator:
         related_variables = []
         target_domain = output_item.variable_id.domain_id
 
-        if target_domain:
+        if target_domain and  not ((target_domain.domain_id == "String") or (target_domain.domain_id == "Date") or (target_domain.domain_id == "Integer") or (target_domain.domain_id == "Boolean") or (target_domain.domain_id == "Float")     ):            
             for input_entity in input_entity_list:
                 if input_entity:
                     field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
@@ -340,7 +340,7 @@ class TransformationMetaDataCreator:
                         if variable and variable.domain_id.domain_id == target_domain.domain_id:
                             related_variables.append(csi)
         else:
-            output_variable_name = output_item.name
+            output_variable_name = output_item.variable_id.variable_id
             if output_variable_name:
                 for input_entity in input_entity_list:
                     if input_entity:
