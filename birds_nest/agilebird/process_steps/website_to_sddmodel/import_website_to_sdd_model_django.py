@@ -20,12 +20,8 @@ class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for importing SDD csv files into an instance of the analysis model
     '''
-    def import_basic_info_from_website(self, sdd_context):
-        '''
-        Import SDD csv files into an instance of the analysis model
-        '''
-        ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
-        ImportWebsiteToSDDModel.create_frameworks(self, sdd_context)
+    
+        
 
     def import_reference_info_from_sdd(self, sdd_context):
         '''
@@ -40,7 +36,8 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
-
+        ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
+        ImportWebsiteToSDDModel.create_frameworks(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,False)
         ImportWebsiteToSDDModel.create_all_members(self, sdd_context,False)
         ImportWebsiteToSDDModel.create_all_variables(self, sdd_context,False)

@@ -351,7 +351,7 @@ class ImportDatabaseToSDDModel(object):
         Import all the cube structure item links
         '''     
         for cube_structure_item_link in CUBE_STRUCTURE_ITEM_LINK.objects.all():
-            context.cube_structure_item_link_dictionary[cube_structure_item_link.cube_structure_item_link_id] = cube_structure_item_link    
+            context.cube_structure_item_links_dictionary[cube_structure_item_link.cube_structure_item_link_id] = cube_structure_item_link    
             cube_link = cube_structure_item_link.cube_link_id
             try:
                 context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(cube_structure_item_link)

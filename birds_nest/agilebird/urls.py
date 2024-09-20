@@ -6,7 +6,6 @@ app_name = 'agilebird'  # Add this line if using namespaces
 
 urlpatterns = [
     path('', views.home_view, name='home'),  # This should handle the root URL of your app
-    path('run-import/', views.run_import_view, name='run_import'),
     path('run-import-ref-info-from-sqldev/', views.run_import_ref_info_from_sqldev, name='run_import_ref_info_from_sqldev'),
     path('edit-variable-mappings/', views.edit_variable_mappings, name='edit_variable_mappings'),
     path('delete-variable-mapping/<str:variable_mapping_id>/', views.delete_variable_mapping, name='delete_variable_mapping'),
@@ -38,5 +37,6 @@ urlpatterns = [
     path('run-create-transformation-meta-data/', views.run_create_transformation_meta_data, name='run_create_transformation_meta_data'),
     path('review-transformation-meta-data/', views.review_transformation_meta_data, name='review_transformation_meta_data'),
     path('run-delete-transformation-meta-data/', views.run_delete_transformation_meta_data, name='run_delete_transformation_meta_data'),
+    path('run_create_transformation_meta_data/', views.run_create_transformation_meta_data, name='run_create_transformation_meta_data'),
     
 ]

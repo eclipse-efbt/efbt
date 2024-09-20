@@ -1,26 +1,64 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}AgileBird Home{% endblock %}
 
 {% block content %}
-<h1>Welcome to AgileBird</h1>
-
-<ul>
-
-    <li><a href="{% url 'agilebird:run_import' %}"> Import  Basic Info (Maintenance Agencies)</a></li>
-    <li><a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}">Import Reference Information from SQLDev</a></li>
-    <li><a href="{% url 'agilebird:import_ref_info_from_website' %}">Import Reference Info from Website (Optional, Not Recomended)</a></li>
-    <li><a href="{% url 'agilebird:run_import_non_ref_info' %}">Import Non Reference Info from Website</a></li>
-    <li><a href="{% url 'agilebird:run_import_hierarchies' %}">Import Hierarchies from Website</a></li>
-    <li><a href="{% url 'agilebird:review_import_hierarchies' %}">Review Hierarchies</a></li>
-    <li><a href="{% url 'agilebird:run_import_mappings_from_website' %}">Import Input/Output Analysis from Website</a></li>
-    <li><a href="{% url 'agilebird:review_input_output_analysis' %}">Review Input/Output Analysis </a></li>
-    <li><a href="{% url 'agilebird:run_create_output_concepts' %}">Create output concepts</a></li>
-    <li><a href="{% url 'agilebird:run_create_transformation_meta_data' %}">Create Transformation Metadata</a></li>
-    <li><a href="{% url 'agilebird:review_transformation_meta_data' %}">Review Transformation Metadata</a></li>
-    <li>Create Executable Transformations Python/Django</li>
 
 
-</ul>
+<div class="task-grid">
+    <a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}" class="task-item">
+        <img src="{% static 'images/import_ref_info.webp' %}" alt="SQLDev icon">
+        <span>Import Reference Information</span>
+    </a>
+    <a href="{% url 'agilebird:run_import_non_ref_info' %}" class="task-item">
+        <img src="{% static 'images/import_non_ref_info.webp' %}" alt="Non Ref Info icon">
+        <span>Import Non Reference Information</span>
+    </a>
 
+    <a href="{% url 'agilebird:run_import_hierarchies' %}" class="task-item">
+        <img src="{% static 'images/hierarchy_icon.webp' %}" alt="Hierarchies icon">
+        <span>Import Hierarchies</span>
+    </a>
+
+    <a href="{% url 'agilebird:review_import_hierarchies' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
+        <span>CHECKPOINT: Review Hierarchies</span>
+    </a>
+    <a href="{% url 'agilebird:run_import_mappings_from_website' %}" class="task-item">
+        <img src="{% static 'images/input_output_icon.webp' %}" alt="Mapping icon">
+        <span>Import Input/Output Analysis</span>
+    </a>
+
+    <a href="{% url 'agilebird:review_input_output_analysis' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
+        <span>CHECKPOINT: Review Input/Output Analysis</span>
+    </a>
+    <a href="{% url 'agilebird:run_create_output_concepts' %}" class="task-item">
+        <img src="{% static 'images/create_outputs.webp' %}" alt="Concept icon">
+        <span>Create Output Concepts</span>
+    </a>
+    <a href="{% url 'agilebird:review_input_output_analysis' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
+        <span>CHECKPOINT:Review Output Items</span>
+    </a>
+    <a href="{% url 'agilebird:run_create_transformation_meta_data' %}" class="task-item">
+        <img src="{% static 'images/transformation_meta_data.webp' %}" alt="Metadata icon">
+        <span>Create Transformation Metadata</span>
+    </a>
+    <a href="{% url 'agilebird:review_transformation_meta_data' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
+        <span>CHECKPOINT:Review Transformation Metadata</span>
+    </a>
+    <a href="{% url 'agilebird:review_transformation_meta_data' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="Review icon">
+        <span>Generate Executable Transformations</span>
+    </a>
+    <a href="{% url 'agilebird:review_transformation_meta_data' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
+        <span>CHECKPOINT:Run Automated Tests</span>
+    </a>
+    </a>
+    
+</div>
 {% endblock %}

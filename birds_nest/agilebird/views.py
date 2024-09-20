@@ -1,11 +1,8 @@
 from django.http import HttpResponse
-from .entry_points.import_basic_info_from_website import RunImportBasicInfoFromWebsite
 from django.shortcuts import render, redirect, get_object_or_404
 from agilebird.sdd_models import VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM
 from django.contrib import messages
 from django.forms import modelformset_factory
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.http import HttpResponse
@@ -45,10 +42,6 @@ def run_import_mappings_from_website(request):
     app_config.import_mappings_from_website()
     return JsonResponse({"status": "success", "message": "Import completed successfully"})
 
-    
-def run_import_view(request):
-    RunImportBasicInfoFromWebsite.run_import()
-    return HttpResponse("Import process completed successfully.")
 
 def run_import_ref_info_from_sqldev(request):
     app_config = RunImportRefInfoFromSQLDev('agilebird', 'birds_nest')
@@ -335,7 +328,6 @@ def edit_mapping_to_cubes(request):
     page_number = request.GET.get('page', 1)
     
 from django.http import HttpResponse
-from .entry_points.import_basic_info_from_website import RunImportBasicInfoFromWebsite
 from django.shortcuts import render, redirect, get_object_or_404
 from agilebird.sdd_models import VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM
 from django.contrib import messages
@@ -660,7 +652,6 @@ def edit_mapping_to_cubes(request):
     page_number = request.GET.get('page', 1)
     
 from django.http import HttpResponse
-from .entry_points.import_basic_info_from_website import RunImportBasicInfoFromWebsite
 from django.shortcuts import render, redirect, get_object_or_404
 from agilebird.sdd_models import VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM
 from django.contrib import messages

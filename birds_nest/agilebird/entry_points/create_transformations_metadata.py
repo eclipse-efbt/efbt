@@ -27,6 +27,7 @@ class RunCreateTransformationMetadata(AppConfig):
     @staticmethod
     def run_create_transformation_meta_data():
         """Execute the process of creating generation rules when the app is ready."""
+        print("Running create transformation metadata")
         from agilebird.process_steps.database_to_sdd_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
         )
