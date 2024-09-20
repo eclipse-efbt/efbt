@@ -53,6 +53,10 @@ class ImportDatabaseToSDDModel(object):
         ImportDatabaseToSDDModel.create_combination_items(self, sdd_context)
         ImportDatabaseToSDDModel.create_cube_to_combination(self, sdd_context)
 
+        ImportDatabaseToSDDModel.create_cube_links(self, sdd_context)
+        ImportDatabaseToSDDModel.create_cube_structure_item_links(self, sdd_context)
+        
+
     def create_all_mapping_definitions(self, context):
         '''
         import all the mapping definitions
@@ -317,3 +321,17 @@ class ImportDatabaseToSDDModel(object):
                 context.combination_to_rol_cube_map[
                     cube_to_combination.cube_id.cube_id
                 ] = [cube_to_combination]
+
+    def create_cube_links(self, context):
+        '''
+        Import all the cube links
+        '''
+        for cube_link in CUBE_LINK.objects.all():
+            context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
+
+    def create_cube_structure_item_links(self, context):
+        '''
+        Import all the cube structure item links
+        '''     
+        for cube_structure_item_link in CUBE_STRUCTURE_ITEM_LINK.objects.all():
+            context.cube_structure_item_link_dictionary[cube_structure_item_link.cube_structure_item_link_id] = cube_structure_item_link    

@@ -93,7 +93,7 @@ class SDDContext(object):
     finrep_output_cubes = {}
     ae_output_cubes = {}
 
-    cube_links = []
+    cube_link_dictionary = {}
     cube_structure_item_links_dictionary = {}
 
  

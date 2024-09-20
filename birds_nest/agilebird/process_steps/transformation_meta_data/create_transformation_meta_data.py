@@ -20,7 +20,7 @@ from typing import List, Any
 
 from agilebird.process_steps.transformation_meta_data.ldm_search import ELDMSearch
 
-class GenerationRuleCreator:
+class TransformationMetaDataCreator:
     """
     A class for creating generation rules for reports and tables.
     """
@@ -175,7 +175,7 @@ class GenerationRuleCreator:
                                     cube_link.cube_link_id = f"{table_part[0]}:{table_part[1]}"
                                     print(f"cube_link.primary_cube_id not found for {table}")
                                 cube_link.foreign_cube_id = generated_output_layer
-                                sdd_context.cube_links.append(cube_link)
+                                sdd_context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
                                 if context.save_derived_sdd_items:
                                     cube_link.save()
                                 self.add_field_to_field_lineage_to_rules_for_table_part(
@@ -229,7 +229,7 @@ class GenerationRuleCreator:
                             f":{csil.primary_cube_variable_code.variable_id.variable_id}"
                         )
                         csil.cube_link_id = cube_link  
-                        
+                        sdd_context.cube_structure_item_links_dictionary[csil.cube_structure_item_link_id] = csil
                         if context.save_derived_sdd_items:
                             csil.save()
 
