@@ -162,8 +162,9 @@ class TransformationMetaDataCreator:
 
                             if table_part[0] == table:
                                 cube_link = CUBE_LINK()
-                                cube_link.description = mc
-                                cube_link.name = table_part[1]
+                                cube_link.description = f"{table_part[0]}:{mc}:{table_part[1]}"
+                                cube_link.name = f"{table_part[0]}:{table_part[1]}"
+                                cube_link.join_identifier = table_part[1]
                                 primary_cube = sdd_context.rol_cube_dictionary.get(table)
                                 if primary_cube:
                                     cube_link.primary_cube_id = primary_cube
@@ -176,6 +177,22 @@ class TransformationMetaDataCreator:
                                     print(f"cube_link.primary_cube_id not found for {table}")
                                 cube_link.foreign_cube_id = generated_output_layer
                                 sdd_context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
+                                foreign_cube = cube_link.foreign_cube_id
+                                try:
+                                    sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
+                                except KeyError:
+                                    sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = [cube_link]
+                                join_identifier = cube_link.join_identifier
+                                try:
+                                    sdd_context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
+                                except KeyError:
+                                    sdd_context.cube_link_to_join_identifier_map[join_identifier] = [cube_link]
+
+                                join_for_report_id = foreign_cube.cube_id + ":" + cube_link.join_identifier
+                                try:
+                                    sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
+                                except KeyError:
+                                    sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
                                 if context.save_derived_sdd_items:
                                     cube_link.save()
                                 self.add_field_to_field_lineage_to_rules_for_table_part(

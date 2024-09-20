@@ -94,9 +94,12 @@ class SDDContext(object):
     ae_output_cubes = {}
 
     cube_link_dictionary = {}
+    cube_link_to_foreign_cube_map = {}
     cube_structure_item_links_dictionary = {}
+    cube_structure_item_link_to_cube_link_map = {}
+    cube_link_to_join_identifier_map = {}
+    cube_link_to_join_for_report_id_map = {}
 
- 
     save_sdd_to_db = True
 
     exclude_reference_info_from_website = False

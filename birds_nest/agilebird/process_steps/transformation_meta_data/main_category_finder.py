@@ -195,7 +195,7 @@ class MainCategoryFinder(object):
                         else "ae_transformation_meta_data_ldm")
 
         output_file = os.path.join(context.output_directory,
-                                   'generations_transformations_csv',
+                                   'transformation_meta_data_csv',
                                    subdirectory,
                                    f'table_parts_draft_{framework}.csv')
         with open(output_file, "a", encoding='utf-8') as f:
