@@ -4,7 +4,8 @@
 {% block title %}AgileBird Home{% endblock %}
 
 {% block content %}
-
+<h1>Home</h1>
+<h2>Non-Executable</h2>
 
 <div class="task-grid">
     <a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}" class="task-item">
@@ -25,7 +26,7 @@
         <img src="{% static 'images/import_non_ref_info.webp' %}" alt="SQLDev icon">
         <span>Create Test Input Data</span>
     </a>
-   
+    <h2>Executable</h2> 
     <a href="{% url 'agilebird:run_create_python_transformations' %}" class="task-item">
         <img src="{% static 'images/executable.webp' %}" alt="Review icon">
         <span>Create/Import Executable Transformations</span>
