@@ -9,52 +9,32 @@
 <div class="task-grid">
     <a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}" class="task-item">
         <img src="{% static 'images/import_ref_info.webp' %}" alt="SQLDev icon">
-        <span>Import Reference Information</span>
+        <span>Create Input Structures</span>
     </a>
-    <a href="{% url 'agilebird:run_import_non_ref_info' %}" class="task-item">
-        <img src="{% static 'images/import_non_ref_info.webp' %}" alt="Non Ref Info icon">
-        <span>Import Non Reference Information</span>
-    </a>
-
-    <a href="{% url 'agilebird:run_import_hierarchies' %}" class="task-item">
-        <img src="{% static 'images/hierarchy_icon.webp' %}" alt="Hierarchies icon">
-        <span>Import Hierarchies</span>
-    </a>
-
-    <a href="{% url 'agilebird:review_import_hierarchies' %}" class="task-item">
-        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
-        <span>CHECKPOINT: Review Hierarchies</span>
-    </a>
-    <a href="{% url 'agilebird:run_import_mappings_from_website' %}" class="task-item">
-        <img src="{% static 'images/input_output_icon.webp' %}" alt="Mapping icon">
-        <span>Import Input/Output Analysis</span>
-    </a>
-
-    <a href="{% url 'agilebird:review_input_output_analysis' %}" class="task-item">
-        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
-        <span>CHECKPOINT: Review Input/Output Analysis</span>
-    </a>
-    <a href="{% url 'agilebird:run_create_output_concepts' %}" class="task-item">
+    <a href="{% url 'agilebird:create_output_structures' %}" class="task-item">
         <img src="{% static 'images/create_outputs.webp' %}" alt="Concept icon">
-        <span>Create Output Concepts</span>
+        <span>Create Output Structures</span>
     </a>
-    <a href="{% url 'agilebird:review_input_output_analysis' %}" class="task-item">
-        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
-        <span>CHECKPOINT:Review Output Items</span>
+   
+    <a href="{% url 'agilebird:create_logical_transformations' %}" class="task-item">
+        <img src="{% static 'images/transformation_meta_data.webp' %}" alt="Concept icon">
+        <span>Create Logical Transformations</span>
     </a>
-    <a href="{% url 'agilebird:run_create_transformation_meta_data' %}" class="task-item">
-        <img src="{% static 'images/transformation_meta_data.webp' %}" alt="Metadata icon">
-        <span>Create Transformation Metadata</span>
+
+    <a href="{% url 'admin:index' %}" class="task-item">
+        <img src="{% static 'images/import_non_ref_info.webp' %}" alt="SQLDev icon">
+        <span>Create Test Input Data</span>
     </a>
-    <a href="{% url 'agilebird:review_transformation_meta_data' %}" class="task-item">
-        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
-        <span>CHECKPOINT:Review Transformation Metadata</span>
-    </a>
-    <a href="{% url 'agilebird:review_transformation_meta_data' %}" class="task-item">
+   
+    <a href="{% url 'agilebird:run_create_python_transformations' %}" class="task-item">
         <img src="{% static 'images/executable.webp' %}" alt="Review icon">
-        <span>Generate Executable Transformations</span>
+        <span>Create/Import Executable Transformations</span>
     </a>
-    <a href="{% url 'agilebird:review_transformation_meta_data' %}" class="task-item">
+    <a href="{% url 'agilebird:home' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
+        <span>Import Expected Results</span>
+    </a>
+    <a href="{% url 'agilebird:home' %}" class="task-item">
         <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
         <span>CHECKPOINT:Run Automated Tests</span>
     </a>

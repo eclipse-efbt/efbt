@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AgileBird Home{% endblock %}
+
+{% block content %}
+
+
+<div class="task-grid">
+
+    <a href="{% url 'agilebird:run_create_transformation_meta_data' %}" class="task-item">
+        <img src="{% static 'images/transformation_meta_data.webp' %}" alt="Metadata icon">
+        <span>Create Transformation Metadata</span>
+    </a>
+    <a href="{% url 'agilebird:review_transformation_meta_data' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
+        <span>CHECKPOINT:Review Transformation Metadata</span>
+    </a>
+    
+</div>
+{% endblock %}

@@ -18,6 +18,7 @@ from django.conf import settings
 from .entry_points.create_output_layer_concepts import RunCreateReports
 from .entry_points.create_transformations_metadata import RunCreateTransformationMetadata
 from .entry_points.delete_transformations_metadata import RunDeleteTransformationMetadata
+from .entry_points.create_executable_transformations import RunCreateExecutableTransformations
 
 
 
@@ -26,6 +27,10 @@ def run_create_transformation_meta_data(request):
     app_config.run_create_transformation_meta_data()
     return HttpResponse("Created Transformation Metadata")
 
+def run_create_python_transformations(request):
+    app_config = RunCreateExecutableTransformations('agilebird', 'birds_nest')
+    app_config.create_python_transformations()
+    return HttpResponse("Created Python Transformations ")
 
 def run_delete_transformation_meta_data(request):
     app_config = RunDeleteTransformationMetadata('agilebird', 'birds_nest')
@@ -460,6 +465,12 @@ def review_input_output_analysis(request):
 
 def review_import_hierarchies(request):
     return render(request, 'agilebird/review_import_hierarchies.html')
+
+def create_output_structures(request):
+    return render(request, 'agilebird/create_output_structures.html')
+
+def create_logical_transformations(request):
+    return render(request, 'agilebird/create_logical_transformations.html')
 
 def review_transformation_meta_data(request):
     return render(request, 'agilebird/review_transformation_meta_data.html')

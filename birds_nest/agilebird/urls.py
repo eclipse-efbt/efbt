@@ -38,5 +38,8 @@ urlpatterns = [
     path('review-transformation-meta-data/', views.review_transformation_meta_data, name='review_transformation_meta_data'),
     path('run-delete-transformation-meta-data/', views.run_delete_transformation_meta_data, name='run_delete_transformation_meta_data'),
     path('run_create_transformation_meta_data/', views.run_create_transformation_meta_data, name='run_create_transformation_meta_data'),
-    
+    path('run-create-python-transformations/', views.run_create_python_transformations, name='run_create_python_transformations'),
+    path('create-output-structures/', views.create_output_structures, name='create_output_structures'),
+    path('create-logical-transformations/', views.create_logical_transformations, name='create_logical_transformations'),   
+        
 ]
