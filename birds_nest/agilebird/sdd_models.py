@@ -541,7 +541,8 @@ class CUBE_LINK(models.Model):
 
     cube_link_type = models.CharField("cube_link_type",max_length=255,default=None, blank=True, null=True)
 
-    product_identifier = models.ForeignKey("CUBE", models.SET_NULL,blank=True,null=True,related_name='product_identifier')
+    join_identifier = models.CharField("join_identifier",max_length=255,default=None, blank=True, null=True)
+    
     class Meta:
         verbose_name = 'CUBE_LINK'
         verbose_name_plural = 'CUBE_LINKs'  
