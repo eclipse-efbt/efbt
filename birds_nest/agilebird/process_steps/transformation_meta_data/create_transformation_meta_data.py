@@ -161,45 +161,46 @@ class TransformationMetaDataCreator:
                                     input_entity_list.append(the_input_table)
 
                             if table_part[0] == table:
-                                cube_link = CUBE_LINK()
-                                cube_link.description = f"{table_part[0]}:{mc}:{table_part[1]}"
-                                cube_link.name = f"{table_part[0]}:{table_part[1]}"
-                                cube_link.join_identifier = table_part[1]
-                                primary_cube = sdd_context.rol_cube_dictionary.get(table)
-                                if primary_cube:
-                                    cube_link.primary_cube_id = primary_cube
-                                    cube_link.cube_link_id = (
-                                        f"{report_template}:"
-                                        f"{table_part[0]}:{table_part[1]}"
-                                    )
-                                else:
-                                    cube_link.cube_link_id = f"{table_part[0]}:{table_part[1]}"
-                                    print(f"cube_link.primary_cube_id not found for {table}")
-                                cube_link.foreign_cube_id = generated_output_layer
-                                sdd_context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
-                                foreign_cube = cube_link.foreign_cube_id
-                                try:
-                                    sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
-                                except KeyError:
-                                    sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = [cube_link]
-                                join_identifier = cube_link.join_identifier
-                                try:
-                                    sdd_context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
-                                except KeyError:
-                                    sdd_context.cube_link_to_join_identifier_map[join_identifier] = [cube_link]
+                                for input_entity in input_entity_list:
+                                    cube_link = CUBE_LINK()
+                                    cube_link.description = f"{table_part[0]}:{mc}:{table_part[1]}:{input_entity.cube_structure_id}"
+                                    cube_link.name = f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
+                                    cube_link.join_identifier = table_part[1]
+                                    primary_cube = sdd_context.rol_cube_dictionary.get(input_entity.cube_structure_id)
+                                    if primary_cube:
+                                        cube_link.primary_cube_id = primary_cube
+                                        cube_link.cube_link_id = (
+                                            f"{report_template}:"
+                                            f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
+                                        )
+                                    else:
+                                        cube_link.cube_link_id = f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
+                                        print(f"cube_link.primary_cube_id not found for {table}")
+                                    cube_link.foreign_cube_id = generated_output_layer
+                                    sdd_context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
+                                    foreign_cube = cube_link.foreign_cube_id
+                                    try:
+                                        sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
+                                    except KeyError:
+                                        sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = [cube_link]
+                                    join_identifier = cube_link.join_identifier
+                                    try:
+                                        sdd_context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
+                                    except KeyError:
+                                        sdd_context.cube_link_to_join_identifier_map[join_identifier] = [cube_link]
 
-                                join_for_report_id = foreign_cube.cube_id + ":" + cube_link.join_identifier
-                                try:
-                                    sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
-                                except KeyError:
-                                    sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
-                                if context.save_derived_sdd_items:
-                                    cube_link.save()
-                                self.add_field_to_field_lineage_to_rules_for_table_part(
-                                    context, sdd_context, generated_output_layer, 
-                                    input_entity_list, mc, report_template, 
-                                    framework, cube_link
-                                )
+                                    join_for_report_id = foreign_cube.cube_id + ":" + cube_link.join_identifier
+                                    try:
+                                        sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
+                                    except KeyError:
+                                        sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
+                                    if context.save_derived_sdd_items:
+                                        cube_link.save()
+                                    self.add_field_to_field_lineage_to_rules_for_table_part(
+                                        context, sdd_context, generated_output_layer, 
+                                        input_entity, mc, report_template, 
+                                        framework, cube_link
+                                    )
 
                                 
                 except KeyError:
@@ -209,7 +210,7 @@ class TransformationMetaDataCreator:
 
     def add_field_to_field_lineage_to_rules_for_table_part(
             self, context: Any, sdd_context: Any,
-            output_entity: Any, input_entity_list: List[Any],
+            output_entity: Any, input_entity: Any,
             category: str, report_template: str, 
             framework: str, cube_link: Any) -> None:
         """
@@ -230,7 +231,7 @@ class TransformationMetaDataCreator:
             if self.valid_operation(context, output_item, framework, 
                                     category, report_template):
                 input_columns = self.find_variables_with_same_domain_then_name(
-                    sdd_context, output_item, input_entity_list)
+                    sdd_context, output_item, input_entity)
 
                 if input_columns:
                     for input_column in input_columns:
@@ -291,32 +292,9 @@ class TransformationMetaDataCreator:
                         return True
         return False
 
-    def find_related_variables(self, context: Any, sdd_context: Any, output_item: Any, input_entity_list: List[Any]) -> List[Any]:
-        """
-        Find related variables for a given output item in the input entity list.
 
-        Args:
-            context (Any): The context object containing necessary data.
-            sdd_context (Any): The SDD context object.
-            output_item (Any): The output item to find related variables for.
-            input_entity_list (List[Any]): List of input entities to search.
 
-        Returns:
-            List[Any]: A list of related variables.
-        """
-        output_variable_name = output_item.name
-        related_variables = []
-        if output_variable_name:
-            for input_entity in input_entity_list:
-                if input_entity:
-                    for input_item in input_entity.eStructuralFeatures:
-                        if isinstance(input_item, (CharField, DateTimeField, BigIntegerField, BooleanField, FloatField, CharField)):
-                            input_item_name = input_item.name
-                            if input_item_name == output_variable_name:
-                                related_variables = [input_item]
-        return related_variables
-
-    def find_variables_with_same_domain_then_name(self, sdd_context: Any, output_item: Any, input_entity_list: List[Any]) -> List[Any]:
+    def find_variables_with_same_domain_then_name(self, sdd_context: Any, output_item: Any, input_entity: Any) -> List[Any]:
         """
         Find variables with the same domain and then name as the output item.
 
@@ -332,23 +310,21 @@ class TransformationMetaDataCreator:
         target_domain = output_item.variable_id.domain_id
 
         if target_domain and  not ((target_domain.domain_id == "String") or (target_domain.domain_id == "Date") or (target_domain.domain_id == "Integer") or (target_domain.domain_id == "Boolean") or (target_domain.domain_id == "Float")     ):            
-            for input_entity in input_entity_list:
-                if input_entity:
-                    field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
-                    for csi in field_list:
-                        variable = csi.variable_id
-                        if variable and variable.domain_id.domain_id == target_domain.domain_id:
+            if input_entity:
+                field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                for csi in field_list:
+                    variable = csi.variable_id
+                    if variable and variable.domain_id.domain_id == target_domain.domain_id:
                             related_variables.append(csi)
         else:
             output_variable_name = output_item.variable_id.variable_id
             if output_variable_name:
-                for input_entity in input_entity_list:
-                    if input_entity:
-                        field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
-                        for csi in field_list:
-                            variable = csi.variable_id
-                            if variable and variable.name == output_variable_name:
-                                related_variables.append(csi)
+                if input_entity:
+                    field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                    for csi in field_list:
+                        variable = csi.variable_id
+                        if variable and variable.name == output_variable_name:
+                            related_variables.append(csi)
 
         return related_variables
 

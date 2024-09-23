@@ -165,9 +165,15 @@ class CreatePythonTransformations:
                     if the_report_id == report_id:
                         file.write("\nclass " + cube_link.join_identifier.replace(' ','_') + "(" + report_id + "_Base):\n")
                         
-                        for cube_structure_item_link in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]:
+                        cube_structure_item_links = []
+                        try:
+                            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
+                        except KeyError:
+                            print(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
+                        
+                        for cube_structure_item_link in cube_structure_item_links:
                             file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + " = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
-                        for cube_structure_item_link in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]:
+                        for cube_structure_item_link in cube_structure_item_links:
                             file.write("\tdef " + cube_structure_item_link.foreign_cube_variable_code.variable_id.variable_id + "(self):\n")
                             file.write("\t\treturn " +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
 
@@ -177,7 +183,12 @@ class CreatePythonTransformations:
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
                         file.write("\nclass " + cube_link.join_identifier.replace(' ','_') + "_Table:\n" )
-                        for cube_structure_item_link in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]:
+                        cube_structure_item_links = []  
+                        try:
+                            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
+                        except KeyError:
+                            print(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
+                        for cube_structure_item_link in cube_structure_item_links:
                             file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + "_Table = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
                         file.write("\t" + cube_link.join_identifier.replace(' ','_') + "s = []# " + cube_link.join_identifier.replace(' ','_') + "[]\n")
                         file.write("\tdef calc_" + cube_link.join_identifier.replace(' ','_') + "s(self) :\n")
