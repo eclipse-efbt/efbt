@@ -18,11 +18,12 @@ class CreatePythonTransformations:
         
          #get all the cubes_structure_items for that cube and make a related Pythin class.
         file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  'output_tables.py', "a",  encoding='utf-8') 
+        file.write("from agilebird.utils.orchestration import Orchestration\n")
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             print(f"report_id: {report_id}")
-            file.write("class " + report_id + ":")
-            file.write("from " + report_id  + "_logic import  " + report_id  + "_Logic")
-            file.write("unionOfLayers = None #  " + report_id + "_UnionItem  unionOfLayers ")
+            file.write("from " + report_id  + "_logic import  " + report_id  + "_Logic\n")
+            file.write("\nclass " + report_id + ":\n")
+            file.write("\tunionOfLayers = None #  " + report_id + "_UnionItem  unionOfLayers\n")
             cube_structure_items = []
             try:
                 cube_structure_items = sdd_context.rol_cube_structure_item_dictionary[report_id+ '_cube_structure']
@@ -34,49 +35,47 @@ class CreatePythonTransformations:
 
                 domain = variable.domain_id.domain_id
                 if domain == 'String':
-                    file.write('\tdef ' + variable.variable_id + '() -> str:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> str:\n')
                 elif domain == 'Integer':
-                    file.write('\tdef ' + variable.variable_id + '() -> int:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> int:\n')
                 elif domain == 'Date':
-                    file.write('\tdef ' + variable.variable_id + '() -> datetime:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> datetime:\n')
                 elif domain == 'Float':
-                    file.write('\tdef ' + variable.variable_id + '() -> float:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> float:\n')
                 elif domain == 'Boolean':
-                    file.write('\tdef ' + variable.variable_id + '() -> bool:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> bool:\n')
                 else:
-                    file.write('\tdef ' + variable.variable_id + '() -> str:')
-                    file.write('\'\'\' return string from ' + domain + ' enumeration \'\'\'')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> str:\n')
+                    file.write('\t\t\'\'\' return string from ' + domain + ' enumeration \'\'\'\n')
 
-                file.write('unionOfLayers.' + variable.variable_id + '()')
+                file.write('\t\treturn self.unionOfLayers.' + variable.variable_id + '()\n')
                 file.write('\n')
             file.write('\n')
-            file.write("class " +report_id + "_table :" )
-            file.write("\t " + report_id + "_UnionTable  unionOfLayersTable # " + report_id + "_UnionTable")
-            file.write("\t " + report_id + "s #" + report_id + "[]")
-            file.write("\t def  calc_" + report_id + "s() -> " + report_id + "[] :")
-            file.write("\t\t items = [] # " + report_id + "[]")
-            file.write("\t\t for item in unionOfLayersTable." + report_id + "_UnionItems:")
-            file.write("\t\t\t newItem = " + report_id + "()")
-            file.write("\t\t\t newItem.unionOfLayers = item")
-            file.write("\t\t\t items.append(newItem)")
-            file.write("\t\t return items")
-            file.write("\t def init(self):")
-            file.write("\t\t orchestration.init(self)")
-            file.write("\t\t self." + report_id + "s.append(calc_" + report_id + "s())")
-            file.write("\t\t\ return None")
+            file.write("class " +report_id + "_table :\n" )
+            file.write("\tunionOfLayersTable = None # " + report_id + "_UnionTable\n" )
+            file.write("\t" + report_id + "s = None #" + report_id + "[]\n" )
+            file.write("\tdef  calc_" + report_id + "s(self) -> list[" + report_id + "] :\n" )
+            file.write("\t\titems = [] # " + report_id + "[]\n" )
+            file.write("\t\tfor item in self.unionOfLayersTable." + report_id + "_UnionItems:\n" )
+            file.write("\t\t\tnewItem = " + report_id + "()\n" )
+            file.write("\t\t\tnewItem.unionOfLayers = item\n" )
+            file.write("\t\t\titems.append(newItem)\n" )
+            file.write("\t\treturn items\n" )
+            file.write("\tdef init(self):\n" )
+            file.write("\t\tOrchestration.init(self)\n" )
+            file.write("\t\tself." + report_id + "s.append(self.calc_" + report_id + "s())\n" )
+            file.write("\t\treturn None\n" )
             file.write('\n')
-
-
 
     def create_slice_classes( sdd_context):
-        
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')   
-
             file.write("from agilebird.ldm_models import *\n")
             file.write("from . import output_tables\n")
-            file.write("class " + report_id + "_UnionItem:\n")
-            file.write("\t base = None #" + report_id + "_Base\n")
+            file.write("from agilebird.utils.orchestration import Orchestration\n")
+        
+            file.write("\nclass " + report_id + "_UnionItem:\n")
+            file.write("\tbase = None #" + report_id + "_Base\n")
             cube_structure_items = []
             try:
                 cube_structure_items = sdd_context.rol_cube_structure_item_dictionary[report_id+ '_cube_structure']
@@ -88,24 +87,24 @@ class CreatePythonTransformations:
 
                 domain = variable.domain_id.domain_id
                 if domain == 'String':
-                    file.write('\tdef ' + variable.variable_id + '() -> str:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> str:\n')
                 elif domain == 'Integer':
-                    file.write('\tdef ' + variable.variable_id + '() -> int:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> int:\n')
                 elif domain == 'Date':
-                    file.write('\tdef ' + variable.variable_id + '() -> datetime:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> datetime:\n')
                 elif domain == 'Float':
-                    file.write('\tdef ' + variable.variable_id + '() -> float:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> float:\n')
                 elif domain == 'Boolean':
-                    file.write('\tdef ' + variable.variable_id + '() -> bool:')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> bool:\n')
                 else:
-                    file.write('\tdef ' + variable.variable_id + '() -> str:')
-                    file.write('\'\'\' return string from ' + domain + ' enumeration \'\'\'')
+                    file.write('\tdef ' + variable.variable_id + '(self) -> str:\n')
+                    file.write('\t\t\'\'\' return string from ' + domain + ' enumeration \'\'\'\n')
 
-                file.write('base.' + variable.variable_id + '()')
+                file.write('\t\treturn self.base.' + variable.variable_id + '()')
                 file.write('\n')
 
 
-            file.write("class " + report_id + "_Base:\n")
+            file.write("\nclass " + report_id + "_Base:\n")
             cube_structure_items = []
             try:
                 cube_structure_items = sdd_context.rol_cube_structure_item_dictionary[report_id+ '_cube_structure']
@@ -117,79 +116,79 @@ class CreatePythonTransformations:
 
                 domain = variable.domain_id.domain_id
                 if domain == 'String':
-                    file.write('\tdef ' + variable.variable_id + '() -> str:')
+                    file.write('\tdef ' + variable.variable_id + '() -> str:\n')
                 elif domain == 'Integer':
-                    file.write('\tdef ' + variable.variable_id + '() -> int:')
+                    file.write('\tdef ' + variable.variable_id + '() -> int:\n')
                 elif domain == 'Date':
-                    file.write('\tdef ' + variable.variable_id + '() -> datetime:')
+                    file.write('\tdef ' + variable.variable_id + '() -> datetime:\n')
                 elif domain == 'Float':
-                    file.write('\tdef ' + variable.variable_id + '() -> float:')
+                    file.write('\tdef ' + variable.variable_id + '() -> float:\n')
                 elif domain == 'Boolean':
-                    file.write('\tdef ' + variable.variable_id + '() -> bool:')
+                    file.write('\tdef ' + variable.variable_id + '() -> bool:\n')
                 else:
-                    file.write('\tdef ' + variable.variable_id + '() -> str:')
-                    file.write('\'\'\' return string from ' + domain + ' enumeration \'\'\'')
+                    file.write('\tdef ' + variable.variable_id + '() -> str:\n')
+                    file.write('\t\t\'\'\' return string from ' + domain + ' enumeration \'\'\'\n')
 
                 file.write('\t\tpass')
                 file.write('\n')
 
 
-            file.write("class " + report_id + "_UnionTable :")
-            file.write("\t" + report_id + "_UnionItems # " +  report_id + "_UnionItem []" )
+            file.write("\nclass " + report_id + "_UnionTable :\n")
+            file.write("\t" + report_id + "_UnionItems = None # " +  report_id + "_UnionItem []\n" )
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
                 for cube_link in cube_links:                   
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
-                        file.write("\t" + cube_link.join_identifier + "_Table # " +  cube_link.join_identifier ) 
-            file.write("def calc_" + report_id + "_UnionItems() -> " + report_id + "_UnionItem [] :")
-            file.write("items = [] # " + report_id + "_UnionItem []")
+                        file.write("\t" + cube_link.join_identifier.replace(' ','_') + "_Table = None # " +  cube_link.join_identifier.replace(' ','_') + "\n") 
+            file.write("\tdef calc_" + report_id + "_UnionItems() -> list[" + report_id + "_UnionItem] :\n")
+            file.write("\t\titems = [] # " + report_id + "_UnionItem []\n")
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
                 for cube_link in cube_links:                   
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
-                        file.write("\t for item in " + cube_link.join_identifier + "_Table." + cube_link.join_identifier + "s:")
-                        file.write("\t\t newItem = " + report_id + "_UnionItem()")
-                        file.write("\t\t newItem.base = item")
-                        file.write("\t\t items.append(newItem)")
-            file.write("\t return items")
+                        file.write("\t\tfor item in " + cube_link.join_identifier.replace(' ','_') + "_Table." + cube_link.join_identifier.replace(' ','_') + "s:\n")
+                        file.write("\t\t\tnewItem = " + report_id + "_UnionItem()\n")
+                        file.write("\t\t\tnewItem.base = item\n")
+                        file.write("\t\t\titems.append(newItem)\n")
+            file.write("\t\treturn items\n")
             file.write("\n")
 
-            file.write("def init(self):")
-            file.write("\t orchestration.init(this)")
-            file.write("\t self." + report_id + "_UnionItems.extend(calc_" + report_id + "_UnionItems())")
-            file.write("\t return None")
+            file.write("\tdef init(self):\n")
+            file.write("\t\tOrchestration.init(self)\n")
+            file.write("\t\tself." + report_id + "_UnionItems.extend(self.calc_" + report_id + "_UnionItems())\n")
+            file.write("\t\treturn None\n")
             file.write("\n")					 
 			
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
                 for cube_link in cube_links:                   
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
-                        file.write("class " + cube_link.join_identifier + "extends " + report_id + "_Base:")
+                        file.write("\nclass " + cube_link.join_identifier.replace(' ','_') + "(" + report_id + "_Base):\n")
                         
                         for cube_structure_item_link in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]:
-                            file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + " = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
+                            file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + " = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
                         for cube_structure_item_link in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]:
-                            file.write("\t def " + cube_structure_item_link.foreign_cube_variable_code.variable_id + "() :")
-                            file.write("\t\t return " +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id)
+                            file.write("\tdef " + cube_structure_item_link.foreign_cube_variable_code.variable_id.variable_id + "(self):\n")
+                            file.write("\t\treturn " +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
 
 		
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
                 for cube_link in cube_links:                   
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
-                        file.write("class " + cube_link.join_identifier + "_Table: " )
+                        file.write("\nclass " + cube_link.join_identifier.replace(' ','_') + "_Table:\n" )
                         for cube_structure_item_link in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]:
-                            file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + "_Table = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
-                        file.write("\t" + cube_link.join_identifier + "s = []# " + cube_link.join_identifier + "[]")
-                        file.write("\t def calc_" + cube_link.join_identifier + "s() :")
-                        file.write("\t\t items = [] # " + cube_link.join_identifier + "[]")
-                        file.write("\t\t# Join up any refered tables that you need to join")
-                        file.write("\t\t# loop through the main table")
-                        file.write("\t\t # set any references you want to on the new Item so that it can refer to themin operations")
-                        file.write("\t\t return items")
-                        file.write("\t def init(self):")
-                        file.write("\t\t orchestration.init(swlf)")
-                        file.write("\t\t self." + cube_link.join_identifier + "s.extend(calc_" + cube_link.join_identifier + "s())")
-                        file.write("\t\t return None")
+                            file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + "_Table = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
+                        file.write("\t" + cube_link.join_identifier.replace(' ','_') + "s = []# " + cube_link.join_identifier.replace(' ','_') + "[]\n")
+                        file.write("\tdef calc_" + cube_link.join_identifier.replace(' ','_') + "s(self) :\n")
+                        file.write("\t\titems = [] # " + cube_link.join_identifier.replace(' ','_') + "[\n")
+                        file.write("\t\t# Join up any refered tables that you need to join\n")
+                        file.write("\t\t# loop through the main table\n")
+                        file.write("\t\t# set any references you want to on the new Item so that it can refer to themin operations\n")
+                        file.write("\t\treturn items\n")
+                        file.write("\tdef init(self):\n")
+                        file.write("\t\tOrchestration.init(self)\n")
+                        file.write("\t\tself." + cube_link.join_identifier.replace(' ','_') + "s.extend(self.calc_" + cube_link.join_identifier.replace(' ','_') + "s())\n")
+                        file.write("\t\treturn None\n")
                         file.write("\n")
 
