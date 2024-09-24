@@ -40,6 +40,8 @@ urlpatterns = [
     path('run_create_transformation_meta_data/', views.run_create_transformation_meta_data, name='run_create_transformation_meta_data'),
     path('run-create-python-transformations/', views.run_create_python_transformations, name='run_create_python_transformations'),
     path('create-output-structures/', views.create_output_structures, name='create_output_structures'),
+    path('executable-transformations/', views.executable_transformations, name='executable_transformations'),
+    path('create-input-structures/', views.create_input_structures, name='create_input_structures'),
     path('create-logical-transformations/', views.create_logical_transformations, name='create_logical_transformations'),   
         
 ]

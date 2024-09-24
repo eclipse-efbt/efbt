@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Output Structures{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">Executable Python Transformations with Data Lineage</h1> 
+<div class="task-grid">
+    
+    <a href="{% url 'agilebird:run_create_python_transformations' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="Review icon">
+        <span>Create Executable Transformations</span>
+    </a>
+    <a href="{% url 'agilebird:home' %}" class="task-item">
+        <img src="{% static 'images/import_transformations.webp' %}" alt="Review icon">
+        <span>Import Executable Transformations</span>
+    </a>
+    <a href="{% url 'agilebird:home' %}" class="task-item">
+        <img src="{% static 'images/import_expected_results.webp' %}" alt="Review icon">
+        <span>Import Expected Results</span>
+    </a>
+    <a href="{% url 'agilebird:home' %}" class="task-item">
+        <img src="{% static 'images/execute.webp' %}" alt="Review icon">
+        <span>Execute Transformations and Regression Tests</span>
+    </a>
+    
+    
+</div>
+{% endblock %}

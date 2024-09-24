@@ -135,21 +135,28 @@ class CreatePythonTransformations:
 
             file.write("\nclass " + report_id + "_UnionTable :\n")
             file.write("\t" + report_id + "_UnionItems = None # " +  report_id + "_UnionItem []\n" )
+            join_ids_added = []
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
                 for cube_link in cube_links:                   
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
-                        file.write("\t" + cube_link.join_identifier.replace(' ','_') + "_Table = None # " +  cube_link.join_identifier.replace(' ','_') + "\n") 
+                        if cube_link.join_identifier not in join_ids_added:
+                            file.write("\t" + cube_link.join_identifier.replace(' ','_') + "_Table = None # " +  cube_link.join_identifier.replace(' ','_') + "\n") 
+                            join_ids_added.append(cube_link.join_identifier)
             file.write("\tdef calc_" + report_id + "_UnionItems() -> list[" + report_id + "_UnionItem] :\n")
             file.write("\t\titems = [] # " + report_id + "_UnionItem []\n")
+
+            join_ids_added = []
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
                 for cube_link in cube_links:                   
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
-                        file.write("\t\tfor item in " + cube_link.join_identifier.replace(' ','_') + "_Table." + cube_link.join_identifier.replace(' ','_') + "s:\n")
-                        file.write("\t\t\tnewItem = " + report_id + "_UnionItem()\n")
-                        file.write("\t\t\tnewItem.base = item\n")
-                        file.write("\t\t\titems.append(newItem)\n")
+                        if cube_link.join_identifier not in join_ids_added:     
+                            file.write("\t\tfor item in " + cube_link.join_identifier.replace(' ','_') + "_Table." + cube_link.join_identifier.replace(' ','_') + "s:\n")
+                            file.write("\t\t\tnewItem = " + report_id + "_UnionItem()\n")
+                            file.write("\t\t\tnewItem.base = item\n")
+                            file.write("\t\t\titems.append(newItem)\n")
+                            join_ids_added.append(cube_link.join_identifier)
             file.write("\t\treturn items\n")
             file.write("\n")
 
@@ -159,47 +166,62 @@ class CreatePythonTransformations:
             file.write("\t\treturn None\n")
             file.write("\n")					 
 			
-            for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
+            for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
+                class_header_is_written = False                
                 for cube_link in cube_links:                   
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
-                        file.write("\nclass " + cube_link.join_identifier.replace(' ','_') + "(" + report_id + "_Base):\n")
+                        # only write the class header once
+                        if not class_header_is_written:
+                            file.write("\nclass " + cube_link.join_identifier.replace(' ','_') + "(" + report_id + "_Base):\n")
+                            class_header_is_written = True
                         
                         cube_structure_item_links = []
                         try:
                             cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
                         except KeyError:
                             print(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
-                        
+                        primary_cubes_added = []
                         for cube_structure_item_link in cube_structure_item_links:
-                            file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + " = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
+                            if cube_structure_item_link.cube_link_id.primary_cube_id.cube_id not in primary_cubes_added:
+                                file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + " = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
+                                primary_cubes_added.append(cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
                         for cube_structure_item_link in cube_structure_item_links:
                             file.write("\tdef " + cube_structure_item_link.foreign_cube_variable_code.variable_id.variable_id + "(self):\n")
                             file.write("\t\treturn " +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
 
 		
-            for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
-                for cube_link in cube_links:                   
-                    the_report_id = cube_link.foreign_cube_id.cube_id
-                    if the_report_id == report_id:
-                        file.write("\nclass " + cube_link.join_identifier.replace(' ','_') + "_Table:\n" )
+            for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
+         
+                report_and_join =   join_for_report_id.split(':') 
+                join_id = report_and_join[1]
+                if report_and_join[0] == report_id:
+                    file.write("\nclass " + join_id.replace(' ','_') + "_Table:\n" )
+                    for cube_link in cube_links:  
                         cube_structure_item_links = []  
                         try:
                             cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
                         except KeyError:
                             print(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
-                        for cube_structure_item_link in cube_structure_item_links:
-                            file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + "_Table = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
-                        file.write("\t" + cube_link.join_identifier.replace(' ','_') + "s = []# " + cube_link.join_identifier.replace(' ','_') + "[]\n")
-                        file.write("\tdef calc_" + cube_link.join_identifier.replace(' ','_') + "s(self) :\n")
-                        file.write("\t\titems = [] # " + cube_link.join_identifier.replace(' ','_') + "[\n")
-                        file.write("\t\t# Join up any refered tables that you need to join\n")
-                        file.write("\t\t# loop through the main table\n")
-                        file.write("\t\t# set any references you want to on the new Item so that it can refer to themin operations\n")
-                        file.write("\t\treturn items\n")
-                        file.write("\tdef init(self):\n")
-                        file.write("\t\tOrchestration.init(self)\n")
-                        file.write("\t\tself." + cube_link.join_identifier.replace(' ','_') + "s.extend(self.calc_" + cube_link.join_identifier.replace(' ','_') + "s())\n")
-                        file.write("\t\treturn None\n")
-                        file.write("\n")
 
+                        primary_cubes_added = []
+                        for cube_structure_item_link in cube_structure_item_links:
+                            if cube_structure_item_link.cube_link_id.primary_cube_id.cube_id not in primary_cubes_added:
+                                file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + "_Table = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
+                                primary_cubes_added.append(cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
+
+                
+                if report_and_join[0] == report_id:
+                    join_id = report_and_join[1]
+                    file.write("\t" + join_id.replace(' ','_') + "s = []# " + join_id.replace(' ','_') + "[]\n")
+                    file.write("\tdef calc_" + join_id.replace(' ','_') + "s(self) :\n")                                
+                    file.write("\t\titems = [] # " + join_id.replace(' ','_') + "[\n")
+                    file.write("\t\t# Join up any refered tables that you need to join\n")
+                    file.write("\t\t# loop through the main table\n")
+                    file.write("\t\t# set any references you want to on the new Item so that it can refer to themin operations\n")
+                    file.write("\t\treturn items\n")
+                    file.write("\tdef init(self):\n")
+                    file.write("\t\tOrchestration.init(self)\n")
+                    file.write("\t\tself." + join_id.replace(' ','_') + "s.extend(self.calc_" + join_id.replace(' ','_') + "s())\n")
+                    file.write("\t\treturn None\n")
+                    file.write("\n")

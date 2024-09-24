@@ -4,49 +4,24 @@
 {% block title %}AgileBird Home{% endblock %}
 
 {% block content %}
-
-<h3>Edit/Create BIRD Metadata in a local SQLite database</h3>
-
+<h1 style="text-align: center;">Home</h1>
 <div class="task-grid">
-    <a href="{% url 'agilebird:run_import_ref_info_from_sqldev' %}" class="task-item">
-        <img src="{% static 'images/import_ref_info.webp' %}" alt="SQLDev icon">
-        <span>Create Input Structures</span>
+    <a href="{% url 'agilebird:create_input_structures' %}" class="task-item">
+        <img src="{% static 'images/input_data_model.webp' %}" alt="Concept icon">
+        <span>Input Data Model</span>
     </a>
     <a href="{% url 'agilebird:create_output_structures' %}" class="task-item">
         <img src="{% static 'images/create_outputs.webp' %}" alt="Concept icon">
-        <span>Create Output Structures</span>
+        <span>Output Structures</span>
     </a>
-   
     <a href="{% url 'agilebird:create_logical_transformations' %}" class="task-item">
         <img src="{% static 'images/transformation_meta_data.webp' %}" alt="Concept icon">
-        <span>Create Logical Transformations</span>
+        <span>Logical Transformations</span>
     </a>
+    <a href="{% url 'agilebird:executable_transformations' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="Concept icon">
+        <span>Executable Transformations</span>
+    </a>
+</div>
 
-    <a href="{% url 'admin:index' %}" class="task-item">
-        <img src="{% static 'images/import_non_ref_info.webp' %}" alt="SQLDev icon">
-        <span>Create Test Input Data</span>
-    </a>
-</div>
-<h3>Create/Import/Run/Test Python Transformations with Data Lineage</h3> 
-<div class="task-grid">
-    
-    <a href="{% url 'agilebird:run_create_python_transformations' %}" class="task-item">
-        <img src="{% static 'images/executable.webp' %}" alt="Review icon">
-        <span>Create Executable Transformations</span>
-    </a>
-    <a href="{% url 'agilebird:home' %}" class="task-item">
-        <img src="{% static 'images/import_transformations.webp' %}" alt="Review icon">
-        <span>Import Executable Transformations</span>
-    </a>
-    <a href="{% url 'agilebird:home' %}" class="task-item">
-        <img src="{% static 'images/import_expected_results.webp' %}" alt="Review icon">
-        <span>Import Expected Results</span>
-    </a>
-    <a href="{% url 'agilebird:home' %}" class="task-item">
-        <img src="{% static 'images/execute.webp' %}" alt="Review icon">
-        <span>Execute Transformations and Regression Tests</span>
-    </a>
-    
-    
-</div>
 {% endblock %}

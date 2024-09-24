@@ -37,7 +37,7 @@
             font-size: 36px;  /* Increased from 24px */
             font-weight: 800; /* Increased from bold (700) to extra-bold (800) */
             color: #0066cc;
-            text-transform: uppercase; /* Optional: makes the text all caps */
+            
             letter-spacing: 1px; /* Optional: adds slight spacing between letters */
         }
         
@@ -77,9 +77,9 @@
         }
         .task-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, 1fr); /* Changed from 4 to 2 columns */
             gap: 25px;
-            max-width: 1000px;
+            max-width: 600px; /* Reduced from 1000px to better fit 2 columns */
             margin: 0 auto;
         }
         
@@ -94,7 +94,8 @@
             border: 1px solid #ddd;
             border-radius: 12px;
             transition: all 0.3s ease;
-            height: 180px; /* Fixed height for consistent layout */
+            height: auto; /* Changed from fixed height to auto */
+            min-height: 180px; /* Added minimum height */
             justify-content: space-between; /* Pushes text to bottom */
         }
         
@@ -125,7 +126,7 @@
 <body>
     <nav>
         <div class="container">
-            <h1 class="site-title">Agile BIRD</h1>
+            <h1 class="site-title">AgileBird: Building Working Systems with BIRD</h1>
             <ul>
 
             </ul>

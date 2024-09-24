@@ -469,6 +469,13 @@ def review_import_hierarchies(request):
 def create_output_structures(request):
     return render(request, 'agilebird/create_output_structures.html')
 
+
+def executable_transformations(request):
+    return render(request, 'agilebird/executable_transformations.html')
+
+def create_input_structures(request):
+    return render(request, 'agilebird/create_input_structures.html')
+
 def create_logical_transformations(request):
     return render(request, 'agilebird/create_logical_transformations.html')
 
