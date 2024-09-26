@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Review Join Metadata</h1>
+
+<p>Select an option to edit:</p>
+
+<ul>
+    <li><a href="{% url 'birdai:edit_cube_links' %}">Edit Cube Links</a></li>
+    <li><a href="{% url 'birdai:edit_cube_structure_item_links' %}">Edit Cube Structure Item Links</a></li>
+    <li><a href="{% url 'birdai:run_delete_joins_meta_data' %}">Delete Transformation Metadata</a></li>
+</ul>
+
+{% endblock %}

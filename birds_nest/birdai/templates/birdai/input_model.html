@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Input Structures{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">Input Model</h1>
+<div class="task-grid">
+
+    <a href="{% url 'birdai:run_import_input_model_from_sqldev' %}" class="task-item">
+        <img src="{% static 'images/import_input_model.webp' %}" alt="Non Ref Info icon">
+        <span>Import Input Model From SQLDeveloper</span>
+    </a>
+    <a href="{% url 'admin:index' %}" class="task-item">
+        <img src="{% static 'images/input_test_data.webp' %}" alt="SQLDev icon">
+        <span>Create Test Input Data</span>
+    </a>
+
+</div>
+{% endblock %}

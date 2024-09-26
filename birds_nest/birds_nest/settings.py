@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'agilebird',  # Make sure this line is present
+    'birdai',  # Make sure this line is present
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'birds_nest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'agilebird', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'birdai', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
