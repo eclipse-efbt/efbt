@@ -6,7 +6,7 @@ app_name = 'birdai'  # Add this line if using namespaces
 
 urlpatterns = [
     path('', views.home_view, name='home'),  # This should handle the root URL of your app
-    path('run-import-ref-info-from-sqldev/', views.run_import_input_model_from_sqldev, name='run_import_input_model_from_sqldev'),
+    path('run_import_input_model_from_sqldev/', views.run_import_input_model_from_sqldev, name='run_import_input_model_from_sqldev'),
     path('edit-variable-mappings/', views.edit_variable_mappings, name='edit_variable_mappings'),
     path('delete-variable-mapping/<str:variable_mapping_id>/', views.delete_variable_mapping, name='delete_variable_mapping'),
     path('edit-variable-mapping-items/', views.edit_variable_mapping_items, name='edit_variable_mapping_items'),
@@ -27,7 +27,7 @@ urlpatterns = [
     path('delete-mapping-to-cube/<int:mapping_to_cube_id>/', views.delete_mapping_to_cube, name='delete_mapping_to_cube'),
     path('edit-mapping-definitions/', views.edit_mapping_definitions, name='edit_mapping_definitions'),
     path('delete-mapping-definition/<str:mapping_id>/', views.delete_mapping_definition, name='delete_mapping_definition'),
-    path('run-import-non-ref-info/', views.import_report_templates, name='import_report_templates'),
+    path('import_report_templates/', views.import_report_templates, name='import_report_templates'),
     path('run_import_semantic_integrations_from_website/', views.run_import_semantic_integrations_from_website, name='run_import_semantic_integrations_from_website'),
     path('run_import_hierarchies/', views.run_import_hierarchies, name='run_import_hierarchies'),
     path('missing-children/', views.missing_children, name='missing_children'),
