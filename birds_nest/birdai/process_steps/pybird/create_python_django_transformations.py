@@ -30,7 +30,7 @@ class CreatePythonTransformations:
         
          #get all the cubes_structure_items for that cube and make a related Python class.
         file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  'output_tables.py', "a",  encoding='utf-8') 
-        file.write("from birdai.pybird.orchestration import Orchestration\n")
+        file.write("from birdai.process_steps.pybird.orchestration import Orchestration\n")
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             print(f"report_id: {report_id}")
             file.write("from " + report_id  + "_logic import  " + report_id  + "_Logic\n")
@@ -83,7 +83,7 @@ class CreatePythonTransformations:
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')   
             file.write("from birdai.ldm_models import *\n")
-            file.write("from birdai.pybird.orchestration import Orchestration\n")
+            file.write("from birdai.process_steps.pybird.orchestration import Orchestration\n")
         
             file.write("\nclass " + report_id + "_UnionItem:\n")
             file.write("\tbase = None #" + report_id + "_Base\n")
