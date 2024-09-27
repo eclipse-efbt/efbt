@@ -91,7 +91,7 @@ def run_create_filters(request):
 
 def run_create_executable_filters(request):
     app_config = RunCreateExecutableFilters('birdai', 'birds_nest')
-    app_config.ready()
+    app_config.run_create_executable_filters()
     return HttpResponse("Create executable filters process completed successfully.")
 
 # Basic views
