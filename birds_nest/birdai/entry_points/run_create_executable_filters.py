@@ -29,7 +29,7 @@ class RunCreateExecutableFilters(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_create_executable_filters(request):
+    def run_create_executable_filters():
         from birdai.sdd_models import MAINTENANCE_AGENCY
 
         from birdai.process_steps.input_model.import_database_to_sdd_model import (
