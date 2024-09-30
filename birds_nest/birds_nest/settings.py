@@ -1,3 +1,15 @@
+# coding=UTF-8
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+
 """
 Django settings for birds_nest project.
 
@@ -38,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'birdai',  # Make sure this line is present
+    'pybirdai',  # Make sure this line is present
 ]
 
 MIDDLEWARE = [
@@ -56,7 +68,7 @@ ROOT_URLCONF = 'birds_nest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'birdai', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'pybirdai', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

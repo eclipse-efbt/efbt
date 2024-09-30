@@ -1,0 +1,25 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Review Hierarchies</h1>
+
+<p>Select an option to edit:</p>
+
+<ul>
+    <li><a href="{% url 'pybirdai:missing_children' %}">Show missing children in Hierarchies</a></li>
+    <li><a href="{% url 'pybirdai:missing_members' %}">Show missing leaf members in Hierarchies</a></li>
+</ul>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}BIRD AI Home{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center;">Home</h1>
+<div class="task-grid">
+    <a href="{% url 'pybirdai:input_model' %}" class="task-item">
+        <img src="{% static 'images/input_model.webp' %}" alt="Concept icon">
+        <span>Input Data Model</span>
+    </a>
+    <a href="{% url 'pybirdai:home' %}" class="task-item">
+        <img src="{% static 'images/transformation.webp' %}" alt="Concept icon">
+        <span>Derivation Transformations</span>
+    </a>
+    <a href="{% url 'pybirdai:filters' %}" class="task-item">
+        <img src="{% static 'images/filters.webp' %}" alt="Concept icon">
+        <span>Filters</span>
+    </a>
+    <a href="{% url 'pybirdai:joins' %}" class="task-item">
+        <img src="{% static 'images/joins.webp' %}" alt="Concept icon">
+        <span>Joins</span>
+    </a>
+    <a href="{% url 'pybirdai:report_templates' %}" class="task-item">
+        <img src="{% static 'images/report_templates.webp' %}" alt="Concept icon">
+        <span>View Populated Templates</span>
+    </a>
+    
+</div>
+
+{% endblock %}
