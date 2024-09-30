@@ -1,0 +1,45 @@
+/** 
+*  Get Arcs
+*
+* Copyright (c) 2024 Bird Software Solutions Ltd
+* This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License 2.0
+* which accompanies this distribution, and is available at
+* https://www.eclipse.org/legal/epl-2.0/
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*    Neil Mackenzie - initial API and implementation
+*
+*/
+
+// ---- INPUT PARAMETERS ----
+script_name = "Get Arcs";
+
+// ---- SCRIPT ----
+var app_view = model.getAppView();
+app_view.logMessage("--------------------------------------------------------");
+app_view.logMessage("Start script: " + script_name);
+app_view.logMessage("--------------------------------------------------------");
+logical_m = model;
+	entity_set = logical_m.getEntitySet().toArray();
+app_view.logMessage("entity_name,arc_name,relation_name,target_entity_name");
+for (var t=0; t<entity_set.length; t++){
+    entity = entity_set[t];
+    arcs = entity.getArcs();
+    entity_name = entity.getName();
+    for (var i=0; i<arcs.length; i++) {
+        relations = arcs[i].getRelations();
+        for (var r = 0; r < relations.length; r++) {
+                relation = relations[r];
+                app_view.logMessage(entity_name.replace(',','_') + "," + arcs[i].getName().replace(',','_') + "," + relation.getName().replace(',','_') + "," + relation.getTargetEntity().getName().replace(',','_') );
+
+        }
+    }
+}
+   
+
+app_view.logMessage("--------------------------------------------------------");
+app_view.logMessage("End script: " + script_name);
+app_view.logMessage("--------------------------------------------------------");

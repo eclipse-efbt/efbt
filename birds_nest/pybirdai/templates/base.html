@@ -1,0 +1,155 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PyBIRD AI{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        nav {
+            background: #e6f2ff; /* Light blue color */
+            color: #333; /* Darker text color for contrast */
+            padding: 15px 0;
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .site-title {
+            margin: 0;
+            font-size: 36px;  /* Increased from 24px */
+            font-weight: 800; /* Increased from bold (700) to extra-bold (800) */
+            color: #0066cc;
+            
+            letter-spacing: 1px; /* Optional: adds slight spacing between letters */
+        }
+        
+        nav ul {
+            padding: 0;
+            list-style: none;
+            margin: 0;
+        }
+        
+        nav ul li {
+            display: inline;
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 16px; /* Adjusted for better contrast with the larger title */
+        }
+        
+        nav ul li a:hover {
+            color: #004080;
+        }
+        
+        .messages {
+            list-style: none;
+            padding: 10px;
+            margin: 10px 0;
+            background: #f4f4f4;
+            border: 1px solid #ccc;
+        }
+        .messages .success {
+            color: green;
+        }
+        .messages .error {
+            color: red;
+        }
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Changed from 4 to 2 columns */
+            gap: 25px;
+            max-width: 600px; /* Reduced from 1000px to better fit 2 columns */
+            margin: 0 auto;
+        }
+        
+        .task-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            height: auto; /* Changed from fixed height to auto */
+            min-height: 180px; /* Added minimum height */
+            justify-content: space-between; /* Pushes text to bottom */
+        }
+        
+        .task-item:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-5px);
+        }
+        
+        .task-item img {
+            width: 128px;
+            height: 128px;
+            margin-bottom: 15px;
+        }
+        
+        .task-item span {
+            font-size: 14px;
+            font-weight: bold;  /* Added this line to make the text bold */
+            margin-top: auto; /* Pushes text to bottom */
+        }
+
+        /* New CSS rule to make headers blue */
+        h1, h2, h3, h4, h5, h6 {
+            color: #0066cc; /* Blue color */
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h1 class="site-title">PyBIRD AI</h1>
+            <ul>
+
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

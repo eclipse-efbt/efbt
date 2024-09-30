@@ -1,0 +1,32 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Review Semantic Integrations</h1>
+
+<p>Select an option to edit:</p>
+
+<ul>    
+    <li><a href="{% url 'pybirdai:mappings_missing_members' %}">Show missing members in mappings</a></li>
+    <li><a href="{% url 'pybirdai:mappings_missing_variables' %}">Show missing variables in mappings</a></li>
+    <li><a href="{% url 'pybirdai:edit_variable_mappings' %}">Edit Variable Mappings</a></li>
+    <li><a href="{% url 'pybirdai:edit_variable_mapping_items' %}">Edit Variable Mapping Items</a></li>
+    <li><a href="{% url 'pybirdai:edit_member_mappings' %}">Edit Member Mappings</a></li>
+    <li><a href="{% url 'pybirdai:edit_member_mapping_items' %}">Edit Member Mapping Items</a></li>
+    <li><a href="{% url 'pybirdai:edit_mapping_to_cubes' %}">Edit Mapping to Cubes</a></li>
+    <li><a href="{% url 'pybirdai:edit_mapping_definitions' %}">Edit Mapping Definitions</a></li>
+</ul>
+
+<p><a href="{% url 'pybirdai:home' %}">Back to Home</a></p>
+{% endblock %}
