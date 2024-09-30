@@ -18,7 +18,7 @@ from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
 from .entry_points.delete_joins_metadata import RunDeleteJoinsMetadata
 from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
-import csv
+from .entry_points.execute_datapoint import RunExecuteDataPoint
 import os
 
 # Helper function for paginated modelformset views
@@ -47,6 +47,9 @@ def paginated_modelformset_view(request, model, template_name, formset_fields='_
         'page_obj': page_obj,
     }
     return render(request, template_name, context)
+
+def show_report(request, report_id):
+    return render(request, 'birdai/' + report_id)
 
 # Views for running various processes
 def run_create_joins_meta_data(request):
@@ -139,6 +142,11 @@ def delete_item(request, model, id_field, redirect_view):
 def delete_variable_mapping(request, variable_mapping_id):
     return delete_item(request, VARIABLE_MAPPING, 'variable_mapping_id', 'edit_variable_mappings')
 
+def execute_data_point(request, data_point_id):
+    app_config = RunExecuteDataPoint('birdai', 'birds_nest')
+    result = app_config.run_execute_data_point(data_point_id)
+    return HttpResponse("DataPoint calulated as: " + result)
+
 def delete_variable_mapping_item(request, item_id):
     return delete_item(request, VARIABLE_MAPPING_ITEM, 'id', 'edit_variable_mapping_items')
 
@@ -159,56 +167,3 @@ def delete_mapping_to_cube(request, mapping_to_cube_id):
 
 def delete_mapping_definition(request, mapping_id):
     return delete_item(request, MAPPING_DEFINITION, 'mapping_id', 'edit_mapping_definitions')
-
-# CSV views
-def csv_view(request, filename):
-    base_dir = settings.BASE_DIR
-    csv_path = os.path.join(base_dir, 'results', filename)
-    csv_contents = []
-
-    with open(csv_path, 'r') as file:
-        csv_reader = csv.reader(file)
-        for row in csv_reader:
-            csv_contents.append(row)
-
-    return render(request, f'{filename.split(".")[0]}.html', {'csv_contents': csv_contents})
-
-def missing_children(request):
-    return csv_view(request, 'missing_children.csv')
-
-def missing_members(request):
-    return csv_view(request, 'missing_members.csv')
-
-def mappings_missing_members(request):
-    return csv_view(request, 'mappings_missing_members.csv')
-
-def mappings_missing_variables(request):
-    return csv_view(request, 'mappings_missing_variables.csv')
-
-# Review views
-def review_semantic_integrations(request):
-    return render(request, 'birdai/review_semantic_integrations.html')
-
-def review_filters(request):
-    return render(request, 'birdai/review_filters.html')
-
-def review_import_hierarchies(request):
-    return render(request, 'birdai/review_import_hierarchies.html')
-
-def review_report_templates(request):
-    return render(request, 'birdai/review_report_templates.html')
-
-def review_join_meta_data(request):
-    return render(request, 'birdai/review_join_meta_data.html')
-
-def executable_transformations(request):
-    return render(request, 'birdai/executable_transformations.html')
-
-def input_model(request):
-    return render(request, 'birdai/input_model.html')
-
-def joins(request):
-    return render(request, 'birdai/joins.html')
-
-def filters(request):
-    return render(request, 'birdai/filters.html')

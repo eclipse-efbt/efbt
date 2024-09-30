@@ -1,6 +1,9 @@
 from django.urls import path
 
 from . import views
+from . import report_views
+
+from django.views.generic import TemplateView
 
 app_name = 'birdai'  # Add this line if using namespaces
 
@@ -11,10 +14,10 @@ urlpatterns = [
     path('delete-variable-mapping/<str:variable_mapping_id>/', views.delete_variable_mapping, name='delete_variable_mapping'),
     path('edit-variable-mapping-items/', views.edit_variable_mapping_items, name='edit_variable_mapping_items'),
     path('delete-variable-mapping-item/<int:item_id>/', views.delete_variable_mapping_item, name='delete_variable_mapping_item'),
-    path('review-semantic-integrations/', views.review_semantic_integrations, name='review_semantic_integrations'),
-    path('review-filters/', views.review_filters, name='review_filters'),
-    path('review-import-hierarchies/', views.review_import_hierarchies, name='review_import_hierarchies'),
-    path('review-report-templates/', views.review_report_templates, name='review_report_templates'),
+    path('review-semantic-integrations/', report_views.review_semantic_integrations, name='review_semantic_integrations'),
+    path('review-filters/', report_views.review_filters, name='review_filters'),
+    path('review-import-hierarchies/', report_views.review_import_hierarchies, name='review_import_hierarchies'),
+    path('review-report-templates/', report_views.review_report_templates, name='review_report_templates'),
     path('edit-member-mappings/', views.edit_member_mappings, name='edit_member_mappings'),
     path('delete-member-mapping/<str:member_mapping_id>/', views.delete_member_mapping, name='delete_member_mapping'),
     path('edit-member-mapping-items/', views.edit_member_mapping_items, name='edit_member_mapping_items'),
@@ -30,20 +33,23 @@ urlpatterns = [
     path('import_report_templates/', views.import_report_templates, name='import_report_templates'),
     path('run_import_semantic_integrations_from_website/', views.run_import_semantic_integrations_from_website, name='run_import_semantic_integrations_from_website'),
     path('run_import_hierarchies/', views.run_import_hierarchies, name='run_import_hierarchies'),
-    path('missing-children/', views.missing_children, name='missing_children'),
-    path('missing-members/', views.missing_members, name='missing_members'),
-    path('mappings-missing-members/', views.mappings_missing_members, name='mappings_missing_members'),
-    path('mappings-missing-variables/', views.mappings_missing_variables, name='mappings_missing_variables'),
+    path('missing-children/', report_views.missing_children, name='missing_children'),
+    path('missing-members/', report_views.missing_members, name='missing_members'),
+    path('mappings-missing-members/', report_views.mappings_missing_members, name='mappings_missing_members'),
+    path('mappings-missing-variables/', report_views.mappings_missing_variables, name='mappings_missing_variables'),
     path('run-create-output-concepts/', views.run_create_filters, name='run_create_filters'),
     path('run-create-transformation-meta-data/', views.run_create_joins_meta_data, name='run_create_joins_meta_data'),
-    path('review-transformation-meta-data/', views.review_join_meta_data, name='review_join_meta_data'),
+    path('review-transformation-meta-data/', report_views.review_join_meta_data, name='review_join_meta_data'),
     path('run-delete-transformation-meta-data/', views.run_delete_joins_meta_data, name='run_delete_joins_meta_data'),
     path('run_create_joins_meta_data/', views.run_create_joins_meta_data, name='run_create_joins_meta_data'),
     path('run-create-python-transformations/', views.run_create_python_joins, name='run_create_python_joins'),
-    path('executable-transformations/', views.executable_transformations, name='executable_transformations'),
-    path('create-input-structures/', views.input_model, name='input_model'),
-    path('create-logical-transformations/', views.joins, name='joins'),   
-    path('filters/', views.filters, name='filters'),  
+    path('executable-transformations/', report_views.executable_transformations, name='executable_transformations'),
+    path('create-input-structures/', report_views.input_model, name='input_model'),
+    path('create-logical-transformations/', report_views.joins, name='joins'),   
+    path('filters/', report_views.filters, name='filters'),  
     path('run-create-executable-filters/', views.run_create_executable_filters, name='run_create_executable_filters'),
-        
+    path('execute-data-point/<str:data_point_id>/', views.execute_data_point, name='execute_data_point'),
+    path('show-report/<str:report_id>/', views.show_report, name='show_report'),
+    path('report-templates/', report_views.report_templates, name='report_templates'),
+    
 ]
