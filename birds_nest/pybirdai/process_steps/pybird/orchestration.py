@@ -1,5 +1,5 @@
 # coding=UTF-8
-# Copyright (c) 2020 Bird Software Solutions Ltd
+# Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
 # which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
-from pybird.orchestration import CSVConverter
+from pybirdai.process_steps.pybird.csv_converter import CSVConverter
 class Orchestration:
 
 	resourceURI = "";
