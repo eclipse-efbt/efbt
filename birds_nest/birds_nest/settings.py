@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'birdai',  # Make sure this line is present
+    'pybirdai',  # Make sure this line is present
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'birds_nest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'birdai', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'pybirdai', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

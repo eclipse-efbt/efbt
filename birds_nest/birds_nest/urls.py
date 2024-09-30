@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('birdai/', include('birdai.urls')),
+    path('pybirdai/', include('pybirdai.urls')),
 ]

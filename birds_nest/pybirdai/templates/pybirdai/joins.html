@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Joins{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">Joins</h1>
+
+<div class="task-grid">
+
+    <a href="{% url 'pybirdai:run_create_joins_meta_data' %}" class="task-item">
+        <img src="{% static 'images/joins.webp' %}" alt="Metadata icon">
+        <span>Create Joins Metadata</span>
+    </a>
+    <a href="{% url 'pybirdai:review_join_meta_data' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
+        <span>CHECKPOINT:Review Joins Metadata</span>
+    </a>
+    <a href="{% url 'pybirdai:run_create_python_joins' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="Review icon">
+        <span>Create Executable Joins</span>
+    </a>
+
+</div>
+{% endblock %}
