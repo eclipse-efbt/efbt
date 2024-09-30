@@ -33,7 +33,7 @@ class CreatePythonTransformations:
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             print(f"report_id: {report_id}")
-            file.write("from " + report_id  + "_logic import  " + report_id  + "_Logic\n")
+            file.write("from ." + report_id  + "_logic import *\n")
             file.write("\nclass " + report_id + ":\n")
             file.write("\tunionOfLayers = None #  " + report_id + "_UnionItem  unionOfLayers\n")
             cube_structure_items = []

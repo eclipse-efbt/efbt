@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
-from pybird.orchestration import CSVConverter
+from pybirdai.process_steps.pybird.csv_converter import CSVConverter
 class Orchestration:
 
 	resourceURI = "";
