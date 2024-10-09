@@ -63,7 +63,7 @@ class CreatePythonTransformations:
                 file.write('\t\treturn self.unionOfLayers.' + variable.variable_id + '()\n')
                 file.write('\n')
             file.write('\n')
-            file.write("class " +report_id + "_table :\n" )
+            file.write("class " +report_id + "_Table :\n" )
             file.write("\tunionOfLayersTable = None # " + report_id + "_UnionTable\n" )
             file.write("\t" + report_id + "s = None #" + report_id + "[]\n" )
             file.write("\tdef  calc_" + report_id + "s(self) -> list[" + report_id + "] :\n" )

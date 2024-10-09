@@ -12,11 +12,14 @@
 #    Neil Mackenzie - initial API and implementation
 import os
 
+from pybirdai.context.sdd_context_django import SDDContext
+
 class CSVConverter:
 
-	def persist_object_as_csv(theObject,useLongNames,sdd_context):
+	def persist_object_as_csv(self,theObject,useLongNames):
 		csvString = CSVConverter.createCSVStringForTable(theObject,useLongNames)
 		fileName = ""
+		sdd_context = SDDContext()
 		try:
 			if (useLongNames):
 				fileName = theObject.__class__.__name__ + "_longnames.csv"
@@ -27,7 +30,8 @@ class CSVConverter:
 				file = open(sdd_context.output_directory + os.sep + fileName, "a",  encoding='utf-8') 
 				file.write(csvString)
 
-		except: 
+		except Exception as e: 
+			print("Exception  " + str(e)  )
 			print("File " + fileName  + " already exists" )
 
 	def createCSVStringForTable( theObject,  useLongNames):

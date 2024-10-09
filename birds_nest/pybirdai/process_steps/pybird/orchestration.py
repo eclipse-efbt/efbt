@@ -10,25 +10,37 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
+
 from pybirdai.process_steps.pybird.csv_converter import CSVConverter
+
+import importlib
 class Orchestration:
 
 	resourceURI = "";
 	isSetUp = False;
 
 	def setup(self, theObject):
-	
-		isSetUp = True;
+		print("setup called")
+		print("theObject : " + str(theObject))
+		print("self " + str(self))
+		self.isSetUp = True
 		
 		operations = [method for method in dir(theObject.__class__) if callable(
 			getattr(theObject.__class__, method)) and not method.startswith('__')]
-
+		if operations:
+			print("operations: " + str(operations))
+		else:
+			print("no operations")
 		for operation in operations:
-			if operation.__name__ == "init":
+			print("operation1: " + operation)
+			if operation == "init":
+				print("operation2: " + operation)
 				try:
-					getattr(theObject, operation.__name__)()
+					getattr(theObject, operation)()
 				except:
-					print (" coud not call function " + operation.__name__)
+
+					print("theObject1: " + str(theObject))
+					print (" coud not call function " + operation)
                     
 		CSVConverter().persist_object_as_csv(theObject,True);
 		contents = Orchestration.get_contained_objects(theObject);
@@ -50,50 +62,69 @@ class Orchestration:
 		pass
 
 	def init(self,theObject):
+		print("init called")
+		print("self.isSetUp: " + str(self.isSetUp)	)
+		print("self: " + str(self))
 		if not self.isSetUp:
 			Orchestration.setup(self,theObject);
 		else:
 
-			eclass = theObject.theObject.__class__;
+			eclass = theObject.__class__;
 			references = [method for method in dir(theObject.__class__) if not callable(
             getattr(theObject.__class__, method)) and not method.startswith('__')]
 			for eReference in references:
-				if eReference.__name__.endswith("Table"):
+				if eReference.endswith("Table"):
 
 					from django.apps import apps
-					table_name = eReference.__name__.split('_')[0]
-					relevant_model = apps.get_model(table_name)
-					newObject = relevant_model.objects.all()
-					if newObject:
-						setattr(theObject,eReference.__name__,newObject)
-						CSVConverter.persistObjectAsCSV(newObject,True);						
-					else:
+					print("eReference: " + eReference)
+					table_name = eReference.split('_Table')[0]
+					print("table_name: " + table_name)
+					relevant_model = None
+					try:
+						relevant_model = apps.get_model('pybirdai',table_name)
+					except LookupError:
+						print("LookupError: " + table_name)
 
-						newObject = Orchestration.createObjectFromReferenceType( eReference);
+					if relevant_model:
+						newObject = relevant_model.objects.all()
+						if newObject:
+							setattr(theObject,eReference,newObject)
+							CSVConverter.persistObjectAsCSV(newObject,True);						
 						
-						newObjectsClass = newObject.__class__
-						operations = [method for method in dir(theObject.__class__) if callable(
-							getattr(theObject.__class__, method)) and not method.startswith('__')]
+					else:
+						newObject = Orchestration.createObjectFromReferenceType(eReference);
+						print("newObject: " + str(newObject))
+						
+						operations = [method for method in dir(newObject.__class__) if callable(
+							getattr(newObject.__class__, method)) and not method.startswith('__')]
 						
 						for operation in operations:
-							if operation.__name__ == "init":
+							if operation == "init":
 								try:
-									getattr(theObject, operation.__name__)()
+									getattr(newObject, operation)()
 								except:
-									print (" coud not call function " + operation.__name__)
+									print (" coud not call function called " + operation)
 							
 						#persistObject(newObject);
 
-						setattr(theObject,eReference.__name__,newObject)
+						setattr(theObject,eReference,newObject)
 
 	
 
 	def createObjectFromReferenceType(eReference):
 		
 		# find the class of the reference somehow, by naming or typ hints
-		theClass = eReference.__class__
-		newObject = theClass();
-		return newObject;
+		
+
+		print("eReference2: " + eReference)
+		
+		try:
+			cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
+			new_object = cls()		
+			return new_object;	
+		except :
+			print("Error: " + eReference)
+		
 		
 
 
