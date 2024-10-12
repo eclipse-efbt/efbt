@@ -32,7 +32,7 @@ class CreateExecutableFilters:
        
    
         file.write("from pybirdai.ldm_models import *\n")
-        file.write("from output_tables import *\n")
+        file.write("from .output_tables import *\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
 
         
@@ -78,7 +78,7 @@ class CreateExecutableFilters:
                             file.write("\t\t\tif filter_passed:\n")
                             file.write("\t\t\t\tself." + cube_id + "s.add(item)\n")
                     file.write("\tdef init(self):\n")
-                    file.write("\t\tOrchestration.init(self)\n")
+                    file.write("\t\tOrchestration().init(self)\n")
                     file.write("\t\tself.calc_referenced_items()\n")
                     file.write("\t\treturn None\n")
             

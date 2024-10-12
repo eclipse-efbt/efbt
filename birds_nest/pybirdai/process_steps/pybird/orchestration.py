@@ -17,13 +17,11 @@ import importlib
 class Orchestration:
 
 	resourceURI = "";
-	isSetUp = False;
 
 	def setup(self, theObject):
 		print("setup called")
 		print("theObject : " + str(theObject))
 		print("self " + str(self))
-		self.isSetUp = True
 		
 		operations = [method for method in dir(theObject.__class__) if callable(
 			getattr(theObject.__class__, method)) and not method.startswith('__')]
@@ -68,52 +66,49 @@ class Orchestration:
 
 	def init(self,theObject):
 		print("init called")
-		print("self.isSetUp: " + str(self.isSetUp)	)
 		print("self: " + str(self))
-		if not self.isSetUp:
-			Orchestration.setup(self,theObject);
-		else:
 
-			eclass = theObject.__class__;
-			references = [method for method in dir(theObject.__class__) if not callable(
-            getattr(theObject.__class__, method)) and not method.startswith('__')]
-			for eReference in references:
-				if eReference.endswith("Table"):
 
-					from django.apps import apps
-					print("eReference: " + eReference)
-					table_name = eReference.split('_Table')[0]
-					print("table_name: " + table_name)
-					relevant_model = None
-					try:
-						relevant_model = apps.get_model('pybirdai',table_name)
-					except LookupError:
-						print("LookupError: " + table_name)
+		eclass = theObject.__class__;
+		references = [method for method in dir(theObject.__class__) if not callable(
+		getattr(theObject.__class__, method)) and not method.startswith('__')]
+		for eReference in references:
+			if eReference.endswith("Table"):
 
-					if relevant_model:
-						newObject = relevant_model.objects.all()
-						if newObject:
-							setattr(theObject,eReference,newObject)
-							CSVConverter.persistObjectAsCSV(newObject,True);						
-						
-					else:
-						newObject = Orchestration.createObjectFromReferenceType(eReference);
-						print("newObject: " + str(newObject))
-						
-						operations = [method for method in dir(newObject.__class__) if callable(
-							getattr(newObject.__class__, method)) and not method.startswith('__')]
-						
-						for operation in operations:
-							if operation == "init":
-								try:
-									import pdb;pdb.set_trace()
-									getattr(newObject, operation)()
-								except:
-									print (" coud not call function called " + operation)
-							
-						#persistObject(newObject);
+				from django.apps import apps
+				print("eReference: " + eReference)
+				table_name = eReference.split('_Table')[0]
+				print("table_name: " + table_name)
+				relevant_model = None
+				try:
+					relevant_model = apps.get_model('pybirdai',table_name)
+				except LookupError:
+					print("LookupError: " + table_name)
 
+				if relevant_model:
+					newObject = relevant_model.objects.all()
+					if newObject:
 						setattr(theObject,eReference,newObject)
+						CSVConverter.persist_object_as_csv(newObject,True);						
+					
+				else:
+					newObject = Orchestration.createObjectFromReferenceType(eReference);
+					print("newObject: " + str(newObject))
+					
+					operations = [method for method in dir(newObject.__class__) if callable(
+						getattr(newObject.__class__, method)) and not method.startswith('__')]
+					
+					for operation in operations:
+						if operation == "init":
+							try:
+								getattr(newObject, operation)()
+							except:
+								print (" coud not call function called " + operation)
+						
+					#persistObject(newObject);
+
+					setattr(theObject,eReference,newObject)
+		CSVConverter.persist_object_as_csv(theObject,True);
 
 	
 

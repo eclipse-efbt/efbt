@@ -16,7 +16,7 @@ from pybirdai.context.sdd_context_django import SDDContext
 
 class CSVConverter:
 
-	def persist_object_as_csv(self,theObject,useLongNames):
+	def persist_object_as_csv(theObject,useLongNames):
 		csvString = CSVConverter.createCSVStringForTable(theObject,useLongNames)
 		fileName = ""
 		sdd_context = SDDContext()
