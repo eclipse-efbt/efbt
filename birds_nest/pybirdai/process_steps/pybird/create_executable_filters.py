@@ -20,6 +20,8 @@ class CreateExecutableFilters:
 
         file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  'report_cells.py', "a",  encoding='utf-8') 
         report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  'report_templates.html', "a",  encoding='utf-8') 
+        report_html_file.write("{% extends 'base.html' %}\n")
+        report_html_file.write("{% block content %}\n")
         report_html_file.write("<!DOCTYPE html>\n")
         report_html_file.write("<html>\n")
         report_html_file.write("<head>\n")
@@ -32,13 +34,16 @@ class CreateExecutableFilters:
        
    
         file.write("from pybirdai.ldm_models import *\n")
-        file.write("from output_tables import *\n")
+        file.write("from .output_tables import *\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
 
         
         for cube_id, combination_list in sdd_context.combination_to_rol_cube_map.items():
             report_html_file.write("<tr><td><a href=\"{% url 'pybirdai:show_report' '" + cube_id +'.html' + "'%}\">" +cube_id + "</a></td></tr>\n")   
             filter_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  cube_id +'.html', "a",  encoding='utf-8') 
+            
+            filter_html_file.write("{% extends 'base.html' %}\n")
+            filter_html_file.write("{% block content %}\n")
             filter_html_file.write("<!DOCTYPE html>\n")
             filter_html_file.write("<html>\n")
             filter_html_file.write("<head>\n")
@@ -78,7 +83,7 @@ class CreateExecutableFilters:
                             file.write("\t\t\tif filter_passed:\n")
                             file.write("\t\t\t\tself." + cube_id + "s.add(item)\n")
                     file.write("\tdef init(self):\n")
-                    file.write("\t\tOrchestration.init(self)\n")
+                    file.write("\t\tOrchestration().init(self)\n")
                     file.write("\t\tself.calc_referenced_items()\n")
                     file.write("\t\treturn None\n")
             
@@ -89,12 +94,13 @@ class CreateExecutableFilters:
             filter_html_file.write("</table>\n")
             filter_html_file.write("</body>\n")
             filter_html_file.write("</html>\n")
-        
+            filter_html_file.write("{% endblock %}\n")
         report_html_file.write("</table>\n")
         report_html_file.write("</body>\n")
         report_html_file.write("</html>\n")
         report_html_file.write("</table>\n")
         report_html_file.write("</body>\n")
         report_html_file.write("</html>\n")
+        report_html_file.write("{% endblock %}\n")
 
 

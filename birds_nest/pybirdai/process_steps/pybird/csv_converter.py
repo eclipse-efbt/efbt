@@ -12,11 +12,14 @@
 #    Neil Mackenzie - initial API and implementation
 import os
 
+from pybirdai.context.sdd_context_django import SDDContext
+
 class CSVConverter:
 
-	def persist_object_as_csv(theObject,useLongNames,sdd_context):
+	def persist_object_as_csv(theObject,useLongNames):
 		csvString = CSVConverter.createCSVStringForTable(theObject,useLongNames)
 		fileName = ""
+		sdd_context = SDDContext()
 		try:
 			if (useLongNames):
 				fileName = theObject.__class__.__name__ + "_longnames.csv"
@@ -27,7 +30,8 @@ class CSVConverter:
 				file = open(sdd_context.output_directory + os.sep + fileName, "a",  encoding='utf-8') 
 				file.write(csvString)
 
-		except: 
+		except Exception as e: 
+			print("Exception  " + str(e)  )
 			print("File " + fileName  + " already exists" )
 
 	def createCSVStringForTable( theObject,  useLongNames):
@@ -52,7 +56,29 @@ class CSVConverter:
 		return csvString + "\n"
 		
 	def get_contained_objects(theObject):
-		pass
+		'''
+		Get all contianed/composed objects
+		Q.) How do we recognise composed objects?
+		A.) 1.) If it is a djangomodel get the list of object/rows
+			2.) Look at the instance members of the object, if it is a list, and does not have a name that ends in Table then get the list. 
+
+		'''
+		rows = []
+		try:
+			rows = theObject.objects.all()
+			return rows
+		except:
+			instance_members = [member for member in dir(theObject.__class__) if not callable(
+            getattr(theObject.__class__, member)) and not member.startswith('__')]
+		
+			for member in instance_members:
+				if not (member.endswith("Table")) and isinstance(getattr(theObject.__class__, member), list):
+					rows = getattr(theObject, member)
+					return rows
+
+		return rows
+
+					
 
 	def createCSVStringForRow(theObject,useLongNames):
 		clazz = None
