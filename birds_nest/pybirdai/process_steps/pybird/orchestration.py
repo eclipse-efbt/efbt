@@ -43,22 +43,27 @@ class Orchestration:
 					print (" coud not call function " + operation)
                     
 		CSVConverter().persist_object_as_csv(theObject,True);
-		contents = Orchestration.get_contained_objects(theObject);
+		# contents = Orchestration.get_contained_objects(theObject);
 		
 
-		for o in contents:
-
-			operations = [method for method in dir(theObject.__class__) if callable(
-            getattr(theObject.__class__, method)) and not method.startswith('__')]
+		#for o in contents:
+		# operations = [method for method in dir(theObject.__class__) if callable(
+        # getattr(theObject.__class__, method)) and not method.startswith('__')]
 			
-			for operation in operations:
+		# for operation in operations:
 				
-				if not (operation.__name__ == "init"):
-					result = getattr(theObject, operation.__name__)()
-					print(result);
+		# if not (operation.__name__ == "init"):
+		# 	result = getattr(theObject, operation.__name__)()
+		# 	print(result);
 
 
 	def get_contained_objects(theObject):
+		'''
+		Recursvely get all contianed/composed objects
+		Q.) How do we recognise composed objects?
+		A.) 1.) If it is a djangomodel it has no further contained objects
+			2.) If it is not a django model 
+		'''
 		pass
 
 	def init(self,theObject):
@@ -101,6 +106,7 @@ class Orchestration:
 						for operation in operations:
 							if operation == "init":
 								try:
+									import pdb;pdb.set_trace()
 									getattr(newObject, operation)()
 								except:
 									print (" coud not call function called " + operation)

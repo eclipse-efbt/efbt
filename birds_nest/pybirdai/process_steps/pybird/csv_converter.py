@@ -56,7 +56,29 @@ class CSVConverter:
 		return csvString + "\n"
 		
 	def get_contained_objects(theObject):
-		pass
+		'''
+		Get all contianed/composed objects
+		Q.) How do we recognise composed objects?
+		A.) 1.) If it is a djangomodel get the list of object/rows
+			2.) Look at the instance members of the object, if it is a list, and does not have a name that ends in Table then get the list. 
+
+		'''
+		rows = []
+		try:
+			rows = theObject.objects.all()
+			return rows
+		except:
+			instance_members = [member for member in dir(theObject.__class__) if not callable(
+            getattr(theObject.__class__, member)) and not member.startswith('__')]
+		
+			for member in instance_members:
+				if not (member.endswith("Table")) and isinstance(getattr(theObject.__class__, member), list):
+					rows = getattr(theObject, member)
+					return rows
+
+		return rows
+
+					
 
 	def createCSVStringForRow(theObject,useLongNames):
 		clazz = None
