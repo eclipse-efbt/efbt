@@ -101,7 +101,6 @@ class Orchestration:
 					for operation in operations:
 						if operation == "init":
 							try:
-								import pdb; pdb.set_trace()
 								getattr(newObject, operation)()
 							except:
 								print (" coud not call function called " + operation)

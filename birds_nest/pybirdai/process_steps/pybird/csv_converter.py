@@ -13,21 +13,22 @@
 import os
 
 from pybirdai.context.sdd_context_django import SDDContext
-
+from django.conf import settings
 class CSVConverter:
 
 	def persist_object_as_csv(theObject,useLongNames):
 		csvString = CSVConverter.createCSVStringForTable(theObject,useLongNames)
 		fileName = ""
-		sdd_context = SDDContext()
+		base_dir = settings.BASE_DIR 
+		output_directory = os.path.join(base_dir, 'results')
 		try:
 			if (useLongNames):
 				fileName = theObject.__class__.__name__ + "_longnames.csv"
-				file = open(sdd_context.output_directory + os.sep + fileName, "a",  encoding='utf-8') 
+				file = open(output_directory + os.sep + fileName, "a",  encoding='utf-8') 
 				file.write(csvString)
 			else:
 				fileName = theObject.eClass().getName() + ".csv"
-				file = open(sdd_context.output_directory + os.sep + fileName, "a",  encoding='utf-8') 
+				file = open(output_directory + os.sep + fileName, "a",  encoding='utf-8') 
 				file.write(csvString)
 
 		except Exception as e: 
