@@ -85,6 +85,7 @@ class CreatePythonTransformations:
             file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')   
             file.write("from pybirdai.ldm_models import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
+            file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
         
             file.write("\nclass " + report_id + "_UnionItem:\n")
             file.write("\tbase = None #" + report_id + "_Base\n")
@@ -200,7 +201,7 @@ class CreatePythonTransformations:
                                 primary_cubes_added.append(cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
                         for cube_structure_item_link in cube_structure_item_links:
                             file.write("\tdef " + cube_structure_item_link.foreign_cube_variable_code.variable_id.variable_id + "(self):\n")
-                            file.write("\t\treturn " +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
+                            file.write("\t\treturn self." +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
 
 		
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
@@ -235,5 +236,7 @@ class CreatePythonTransformations:
                     file.write("\tdef init(self):\n")
                     file.write("\t\tOrchestration().init(self)\n")
                     file.write("\t\tself." + join_id.replace(' ','_') + "s.extend(self.calc_" + join_id.replace(' ','_') + "s())\n")
+                    file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
+
                     file.write("\t\treturn None\n")
                     file.write("\n")

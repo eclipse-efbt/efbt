@@ -104,18 +104,14 @@ class CSVConverter:
 			references = [method for method in dir(theObject.__class__) if not callable(
 				getattr(theObject.__class__, method)) and not method.startswith('__')]
 			for relationship in references:
-				print("relationship: " + relationship)
 				if not(relationship == "objects") and not(relationship == "_meta") and not(relationship.endswith("_domain")):
 					cardinality = 1
 					if not (relationship is None):
 						cardinality = 1
-						#cardinality = ((EReference) eStructuralFeature).getUpperBound()
-
-					#dont show any items in the inout data that have  cardinality	of -1
+						
 					if not(cardinality == -1):
 						if firstItem:
 							referencedItem = getattr(theObject,relationship)
-							#referencedItemString = CSVConverter.getReferencedItemString(relationship, referencedItem,useLongNames)
 							referencedItemString = str(referencedItem)
 							if referencedItemString.endswith(".None"):
 								referencedItemString = "None"
@@ -134,7 +130,6 @@ class CSVConverter:
 			operations = [method for method in dir(theObject.__class__) if callable(
 							getattr(theObject.__class__, method)) and not method.startswith('__')]
 			for eOperation in operations:
-				print("eOperation: " + eOperation)
 				if (firstItem):
 					try:
 						result = getattr(theObject, eOperation)()
@@ -193,8 +188,8 @@ class CSVConverter:
 					csvString = csvString + eOperation
 					firstItem = False
 
-			else:
-				csvString = csvString + "," + eOperation
+				else:
+					csvString = csvString + "," + eOperation
 
 		return csvString + "\n"
 
