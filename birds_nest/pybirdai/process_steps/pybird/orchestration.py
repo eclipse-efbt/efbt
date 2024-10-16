@@ -108,7 +108,7 @@ class Orchestration:
 					#persistObject(newObject);
 
 					setattr(theObject,eReference,newObject)
-		CSVConverter.persist_object_as_csv(theObject,True);
+		#CSVConverter.persist_object_as_csv(theObject,True)
 
 	
 

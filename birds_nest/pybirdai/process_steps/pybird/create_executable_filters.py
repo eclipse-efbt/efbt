@@ -81,7 +81,7 @@ class CreateExecutableFilters:
                             file.write("\t\t\tif item." + combination_item.variable_id.name + "() == '" + combination_item.member_id.code + "':\n")
                             file.write("\t\t\t\tfilter_passed = True\n")
                             file.write("\t\t\tif filter_passed:\n")
-                            file.write("\t\t\t\tself." + cube_id + "s.add(item)\n")
+                            file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
                     file.write("\tdef init(self):\n")
                     file.write("\t\tOrchestration().init(self)\n")
                     file.write("\t\tself.calc_referenced_items()\n")

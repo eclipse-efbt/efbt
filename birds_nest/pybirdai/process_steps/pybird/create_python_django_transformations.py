@@ -76,7 +76,7 @@ class CreatePythonTransformations:
             file.write("\t\treturn items\n" )
             file.write("\tdef init(self):\n" )
             file.write("\t\tOrchestration().init(self)\n" )
-            file.write("\t\tself." + report_id + "s.append(self.calc_" + report_id + "s())\n" )
+            file.write("\t\tself." + report_id + "s.extend(self.calc_" + report_id + "s())\n" )
             file.write("\t\treturn None\n" )
             file.write('\n')
 
@@ -85,6 +85,7 @@ class CreatePythonTransformations:
             file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')   
             file.write("from pybirdai.ldm_models import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
+            file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
         
             file.write("\nclass " + report_id + "_UnionItem:\n")
             file.write("\tbase = None #" + report_id + "_Base\n")
@@ -146,14 +147,14 @@ class CreatePythonTransformations:
 
 
             file.write("\nclass " + report_id + "_UnionTable :\n")
-            file.write("\t" + report_id + "_UnionItems = None # " +  report_id + "_UnionItem []\n" )
+            file.write("\t" + report_id + "_UnionItems = [] # " +  report_id + "_UnionItem []\n" )
             join_ids_added = []
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
                 for cube_link in cube_links:                   
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
                         if cube_link.join_identifier not in join_ids_added:
-                            file.write("\t" + cube_link.join_identifier.replace(' ','_') + "_Table = None # " +  cube_link.join_identifier.replace(' ','_') + "\n") 
+                            file.write("\t" + report_id + "_" + cube_link.join_identifier.replace(' ','_') + "_Table = None # " +  cube_link.join_identifier.replace(' ','_') + "\n") 
                             join_ids_added.append(cube_link.join_identifier)
             file.write("\tdef calc_" + report_id + "_UnionItems() -> list[" + report_id + "_UnionItem] :\n")
             file.write("\t\titems = [] # " + report_id + "_UnionItem []\n")
@@ -164,7 +165,7 @@ class CreatePythonTransformations:
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
                         if cube_link.join_identifier not in join_ids_added:     
-                            file.write("\t\tfor item in " + cube_link.join_identifier.replace(' ','_') + "_Table." + cube_link.join_identifier.replace(' ','_') + "s:\n")
+                            file.write("\t\tfor item in " + report_id + "_" + cube_link.join_identifier.replace(' ','_') + "_Table." + cube_link.join_identifier.replace(' ','_') + "s:\n")
                             file.write("\t\t\tnewItem = " + report_id + "_UnionItem()\n")
                             file.write("\t\t\tnewItem.base = item\n")
                             file.write("\t\t\titems.append(newItem)\n")
@@ -173,7 +174,7 @@ class CreatePythonTransformations:
             file.write("\n")
 
             file.write("\tdef init(self):\n")
-            file.write("\t\tOrchestration.init(self)\n")
+            file.write("\t\tOrchestration().init(self)\n")
             file.write("\t\tself." + report_id + "_UnionItems.extend(self.calc_" + report_id + "_UnionItems())\n")
             file.write("\t\treturn None\n")
             file.write("\n")					 
@@ -200,7 +201,7 @@ class CreatePythonTransformations:
                                 primary_cubes_added.append(cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
                         for cube_structure_item_link in cube_structure_item_links:
                             file.write("\tdef " + cube_structure_item_link.foreign_cube_variable_code.variable_id.variable_id + "(self):\n")
-                            file.write("\t\treturn " +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
+                            file.write("\t\treturn self." +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
 
 		
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
@@ -208,7 +209,7 @@ class CreatePythonTransformations:
                 report_and_join =   join_for_report_id.split(':') 
                 join_id = report_and_join[1]
                 if report_and_join[0] == report_id:
-                    file.write("\nclass " + join_id.replace(' ','_') + "_Table:\n" )
+                    file.write("\nclass " + report_id + "_" + join_id.replace(' ','_') + "_Table:\n" )
                     for cube_link in cube_links:  
                         cube_structure_item_links = []  
                         try:
@@ -233,7 +234,9 @@ class CreatePythonTransformations:
                     file.write("\t\t# set any references you want to on the new Item so that it can refer to themin operations\n")
                     file.write("\t\treturn items\n")
                     file.write("\tdef init(self):\n")
-                    file.write("\t\tOrchestration.init(self)\n")
+                    file.write("\t\tOrchestration().init(self)\n")
                     file.write("\t\tself." + join_id.replace(' ','_') + "s.extend(self.calc_" + join_id.replace(' ','_') + "s())\n")
+                    file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
+
                     file.write("\t\treturn None\n")
                     file.write("\n")
