@@ -77,6 +77,7 @@ class CreatePythonTransformations:
             file.write("\tdef init(self):\n" )
             file.write("\t\tOrchestration().init(self)\n" )
             file.write("\t\tself." + report_id + "s.extend(self.calc_" + report_id + "s())\n" )
+            file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
             file.write("\t\treturn None\n" )
             file.write('\n')
 
@@ -156,7 +157,7 @@ class CreatePythonTransformations:
                         if cube_link.join_identifier not in join_ids_added:
                             file.write("\t" + report_id + "_" + cube_link.join_identifier.replace(' ','_') + "_Table = None # " +  cube_link.join_identifier.replace(' ','_') + "\n") 
                             join_ids_added.append(cube_link.join_identifier)
-            file.write("\tdef calc_" + report_id + "_UnionItems() -> list[" + report_id + "_UnionItem] :\n")
+            file.write("\tdef calc_" + report_id + "_UnionItems(self) -> list[" + report_id + "_UnionItem] :\n")
             file.write("\t\titems = [] # " + report_id + "_UnionItem []\n")
 
             join_ids_added = []
@@ -176,6 +177,7 @@ class CreatePythonTransformations:
             file.write("\tdef init(self):\n")
             file.write("\t\tOrchestration().init(self)\n")
             file.write("\t\tself." + report_id + "_UnionItems.extend(self.calc_" + report_id + "_UnionItems())\n")
+            file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
             file.write("\t\treturn None\n")
             file.write("\n")					 
 			
