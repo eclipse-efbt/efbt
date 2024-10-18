@@ -156,7 +156,7 @@ def delete_variable_mapping(request, variable_mapping_id):
 def execute_data_point(request, data_point_id):
     app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
     result = app_config.run_execute_data_point(data_point_id)
-    return HttpResponse("DataPoint calulated as: " + result)
+    return HttpResponse("DataPoint " + data_point_id + " calculated as: " + result)
 
 def delete_variable_mapping_item(request, item_id):
     return delete_item(request, VARIABLE_MAPPING_ITEM, 'id', 'edit_variable_mapping_items')

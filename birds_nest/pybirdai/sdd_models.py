@@ -424,6 +424,8 @@ class TABLE_CELL(models.Model):
 
     table_id = models.ForeignKey("TABLE", models.SET_NULL,blank=True,null=True,) 
 
+    table_cell_combination_id = models.CharField("table_cell_combination_id",max_length=255,default=None, blank=True, null=True)
+    
     name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
     class Meta:
         verbose_name = 'TABLE_CELL'

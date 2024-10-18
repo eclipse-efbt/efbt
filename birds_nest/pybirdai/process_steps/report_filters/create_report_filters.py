@@ -98,9 +98,11 @@ class CreateReportFilters:
             pass
             return
 
-        CreateReportFilters.create_combination_and_filters(cell_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context)
+        combination_id = cell.table_cell_combination_id
+        if combination_id and not(combination_id == ''):
+            CreateReportFilters.create_combination_and_filters(combination_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context)
 
-    def create_combination_and_filters( cell_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context):
+    def create_combination_and_filters( table_cell_combination_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context):
         """
         Create a combination and associated filters for a given cell.
 
@@ -112,12 +114,12 @@ class CreateReportFilters:
             sdd_context: The SDD context object.
             context: The context object.
         """
-        report_cell = COMBINATION(combination_id=cell_id)
+        report_cell = COMBINATION(combination_id=table_cell_combination_id)
         metric = CreateReportFilters.get_metric(sdd_context, tuples, relevant_mappings)
         if metric:
             CreateReportFilters.add_variable_to_rol_cube(context,sdd_context, report_rol_cube, metric)
         report_cell.metric = metric
-        sdd_context.combination_dictionary[cell_id] = report_cell
+        sdd_context.combination_dictionary[table_cell_combination_id] = report_cell
         if context.save_derived_sdd_items:
             report_cell.save()
 

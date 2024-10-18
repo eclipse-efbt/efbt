@@ -20,20 +20,17 @@
 <h1 style="text-align: center;">Home</h1>
 <div class="task-grid">
     <a href="{% url 'pybirdai:input_model' %}" class="task-item">
-        <img src="{% static 'images/input_model.webp' %}" alt="Concept icon">
-        <span>Input Data Model</span>
+        <img src="{% static 'images/import_bird.webp' %}" alt="Concept icon">
+        <span>Import Official BIRD Artefacts</span>
     </a>
-    <a href="{% url 'pybirdai:home' %}" class="task-item">
+    
+    <a href="{% url 'pybirdai:create_transformation_rules_in_smcubes' %}" class="task-item">
         <img src="{% static 'images/transformation.webp' %}" alt="Concept icon">
-        <span>Derivation Transformations</span>
+        <span>Create Transformation Rules in SMCubes</span>
     </a>
-    <a href="{% url 'pybirdai:filters' %}" class="task-item">
-        <img src="{% static 'images/filters.webp' %}" alt="Concept icon">
-        <span>Filters</span>
-    </a>
-    <a href="{% url 'pybirdai:joins' %}" class="task-item">
-        <img src="{% static 'images/joins.webp' %}" alt="Concept icon">
-        <span>Joins</span>
+    <a href="{% url 'pybirdai:create_transformation_rules_in_python' %}" class="task-item">
+        <img src="{% static 'images/smcubes_to_python.webp' %}" alt="Concept icon">
+        <span>Create Python Transformation Rules from SMCubes</span>
     </a>
     <a href="{% url 'pybirdai:report_templates' %}" class="task-item">
         <img src="{% static 'images/report_templates.webp' %}" alt="Concept icon">

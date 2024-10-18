@@ -589,7 +589,8 @@ class ImportWebsiteToSDDModel(object):
                         table_cell.cell_id = ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id)
                         table_cell.table_id = ImportWebsiteToSDDModel.\
                             find_table_with_id(self, context,ImportWebsiteToSDDModel.replace_dots(self,table_cell_table_id))
-
+                        table_cell.table_cell_combination_id = table_cell_combination_id
+                        
                         if context.save_sdd_to_db:  
                             table_cell.save()
                         context.table_cell_dictionary[table_cell.cell_id] = table_cell

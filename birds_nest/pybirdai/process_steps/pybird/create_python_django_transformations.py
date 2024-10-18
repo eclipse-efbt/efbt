@@ -31,6 +31,7 @@ class CreatePythonTransformations:
          #get all the cubes_structure_items for that cube and make a related Python class.
         file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  'output_tables.py', "a",  encoding='utf-8') 
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
+        file.write("from datetime import datetime\n")
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             print(f"report_id: {report_id}")
             file.write("from ." + report_id  + "_logic import *\n")
@@ -87,6 +88,7 @@ class CreatePythonTransformations:
             file.write("from pybirdai.ldm_models import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
+            file.write("from datetime import datetime\n")
         
             file.write("\nclass " + report_id + "_UnionItem:\n")
             file.write("\tbase = None #" + report_id + "_Base\n")
@@ -124,6 +126,10 @@ class CreatePythonTransformations:
                 cube_structure_items = sdd_context.rol_cube_structure_item_dictionary[report_id+ '_cube_structure']
             except KeyError:
                 print(f"No cube structure items for report_id: {report_id}")
+
+            if len(cube_structure_items) == 0:
+                file.write("\tpass\n")
+
             for cube_structure_item in cube_structure_items:
                 print(f"cube_structure_item: {cube_structure_item}")
                 variable = cube_structure_item.variable_id
@@ -197,6 +203,8 @@ class CreatePythonTransformations:
                         except KeyError:
                             print(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
                         primary_cubes_added = []
+                        if len(cube_structure_item_links) == 0:
+                            file.write("\tpass\n")
                         for cube_structure_item_link in cube_structure_item_links:
                             if cube_structure_item_link.cube_link_id.primary_cube_id.cube_id not in primary_cubes_added:
                                 file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + " = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
