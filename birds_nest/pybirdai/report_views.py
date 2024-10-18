@@ -61,11 +61,11 @@ def executable_transformations(request):
 def input_model(request):
     return render(request, 'pybirdai/input_model.html')
 
-def joins(request):
-    return render(request, 'pybirdai/joins.html')
+def create_transformation_rules_in_python(request):
+    return render(request, 'pybirdai/create_transformation_rules_in_python.html')
 
-def filters(request):
-    return render(request, 'pybirdai/filters.html')
+def create_transformation_rules_in_smcubes(request):
+    return render(request, 'pybirdai/create_transformation_rules_in_smcubes.html')
 
 def report_templates(request):
     return render(request, 'pybirdai/report_templates.html')
