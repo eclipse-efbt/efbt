@@ -610,6 +610,9 @@ class COMBINATION_ITEM(models.Model):
     member_id = models.ForeignKey("MEMBER", models.SET_NULL,blank=True,null=True,) 
 
     variable_id = models.ForeignKey("VARIABLE", models.SET_NULL,blank=True,null=True,) 
+
+    member_hierarchy = models.ForeignKey("MEMBER_HIERARCHY", models.SET_NULL,blank=True,null=True,) 
+    
     class Meta:
         verbose_name = 'COMBINATION_ITEM'
         verbose_name_plural = 'COMBINATION_ITEMs'  
