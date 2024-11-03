@@ -42,12 +42,7 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
         ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
-    def import_used_reference_domains_from_sdd(self, sdd_context):
-        '''
-        Import SDD csv files into an instance of the analysis model
-        '''
-        ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,True)
-        ImportWebsiteToSDDModel.create_all_reference_subdomains(self, sdd_context)
+  
         
 
     def import_semantic_integrations_from_sdd(self, sdd_context):
@@ -126,34 +121,7 @@ class ImportWebsiteToSDDModel(object):
                         framework.save()
                     context.framework_dictionary[ImportWebsiteToSDDModel.replace_dots(self, id)] = framework
 
-    def create_all_reference_subdomains(self, context):
-        '''
-        Import reference subdomains from CSV file, butr we are not going to create items for them
-        '''
-        file_location = context.file_directory + os.sep + "subdomain.csv"
-        header_skipped = False
-
-        with open(file_location, encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            for row in filereader:
-                if not header_skipped:
-                    header_skipped = True
-                else:
-                    domain_id = row[ColumnIndexes().subdomain_domain_id_index]
-                    subdomain_id = row[ColumnIndexes().subdomain_subdomain_id_index]
-                    code = row[ColumnIndexes().subdomain_subdomain_code]
-                    description = row[ColumnIndexes().subdomain_subdomain_description]  
-                    name = row[ColumnIndexes().subdomain_subdomain_name]
-                    subdomain = SUBDOMAIN(
-                        subdomain_id=ImportWebsiteToSDDModel.replace_dots(self, subdomain_id))
-                    subdomain.code = code
-                    subdomain.description = description
-                    domain = ImportWebsiteToSDDModel.find_domain_with_id(self, context, domain_id)
-                    subdomain.domain_id = domain
-                    subdomain.name = name
-                    if context.save_sdd_to_db:  
-                        subdomain.save()
-                    context.subdomain_dictionary[subdomain_id] = subdomain
+    
                     
     def create_all_domains(self, context, ref):
         '''
