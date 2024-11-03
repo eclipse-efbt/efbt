@@ -13,7 +13,9 @@
 
 from pybirdai.sdd_models import *
 from django.apps import apps
-
+import os
+import csv
+from pybirdai.context.csv_column_index_context import ColumnIndexes
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 
 
@@ -33,6 +35,7 @@ class ImportInputModel(object):
         """
         ImportInputModel._create_maintenance_agency(sdd_context)
         ImportInputModel._create_primitive_domains(sdd_context)
+        ImportInputModel._create_subdomain_to_domain_map(sdd_context)
         ImportInputModel._process_models(sdd_context, context)
 
     def _create_maintenance_agency( sdd_context):
@@ -48,6 +51,7 @@ class ImportInputModel(object):
         maintenance_agency.description = "REFERENCE"
         maintenance_agency.maintenance_agency_id = "REF"
         maintenance_agency.save()
+        sdd_context.agency_dictionary["REF"] = maintenance_agency
 
         maintenance_agency = MAINTENANCE_AGENCY(name="NODE")
         maintenance_agency.code = "NODE"
@@ -55,7 +59,15 @@ class ImportInputModel(object):
         maintenance_agency.maintenance_agency_id = "NODE"
         maintenance_agency.save()
 
-        sdd_context.agency_dictionary["REF"] = maintenance_agency
+        sdd_context.agency_dictionary["NODE"] = maintenance_agency
+
+        maintenance_agency = MAINTENANCE_AGENCY(name="SDD_DOMAIN")
+        maintenance_agency.code = "SDD_DOMAIN"
+        maintenance_agency.description = "SDD Domain"
+        maintenance_agency.maintenance_agency_id = "SDD_DOMAIN"
+        maintenance_agency.save()
+
+        sdd_context.agency_dictionary["SDD_DOMAIN"] = maintenance_agency
 
     def _create_primitive_domains(sdd_context):
         """
@@ -96,6 +108,19 @@ class ImportInputModel(object):
         sdd_context.ref_domain_dictionary['Boolean'].type = 'Boolean'
         sdd_context.ref_domain_dictionary['Boolean'].save()
 
+    def _create_subdomain_to_domain_map(sdd_context):
+        file_location = sdd_context.file_directory + os.sep + "subdomain.csv"
+        header_skipped = False
+
+        with open(file_location, encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    domain_id = row[ColumnIndexes().subdomain_domain_id_index]
+                    subdomain_id = row[ColumnIndexes().subdomain_subdomain_id_index]
+                    sdd_context.subdomain_to_domain_map[subdomain_id] = domain_id
 
     def _process_models(sdd_context, context):
         """
@@ -161,11 +186,11 @@ class ImportInputModel(object):
             context: The context object containing configuration settings.
         """
         variable_id = field.name
-        domain = ImportInputModel._create_domain_if_needed(field, sdd_context)
+        domain,subdomain = ImportInputModel._create_domain_and_subdomain_if_needed(field, sdd_context)
         ImportInputModel._create_variable_if_needed(field, variable_id, domain, sdd_context)
-        ImportInputModel._create_cube_structure_item(field, variable_id, sdd_context, context)
+        ImportInputModel._create_cube_structure_item(field, variable_id, subdomain, sdd_context, context)
 
-    def _create_domain_if_needed(field, sdd_context):
+    def _create_domain_and_subdomain_if_needed(field, sdd_context):
         """
         Create a domain for the field if it doesn't exist and add it to the
         SDD context.
@@ -179,7 +204,17 @@ class ImportInputModel(object):
         """
         domain = None
         try:
-            domain_id = field.db_comment
+            subdomain_id = field.db_comment
+            domain_id = None
+            domain = None
+            subdomain = None
+            subdomain_enumeration = None
+            try:
+                if subdomain_id:
+                    domain_id = sdd_context.subdomain_to_domain_map[subdomain_id[0:len(subdomain_id)-7]]
+            except KeyError:
+                pass
+
             if domain_id and domain_id not in sdd_context.ref_domain_dictionary:
                 domain = DOMAIN()
                 domain.domain_id = domain_id
@@ -189,21 +224,51 @@ class ImportInputModel(object):
                     domain.save()
                 print(f"Adding domain: {domain_id}")
                 
-                choices = field.choices
-                if choices:
-                    for choice in choices:
-                        member = MEMBER()
-                        member.member_id = f"{domain_id[0:len(domain_id)-7]}_{choice[0]}"
-                        member.name = choice[1]
-                        member.code = choice[0]
-                        member.domain_id = domain
-                        sdd_context.ref_member_dictionary[member.member_id] = member
-                        if sdd_context.save_sdd_to_db:
-                            member.save()
-                        print(f"Adding member {member.member_id}: {member.name}")
+            if subdomain_id and subdomain_id not in sdd_context.subdomain_dictionary:
+                subdomain = SUBDOMAIN()
+                subdomain.subdomain_id = subdomain_id
+                try:
+                    domain = sdd_context.ref_domain_dictionary[domain_id]
+                    subdomain.domain_id = domain
+                except KeyError:
+                    pass
+               
+                sdd_context.subdomain_dictionary[subdomain_id] = subdomain
+                if sdd_context.save_sdd_to_db:
+                    subdomain.save()
+                print(f"Adding subdomain: {subdomain_id}")
+
+                
+
+            choices = field.choices
+            if choices:
+                for choice in choices:
+                    member = MEMBER()
+                    member.member_id = f"{domain_id}_{choice[0]}"
+                    member.name = choice[1]
+                    member.code = choice[0]
+                    member.domain_id = domain
+                    if subdomain:
+                        if not member.member_id in sdd_context.ref_member_dictionary:
+                            sdd_context.ref_member_dictionary[member.member_id] = member
+                            if sdd_context.save_sdd_to_db:
+                                member.save()
+                            print(f"Adding member {member.member_id}: {member.name}")
+                            subdomain_enumeration = SUBDOMAIN_ENUMERATION()
+                            subdomain_enumeration.subdomain_id = subdomain
+                            subdomain_enumeration.member_id = member
+                            print(subdomain_id)
+                            print(member.member_id)
+                            sdd_context.subdomain_enumeration_dictionary[subdomain_id+":"+member.member_id] = subdomain_enumeration
+                            if sdd_context.save_sdd_to_db:
+                                subdomain_enumeration.save()
+                            print(f"Adding subdomain enumeration: {subdomain_id}:{member.member_id} ")
+
+            
+
         except AttributeError:
             pass
-        return domain
+        return domain,subdomain
 
     def _create_variable_if_needed(field, variable_id, domain, sdd_context):
         """
@@ -244,13 +309,14 @@ class ImportInputModel(object):
                 variable.save()
             print(f"Adding variable {variable_id}")
 
-    def _create_cube_structure_item(field, variable_id, sdd_context, context):
+    def _create_cube_structure_item(field, variable_id, subdomain, sdd_context, context):
         """
         Create a cube structure item for the field and add it to the SDD context.
 
         Args:
             field: The Django model field to create a cube structure item for.
             variable_id: The ID of the variable associated with the field.
+            subdomain: The subdomain associated with the field.
             sdd_context: The SDD context object to store created elements.
             context: The context object containing configuration settings.
         """
@@ -258,6 +324,7 @@ class ImportInputModel(object):
         csi.cube_structure_id = sdd_context.bird_cube_structure_dictionary[
             field.model.__name__]
         csi.variable_id = sdd_context.ref_variable_dictionary[variable_id]
+        csi.subdomain_id = subdomain
         key = f"{csi.cube_structure_id.cube_structure_id}:{csi.variable_id.variable_id}"
         sdd_context.bird_cube_structure_item_dictionary[key] = csi
         if context.save_derived_sdd_items:
