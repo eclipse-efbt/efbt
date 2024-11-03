@@ -42,6 +42,14 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
         ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
+    def import_used_reference_domains_from_sdd(self, sdd_context):
+        '''
+        Import SDD csv files into an instance of the analysis model
+        '''
+        ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,True)
+        ImportWebsiteToSDDModel.create_all_reference_subdomains(self, sdd_context)
+        
+
     def import_semantic_integrations_from_sdd(self, sdd_context):
         '''
         Import SDD csv files into an instance of the analysis model
@@ -58,8 +66,8 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import hierarchies from CSV file
         '''
-        ImportWebsiteToSDDModel.create_all_parent_members_with_children_locally(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_member_hierarchies(self, sdd_context)
+        ImportWebsiteToSDDModel.create_all_parent_members_with_children_locally(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_member_hierarchies_nodes(self, sdd_context)
 
     def create_maintenance_agencies(self, context):
@@ -118,6 +126,35 @@ class ImportWebsiteToSDDModel(object):
                         framework.save()
                     context.framework_dictionary[ImportWebsiteToSDDModel.replace_dots(self, id)] = framework
 
+    def create_all_reference_subdomains(self, context):
+        '''
+        Import reference subdomains from CSV file, butr we are not going to create items for them
+        '''
+        file_location = context.file_directory + os.sep + "subdomain.csv"
+        header_skipped = False
+
+        with open(file_location, encoding='utf-8') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                else:
+                    domain_id = row[ColumnIndexes().subdomain_domain_id_index]
+                    subdomain_id = row[ColumnIndexes().subdomain_subdomain_id_index]
+                    code = row[ColumnIndexes().subdomain_subdomain_code]
+                    description = row[ColumnIndexes().subdomain_subdomain_description]  
+                    name = row[ColumnIndexes().subdomain_subdomain_name]
+                    subdomain = SUBDOMAIN(
+                        subdomain_id=ImportWebsiteToSDDModel.replace_dots(self, subdomain_id))
+                    subdomain.code = code
+                    subdomain.description = description
+                    domain = ImportWebsiteToSDDModel.find_domain_with_id(self, context, domain_id)
+                    subdomain.domain_id = domain
+                    subdomain.name = name
+                    if context.save_sdd_to_db:  
+                        subdomain.save()
+                    context.subdomain_dictionary[subdomain_id] = subdomain
+                    
     def create_all_domains(self, context, ref):
         '''
         Import all domains from CSV file
@@ -147,7 +184,10 @@ class ImportWebsiteToSDDModel(object):
                     if include:
                         domain = DOMAIN(
                             name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
-                        maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
+                        if ref:
+                            maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"SDD_DOMAIN")
+                        else:
+                            maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
                         domain.maintenance_agency_id = maintenance_agency
                         domain.code = code
 
@@ -166,7 +206,11 @@ class ImportWebsiteToSDDModel(object):
 
                         if context.save_sdd_to_db:  
                             domain.save()
-                        context.nonref_domain_dictionary[domain_id] = domain
+
+                        if ref:
+                            context.ref_domain_dictionary[domain_id] = domain
+                        else:
+                            context.nonref_domain_dictionary[domain_id] = domain
 
     def create_all_members(self, context,ref):
         '''
@@ -266,7 +310,7 @@ class ImportWebsiteToSDDModel(object):
         file_location = context.file_directory + os.sep + "member_hierarchy_node.csv"
         header_skipped = False
         parent_members = []
-        parent_members_child_pairs = []
+        parent_members_child_triples = []
         missing_children = []
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -276,15 +320,21 @@ class ImportWebsiteToSDDModel(object):
                 else:
                     parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id]
                     member_id = row[ColumnIndexes().member_hierarchy_node_member_id]
-                    if not (parent_member_id is None) and not (parent_member_id == ""):                 
-                            parent_members_child_pairs.append((
-                                    parent_member_id,member_id)
+                    hierarchy_id = row[ColumnIndexes().member_hierarchy_node_hierarchy_id]
+                    hierarchy = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
+                    if hierarchy:
+                        domain = hierarchy.domain_id
+                        if not (parent_member_id is None) and not (parent_member_id == ""):                 
+                            parent_members_child_triples.append((
+                                    parent_member_id,member_id,domain)
                                 )
-                    if not (parent_member_id in parent_members):
-                        parent_members.append(parent_member_id)
+                        if not (parent_member_id in parent_members):
+                            parent_members.append(parent_member_id)
+                    else:
+                        print(f"Hierarchy {hierarchy_id} not found")
                         
                             
-        for parent_member_id,member_id in parent_members_child_pairs:
+        for parent_member_id,member_id,domain in parent_members_child_triples:
             # checkif child is a parent node
             # if the node has a child that is a parent node, we ad it to the database
             if member_id in parent_members:
@@ -292,6 +342,7 @@ class ImportWebsiteToSDDModel(object):
                     parent_member = MEMBER(name=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id))
                     parent_member.member_id = ImportWebsiteToSDDModel.replace_dots(self, parent_member_id)
                     parent_member.maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"NODE")
+                    parent_member.domain_id = domain
                     if context.save_sdd_to_db:  
                         parent_member.save()
                         context.members_that_are_nodes[parent_member_id] = parent_member
@@ -303,6 +354,7 @@ class ImportWebsiteToSDDModel(object):
                         parent_member = MEMBER(name=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id))
                         parent_member.member_id = ImportWebsiteToSDDModel.replace_dots(self, parent_member_id)
                         parent_member.maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"NODE")
+                        parent_member.domain_id = domain
                         if context.save_sdd_to_db:  
                             parent_member.save()
                             context.members_that_are_nodes[parent_member_id] = parent_member
@@ -323,6 +375,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all member hierarchies from CSV file
         '''
+        missing_domains = []
         file_location = context.file_directory + os.sep + "member_hierarchy.csv"
         header_skipped = False
 
@@ -339,17 +392,30 @@ class ImportWebsiteToSDDModel(object):
                     description = row[ColumnIndexes().member_hierarchy_description]
 
                     maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id)
+                    
                     domain = ImportWebsiteToSDDModel.find_domain_with_id(self,context,domain_id)
-                    hierarchy = MEMBER_HIERARCHY(name=ImportWebsiteToSDDModel.replace_dots(self, id))
-                    hierarchy.member_hierarchy_id = ImportWebsiteToSDDModel.replace_dots(self, id)
-                    hierarchy.code = code
-                    hierarchy.description = description
-                    hierarchy.maintenance_agency_id = maintenance_agency
-                    hierarchy.domain_id = domain
+                    if domain is None:
+                        print(f"Domain {domain_id} not found")
+                        missing_domains.append(domain_id)
+                    else:
+                        hierarchy = MEMBER_HIERARCHY(name=ImportWebsiteToSDDModel.replace_dots(self, id))
+                        hierarchy.member_hierarchy_id = ImportWebsiteToSDDModel.replace_dots(self, id)
+                        hierarchy.code = code
+                        hierarchy.description = description
+                        hierarchy.maintenance_agency_id = maintenance_agency
+                        hierarchy.domain_id = domain
 
-                    context.member_hierarchy_dictionary[id] = hierarchy
-                    if context.save_sdd_to_db:  
-                        hierarchy.save()
+                        context.member_hierarchy_dictionary[id] = hierarchy
+                        if context.save_sdd_to_db:  
+                            hierarchy.save()
+
+        ImportWebsiteToSDDModel.save_missing_domains_to_csv(context,missing_domains)
+
+    def save_missing_domains_to_csv(context,missing_domains):
+        filename = context.output_directory + os.sep + "missing_domains.csv"
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(missing_domains)
 
     def save_missing_members_to_csv(context,missing_members):
         filename = context.output_directory + os.sep + "missing_members.csv"
@@ -379,6 +445,7 @@ class ImportWebsiteToSDDModel(object):
         file_location = context.file_directory + os.sep + "member_hierarchy_node.csv"
         header_skipped = False
         missing_members = []
+        missing_hierarchies = []
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -394,27 +461,40 @@ class ImportWebsiteToSDDModel(object):
                     valid_from = row[ColumnIndexes().member_hierarchy_node_valid_from]
                     valid_to = row[ColumnIndexes().member_hierarchy_node_valid_to]
 
-                    member = ImportWebsiteToSDDModel.find_member_with_id(self,member_id,context)
-                    if member is None:
-                        missing_members.append((hierarchy_id,member_id))
-                        print(f"Member {member_id} not found in the database for hierarchy {hierarchy_id}")
+                    hierarchy = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
+                    if hierarchy is None:
+                        print(f"Hierarchy {hierarchy_id} not found")
+                        missing_hierarchies.append(hierarchy_id)
                     else:
-                        parent_member = ImportWebsiteToSDDModel.find_member_with_id(self,parent_member_id,context)
-
-                        hierarchy = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
-                        
-
-                        hierarchy_node = MEMBER_HIERARCHY_NODE()
-                        hierarchy_node.member_hierarchy_id = hierarchy
-                        hierarchy_node.comparator = comparator
-                        hierarchy_node.operator = operator
-                        hierarchy_node.member_id = member
-                        hierarchy_node.level = int(node_level)
-                        hierarchy_node.parent_member_id = parent_member
-                        context.member_hierarchy_node_dictionary[hierarchy_id + ":" + member_id] = hierarchy_node
-                        if context.save_sdd_to_db:  
-                            hierarchy_node.save()
+                        member = ImportWebsiteToSDDModel.find_member_with_id_for_hierarchy(self,member_id,hierarchy,context)
+                        if member is None:
+                            print(f"Member {member_id} not found in the database for hierarchy {hierarchy_id}")
+                            missing_members.append((hierarchy_id,member_id))
+                        else:
+                            parent_member = ImportWebsiteToSDDModel.find_member_with_id(self,parent_member_id,context)
+                            hierarchy_node = MEMBER_HIERARCHY_NODE()
+                            hierarchy_node.member_hierarchy_id = hierarchy
+                            hierarchy_node.comparator = comparator
+                            hierarchy_node.operator = operator
+                            hierarchy_node.member_id = member
+                            hierarchy_node.level = int(node_level)
+                            hierarchy_node.parent_member_id = parent_member
+                            context.member_hierarchy_node_dictionary[hierarchy_id + ":" + member_id] = hierarchy_node
+                            if context.save_sdd_to_db:  
+                                hierarchy_node.save()
         ImportWebsiteToSDDModel.save_missing_members_to_csv(context,missing_members)
+        ImportWebsiteToSDDModel.save_missing_hierarchies_to_csv(context,missing_hierarchies)
+
+    def save_missing_hierarchies_to_csv(context,missing_hierarchies):
+        filename = context.output_directory + os.sep + "missing_hierarchies.csv"
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(missing_hierarchies)
+
+    def find_member_with_id_for_hierarchy(self,member_id,hierarchy,context):
+        domain = hierarchy.domain_id
+        member = MEMBER.objects.filter(domain_id=domain,member_id=member_id).first()
+        return member
 
     def create_report_tables(self, context):
         '''
@@ -937,7 +1017,8 @@ class ImportWebsiteToSDDModel(object):
             return context.ref_domain_dictionary[element_id]
         except KeyError:
             try:
-                return context.nonref_domain_dictionary[element_id]
+                return_item = context.nonref_domain_dictionary[element_id]
+                return return_item
             except KeyError:
                 return None
             

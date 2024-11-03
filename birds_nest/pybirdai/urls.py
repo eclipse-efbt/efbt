@@ -21,6 +21,7 @@ app_name = 'pybirdai'  # Add this line if using namespaces
 urlpatterns = [
     path('', views.home_view, name='home'),  # This should handle the root URL of your app
     path('run_import_input_model_from_sqldev/', views.run_import_input_model_from_sqldev, name='run_import_input_model_from_sqldev'),
+    path('run-import-sdd-domains/', views.run_import_sdd_domains, name='run_import_sdd_domains'),
     path('edit-variable-mappings/', views.edit_variable_mappings, name='edit_variable_mappings'),
     path('delete-variable-mapping/<str:variable_mapping_id>/', views.delete_variable_mapping, name='delete_variable_mapping'),
     path('edit-variable-mapping-items/', views.edit_variable_mapping_items, name='edit_variable_mapping_items'),

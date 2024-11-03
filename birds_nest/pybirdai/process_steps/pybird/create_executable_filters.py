@@ -84,7 +84,7 @@ class CreateExecutableFilters:
                         
                         file.write("\t\t\tif ")
                         for leaf_node_member in leaf_node_members:
-                            file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + leaf_node_member.code + "')  or\\\\ :\n")
+                            file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or\\\\ :\n")
                         file.write("\t\t\t\tFalse\n")
                         file.write("\t\t\t\tfilter_passed = True\n")
                         file.write("\t\t\tif filter_passed:\n")
@@ -117,33 +117,19 @@ class CreateExecutableFilters:
             return_list = CreateExecutableFilters.get_member_list_considering_hierarchies(self,sdd_context,member,member_hierarchy)
         return return_list
 
-    def find_literals_with_id(self,context,sdd_context,member,domain_id,warning_list, template_code, combination_id, variable_id,framework,cube_type,input_cube_type):
-        return_literal = None
-        return_literal = CreateExecutableFilters.find_literal_with_id(self,context,member,domain_id,framework,cube_type,input_cube_type)
-        return CreateExecutableFilters.get_literal_list_considering_hierarchies(self,context,sdd_context,return_literal,member,domain_id,warning_list, template_code,combination_id, variable_id,framework,cube_type,input_cube_type)
-
-       
-    def find_literal_with_id(self,context,member,domain_id,framework,cube_type,input_cube_type):
-            try:
-                enum_source = None
-                if input_cube_type == "RC":
-                    enum_source =  framework + ":" + cube_type
-                else:
-                    enum_source =  "BIRD:" + input_cube_type 
-
-                return context.enum_literals_map[enum_source +":" + domain_id + "_domain" +":" +  Utils.make_valid_id_for_literal(member.code)]
-            except:
-                return None
+    
 
     def get_literal_list_considering_hierarchies(self,context,sdd_context,literal,member,domain_id, warning_list, template_code,combination_id, variable_id,framework,cube_type,input_cube_type):
         return_list = []
+        is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,member)
         if literal is None:
-            is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,member)
+            
             if not (is_node):
                 warning_list.append( ("error", "member does not exist in input layer and is not a node", template_code,combination_id, variable_id, member.member_id, None,domain_id))
             pass
         else:
-            return_list = [literal]
+            if not (is_node):
+                return_list = [literal]
             
         for domain,hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
             if domain is None:
@@ -176,7 +162,9 @@ class CreateExecutableFilters:
                 literal = item
                 if not(literal is None):
                     if not(literal in literal_list):
-                        literal_list.append(literal)
+                        is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,literal)
+                        if not (is_node):
+                            literal_list.append(literal)
                     
             for item in child_members:
                 CreateExecutableFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,item,hierarchy, literal_list,framework,cube_type,input_cube_type)
@@ -185,7 +173,6 @@ class CreateExecutableFilters:
         
             
     def is_member_a_node(self,sdd_context,member):
-
         if member in sdd_context.members_that_are_nodes:
             return True
         else:
@@ -228,20 +215,23 @@ class CreateExecutableFilters:
 
     def get_member_list_considering_hierarchies(self,sdd_context,member,member_hierarchy):
         return_list = []
+        is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,member)
         if member is None:
             pass
         else:
-            return_list = [member]
-            
-        for domain,hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
-            if domain is None:
-                print ("the domain is none")
-            elif domain.domain_id == member.domain_id.domain_id:
-                for hierarchy in hierarchy_list:
-                    hierarchy_id = hierarchy.member_hierarchy_id                
-                    member_list = []
-                    CreateExecutableFilters.get_member_list_considering_hierarchy(self,sdd_context,member,hierarchy_id,member_list)
-                    return_list.extend(member_list)
+            if not (is_node):
+                return_list = [member]
+        if member:   
+            print ("member" + str(member))  
+            for domain,hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
+                if domain is None:
+                    print ("the domain is none")
+                elif domain.domain_id == member.domain_id.domain_id:
+                    for hierarchy in hierarchy_list:
+                        hierarchy_id = hierarchy.member_hierarchy_id                
+                        member_list = []
+                        CreateExecutableFilters.get_member_list_considering_hierarchy(self,sdd_context,member,hierarchy_id,member_list)
+                        return_list.extend(member_list)
 
         return return_list     
 
@@ -255,7 +245,9 @@ class CreateExecutableFilters:
                 member = item
                 if not(member is None):
                     if not(member in member_list):
-                        member_list.append(member)
+                        is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,member)
+                        if not (is_node):
+                            member_list.append(member)
                     
             for item in child_members:
                 CreateExecutableFilters.get_member_list_considering_hierarchy(self,sdd_context,item,hierarchy, member_list)

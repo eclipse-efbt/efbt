@@ -13,7 +13,26 @@
 from django.db import models
 
 
+class SUBDOMAIN(models.Model):
+
+    subdomain_id = models.CharField("subdomain_id",max_length=255, primary_key=True)   
+    code = models.CharField("code",max_length=255,default=None, blank=True, null=True)   
+    description = models.CharField("description",max_length=255,default=None, blank=True, null=True)   
+    domain_id = models.ForeignKey("DOMAIN", models.SET_NULL,blank=True,null=True,) 
+    name = models.CharField("name",max_length=255,default=None, blank=True, null=True)   
+    class Meta:
+        verbose_name = 'SUBDOMAIN'
+        verbose_name_plural = 'SUBDOMAINs'
+
+class SUBDOMAIN_ENUMERATION(models.Model):
+
+    subdomain_id = models.ForeignKey("SUBDOMAIN", models.SET_NULL,blank=True,null=True,) 
+    member_id = models.ForeignKey("MEMBER", models.SET_NULL,blank=True,null=True,) 
+    class Meta:
+        verbose_name = 'SUBDOMAIN_ENUMERATION'
+        verbose_name_plural = 'SUBDOMAIN_ENUMERATIONs'
         
+
 class DOMAIN(models.Model):
 
 
@@ -489,6 +508,9 @@ class CUBE_STRUCTURE_ITEM(models.Model):
     is_identifier = models.BooleanField("is_identifier",default=None, blank=True, null=True)   
 
     cube_variable_code = models.CharField("cube_variable_code",max_length=255,default=None, blank=True, null=True) 
+
+    subdomain_id = models.ForeignKey("SUBDOMAIN", models.SET_NULL,blank=True,null=True,) 
+    
     class Meta:
         verbose_name = 'CUBE_STRUCTURE_ITEM'
         verbose_name_plural = 'CUBE_STRUCTURE_ITEMs'

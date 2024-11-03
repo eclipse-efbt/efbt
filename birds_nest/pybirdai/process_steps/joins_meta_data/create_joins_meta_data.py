@@ -125,6 +125,8 @@ class JoinsMetaDataCreator:
                         table_parts = table_and_part_tuple_map[mc]
 
                         for table_part in table_parts:
+                            print(f"table_part:{table_part}")
+                            print(inputLayerTable)
                             input_entity_list = [inputLayerTable]
                             linked_tables = table_parts_to_linked_tables_map[table_part]
                             linked_tables_list = linked_tables.split(":")
@@ -162,6 +164,7 @@ class JoinsMetaDataCreator:
 
                             if table_part[0] == table:
                                 for input_entity in input_entity_list:
+                                    print(f"input_entity:{input_entity}")
                                     cube_link = CUBE_LINK()
                                     cube_link.description = f"{table_part[0]}:{mc}:{table_part[1]}:{input_entity.cube_structure_id}"
                                     cube_link.name = f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
