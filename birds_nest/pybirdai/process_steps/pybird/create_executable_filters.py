@@ -84,8 +84,8 @@ class CreateExecutableFilters:
                         
                         file.write("\t\t\tif ")
                         for leaf_node_member in leaf_node_members:
-                            file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or\\\\ :\n")
-                        file.write("\t\t\t\tFalse\n")
+                            file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n")
+                        file.write("\t\t\t\tFalse:\n")
                         file.write("\t\t\t\tfilter_passed = True\n")
                         file.write("\t\t\tif filter_passed:\n")
                         file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
