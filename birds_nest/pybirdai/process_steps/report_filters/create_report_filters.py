@@ -194,12 +194,13 @@ class CreateReportFilters:
         ref_tuple_list = CreateReportFilters.get_reference_tuple_list(sdd_context, tuples, relevant_mappings)
         if ref_tuple_list:
             for ref_tuple_in in ref_tuple_list:
-                ref_variable, ref_member = ref_tuple_in
+                ref_variable, ref_member, ref_member_hierarchy = ref_tuple_in
                 
                 the_filter = COMBINATION_ITEM()
                 the_filter.combination_id = report_cell
                 the_filter.variable_id = ref_variable
                 the_filter.member_id = ref_member
+                the_filter.member_hierarchy = ref_member_hierarchy
                 var_string = 'None'
                 if ref_variable:
                     var_string = ref_variable.variable_id
@@ -240,7 +241,7 @@ class CreateReportFilters:
                     if match:
                         for member_mapping_item in member_mapping_items:
                             if not member_mapping_item.is_source =='true' :
-                                ref_tuple_list.append((member_mapping_item.variable, member_mapping_item.member))
+                                ref_tuple_list.append((member_mapping_item.variable, member_mapping_item.member, member_mapping_item.member_hierarchy))
         return ref_tuple_list
 
     def create_member_mapping_item_row_dict(sdd_context, member_mapping):

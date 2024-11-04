@@ -21,6 +21,7 @@ from .sdd_models import (
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION
 )
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
+
 from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
 from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
 from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
@@ -87,6 +88,8 @@ def run_import_input_model_from_sqldev(request):
     app_config = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
     app_config.ready()
     return HttpResponse("Import Input Model from SQLDev process completed successfully.")
+
+
 
 def run_import_hierarchies(request):
     app_config = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
