@@ -39,6 +39,9 @@ def mappings_missing_members(request):
 def mappings_missing_variables(request):
     return csv_view(request, 'mappings_missing_variables.csv')
 
+def mappings_warnings_summary(request):
+    return csv_view(request, 'mappings_warnings_summary.csv')
+
 # Review views
 def review_semantic_integrations(request):
     return render(request, 'pybirdai/review_semantic_integrations.html')
