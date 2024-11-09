@@ -700,15 +700,16 @@ class ImportWebsiteToSDDModel(object):
                     member_mapping_id = row[ColumnIndexes().member_map_member_mapping_id]
                     name = row[ColumnIndexes().member_map_name]
                     code = row[ColumnIndexes().member_map_code]
-                    member_mapping = MEMBER_MAPPING()
-                    member_mapping.member_mapping_id = member_mapping_id
-                    member_mapping.name = name
-                    member_mapping.code = code
-                    member_mapping.maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(
-                        self,context,maintenance_agency_id)
-                    if context.save_sdd_to_db:
-                        member_mapping.save()
-                    context.member_mapping_dictionary[member_mapping_id] = member_mapping
+                    if not member_mapping_id.startswith("SHS_"):
+                        member_mapping = MEMBER_MAPPING()
+                        member_mapping.member_mapping_id = member_mapping_id
+                        member_mapping.name = name
+                        member_mapping.code = code
+                        member_mapping.maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(
+                            self,context,maintenance_agency_id)
+                        if context.save_sdd_to_db:
+                            member_mapping.save()
+                        context.member_mapping_dictionary[member_mapping_id] = member_mapping
 
     def create_all_member_mappings_items(self, context):
         '''
@@ -729,57 +730,89 @@ class ImportWebsiteToSDDModel(object):
                     variable_id = row[ColumnIndexes().member_mapping_variable_id]
                     is_source = row[ColumnIndexes().member_mapping_is_source]
                     member_id = row[ColumnIndexes().member_mapping_member_id]
+                    if not member_mapping_id.startswith("SHS_"):
+                        member = ImportWebsiteToSDDModel.find_member_with_id(
+                                                            self,member_id,context)
+                        variable = ImportWebsiteToSDDModel.find_variable_with_id(
+                                                            self,context,variable_id)
+                        
+                        if member is None:
+                            if member_id not in missing_members:
+                                missing_members.append((member_id,member_mapping_id,row_number,variable_id))
+                        if variable is None:
+                            if variable_id not in missing_variables:
+                                missing_variables.append((variable_id,'',''))
+                                
 
-                    member = ImportWebsiteToSDDModel.find_member_with_id(
-                                                        self,member_id,context)
-                    variable = ImportWebsiteToSDDModel.find_variable_with_id(
-                                                        self,context,variable_id)
-                    
-                    if member is None:
-                        if member_id not in missing_members:
-                            missing_members.append(member_id)
-                    if variable is None:
-                        if variable_id not in missing_variables:
-                            missing_variables.append(variable_id)
+                        if member is None or variable is None:
+                            pass
+                        else:
+                            member_mapping_item = MEMBER_MAPPING_ITEM()
+                            member_mapping_item.is_source = is_source
+                            member_mapping_item.member = member
+                            member_mapping_item.variable = variable
+                            member_mapping_item.row = row_number
+                            member_mapping_item.member_mapping_id  = ImportWebsiteToSDDModel.find_member_mapping_with_id(
+                                                self,context,member_mapping_id)
 
-                    if member is None or variable is None:
-                        pass
-                    else:
-                        member_mapping_item = MEMBER_MAPPING_ITEM()
-                        member_mapping_item.is_source = is_source
-                        member_mapping_item.member = member
-                        member_mapping_item.variable = variable
-                        member_mapping_item.row = row_number
-                        member_mapping_item.member_mapping_id  = ImportWebsiteToSDDModel.find_member_mapping_with_id(
-                                            self,context,member_mapping_id)
-
-                        if context.save_sdd_to_db:  
-                            member_mapping_item.save()
-                        try:
-                            member_mapping_items_list = context.member_mapping_items_dictionary[member_mapping_id]
-                            member_mapping_items_list.append(member_mapping_item)
-                        except KeyError:
-                            context.member_mapping_items_dictionary[member_mapping_id] = [member_mapping_item]
+                            if context.save_sdd_to_db:  
+                                member_mapping_item.save()
+                            try:
+                                member_mapping_items_list = context.member_mapping_items_dictionary[member_mapping_id]
+                                member_mapping_items_list.append(member_mapping_item)
+                            except KeyError:
+                                context.member_mapping_items_dictionary[member_mapping_id] = [member_mapping_item]
         for missing_member in missing_members:
             print(f"Missing member {missing_member}")
         for missing_variable in missing_variables:
             print(f"Missing variable {missing_variable}")
-        ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context,missing_variables)
+        #ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context,missing_variables)
         ImportWebsiteToSDDModel.save_missing_mapping_members_to_csv(context,missing_members)
 
     def save_missing_mapping_variables_to_csv(context,missing_variables):
         filename = context.output_directory + os.sep + "mappings_missing_variables.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
+            writer.writerow(["Varaible","Mapping","Valid_to"])
             for var in missing_variables:
-                writer.writerow([var])
+                writer.writerow([var[0],var[1],var[2]])
 
     def save_missing_mapping_members_to_csv(context,missing_members):   
         filename = context.output_directory + os.sep + "mappings_missing_members.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
+            writer.writerow(["Member","Mapping","Row","Variable"])
             for mem in missing_members:
-                writer.writerow([mem])
+                writer.writerow([mem[0],mem[1],mem[2],mem[3]])
+
+        ImportWebsiteToSDDModel.create_mappings_warnings_summary(context,missing_members)
+
+    def create_mappings_warnings_summary(context,missing_members):
+        filename = context.output_directory + os.sep + "mappings_warnings_summary.csv"
+        #create a list of unique missing variable ids
+        # read mappings_missing_variables file into a dictionary
+        missing_variables= []
+        written_members = []
+        varaibles_filename = context.output_directory + os.sep + "mappings_missing_variables.csv"
+        with open(varaibles_filename, 'r', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                if row[0] not in missing_variables:
+                    missing_variables.append(row[0])
+
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["Variable","Member"])
+            for var in missing_variables:
+                writer.writerow([var,''])
+
+            for mem in missing_members:
+                variable = mem[3]
+                member = mem[0]
+                if member not in written_members:
+                    if variable not in missing_variables:
+                        writer.writerow([variable,member])
+                    written_members.append(member)
 
     def create_all_mapping_definitions(self, context):
         '''
@@ -800,20 +833,20 @@ class ImportWebsiteToSDDModel(object):
                     mapping_definition_mapping_type = row[ColumnIndexes().mapping_definition_mapping_type]
                     mapping_definition_member_mapping_id = row[ColumnIndexes().mapping_definition_member_mapping_id]
                     mapping_definition_variable_mapping_id = row[ColumnIndexes().mapping_definition_variable_mapping_id]
+                    if not mapping_definition_id.startswith("SHS_"):
+                        mapping_definition = MAPPING_DEFINITION()
+                        mapping_definition.mapping_id = mapping_definition_id
+                        mapping_definition.name = mapping_definition_name
+                        mapping_definition.code = mapping_definition_code
+                        mapping_definition.mapping_type = mapping_definition_mapping_type
+                        mapping_definition.member_mapping_id = ImportWebsiteToSDDModel.find_member_mapping_with_id(
+                            self,context,mapping_definition_member_mapping_id)
+                        mapping_definition.variable_mapping_id = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
+                            self,context,mapping_definition_variable_mapping_id)
 
-                    mapping_definition = MAPPING_DEFINITION()
-                    mapping_definition.mapping_id = mapping_definition_id
-                    mapping_definition.name = mapping_definition_name
-                    mapping_definition.code = mapping_definition_code
-                    mapping_definition.mapping_type = mapping_definition_mapping_type
-                    mapping_definition.member_mapping_id = ImportWebsiteToSDDModel.find_member_mapping_with_id(
-                        self,context,mapping_definition_member_mapping_id)
-                    mapping_definition.variable_mapping_id = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
-                        self,context,mapping_definition_variable_mapping_id)
-
-                    if context.save_sdd_to_db:  
-                        mapping_definition.save()
-                    context.mapping_definition_dictionary[mapping_definition_id] = mapping_definition
+                        if context.save_sdd_to_db:  
+                            mapping_definition.save()
+                        context.mapping_definition_dictionary[mapping_definition_id] = mapping_definition
 
     def create_all_mapping_to_cubes(self, context):
         '''
@@ -831,21 +864,21 @@ class ImportWebsiteToSDDModel(object):
                     mapping_to_cube_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_cube_mapping_id]
                     mapping_to_cube_valid_from = row[ColumnIndexes().mapping_to_cube_valid_from]
                     mapping_to_cube_valid_to = row[ColumnIndexes().mapping_to_cube_valid_to]
+                    if not mapping_to_cube_mapping_id.startswith("M_SHS"):
+                        mapping_to_cube = MAPPING_TO_CUBE()
+                        mapping_to_cube.mapping = ImportWebsiteToSDDModel.find_mapping_definition_with_id(
+                            self,context,mapping_to_cube_mapping_id)
+                        mapping_to_cube.cubeMapping = ImportWebsiteToSDDModel.replace_dots(self,mapping_to_cube_cube_mapping_id)
+                        mapping_to_cube.valid_from = mapping_to_cube_valid_from
+                        mapping_to_cube.valid_to = mapping_to_cube_valid_to
 
-                    mapping_to_cube = MAPPING_TO_CUBE()
-                    mapping_to_cube.mapping = ImportWebsiteToSDDModel.find_mapping_definition_with_id(
-                        self,context,mapping_to_cube_mapping_id)
-                    mapping_to_cube.cubeMapping = ImportWebsiteToSDDModel.replace_dots(self,mapping_to_cube_cube_mapping_id)
-                    mapping_to_cube.valid_from = mapping_to_cube_valid_from
-                    mapping_to_cube.valid_to = mapping_to_cube_valid_to
-
-                    if context.save_sdd_to_db:
-                        mapping_to_cube.save()
-                    try:
-                        mapping_to_cube_list = context.mapping_to_cube_dictionary[mapping_to_cube.cubeMapping]
-                        mapping_to_cube_list.append(mapping_to_cube)
-                    except KeyError:
-                        context.mapping_to_cube_dictionary[mapping_to_cube.cubeMapping] = [mapping_to_cube]
+                        if context.save_sdd_to_db:
+                            mapping_to_cube.save()
+                        try:
+                            mapping_to_cube_list = context.mapping_to_cube_dictionary[mapping_to_cube.cubeMapping]
+                            mapping_to_cube_list.append(mapping_to_cube)
+                        except KeyError:
+                            context.mapping_to_cube_dictionary[mapping_to_cube.cubeMapping] = [mapping_to_cube]
 
     def create_all_variable_mappings(self, context):
         '''
@@ -870,9 +903,10 @@ class ImportWebsiteToSDDModel(object):
                         self,context,variable_mapping_maintenance_agency_id)
                     variable_mapping.code = variable_mapping_code
                     variable_mapping.name = variable_mapping_name
-                    if context.save_sdd_to_db:
-                        variable_mapping.save()
-                    context.variable_mapping_dictionary[variable_mapping_id] = variable_mapping
+                    if not variable_mapping_id.startswith("SHS_"):
+                        if context.save_sdd_to_db:
+                            variable_mapping.save()
+                        context.variable_mapping_dictionary[variable_mapping_id] = variable_mapping
             
 
     def create_all_variable_mapping_items(self, context):
@@ -893,33 +927,36 @@ class ImportWebsiteToSDDModel(object):
                     variable_mapping_item_is_source = row[ColumnIndexes().variable_mapping_item_is_source]
                     variable_mapping_item_valid_from = row[ColumnIndexes().variable_mapping_item_valid_from]
                     variable_mapping_item_valid_to = row[ColumnIndexes().variable_mapping_item_valid_to]
-                    variable = ImportWebsiteToSDDModel.find_variable_with_id(
-                        self,context,variable_mapping_item_variable_id)
-                    if variable is None:
-                        missing_variables.append(variable_mapping_item_variable_id)
-                    else:  
-                        variable_mapping_item = VARIABLE_MAPPING_ITEM()
-                        variable_mapping_item.variable = variable
-                        variable_mapping_item.variable_mapping_id = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
-                            self,context,variable_mapping_item_variable_mapping_id)
+                    if not variable_mapping_item_variable_mapping_id.startswith("SHS_"):
                         
-                        if variable_mapping_item.variable is None:
-                            print(f"No Variable mapping item variable id: {variable_mapping_item_variable_id}")
-                        variable_mapping_item.is_source = variable_mapping_item_is_source
-                        variable_mapping_item.valid_from = variable_mapping_item_valid_from
-                        variable_mapping_item.valid_to = variable_mapping_item_valid_to
+                        variable = ImportWebsiteToSDDModel.find_variable_with_id(
+                            self,context,variable_mapping_item_variable_id)
+                        if variable is None:
+                            missing_variables.append((variable_mapping_item_variable_id,variable_mapping_item_variable_mapping_id,variable_mapping_item_valid_to))
+                        else:  
+                            variable_mapping_item = VARIABLE_MAPPING_ITEM()
+                            variable_mapping_item.variable = variable
+                            variable_mapping_item.variable_mapping_id = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
+                                self,context,variable_mapping_item_variable_mapping_id)
+                            
+                            if variable_mapping_item.variable is None:
+                                print(f"No Variable mapping item variable id: {variable_mapping_item_variable_id}")
+                            variable_mapping_item.is_source = variable_mapping_item_is_source
+                            variable_mapping_item.valid_from = variable_mapping_item_valid_from
+                            variable_mapping_item.valid_to = variable_mapping_item_valid_to
 
-                        if context.save_sdd_to_db:
-                            variable_mapping_item.save()
-                        try:
-                            variable_mapping_items_list = context.variable_mapping_item_dictionary[variable_mapping_item_variable_mapping_id]
-                            variable_mapping_items_list.append(variable_mapping_item)
-                        except KeyError:
-                            context.variable_mapping_item_dictionary[variable_mapping_item_variable_mapping_id] = [variable_mapping_item]
+                            
+                            if context.save_sdd_to_db:
+                                variable_mapping_item.save()
+                            try:
+                                variable_mapping_items_list = context.variable_mapping_item_dictionary[variable_mapping_item_variable_mapping_id]
+                                variable_mapping_items_list.append(variable_mapping_item)
+                            except KeyError:
+                                context.variable_mapping_item_dictionary[variable_mapping_item_variable_mapping_id] = [variable_mapping_item]
         for missing_variable in missing_variables:
             print(f"Misssing Varaible {missing_variable}")
 
-        ImportWebsiteToSDDModel.save_missing_variables_to_csv(context,missing_variable)
+        ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context,missing_variables)
 
     
 
