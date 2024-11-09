@@ -48,6 +48,7 @@ urlpatterns = [
     path('missing-members/', report_views.missing_members, name='missing_members'),
     path('mappings-missing-members/', report_views.mappings_missing_members, name='mappings_missing_members'),
     path('mappings-missing-variables/', report_views.mappings_missing_variables, name='mappings_missing_variables'),
+    path('mappings-warnings-summary/', report_views.mappings_warnings_summary, name='mappings_warnings_summary'),
     path('run-create-output-concepts/', views.run_create_filters, name='run_create_filters'),
     path('run-create-transformation-meta-data/', views.run_create_joins_meta_data, name='run_create_joins_meta_data'),
     path('review-transformation-meta-data/', report_views.review_join_meta_data, name='review_join_meta_data'),
