@@ -13,6 +13,7 @@
 from pybirdai.utils.utils import Utils
 from pybirdai.sdd_models import *
 import os
+from django.conf import settings
 
 
 class CreatePythonTransformations:
@@ -22,6 +23,7 @@ class CreatePythonTransformations:
         '''
         Read in the transformation meta data and create python classes
         '''
+        CreatePythonTransformations.delete_generated_python_join_files(context)
         CreatePythonTransformations.create_output_classes( sdd_context)
         CreatePythonTransformations.create_slice_classes(sdd_context)
         # get all the cube_links for a report
@@ -29,7 +31,7 @@ class CreatePythonTransformations:
     def create_output_classes(  sdd_context):
         
          #get all the cubes_structure_items for that cube and make a related Python class.
-        file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  'output_tables.py', "a",  encoding='utf-8') 
+        file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  'output_tables.py', "a",  encoding='utf-8') 
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         file.write("from datetime import datetime\n")
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
@@ -84,7 +86,7 @@ class CreatePythonTransformations:
 
     def create_slice_classes( sdd_context):
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
-            file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')   
+            file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')   
             file.write("from pybirdai.ldm_models import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
@@ -250,3 +252,9 @@ class CreatePythonTransformations:
 
                     file.write("\t\treturn None\n")
                     file.write("\n")
+
+    def delete_generated_python_join_files(context):
+        base_dir = settings.BASE_DIR
+        python_dir = os.path.join(base_dir, 'results',  'generated_python_joins')
+        for file in os.listdir(python_dir):
+            os.remove(os.path.join(python_dir, file))
