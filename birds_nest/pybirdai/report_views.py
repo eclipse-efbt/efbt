@@ -15,9 +15,21 @@ import csv
 import os
 
 # CSV views
-def csv_view(request, filename):
+def mappings_csv_view(request, filename):
     base_dir = settings.BASE_DIR
-    csv_path = os.path.join(base_dir, 'results', filename)
+    csv_path = os.path.join(base_dir, 'results', 'generated_mapping_warnings', filename)
+    csv_contents = []
+
+    with open(csv_path, 'r') as file:
+        csv_reader = csv.reader(file)
+        for row in csv_reader:
+            csv_contents.append(row)
+
+    return render(request, f'{filename.split(".")[0]}.html', {'csv_contents': csv_contents})
+
+def hierarchy_csv_view(request, filename):
+    base_dir = settings.BASE_DIR
+    csv_path = os.path.join(base_dir, 'results', 'generated_hierarchy_warnings', filename)
     csv_contents = []
 
     with open(csv_path, 'r') as file:
@@ -28,19 +40,19 @@ def csv_view(request, filename):
     return render(request, f'{filename.split(".")[0]}.html', {'csv_contents': csv_contents})
 
 def missing_children(request):
-    return csv_view(request, 'missing_children.csv')
+    return hierarchy_csv_view(request, 'missing_children.csv')
 
 def missing_members(request):
-    return csv_view(request, 'missing_members.csv')
+    return hierarchy_csv_view(request, 'missing_members.csv')
 
 def mappings_missing_members(request):
-    return csv_view(request, 'mappings_missing_members.csv')
+    return mappings_csv_view(request, 'mappings_missing_members.csv')
 
 def mappings_missing_variables(request):
-    return csv_view(request, 'mappings_missing_variables.csv')
+    return mappings_csv_view(request, 'mappings_missing_variables.csv')
 
 def mappings_warnings_summary(request):
-    return csv_view(request, 'mappings_warnings_summary.csv')
+    return mappings_csv_view(request, 'mappings_warnings_summary.csv')
 
 # Review views
 def review_semantic_integrations(request):

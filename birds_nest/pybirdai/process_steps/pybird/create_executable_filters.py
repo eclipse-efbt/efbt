@@ -11,14 +11,17 @@
 #    Neil Mackenzie - initial API and implementation
 
 from pybirdai.utils.utils import Utils
+from django.conf import settings
 
 import os
 
 
 class CreateExecutableFilters:
     def create_executable_filters(self,context, sdd_context):
+        CreateExecutableFilters.delete_generated_python_filter_files(self, context)
+        CreateExecutableFilters.delete_generated_html_filter_files(self, context)
         CreateExecutableFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
-        file = open(sdd_context.output_directory + os.sep + 'generated_python' + os.sep +  'report_cells.py', "a",  encoding='utf-8') 
+        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep +  'report_cells.py', "a",  encoding='utf-8') 
         report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  'report_templates.html', "a",  encoding='utf-8') 
         report_html_file.write("{% extends 'base.html' %}\n")
         report_html_file.write("{% block content %}\n")
@@ -253,4 +256,16 @@ class CreateExecutableFilters:
                 CreateExecutableFilters.get_member_list_considering_hierarchy(self,sdd_context,item,hierarchy, member_list)
         except KeyError:
             pass
+
+    def delete_generated_python_filter_files(self, context):
+        base_dir = settings.BASE_DIR
+        python_dir = os.path.join(base_dir, 'results', 'generated_python_filters')
+        for file in os.listdir(python_dir):
+            os.remove(os.path.join(python_dir, file))
+
+    def delete_generated_html_filter_files(self, context):
+        base_dir = settings.BASE_DIR
+        html_dir = os.path.join(base_dir, 'results', 'generated_html')
+        for file in os.listdir(html_dir):
+            os.remove(os.path.join(html_dir, file))
 
