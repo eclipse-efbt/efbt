@@ -32,6 +32,8 @@ from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
 from .entry_points.execute_datapoint import RunExecuteDataPoint
 import os
+import csv
+from pathlib import Path
 
 # Helper function for paginated modelformset views
 def paginated_modelformset_view(request, model, template_name, formset_fields='__all__', order_by='id', items_per_page=20):
@@ -159,7 +161,14 @@ def delete_variable_mapping(request, variable_mapping_id):
 def execute_data_point(request, data_point_id):
     app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
     result = app_config.run_execute_data_point(data_point_id)
-    return HttpResponse("DataPoint " + data_point_id + " calculated as: " + result)
+    
+    html_response = f"""
+        <h3>DataPoint Execution Results</h3>
+        <p><strong>DataPoint ID:</strong> {data_point_id}</p>
+        <p><strong>Result:</strong> {result}</p>
+        <p><a href="{request.build_absolute_uri('/pybirdai/lineage/')}">View Lineage Files</a></p>
+    """
+    return HttpResponse(html_response)
 
 def delete_variable_mapping_item(request, item_id):
     return delete_item(request, VARIABLE_MAPPING_ITEM, 'id', 'edit_variable_mapping_items')
@@ -181,3 +190,51 @@ def delete_mapping_to_cube(request, mapping_to_cube_id):
 
 def delete_mapping_definition(request, mapping_id):
     return delete_item(request, MAPPING_DEFINITION, 'mapping_id', 'edit_mapping_definitions')
+
+def list_lineage_files(request):
+    lineage_dir = Path(settings.BASE_DIR) / 'results' / 'lineage'
+    csv_files = []
+    
+    if lineage_dir.exists():
+        csv_files = [f.name for f in lineage_dir.glob('*.csv')]
+    
+    return render(request, 'pybirdai/lineage_files.html', {'csv_files': csv_files})
+
+def view_csv_file(request, filename):
+
+    file_path = Path(settings.BASE_DIR) / 'results' / 'lineage' / filename
+    
+    if not file_path.exists() or not filename.endswith('.csv'):
+        messages.error(request, 'File not found or invalid file type')
+        return redirect('pybirdai:list_lineage_files')
+    
+    try:
+        with open(file_path, 'r', encoding='utf-8') as csvfile:
+            csv_reader = csv.reader(csvfile)
+            headers = next(csv_reader)  # Get the headers
+            data = list(csv_reader)     # Get all rows
+            
+        # Paginate the results
+        items_per_page = 50  # Adjust this number as needed
+        paginator = Paginator(data, items_per_page)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+        
+        # Calculate some statistics
+        total_rows = len(data)
+        num_columns = len(headers)
+        
+        context = {
+            'filename': filename,
+            'headers': headers,
+            'page_obj': page_obj,
+            'total_rows': total_rows,
+            'num_columns': num_columns,
+            'start_index': (page_obj.number - 1) * items_per_page + 1,
+            'end_index': min(page_obj.number * items_per_page, total_rows),
+        }
+        return render(request, 'pybirdai/view_csv.html', context)
+        
+    except Exception as e:
+        messages.error(request, f'Error reading file: {str(e)}')
+        return redirect('pybirdai:list_lineage_files')

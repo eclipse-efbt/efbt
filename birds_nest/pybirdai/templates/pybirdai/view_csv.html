@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .csv-container {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .table-wrapper {
+        overflow-x: auto;
+        max-width: 100%;
+        margin: 20px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+    
+    .csv-table {
+        margin: 0;
+        white-space: nowrap;
+        font-size: 0.9rem;
+    }
+    
+    .csv-table th {
+        background-color: #343a40;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        padding: 12px 15px;
+    }
+    
+    .csv-table td {
+        padding: 8px 15px;
+        border: 1px solid #dee2e6;
+        background-color: white;
+    }
+    
+    .csv-table tr:nth-child(even) td {
+        background-color: #f8f9fa;
+    }
+    
+    .csv-table tr:hover td {
+        background-color: #e9ecef;
+    }
+    
+    .row-number {
+        position: sticky;
+        left: 0;
+        background-color: #343a40 !important;
+        color: white;
+        font-weight: bold;
+        z-index: 2;
+    }
+    
+    .pagination {
+        margin-top: 20px;
+    }
+    
+    .file-info {
+        background-color: white;
+        padding: 10px 15px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        border: 1px solid #dee2e6;
+    }
+</style>
+
+<div class="container-fluid csv-container">
+    <div class="file-info">
+        <h2 class="mb-2">{{ filename }}</h2>
+        <p class="text-muted mb-0">
+            Showing rows {{ start_index }} to {{ end_index }} of {{ total_rows }} total rows
+            ({{ num_columns }} columns)
+        </p>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table csv-table">
+            <thead>
+                <tr>
+                    <th class="row-number">#</th>
+                    {% for header in headers %}
+                        <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in page_obj %}
+                    <tr>
+                        <td class="row-number">{{ forloop.counter0|add:start_index }}</td>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

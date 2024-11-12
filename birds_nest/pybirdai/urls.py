@@ -63,5 +63,6 @@ urlpatterns = [
     path('execute-data-point/<str:data_point_id>/', views.execute_data_point, name='execute_data_point'),
     path('show-report/<str:report_id>/', views.show_report, name='show_report'),
     path('report-templates/', report_views.report_templates, name='report_templates'),
-    
+    path('lineage/', views.list_lineage_files, name='list_lineage_files'),
+    path('lineage/<str:filename>/', views.view_csv_file, name='view_csv'),
 ]
