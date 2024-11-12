@@ -12,6 +12,7 @@
 #
 import os
 import csv
+from django.conf import settings
 from pybirdai.sdd_models import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 
@@ -49,7 +50,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
-        
+        ImportWebsiteToSDDModel.delete_mapping_warnings_files(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_variable_mappings(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_variable_mapping_items(self, sdd_context)
         ImportWebsiteToSDDModel.create_member_mappings(self, sdd_context)
@@ -61,6 +62,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import hierarchies from CSV file
         '''
+        ImportWebsiteToSDDModel.delete_hierarchy_warnings_files(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_member_hierarchies(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_parent_members_with_children_locally(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_member_hierarchies_nodes(self, sdd_context)
@@ -380,25 +382,25 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.save_missing_domains_to_csv(context,missing_domains)
 
     def save_missing_domains_to_csv(context,missing_domains):
-        filename = context.output_directory + os.sep + "missing_domains.csv"
+        filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_domains.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(missing_domains)
 
     def save_missing_members_to_csv(context,missing_members):
-        filename = context.output_directory + os.sep + "missing_members.csv"
+        filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_members.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(missing_members)
 
     def save_missing_variables_to_csv(context,missing_variables):
-        filename = context.output_directory + os.sep + "missing_variables.csv"
+        filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_variables.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(missing_variables)
 
     def save_missing_children_to_csv(context,missing_children):
-        filename = context.output_directory + os.sep + "missing_children.csv"
+        filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_children.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(missing_children)
@@ -770,7 +772,7 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.save_missing_mapping_members_to_csv(context,missing_members)
 
     def save_missing_mapping_variables_to_csv(context,missing_variables):
-        filename = context.output_directory + os.sep + "mappings_missing_variables.csv"
+        filename = context.output_directory + os.sep + "generated_mapping_warnings" + os.sep + "mappings_missing_variables.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(["Varaible","Mapping","Valid_to"])
@@ -778,7 +780,7 @@ class ImportWebsiteToSDDModel(object):
                 writer.writerow([var[0],var[1],var[2]])
 
     def save_missing_mapping_members_to_csv(context,missing_members):   
-        filename = context.output_directory + os.sep + "mappings_missing_members.csv"
+        filename = context.output_directory + os.sep + "generated_mapping_warnings" + os.sep + "mappings_missing_members.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(["Member","Mapping","Row","Variable"])
@@ -788,12 +790,12 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_mappings_warnings_summary(context,missing_members)
 
     def create_mappings_warnings_summary(context,missing_members):
-        filename = context.output_directory + os.sep + "mappings_warnings_summary.csv"
+        filename = context.output_directory + os.sep + "generated_mapping_warnings" + os.sep + "mappings_warnings_summary.csv"
         #create a list of unique missing variable ids
         # read mappings_missing_variables file into a dictionary
         missing_variables= []
         written_members = []
-        varaibles_filename = context.output_directory + os.sep + "mappings_missing_variables.csv"
+        varaibles_filename = context.output_directory + os.sep + "generated_mapping_warnings" + os.sep + "mappings_missing_variables.csv"
         with open(varaibles_filename, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
@@ -1086,4 +1088,17 @@ class ImportWebsiteToSDDModel(object):
             return context.mapping_definition_dictionary[mapping_definition_id]
         except KeyError:
             return None
+
+
+    def delete_hierarchy_warnings_files(self, context):
+        base_dir = settings.BASE_DIR
+        hierarchy_warnings_dir = os.path.join(base_dir, 'results', 'generated_hierarchy_warnings')
+        for file in os.listdir(hierarchy_warnings_dir):
+            os.remove(os.path.join(hierarchy_warnings_dir, file))
+
+    def delete_mapping_warnings_files(self, context):
+        base_dir = settings.BASE_DIR
+        mapping_warnings_dir = os.path.join(base_dir, 'results', 'generated_mapping_warnings')
+        for file in os.listdir(mapping_warnings_dir):
+            os.remove(os.path.join(mapping_warnings_dir, file))
 

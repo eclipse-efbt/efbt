@@ -22,7 +22,7 @@ class CSVConverter:
 		
 		fileName = ""
 		base_dir = settings.BASE_DIR 
-		output_directory = os.path.join(base_dir, 'results')
+		output_directory = os.path.join(base_dir, 'results','lineage')
 		table_name = CSVConverter.get_table_name(theObject)
 		csvString = CSVConverter.createCSVStringForTable(theObject,useLongNames,table_name)
 		try:
