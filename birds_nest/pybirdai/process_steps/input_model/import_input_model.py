@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.sdd_models import *
+from pybirdai.bird_meta_data_model import *
 from django.apps import apps
 import os
 import csv

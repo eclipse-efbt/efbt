@@ -27,7 +27,7 @@ class RunCreateExecutableJoins(AppConfig):
     @staticmethod
     def create_python_joins():
         """Execute the process of creating generation rules when the app is ready."""
-        from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
+        from pybirdai.process_steps.input_model.import_database_to_bird_meta_data_model import (
             ImportDatabaseToSDDModel
         )
         from pybirdai.context.sdd_context_django import SDDContext

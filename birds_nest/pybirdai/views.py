@@ -16,7 +16,8 @@ from django.forms import modelformset_factory
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.conf import settings
-from .sdd_models import (
+from django.views.decorators.http import require_http_methods
+from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION
 )
@@ -31,9 +32,12 @@ from .entry_points.delete_joins_metadata import RunDeleteJoinsMetadata
 from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
 from .entry_points.execute_datapoint import RunExecuteDataPoint
+from .entry_points.upload_sqldev_eil_files import UploadSQLDevEILFiles
+from .entry_points.create_django_models import RunCreateDjangoModels
 import os
 import csv
 from pathlib import Path
+from .process_steps.upload_files.file_uploader import FileUploader
 
 # Helper function for paginated modelformset views
 def paginated_modelformset_view(request, model, template_name, formset_fields='__all__', order_by='id', items_per_page=20):
@@ -71,6 +75,11 @@ def run_create_joins_meta_data(request):
     app_config.run_create_joins_meta_data()
     return HttpResponse("Created Transformation Metadata")
 
+def create_django_models(request):
+    app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
+    app_config.ready()
+    return HttpResponse("Created Django Models")
+
 def run_create_python_joins(request):
     app_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
     app_config.create_python_joins()
@@ -93,6 +102,7 @@ def run_import_input_model_from_sqldev(request):
 
 
 
+
 def run_import_hierarchies(request):
     app_config = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
     app_config.import_hierarchies()
@@ -112,6 +122,25 @@ def run_create_executable_filters(request):
     app_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
     app_config.run_create_executable_filters()
     return HttpResponse("Create executable filters process completed successfully.")
+
+def upload_sqldev_eil_files(request):
+    if request.method == 'GET':
+        # Show the upload form
+        return render(request, 'pybirdai/upload_sqldev_eil_files.html')
+    elif request.method == 'POST':
+        # Handle the file upload
+        
+        app_config = UploadSQLDevEILFiles('pybirdai', 'birds_nest')
+        app_config.upload_sqldev_eil_files(request)
+        
+        #result = app_config.upload_sqldev_eil_files()
+        
+        #if result['status'] == 'success':
+        #   messages.success(request, 'Files uploaded successfully')
+        #else:
+        #    messages.error(request, result['message'])
+            
+        return HttpResponse("Uploaded SQLDeveloper EILFiles.")
 
 # Basic views
 def index(request):
