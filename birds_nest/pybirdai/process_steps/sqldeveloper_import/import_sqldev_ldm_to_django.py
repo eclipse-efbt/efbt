@@ -23,8 +23,16 @@ class RegDNAToDJango(object):
         '''
         Documentation for the method.
         '''
-        models_file = open(context.output_directory + os.sep + 'models.py', "a",  encoding='utf-8') 
-        admin_file = open(context.output_directory + os.sep + 'admin.py', "a",  encoding='utf-8') 
+
+        #delete the existing files
+        try:    
+            os.remove(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'models.py')
+            os.remove(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'admin.py')
+        except FileNotFoundError:
+            pass
+
+        models_file = open(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'models.py', "a",  encoding='utf-8') 
+        admin_file = open(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'admin.py', "a",  encoding='utf-8') 
         if context.ldm_or_il == 'ldm':
             RegDNAToDJango.createDjangoForPackage(self,context.ldm_entities_package,models_file,context)
             RegDNAToDJango.createDjangoAdminForPackage(self,context.ldm_entities_package,admin_file,context)
@@ -120,7 +128,7 @@ class RegDNAToDJango(object):
         output_file.write('from django.contrib import admin\r\n')
         for elclass in elpackage.eClassifiers:
             if  isinstance(elclass ,ELClass):
-                output_file.write('from .ldm_models import ' + elclass.name + '\n')
+                output_file.write('from .bird_data_model import ' + elclass.name + '\n')
                 output_file.write('admin.site.register(' + elclass.name + ')\n')
         output_file.close()
 

@@ -65,4 +65,14 @@ urlpatterns = [
     path('report-templates/', report_views.report_templates, name='report_templates'),
     path('lineage/', views.list_lineage_files, name='list_lineage_files'),
     path('lineage/<str:filename>/', views.view_csv_file, name='view_csv'),
+    path('upload-sqldev-eil-files/', views.upload_sqldev_eil_files, name='upload_sqldev_eil_files'),
+    path('create-bird-database/', report_views.create_bird_database, name='create_bird_database'),
+    path('import-data-model-artefacts/', report_views.import_data_model_artefacts, name='import_data_model_artefacts'),
+    path('import-sqldev-eil-files/', report_views.import_sqldev_eil_files, name='import_sqldev_eil_files'),
+    path('import-sqldev-eldm-files/', report_views.import_sqldev_eldm_files, name='import_sqldev_eldm_files'),
+    path('import-bird-eil-datamodel/', report_views.import_bird_eil_datamodel, name='import_bird_eil_datamodel'),
+    path('import-bird-eldm-datamodel/', report_views.import_bird_eldm_datamodel, name='import_bird_eldm_datamodel'),
+    path('create-django-models/', views.create_django_models, name='create_django_models'),
+    path('create-database-manual-steps/', report_views.create_database_manual_steps, name='create_database_manual_steps'),
+    
 ]

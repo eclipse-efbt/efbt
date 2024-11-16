@@ -13,7 +13,7 @@
 import os
 import csv
 from django.conf import settings
-from pybirdai.sdd_models import *
+from pybirdai.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 
 
@@ -21,11 +21,6 @@ class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for importing SDD csv files into an instance of the analysis model
     '''
-    
-        
-
- 
-
     def import_report_templates_from_sdd(self, sdd_context):
         '''
         Import SDD csv files into an instance of the analysis model

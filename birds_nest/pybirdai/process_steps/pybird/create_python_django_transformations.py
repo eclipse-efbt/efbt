@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 
 from pybirdai.utils.utils import Utils
-from pybirdai.sdd_models import *
+from pybirdai.bird_meta_data_model import *
 import os
 from django.conf import settings
 
@@ -87,7 +87,7 @@ class CreatePythonTransformations:
     def create_slice_classes( sdd_context):
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')   
-            file.write("from pybirdai.ldm_models import *\n")
+            file.write("from pybirdai.bird_data_model import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
             file.write("from datetime import datetime\n")

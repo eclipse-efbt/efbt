@@ -18,7 +18,7 @@ from django.apps import AppConfig
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
 
-class RunExecuteDataPoint(AppConfig):
+class UploadSQLDevEILFiles(AppConfig):
     """
     Django AppConfig for running the website to SDD model conversion process.
 
@@ -27,10 +27,9 @@ class RunExecuteDataPoint(AppConfig):
     """
 
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
-    #path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_execute_data_point(data_point_id):
+    def upload_sqldev_eil_files(request):
         """
         Prepare and execute the website to SDD model conversion process.
 
@@ -38,10 +37,10 @@ class RunExecuteDataPoint(AppConfig):
         and variables, and imports the website data into the SDD model.
         """
         from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
-
-        from pybirdai.process_steps.pybird.execute_datapoint import (
-            ExecuteDataPoint
+        from pybirdai.process_steps.upload_files.file_uploader import (
+            FileUploader
         )
+       
         from pybirdai.context.context import Context
 
         base_dir = settings.BASE_DIR
@@ -53,16 +52,13 @@ class RunExecuteDataPoint(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        # Create reference domains, variables, and cubes
-        return ExecuteDataPoint.execute_data_point(
-             data_point_id
-        )
+        FileUploader().upload_sqldev_eil_files(sdd_context, request)
+        
 
     def ready(self):
         # This method is still needed for Django's AppConfig
         pass
 
-       
 
 
 

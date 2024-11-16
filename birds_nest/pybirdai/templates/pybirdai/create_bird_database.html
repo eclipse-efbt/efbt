@@ -1,0 +1,43 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create BIRD Database{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">Create BIRD Database</h1>
+<div class="task-grid">
+
+    <a href="{% url 'pybirdai:import_data_model_artefacts' %}" class="task-item">
+        <img src="{% static 'images/import_data_model_artefacts.webp' %}" alt="import_data_model_artefacts">
+        <span>Import Data Model Artefacts</span>
+    </a>
+    <a href="{% url 'pybirdai:create_django_models' %}" class="task-item">
+        <img src="{% static 'images/create_bird_database_configuration.webp' %}" alt="create_bird_database_configuration">
+        <span>Create BIRD Database configuration</span>
+    </a>
+    <a href="{% url 'pybirdai:create_database_manual_steps' %}" class="task-item">
+        <img src="{% static 'images/create_database_manual_steps.webp' %}" alt="create_database_manual_steps">
+        <span>Create the Empty BIRD Database</span>
+    </a>
+    
+    <a href="{% url 'admin:index' %}" class="task-item">
+        <img src="{% static 'images/admin.webp' %}" alt="Admin icon">
+        <span>Check the Autogenerted Database  UI</span>
+    </a>
+
+
+</div>
+{% endblock %}

@@ -31,8 +31,8 @@ class RunImportReportTemplatesFromWebsite(AppConfig):
     @staticmethod
     def run_import():
         # Move the content of the ready() method here
-        from pybirdai.sdd_models import MAINTENANCE_AGENCY
-        from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
+        from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
+        from pybirdai.process_steps.website_to_sddmodel.import_website_to_bird_meta_data_model_django import (
             ImportWebsiteToSDDModel
         )
         from pybirdai.context.context import Context
