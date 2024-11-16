@@ -28,11 +28,11 @@ class CSVConverter:
 		try:
 			if (useLongNames):
 				fileName = table_name + "_longnames.csv"
-				file = open(output_directory + os.sep + fileName, "a",  encoding='utf-8') 
+				file = open(output_directory + os.sep + fileName, "w",  encoding='utf-8') 
 				file.write(csvString)
 			else:
 				fileName = table_name + ".csv"
-				file = open(output_directory + os.sep + fileName, "a",  encoding='utf-8') 
+				file = open(output_directory + os.sep + fileName, "w",  encoding='utf-8') 
 				file.write(csvString)
 
 		except Exception as e: 
