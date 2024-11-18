@@ -37,10 +37,10 @@ class RunImportHierarchiesFromWebsite(AppConfig):
         and variables, and imports the website data into the SDD model.
         """
         from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
-        from pybirdai.process_steps.website_to_sddmodel.import_website_to_bird_meta_data_model_django import (
+        from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
             ImportWebsiteToSDDModel
         )
-        from pybirdai.process_steps.input_model.import_database_to_bird_meta_data_model import (
+        from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
         )
         from pybirdai.context.context import Context

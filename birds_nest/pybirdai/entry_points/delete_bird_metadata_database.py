@@ -19,22 +19,22 @@ import django
 from django.apps import AppConfig
 from django.conf import settings
 
-class RunCreateExecutableJoins(AppConfig):
+class RunDeleteBirdMetadataDatabase(AppConfig):
     """Django AppConfig for running the creation of generation rules."""
 
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def create_python_joins():
+    def run_delete_bird_metadata_database():
         """Execute the process of creating generation rules when the app is ready."""
-        from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
-            ImportDatabaseToSDDModel
-        )
+
         from pybirdai.context.sdd_context_django import SDDContext
         from pybirdai.context.context import Context
-        from pybirdai.process_steps.pybird.create_python_django_transformations import (
-            CreatePythonTransformations
+
+        from pybirdai.process_steps.joins_meta_data.delete_joins_meta_data import (
+            TransformationMetaDataDestroyer
         )
+
 
         base_dir = settings.BASE_DIR 
         sdd_context = SDDContext()
@@ -45,9 +45,12 @@ class RunCreateExecutableJoins(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        ImportDatabaseToSDDModel().import_sdd(sdd_context)
-        CreatePythonTransformations().create_python_joins(context, sdd_context)
 
+        TransformationMetaDataDestroyer().delete_bird_metadata_database(
+            context,
+            sdd_context,
+            "FINREP_REF"
+        )
 
 def ready(self):
         # This method is still needed for Django's AppConfig
