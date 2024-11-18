@@ -18,7 +18,7 @@ from django.apps import AppConfig
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
 
-class RunImportSemanticIntegrationsFromWebsite(AppConfig):
+class UploadJoinsConfiguration(AppConfig):
     """
     Django AppConfig for running the website to SDD model conversion process.
 
@@ -29,7 +29,7 @@ class RunImportSemanticIntegrationsFromWebsite(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def import_mappings_from_website():
+    def upload_joins_configuration(request):
         """
         Prepare and execute the website to SDD model conversion process.
 
@@ -37,12 +37,10 @@ class RunImportSemanticIntegrationsFromWebsite(AppConfig):
         and variables, and imports the website data into the SDD model.
         """
         from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
-        from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
-            ImportWebsiteToSDDModel
+        from pybirdai.process_steps.upload_files.file_uploader import (
+            FileUploader
         )
-        from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
-            ImportDatabaseToSDDModel
-        )
+       
         from pybirdai.context.context import Context
 
         base_dir = settings.BASE_DIR
@@ -54,12 +52,14 @@ class RunImportSemanticIntegrationsFromWebsite(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        ImportDatabaseToSDDModel().import_sdd(sdd_context)
-        ImportWebsiteToSDDModel().import_semantic_integrations_from_sdd(sdd_context)
+        FileUploader().upload_joins_configuration(sdd_context, request)
+        
 
-def ready(self):
+    def ready(self):
         # This method is still needed for Django's AppConfig
         pass
+
+
 
 
       

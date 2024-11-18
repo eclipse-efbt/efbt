@@ -1,0 +1,40 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Populate BIRD Metadata Database{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">Populate BIRD Metadata Database</h1>
+<div class="task-grid">
+
+    <a href="{% url 'pybirdai:delete_existing_contents_of_bird_metadata_database' %}" class="task-item">
+        <img src="{% static 'images/delete_bird_metadata_database.webp' %}" alt="delete_bird_metadata_database">
+        <span>Delete Exising Contents of BIRD Metadata Database.</span>
+    </a>
+    <a href="{% url 'pybirdai:upload_technical_export_files' %}" class="task-item">
+        <img src="{% static 'images/report_templates.webp' %}" alt="Non Ref Info icon">
+        <span>Upload Technical Export Files  From BIRD Website.</span>
+    </a>
+    <a href="{% url 'pybirdai:run_import_input_model_from_sqldev' %}" class="task-item">
+        <img src="{% static 'images/import_input_model.webp' %}" alt="Non Ref Info icon">
+        <span>Populate BIRD Metadata Database with BIRD datamodel meta data</span>
+    </a>
+    <a href="{% url 'pybirdai:import_report_templates' %}" class="task-item">
+        <img src="{% static 'images/report_templates.webp' %}" alt="Non Ref Info icon">
+        <span>Populate BIRD Metadata Database with BIRD Report Templates</span>
+    </a>
+</div>
+{% endblock %}

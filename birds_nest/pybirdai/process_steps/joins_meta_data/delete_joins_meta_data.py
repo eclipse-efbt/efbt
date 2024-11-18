@@ -36,5 +36,42 @@ class TransformationMetaDataDestroyer:
         """
         CUBE_LINK.objects.all().delete()
         CUBE_STRUCTURE_ITEM_LINK.objects.all().delete()
-    
-    
+
+    def delete_bird_metadata_database(self, context: Any, sdd_context: Any, framework: str) -> None:
+        """
+        Delete the Bird Metadata Database.
+        """
+        CUBE_LINK.objects.all().delete()
+        CUBE_STRUCTURE_ITEM_LINK.objects.all().delete()
+        CUBE_STRUCTURE_ITEM.objects.all().delete()
+        CUBE_STRUCTURE.objects.all().delete()
+        CUBE.objects.all().delete()
+        DOMAIN.objects.all().delete()
+        VARIABLE.objects.all().delete()
+        MEMBER.objects.all().delete()
+        MEMBER_MAPPING.objects.all().delete()
+        MEMBER_MAPPING_ITEM.objects.all().delete()
+        VARIABLE_MAPPING.objects.all().delete()
+        VARIABLE_MAPPING_ITEM.objects.all().delete()
+        TABLE_CELL.objects.all().delete()
+        CELL_POSITION.objects.all().delete()
+        AXIS_ORDINATE.objects.all().delete()
+        ORDINATE_ITEM.objects.all().delete()
+        MAPPING_DEFINITION.objects.all().delete()
+        MAPPING_TO_CUBE.objects.all().delete()
+        TABLE.objects.all().delete()
+        CELL_POSITION.objects.all().delete()
+        AXIS.objects.all().delete()
+        SUBDOMAIN.objects.all().delete()
+        SUBDOMAIN_ENUMERATION.objects.all().delete()
+        FACET_COLLECTION.objects.all().delete()
+        MAINTENANCE_AGENCY.objects.all().delete()
+        FRAMEWORK.objects.all().delete()
+        MEMBER_HIERARCHY.objects.all().delete()
+        MEMBER_HIERARCHY_NODE.objects.all().delete()
+        COMBINATION.objects.all().delete()
+        COMBINATION_ITEM.objects.all().delete()
+        CUBE_TO_COMBINATION.objects.all().delete()
+
+
+        

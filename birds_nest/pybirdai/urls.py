@@ -66,6 +66,7 @@ urlpatterns = [
     path('lineage/', views.list_lineage_files, name='list_lineage_files'),
     path('lineage/<str:filename>/', views.view_csv_file, name='view_csv'),
     path('upload-sqldev-eil-files/', views.upload_sqldev_eil_files, name='upload_sqldev_eil_files'),
+    path('upload-technical-export-files/', views.upload_technical_export_files, name='upload_technical_export_files'),
     path('create-bird-database/', report_views.create_bird_database, name='create_bird_database'),
     path('import-data-model-artefacts/', report_views.import_data_model_artefacts, name='import_data_model_artefacts'),
     path('import-sqldev-eil-files/', report_views.import_sqldev_eil_files, name='import_sqldev_eil_files'),
@@ -74,5 +75,13 @@ urlpatterns = [
     path('import-bird-eldm-datamodel/', report_views.import_bird_eldm_datamodel, name='import_bird_eldm_datamodel'),
     path('create-django-models/', views.create_django_models, name='create_django_models'),
     path('create-database-manual-steps/', report_views.create_database_manual_steps, name='create_database_manual_steps'),
-    
+    path('populate-bird-metadata-database/', report_views.populate_bird_metadata_database, name='populate_bird_metadata_database'),
+    path('import-report-template-instructions/', report_views.import_report_template_instructions, name='import_report_template_instructions'),
+    path('delete-existing-contents-of-bird-metadata-database/', views.delete_existing_contents_of_bird_metadata_database, name='delete_existing_contents_of_bird_metadata_database'),
+    path('create-transformations-metadata/', report_views.create_transformations_metadata, name='create_transformations_metadata'),
+    path('create-transformation-rules-configuration/', report_views.create_transformation_rules_configuration, name='create_transformation_rules_configuration'),
+    path('derivation-transformation-rules/', report_views.derivation_transformation_rules, name='derivation_transformation_rules'),
+    path('manual-edits/', report_views.manual_edits, name='manual_edits'),
+    path('upload-joins-configuration/', views.upload_joins_configuration, name='upload_joins_configuration'),
+
 ]
