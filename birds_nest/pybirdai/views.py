@@ -41,6 +41,7 @@ from pathlib import Path
 from .process_steps.upload_files.file_uploader import FileUploader
 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 from .entry_points.upload_joins_configuration import UploadJoinsConfiguration
+from django.template.loader import render_to_string
 
 # Helper function for paginated modelformset views
 def paginated_modelformset_view(request, model, template_name, formset_fields='__all__', order_by='id', items_per_page=20):
@@ -74,128 +75,167 @@ def show_report(request, report_id):
 
 # Views for running various processes
 def run_create_joins_meta_data(request):
-    app_config = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
-    app_config.run_create_joins_meta_data()
-   
-
-    html_response = f"""
-            <h3>Created Joins Metadata.</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-in-smcubes')}">Create Transformations Rules MetaData</a></p>
-        """
-    return HttpResponse(html_response)
-
+    if request.GET.get('execute') == 'true':
+        # Execute the actual task
+        app_config = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
+        app_config.run_create_joins_meta_data()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Creating Joins Metadata (approx 3 minutes on a fast desktop, dont press the back button on this web page)",
+        "Joins Metadata created successfully.",
+        '/pybirdai/create-transformation-rules-in-smcubes',
+        "Create Transformations Rules MetaData"
+    )
 
 def create_django_models(request):
-    app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
-    app_config.ready()
-
-    html_response = f"""
-            <h3>Created Django Models.</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-bird-database')}">Create BIRD Database</a></p>
-        """
-    return HttpResponse(html_response)
-
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
+        app_config.ready()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Creating Django Models",
+        "Created Django Models successfully.",
+        '/pybirdai/create-bird-database',
+        "Create BIRD Database"
+    )
 
 def run_create_python_joins(request):
-    app_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
-    app_config.create_python_joins()
-    html_response = f"""
-            <h3>Created Executable  Joins in Python</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-in-python')}">Create Transformations Rules in Python</a></p>
-        """
-    return HttpResponse(html_response)
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
+        app_config.create_python_joins()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Creating Python Joins (approx 2 minutes on a fast desktop, dont press the back button on this web page)",
+        "Created Executable Joins in Python",
+        '/pybirdai/create-transformation-rules-in-python',
+        "Create Transformations Rules in Python"
+    )
     
 
 
 def run_delete_joins_meta_data(request):
-    app_config = RunDeleteJoinsMetadata('pybirdai', 'birds_nest')
-    app_config.run_delete_joins_meta_data()
-    return HttpResponse("Deleted Transformation Metadata")
+    if request.GET.get('execute') == 'true':
+        app_config = RunDeleteJoinsMetadata('pybirdai', 'birds_nest')
+        app_config.run_delete_joins_meta_data()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Deleting Joins Metadata",
+        "Deleted Transformation Metadata successfully",
+        '/pybirdai/create-transformation-rules-in-smcubes',
+        "Create Transformations Rules MetaData"
+    )
 
 def delete_existing_contents_of_bird_metadata_database(request):
-    app_config = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
-    app_config.run_delete_bird_metadata_database()
-
-    html_response = f"""
-            <h3>Deleted Bird Metadata Database</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
-        """
-    return HttpResponse(html_response)
+    if request.GET.get('execute') == 'true':
+        app_config = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
+        app_config.run_delete_bird_metadata_database()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Deleting Bird Metadata Database",
+        "Deleted Bird Metadata Database",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
+    )
 
 def run_import_semantic_integrations_from_website(request):
-    app_config = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
-    app_config.import_mappings_from_website()
-
-    html_response = f"""
-            <h3>Import Semantic Integrations completed successfully.</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-configuration')}">Create Transformations Rules Configuration</a></p>
-        """
-    return HttpResponse(html_response)
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
+        app_config.import_mappings_from_website()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Importing Semantic Integrations (approx 4 minutes on a fast desktop, dont press the back button on this web page)",
+        "Import Semantic Integrations completed successfully.",
+        '/pybirdai/create-transformation-rules-configuration',
+        "Create Transformations Rules Configuration"
+    )
 
 def run_import_input_model_from_sqldev(request):
-    app_config = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
-    app_config.ready()
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
+        app_config.ready()
+        return JsonResponse({'status': 'success'})
     
-    html_response = f"""
-            <h3>Import Input Model from SQLDev process completed successfully</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
-        """
-    return HttpResponse(html_response)
+    return create_response_with_loading(
+        request,
+        "Importing Input Model from SQLDev (approx 4 minutes on a fast desktop, dont press the back button on this web page)",
+        "Import Input Model from SQLDev process completed successfully",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
+    )
 
 
 
 
 def run_import_hierarchies(request):
-    app_config = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
-    app_config.import_hierarchies()
-    html_response = f"""
-            <h3>Import hierarchies successfully.</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-configuration')}">Create Transformations Rules Configuration</a></p>
-        """
-    return HttpResponse(html_response)
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
+        app_config.import_hierarchies()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Importing Hierarchies (approx 4 minutes on a fast desktop, dont press the back button on this web page)",
+        "Import hierarchies completed successfully.",
+        '/pybirdai/create-transformation-rules-configuration',
+        "Create Transformations Rules Configuration"
+    )
     
  
 def import_report_templates(request):
-    app_config = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
-    app_config.run_import()
- 
-
-    html_response = f"""
-            <h3>Import Report templates from website completed successfully.</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
-        """
-    return HttpResponse(html_response)
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
+        app_config.run_import()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Importing Report Templates (approx 12 minutes on a fast desktop, dont press the back button on this web page)",
+        "Import Report templates from website completed successfully.",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
+    )
 
 def run_create_filters(request):
-    app_config = RunCreateFilters('pybirdai', 'birds_nest')
-    app_config.run_create_filters()
+    if request.GET.get('execute') == 'true':
+        # Execute the actual task
+        app_config = RunCreateFilters('pybirdai', 'birds_nest')
+        app_config.run_create_filters()
+        return JsonResponse({'status': 'success'})
     
-    
-    html_response = f"""
-            <h3>Created filters successfully.</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-in-smcubes')}">Create Transformations Rules MetaData</a></p>
-        """
-    return HttpResponse(html_response)
+    return create_response_with_loading(
+        request,
+        "Creating Filters (approx 10 minutes on a fast desktop, dont press the back button on this web page)",
+        "Filters created successfully.",
+        '/pybirdai/create-transformation-rules-in-smcubes',
+        "Create Transformations Rules MetaData"
+    )
 
 
 def run_create_executable_filters(request):
-    app_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
-    app_config.run_create_executable_filters()
-    html_response = f"""
-            <h3>Create executable filters process completed successfully</h3>
-
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-in-python')}">Create Transformations Rules in Python</a></p>
-        """
-    return HttpResponse(html_response)
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
+        app_config.run_create_executable_filters()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Creating Executable Filters (approx 20 minutes on a fast desktop, dont press the back button on this web page)",
+        "Create executable filters process completed successfully",
+        '/pybirdai/create-transformation-rules-in-python',
+        "Create Transformations Rules in Python"
+    )
 
 def upload_sqldev_eil_files(request):
     if request.method == 'GET':
@@ -400,3 +440,117 @@ def view_csv_file(request, filename):
     except Exception as e:
         messages.error(request, f'Error reading file: {str(e)}')
         return redirect('pybirdai:list_lineage_files')
+
+def create_response_with_loading(request, task_title, success_message, return_url, return_link_text):
+    html_response = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                .loading-overlay {{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    z-index: 9999;
+                }}
+
+                .loading-spinner {{
+                    width: 50px;
+                    height: 50px;
+                    border: 5px solid #f3f3f3;
+                    border-top: 5px solid #3498db;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin-bottom: 20px;
+                }}
+
+                @keyframes spin {{
+                    0% {{ transform: rotate(0deg); }}
+                    100% {{ transform: rotate(360deg); }}
+                }}
+
+                .loading-message {{
+                    font-size: 18px;
+                    color: #333;
+                }}
+
+                .task-info {{
+                    padding: 20px;
+                    max-width: 600px;
+                    margin: 0 auto;
+                }}
+
+                #success-message {{
+                    display: none;
+                    margin-top: 20px;
+                    padding: 15px;
+                    background-color: #d4edda;
+                    border: 1px solid #c3e6cb;
+                    border-radius: 4px;
+                    color: #155724;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="task-info">
+                <h3>{task_title}</h3>
+                <div id="loading-overlay" class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-message">Please wait while the task completes...</div>
+                </div>
+                <div id="success-message">
+                    <p>{success_message}</p>
+                    <p>Go back to <a href="{request.build_absolute_uri(return_url)}">{return_link_text}</a></p>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {{
+                    // Show loading immediately
+                    document.getElementById('loading-overlay').style.display = 'flex';
+                    document.getElementById('success-message').style.display = 'none';
+                    
+                    // Start the task execution after a small delay to ensure loading is visible
+                    setTimeout(() => {{
+                        fetch(window.location.href + '?execute=true', {{
+                            method: 'GET',
+                            headers: {{
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }}
+                        }})
+                        .then(response => response.json())
+                        .then(data => {{
+                            if (data.status === 'success') {{
+                                // Hide loading and show success
+                                document.getElementById('loading-overlay').style.display = 'none';
+                                document.getElementById('success-message').style.display = 'block';
+                            }} else {{
+                                throw new Error('Task failed');
+                            }}
+                        }})
+                        .catch(error => {{
+                            console.error('Error:', error);
+                            alert('An error occurred while processing the task.');
+                        }});
+                    }}, 100); // Small delay to ensure loading screen is visible
+                }});
+            </script>
+        </body>
+        </html>
+    """
+    
+    # If this is the AJAX request to execute the task
+    if request.GET.get('execute') == 'true':
+        # Execute the actual task
+        try:
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    
+    return HttpResponse(html_response)
