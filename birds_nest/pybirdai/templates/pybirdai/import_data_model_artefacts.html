@@ -1,0 +1,43 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Import Data Model Artefacts{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">Import Data Model Artefacts (Choose One) </h1>
+<div class="task-grid">
+
+    <a href="{% url 'pybirdai:upload_sqldev_eil_files' %}" class="task-item">
+        <img src="{% static 'images/upload-sqldev-eil-files.webp' %}" alt="upload-sqldev-eil-files">
+        <span>Upload SQLDEveloper EIL Files</span>
+    </a>
+    <a href="{% url 'pybirdai:upload_sqldev_eil_files' %}" class="task-item">
+        <img src="{% static 'images/import_sqldev_eldm_files.webp' %}" alt="import_sqldev_eldm_files">
+        <span>Import SQLDEveloper ELDM Files</span>
+    </a>
+    <a href="{% url 'pybirdai:upload_sqldev_eil_files' %}" class="task-item">
+        <img src="{% static 'images/import_bird_eil_datamodel.webp' %}" alt="import_bird_eil_datamodel">
+        <span>Import Technical export file of BIRD EIL datamodel</span>
+    </a>
+    
+    <a href="{% url 'pybirdai:upload_sqldev_eil_files' %}" class="task-item">
+        <img src="{% static 'images/import_bird_eldm_datamodel.webp' %}" alt="import_bird_eldm_datamodel">
+        <span>Import Technical export file of BIRD ELDM datamodel</span>
+    </a>
+
+
+</div>
+{% endblock %}

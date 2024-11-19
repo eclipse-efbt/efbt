@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Import Report Template Files</h1>
+
+<p>Using the BIRD website, export the  CSV files related to report tempaltes, following the instructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Downloading-Files-from-the-ECB-website">here</a>  <br><br>
+    and then upload them by clicking the link below: <br><br>
+Specifically get the only files called
+    <ul>
+        <li>axis_ordinate </li>        
+        <li>domain</li>
+        <li>member</li>
+        <li>ordinate_item</li>        
+        <li>table</li>
+        <li>variable</li>
+        <li>axis</li>
+        <li>cell_position</li>
+        <li>table_cell</li>        
+        <li>framework</li>
+        <li>maintenance_agency</li>
+
+    </ul>
+</li>
+
+</p>
+   
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="technical_export_files" multiple>
+    <button type="submit">Upload Files</button>
+</form>
+
+{% endblock %}

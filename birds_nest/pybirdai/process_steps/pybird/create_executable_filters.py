@@ -36,7 +36,7 @@ class CreateExecutableFilters:
 
        
    
-        file.write("from pybirdai.ldm_models import *\n")
+        file.write("from pybirdai.bird_data_model import *\n")
         file.write("from .output_tables import *\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
 

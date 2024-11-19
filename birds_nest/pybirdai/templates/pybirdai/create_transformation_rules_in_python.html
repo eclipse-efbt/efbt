@@ -23,12 +23,20 @@
 
     
     <a href="{% url 'pybirdai:run_create_executable_filters' %}" class="task-item">
-        <img src="{% static 'images/executable.webp' %}" alt="Concept icon">
+        <img src="{% static 'images/executable.webp' %}" alt="executable">
         <span>Create Executable Filters</span>
     </a>
     <a href="{% url 'pybirdai:run_create_python_joins' %}" class="task-item">
-        <img src="{% static 'images/executable.webp' %}" alt="Review icon">
+        <img src="{% static 'images/executable.webp' %}" alt="executable">
         <span>Create Executable Joins</span>
+    </a>
+    <a href="{% url 'pybirdai:derivation_transformation_rules' %}" class="task-item">
+        <img src="{% static 'images/formula.webp' %}" alt="formula">
+        <span>Change Psuedocode for Derivation Transformation Rules</span>
+    </a>
+    <a href="{% url 'pybirdai:manual_edits' %}" class="task-item">
+        <img src="{% static 'images/manual_edits.webp' %}" alt="manual_edits">
+        <span>Make Final Manual Edits to Generated Python Code</span>
     </a>
 
 </div>

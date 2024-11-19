@@ -13,7 +13,7 @@
 import os
 import csv
 from django.conf import settings
-from pybirdai.sdd_models import *
+from pybirdai.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 
 
@@ -21,11 +21,6 @@ class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for importing SDD csv files into an instance of the analysis model
     '''
-    
-        
-
- 
-
     def import_report_templates_from_sdd(self, sdd_context):
         '''
         Import SDD csv files into an instance of the analysis model
@@ -71,7 +66,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import maintenance agencies from CSV file
         '''
-        file_location = context.file_directory + os.sep + "maintenance_agency.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "maintenance_agency.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -99,7 +94,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import frameworks from CSV file
         '''
-        file_location = context.file_directory + os.sep + "framework.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "framework.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -129,7 +124,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all domains from CSV file
         '''
-        file_location = context.file_directory + os.sep + "domain.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "domain.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -186,7 +181,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all members from CSV file
         '''
-        file_location = context.file_directory + os.sep + "member.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -232,7 +227,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all variables from CSV file
         '''
-        file_location = context.file_directory + os.sep + "variable.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "variable.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -277,7 +272,7 @@ class ImportWebsiteToSDDModel(object):
 
     def create_all_parent_members_with_children_locally(self, context):
         print("Creating all parent members with children locally")
-        file_location = context.file_directory + os.sep + "member_hierarchy_node.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member_hierarchy_node.csv"
         header_skipped = False
         parent_members = []
         parent_members_child_triples = []
@@ -346,7 +341,7 @@ class ImportWebsiteToSDDModel(object):
         Import all member hierarchies from CSV file
         '''
         missing_domains = []
-        file_location = context.file_directory + os.sep + "member_hierarchy.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member_hierarchy.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -412,7 +407,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all member hierarchy nodes from CSV file
         '''
-        file_location = context.file_directory + os.sep + "member_hierarchy_node.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member_hierarchy_node.csv"
         header_skipped = False
         missing_members = []
         missing_hierarchies = []
@@ -456,7 +451,7 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.save_missing_hierarchies_to_csv(context,missing_hierarchies)
 
     def save_missing_hierarchies_to_csv(context,missing_hierarchies):
-        filename = context.output_directory + os.sep + "missing_hierarchies.csv"
+        filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_hierarchies.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(missing_hierarchies)
@@ -470,7 +465,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all tables from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "table.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "table.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -506,7 +501,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all axes from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "axis.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "axis.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -538,7 +533,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all axis ordinates from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "axis_ordinate.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "axis_ordinate.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -576,7 +571,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all ordinate items from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "ordinate_item.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "ordinate_item.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -618,7 +613,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all table cells from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "table_cell.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "table_cell.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -657,7 +652,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all cell positions from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "cell_position.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "cell_position.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -689,7 +684,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all member mappings from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "member_mapping.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member_mapping.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -717,7 +712,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all member mapping items from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "member_mapping_item.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member_mapping_item.csv"
         header_skipped = False
         missing_members = []
         missing_variables = []
@@ -820,7 +815,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all mapping definitions from the rendering package CSV file
         '''
-        file_location = context.file_directory + os.sep + "mapping_definition.csv"
+        file_location = context.file_directory + os.sep + "technical_export" + os.sep + "mapping_definition.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -854,7 +849,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all mapping to cubes from the rendering package CSV file
         '''
-        filelocation = context.file_directory + os.sep + "mapping_to_cube.csv"
+        filelocation = context.file_directory + os.sep + "technical_export" + os.sep + "mapping_to_cube.csv"
         header_skipped = False
         with open(filelocation, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -886,7 +881,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         Import all variable mappings from the rendering package CSV file
         '''
-        filelocation = context.file_directory + os.sep + "variable_mapping.csv"
+        filelocation = context.file_directory + os.sep + "technical_export" + os.sep + "variable_mapping.csv"
         header_skipped = False
         with open(filelocation, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -916,7 +911,7 @@ class ImportWebsiteToSDDModel(object):
         Import all variable mapping items from the rendering package CSV file
         '''
         missing_variables = []
-        fileloacation = context.file_directory + os.sep + "variable_mapping_item.csv"
+        fileloacation = context.file_directory + os.sep + "technical_export" + os.sep + "variable_mapping_item.csv"
         header_skipped = False
         with open(fileloacation, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')

@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.sdd_models import *
+from pybirdai.bird_meta_data_model import *
 
 import os
 import csv
@@ -29,7 +29,7 @@ class CreateOutputLayers:
             version: The version of the framework.
         """
         file_location = os.path.join(
-            context.file_directory, f"in_scope_reports_{framework}.csv"
+            context.file_directory, "joins_configuration", f"in_scope_reports_{framework}.csv"
         )
         in_scope_reports = self._get_in_scope_reports(
             file_location, framework, version

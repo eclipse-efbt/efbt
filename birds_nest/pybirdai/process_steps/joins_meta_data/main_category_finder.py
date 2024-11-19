@@ -43,7 +43,7 @@ class MainCategoryFinder(object):
         '''
         Create a map of EBA main category code to its user-friendly display name
         '''
-        file_location = os.path.join(context.file_directory,
+        file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"table_part_to_reference_category_{framework}.csv")
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -72,7 +72,7 @@ class MainCategoryFinder(object):
         '''
         Create a map from table parts to main categories
         '''
-        file_location = os.path.join(context.file_directory,
+        file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"table_part_main_category_{framework}.csv")
         table_parts_to_main_category_map = (
             context.table_parts_to_main_category_map_finrep if framework == "FINREP_REF"
@@ -206,7 +206,7 @@ class MainCategoryFinder(object):
         '''
         Create a map from table parts to main categories
         '''
-        file_location = os.path.join(context.file_directory,
+        file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"table_part_to_reference_category_{framework}.csv")
         table_parts_to_main_category_map = (
             context.table_parts_to_main_category_map_finrep if framework == "FINREP_REF"
@@ -224,10 +224,10 @@ class MainCategoryFinder(object):
         Create a map from main categories such as loans and advances
         to the related input layer such as instrument
         '''
-        file_location = os.path.join(context.file_directory,
+        file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"table_part_ldm_definitions_{framework}.csv")
         if not (context.ldm_or_il == "ldm"):
-            file_location = os.path.join(context.file_directory,
+            file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"table_part_il_definitions_{framework}.csv")
         tables_for_main_category_map = (
             context.tables_for_main_category_map_finrep if framework == "FINREP_REF"
@@ -250,10 +250,10 @@ class MainCategoryFinder(object):
         to the related table parts, where table part is a combination
         of an input layer and main category description
         '''
-        file_location = os.path.join(context.file_directory,
+        file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"table_part_ldm_definitions_{framework}.csv")
         if not (context.ldm_or_il == "ldm"):
-            file_location = os.path.join(context.file_directory,
+            file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"table_part_il_definitions_{framework}.csv")
         table_parts_to_linked_tables_map = (
             context.table_parts_to_linked_tables_map_finrep if framework == "FINREP_REF"

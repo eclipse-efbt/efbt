@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Change Psuedocode for Derivation Transformation Rules</h1>
+
+<p> PyBIRD AI generates all the code for calling the generation transformation rules and executable derivation rules.<br><br>
+    For each derivation rule, We have a clear location for where the code should live, users need to do the last step of translating the psuedocode into actual python code.<br><br>
+    This <a href="https://youtu.be/MY5drY3RlJs">video</a>   explains how to change the psuedocode for derivation transformation rules into executable Python code.<br><br>
+
+    The exmple code used for the GRSS_CRRYNG_AMNT derived attribute is available  <a href="https://github.com/regcommunity/FreeBIRD/blob/main/birds_nest/pybirdai/ldm_models.py#L648">here</a><br><br>
+
+    When you are just changing derived fields like GRSS_CRRYNG_AMNT into functions, you do not need to re-run the creation and migration of the database for the functions to work and be called, note that unitl you do then they will be fields in the database.
+</p>
+
+
+{% endblock %}

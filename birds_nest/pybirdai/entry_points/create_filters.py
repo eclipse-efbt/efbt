@@ -41,7 +41,7 @@ class RunCreateFilters(AppConfig):
 
         The specific processes and their parameters are defined within the method.
         """
-        from pybirdai.sdd_models import MAINTENANCE_AGENCY
+        from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
         )

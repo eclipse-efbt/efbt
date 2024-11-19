@@ -76,6 +76,35 @@ def executable_transformations(request):
 def input_model(request):
     return render(request, 'pybirdai/input_model.html')
 
+
+def create_database_manual_steps(request):
+    return render(request, 'pybirdai/create_database_manual_steps.html')
+
+def create_bird_database(request):
+    return render(request, 'pybirdai/create_bird_database.html')
+
+def populate_bird_metadata_database(request):
+    return render(request, 'pybirdai/populate_bird_metadata_database.html')
+
+def import_report_template_instructions(request):
+    return render(request, 'pybirdai/import_report_template_instructions.html')
+
+def import_data_model_artefacts(request):
+    return render(request, 'pybirdai/import_data_model_artefacts.html')
+
+def import_sqldev_eil_files(request):
+    return render(request, 'pybirdai/import_sqldev_eil_files.html')
+
+def import_sqldev_eldm_files(request):
+    return render(request, 'pybirdai/import_sqldev_eldm_files.html')
+
+def import_bird_eil_datamodel(request):
+    return render(request, 'pybirdai/import_bird_eil_datamodel.html')
+
+def import_bird_eldm_datamodel(request):
+    return render(request, 'pybirdai/import_bird_eldm_datamodel.html')
+
+
 def create_transformation_rules_in_python(request):
     return render(request, 'pybirdai/create_transformation_rules_in_python.html')
 
@@ -84,3 +113,19 @@ def create_transformation_rules_in_smcubes(request):
 
 def report_templates(request):
     return render(request, 'pybirdai/report_templates.html')
+
+def create_transformations_metadata(request):
+    return render(request, 'pybirdai/create_transformations_metadata.html')
+
+def create_transformation_rules_configuration(request):
+    return render(request, 'pybirdai/create_transformation_rules_configuration.html')
+
+def derivation_transformation_rules(request):
+    return render(request, 'pybirdai/derivation_transformation_rules.html')
+
+def manual_edits(request):
+    return render(request, 'pybirdai/manual_edits.html')
+
+
+
+
