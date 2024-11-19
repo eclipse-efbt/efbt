@@ -17,7 +17,7 @@
 
 {% block content %}
 
-<h1 style="text-align: center;">Create Transformation Rules in SMCubes</h1>
+<h1 style="text-align: center;">Create Transformation Rules MetaData</h1>
 
 <div class="task-grid">
     
@@ -37,6 +37,10 @@
     <a href="{% url 'pybirdai:review_join_meta_data' %}" class="task-item">
         <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
         <span>CHECKPOINT:Review Joins Metadata</span>
+    </a>
+    <a href="{% url 'pybirdai:create_transformations_metadata' %}" class="task-item">
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+        <span>Back to Create Transformations Metadata</span>
     </a>
     
     
