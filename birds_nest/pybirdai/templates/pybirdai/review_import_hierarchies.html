@@ -18,8 +18,10 @@
 <p>Select an option to edit:</p>
 
 <ul>
+    <li><a href="{% url 'pybirdai:create_transformation_rules_configuration' %}">Back to Create Transformations Rules Configuration</a></li>
     <li><a href="{% url 'pybirdai:missing_children' %}">Show missing children in Hierarchies</a></li>
     <li><a href="{% url 'pybirdai:missing_members' %}">Show missing leaf members in Hierarchies</a></li>
+    
 </ul>
 
 {% endblock %}
