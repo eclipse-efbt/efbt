@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.sdd_models import *
+from pybirdai.bird_meta_data_model import *
 from django.apps import apps
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 import os
@@ -45,7 +45,7 @@ class JoinsMetaDataCreator:
             sdd_context (Any): The SDD context object.
             framework (str): The framework being used (e.g., "FINREP_REF").
         """
-        file_location = os.path.join(context.file_directory, 
+        file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"in_scope_reports_{framework}.csv")
         self.create_ldm_entity_to_linked_entities_map(context, sdd_context)
 

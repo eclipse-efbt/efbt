@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Make Final Manual Edits to Generated Python Code</h1>
+
+<p>
+    <b> description under construction</b><br><br>
+    
+    Although PyBIRD AI generates about 95% of the code we need for generation rules, we need to complete the last 5% maunally <br><br>
+    This is because we have flexibility in how we define the Joins of tables on the input layer data <br><br>
+    Do the edits to the generated python joins code as required <b>(This step is to be documented further)</b><br><br> 
+    For now, as an example you can find the class  F_05_01_REF_FINREP_3_0_Loans_and_advances_Table in  pybirdai/process_steps/filter_code/F_05_01_REF_FINREP_3_0_logic.py and replace it with the code   <a href="https://github.com/regcommunity/FreeBIRD/blob/main/birds_nest/pybirdai/process_steps/filter_code/F_05_01_REF_FINREP_3_0_logic.py#L142">here</a> <br><br>
+    
+    There is also currently a small bug that need a workaround. where carrying amount is being created twice in some function defintions. To fix this for the Finrep F05.01 report you should find the  
+    class Loans_and_advances(F_05_01_REF_FINREP_3_0_Base): in pybirdai/process_steps/filter_code/F_05_01_REF_FINREP_3_0_logic.py and replace it with this class which has CRRYING_AMNT described only once    <a href="https://github.com/regcommunity/FreeBIRD/blob/main/birds_nest/pybirdai/process_steps/filter_code/F_05_01_REF_FINREP_3_0_logic.py#98">here</a> <br><br>
+    
+    This will allow you later to run the transformations for the  F05.01 report.<br><br>
+    
+    We then need to move the generated files to the correct locations<br><br>
+    remove old files from birds_nest\pybirdai\process_steps\filter_code<br><br>
+    The report_cells.py file form the birds_nest\results\generated_python_filters folder should be moved to the birds_nest\pybirdai\process_steps\filter_code folder.<br><br> 
+    All generated python files from the birds_nest\results\generated_python_joins folder should be moved to the birds_nest\pybirdai\process_steps\filter_code folder.<br><br> 
+    All generated html files from the birds_nest\results\generated_html  folder should be moved to the birds_nest\pybirdai\templates\pybirdai folder.<br><br>
+    
+</p>
+
+
+{% endblock %}

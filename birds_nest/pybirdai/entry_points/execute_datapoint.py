@@ -37,7 +37,7 @@ class RunExecuteDataPoint(AppConfig):
         This method sets up the necessary contexts, creates reference domains
         and variables, and imports the website data into the SDD model.
         """
-        from pybirdai.sdd_models import MAINTENANCE_AGENCY
+        from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
 
         from pybirdai.process_steps.pybird.execute_datapoint import (
             ExecuteDataPoint

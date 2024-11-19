@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.sdd_models import *
+from pybirdai.bird_meta_data_model import *
 from django.apps import apps
 import os
 import csv
@@ -109,7 +109,7 @@ class ImportInputModel(object):
         sdd_context.ref_domain_dictionary['Boolean'].save()
 
     def _create_subdomain_to_domain_map(sdd_context):
-        file_location = sdd_context.file_directory + os.sep + "subdomain.csv"
+        file_location = sdd_context.file_directory + os.sep + "technical_export" + os.sep + "subdomain.csv"
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:

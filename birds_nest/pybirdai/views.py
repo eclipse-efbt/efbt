@@ -16,7 +16,8 @@ from django.forms import modelformset_factory
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.conf import settings
-from .sdd_models import (
+from django.views.decorators.http import require_http_methods
+from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION
 )
@@ -31,9 +32,15 @@ from .entry_points.delete_joins_metadata import RunDeleteJoinsMetadata
 from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
 from .entry_points.execute_datapoint import RunExecuteDataPoint
+from .entry_points.upload_sqldev_eil_files import UploadSQLDevEILFiles
+from .entry_points.upload_technical_export_files import UploadTechnicalExportFiles
+from .entry_points.create_django_models import RunCreateDjangoModels
 import os
 import csv
 from pathlib import Path
+from .process_steps.upload_files.file_uploader import FileUploader
+from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+from .entry_points.upload_joins_configuration import UploadJoinsConfiguration
 
 # Helper function for paginated modelformset views
 def paginated_modelformset_view(request, model, template_name, formset_fields='__all__', order_by='id', items_per_page=20):
@@ -71,6 +78,11 @@ def run_create_joins_meta_data(request):
     app_config.run_create_joins_meta_data()
     return HttpResponse("Created Transformation Metadata")
 
+def create_django_models(request):
+    app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
+    app_config.ready()
+    return HttpResponse("Created Django Models")
+
 def run_create_python_joins(request):
     app_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
     app_config.create_python_joins()
@@ -81,6 +93,11 @@ def run_delete_joins_meta_data(request):
     app_config.run_delete_joins_meta_data()
     return HttpResponse("Deleted Transformation Metadata")
 
+def delete_existing_contents_of_bird_metadata_database(request):
+    app_config = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
+    app_config.run_delete_bird_metadata_database()
+    return HttpResponse("Deleted Bird Metadata Database")
+
 def run_import_semantic_integrations_from_website(request):
     app_config = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
     app_config.import_mappings_from_website()
@@ -90,6 +107,7 @@ def run_import_input_model_from_sqldev(request):
     app_config = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
     app_config.ready()
     return HttpResponse("Import Input Model from SQLDev process completed successfully.")
+
 
 
 
@@ -112,6 +130,64 @@ def run_create_executable_filters(request):
     app_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
     app_config.run_create_executable_filters()
     return HttpResponse("Create executable filters process completed successfully.")
+
+def upload_sqldev_eil_files(request):
+    if request.method == 'GET':
+        # Show the upload form
+        return render(request, 'pybirdai/upload_sqldev_eil_files.html')
+    elif request.method == 'POST':
+        # Handle the file upload
+        
+        app_config = UploadSQLDevEILFiles('pybirdai', 'birds_nest')
+        app_config.upload_sqldev_eil_files(request)
+        
+        #result = app_config.upload_sqldev_eil_files()
+        
+        #if result['status'] == 'success':
+        #   messages.success(request, 'Files uploaded successfully')
+        #else:
+        #    messages.error(request, result['message'])
+            
+        return HttpResponse("Uploaded SQLDeveloper EILFiles.")
+
+def upload_technical_export_files(request):
+    if request.method == 'GET':
+        # Show the upload form
+        return render(request, 'pybirdai/upload_technical_export_files.html')
+    elif request.method == 'POST':
+        # Handle the file upload
+        
+        app_config = UploadTechnicalExportFiles('pybirdai', 'birds_nest')
+        app_config.upload_technical_export_files(request)
+        
+        #result = app_config.upload_sqldev_eil_files()
+        
+        #if result['status'] == 'success':
+        #   messages.success(request, 'Files uploaded successfully')
+        #else:
+        #    messages.error(request, result['message'])
+            
+        return HttpResponse("Uploaded Technical Export Files.")
+    
+def upload_joins_configuration(request):
+    
+    if request.method == 'GET':
+        # Show the upload form
+        return render(request, 'pybirdai/upload_joins_configuration.html')
+    elif request.method == 'POST':
+        # Handle the file upload
+        
+        app_config = UploadJoinsConfiguration('pybirdai', 'birds_nest')
+        app_config.upload_joins_configuration(request)
+        
+        #result = app_config.upload_sqldev_eil_files()
+        
+        #if result['status'] == 'success':
+        #   messages.success(request, 'Files uploaded successfully')
+        #else:
+        #    messages.error(request, result['message'])
+            
+        return HttpResponse("Uploaded Joins Configuration Files.")
 
 # Basic views
 def index(request):
