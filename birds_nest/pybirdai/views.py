@@ -76,17 +76,39 @@ def show_report(request, report_id):
 def run_create_joins_meta_data(request):
     app_config = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
     app_config.run_create_joins_meta_data()
-    return HttpResponse("Created Transformation Metadata")
+   
+
+    html_response = f"""
+            <h3>Created Joins Metadata.</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-in-smcubes')}">Create Transformations Rules MetaData</a></p>
+        """
+    return HttpResponse(html_response)
+
 
 def create_django_models(request):
     app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
     app_config.ready()
-    return HttpResponse("Created Django Models")
+
+    html_response = f"""
+            <h3>Created Django Models.</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-bird-database')}">Create BIRD Database</a></p>
+        """
+    return HttpResponse(html_response)
+
 
 def run_create_python_joins(request):
     app_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
     app_config.create_python_joins()
-    return HttpResponse("Created Python Transformations")
+    html_response = f"""
+            <h3>Created Executable  Joins in Python</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-in-python')}">Create Transformations Rules in Python</a></p>
+        """
+    return HttpResponse(html_response)
+    
+
 
 def run_delete_joins_meta_data(request):
     app_config = RunDeleteJoinsMetadata('pybirdai', 'birds_nest')
@@ -96,17 +118,35 @@ def run_delete_joins_meta_data(request):
 def delete_existing_contents_of_bird_metadata_database(request):
     app_config = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
     app_config.run_delete_bird_metadata_database()
-    return HttpResponse("Deleted Bird Metadata Database")
+
+    html_response = f"""
+            <h3>Deleted Bird Metadata Database</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
+        """
+    return HttpResponse(html_response)
 
 def run_import_semantic_integrations_from_website(request):
     app_config = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
     app_config.import_mappings_from_website()
-    return HttpResponse("Import Semantic Integrations completed successfully.")
+
+    html_response = f"""
+            <h3>Import Semantic Integrations completed successfully.</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-configuration')}">Create Transformations Rules Configuration</a></p>
+        """
+    return HttpResponse(html_response)
 
 def run_import_input_model_from_sqldev(request):
     app_config = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
     app_config.ready()
-    return HttpResponse("Import Input Model from SQLDev process completed successfully.")
+    
+    html_response = f"""
+            <h3>Import Input Model from SQLDev process completed successfully</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
+        """
+    return HttpResponse(html_response)
 
 
 
@@ -114,22 +154,48 @@ def run_import_input_model_from_sqldev(request):
 def run_import_hierarchies(request):
     app_config = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
     app_config.import_hierarchies()
-    return HttpResponse("Import hierarchies successfully.")
+    html_response = f"""
+            <h3>Import hierarchies successfully.</h3>
 
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-configuration')}">Create Transformations Rules Configuration</a></p>
+        """
+    return HttpResponse(html_response)
+    
+ 
 def import_report_templates(request):
     app_config = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
     app_config.run_import()
-    return HttpResponse("Import Report templates from website completed successfully.")
+ 
+
+    html_response = f"""
+            <h3>Import Report templates from website completed successfully.</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
+        """
+    return HttpResponse(html_response)
 
 def run_create_filters(request):
     app_config = RunCreateFilters('pybirdai', 'birds_nest')
     app_config.run_create_filters()
-    return HttpResponse("Created filters successfully.")
+    
+    
+    html_response = f"""
+            <h3>Created filters successfully.</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-in-smcubes')}">Create Transformations Rules MetaData</a></p>
+        """
+    return HttpResponse(html_response)
+
 
 def run_create_executable_filters(request):
     app_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
     app_config.run_create_executable_filters()
-    return HttpResponse("Create executable filters process completed successfully.")
+    html_response = f"""
+            <h3>Create executable filters process completed successfully</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-in-python')}">Create Transformations Rules in Python</a></p>
+        """
+    return HttpResponse(html_response)
 
 def upload_sqldev_eil_files(request):
     if request.method == 'GET':
@@ -147,8 +213,14 @@ def upload_sqldev_eil_files(request):
         #   messages.success(request, 'Files uploaded successfully')
         #else:
         #    messages.error(request, result['message'])
-            
-        return HttpResponse("Uploaded SQLDeveloper EILFiles.")
+        
+        html_response = f"""
+        <h3>Uploaded SQLDeveloper EILFiles.</h3>
+
+        <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-bird-database')}">Create BIRD Database</a></p>
+    """
+    return HttpResponse(html_response)
+    
 
 def upload_technical_export_files(request):
     if request.method == 'GET':
@@ -167,7 +239,13 @@ def upload_technical_export_files(request):
         #else:
         #    messages.error(request, result['message'])
             
-        return HttpResponse("Uploaded Technical Export Files.")
+       
+        html_response = f"""
+            <h3>Uploaded Technical Export Files.</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
+        """
+        return HttpResponse(html_response)
     
 def upload_joins_configuration(request):
     
@@ -187,7 +265,13 @@ def upload_joins_configuration(request):
         #else:
         #    messages.error(request, result['message'])
             
-        return HttpResponse("Uploaded Joins Configuration Files.")
+        
+        html_response = f"""
+            <h3>Uploaded Joins Configuration Files.</h3>
+
+            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-configuration')}">Create Transformations Rules Configuration</a></p>
+        """
+        return HttpResponse(html_response)
 
 # Basic views
 def index(request):
@@ -239,10 +323,12 @@ def execute_data_point(request, data_point_id):
     result = app_config.run_execute_data_point(data_point_id)
     
     html_response = f"""
+
         <h3>DataPoint Execution Results</h3>
         <p><strong>DataPoint ID:</strong> {data_point_id}</p>
         <p><strong>Result:</strong> {result}</p>
         <p><a href="{request.build_absolute_uri('/pybirdai/lineage/')}">View Lineage Files</a></p>
+        <p><a href="{request.build_absolute_uri('/pybirdai/report-templates/')}">Back to the PyBIRD Reports Templates Page</a></p>
     """
     return HttpResponse(html_response)
 

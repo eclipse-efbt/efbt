@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Lineage Files</h1>
-
+<a href="{% url 'pybirdai:report_templates'%}">Back to the PyBIRD Reports Templates Page</a>
 {% if csv_files %}
     <ul>
     {% for file in csv_files %}

@@ -33,9 +33,8 @@ class CreateExecutableFilters:
         report_html_file.write("<body>\n")
         report_html_file.write("<h1>Report Templates</h1>\n")
         report_html_file.write("<table border=\"1\">\n") 
+        report_html_file.write("<a href=\"{% url 'pybirdai:home'%}\">Back to the PyBIRD AI Home Page</a>\n")
 
-       
-   
         file.write("from pybirdai.bird_data_model import *\n")
         file.write("from .output_tables import *\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
@@ -55,6 +54,7 @@ class CreateExecutableFilters:
             filter_html_file.write("<body>\n")
             filter_html_file.write("<h1>" + cube_id + "</h1>\n")
             filter_html_file.write("<table border=\"1\">\n")
+            filter_html_file.write("<a href=\"{% url 'pybirdai:report_templates'%}\">Back to the PyBIRD Reports Templates Page</a>\n")
             
 
             for combination in combination_list:
