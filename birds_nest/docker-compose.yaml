@@ -1,0 +1,6 @@
+services:
+  web:
+    build: .
+    container_name: birds_nest_web
+    ports:
+      - "8000:8000"
