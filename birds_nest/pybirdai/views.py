@@ -83,7 +83,7 @@ def run_create_joins_meta_data(request):
     
     return create_response_with_loading(
         request,
-        "Creating Joins Metadata (approx 3 minutes on a fast desktop, dont press the back button on this web page)",
+        "Creating Joins Metadata (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Joins Metadata created successfully.",
         '/pybirdai/create-transformation-rules-in-smcubes',
         "Create Transformations Rules MetaData"
@@ -111,7 +111,7 @@ def run_create_python_joins(request):
     
     return create_response_with_loading(
         request,
-        "Creating Python Joins (approx 2 minutes on a fast desktop, dont press the back button on this web page)",
+        "Creating Python Joins (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Created Executable Joins in Python",
         '/pybirdai/create-transformation-rules-in-python',
         "Create Transformations Rules in Python"
@@ -155,7 +155,7 @@ def run_import_semantic_integrations_from_website(request):
     
     return create_response_with_loading(
         request,
-        "Importing Semantic Integrations (approx 4 minutes on a fast desktop, dont press the back button on this web page)",
+        "Importing Semantic Integrations (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Semantic Integrations completed successfully.",
         '/pybirdai/create-transformation-rules-configuration',
         "Create Transformations Rules Configuration"
@@ -169,7 +169,7 @@ def run_import_input_model_from_sqldev(request):
     
     return create_response_with_loading(
         request,
-        "Importing Input Model from SQLDev (approx 4 minutes on a fast desktop, dont press the back button on this web page)",
+        "Importing Input Model from SQLDev (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Input Model from SQLDev process completed successfully",
         '/pybirdai/populate-bird-metadata-database',
         "Populate BIRD Metadata Database"
@@ -186,7 +186,7 @@ def run_import_hierarchies(request):
     
     return create_response_with_loading(
         request,
-        "Importing Hierarchies (approx 4 minutes on a fast desktop, dont press the back button on this web page)",
+        "Importing Hierarchies (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import hierarchies completed successfully.",
         '/pybirdai/create-transformation-rules-configuration',
         "Create Transformations Rules Configuration"
@@ -201,7 +201,7 @@ def import_report_templates(request):
     
     return create_response_with_loading(
         request,
-        "Importing Report Templates (approx 12 minutes on a fast desktop, dont press the back button on this web page)",
+        "Importing Report Templates (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Report templates from website completed successfully.",
         '/pybirdai/populate-bird-metadata-database',
         "Populate BIRD Metadata Database"
@@ -216,7 +216,7 @@ def run_create_filters(request):
     
     return create_response_with_loading(
         request,
-        "Creating Filters (approx 10 minutes on a fast desktop, dont press the back button on this web page)",
+        "Creating Filters (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Filters created successfully.",
         '/pybirdai/create-transformation-rules-in-smcubes',
         "Create Transformations Rules MetaData"
@@ -231,7 +231,7 @@ def run_create_executable_filters(request):
     
     return create_response_with_loading(
         request,
-        "Creating Executable Filters (approx 20 minutes on a fast desktop, dont press the back button on this web page)",
+        "Creating Executable Filters (approx 10 minutes on a fast desktop, dont press the back button on this web page)",
         "Create executable filters process completed successfully",
         '/pybirdai/create-transformation-rules-in-python',
         "Create Transformations Rules in Python"

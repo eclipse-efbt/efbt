@@ -31,8 +31,21 @@ class CreateReportFilters:
         
         cell_to_variable_member_tuple_map = CreateReportFilters.create_cell_to_variable_member_map(sdd_context)
         
+        # Add lists to collect objects for bulk creation
+        self.combinations_to_create = []
+        self.combination_items_to_create = []
+        self.cube_structure_items_to_create = []
+        self.cube_to_combinations_to_create = []
+        
         for cell_id, tuples in cell_to_variable_member_tuple_map.items():
-            CreateReportFilters.process_cell(cell_id, tuples, sdd_context, context, framework, version)
+            CreateReportFilters.process_cell(self,cell_id, tuples, sdd_context, context, framework, version)
+            
+        # Bulk create all collected objects at the end
+        if context.save_derived_sdd_items:
+            COMBINATION.objects.bulk_create(self.combinations_to_create, batch_size=1000)
+            COMBINATION_ITEM.objects.bulk_create(self.combination_items_to_create, batch_size=1000)
+            CUBE_STRUCTURE_ITEM.objects.bulk_create(self.cube_structure_items_to_create, batch_size=1000)
+            CUBE_TO_COMBINATION.objects.bulk_create(self.cube_to_combinations_to_create, batch_size=1000)
 
     def read_in_scope_reports(file_location):
         """
@@ -73,7 +86,7 @@ class CreateReportFilters:
                         ).append(tuple_item)
         return cell_to_variable_member_tuple_map
 
-    def process_cell(cell_id, tuples, sdd_context, context, framework, version):
+    def process_cell(self,cell_id, tuples, sdd_context, context, framework, version):
         """
         Process a single cell, creating combinations and filters.
 
@@ -100,9 +113,9 @@ class CreateReportFilters:
 
         combination_id = cell.table_cell_combination_id
         if combination_id and not(combination_id == ''):
-            CreateReportFilters.create_combination_and_filters(combination_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context)
+            CreateReportFilters.create_combination_and_filters(self,combination_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context)
 
-    def create_combination_and_filters( table_cell_combination_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context):
+    def create_combination_and_filters(self,table_cell_combination_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context):
         """
         Create a combination and associated filters for a given cell.
 
@@ -114,19 +127,20 @@ class CreateReportFilters:
             sdd_context: The SDD context object.
             context: The context object.
         """
-        report_cell = COMBINATION(combination_id=table_cell_combination_id)
-        metric = CreateReportFilters.get_metric(sdd_context, tuples, relevant_mappings)
-        if metric:
-            CreateReportFilters.add_variable_to_rol_cube(context,sdd_context, report_rol_cube, metric)
-        report_cell.metric = metric
-        sdd_context.combination_dictionary[table_cell_combination_id] = report_cell
-        if context.save_derived_sdd_items:
-            report_cell.save()
+        if not(table_cell_combination_id in sdd_context.combination_dictionary.keys()):
+            report_cell = COMBINATION(combination_id=table_cell_combination_id)
+            metric = CreateReportFilters.get_metric(sdd_context, tuples, relevant_mappings)
+            if metric:
+                CreateReportFilters.add_variable_to_rol_cube(self,context, sdd_context, report_rol_cube, metric)
+            report_cell.metric = metric
+            sdd_context.combination_dictionary[table_cell_combination_id] = report_cell
+            if context.save_derived_sdd_items:
+                self.combinations_to_create.append(report_cell)  # Changed from save() to append
 
-        CreateReportFilters.create_cube_to_combination(report_cell, report_rol_cube, sdd_context, context)
-        CreateReportFilters.create_filters(report_cell, tuples, relevant_mappings, report_rol_cube, sdd_context, context)
+            CreateReportFilters.create_cube_to_combination(self,report_cell, report_rol_cube, sdd_context, context)
+            CreateReportFilters.create_filters(self, report_cell, tuples, relevant_mappings, report_rol_cube, sdd_context, context)
 
-    def add_variable_to_rol_cube(context, sdd_context, report_rol_cube, metric):
+    def add_variable_to_rol_cube(self,context, sdd_context, report_rol_cube, metric):
         """
         Add a variable to the ROL cube if it doesn't already exist.
 
@@ -147,7 +161,7 @@ class CreateReportFilters:
             csi.cube_structure_id = report_rol_cube.cube_structure_id
             csi.variable_id = metric
             if context.save_derived_sdd_items:
-                csi.save()
+                self.cube_structure_items_to_create.append(csi)  # Changed from save() to append
             sdd_context.rol_cube_structure_item_dictionary.setdefault(
                 report_rol_cube.cube_structure_id.cube_structure_id, []
             ).append(csi)
@@ -179,7 +193,7 @@ class CreateReportFilters:
         
         return None
 
-    def create_filters( report_cell, tuples, relevant_mappings, report_rol_cube, sdd_context, context):
+    def create_filters( self, report_cell, tuples, relevant_mappings, report_rol_cube, sdd_context, context):
         """
         Create filters for a given report cell.
 
@@ -204,7 +218,7 @@ class CreateReportFilters:
                 var_string = 'None'
                 if ref_variable:
                     var_string = ref_variable.variable_id
-                    CreateReportFilters.add_variable_to_rol_cube(context, sdd_context, report_rol_cube, ref_variable)
+                    CreateReportFilters.add_variable_to_rol_cube(self,context, sdd_context, report_rol_cube, ref_variable)
 
                 member_string = 'None'
                 if ref_member:
@@ -212,7 +226,7 @@ class CreateReportFilters:
 
                 sdd_context.combination_item_dictionary.setdefault(report_cell.combination_id, []).append(the_filter)
                 if context.save_derived_sdd_items:
-                    the_filter.save()
+                    self.combination_items_to_create.append(the_filter)  # Changed from save() to append
 
     def get_reference_tuple_list(sdd_context, non_ref_tuple_list, relevant_mappings):
         """
@@ -314,7 +328,7 @@ class CreateReportFilters:
         except KeyError:
             return None
 
-    def create_cube_to_combination( report_cell, report_rol_cube, sdd_context, context):
+    def create_cube_to_combination(self,report_cell, report_rol_cube, sdd_context, context):
         """
         Create a cube-to-combination mapping.
 
@@ -329,7 +343,7 @@ class CreateReportFilters:
         cube_to_comb.cube_id = report_rol_cube
         sdd_context.combination_to_rol_cube_map.setdefault(report_rol_cube.cube_id, []).append(cube_to_comb)
         if context.save_derived_sdd_items:
-            cube_to_comb.save()
+            self.cube_to_combinations_to_create.append(cube_to_comb)  # Changed from save() to append
 
         
     
