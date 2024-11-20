@@ -338,7 +338,7 @@ class ImportDatabaseToSDDModel(object):
         '''
         Import all the cube to combination
         '''
-        context.cube_to_combination_dictionary = {}
+        context.combination_to_rol_cube_map = {}
         for cube_to_combination in CUBE_TO_COMBINATION.objects.all():
             try:
                 context.combination_to_rol_cube_map[
