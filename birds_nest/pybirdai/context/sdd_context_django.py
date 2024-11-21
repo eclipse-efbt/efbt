@@ -12,15 +12,15 @@
 #
 
 
-
 class SDDContext(object):
-    '''
+    """
     Documentation for Context
-    '''
+    """
+
     # variables to configure the behaviour
 
     use_codes = True
-    
+
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.
@@ -34,10 +34,10 @@ class SDDContext(object):
     combinations_dictionary = {}
     nonref_member_dictionary = {}
     nonref_domain_dictionary = {}
-    nonref_variable_dictionary= {}
+    nonref_variable_dictionary = {}
     ref_member_dictionary = {}
     ref_domain_dictionary = {}
-    ref_variable_dictionary= {}
+    ref_variable_dictionary = {}
     member_hierarchy_dictionary = {}
     member_hierarchy_node_dictionary = {}
     rol_cube_structure_dictionary = {}
@@ -50,10 +50,9 @@ class SDDContext(object):
     combination_item_dictionary = {}
     combination_to_rol_cube_map = {}
 
-    
-    axis_ordinate_dictionary= {}
-    table_cell_dictionary= {}
-    table_to_table_cell_dictionary= {}
+    axis_ordinate_dictionary = {}
+    table_cell_dictionary = {}
+    table_to_table_cell_dictionary = {}
     member_mapping_dictionary = {}
     member_mapping_items_dictionary = {}
     cell_positions_dictionary = {}
@@ -79,16 +78,14 @@ class SDDContext(object):
     combination_to_typ_instrmnt_map = {}
     table_to_combination_dictionary = {}
 
-
-    
-     # For the reference output layers we record a map between members ids
+    # For the reference output layers we record a map between members ids
     # andtheir containing domains
     member_id_to_domain_map = {}
 
     # For the reference output layers we record a map between members ids
     # and their codes
     member_id_to_member_code_map = {}
-    
+
     variable_set_to_variable_map = {}
 
     axis_ordinate_to_ordinate_items_map = {}
@@ -108,5 +105,4 @@ class SDDContext(object):
     exclude_reference_info_from_website = False
 
     def __init__(self):
-
         pass
