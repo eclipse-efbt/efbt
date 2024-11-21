@@ -1,27 +1,23 @@
 """Definition of meta model 'regdna'."""
-
 from functools import partial
 import pyecore.ecore as Ecore
 from pyecore.ecore import *
 
 
-name = "regdna"
-nsURI = "http://www.eclipse.org/efbt/regdna"
-nsPrefix = "regdna"
+name = 'regdna'
+nsURI = 'http://www.eclipse.org/efbt/regdna'
+nsPrefix = 'regdna'
 
 eClass = EPackage(name=name, nsURI=nsURI, nsPrefix=nsPrefix)
 
 eClassifiers = {}
 getEClassifier = partial(Ecore.getEClassifier, searchspace=eClassifiers)
-Comparitor = EEnum(
-    "Comparitor", literals=["less_than", "equals", "greater_than", "not_equals"]
-)
+Comparitor = EEnum('Comparitor', literals=['less_than', 'equals', 'greater_than', 'not_equals'])
 
 
 class Import(EObject, metaclass=MetaEClass):
-    importedNamespace = EAttribute(
-        eType=EString, unique=True, derived=False, changeable=True
-    )
+
+    importedNamespace = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
     def __init__(self, *, importedNamespace=None):
         # if kwargs:
@@ -34,35 +30,17 @@ class Import(EObject, metaclass=MetaEClass):
 
 
 class Module(EObject, metaclass=MetaEClass):
-    theDescription = EAttribute(
-        eType=EString, unique=True, derived=False, changeable=True
-    )
-    license = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    name = EAttribute(
-        eType=EString, unique=True, derived=False, changeable=True, iD=True
-    )
-    version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    dependencies = EReference(
-        ordered=True, unique=True, containment=False, derived=False, upper=-1
-    )
-    imports = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
-    annotationDirectives = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
 
-    def __init__(
-        self,
-        *,
-        dependencies=None,
-        theDescription=None,
-        license=None,
-        name=None,
-        version=None,
-        imports=None,
-        annotationDirectives=None,
-    ):
+    theDescription = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    license = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
+    version = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
+    dependencies = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+    imports = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    annotationDirectives = EReference(ordered=True, unique=True,
+                                      containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, dependencies=None, theDescription=None, license=None, name=None, version=None, imports=None, annotationDirectives=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -91,9 +69,8 @@ class Module(EObject, metaclass=MetaEClass):
 
 
 class ModuleList(EObject, metaclass=MetaEClass):
-    modules = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    modules = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, modules=None):
         # if kwargs:
@@ -106,12 +83,9 @@ class ModuleList(EObject, metaclass=MetaEClass):
 
 
 class RulesForReport(EObject, metaclass=MetaEClass):
-    outputLayerCube = EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
-    rulesForTable = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    outputLayerCube = EReference(ordered=True, unique=True, containment=False, derived=False)
+    rulesForTable = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, outputLayerCube=None, rulesForTable=None):
         # if kwargs:
@@ -127,12 +101,10 @@ class RulesForReport(EObject, metaclass=MetaEClass):
 
 
 class RulesForILTable(EObject, metaclass=MetaEClass):
-    rulesForTablePart = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
-    inputLayerTable = EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
+
+    rulesForTablePart = EReference(ordered=True, unique=True,
+                                   containment=True, derived=False, upper=-1)
+    inputLayerTable = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, rulesForTablePart=None, inputLayerTable=None):
         # if kwargs:
@@ -148,9 +120,8 @@ class RulesForILTable(EObject, metaclass=MetaEClass):
 
 
 class SelectColumn(EObject, metaclass=MetaEClass):
-    asAttribute = EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
+
+    asAttribute = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, asAttribute=None):
         # if kwargs:
@@ -163,6 +134,7 @@ class SelectColumn(EObject, metaclass=MetaEClass):
 
 
 class TableFilter(EObject, metaclass=MetaEClass):
+
     predicate = EReference(ordered=True, unique=True, containment=True, derived=False)
 
     def __init__(self, *, predicate=None):
@@ -176,10 +148,9 @@ class TableFilter(EObject, metaclass=MetaEClass):
 
 
 class RuleForILTablePart(EObject, metaclass=MetaEClass):
+
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    columns = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+    columns = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     whereClause = EReference(ordered=True, unique=True, containment=True, derived=False)
 
     def __init__(self, *, name=None, columns=None, whereClause=None):
@@ -200,6 +171,7 @@ class RuleForILTablePart(EObject, metaclass=MetaEClass):
 
 @abstract
 class Predicate(EObject, metaclass=MetaEClass):
+
     def __init__(self):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
@@ -209,9 +181,8 @@ class Predicate(EObject, metaclass=MetaEClass):
 
 @abstract
 class ELModelElement(EObject, metaclass=MetaEClass):
-    eAnnotations = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    eAnnotations = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, eAnnotations=None):
         # if kwargs:
@@ -224,6 +195,7 @@ class ELModelElement(EObject, metaclass=MetaEClass):
 
 
 class ELStringToStringMapEntry(EObject, metaclass=MetaEClass):
+
     key = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
@@ -241,15 +213,10 @@ class ELStringToStringMapEntry(EObject, metaclass=MetaEClass):
 
 
 class Report(EObject, metaclass=MetaEClass):
-    outputLayer = EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
-    rows = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
-    columns = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
+    rows = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    columns = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, outputLayer=None, rows=None, columns=None):
         # if kwargs:
@@ -268,9 +235,8 @@ class Report(EObject, metaclass=MetaEClass):
 
 
 class ReportRow(EObject, metaclass=MetaEClass):
-    name = EAttribute(
-        eType=EString, unique=True, derived=False, changeable=True, iD=True
-    )
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
 
     def __init__(self, *, name=None):
         # if kwargs:
@@ -283,9 +249,8 @@ class ReportRow(EObject, metaclass=MetaEClass):
 
 
 class ReportColumn(EObject, metaclass=MetaEClass):
-    name = EAttribute(
-        eType=EString, unique=True, derived=False, changeable=True, iD=True
-    )
+
+    name = EAttribute(eType=EString, unique=True, derived=False, changeable=True, iD=True)
 
     def __init__(self, *, name=None):
         # if kwargs:
@@ -298,17 +263,14 @@ class ReportColumn(EObject, metaclass=MetaEClass):
 
 
 class ReportCell(EObject, metaclass=MetaEClass):
+
     datapointID = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     row = EReference(ordered=True, unique=True, containment=False, derived=False)
     column = EReference(ordered=True, unique=True, containment=False, derived=False)
-    filters = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+    filters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     metric = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(
-        self, *, row=None, column=None, filters=None, metric=None, datapointID=None
-    ):
+    def __init__(self, *, row=None, column=None, filters=None, metric=None, datapointID=None):
         # if kwargs:
         #    raise AttributeError('unexpected arguments: {}'.format(kwargs))
 
@@ -331,13 +293,10 @@ class ReportCell(EObject, metaclass=MetaEClass):
 
 
 class Filter(EObject, metaclass=MetaEClass):
-    outputLayer = EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
+
+    outputLayer = EReference(ordered=True, unique=True, containment=False, derived=False)
     operation = EReference(ordered=True, unique=True, containment=False, derived=False)
-    member = EReference(
-        ordered=True, unique=True, containment=False, derived=False, upper=-1
-    )
+    member = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
 
     def __init__(self, *, outputLayer=None, operation=None, member=None):
         # if kwargs:
@@ -356,10 +315,9 @@ class Filter(EObject, metaclass=MetaEClass):
 
 
 class RowFilters(EObject, metaclass=MetaEClass):
+
     row = EReference(ordered=True, unique=True, containment=False, derived=False)
-    filters = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+    filters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     metric = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, row=None, filters=None, metric=None):
@@ -379,10 +337,9 @@ class RowFilters(EObject, metaclass=MetaEClass):
 
 
 class ColumnFilters(EObject, metaclass=MetaEClass):
+
     column = EReference(ordered=True, unique=True, containment=False, derived=False)
-    filters = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+    filters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     metric = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, column=None, filters=None, metric=None):
@@ -402,9 +359,8 @@ class ColumnFilters(EObject, metaclass=MetaEClass):
 
 
 class WholeReportFilters(EObject, metaclass=MetaEClass):
-    filters = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    filters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, filters=None):
         # if kwargs:
@@ -417,11 +373,11 @@ class WholeReportFilters(EObject, metaclass=MetaEClass):
 
 
 class SelectColumnMemberAs(SelectColumn):
-    memberAsConstant = EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
+
+    memberAsConstant = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, memberAsConstant=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if memberAsConstant is not None:
@@ -429,9 +385,11 @@ class SelectColumnMemberAs(SelectColumn):
 
 
 class SelectColumnAttributeAs(SelectColumn):
+
     attribute = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, attribute=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if attribute is not None:
@@ -439,9 +397,11 @@ class SelectColumnAttributeAs(SelectColumn):
 
 
 class SelectDerivedColumnAs(SelectColumn):
+
     attribute = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, attribute=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if attribute is not None:
@@ -449,9 +409,11 @@ class SelectDerivedColumnAs(SelectColumn):
 
 
 class SelectValueAs(SelectColumn):
+
     value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
     def __init__(self, *, value=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if value is not None:
@@ -459,11 +421,12 @@ class SelectValueAs(SelectColumn):
 
 
 class GenerationRulesModule(Module):
-    rulesForReport = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    rulesForReport = EReference(ordered=True, unique=True,
+                                containment=True, derived=False, upper=-1)
 
     def __init__(self, *, rulesForReport=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if rulesForReport:
@@ -471,11 +434,11 @@ class GenerationRulesModule(Module):
 
 
 class AndPredicate(Predicate):
-    operands = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    operands = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, operands=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if operands:
@@ -483,11 +446,11 @@ class AndPredicate(Predicate):
 
 
 class OrPredicate(Predicate):
-    operands = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    operands = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, operands=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if operands:
@@ -495,9 +458,11 @@ class OrPredicate(Predicate):
 
 
 class NotPredicate(Predicate):
+
     operand = EReference(ordered=True, unique=True, containment=True, derived=False)
 
     def __init__(self, *, operand=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if operand is not None:
@@ -505,16 +470,14 @@ class NotPredicate(Predicate):
 
 
 class AttributePredicate(Predicate):
-    comparitor = EAttribute(
-        eType=Comparitor, unique=True, derived=False, changeable=True
-    )
+
+    comparitor = EAttribute(eType=Comparitor, unique=True, derived=False, changeable=True)
     value = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     attribute1 = EReference(ordered=True, unique=True, containment=False, derived=False)
     member = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(
-        self, *, attribute1=None, comparitor=None, member=None, value=None, **kwargs
-    ):
+    def __init__(self, *, attribute1=None, comparitor=None, member=None, value=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if comparitor is not None:
@@ -532,9 +495,11 @@ class AttributePredicate(Predicate):
 
 @abstract
 class ELNamedElement(ELModelElement):
+
     name = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
     def __init__(self, *, name=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if name is not None:
@@ -542,13 +507,13 @@ class ELNamedElement(ELModelElement):
 
 
 class ELPackage(Module):
+
     nsURI = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     nsPrefix = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
-    eClassifiers = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+    eClassifiers = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, eClassifiers=None, nsURI=None, nsPrefix=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if nsURI is not None:
@@ -562,12 +527,12 @@ class ELPackage(Module):
 
 
 class ELAnnotation(ELModelElement):
-    details = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    details = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
     source = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, details=None, source=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if details:
@@ -578,11 +543,11 @@ class ELAnnotation(ELModelElement):
 
 
 class CellBasedReport(Report):
-    reportCells = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    reportCells = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, reportCells=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if reportCells:
@@ -590,11 +555,11 @@ class CellBasedReport(Report):
 
 
 class ReportModule(Module):
-    reports = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    reports = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, reports=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if reports:
@@ -602,19 +567,13 @@ class ReportModule(Module):
 
 
 class RowColumnBasedReport(Report):
-    columnFilters = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
-    rowFilters = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
-    wholeReportFilters = EReference(
-        ordered=True, unique=True, containment=True, derived=False
-    )
 
-    def __init__(
-        self, *, columnFilters=None, rowFilters=None, wholeReportFilters=None, **kwargs
-    ):
+    columnFilters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    rowFilters = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+    wholeReportFilters = EReference(ordered=True, unique=True, containment=True, derived=False)
+
+    def __init__(self, *, columnFilters=None, rowFilters=None, wholeReportFilters=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if columnFilters:
@@ -629,11 +588,12 @@ class RowColumnBasedReport(Report):
 
 @abstract
 class ELClassifier(ELNamedElement):
-    ePackage = EReference(
-        ordered=True, unique=True, containment=False, derived=False, transient=True
-    )
+
+    ePackage = EReference(ordered=True, unique=True, containment=False,
+                          derived=False, transient=True)
 
     def __init__(self, *, ePackage=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if ePackage is not None:
@@ -641,10 +601,12 @@ class ELClassifier(ELNamedElement):
 
 
 class ELEnumLiteral(ELNamedElement):
+
     value = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     literal = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
     def __init__(self, *, value=None, literal=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if value is not None:
@@ -656,11 +618,13 @@ class ELEnumLiteral(ELNamedElement):
 
 @abstract
 class ELTypedElement(ELNamedElement):
+
     upperBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     lowerBound = EAttribute(eType=EInt, unique=True, derived=False, changeable=True)
     eType = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, eType=None, upperBound=None, lowerBound=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if upperBound is not None:
@@ -674,10 +638,12 @@ class ELTypedElement(ELNamedElement):
 
 
 class ELAnnotationDirective(ELNamedElement):
+
     sourceURI = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
     module = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, module=None, sourceURI=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if sourceURI is not None:
@@ -688,26 +654,15 @@ class ELAnnotationDirective(ELNamedElement):
 
 
 class ELClass(ELClassifier):
-    eAbstract = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    eSuperTypes = EReference(
-        ordered=True, unique=True, containment=False, derived=False, upper=-1
-    )
-    eStructuralFeatures = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
-    eOperations = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
 
-    def __init__(
-        self,
-        *,
-        eAbstract=None,
-        eSuperTypes=None,
-        eStructuralFeatures=None,
-        eOperations=None,
-        **kwargs,
-    ):
+    eAbstract = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
+    eSuperTypes = EReference(ordered=True, unique=True, containment=False, derived=False, upper=-1)
+    eStructuralFeatures = EReference(ordered=True, unique=True,
+                                     containment=True, derived=False, upper=-1)
+    eOperations = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
+
+    def __init__(self, *, eAbstract=None, eSuperTypes=None, eStructuralFeatures=None, eOperations=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if eAbstract is not None:
@@ -724,11 +679,11 @@ class ELClass(ELClassifier):
 
 
 class ELDataType(ELClassifier):
-    industryName = EAttribute(
-        eType=EString, unique=True, derived=False, changeable=True
-    )
+
+    industryName = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
     def __init__(self, *, industryName=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if industryName is not None:
@@ -736,9 +691,11 @@ class ELDataType(ELClassifier):
 
 
 class ELOperation(ELTypedElement):
+
     body = EAttribute(eType=EString, unique=True, derived=False, changeable=True)
 
     def __init__(self, *, body=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if body is not None:
@@ -746,23 +703,27 @@ class ELOperation(ELTypedElement):
 
 
 class ELParameter(ELTypedElement):
+
     def __init__(self, **kwargs):
+
         super().__init__(**kwargs)
 
 
 @abstract
 class ELStructuralFeature(ELTypedElement):
+
     def __init__(self, **kwargs):
+
         super().__init__(**kwargs)
 
 
 class ELAttribute(ELStructuralFeature):
+
     iD = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
-    eAttributeType = EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
+    eAttributeType = EReference(ordered=True, unique=True, containment=False, derived=False)
 
     def __init__(self, *, iD=None, eAttributeType=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if iD is not None:
@@ -773,11 +734,11 @@ class ELAttribute(ELStructuralFeature):
 
 
 class ELEnum(ELDataType):
-    eLiterals = EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
+
+    eLiterals = EReference(ordered=True, unique=True, containment=True, derived=False, upper=-1)
 
     def __init__(self, *, eLiterals=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if eLiterals:
@@ -785,17 +746,13 @@ class ELEnum(ELDataType):
 
 
 class ELReference(ELStructuralFeature):
-    containment = EAttribute(
-        eType=EBoolean, unique=True, derived=False, changeable=True
-    )
-    eReferenceType = EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
+
+    containment = EAttribute(eType=EBoolean, unique=True, derived=False, changeable=True)
+    eReferenceType = EReference(ordered=True, unique=True, containment=False, derived=False)
     eOpposite = EReference(ordered=True, unique=True, containment=False, derived=False)
 
-    def __init__(
-        self, *, containment=None, eReferenceType=None, eOpposite=None, **kwargs
-    ):
+    def __init__(self, *, containment=None, eReferenceType=None, eOpposite=None, **kwargs):
+
         super().__init__(**kwargs)
 
         if containment is not None:

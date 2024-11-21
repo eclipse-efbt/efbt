@@ -18,7 +18,6 @@ from django.apps import AppConfig
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
 
-
 class RunImportInputModelFromSQLDev(AppConfig):
     """
     Django AppConfig for running the website to SDD model conversion process.
@@ -27,8 +26,9 @@ class RunImportInputModelFromSQLDev(AppConfig):
     to convert website data into an SDD  model.
     """
 
-    path = os.path.join(settings.BASE_DIR, "birds_nest")
-    # path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    #path = os.path.join(settings.BASE_DIR, 'birds_nest')
+
 
     def ready(self):
         """
@@ -40,23 +40,30 @@ class RunImportInputModelFromSQLDev(AppConfig):
         from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
 
         from pybirdai.process_steps.input_model.import_input_model import (
-            ImportInputModel,
+            ImportInputModel
         )
         from pybirdai.context.context import Context
 
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
-        sdd_context.file_directory = os.path.join(base_dir, "resources")
-        sdd_context.output_directory = os.path.join(base_dir, "results")
-
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.output_directory = os.path.join(base_dir, 'results')
+        
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
         # Create reference domains, variables, and cubes
-        ImportInputModel.import_input_model(sdd_context, context)
+        ImportInputModel.import_input_model(
+             sdd_context, context
+        )
 
+       
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     django.setup()
-    RunImportInputModelFromSQLDev("pybirdai", "birds_nest").ready()
+    RunImportInputModelFromSQLDev('pybirdai', 'birds_nest').ready()
+
+
+      
+    

@@ -19,29 +19,28 @@ import django
 from django.apps import AppConfig
 from django.conf import settings
 
-
 class RunCreateExecutableJoins(AppConfig):
     """Django AppConfig for running the creation of generation rules."""
 
-    path = os.path.join(settings.BASE_DIR, "birds_nest")
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
     def create_python_joins():
         """Execute the process of creating generation rules when the app is ready."""
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
-            ImportDatabaseToSDDModel,
+            ImportDatabaseToSDDModel
         )
         from pybirdai.context.sdd_context_django import SDDContext
         from pybirdai.context.context import Context
         from pybirdai.process_steps.pybird.create_python_django_transformations import (
-            CreatePythonTransformations,
+            CreatePythonTransformations
         )
 
-        base_dir = settings.BASE_DIR
+        base_dir = settings.BASE_DIR 
         sdd_context = SDDContext()
-        sdd_context.file_directory = os.path.join(base_dir, "resources")
-        sdd_context.output_directory = os.path.join(base_dir, "results")
-
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.output_directory = os.path.join(base_dir, 'results')
+        
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
@@ -51,5 +50,5 @@ class RunCreateExecutableJoins(AppConfig):
 
 
 def ready(self):
-    # This method is still needed for Django's AppConfig
-    pass
+        # This method is still needed for Django's AppConfig
+        pass

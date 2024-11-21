@@ -26,30 +26,30 @@ from pybirdai.process_steps.sqldeveloper_import.import_sqldev_ldm_to_django impo
     RegDNAToDJango,
 )
 
-
 class RunCreateDjangoModels(AppConfig):
     """AppConfig for creating Django models from SQL Developer Logical Data Model."""
 
-    path = os.path.join(settings.BASE_DIR, "birds_nest")
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
+
 
     def ready(self):
         """Prepare the context and run the import and conversion processes."""
         base_dir = settings.BASE_DIR
-
+        
         sdd_context = SDDContext()
-        sdd_context.file_directory = os.path.join(base_dir, "resources")
-        sdd_context.output_directory = os.path.join(base_dir, "results")
-
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.output_directory = os.path.join(base_dir, 'results')
+        
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
-        if context.ldm_or_il == "ldm":
+        if context.ldm_or_il == 'ldm':
             SQLDevLDMImport.do_import(self, context)
         else:
             SQLDeveloperILImport.do_import(self, context)
         RegDNAToDJango.convert(self, context)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     django.setup()
-    RunCreateDjangoModels("pybirdai", "birds_nest").ready()
+    RunCreateDjangoModels('pybirdai', 'birds_nest').ready()
+

@@ -18,7 +18,6 @@ from django.apps import AppConfig
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
 
-
 class RunExecuteDataPoint(AppConfig):
     """
     Django AppConfig for running the website to SDD model conversion process.
@@ -27,8 +26,8 @@ class RunExecuteDataPoint(AppConfig):
     to convert website data into an SDD  model.
     """
 
-    path = os.path.join(settings.BASE_DIR, "birds_nest")
-    # path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    #path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
     def run_execute_data_point(data_point_id):
@@ -40,21 +39,32 @@ class RunExecuteDataPoint(AppConfig):
         """
         from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
 
-        from pybirdai.process_steps.pybird.execute_datapoint import ExecuteDataPoint
+        from pybirdai.process_steps.pybird.execute_datapoint import (
+            ExecuteDataPoint
+        )
         from pybirdai.context.context import Context
 
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
-        sdd_context.file_directory = os.path.join(base_dir, "resources")
-        sdd_context.output_directory = os.path.join(base_dir, "results")
-
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.output_directory = os.path.join(base_dir, 'results')
+        
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
         # Create reference domains, variables, and cubes
-        return ExecuteDataPoint.execute_data_point(data_point_id)
+        return ExecuteDataPoint.execute_data_point(
+             data_point_id
+        )
 
     def ready(self):
         # This method is still needed for Django's AppConfig
         pass
+
+       
+
+
+
+      
+    

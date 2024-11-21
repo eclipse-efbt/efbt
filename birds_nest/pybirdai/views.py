@@ -18,26 +18,14 @@ from django.db import transaction
 from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from .bird_meta_data_model import (
-    VARIABLE_MAPPING,
-    VARIABLE_MAPPING_ITEM,
-    MEMBER_MAPPING,
-    MEMBER_MAPPING_ITEM,
-    CUBE_LINK,
-    CUBE_STRUCTURE_ITEM_LINK,
-    MAPPING_TO_CUBE,
-    MAPPING_DEFINITION,
+    VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
+    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION
 )
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
-from .entry_points.import_report_templates_from_website import (
-    RunImportReportTemplatesFromWebsite,
-)
-from .entry_points.import_semantic_integrations_from_website import (
-    RunImportSemanticIntegrationsFromWebsite,
-)
-from .entry_points.import_hierarchy_analysis_from_website import (
-    RunImportHierarchiesFromWebsite,
-)
+from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
+from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
 from .entry_points.create_filters import RunCreateFilters
 from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
 from .entry_points.delete_joins_metadata import RunDeleteJoinsMetadata
@@ -55,283 +43,269 @@ from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDat
 from .entry_points.upload_joins_configuration import UploadJoinsConfiguration
 from django.template.loader import render_to_string
 
-
 # Helper function for paginated modelformset views
-def paginated_modelformset_view(
-    request,
-    model,
-    template_name,
-    formset_fields="__all__",
-    order_by="id",
-    items_per_page=20,
-):
-    page_number = request.GET.get("page", 1)
+def paginated_modelformset_view(request, model, template_name, formset_fields='__all__', order_by='id', items_per_page=20):
+    page_number = request.GET.get('page', 1)
     all_items = model.objects.all().order_by(order_by)
     paginator = Paginator(all_items, items_per_page)
     page_obj = paginator.get_page(page_number)
-
+    
     ModelFormSet = modelformset_factory(model, fields=formset_fields, extra=0)
-
-    if request.method == "POST":
+    
+    if request.method == 'POST':
         formset = ModelFormSet(request.POST, queryset=page_obj.object_list)
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
-            messages.success(request, f"{model.__name__} updated successfully.")
+            messages.success(request, f'{model.__name__} updated successfully.')
             return redirect(request.path)
         else:
-            messages.error(
-                request, f"There was an error updating the {model.__name__}."
-            )
+            messages.error(request, f'There was an error updating the {model.__name__}.')
     else:
         formset = ModelFormSet(queryset=page_obj.object_list)
-
+    
     context = {
-        "formset": formset,
-        "page_obj": page_obj,
+        'formset': formset,
+        'page_obj': page_obj,
     }
     return render(request, template_name, context)
 
-
 def show_report(request, report_id):
-    return render(request, "pybirdai/" + report_id)
-
+    return render(request, 'pybirdai/' + report_id)
 
 # Views for running various processes
 def run_create_joins_meta_data(request):
-    if request.GET.get("execute") == "true":
+    if request.GET.get('execute') == 'true':
         # Execute the actual task
-        app_config = RunCreateJoinsMetadata("pybirdai", "birds_nest")
+        app_config = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
         app_config.run_create_joins_meta_data()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Creating Joins Metadata (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Joins Metadata created successfully.",
-        "/pybirdai/create-transformation-rules-in-smcubes",
-        "Create Transformations Rules MetaData",
+        '/pybirdai/create-transformation-rules-in-smcubes',
+        "Create Transformations Rules MetaData"
     )
 
-
 def create_django_models(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunCreateDjangoModels("pybirdai", "birds_nest")
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
         app_config.ready()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Creating Django Models",
         "Created Django Models successfully.",
-        "/pybirdai/create-bird-database",
-        "Create BIRD Database",
+        '/pybirdai/create-bird-database',
+        "Create BIRD Database"
     )
 
-
 def run_create_python_joins(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunCreateExecutableJoins("pybirdai", "birds_nest")
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
         app_config.create_python_joins()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Creating Python Joins (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Created Executable Joins in Python",
-        "/pybirdai/create-transformation-rules-in-python",
-        "Create Transformations Rules in Python",
+        '/pybirdai/create-transformation-rules-in-python',
+        "Create Transformations Rules in Python"
     )
+    
 
 
 def run_delete_joins_meta_data(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunDeleteJoinsMetadata("pybirdai", "birds_nest")
+    if request.GET.get('execute') == 'true':
+        app_config = RunDeleteJoinsMetadata('pybirdai', 'birds_nest')
         app_config.run_delete_joins_meta_data()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Deleting Joins Metadata",
         "Deleted Transformation Metadata successfully",
-        "/pybirdai/create-transformation-rules-in-smcubes",
-        "Create Transformations Rules MetaData",
+        '/pybirdai/create-transformation-rules-in-smcubes',
+        "Create Transformations Rules MetaData"
     )
 
-
 def delete_existing_contents_of_bird_metadata_database(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
+    if request.GET.get('execute') == 'true':
+        app_config = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
         app_config.run_delete_bird_metadata_database()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Deleting Bird Metadata Database",
         "Deleted Bird Metadata Database",
-        "/pybirdai/populate-bird-metadata-database",
-        "Populate BIRD Metadata Database",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
     )
 
-
 def run_import_semantic_integrations_from_website(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunImportSemanticIntegrationsFromWebsite("pybirdai", "birds_nest")
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
         app_config.import_mappings_from_website()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Importing Semantic Integrations (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Semantic Integrations completed successfully.",
-        "/pybirdai/create-transformation-rules-configuration",
-        "Create Transformations Rules Configuration",
+        '/pybirdai/create-transformation-rules-configuration',
+        "Create Transformations Rules Configuration"
     )
 
-
 def run_import_input_model_from_sqldev(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunImportInputModelFromSQLDev("pybirdai", "birds_nest")
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
         app_config.ready()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Importing Input Model from SQLDev (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Input Model from SQLDev process completed successfully",
-        "/pybirdai/populate-bird-metadata-database",
-        "Populate BIRD Metadata Database",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
     )
 
 
-def run_import_hierarchies(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunImportHierarchiesFromWebsite("pybirdai", "birds_nest")
-        app_config.import_hierarchies()
-        return JsonResponse({"status": "success"})
 
+
+def run_import_hierarchies(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
+        app_config.import_hierarchies()
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Importing Hierarchies (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import hierarchies completed successfully.",
-        "/pybirdai/create-transformation-rules-configuration",
-        "Create Transformations Rules Configuration",
+        '/pybirdai/create-transformation-rules-configuration',
+        "Create Transformations Rules Configuration"
     )
-
-
+    
+ 
 def import_report_templates(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunImportReportTemplatesFromWebsite("pybirdai", "birds_nest")
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
         app_config.run_import()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Importing Report Templates (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Report templates from website completed successfully.",
-        "/pybirdai/populate-bird-metadata-database",
-        "Populate BIRD Metadata Database",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
     )
 
-
 def run_create_filters(request):
-    if request.GET.get("execute") == "true":
+    if request.GET.get('execute') == 'true':
         # Execute the actual task
-        app_config = RunCreateFilters("pybirdai", "birds_nest")
+        app_config = RunCreateFilters('pybirdai', 'birds_nest')
         app_config.run_create_filters()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Creating Filters (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Filters created successfully.",
-        "/pybirdai/create-transformation-rules-in-smcubes",
-        "Create Transformations Rules MetaData",
+        '/pybirdai/create-transformation-rules-in-smcubes',
+        "Create Transformations Rules MetaData"
     )
 
 
 def run_create_executable_filters(request):
-    if request.GET.get("execute") == "true":
-        app_config = RunCreateExecutableFilters("pybirdai", "birds_nest")
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
         app_config.run_create_executable_filters()
-        return JsonResponse({"status": "success"})
-
+        return JsonResponse({'status': 'success'})
+    
     return create_response_with_loading(
         request,
         "Creating Executable Filters (approx 10 minutes on a fast desktop, dont press the back button on this web page)",
         "Create executable filters process completed successfully",
-        "/pybirdai/create-transformation-rules-in-python",
-        "Create Transformations Rules in Python",
+        '/pybirdai/create-transformation-rules-in-python',
+        "Create Transformations Rules in Python"
     )
 
-
 def upload_sqldev_eil_files(request):
-    if request.method == "GET":
+    if request.method == 'GET':
         # Show the upload form
-        return render(request, "pybirdai/upload_sqldev_eil_files.html")
-    elif request.method == "POST":
+        return render(request, 'pybirdai/upload_sqldev_eil_files.html')
+    elif request.method == 'POST':
         # Handle the file upload
-
-        app_config = UploadSQLDevEILFiles("pybirdai", "birds_nest")
+        
+        app_config = UploadSQLDevEILFiles('pybirdai', 'birds_nest')
         app_config.upload_sqldev_eil_files(request)
-
-        # result = app_config.upload_sqldev_eil_files()
-
-        # if result['status'] == 'success':
+        
+        #result = app_config.upload_sqldev_eil_files()
+        
+        #if result['status'] == 'success':
         #   messages.success(request, 'Files uploaded successfully')
-        # else:
+        #else:
         #    messages.error(request, result['message'])
-
+        
         html_response = f"""
         <h3>Uploaded SQLDeveloper EILFiles.</h3>
 
         <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-bird-database')}">Create BIRD Database</a></p>
     """
     return HttpResponse(html_response)
-
+    
 
 def upload_technical_export_files(request):
-    if request.method == "GET":
+    if request.method == 'GET':
         # Show the upload form
-        return render(request, "pybirdai/upload_technical_export_files.html")
-    elif request.method == "POST":
+        return render(request, 'pybirdai/upload_technical_export_files.html')
+    elif request.method == 'POST':
         # Handle the file upload
-
-        app_config = UploadTechnicalExportFiles("pybirdai", "birds_nest")
+        
+        app_config = UploadTechnicalExportFiles('pybirdai', 'birds_nest')
         app_config.upload_technical_export_files(request)
-
-        # result = app_config.upload_sqldev_eil_files()
-
-        # if result['status'] == 'success':
+        
+        #result = app_config.upload_sqldev_eil_files()
+        
+        #if result['status'] == 'success':
         #   messages.success(request, 'Files uploaded successfully')
-        # else:
+        #else:
         #    messages.error(request, result['message'])
-
+            
+       
         html_response = f"""
             <h3>Uploaded Technical Export Files.</h3>
 
             <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
         """
         return HttpResponse(html_response)
-
-
+    
 def upload_joins_configuration(request):
-    if request.method == "GET":
+    
+    if request.method == 'GET':
         # Show the upload form
-        return render(request, "pybirdai/upload_joins_configuration.html")
-    elif request.method == "POST":
+        return render(request, 'pybirdai/upload_joins_configuration.html')
+    elif request.method == 'POST':
         # Handle the file upload
-
-        app_config = UploadJoinsConfiguration("pybirdai", "birds_nest")
+        
+        app_config = UploadJoinsConfiguration('pybirdai', 'birds_nest')
         app_config.upload_joins_configuration(request)
-
-        # result = app_config.upload_sqldev_eil_files()
-
-        # if result['status'] == 'success':
+        
+        #result = app_config.upload_sqldev_eil_files()
+        
+        #if result['status'] == 'success':
         #   messages.success(request, 'Files uploaded successfully')
-        # else:
+        #else:
         #    messages.error(request, result['message'])
-
+            
+        
         html_response = f"""
             <h3>Uploaded Joins Configuration Files.</h3>
 
@@ -339,98 +313,55 @@ def upload_joins_configuration(request):
         """
         return HttpResponse(html_response)
 
-
 # Basic views
 def index(request):
     return HttpResponse("Hello, world. You're at the pybirdai index.")
 
-
 def home_view(request):
-    return render(request, "pybirdai/home.html")
-
+    return render(request, 'pybirdai/home.html')
 
 # CRUD views for various models
 def edit_variable_mappings(request):
-    return paginated_modelformset_view(
-        request,
-        VARIABLE_MAPPING,
-        "pybirdai/edit_variable_mappings.html",
-        order_by="variable_mapping_id",
-    )
-
+    return paginated_modelformset_view(request, VARIABLE_MAPPING, 'pybirdai/edit_variable_mappings.html', order_by='variable_mapping_id')
 
 def edit_variable_mapping_items(request):
-    return paginated_modelformset_view(
-        request, VARIABLE_MAPPING_ITEM, "pybirdai/edit_variable_mapping_items.html"
-    )
-
+    return paginated_modelformset_view(request, VARIABLE_MAPPING_ITEM, 'pybirdai/edit_variable_mapping_items.html')
 
 def edit_member_mappings(request):
-    return paginated_modelformset_view(
-        request,
-        MEMBER_MAPPING,
-        "pybirdai/edit_member_mappings.html",
-        order_by="member_mapping_id",
-    )
-
+    return paginated_modelformset_view(request, MEMBER_MAPPING, 'pybirdai/edit_member_mappings.html', order_by='member_mapping_id')
 
 def edit_member_mapping_items(request):
-    return paginated_modelformset_view(
-        request, MEMBER_MAPPING_ITEM, "pybirdai/edit_member_mapping_items.html"
-    )
-
+    return paginated_modelformset_view(request, MEMBER_MAPPING_ITEM, 'pybirdai/edit_member_mapping_items.html')
 
 def edit_cube_links(request):
-    return paginated_modelformset_view(
-        request, CUBE_LINK, "pybirdai/edit_cube_links.html", order_by="cube_link_id"
-    )
-
+    return paginated_modelformset_view(request, CUBE_LINK, 'pybirdai/edit_cube_links.html', order_by='cube_link_id')
 
 def edit_cube_structure_item_links(request):
-    return paginated_modelformset_view(
-        request,
-        CUBE_STRUCTURE_ITEM_LINK,
-        "pybirdai/edit_cube_structure_item_links.html",
-        order_by="cube_structure_item_link_id",
-    )
-
+    return paginated_modelformset_view(request, CUBE_STRUCTURE_ITEM_LINK, 'pybirdai/edit_cube_structure_item_links.html', order_by='cube_structure_item_link_id')
 
 def edit_mapping_to_cubes(request):
-    return paginated_modelformset_view(
-        request, MAPPING_TO_CUBE, "pybirdai/edit_mapping_to_cubes.html"
-    )
-
+    return paginated_modelformset_view(request, MAPPING_TO_CUBE, 'pybirdai/edit_mapping_to_cubes.html')
 
 def edit_mapping_definitions(request):
-    return paginated_modelformset_view(
-        request,
-        MAPPING_DEFINITION,
-        "pybirdai/edit_mapping_definitions.html",
-        order_by="mapping_id",
-    )
-
+    return paginated_modelformset_view(request, MAPPING_DEFINITION, 'pybirdai/edit_mapping_definitions.html', order_by='mapping_id')
 
 # Delete views for various models
 def delete_item(request, model, id_field, redirect_view):
     item = get_object_or_404(model, **{id_field: request.POST.get(id_field)})
-    if request.method == "POST":
+    if request.method == 'POST':
         item.delete()
-        messages.success(request, f"{model.__name__} deleted successfully.")
+        messages.success(request, f'{model.__name__} deleted successfully.')
     else:
-        messages.error(request, "Invalid request for deletion.")
-    return redirect(f"pybirdai:{redirect_view}")
-
+        messages.error(request, 'Invalid request for deletion.')
+    return redirect(f'pybirdai:{redirect_view}')
 
 def delete_variable_mapping(request, variable_mapping_id):
-    return delete_item(
-        request, VARIABLE_MAPPING, "variable_mapping_id", "edit_variable_mappings"
-    )
-
+    return delete_item(request, VARIABLE_MAPPING, 'variable_mapping_id', 'edit_variable_mappings')
 
 def execute_data_point(request, data_point_id):
-    app_config = RunExecuteDataPoint("pybirdai", "birds_nest")
+    app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
     result = app_config.run_execute_data_point(data_point_id)
-
+    
     html_response = f"""
 
         <h3>DataPoint Execution Results</h3>
@@ -441,98 +372,76 @@ def execute_data_point(request, data_point_id):
     """
     return HttpResponse(html_response)
 
-
 def delete_variable_mapping_item(request, item_id):
-    return delete_item(
-        request, VARIABLE_MAPPING_ITEM, "id", "edit_variable_mapping_items"
-    )
-
+    return delete_item(request, VARIABLE_MAPPING_ITEM, 'id', 'edit_variable_mapping_items')
 
 def delete_member_mapping(request, member_mapping_id):
-    return delete_item(
-        request, MEMBER_MAPPING, "member_mapping_id", "edit_member_mappings"
-    )
-
+    return delete_item(request, MEMBER_MAPPING, 'member_mapping_id', 'edit_member_mappings')
 
 def delete_member_mapping_item(request, item_id):
-    return delete_item(request, MEMBER_MAPPING_ITEM, "id", "edit_member_mapping_items")
-
+    return delete_item(request, MEMBER_MAPPING_ITEM, 'id', 'edit_member_mapping_items')
 
 def delete_cube_link(request, cube_link_id):
-    return delete_item(request, CUBE_LINK, "cube_link_id", "edit_cube_links")
-
+    return delete_item(request, CUBE_LINK, 'cube_link_id', 'edit_cube_links')
 
 def delete_cube_structure_item_link(request, cube_structure_item_link_id):
-    return delete_item(
-        request,
-        CUBE_STRUCTURE_ITEM_LINK,
-        "cube_structure_item_link_id",
-        "edit_cube_structure_item_links",
-    )
-
+    return delete_item(request, CUBE_STRUCTURE_ITEM_LINK, 'cube_structure_item_link_id', 'edit_cube_structure_item_links')
 
 def delete_mapping_to_cube(request, mapping_to_cube_id):
-    return delete_item(request, MAPPING_TO_CUBE, "id", "edit_mapping_to_cubes")
-
+    return delete_item(request, MAPPING_TO_CUBE, 'id', 'edit_mapping_to_cubes')
 
 def delete_mapping_definition(request, mapping_id):
-    return delete_item(
-        request, MAPPING_DEFINITION, "mapping_id", "edit_mapping_definitions"
-    )
-
+    return delete_item(request, MAPPING_DEFINITION, 'mapping_id', 'edit_mapping_definitions')
 
 def list_lineage_files(request):
-    lineage_dir = Path(settings.BASE_DIR) / "results" / "lineage"
+    lineage_dir = Path(settings.BASE_DIR) / 'results' / 'lineage'
     csv_files = []
-
+    
     if lineage_dir.exists():
-        csv_files = [f.name for f in lineage_dir.glob("*.csv")]
-
-    return render(request, "pybirdai/lineage_files.html", {"csv_files": csv_files})
-
+        csv_files = [f.name for f in lineage_dir.glob('*.csv')]
+    
+    return render(request, 'pybirdai/lineage_files.html', {'csv_files': csv_files})
 
 def view_csv_file(request, filename):
-    file_path = Path(settings.BASE_DIR) / "results" / "lineage" / filename
 
-    if not file_path.exists() or not filename.endswith(".csv"):
-        messages.error(request, "File not found or invalid file type")
-        return redirect("pybirdai:list_lineage_files")
-
+    file_path = Path(settings.BASE_DIR) / 'results' / 'lineage' / filename
+    
+    if not file_path.exists() or not filename.endswith('.csv'):
+        messages.error(request, 'File not found or invalid file type')
+        return redirect('pybirdai:list_lineage_files')
+    
     try:
-        with open(file_path, "r", encoding="utf-8") as csvfile:
+        with open(file_path, 'r', encoding='utf-8') as csvfile:
             csv_reader = csv.reader(csvfile)
             headers = next(csv_reader)  # Get the headers
-            data = list(csv_reader)  # Get all rows
-
+            data = list(csv_reader)     # Get all rows
+            
         # Paginate the results
         items_per_page = 50  # Adjust this number as needed
         paginator = Paginator(data, items_per_page)
-        page_number = request.GET.get("page", 1)
+        page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
-
+        
         # Calculate some statistics
         total_rows = len(data)
         num_columns = len(headers)
-
+        
         context = {
-            "filename": filename,
-            "headers": headers,
-            "page_obj": page_obj,
-            "total_rows": total_rows,
-            "num_columns": num_columns,
-            "start_index": (page_obj.number - 1) * items_per_page + 1,
-            "end_index": min(page_obj.number * items_per_page, total_rows),
+            'filename': filename,
+            'headers': headers,
+            'page_obj': page_obj,
+            'total_rows': total_rows,
+            'num_columns': num_columns,
+            'start_index': (page_obj.number - 1) * items_per_page + 1,
+            'end_index': min(page_obj.number * items_per_page, total_rows),
         }
-        return render(request, "pybirdai/view_csv.html", context)
-
+        return render(request, 'pybirdai/view_csv.html', context)
+        
     except Exception as e:
-        messages.error(request, f"Error reading file: {str(e)}")
-        return redirect("pybirdai:list_lineage_files")
+        messages.error(request, f'Error reading file: {str(e)}')
+        return redirect('pybirdai:list_lineage_files')
 
-
-def create_response_with_loading(
-    request, task_title, success_message, return_url, return_link_text
-):
+def create_response_with_loading(request, task_title, success_message, return_url, return_link_text):
     html_response = f"""
         <!DOCTYPE html>
         <html>
@@ -635,13 +544,13 @@ def create_response_with_loading(
         </body>
         </html>
     """
-
+    
     # If this is the AJAX request to execute the task
-    if request.GET.get("execute") == "true":
+    if request.GET.get('execute') == 'true':
         # Execute the actual task
         try:
-            return JsonResponse({"status": "success"})
+            return JsonResponse({'status': 'success'})
         except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)})
-
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    
     return HttpResponse(html_response)

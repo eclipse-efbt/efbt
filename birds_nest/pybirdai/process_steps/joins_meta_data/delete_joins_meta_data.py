@@ -13,28 +13,19 @@
 
 from pybirdai.bird_meta_data_model import *
 from django.apps import apps
-from django.db.models.fields import (
-    CharField,
-    DateTimeField,
-    BooleanField,
-    FloatField,
-    BigIntegerField,
-)
+from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 import os
 import csv
 from typing import List, Any
 
 from pybirdai.process_steps.joins_meta_data.ldm_search import ELDMSearch
 
-
 class TransformationMetaDataDestroyer:
     """
     A class for creating generation rules for reports and tables.
     """
 
-    def delete_joins_meta_data(
-        self, context: Any, sdd_context: Any, framework: str
-    ) -> None:
+    def delete_joins_meta_data(self, context: Any, sdd_context: Any, framework: str) -> None:
         """
         Generate generation rules for the given context and framework.
 
@@ -46,9 +37,7 @@ class TransformationMetaDataDestroyer:
         CUBE_LINK.objects.all().delete()
         CUBE_STRUCTURE_ITEM_LINK.objects.all().delete()
 
-    def delete_bird_metadata_database(
-        self, context: Any, sdd_context: Any, framework: str
-    ) -> None:
+    def delete_bird_metadata_database(self, context: Any, sdd_context: Any, framework: str) -> None:
         """
         Delete the Bird Metadata Database.
         """
@@ -83,3 +72,6 @@ class TransformationMetaDataDestroyer:
         COMBINATION.objects.all().delete()
         COMBINATION_ITEM.objects.all().delete()
         CUBE_TO_COMBINATION.objects.all().delete()
+
+
+        
