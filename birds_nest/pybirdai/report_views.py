@@ -126,6 +126,9 @@ def derivation_transformation_rules(request):
 def manual_edits(request):
     return render(request, 'pybirdai/manual_edits.html')
 
+def insert_data_into_bird_database(request):
+    return render(request, 'pybirdai/insert_data_into_bird_database.html')
+
 
 
 
