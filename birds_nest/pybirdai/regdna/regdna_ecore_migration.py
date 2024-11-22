@@ -23,7 +23,15 @@ ELEnumLiteral = ecore.EEnumLiteral
 ELClass = ecore.EClass
 ELAttribute = ecore.EAttribute
 ELReference = ecore.EReference
-
+ELEnum = ecore.EEnum
+ELOperation = ecore.EOperation
+ELParameter = ecore.EParameter
+ELStructuralFeature = ecore.EStructuralFeature
+ELDataType = ecore.EDataType
+ELClassifier = ecore.EClassifier
+ELTypedElement = ecore.ETypedElement
+ELPackage = ecore.EPackage
+ELNamedElement = ecore.ENamedElement
 
 # Custom class definitions
 class Import(ecore.EObject, metaclass=ecore.MetaEClass):
@@ -505,43 +513,6 @@ class AttributePredicate(Predicate):
             self.member = member
 
 
-@ecore.abstract
-class ELNamedElement(ELModelElement):
-    name = ecore.EAttribute(
-        eType=ecore.EString, unique=True, derived=False, changeable=True
-    )
-
-    def __init__(self, *, name=None, **kwargs):
-        super().__init__(**kwargs)
-
-        if name is not None:
-            self.name = name
-
-
-class ELPackage(Module):
-    nsURI = ecore.EAttribute(
-        eType=ecore.EString, unique=True, derived=False, changeable=True
-    )
-    nsPrefix = ecore.EAttribute(
-        eType=ecore.EString, unique=True, derived=False, changeable=True
-    )
-    eClassifiers = ecore.EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
-
-    def __init__(self, *, eClassifiers=None, nsURI=None, nsPrefix=None, **kwargs):
-        super().__init__(**kwargs)
-
-        if nsURI is not None:
-            self.nsURI = nsURI
-
-        if nsPrefix is not None:
-            self.nsPrefix = nsPrefix
-
-        if eClassifiers:
-            self.eClassifiers.extend(eClassifiers)
-
-
 class CellBasedReport(Report):
     reportCells = ecore.EReference(
         ordered=True, unique=True, containment=True, derived=False, upper=-1
@@ -591,45 +562,6 @@ class RowColumnBasedReport(Report):
         if wholeReportFilters is not None:
             self.wholeReportFilters = wholeReportFilters
 
-
-@ecore.abstract
-class ELClassifier(ELNamedElement):
-    ePackage = ecore.EReference(
-        ordered=True, unique=True, containment=False, derived=False, transient=True
-    )
-
-    def __init__(self, *, ePackage=None, **kwargs):
-        super().__init__(**kwargs)
-
-        if ePackage is not None:
-            self.ePackage = ePackage
-
-
-@ecore.abstract
-class ELTypedElement(ELNamedElement):
-    upperBound = ecore.EAttribute(
-        eType=ecore.EInt, unique=True, derived=False, changeable=True
-    )
-    lowerBound = ecore.EAttribute(
-        eType=ecore.EInt, unique=True, derived=False, changeable=True
-    )
-    eType = ecore.EReference(
-        ordered=True, unique=True, containment=False, derived=False
-    )
-
-    def __init__(self, *, eType=None, upperBound=None, lowerBound=None, **kwargs):
-        super().__init__(**kwargs)
-
-        if upperBound is not None:
-            self.upperBound = upperBound
-
-        if lowerBound is not None:
-            self.lowerBound = lowerBound
-
-        if eType is not None:
-            self.eType = eType
-
-
 class ELAnnotationDirective(ELNamedElement):
     sourceURI = ecore.EAttribute(
         eType=ecore.EString, unique=True, derived=False, changeable=True
@@ -646,50 +578,3 @@ class ELAnnotationDirective(ELNamedElement):
 
         if module is not None:
             self.module = module
-
-
-class ELDataType(ELClassifier):
-    industryName = ecore.EAttribute(
-        eType=ecore.EString, unique=True, derived=False, changeable=True
-    )
-
-    def __init__(self, *, industryName=None, **kwargs):
-        super().__init__(**kwargs)
-
-        if industryName is not None:
-            self.industryName = industryName
-
-
-class ELOperation(ELTypedElement):
-    body = ecore.EAttribute(
-        eType=ecore.EString, unique=True, derived=False, changeable=True
-    )
-
-    def __init__(self, *, body=None, **kwargs):
-        super().__init__(**kwargs)
-
-        if body is not None:
-            self.body = body
-
-
-class ELParameter(ELTypedElement):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-
-@ecore.abstract
-class ELStructuralFeature(ELTypedElement):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-
-class ELEnum(ELDataType):
-    eLiterals = ecore.EReference(
-        ordered=True, unique=True, containment=True, derived=False, upper=-1
-    )
-
-    def __init__(self, *, eLiterals=None, **kwargs):
-        super().__init__(**kwargs)
-
-        if eLiterals:
-            self.eLiterals.extend(eLiterals)
