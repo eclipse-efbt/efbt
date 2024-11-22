@@ -83,5 +83,6 @@ urlpatterns = [
     path('derivation-transformation-rules/', report_views.derivation_transformation_rules, name='derivation_transformation_rules'),
     path('manual-edits/', report_views.manual_edits, name='manual_edits'),
     path('upload-joins-configuration/', views.upload_joins_configuration, name='upload_joins_configuration'),
+    path('insert-data-into-bird-database/', report_views.insert_data_into_bird_database, name='insert_data_into_bird_database'),
 
 ]
