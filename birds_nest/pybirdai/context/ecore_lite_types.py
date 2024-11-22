@@ -13,11 +13,11 @@
 from pybirdai.regdna import ELDataType
 
 
-
 class EcoreLiteTypes(object):
-    '''
+    """
     Set up the main types for ecore lite
-    '''
+    """
+
     # we create the main 5 'primitive' data types
     e_string = ELDataType()
     e_string.name = "String"

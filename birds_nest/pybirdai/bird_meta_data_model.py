@@ -1032,8 +1032,6 @@ class CUBE_STRUCTURE_ITEM_LINK(models.Model):
         verbose_name_plural = "CUBE_STRUCTURE_ITEM_LINKs"
 
 
-
-
 class COMBINATION(models.Model):
     code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
 
@@ -1122,6 +1120,7 @@ class CUBE_TO_COMBINATION(models.Model):
     class Meta:
         verbose_name = "CUBE_TO_COMBINATION"
         verbose_name_plural = "CUBE_TO_COMBINATIONs"
+
 
 class MEMBER_LINK(models.Model):
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)

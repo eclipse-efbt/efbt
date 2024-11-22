@@ -13,6 +13,7 @@
 
 from django.db.models.fields.related import ForeignKey
 
+
 class ELDMSearch:
     """
     A class for searching and retrieving related entities in a Django model hierarchy.
@@ -36,9 +37,7 @@ class ELDMSearch:
         ELDMSearch._get_associated_entities(context, entity, entities, 0, 4)
         return entities
 
-    def _get_associated_entities(
-        context, entity, entities, link_count, link_limit
-    ):
+    def _get_associated_entities(context, entity, entities, link_count, link_limit):
         """
         Recursively retrieve associated entities through foreign key relationships.
 
@@ -61,7 +60,7 @@ class ELDMSearch:
                 related_model = feature.related_model
                 if related_model not in entities:
                     entities.append(related_model)
-                
+
                 ELDMSearch._get_superclasses_and_associated_entities(
                     context, related_model, entities, link_count + 1, link_limit
                 )
@@ -109,6 +108,3 @@ class ELDMSearch:
                 ELDMSearch._get_superclasses_and_associated_entities(
                     context, super_entity, entities, link_count, link_limit
                 )
-
-
-

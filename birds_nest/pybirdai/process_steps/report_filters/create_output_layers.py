@@ -16,6 +16,7 @@ from pybirdai.bird_meta_data_model import *
 import os
 import csv
 
+
 class CreateOutputLayers:
     def create_filters(self, context, sdd_context, framework, version):
         """
@@ -29,14 +30,14 @@ class CreateOutputLayers:
             version: The version of the framework.
         """
         file_location = os.path.join(
-            context.file_directory, "joins_configuration", f"in_scope_reports_{framework}.csv"
+            context.file_directory,
+            "joins_configuration",
+            f"in_scope_reports_{framework}.csv",
         )
-        in_scope_reports = self._get_in_scope_reports(
-            file_location, framework, version
-        )
-        
+        in_scope_reports = self._get_in_scope_reports(file_location, framework, version)
+
         for destination_cube in sdd_context.mapping_to_cube_dictionary.keys():
-            if destination_cube.replace('.', '_') in in_scope_reports:
+            if destination_cube.replace(".", "_") in in_scope_reports:
                 self.create_output_layer_for_cube_mapping(
                     context, sdd_context, destination_cube, framework
                 )
@@ -54,8 +55,8 @@ class CreateOutputLayers:
             list: A list of in-scope report names.
         """
         in_scope_reports = []
-        with open(file_location, encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        with open(file_location, encoding="utf-8") as csvfile:
+            filereader = csv.reader(csvfile, delimiter=",", quotechar='"')
             next(filereader)  # Skip header
             for row in filereader:
                 report_template = row[0]
@@ -77,13 +78,15 @@ class CreateOutputLayers:
         Returns:
             str: The generated report name.
         """
-        version_str = version.replace('.', '_')
-        if framework == 'FINREP_REF':
-            return f'M_{report_template}_REF_FINREP {version_str}'
-        elif framework == 'AE_REF':
-            return f'M_{report_template}_REF_AE{framework} {version_str}'
+        version_str = version.replace(".", "_")
+        if framework == "FINREP_REF":
+            return f"M_{report_template}_REF_FINREP {version_str}"
+        elif framework == "AE_REF":
+            return f"M_{report_template}_REF_AE{framework} {version_str}"
 
-    def create_output_layer_for_cube_mapping(self, context, sdd_context, destination_cube, framework):
+    def create_output_layer_for_cube_mapping(
+        self, context, sdd_context, destination_cube, framework
+    ):
         """
         Create an output layer for each cube mapping.
 
@@ -93,18 +96,22 @@ class CreateOutputLayers:
             destination_cube (str): The destination cube name.
             framework (str): The reporting framework.
         """
-        output_layer_cube, output_layer_cube_structure = self._create_cube_and_structure(destination_cube)
-        
-        sdd_context.rol_cube_structure_dictionary[output_layer_cube_structure.name] = output_layer_cube_structure
+        output_layer_cube, output_layer_cube_structure = (
+            self._create_cube_and_structure(destination_cube)
+        )
+
+        sdd_context.rol_cube_structure_dictionary[output_layer_cube_structure.name] = (
+            output_layer_cube_structure
+        )
         sdd_context.rol_cube_dictionary[output_layer_cube.name] = output_layer_cube
-        
+
         if context.save_derived_sdd_items:
             output_layer_cube_structure.save()
             output_layer_cube.save()
-        
-        if framework == 'FINREP_REF':
+
+        if framework == "FINREP_REF":
             sdd_context.finrep_output_cubes[output_layer_cube.name] = output_layer_cube
-        elif framework == 'AE_REF':
+        elif framework == "AE_REF":
             sdd_context.ae_output_cubes[output_layer_cube.name] = output_layer_cube
 
     def _create_cube_and_structure(self, destination_cube):
@@ -118,7 +125,7 @@ class CreateOutputLayers:
             tuple: A tuple containing the created CUBE and CUBE_STRUCTURE objects.
         """
         cube_name = self._generate_cube_name(destination_cube)
-        
+
         output_layer_cube = CUBE()
         output_layer_cube.cube_id = cube_name
         output_layer_cube.name = cube_name
@@ -126,9 +133,9 @@ class CreateOutputLayers:
         output_layer_cube_structure = CUBE_STRUCTURE()
         output_layer_cube_structure.cube_structure_id = f"{cube_name}_cube_structure"
         output_layer_cube_structure.name = f"{cube_name}_cube_structure"
-        
+
         output_layer_cube.cube_structure_id = output_layer_cube_structure
-        
+
         return output_layer_cube, output_layer_cube_structure
 
     def _generate_cube_name(self, destination_cube):
@@ -141,4 +148,4 @@ class CreateOutputLayers:
         Returns:
             str: The generated cube name.
         """
-        return destination_cube.replace('.', '_').replace(' ', '_')[2:]
+        return destination_cube.replace(".", "_").replace(" ", "_")[2:]

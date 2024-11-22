@@ -19,10 +19,11 @@ import django
 from django.apps import AppConfig
 from django.conf import settings
 
+
 class RunDeleteBirdMetadataDatabase(AppConfig):
     """Django AppConfig for running the creation of generation rules."""
 
-    path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    path = os.path.join(settings.BASE_DIR, "birds_nest")
 
     @staticmethod
     def run_delete_bird_metadata_database():
@@ -32,26 +33,23 @@ class RunDeleteBirdMetadataDatabase(AppConfig):
         from pybirdai.context.context import Context
 
         from pybirdai.process_steps.joins_meta_data.delete_joins_meta_data import (
-            TransformationMetaDataDestroyer
+            TransformationMetaDataDestroyer,
         )
 
-
-        base_dir = settings.BASE_DIR 
+        base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
-        sdd_context.file_directory = os.path.join(base_dir, 'resources')
-        sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+        sdd_context.file_directory = os.path.join(base_dir, "resources")
+        sdd_context.output_directory = os.path.join(base_dir, "results")
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-
         TransformationMetaDataDestroyer().delete_bird_metadata_database(
-            context,
-            sdd_context,
-            "FINREP_REF"
+            context, sdd_context, "FINREP_REF"
         )
 
+
 def ready(self):
-        # This method is still needed for Django's AppConfig
-        pass
+    # This method is still needed for Django's AppConfig
+    pass

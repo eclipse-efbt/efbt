@@ -18,6 +18,7 @@ from django.apps import AppConfig
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
 
+
 class UploadTechnicalExportFiles(AppConfig):
     """
     Django AppConfig for running the website to SDD model conversion process.
@@ -26,7 +27,7 @@ class UploadTechnicalExportFiles(AppConfig):
     to convert website data into an SDD  model.
     """
 
-    path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    path = os.path.join(settings.BASE_DIR, "birds_nest")
 
     @staticmethod
     def upload_technical_export_files(request):
@@ -37,30 +38,21 @@ class UploadTechnicalExportFiles(AppConfig):
         and variables, and imports the website data into the SDD model.
         """
         from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
-        from pybirdai.process_steps.upload_files.file_uploader import (
-            FileUploader
-        )
-       
+        from pybirdai.process_steps.upload_files.file_uploader import FileUploader
+
         from pybirdai.context.context import Context
 
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
-        sdd_context.file_directory = os.path.join(base_dir, 'resources')
-        sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+        sdd_context.file_directory = os.path.join(base_dir, "resources")
+        sdd_context.output_directory = os.path.join(base_dir, "results")
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
         FileUploader().upload_technical_export_files(sdd_context, request)
-        
 
     def ready(self):
         # This method is still needed for Django's AppConfig
         pass
-
-
-
-
-      
-    
