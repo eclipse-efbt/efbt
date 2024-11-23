@@ -231,7 +231,7 @@ def run_create_executable_filters(request):
     
     return create_response_with_loading(
         request,
-        "Creating Executable Filters (approx 10 minutes on a fast desktop, dont press the back button on this web page)",
+        "Creating Executable Filters (approx 2 minutes on a fast desktop, dont press the back button on this web page)",
         "Create executable filters process completed successfully",
         '/pybirdai/create-transformation-rules-in-python',
         "Create Transformations Rules in Python"
