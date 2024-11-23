@@ -257,7 +257,7 @@ def upload_sqldev_eil_files(request):
         html_response = f"""
         <h3>Uploaded SQLDeveloper EILFiles.</h3>
 
-        <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-bird-database')}">Create BIRD Database</a></p>
+        <p> Go back to <a href="/pybirdai/create-bird-database">Create BIRD Database</a></p>
     """
     return HttpResponse(html_response)
     
@@ -283,7 +283,7 @@ def upload_technical_export_files(request):
         html_response = f"""
             <h3>Uploaded Technical Export Files.</h3>
 
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/populate-bird-metadata-database')}">Populate BIRD Metadata Database</a></p>
+            <p> Go back to <a href="/pybirdai/populate-bird-metadata-database">Populate BIRD Metadata Database</a></p>
         """
         return HttpResponse(html_response)
     
@@ -309,7 +309,7 @@ def upload_joins_configuration(request):
         html_response = f"""
             <h3>Uploaded Joins Configuration Files.</h3>
 
-            <p> Go back to <a href="{request.build_absolute_uri('/pybirdai/create-transformation-rules-configuration')}">Create Transformations Rules Configuration</a></p>
+            <p> Go back to <a href="/pybirdai/create-transformation-rules-configuration">Create Transformations Rules Configuration</a></p>
         """
         return HttpResponse(html_response)
 
@@ -367,8 +367,8 @@ def execute_data_point(request, data_point_id):
         <h3>DataPoint Execution Results</h3>
         <p><strong>DataPoint ID:</strong> {data_point_id}</p>
         <p><strong>Result:</strong> {result}</p>
-        <p><a href="{request.build_absolute_uri('/pybirdai/lineage/')}">View Lineage Files</a></p>
-        <p><a href="{request.build_absolute_uri('/pybirdai/report-templates/')}">Back to the PyBIRD Reports Templates Page</a></p>
+        <p><a href="/pybirdai/lineage/">View Lineage Files</a></p>
+        <p><a href="/pybirdai/report-templates/">Back to the PyBIRD Reports Templates Page</a></p>
     """
     return HttpResponse(html_response)
 
@@ -507,7 +507,7 @@ def create_response_with_loading(request, task_title, success_message, return_ur
                 </div>
                 <div id="success-message">
                     <p>{success_message}</p>
-                    <p>Go back to <a href="{request.build_absolute_uri(return_url)}">{return_link_text}</a></p>
+                    <p>Go back to <a href="{return_url}">{return_link_text}</a></p>
                 </div>
             </div>
             <script>
