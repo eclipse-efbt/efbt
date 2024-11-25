@@ -58,7 +58,7 @@ class CreateReportFilters:
             list: A list of report templates from the CSV file.
         """
         with open(file_location, encoding='utf-8') as csvfile:
-            return [row[0] for row in csv.reader(csvfile) if row[0] != "report_template"]
+            return [row[0] for row in csv.reader(csvfile) if row and row[0] != "report_template"]
 
     def create_cell_to_variable_member_map(sdd_context):
         """
@@ -70,20 +70,27 @@ class CreateReportFilters:
         Returns:
             dict: A dictionary mapping cell IDs to lists of variable-member tuples.
         """
+        cell_positions_dict = sdd_context.cell_positions_dictionary
+        table_cell_dict = sdd_context.table_cell_dictionary
+        axis_ordinate_map = sdd_context.axis_ordinate_to_ordinate_items_map
+        
+        # Initialize with expected size
         cell_to_variable_member_tuple_map = {}
-        for cell_id, cell_positions in sdd_context.cell_positions_dictionary.items():
-            cell = sdd_context.table_cell_dictionary.get(cell_id)
-            if cell and cell.table_id:
-                for cell_position in cell_positions:
-                    axis_ordinate = cell_position.axis_ordinate_id
-                    ordinate_items = sdd_context.axis_ordinate_to_ordinate_items_map.get(
-                        axis_ordinate.axis_ordinate_id, []
-                    )
-                    for ordinate_item in ordinate_items:
-                        tuple_item = (ordinate_item.variable_id, ordinate_item.member_id)
-                        cell_to_variable_member_tuple_map.setdefault(
-                            cell_id, []
-                        ).append(tuple_item)
+        
+        for cell_id, cell_positions in cell_positions_dict.items():
+            cell = table_cell_dict.get(cell_id)
+            if not (cell and cell.table_id):
+                continue
+            
+            tuples = []
+            for cell_position in cell_positions:
+                axis_ordinate = cell_position.axis_ordinate_id
+                ordinate_items = axis_ordinate_map.get(axis_ordinate.axis_ordinate_id, [])
+                tuples.extend((item.variable_id, item.member_id) for item in ordinate_items)
+            
+            if tuples:
+                cell_to_variable_member_tuple_map[cell_id] = tuples
+        
         return cell_to_variable_member_tuple_map
 
     def process_cell(self,cell_id, tuples, sdd_context, context, framework, version):
@@ -178,19 +185,18 @@ class CreateReportFilters:
         Returns:
             The metric (variable) or None if not found.
         """
-        for tuple in tuples:
-            if tuple[1] is None:
-                try:
-                    variable_mapping_items = sdd_context.variable_mapping_item_dictionary[
-                        tuple[0].variable_id.replace('EBA_', 'DPM_')
-                    ]
-                    
-                    for variable_mapping_item in variable_mapping_items:
-                        if variable_mapping_item.is_source == 'false':
-                            return variable_mapping_item.variable
-                except KeyError:
-                    print(f"Could not find variable mapping for {tuple[0].variable_id}")
+        var_mapping_dict = sdd_context.variable_mapping_item_dictionary
         
+        for var_id, member_id in tuples:
+            if member_id is None:
+                try:
+                    dpm_var_id = var_id.variable_id.replace('EBA_', 'DPM_')
+                    variable_mapping_items = var_mapping_dict[dpm_var_id]
+                    # Use next() with generator expression for early exit
+                    return next((item.variable for item in variable_mapping_items 
+                               if item.is_source == 'false'), None)
+                except KeyError:
+                    print(f"Could not find variable mapping for {var_id.variable_id}")
         return None
 
     def create_filters( self, report_cell, tuples, relevant_mappings, report_rol_cube, sdd_context, context):
@@ -241,21 +247,29 @@ class CreateReportFilters:
             list: A list of reference tuples.
         """
         ref_tuple_list = []
+        non_ref_set = set(non_ref_tuple_list)  # Convert to set for O(1) lookups
+        
         for mapping in relevant_mappings:
             member_mapping = mapping.mapping.member_mapping_id
-            if member_mapping:
-                member_mapping_item_row_dict = CreateReportFilters.create_member_mapping_item_row_dict(sdd_context, member_mapping)
-                for member_mapping_items in member_mapping_item_row_dict.values():
-                    match = True
-                    for member_mapping_item in member_mapping_items:
-                        if member_mapping_item.is_source =='true':
-                            if (member_mapping_item.variable, member_mapping_item.member) not in non_ref_tuple_list:
-                                match = False
-                                break
-                    if match:
-                        for member_mapping_item in member_mapping_items:
-                            if not member_mapping_item.is_source =='true' :
-                                ref_tuple_list.append((member_mapping_item.variable, member_mapping_item.member, member_mapping_item.member_hierarchy))
+            if not member_mapping:
+                continue
+            
+            member_mapping_item_row_dict = CreateReportFilters.create_member_mapping_item_row_dict(
+                sdd_context, member_mapping)
+            
+            for member_mapping_items in member_mapping_item_row_dict.values():
+                # Group items by is_source for faster processing
+                source_items = [(item.variable, item.member) for item in member_mapping_items 
+                              if item.is_source == 'true']
+                
+                # Check if all source items are in non_ref_tuple_list
+                if all(item in non_ref_set for item in source_items):
+                    ref_tuple_list.extend(
+                        (item.variable, item.member, item.member_hierarchy)
+                        for item in member_mapping_items
+                        if item.is_source != 'true'
+                    )
+                
         return ref_tuple_list
 
     def create_member_mapping_item_row_dict(sdd_context, member_mapping):
