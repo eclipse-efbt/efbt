@@ -112,6 +112,9 @@ class JoinsMetaDataCreator:
             if framework == "FINREP_REF" 
             else context.table_and_part_tuple_map_ae
         )
+        cube_links_to_create = []  # New list to collect CUBE_LINK objects
+        cube_structure_item_links_to_create = []  # New list for CUBE_STRUCTURE_ITEM_LINK objects
+        
         try:
             report_template = generated_output_layer.name
             main_categories = context.report_to_main_category_map[report_template]
@@ -180,30 +183,33 @@ class JoinsMetaDataCreator:
                                         cube_link.cube_link_id = f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
                                         print(f"cube_link.primary_cube_id not found for {table}")
                                     cube_link.foreign_cube_id = generated_output_layer
-                                    sdd_context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
-                                    foreign_cube = cube_link.foreign_cube_id
-                                    try:
-                                        sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
-                                    except KeyError:
-                                        sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = [cube_link]
-                                    join_identifier = cube_link.join_identifier
-                                    try:
-                                        sdd_context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
-                                    except KeyError:
-                                        sdd_context.cube_link_to_join_identifier_map[join_identifier] = [cube_link]
 
-                                    join_for_report_id = foreign_cube.cube_id + ":" + cube_link.join_identifier
-                                    try:
-                                        sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
-                                    except KeyError:
-                                        sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
-                                    if context.save_derived_sdd_items:
-                                        cube_link.save()
-                                    self.add_field_to_field_lineage_to_rules_for_table_part(
-                                        context, sdd_context, generated_output_layer, 
-                                        input_entity, mc, report_template, 
-                                        framework, cube_link
-                                    )
+
+                                    if cube_link.cube_link_id not in sdd_context.cube_link_dictionary:
+                                        sdd_context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
+                                        foreign_cube = cube_link.foreign_cube_id
+                                        try:
+                                            sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
+                                        except KeyError:
+                                            sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = [cube_link]
+                                        join_identifier = cube_link.join_identifier
+                                        try:
+                                            sdd_context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
+                                        except KeyError:
+                                            sdd_context.cube_link_to_join_identifier_map[join_identifier] = [cube_link]
+
+                                        join_for_report_id = foreign_cube.cube_id + ":" + cube_link.join_identifier
+                                        try:
+                                            sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
+                                        except KeyError:
+                                            sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
+                                        if context.save_derived_sdd_items:
+                                            cube_links_to_create.append(cube_link)
+                                        self.add_field_to_field_lineage_to_rules_for_table_part(
+                                            context, sdd_context, generated_output_layer, 
+                                            input_entity, mc, report_template, 
+                                            framework, cube_link, cube_structure_item_links_to_create
+                                        )
 
                                 
                 except KeyError:
@@ -211,11 +217,20 @@ class JoinsMetaDataCreator:
         except KeyError:
             print(f"no main category for report :{report_template}")
 
+        # Bulk create all collected CUBE_LINK objects
+        if context.save_derived_sdd_items and cube_links_to_create:
+            CUBE_LINK.objects.bulk_create(cube_links_to_create, batch_size=1000)
+            
+        # Bulk create all collected CUBE_STRUCTURE_ITEM_LINK objects
+        if context.save_derived_sdd_items and cube_structure_item_links_to_create:
+            CUBE_STRUCTURE_ITEM_LINK.objects.bulk_create(cube_structure_item_links_to_create, batch_size=1000)
+
     def add_field_to_field_lineage_to_rules_for_table_part(
             self, context: Any, sdd_context: Any,
             output_entity: Any, input_entity: Any,
             category: str, report_template: str, 
-            framework: str, cube_link: Any) -> None:
+            framework: str, cube_link: Any,
+            cube_structure_item_links_to_create: List) -> None:
         """
         Add field-to-field lineage rules for a table part.
 
@@ -252,7 +267,7 @@ class JoinsMetaDataCreator:
                         csil.cube_link_id = cube_link  
                         sdd_context.cube_structure_item_links_dictionary[csil.cube_structure_item_link_id] = csil
                         if context.save_derived_sdd_items:
-                            csil.save()
+                            cube_structure_item_links_to_create.append(csil)
 
     def valid_operation(self, context: Any, output_item: Any, framework: str, category: str, report_template: str) -> bool:
         """
