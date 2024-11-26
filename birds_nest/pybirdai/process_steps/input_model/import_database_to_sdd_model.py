@@ -12,50 +12,82 @@
 #
 
 from pybirdai.bird_meta_data_model import *
+from concurrent.futures import ThreadPoolExecutor
 
 class ImportDatabaseToSDDModel(object):
     '''
     Class responsible for the import of  SDD csv files
     into an instance of the analaysis model
     '''
-    def import_sdd(self,sdd_context):
+    def import_sdd(self, sdd_context):
         '''
-        Import SDD csv files into an instance of the analysis model
+        Import SDD csv files into an instance of the analysis model, using parallel execution
+        where possible for better performance.
         '''
-        
+        # Basic setup - these need to run sequentially as later steps depend on them
         ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportDatabaseToSDDModel.create_frameworks(self, sdd_context)
         ImportDatabaseToSDDModel.create_all_domains(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_members(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_variables(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_rol_cube_structures(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_rol_cubes(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_rol_cube_structure_items(self, sdd_context)
-
-        ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies_nodes(
-            self, sdd_context)
-        ImportDatabaseToSDDModel.create_member_mappings(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_member_mapping_items(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_mapping_to_cubes(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_mapping_definitions(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_variable_mappings(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_variable_mapping_items(self, sdd_context)
-                
-        ImportDatabaseToSDDModel.create_report_tables(self, sdd_context)
-        ImportDatabaseToSDDModel.create_table_cells(self, sdd_context)
-        ImportDatabaseToSDDModel.create_axis(self, sdd_context)
-        ImportDatabaseToSDDModel.create_axis_ordinates(self, sdd_context)
-        ImportDatabaseToSDDModel.create_ordinate_items(self, sdd_context)
-        ImportDatabaseToSDDModel.create_cell_positions(self, sdd_context)
-
-        ImportDatabaseToSDDModel.create_combinations(self, sdd_context)
-        ImportDatabaseToSDDModel.create_combination_items(self, sdd_context)
-        ImportDatabaseToSDDModel.create_cube_to_combination(self, sdd_context)
-
-        ImportDatabaseToSDDModel.create_cube_links(self, sdd_context)
-        ImportDatabaseToSDDModel.create_cube_structure_item_links(self, sdd_context)
         
+        # Group 1 - Independent base entities
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_all_members, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_variables, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_rol_cube_structures, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_rol_cubes, self, sdd_context)
+            ]
+            # Wait for all tasks to complete
+            for future in futures:
+                future.result()
+
+        # Group 2 - Dependent on base entities but independent of each other
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_all_rol_cube_structure_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_member_mappings, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_mapping_definitions, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_variable_mappings, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_combinations, self, sdd_context)
+            ]
+            for future in futures:
+                future.result()
+
+        # Group 3 - Dependent on previous groups but independent of each other
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies_nodes, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_member_mapping_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_mapping_to_cubes, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_variable_mapping_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_combination_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_cube_to_combination, self, sdd_context)
+            ]
+            for future in futures:
+                future.result()
+
+        # Group 4 - Report-related items that can run in parallel
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_report_tables, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_axis, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_table_cells, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_cube_links, self, sdd_context)
+            ]
+            for future in futures:
+                future.result()
+
+        # Group 5 - Final dependent items
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_axis_ordinates, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_ordinate_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_cell_positions, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_cube_structure_item_links, self, sdd_context)
+            ]
+            for future in futures:
+                future.result()
 
     def create_all_mapping_definitions(self, context):
         '''
