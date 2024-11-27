@@ -536,7 +536,7 @@ def create_response_with_loading(request, task_title, success_message, return_ur
                         }})
                         .catch(error => {{
                             console.error('Error:', error);
-                            alert('An error occurred while processing the task.');
+                            alert('An error occurred while processing the task: ' + error.message);
                         }});
                     }}, 100); // Small delay to ensure loading screen is visible
                 }});
