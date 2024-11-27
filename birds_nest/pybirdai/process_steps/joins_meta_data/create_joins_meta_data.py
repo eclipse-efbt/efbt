@@ -172,7 +172,7 @@ class JoinsMetaDataCreator:
                                     cube_link.description = f"{table_part[0]}:{mc}:{table_part[1]}:{input_entity.cube_structure_id}"
                                     cube_link.name = f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
                                     cube_link.join_identifier = table_part[1]
-                                    primary_cube = sdd_context.rol_cube_dictionary.get(input_entity.cube_structure_id)
+                                    primary_cube = sdd_context.bird_cube_dictionary.get(input_entity.cube_structure_id)
                                     if primary_cube:
                                         cube_link.primary_cube_id = primary_cube
                                         cube_link.cube_link_id = (
@@ -244,7 +244,7 @@ class JoinsMetaDataCreator:
             framework (str): The framework being used (e.g., "FINREP_REF").
             cube_link (Any): The cube link object.
         """
-        for output_item in sdd_context.rol_cube_structure_item_dictionary[
+        for output_item in sdd_context.bird_cube_structure_item_dictionary[
                 output_entity.cube_id + '_cube_structure']:
             if self.valid_operation(context, output_item, framework, 
                                     category, report_template):
@@ -329,7 +329,7 @@ class JoinsMetaDataCreator:
 
         if target_domain and  not ((target_domain.domain_id == "String") or (target_domain.domain_id == "Date") or (target_domain.domain_id == "Integer") or (target_domain.domain_id == "Boolean") or (target_domain.domain_id == "Float")     ):            
             if input_entity:
-                field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                field_list = sdd_context.bird_cube_structure_item_dictionary[input_entity.cube_structure_id]
                 for csi in field_list:
                     variable = csi.variable_id
                     if variable and variable.domain_id.domain_id == target_domain.domain_id:
@@ -338,7 +338,7 @@ class JoinsMetaDataCreator:
             output_variable_name = output_item.variable_id.variable_id
             if output_variable_name:
                 if input_entity:
-                    field_list = sdd_context.rol_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                    field_list = sdd_context.bird_cube_structure_item_dictionary[input_entity.cube_structure_id]
                     for csi in field_list:
                         variable = csi.variable_id
                         if variable and variable.name == output_variable_name:
@@ -359,7 +359,7 @@ class JoinsMetaDataCreator:
             Any: The output layer cube if found, None otherwise.
         """
         output_layer_name = f"{output_layer_name}_REF_FINREP_3_0" if framework == "FINREP_REF" else output_layer_name
-        return sdd_context.rol_cube_dictionary.get(output_layer_name)
+        return sdd_context.bird_cube_dictionary.get(output_layer_name)
 
     def find_input_layer_cube(self, sdd_context: Any, input_layer_name: str, framework: str) -> Any:
         """
@@ -373,4 +373,4 @@ class JoinsMetaDataCreator:
         Returns:
             Any: The input layer cube if found, None otherwise.
         """
-        return sdd_context.rol_cube_structure_dictionary.get(input_layer_name)
+        return sdd_context.bird_cube_structure_dictionary.get(input_layer_name)

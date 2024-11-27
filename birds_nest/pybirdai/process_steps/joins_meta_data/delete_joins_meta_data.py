@@ -73,5 +73,43 @@ class TransformationMetaDataDestroyer:
         COMBINATION_ITEM.objects.all().delete()
         CUBE_TO_COMBINATION.objects.all().delete()
 
+        context.mapping_definition_dictionary = {}
+        context.variable_mapping_dictionary = {}
+        context.variable_mapping_item_dictionary = {}
+        context.bird_cube_structure_dictionary = {}
+        context.bird_cube_dictionary = {}
+        context.bird_cube_structure_item_dictionary = {}
+        context.mapping_to_cube_dictionary = {}
+        context.agency_dictionary = {}
+        context.framework_dictionary = {}
+        context.domain_dictionary = {}
+        context.member_dictionary = {}
+        context.member_id_to_domain_map = {}
+        context.member_id_to_member_code_map = {}
+        context.variable_dictionary = {}
+        context.variable_to_domain_map = {}
+        context.variable_to_long_names_map = {}
+        context.variable_to_primary_concept_map = {}
+        context.member_hierarchy_dictionary = {}
+        context.member_hierarchy_node_dictionary = {}
+        context.report_tables_dictionary = {}
+        context.axis_dictionary = {}
+        context.axis_ordinate_dictionary = {}
+        sdd_context.axis_ordinate_to_ordinate_items_map = {}
+        context.table_cell_dictionary = {}
+        context.table_to_table_cell_dictionary = {}
+        context.cell_positions_dictionary = {}
+        context.member_mapping_dictionary = {}
+        context.member_mapping_items_dictionary = {}
+        context.combination_item_dictionary = {}
+        context.combination_dictionary = {}
+        context.combination_to_rol_cube_map = {}
+        context.cube_link_dictionary = {}
+        context.cube_link_to_foreign_cube_map = {}
+        context.cube_link_to_join_identifier_map = {}
+        context.cube_link_to_join_for_report_id_map = {}
+        context.cube_structure_item_links_dictionary = {}
+        context.cube_structure_item_link_to_cube_link_map = {}
+
 
         

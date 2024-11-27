@@ -13,7 +13,7 @@
 
 from pybirdai.bird_meta_data_model import *
 from concurrent.futures import ThreadPoolExecutor
-
+from datetime import datetime
 class ImportDatabaseToSDDModel(object):
     '''
     Class responsible for the import of  SDD csv files
@@ -24,6 +24,9 @@ class ImportDatabaseToSDDModel(object):
         Import SDD csv files into an instance of the analysis model, using parallel execution
         where possible for better performance.
         '''
+        #print the current time
+        print("Starting import at:")
+        print(datetime.now())
         # Basic setup - these need to run sequentially as later steps depend on them
         ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportDatabaseToSDDModel.create_frameworks(self, sdd_context)
@@ -89,6 +92,11 @@ class ImportDatabaseToSDDModel(object):
             for future in futures:
                 future.result()
 
+
+            #print the current time
+        print("Ending import at:")
+        print(datetime.now())
+
     def create_all_mapping_definitions(self, context):
         '''
         import all the mapping definitions
@@ -126,31 +134,31 @@ class ImportDatabaseToSDDModel(object):
         '''
         import all the rol cube structures
         '''
-        context.rol_cube_structure_dictionary = {}
+        context.bird_cube_structure_dictionary = {}
         for rol_cube_structure in CUBE_STRUCTURE.objects.all():
-            context.rol_cube_structure_dictionary[
+            context.bird_cube_structure_dictionary[
                 rol_cube_structure.cube_structure_id] = rol_cube_structure
 
     def create_all_rol_cubes(self, context):
         '''
         import all the rol cubes
         '''
-        context.rol_cube_dictionary = {}
+        context.bird_cube_dictionary = {}
         for rol_cube in CUBE.objects.all():
-            context.rol_cube_dictionary[rol_cube.cube_id] = rol_cube
+            context.bird_cube_dictionary[rol_cube.cube_id] = rol_cube
 
     def create_all_rol_cube_structure_items(self, context):
         '''
         import all the rol cube structure items
         '''
-        context.rol_cube_structure_item_dictionary = {}
+        context.bird_cube_structure_item_dictionary = {}
         for rol_cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
             try:
-                context.rol_cube_structure_item_dictionary[
+                context.bird_cube_structure_item_dictionary[
                     rol_cube_structure_item.cube_structure_id.cube_structure_id
                 ].append(rol_cube_structure_item)
             except KeyError:
-                context.rol_cube_structure_item_dictionary[
+                context.bird_cube_structure_item_dictionary[
                     rol_cube_structure_item.cube_structure_id.cube_structure_id
                 ] = [rol_cube_structure_item]
 
@@ -188,20 +196,20 @@ class ImportDatabaseToSDDModel(object):
         '''
         import all the domains
         '''
-        context.nonref_domain_dictionary = {}
+        context.domain_dictionary = {}
         for domain in DOMAIN.objects.all():
-            context.nonref_domain_dictionary[domain.domain_id] = domain
+            context.domain_dictionary[domain.domain_id] = domain
 
         
     def create_all_members(self, context):
         '''
         Import all the members
         '''
-        context.nonref_member_dictionary = {}
+        context.member_dictionary = {}
         context.member_id_to_domain_map = {}
         context.member_id_to_member_code_map = {}
         for member in MEMBER.objects.all():
-            context.nonref_member_dictionary[member.member_id] = member
+            context.member_dictionary[member.member_id] = member
             context.member_id_to_domain_map[member] = member.domain_id
             context.member_id_to_member_code_map[member.member_id] = member.code
 
@@ -209,12 +217,12 @@ class ImportDatabaseToSDDModel(object):
         '''
         import all the variables
         '''
-        context.nonref_variable_dictionary = {}
+        context.variable_dictionary = {}
         context.variable_to_domain_map = {}
         context.variable_to_long_names_map = {}
         context.variable_to_primary_concept_map = {}
         for variable in VARIABLE.objects.all():
-            context.nonref_variable_dictionary[variable.variable_id] = variable
+            context.variable_dictionary[variable.variable_id] = variable
             context.variable_to_domain_map[variable.variable_id] = variable.domain_id
             context.variable_to_long_names_map[variable.variable_id] = variable.name
             context.variable_to_primary_concept_map[variable.variable_id] = variable.primary_concept

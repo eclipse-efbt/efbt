@@ -28,7 +28,7 @@ class CreateReportFilters:
         """
         file_location = os.path.join(context.file_directory, "joins_configuration", f"in_scope_reports_{framework}.csv")
         in_scope_reports = CreateReportFilters.read_in_scope_reports(file_location)
-        
+        import pdb;pdb.set_trace()
         cell_to_variable_member_tuple_map = CreateReportFilters.create_cell_to_variable_member_map(sdd_context)
         
         # Add lists to collect objects for bulk creation
@@ -42,10 +42,10 @@ class CreateReportFilters:
             
         # Bulk create all collected objects at the end
         if context.save_derived_sdd_items:
-            COMBINATION.objects.bulk_create(self.combinations_to_create, batch_size=1000)
-            COMBINATION_ITEM.objects.bulk_create(self.combination_items_to_create, batch_size=1000)
-            CUBE_STRUCTURE_ITEM.objects.bulk_create(self.cube_structure_items_to_create, batch_size=1000)
-            CUBE_TO_COMBINATION.objects.bulk_create(self.cube_to_combinations_to_create, batch_size=1000)
+            COMBINATION.objects.bulk_create(self.combinations_to_create, batch_size=5000)
+            COMBINATION_ITEM.objects.bulk_create(self.combination_items_to_create, batch_size=5000)
+            CUBE_STRUCTURE_ITEM.objects.bulk_create(self.cube_structure_items_to_create, batch_size=5000)
+            CUBE_TO_COMBINATION.objects.bulk_create(self.cube_to_combinations_to_create, batch_size=5000)
 
     def read_in_scope_reports(file_location):
         """
@@ -76,7 +76,7 @@ class CreateReportFilters:
         
         # Initialize with expected size
         cell_to_variable_member_tuple_map = {}
-        
+
         for cell_id, cell_positions in cell_positions_dict.items():
             cell = table_cell_dict.get(cell_id)
             if not (cell and cell.table_id):
@@ -105,6 +105,7 @@ class CreateReportFilters:
             framework: The framework being used.
             version: The version of the framework.
         """
+        import pdb;pdb.set_trace()
         cell = sdd_context.table_cell_dictionary.get(cell_id)
         if not cell or not cell.table_id:
             return
@@ -157,7 +158,7 @@ class CreateReportFilters:
             metric: The metric (variable) to be added.
         """
         variable_already_exists_in_cube = False
-        csis = sdd_context.rol_cube_structure_item_dictionary.get(
+        csis = sdd_context.bird_cube_structure_item_dictionary.get(
             report_rol_cube.cube_structure_id.cube_structure_id, []
         )
         for csi in csis:
@@ -169,7 +170,7 @@ class CreateReportFilters:
             csi.variable_id = metric
             if context.save_derived_sdd_items:
                 self.cube_structure_items_to_create.append(csi)  # Changed from save() to append
-            sdd_context.rol_cube_structure_item_dictionary.setdefault(
+            sdd_context.bird_cube_structure_item_dictionary.setdefault(
                 report_rol_cube.cube_structure_id.cube_structure_id, []
             ).append(csi)
 
@@ -338,7 +339,7 @@ class CreateReportFilters:
         """
         try:
             key = table_id[11:len(table_id)]
-            return sdd_context.rol_cube_dictionary[key]
+            return sdd_context.bird_cube_dictionary[key]
         except KeyError:
             return None
 
