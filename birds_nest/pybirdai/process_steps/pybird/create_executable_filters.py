@@ -17,6 +17,18 @@ import os
 
 
 class CreateExecutableFilters:
+    def __init__(self):
+        # Keep caching for performance
+        self._node_cache = {}
+        self._member_list_cache = {}
+        self._literal_list_cache = {}
+    
+    def is_member_a_node(self, sdd_context, member):
+        # Keep the member node caching
+        if member not in self._node_cache:
+            self._node_cache[member] = member in sdd_context.members_that_are_nodes
+        return self._node_cache[member]
+
     def create_executable_filters(self,context, sdd_context):
         CreateExecutableFilters.delete_generated_python_filter_files(self, context)
         CreateExecutableFilters.delete_generated_html_filter_files(self, context)
@@ -114,45 +126,43 @@ class CreateExecutableFilters:
         report_html_file.write("{% endblock %}\n")
 
 
-    def get_leaf_node_codes(self,sdd_context, member,member_hierarchy  ):
+    def get_leaf_node_codes(self, sdd_context, member, member_hierarchy):
         return_list = []
         if member is not None:
-            return_list = CreateExecutableFilters.get_member_list_considering_hierarchies(self,sdd_context,member,member_hierarchy)
+            members = self.get_member_list_considering_hierarchies(sdd_context, member, member_hierarchy)
+            return_list = members  # Keep original order
         return return_list
 
-    
+    def get_literal_list_considering_hierarchies(self, context, sdd_context, literal, member, domain_id, warning_list, template_code, combination_id, variable_id, framework, cube_type, input_cube_type):
+        cache_key = (literal, member, domain_id) if literal and member else None
+        if cache_key in self._literal_list_cache:
+            return self._literal_list_cache[cache_key].copy()
 
-    def get_literal_list_considering_hierarchies(self,context,sdd_context,literal,member,domain_id, warning_list, template_code,combination_id, variable_id,framework,cube_type,input_cube_type):
         return_list = []
-        is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,member)
+        is_node = self.is_member_a_node(sdd_context, member)
+        
         if literal is None:
-            
-            if not (is_node):
-                warning_list.append( ("error", "member does not exist in input layer and is not a node", template_code,combination_id, variable_id, member.member_id, None,domain_id))
-            pass
+            if not is_node:
+                warning_list.append(("error", "member does not exist in input layer and is not a node", template_code, combination_id, variable_id, member.member_id, None, domain_id))
         else:
-            if not (is_node):
+            if not is_node:
                 return_list = [literal]
             
-        for domain,hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
-            if domain is None:
-                print("domain is None in hierarchy_list")
+        for domain, hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
             if domain.domain_id == domain_id:
                 for hierarchy in hierarchy_list:
-                    hierarchy_id = hierarchy.member_hierarchy_id                
+                    hierarchy_id = hierarchy.member_hierarchy_id
                     literal_list = []
-                    CreateExecutableFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy_id,literal_list,framework,cube_type,input_cube_type)
+                    self.get_literal_list_considering_hierarchy(context, sdd_context, member, hierarchy_id, literal_list, framework, cube_type, input_cube_type)
                     return_list.extend(literal_list)
                     
         if len(return_list) == 0:
-            warning_list.append( ("error","could not find any input layer members or sub members for member", template_code,combination_id, variable_id, member.member_id, None,domain_id))
-        return return_list     
-
-    
-                
-
-    def get_literal_list_considering_hierarchy(self,context,sdd_context,member,hierarchy,literal_list,framework,cube_type,input_cube_type):
+            warning_list.append(("error", "could not find any input layer members or sub members for member", template_code, combination_id, variable_id, member.member_id, None, domain_id))
         
+        self._literal_list_cache[cache_key] = return_list
+        return return_list.copy()
+
+    def get_literal_list_considering_hierarchy(self, context, sdd_context, member, hierarchy, literal_list, framework, cube_type, input_cube_type):
         key = member.member_id + ":" + hierarchy
         child_members = []
         try:
@@ -175,85 +185,76 @@ class CreateExecutableFilters:
             pass
         
             
-    def is_member_a_node(self,sdd_context,member):
-        if member in sdd_context.members_that_are_nodes:
-            return True
-        else:
-            return False
-
-        
     def find_member_node(self,sdd_context,member_id,hierarchy):
         try:
             return sdd_context.member_hierarchy_node_dictionary[hierarchy + ":" + member_id.member_id]
         except:
             pass
 
-    def prepare_node_dictionaries_and_lists (self,sdd_context):
-        
-        sdd_context.members_that_are_nodes = []
+    def prepare_node_dictionaries_and_lists(self, sdd_context):
+        # Use sets for faster membership testing
+        sdd_context.members_that_are_nodes = set()
         sdd_context.member_plus_hierarchy_to_child_literals = {}
         sdd_context.domain_to_hierarchy_dictionary = {}
-        for node in sdd_context.member_hierarchy_node_dictionary.values():
-            if not (node.parent_member_id is None) and not (node.parent_member_id == ''):
-                sdd_context.members_that_are_nodes.append(node.parent_member_id)
-                member_plus_hierarchy = node.parent_member_id.member_id + ":" +  node.member_hierarchy_id.member_hierarchy_id
-                # ad the parent node to the dictionary of nodes that have children
-                if not(member_plus_hierarchy in sdd_context.member_plus_hierarchy_to_child_literals.keys() ):
-                    initial_member_list = []
-                    initial_member_list.append(node.member_id)
-                    sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy] = initial_member_list
-                else:
-                    member_list =  sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy]
-                    if not(node.member_id in member_list):
-                            member_list.append(node.member_id)
-                            
-        for hierarchy in sdd_context.member_hierarchy_dictionary.values():
-            try:
-                hierarchy_list = sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id]
-                hierarchy_list.append(hierarchy)
-            except KeyError:
-                hierarchy_list = []
-                hierarchy_list.append(hierarchy)
-                sdd_context.domain_to_hierarchy_dictionary[hierarchy.domain_id] = hierarchy_list
-
-    def get_member_list_considering_hierarchies(self,sdd_context,member,member_hierarchy):
-        return_list = []
-        is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,member)
-        if member is None:
-            pass
-        else:
-            if not (is_node):
-                return_list = [member]
-        if member:   
-            print ("member" + str(member))  
-            for domain,hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
-                if domain is None:
-                    print ("the domain is none")
-                elif domain.domain_id == member.domain_id.domain_id:
-                    for hierarchy in hierarchy_list:
-                        hierarchy_id = hierarchy.member_hierarchy_id                
-                        member_list = []
-                        CreateExecutableFilters.get_member_list_considering_hierarchy(self,sdd_context,member,hierarchy_id,member_list)
-                        return_list.extend(member_list)
-
-        return return_list     
-
-    def get_member_list_considering_hierarchy(self,sdd_context,member,hierarchy,member_list):
         
-        key = member.member_id + ":" + hierarchy
-        child_members = []
+        # Pre-process hierarchy nodes
+        for node in sdd_context.member_hierarchy_node_dictionary.values():
+            if node.parent_member_id and node.parent_member_id != '':
+                sdd_context.members_that_are_nodes.add(node.parent_member_id)
+                member_plus_hierarchy = f"{node.parent_member_id.member_id}:{node.member_hierarchy_id.member_hierarchy_id}"
+                
+                if member_plus_hierarchy not in sdd_context.member_plus_hierarchy_to_child_literals:
+                    sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy] = [node.member_id]
+                else:
+                    if node.member_id not in sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy]:
+                        sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy].append(node.member_id)
+        
+        # Build domain hierarchy mapping
+        for hierarchy in sdd_context.member_hierarchy_dictionary.values():
+            domain_id = hierarchy.domain_id
+            if domain_id not in sdd_context.domain_to_hierarchy_dictionary:
+                sdd_context.domain_to_hierarchy_dictionary[domain_id] = []
+            sdd_context.domain_to_hierarchy_dictionary[domain_id].append(hierarchy)
+
+    def get_member_list_considering_hierarchies(self, sdd_context, member, member_hierarchy):
+        # Cache key based on member and hierarchy
+        cache_key = (member, member_hierarchy) if member else None
+        if cache_key in self._member_list_cache:
+            return self._member_list_cache[cache_key].copy()  # Return a copy to prevent modifications
+
+        return_list = []
+        is_node = self.is_member_a_node(sdd_context, member)
+        
+        if member is None:
+            self._member_list_cache[cache_key] = []
+            return []
+            
+        if not is_node:
+            return_list.append(member)
+            
+        if member:
+            for domain, hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
+                if domain.domain_id == member.domain_id.domain_id:
+                    for hierarchy in hierarchy_list:
+                        hierarchy_id = hierarchy.member_hierarchy_id
+                        temp_list = []
+                        self.get_member_list_considering_hierarchy(sdd_context, member, hierarchy_id, temp_list)
+                        for item in temp_list:
+                            if item not in return_list:  # Keep original duplicate checking
+                                return_list.append(item)
+        
+        self._member_list_cache[cache_key] = return_list
+        return return_list.copy()  # Return a copy to prevent modifications
+
+    def get_member_list_considering_hierarchy(self, sdd_context, member, hierarchy, member_list):
+        key = f"{member.member_id}:{hierarchy}"
         try:
             child_members = sdd_context.member_plus_hierarchy_to_child_literals[key]
             for item in child_members:
-                member = item
-                if not(member is None):
-                    if not(member in member_list):
-                        is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,member)
-                        if not (is_node):
-                            member_list.append(member)
-                    
-            for item in child_members:
-                CreateExecutableFilters.get_member_list_considering_hierarchy(self,sdd_context,item,hierarchy, member_list)
+                if item is not None and item not in member_list:
+                    if not self.is_member_a_node(sdd_context, item):
+                        member_list.append(item)
+                    self.get_member_list_considering_hierarchy(sdd_context, item, hierarchy, member_list)
         except KeyError:
             pass
 
