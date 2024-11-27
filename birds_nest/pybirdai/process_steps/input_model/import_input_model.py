@@ -195,8 +195,10 @@ class ImportInputModel(object):
                     subdomain_id=subdomain
                 )
                 cube_structure_items_to_create.append(csi)
-                key = f"{csi.cube_structure_id.cube_structure_id}:{csi.variable_id.variable_id}"
-                sdd_context.bird_cube_structure_item_dictionary[key] = csi
+                #key = f"{csi.cube_structure_id.cube_structure_id}:{csi.variable_id.variable_id}"
+                if csi.cube_structure_id.cube_structure_id not in sdd_context.bird_cube_structure_item_dictionary.keys():
+                    sdd_context.bird_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id] = []
+                sdd_context.bird_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id].append(csi)
 
         # Bulk create all objects
         if variables_to_create and sdd_context.save_sdd_to_db:

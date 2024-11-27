@@ -205,6 +205,8 @@ class JoinsMetaDataCreator:
                                             sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
                                         if context.save_derived_sdd_items:
                                             cube_links_to_create.append(cube_link)
+
+                                        
                                         self.add_field_to_field_lineage_to_rules_for_table_part(
                                             context, sdd_context, generated_output_layer, 
                                             input_entity, mc, report_template, 
@@ -266,6 +268,12 @@ class JoinsMetaDataCreator:
                         )
                         csil.cube_link_id = cube_link  
                         sdd_context.cube_structure_item_links_dictionary[csil.cube_structure_item_link_id] = csil
+                        
+                        try:
+                            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(csil)
+                        except KeyError:
+                            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id] = [csil]
+                            
                         if context.save_derived_sdd_items:
                             cube_structure_item_links_to_create.append(csil)
 

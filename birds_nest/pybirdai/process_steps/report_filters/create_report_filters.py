@@ -28,7 +28,7 @@ class CreateReportFilters:
         """
         file_location = os.path.join(context.file_directory, "joins_configuration", f"in_scope_reports_{framework}.csv")
         in_scope_reports = CreateReportFilters.read_in_scope_reports(file_location)
-        import pdb;pdb.set_trace()
+        
         cell_to_variable_member_tuple_map = CreateReportFilters.create_cell_to_variable_member_map(sdd_context)
         
         # Add lists to collect objects for bulk creation
@@ -70,6 +70,7 @@ class CreateReportFilters:
         Returns:
             dict: A dictionary mapping cell IDs to lists of variable-member tuples.
         """
+        
         cell_positions_dict = sdd_context.cell_positions_dictionary
         table_cell_dict = sdd_context.table_cell_dictionary
         axis_ordinate_map = sdd_context.axis_ordinate_to_ordinate_items_map
@@ -86,7 +87,10 @@ class CreateReportFilters:
             for cell_position in cell_positions:
                 axis_ordinate = cell_position.axis_ordinate_id
                 ordinate_items = axis_ordinate_map.get(axis_ordinate.axis_ordinate_id, [])
-                tuples.extend((item.variable_id, item.member_id) for item in ordinate_items)
+                
+                if len(ordinate_items) > 0:
+                    
+                    tuples.extend((item.variable_id, item.member_id) for item in ordinate_items)
             
             if tuples:
                 cell_to_variable_member_tuple_map[cell_id] = tuples
@@ -105,7 +109,7 @@ class CreateReportFilters:
             framework: The framework being used.
             version: The version of the framework.
         """
-        import pdb;pdb.set_trace()
+        
         cell = sdd_context.table_cell_dictionary.get(cell_id)
         if not cell or not cell.table_id:
             return
