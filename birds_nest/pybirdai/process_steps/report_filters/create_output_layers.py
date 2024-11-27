@@ -92,8 +92,8 @@ class CreateOutputLayers:
         output_layer_cube, output_layer_cube_structure = self._create_cube_and_structure(destination_cube)
         
         structures_and_cubes = {
-            'structure': (sdd_context.rol_cube_structure_dictionary, output_layer_cube_structure),
-            'cube': (sdd_context.rol_cube_dictionary, output_layer_cube),
+            'structure': (sdd_context.bird_cube_structure_dictionary, output_layer_cube_structure),
+            'cube': (sdd_context.bird_cube_dictionary, output_layer_cube),
             'FINREP_REF': (sdd_context.finrep_output_cubes, output_layer_cube),
             'AE_REF': (sdd_context.ae_output_cubes, output_layer_cube)
         }

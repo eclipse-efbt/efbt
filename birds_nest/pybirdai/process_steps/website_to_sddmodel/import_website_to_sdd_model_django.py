@@ -170,9 +170,9 @@ class ImportWebsiteToSDDModel(object):
 
                         domains_to_create.append(domain)
                         if ref:
-                            context.ref_domain_dictionary[domain_id] = domain
+                            context.domain_dictionary[domain_id] = domain
                         else:
-                            context.nonref_domain_dictionary[domain_id] = domain
+                            context.domain_dictionary[domain_id] = domain
 
         if context.save_sdd_to_db and domains_to_create:
             DOMAIN.objects.bulk_create(domains_to_create, batch_size=1000)
@@ -219,7 +219,7 @@ class ImportWebsiteToSDDModel(object):
                         member.domain_id = domain
 
                         members_to_create.append(member)
-                        context.nonref_member_dictionary[member_id] = member
+                        context.member_dictionary[member_id] = member
 
                         if not (domain_id is None) and not (domain_id == ""):
                             context.member_id_to_domain_map[member] = domain
@@ -268,7 +268,7 @@ class ImportWebsiteToSDDModel(object):
                         variable.maintenance_agency_id = maintenance_agency_id
 
                         variables_to_create.append(variable)
-                        context.nonref_variable_dictionary[variable_id] = variable
+                        context.variable_dictionary[variable_id] = variable
                         context.variable_to_domain_map[variable_id] = domain
                         context.variable_to_long_names_map[variable_id] = name
                         if not((primary_concept == "") or (primary_concept == None)):
@@ -310,8 +310,8 @@ class ImportWebsiteToSDDModel(object):
         for parent_member_id, member_id, domain in parent_members_child_triples:
             if member_id in parent_members:
                 if not any(parent_member_id in d for d in (context.members_that_are_nodes, 
-                                                         context.nonref_member_dictionary,
-                                                         context.ref_member_dictionary)):
+                                                         context.member_dictionary,
+                                                         context.member_dictionary)):
                     parent_member = MEMBER(
                         name=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id),
                         member_id=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id),
@@ -325,8 +325,8 @@ class ImportWebsiteToSDDModel(object):
                 if member is None:
                     missing_children.append((parent_member_id,member_id))
                 elif not any(parent_member_id in d for d in (context.members_that_are_nodes,
-                                                          context.nonref_member_dictionary,
-                                                          context.ref_member_dictionary)):
+                                                          context.member_dictionary,
+                                                          context.member_dictionary)):
                     parent_member = MEMBER(
                         name=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id),
                         member_id=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id),
@@ -1022,10 +1022,10 @@ class ImportWebsiteToSDDModel(object):
         Find an existing member with this id
         '''
         try:
-            return context.nonref_member_dictionary[element_id]
+            return context.member_dictionary[element_id]
         except:
             try:
-                return context.ref_member_dictionary[element_id]
+                return context.member_dictionary[element_id]
             except KeyError:
                 try:
                     return context.members_that_are_nodes[element_id]
@@ -1046,10 +1046,10 @@ class ImportWebsiteToSDDModel(object):
         Find an existing variable with this id
         '''
         try:
-            return context.nonref_variable_dictionary[element_id]
+            return context.variable_dictionary[element_id]
         except KeyError:
             try:
-                return context.ref_variable_dictionary[element_id]
+                return context.variable_dictionary[element_id]
             except KeyError:
                 return None
             
@@ -1067,10 +1067,10 @@ class ImportWebsiteToSDDModel(object):
         Find an existing domain with this id
         '''
         try:
-            return context.ref_domain_dictionary[element_id]
+            return context.domain_dictionary[element_id]
         except KeyError:
             try:
-                return_item = context.nonref_domain_dictionary[element_id]
+                return_item = context.domain_dictionary[element_id]
                 return return_item
             except KeyError:
                 return None
