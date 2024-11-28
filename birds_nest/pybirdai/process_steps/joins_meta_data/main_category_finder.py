@@ -26,6 +26,7 @@ class MainCategoryFinder(object):
         '''
         Create maps of information related to the EBA main category
         '''
+        
         MainCategoryFinder.create_main_category_to_name_map(self, context,
                                                             sdd_context, framework)
         MainCategoryFinder.create_report_to_main_category_map(
@@ -91,6 +92,7 @@ class MainCategoryFinder(object):
         '''
         Look through the generated report and create a map of reports to main categories
         '''
+        
         main_categories_in_scope = (
             context.main_categories_in_scope_finrep if full_framework_name == "FINREP_REF"
             else context.main_categories_in_scope_ae

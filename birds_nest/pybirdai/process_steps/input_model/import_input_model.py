@@ -93,7 +93,7 @@ class ImportInputModel(object):
                 data_type=domain_type
             )
             domains.append(domain)
-            sdd_context.ref_domain_dictionary[domain_type] = domain
+            sdd_context.domain_dictionary[domain_type] = domain
         
         # Bulk create all domains
         DOMAIN.objects.bulk_create(domains)
@@ -176,7 +176,7 @@ class ImportInputModel(object):
             domain, subdomain = ImportInputModel._create_domain_and_subdomain_if_needed(field, sdd_context)
 
             # Create variable if needed
-            if variable_id not in sdd_context.ref_variable_dictionary:
+            if variable_id not in sdd_context.variable_dictionary:
                 variable = VARIABLE(
                     maintenance_agency_id=sdd_context.agency_dictionary["REF"],
                     variable_id=variable_id,
@@ -185,18 +185,20 @@ class ImportInputModel(object):
                     domain_id=domain or ImportInputModel._get_default_domain(field, sdd_context)
                 )
                 variables_to_create.append(variable)
-                sdd_context.ref_variable_dictionary[variable_id] = variable
+                sdd_context.variable_dictionary[variable_id] = variable
 
             # Create cube structure item
             if context.save_derived_sdd_items:
                 csi = CUBE_STRUCTURE_ITEM(
                     cube_structure_id=sdd_context.bird_cube_structure_dictionary[field.model.__name__],
-                    variable_id=sdd_context.ref_variable_dictionary[variable_id],
+                    variable_id=sdd_context.variable_dictionary[variable_id],
                     subdomain_id=subdomain
                 )
                 cube_structure_items_to_create.append(csi)
-                key = f"{csi.cube_structure_id.cube_structure_id}:{csi.variable_id.variable_id}"
-                sdd_context.bird_cube_structure_item_dictionary[key] = csi
+                #key = f"{csi.cube_structure_id.cube_structure_id}:{csi.variable_id.variable_id}"
+                if csi.cube_structure_id.cube_structure_id not in sdd_context.bird_cube_structure_item_dictionary.keys():
+                    sdd_context.bird_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id] = []
+                sdd_context.bird_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id].append(csi)
 
         # Bulk create all objects
         if variables_to_create and sdd_context.save_sdd_to_db:
@@ -208,15 +210,15 @@ class ImportInputModel(object):
     @staticmethod
     def _get_default_domain(field, sdd_context):
         if isinstance(field, CharField):
-            return sdd_context.ref_domain_dictionary['String']
+            return sdd_context.domain_dictionary['String']
         elif isinstance(field, DateTimeField):
-            return sdd_context.ref_domain_dictionary['Date']
+            return sdd_context.domain_dictionary['Date']
         elif isinstance(field, BigIntegerField):
-            return sdd_context.ref_domain_dictionary['Integer']
+            return sdd_context.domain_dictionary['Integer']
         elif isinstance(field, BooleanField):
-            return sdd_context.ref_domain_dictionary['Boolean']
+            return sdd_context.domain_dictionary['Boolean']
         elif isinstance(field, FloatField):
-            return sdd_context.ref_domain_dictionary['Float']
+            return sdd_context.domain_dictionary['Float']
         return None
 
     @transaction.atomic
@@ -249,13 +251,13 @@ class ImportInputModel(object):
             subdomain_enums_to_create = []
 
             # Create domain if needed
-            if domain_id and domain_id not in sdd_context.ref_domain_dictionary:
+            if domain_id and domain_id not in sdd_context.domain_dictionary:
                 domain = DOMAIN(
                     domain_id=domain_id,
                     name=domain_id
                 )
                 domains_to_create.append(domain)
-                sdd_context.ref_domain_dictionary[domain_id] = domain
+                sdd_context.domain_dictionary[domain_id] = domain
                 print(f"Adding domain: {domain_id}")
 
             # Create subdomain if needed
@@ -263,7 +265,7 @@ class ImportInputModel(object):
             if subdomain_id and subdomain_id not in sdd_context.subdomain_dictionary:
                 subdomain = SUBDOMAIN(
                     subdomain_id=subdomain_id,
-                    domain_id=sdd_context.ref_domain_dictionary.get(domain_id)
+                    domain_id=sdd_context.domain_dictionary.get(domain_id)
                 )
                 subdomains_to_create.append(subdomain)
                 sdd_context.subdomain_dictionary[subdomain_id] = subdomain
@@ -273,15 +275,15 @@ class ImportInputModel(object):
             if field.choices:
                 for choice in field.choices:
                     member_id = f"{domain_id}_{choice[0]}"
-                    if member_id not in sdd_context.ref_member_dictionary:
+                    if member_id not in sdd_context.member_dictionary:
                         member = MEMBER(
                             member_id=member_id,
                             name=choice[1],
                             code=choice[0],
-                            domain_id=sdd_context.ref_domain_dictionary.get(domain_id)
+                            domain_id=sdd_context.domain_dictionary.get(domain_id)
                         )
                         members_to_create.append(member)
-                        sdd_context.ref_member_dictionary[member_id] = member
+                        sdd_context.member_dictionary[member_id] = member
 
                         if subdomain:
                             subdomain_enum = SUBDOMAIN_ENUMERATION(
@@ -305,7 +307,7 @@ class ImportInputModel(object):
             if subdomain_enums_to_create and sdd_context.save_sdd_to_db:
                 SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create)
 
-            return sdd_context.ref_domain_dictionary.get(domain_id), subdomain
+            return sdd_context.domain_dictionary.get(domain_id), subdomain
 
         except AttributeError:
             return None, None

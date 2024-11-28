@@ -170,9 +170,9 @@ class ImportWebsiteToSDDModel(object):
 
                         domains_to_create.append(domain)
                         if ref:
-                            context.ref_domain_dictionary[domain_id] = domain
+                            context.domain_dictionary[domain.domain_id] = domain
                         else:
-                            context.nonref_domain_dictionary[domain_id] = domain
+                            context.domain_dictionary[domain.domain_id] = domain
 
         if context.save_sdd_to_db and domains_to_create:
             DOMAIN.objects.bulk_create(domains_to_create, batch_size=1000)
@@ -219,11 +219,11 @@ class ImportWebsiteToSDDModel(object):
                         member.domain_id = domain
 
                         members_to_create.append(member)
-                        context.nonref_member_dictionary[member_id] = member
+                        context.member_dictionary[member.member_id] = member
 
                         if not (domain_id is None) and not (domain_id == ""):
                             context.member_id_to_domain_map[member] = domain
-                            context.member_id_to_member_code_map[member_id] = code
+                            context.member_id_to_member_code_map[member.member_id] = code
 
         if context.save_sdd_to_db and members_to_create:
             MEMBER.objects.bulk_create(members_to_create, batch_size=1000)
@@ -268,11 +268,11 @@ class ImportWebsiteToSDDModel(object):
                         variable.maintenance_agency_id = maintenance_agency_id
 
                         variables_to_create.append(variable)
-                        context.nonref_variable_dictionary[variable_id] = variable
-                        context.variable_to_domain_map[variable_id] = domain
-                        context.variable_to_long_names_map[variable_id] = name
+                        context.variable_dictionary[variable.variable_id] = variable
+                        context.variable_to_domain_map[variable.variable_id] = domain
+                        context.variable_to_long_names_map[variable.variable_id] = name
                         if not((primary_concept == "") or (primary_concept == None)):
-                            context.variable_to_primary_concept_map[variable_id] = primary_concept
+                            context.variable_to_primary_concept_map[variable.variable_id] = primary_concept
 
         if context.save_sdd_to_db and variables_to_create:
             VARIABLE.objects.bulk_create(variables_to_create, batch_size=1000)
@@ -310,8 +310,8 @@ class ImportWebsiteToSDDModel(object):
         for parent_member_id, member_id, domain in parent_members_child_triples:
             if member_id in parent_members:
                 if not any(parent_member_id in d for d in (context.members_that_are_nodes, 
-                                                         context.nonref_member_dictionary,
-                                                         context.ref_member_dictionary)):
+                                                         context.member_dictionary,
+                                                         context.member_dictionary)):
                     parent_member = MEMBER(
                         name=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id),
                         member_id=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id),
@@ -319,14 +319,19 @@ class ImportWebsiteToSDDModel(object):
                         domain_id=domain
                     )
                     parent_members_to_create.append(parent_member)
+                    context.member_dictionary[parent_member.member_id] = parent_member
+                    if not (parent_member.domain_id is None) and not (parent_member.domain_id == ""):
+                        context.member_id_to_domain_map[parent_member] = domain
+                        context.member_id_to_member_code_map[parent_member.member_id] = parent_member.member_id
+
                     context.members_that_are_nodes[parent_member_id] = parent_member
             else:
                 member = ImportWebsiteToSDDModel.find_member_with_id(self,member_id,context)
                 if member is None:
                     missing_children.append((parent_member_id,member_id))
                 elif not any(parent_member_id in d for d in (context.members_that_are_nodes,
-                                                          context.nonref_member_dictionary,
-                                                          context.ref_member_dictionary)):
+                                                          context.member_dictionary,
+                                                          context.member_dictionary)):
                     parent_member = MEMBER(
                         name=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id),
                         member_id=ImportWebsiteToSDDModel.replace_dots(self, parent_member_id),
@@ -335,6 +340,11 @@ class ImportWebsiteToSDDModel(object):
                     )
                     parent_members_to_create.append(parent_member)
                     context.members_that_are_nodes[parent_member_id] = parent_member
+                    
+                    context.member_dictionary[parent_member.member_id] = parent_member
+                    if not (parent_member.domain_id is None) and not (parent_member.domain_id == ""):
+                        context.member_id_to_domain_map[parent_member] = domain
+                        context.member_id_to_member_code_map[parent_member.member_id] = parent_member.member_id
 
         if context.save_sdd_to_db and parent_members_to_create:
             MEMBER.objects.bulk_create(parent_members_to_create, batch_size=5000)  # Increased batch size
@@ -373,9 +383,9 @@ class ImportWebsiteToSDDModel(object):
                     domain_id=domain
                 )
                 
-                if id not in context.member_hierarchy_dictionary:
+                if hierarchy.member_hierarchy_id not in context.member_hierarchy_dictionary:
                     hierarchies_to_create.append(hierarchy)
-                    context.member_hierarchy_dictionary[id] = hierarchy
+                    context.member_hierarchy_dictionary[hierarchy.member_hierarchy_id] = hierarchy
 
         if context.save_sdd_to_db and hierarchies_to_create:
             MEMBER_HIERARCHY.objects.bulk_create(hierarchies_to_create, batch_size=5000)  # Increased batch size
@@ -543,7 +553,7 @@ class ImportWebsiteToSDDModel(object):
                     axis.table_id = ImportWebsiteToSDDModel.find_table_with_id(self, context, axis_table_id)
 
                     axes_to_create.append(axis)
-                    context.axis_dictionary[axis_id] = axis
+                    context.axis_dictionary[axis.axis_id] = axis
 
         if context.save_sdd_to_db and axes_to_create:
             AXIS.objects.bulk_create(axes_to_create, batch_size=1000)
@@ -582,7 +592,7 @@ class ImportWebsiteToSDDModel(object):
                     axis_ordinate.description = axis_ordinate_description
 
                     ordinates_to_create.append(axis_ordinate)
-                    context.axis_ordinate_dictionary[axis_ordinate_id] = axis_ordinate
+                    context.axis_ordinate_dictionary[axis_ordinate.axis_ordinate_id] = axis_ordinate
 
         if context.save_sdd_to_db and ordinates_to_create:
             AXIS_ORDINATE.objects.bulk_create(ordinates_to_create, batch_size=1000)
@@ -610,24 +620,24 @@ class ImportWebsiteToSDDModel(object):
 
                     ordinate_item = ORDINATE_ITEM()
                     ordinate_item.axis_ordinate_id = ImportWebsiteToSDDModel.find_axis_ordinate_with_id(
-                        self, context, axis_ordinate_id)
+                        self, context, ImportWebsiteToSDDModel.replace_dots(self, axis_ordinate_id))
                     ordinate_item.variable_id = ImportWebsiteToSDDModel.find_variable_with_id(
-                        self, context, variable_id)
+                        self, context, ImportWebsiteToSDDModel.replace_dots(self, variable_id))
                     ordinate_item.member_id = ImportWebsiteToSDDModel.find_member_with_id(
-                        self, member_id, context)
+                        self, ImportWebsiteToSDDModel.replace_dots(self, member_id), context)
                     ordinate_item.member_hierarchy_id = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(
-                        self, member_hierarchy_id, context)
+                        self, ImportWebsiteToSDDModel.replace_dots(self, member_hierarchy_id), context)
                     ordinate_item.starting_member_id = ImportWebsiteToSDDModel.find_member_with_id(
-                        self, starting_member_id, context)
+                        self, ImportWebsiteToSDDModel.replace_dots(self, starting_member_id), context)
                     ordinate_item.is_starting_member_included = is_starting_member_included
 
                     ordinate_items_to_create.append(ordinate_item)
 
                     try:
-                        ordinate_items = context.axis_ordinate_to_ordinate_items_map[axis_ordinate_id]
+                        ordinate_items = context.axis_ordinate_to_ordinate_items_map[ordinate_item.axis_ordinate_id.axis_ordinate_id]
                         ordinate_items.append(ordinate_item)
                     except KeyError:
-                        context.axis_ordinate_to_ordinate_items_map[axis_ordinate_id] = [ordinate_item]
+                        context.axis_ordinate_to_ordinate_items_map[ordinate_item.axis_ordinate_id.axis_ordinate_id] = [ordinate_item]
 
         if context.save_sdd_to_db and ordinate_items_to_create:
             ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=1000)
@@ -687,13 +697,13 @@ class ImportWebsiteToSDDModel(object):
                     if cell_positions_cell_id.endswith("_REF"):
                         cell_position = CELL_POSITION()
                         cell_position.axis_ordinate_id = ImportWebsiteToSDDModel.find_axis_ordinate_with_id(
-                            self, context, cell_positions_axis_ordinate_id)
+                            self, context, ImportWebsiteToSDDModel.replace_dots(self, cell_positions_axis_ordinate_id))
                         cell_position.cell_id = ImportWebsiteToSDDModel.find_table_cell_with_id(
                             self, context, ImportWebsiteToSDDModel.replace_dots(self, cell_positions_cell_id))
 
                         cell_positions_to_create.append(cell_position)
 
-                        cell_positions_list = context.cell_positions_dictionary.setdefault(cell_positions_cell_id, [])
+                        cell_positions_list = context.cell_positions_dictionary.setdefault(cell_position.cell_id.cell_id, [])
                         cell_positions_list.append(cell_position)
 
         if context.save_sdd_to_db and cell_positions_to_create:
@@ -1022,10 +1032,10 @@ class ImportWebsiteToSDDModel(object):
         Find an existing member with this id
         '''
         try:
-            return context.nonref_member_dictionary[element_id]
+            return context.member_dictionary[element_id]
         except:
             try:
-                return context.ref_member_dictionary[element_id]
+                return context.member_dictionary[element_id]
             except KeyError:
                 try:
                     return context.members_that_are_nodes[element_id]
@@ -1046,10 +1056,10 @@ class ImportWebsiteToSDDModel(object):
         Find an existing variable with this id
         '''
         try:
-            return context.nonref_variable_dictionary[element_id]
+            return context.variable_dictionary[element_id]
         except KeyError:
             try:
-                return context.ref_variable_dictionary[element_id]
+                return context.variable_dictionary[element_id]
             except KeyError:
                 return None
             
@@ -1067,10 +1077,10 @@ class ImportWebsiteToSDDModel(object):
         Find an existing domain with this id
         '''
         try:
-            return context.ref_domain_dictionary[element_id]
+            return context.domain_dictionary[element_id]
         except KeyError:
             try:
-                return_item = context.nonref_domain_dictionary[element_id]
+                return_item = context.domain_dictionary[element_id]
                 return return_item
             except KeyError:
                 return None
