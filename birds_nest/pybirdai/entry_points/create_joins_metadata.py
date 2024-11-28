@@ -49,8 +49,8 @@ class RunCreateJoinsMetadata(AppConfig):
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
-
-        ImportDatabaseToSDDModel().import_sdd(sdd_context)
+        
+        #ImportDatabaseToSDDModel().import_sdd(sdd_context)
 
         MainCategoryFinder().create_report_to_main_category_maps(
             context,

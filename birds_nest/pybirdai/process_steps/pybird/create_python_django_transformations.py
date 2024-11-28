@@ -41,7 +41,7 @@ class CreatePythonTransformations:
             file.write("\tunionOfLayers = None #  " + report_id + "_UnionItem  unionOfLayers\n")
             cube_structure_items = []
             try:
-                cube_structure_items = sdd_context.rol_cube_structure_item_dictionary[report_id+ '_cube_structure']
+                cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[report_id+ '_cube_structure']
             except KeyError:
                 print(f"No cube structure items for report_id: {report_id}")
             for cube_structure_item in cube_structure_items:
@@ -96,7 +96,7 @@ class CreatePythonTransformations:
             file.write("\tbase = None #" + report_id + "_Base\n")
             cube_structure_items = []
             try:
-                cube_structure_items = sdd_context.rol_cube_structure_item_dictionary[report_id+ '_cube_structure']
+                cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[report_id+ '_cube_structure']
             except KeyError:
                 print(f"No cube structure items for report_id: {report_id}")
             for cube_structure_item in cube_structure_items:
@@ -125,7 +125,7 @@ class CreatePythonTransformations:
             file.write("\nclass " + report_id + "_Base:\n")
             cube_structure_items = []
             try:
-                cube_structure_items = sdd_context.rol_cube_structure_item_dictionary[report_id+ '_cube_structure']
+                cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[report_id+ '_cube_structure']
             except KeyError:
                 print(f"No cube structure items for report_id: {report_id}")
 

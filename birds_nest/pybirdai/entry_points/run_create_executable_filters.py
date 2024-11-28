@@ -49,7 +49,7 @@ class RunCreateExecutableFilters(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        ImportDatabaseToSDDModel().import_sdd(sdd_context)
+        #ImportDatabaseToSDDModel().import_sdd(sdd_context)
         CreateExecutableFilters().create_executable_filters(context, sdd_context)
 
     def ready(self):

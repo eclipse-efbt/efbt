@@ -42,10 +42,10 @@ class CreateReportFilters:
             
         # Bulk create all collected objects at the end
         if context.save_derived_sdd_items:
-            COMBINATION.objects.bulk_create(self.combinations_to_create, batch_size=1000)
-            COMBINATION_ITEM.objects.bulk_create(self.combination_items_to_create, batch_size=1000)
-            CUBE_STRUCTURE_ITEM.objects.bulk_create(self.cube_structure_items_to_create, batch_size=1000)
-            CUBE_TO_COMBINATION.objects.bulk_create(self.cube_to_combinations_to_create, batch_size=1000)
+            COMBINATION.objects.bulk_create(self.combinations_to_create, batch_size=5000)
+            COMBINATION_ITEM.objects.bulk_create(self.combination_items_to_create, batch_size=5000)
+            CUBE_STRUCTURE_ITEM.objects.bulk_create(self.cube_structure_items_to_create, batch_size=5000)
+            CUBE_TO_COMBINATION.objects.bulk_create(self.cube_to_combinations_to_create, batch_size=5000)
 
     def read_in_scope_reports(file_location):
         """
@@ -70,13 +70,14 @@ class CreateReportFilters:
         Returns:
             dict: A dictionary mapping cell IDs to lists of variable-member tuples.
         """
+        
         cell_positions_dict = sdd_context.cell_positions_dictionary
         table_cell_dict = sdd_context.table_cell_dictionary
         axis_ordinate_map = sdd_context.axis_ordinate_to_ordinate_items_map
         
         # Initialize with expected size
         cell_to_variable_member_tuple_map = {}
-        
+
         for cell_id, cell_positions in cell_positions_dict.items():
             cell = table_cell_dict.get(cell_id)
             if not (cell and cell.table_id):
@@ -86,7 +87,10 @@ class CreateReportFilters:
             for cell_position in cell_positions:
                 axis_ordinate = cell_position.axis_ordinate_id
                 ordinate_items = axis_ordinate_map.get(axis_ordinate.axis_ordinate_id, [])
-                tuples.extend((item.variable_id, item.member_id) for item in ordinate_items)
+                
+                if len(ordinate_items) > 0:
+                    
+                    tuples.extend((item.variable_id, item.member_id) for item in ordinate_items)
             
             if tuples:
                 cell_to_variable_member_tuple_map[cell_id] = tuples
@@ -105,6 +109,7 @@ class CreateReportFilters:
             framework: The framework being used.
             version: The version of the framework.
         """
+        
         cell = sdd_context.table_cell_dictionary.get(cell_id)
         if not cell or not cell.table_id:
             return
@@ -157,7 +162,7 @@ class CreateReportFilters:
             metric: The metric (variable) to be added.
         """
         variable_already_exists_in_cube = False
-        csis = sdd_context.rol_cube_structure_item_dictionary.get(
+        csis = sdd_context.bird_cube_structure_item_dictionary.get(
             report_rol_cube.cube_structure_id.cube_structure_id, []
         )
         for csi in csis:
@@ -169,7 +174,7 @@ class CreateReportFilters:
             csi.variable_id = metric
             if context.save_derived_sdd_items:
                 self.cube_structure_items_to_create.append(csi)  # Changed from save() to append
-            sdd_context.rol_cube_structure_item_dictionary.setdefault(
+            sdd_context.bird_cube_structure_item_dictionary.setdefault(
                 report_rol_cube.cube_structure_id.cube_structure_id, []
             ).append(csi)
 
@@ -338,7 +343,7 @@ class CreateReportFilters:
         """
         try:
             key = table_id[11:len(table_id)]
-            return sdd_context.rol_cube_dictionary[key]
+            return sdd_context.bird_cube_dictionary[key]
         except KeyError:
             return None
 
