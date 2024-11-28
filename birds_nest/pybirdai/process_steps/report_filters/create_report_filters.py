@@ -44,7 +44,9 @@ class CreateReportFilters:
         if context.save_derived_sdd_items:
             COMBINATION.objects.bulk_create(self.combinations_to_create, batch_size=5000)
             COMBINATION_ITEM.objects.bulk_create(self.combination_items_to_create, batch_size=5000)
-            CUBE_STRUCTURE_ITEM.objects.bulk_create(self.cube_structure_items_to_create, batch_size=5000)
+            for item in self.cube_structure_items_to_create:
+                item.save()
+            #CUBE_STRUCTURE_ITEM.objects.bulk_create(self.cube_structure_items_to_create, batch_size=5000)
             CUBE_TO_COMBINATION.objects.bulk_create(self.cube_to_combinations_to_create, batch_size=5000)
 
     def read_in_scope_reports(file_location):
