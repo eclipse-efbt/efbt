@@ -110,6 +110,13 @@ class TransformationMetaDataDestroyer:
         context.cube_link_to_join_for_report_id_map = {}
         context.cube_structure_item_links_dictionary = {}
         context.cube_structure_item_link_to_cube_link_map = {}
+        context.subdomain_dictionary = {}
+        context.subdomain_to_domain_map ={}
+        context.subdomain_enumeration_dictionary = {}
+        context.members_that_are_nodes = {}
+        context.member_plus_hierarchy_to_child_literals = {}
+        context.domain_to_hierarchy_dictionary = {}
+
 
 
         

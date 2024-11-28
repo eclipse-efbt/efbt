@@ -39,7 +39,7 @@ class ImportInputModel(object):
         ImportInputModel._create_subdomain_to_domain_map(sdd_context)
         ImportInputModel._process_models(sdd_context, context)
 
-    @transaction.atomic
+    
     def _create_maintenance_agency(sdd_context):
         """
         Create a maintenance agency named 'REF' and add it to the SDD context.
@@ -75,7 +75,7 @@ class ImportInputModel(object):
             agency.code: agency for agency in created_agencies
         })
 
-    @transaction.atomic
+    
     def _create_primitive_domains(sdd_context):
         """
         Create a 'String' domain and add it to the SDD context.
@@ -152,7 +152,7 @@ class ImportInputModel(object):
             bird_cube_cube_structure.save()
             bird_cube.save()
 
-    @transaction.atomic
+    
     def _process_fields(model, sdd_context, context):
         """
         Process all fields of the given model.
@@ -205,7 +205,9 @@ class ImportInputModel(object):
             VARIABLE.objects.bulk_create(variables_to_create)
 
         if cube_structure_items_to_create and context.save_derived_sdd_items:
-            CUBE_STRUCTURE_ITEM.objects.bulk_create(cube_structure_items_to_create)
+            for item in cube_structure_items_to_create:
+                item.save() 
+            #CUBE_STRUCTURE_ITEM.objects.bulk_create(cube_structure_items_to_create)
 
     @staticmethod
     def _get_default_domain(field, sdd_context):
@@ -221,7 +223,7 @@ class ImportInputModel(object):
             return sdd_context.domain_dictionary['Float']
         return None
 
-    @transaction.atomic
+    
     def _create_domain_and_subdomain_if_needed(field, sdd_context):
         """
         Create a domain for the field if it doesn't exist and add it to the

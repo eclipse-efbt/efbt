@@ -224,8 +224,13 @@ class JoinsMetaDataCreator:
             CUBE_LINK.objects.bulk_create(cube_links_to_create, batch_size=1000)
             
         # Bulk create all collected CUBE_STRUCTURE_ITEM_LINK objects
-        if context.save_derived_sdd_items and cube_structure_item_links_to_create:
-            CUBE_STRUCTURE_ITEM_LINK.objects.bulk_create(cube_structure_item_links_to_create, batch_size=1000)
+        for item in cube_structure_item_links_to_create:
+            print(item.foreign_cube_variable_code.variable_id)
+            #import pdb;pdb.set_trace()
+            item.save()
+        #import pdb;pdb.set_trace()
+        #if context.save_derived_sdd_items and cube_structure_item_links_to_create:
+        #    CUBE_STRUCTURE_ITEM_LINK.objects.bulk_create(cube_structure_item_links_to_create, batch_size=1000)
 
     def add_field_to_field_lineage_to_rules_for_table_part(
             self, context: Any, sdd_context: Any,
