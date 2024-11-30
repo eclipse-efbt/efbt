@@ -84,5 +84,10 @@ urlpatterns = [
     path('manual-edits/', report_views.manual_edits, name='manual_edits'),
     path('upload-joins-configuration/', views.upload_joins_configuration, name='upload_joins_configuration'),
     path('insert-data-into-bird-database/', report_views.insert_data_into_bird_database, name='insert_data_into_bird_database'),
+    path('combinations/', views.combinations, name='combinations'),
+    path('combination-items/', views.combination_items, name='combination_items'),
+    path('output-layers/', views.output_layers, name='output_layers'),
+    path('delete-combination/<str:combination_id>/', views.delete_combination, name='delete_combination'),
+    
 
 ]
