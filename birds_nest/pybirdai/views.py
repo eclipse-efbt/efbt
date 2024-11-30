@@ -19,7 +19,8 @@ from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
-    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION
+    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION, 
+    COMBINATION, COMBINATION_ITEM, CUBE
 )
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
@@ -42,6 +43,7 @@ from .process_steps.upload_files.file_uploader import FileUploader
 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 from .entry_points.upload_joins_configuration import UploadJoinsConfiguration
 from django.template.loader import render_to_string
+
 
 # Helper function for paginated modelformset views
 def paginated_modelformset_view(request, model, template_name, formset_fields='__all__', order_by='id', items_per_page=20):
@@ -554,3 +556,21 @@ def create_response_with_loading(request, task_title, success_message, return_ur
             return JsonResponse({'status': 'error', 'message': str(e)})
     
     return HttpResponse(html_response)
+
+def combinations(request):
+    return paginated_modelformset_view(request, COMBINATION, 'pybirdai/combinations.html', order_by='combination_id')
+ 
+
+def combination_items(request):
+    return paginated_modelformset_view(request, COMBINATION_ITEM, 'pybirdai/combination_items.html')
+ 
+
+def output_layers(request):
+    return paginated_modelformset_view(request, CUBE, 'pybirdai/output_layers.html', order_by='cube_id')
+
+
+
+def delete_combination(request, combination_id):
+    return delete_item(request, COMBINATION, 'combination_id', 'combinations')
+
+
