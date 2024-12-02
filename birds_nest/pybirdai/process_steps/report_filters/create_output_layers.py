@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.sdd_models import *
+from pybirdai.bird_meta_data_model import *
 
 import os
 import csv
@@ -21,25 +21,31 @@ class CreateOutputLayers:
         """
         Create output layers for each cube mapping based on variable mappings
         and expanded variable set mappings.
-
-        Args:
-            context: The context object containing file directory information.
-            sdd_context: The SDD context object containing mapping information.
-            framework: The reporting framework (e.g., 'FINREP_REF', 'AE_REF').
-            version: The version of the framework.
         """
         file_location = os.path.join(
-            context.file_directory, f"in_scope_reports_{framework}.csv"
+            context.file_directory, "joins_configuration", f"in_scope_reports_{framework}.csv"
         )
         in_scope_reports = self._get_in_scope_reports(
             file_location, framework, version
         )
         
+        # Lists to collect objects for bulk creation
+        cubes_to_create = []
+        structures_to_create = []
+        
         for destination_cube in sdd_context.mapping_to_cube_dictionary.keys():
             if destination_cube.replace('.', '_') in in_scope_reports:
-                self.create_output_layer_for_cube_mapping(
+                cube, structure = self.create_output_layer_for_cube_mapping(
                     context, sdd_context, destination_cube, framework
                 )
+                if cube and structure:  # Only add if objects were created
+                    cubes_to_create.append(cube)
+                    structures_to_create.append(structure)
+        
+        # Bulk create if saving is enabled
+        if context.save_derived_sdd_items and cubes_to_create:
+            CUBE_STRUCTURE.objects.bulk_create(structures_to_create)
+            CUBE.objects.bulk_create(cubes_to_create)
 
     def _get_in_scope_reports(self, file_location, framework, version):
         """
@@ -53,17 +59,11 @@ class CreateOutputLayers:
         Returns:
             list: A list of in-scope report names.
         """
-        in_scope_reports = []
         with open(file_location, encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
-            next(filereader)  # Skip header
-            for row in filereader:
-                report_template = row[0]
-                report_name = self._generate_report_name(
-                    report_template, framework, version
-                )
-                in_scope_reports.append(report_name)
-        return in_scope_reports
+            return [
+                self._generate_report_name(row[0], framework, version)
+                for row in csv.reader(csvfile, delimiter=',', quotechar='"')
+            ][1:]
 
     def _generate_report_name(self, report_template, framework, version):
         """
@@ -78,34 +78,33 @@ class CreateOutputLayers:
             str: The generated report name.
         """
         version_str = version.replace('.', '_')
-        if framework == 'FINREP_REF':
-            return f'M_{report_template}_REF_FINREP {version_str}'
-        elif framework == 'AE_REF':
-            return f'M_{report_template}_REF_AE{framework} {version_str}'
+        templates = {
+            'FINREP_REF': f'M_{report_template}_REF_FINREP {version_str}',
+            'AE_REF': f'M_{report_template}_REF_AE{framework} {version_str}'
+        }
+        return templates[framework]
 
     def create_output_layer_for_cube_mapping(self, context, sdd_context, destination_cube, framework):
         """
         Create an output layer for each cube mapping.
-
-        Args:
-            context: The context object.
-            sdd_context: The SDD context object.
-            destination_cube (str): The destination cube name.
-            framework (str): The reporting framework.
+        Returns the created cube and structure instead of saving them.
         """
         output_layer_cube, output_layer_cube_structure = self._create_cube_and_structure(destination_cube)
         
-        sdd_context.rol_cube_structure_dictionary[output_layer_cube_structure.name] = output_layer_cube_structure
-        sdd_context.rol_cube_dictionary[output_layer_cube.name] = output_layer_cube
+        structures_and_cubes = {
+            'structure': (sdd_context.bird_cube_structure_dictionary, output_layer_cube_structure),
+            'cube': (sdd_context.bird_cube_dictionary, output_layer_cube),
+            'FINREP_REF': (sdd_context.finrep_output_cubes, output_layer_cube),
+            'AE_REF': (sdd_context.ae_output_cubes, output_layer_cube)
+        }
         
-        if context.save_derived_sdd_items:
-            output_layer_cube_structure.save()
-            output_layer_cube.save()
+        structures_and_cubes['structure'][0][output_layer_cube_structure.name] = output_layer_cube_structure
+        structures_and_cubes['cube'][0][output_layer_cube.name] = output_layer_cube
         
-        if framework == 'FINREP_REF':
-            sdd_context.finrep_output_cubes[output_layer_cube.name] = output_layer_cube
-        elif framework == 'AE_REF':
-            sdd_context.ae_output_cubes[output_layer_cube.name] = output_layer_cube
+        if framework in structures_and_cubes:
+            structures_and_cubes[framework][0][output_layer_cube.name] = output_layer_cube
+        
+        return output_layer_cube, output_layer_cube_structure
 
     def _create_cube_and_structure(self, destination_cube):
         """

@@ -13,22 +13,13 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Filters{% endblock %}
+{% block title %}Create Transformations Rules Configuration{% endblock %}
 
 {% block content %}
 
-<h1 style="text-align: center;">Filters</h1>
-
+<h1 style="text-align: center;">Create Transformations Rules Configuration</h1>
 <div class="task-grid">
-    <a href="{% url 'pybirdai:import_report_templates' %}" class="task-item">
-        <img src="{% static 'images/report_templates.webp' %}" alt="Non Ref Info icon">
-        <span>Import Report Templates from BIRD Website</span>
-    </a>
-    <a href="{% url 'pybirdai:review_report_templates' %}" class="task-item">
-        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
-        <span>CHECKPOINT: Review Report Templates</span>
-    </a>
-    
+
     <a href="{% url 'pybirdai:run_import_hierarchies' %}" class="task-item">
         <img src="{% static 'images/hierarchy_icon.webp' %}" alt="Hierarchies icon">
         <span>Import Hierarchies from BIRD Website</span>
@@ -47,20 +38,14 @@
         <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
         <span>CHECKPOINT: Review Semantic Integration</span>
     </a>
-    <a href="{% url 'pybirdai:run_create_filters' %}" class="task-item">
-        <img src="{% static 'images/filters.webp' %}" alt="Concept icon">
-        <span>Create Output Layer and Filters</span>
+
+    <a href="{% url 'pybirdai:upload_joins_configuration' %}" class="task-item">
+        <img src="{% static 'images/joins_configuration.webp' %}" alt="upload_joins_configuration">
+        <span>Upload Joins Configuration</span>
     </a>
-    
-    <a href="{% url 'pybirdai:review_filters' %}" class="task-item">
-        <img src="{% static 'images/review_checkpoint.webp' %}" alt="Review icon">
-        <span>CHECKPOINT:Review Output Layer and Filters</span>
+    <a href="{% url 'pybirdai:create_transformations_metadata' %}" class="task-item">
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+        <span>Back to Create Transformations Metadata</span>
     </a>
-    <a href="{% url 'pybirdai:run_create_executable_filters' %}" class="task-item">
-        <img src="{% static 'images/executable.webp' %}" alt="Concept icon">
-        <span>Create Executable Filters</span>
-    </a>
-    
-    
 </div>
 {% endblock %}

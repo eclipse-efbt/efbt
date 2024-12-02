@@ -1,15 +1,5 @@
-<!--
-# Copyright (c) 2024 Bird Software Solutions Ltd
-# This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License 2.0
-# which accompanies this distribution, and is available at
-# https://www.eclipse.org/legal/epl-2.0/
-#
-# SPDX-License-Identifier: EPL-2.0
-#
-# Contributors:
-#    Neil Mackenzie - initial API and implementation
--->
+{% extends 'base.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,10 +8,72 @@
 <body>
 <h1>Report Templates</h1>
 <table border="1">
-
+<a href="{% url 'pybirdai:home'%}">Back to the PyBIRD AI Home Page</a>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_07_REF_FINREP_3_0.html'%}">F_04_07_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_21_00_REF_FINREP_3_0.html'%}">F_21_00_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_11_01_REF_FINREP_3_0.html'%}">F_11_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_41_02_REF_FINREP_3_0.html'%}">F_41_02_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_20_04_REF_FINREP_3_0.html'%}">F_20_04_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_11_02_REF_FINREP_3_0.html'%}">F_11_02_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_09_REF_FINREP_3_0.html'%}">F_04_09_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_41_01_REF_FINREP_3_0.html'%}">F_41_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_06_01_REF_FINREP_3_0.html'%}">F_06_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_42_00_REF_FINREP_3_0.html'%}">F_42_00_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_01_02_REF_FINREP_3_0.html'%}">F_01_02_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_09_02_REF_FINREP_3_0.html'%}">F_09_02_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_01_REF_FINREP_3_0.html'%}">F_04_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_20_02_REF_FINREP_3_0.html'%}">F_20_02_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_09_01_REF_FINREP_3_0.html'%}">F_09_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_01_01_REF_FINREP_3_0.html'%}">F_01_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_10_00_REF_FINREP_3_0.html'%}">F_10_00_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_20_01_REF_FINREP_3_0.html'%}">F_20_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_10_REF_FINREP_3_0.html'%}">F_04_10_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_13_01_REF_FINREP_3_0.html'%}">F_13_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_05_01_REF_FINREP_3_0.html'%}">F_05_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_05_REF_FINREP_3_0.html'%}">F_04_05_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_20_06_REF_FINREP_3_0.html'%}">F_20_06_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_08_REF_FINREP_3_0.html'%}">F_04_08_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_14_00_REF_FINREP_3_0.html'%}">F_14_00_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_08_02_REF_FINREP_3_0.html'%}">F_08_02_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_06_REF_FINREP_3_0.html'%}">F_04_06_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_31_01_REF_FINREP_3_0.html'%}">F_31_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_07_02_REF_FINREP_3_0.html'%}">F_07_02_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_40_02_REF_FINREP_3_0.html'%}">F_40_02_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_07_01_REF_FINREP_3_0.html'%}">F_07_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_40_01_REF_FINREP_3_0.html'%}">F_40_01_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_18_00_d_REF_FINREP_3_0.html'%}">F_18_00_d_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_19_00_e_REF_FINREP_3_0.html'%}">F_19_00_e_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_18_00_b_REF_FINREP_3_0.html'%}">F_18_00_b_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_20_07_1_REF_FINREP_3_0.html'%}">F_20_07_1_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_18_00_a_REF_FINREP_3_0.html'%}">F_18_00_a_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_03_1_REF_FINREP_3_0.html'%}">F_04_03_1_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_19_00_c_REF_FINREP_3_0.html'%}">F_19_00_c_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_25_02_c_REF_FINREP_3_0.html'%}">F_25_02_c_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_02_1_REF_FINREP_3_0.html'%}">F_04_02_1_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_04_1_REF_FINREP_3_0.html'%}">F_04_04_1_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_19_00_d_REF_FINREP_3_0.html'%}">F_19_00_d_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_08_01_a_REF_FINREP_3_0.html'%}">F_08_01_a_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_20_05_a_REF_FINREP_3_0.html'%}">F_20_05_a_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_04_02_2_REF_FINREP_3_0.html'%}">F_04_02_2_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_20_05_b_REF_FINREP_3_0.html'%}">F_20_05_b_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_08_01_b_REF_FINREP_3_0.html'%}">F_08_01_b_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_18_00_e_REF_FINREP_3_0.html'%}">F_18_00_e_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_15_00_a_REF_FINREP_3_0.html'%}">F_15_00_a_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_09_01_1_REF_FINREP_3_0.html'%}">F_09_01_1_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_25_02_b_REF_FINREP_3_0.html'%}">F_25_02_b_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_19_00_b_REF_FINREP_3_0.html'%}">F_19_00_b_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_15_00_b_REF_FINREP_3_0.html'%}">F_15_00_b_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_18_00_c_REF_FINREP_3_0.html'%}">F_18_00_c_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_19_00_a_REF_FINREP_3_0.html'%}">F_19_00_a_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_25_02_a_REF_FINREP_3_0.html'%}">F_25_02_a_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_13_02_1_a_REF_FINREP_3_0.html'%}">F_13_02_1_a_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_13_02_1_b_REF_FINREP_3_0.html'%}">F_13_02_1_b_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_13_03_1_b_REF_FINREP_3_0.html'%}">F_13_03_1_b_REF_FINREP_3_0</a></td></tr>
+<tr><td><a href="{% url 'pybirdai:show_report' 'F_13_03_1_a_REF_FINREP_3_0.html'%}">F_13_03_1_a_REF_FINREP_3_0</a></td></tr>
 </table>
 </body>
 </html>
 </table>
 </body>
 </html>
+{% endblock %}

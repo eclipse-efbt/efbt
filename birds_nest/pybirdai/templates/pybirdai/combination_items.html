@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Edit Combination Items</h1>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Maintenance Agency</th>
+                    <th>Combination Item ID</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Valid From</th>
+                    <th>Valid To</th>
+                    <th>Version</th>
+                    <th>Combination ID</th>
+                    <th>Variable ID</th>
+                    <th>Member ID</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                {{ form.id }}
+                <tr>
+                    <td>{{ form.maintenance_agency_id }}</td>
+                    <td>{{ form.combination_item_id }}</td>
+                    <td>{{ form.code }}</td>
+                    <td>{{ form.name }}</td>
+                    <td>{{ form.description }}</td>
+                    <td>{{ form.valid_from }}</td>
+                    <td>{{ form.valid_to }}</td>
+                    <td>{{ form.version }}</td>
+                    <td>{{ form.combination_id }}</td>
+                    <td>{{ form.variable_id }}</td>
+                    <td>{{ form.member_id }}</td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                {% if form.errors %}
+                <tr>
+                    <td colspan="12">
+                        {{ form.errors }}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button type="submit">Save Changes</button>
+</form>
+
+<!-- Pagination -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+
+{% endblock %} 

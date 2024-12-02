@@ -1,0 +1,47 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Joins{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">Create Python Transformation Rules from SMCubes</h1>
+
+<div class="task-grid">
+
+    
+    <a href="{% url 'pybirdai:run_create_executable_filters' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="executable">
+        <span>Create Executable Filters</span>
+    </a>
+    <a href="{% url 'pybirdai:run_create_python_joins' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="executable">
+        <span>Create Executable Joins</span>
+    </a>
+    <a href="{% url 'pybirdai:derivation_transformation_rules' %}" class="task-item">
+        <img src="{% static 'images/formula.webp' %}" alt="formula">
+        <span>Change Psuedocode for Derivation Transformation Rules</span>
+    </a>
+    <a href="{% url 'pybirdai:manual_edits' %}" class="task-item">
+        <img src="{% static 'images/manual_edits.webp' %}" alt="manual_edits">
+        <span>Make Final Manual Edits to Generated Python Code</span>
+    </a>
+    <a href="{% url 'pybirdai:home' %}" class="task-item">
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+        <span>Back to the PyBIRD AI Home Page</span>
+    </a>
+
+</div>
+{% endblock %}

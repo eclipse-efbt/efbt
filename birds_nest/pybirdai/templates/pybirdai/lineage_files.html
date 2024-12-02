@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lineage Files</h1>
+<a href="{% url 'pybirdai:report_templates'%}">Back to the PyBIRD Reports Templates Page</a>
+{% if csv_files %}
+    <ul>
+    {% for file in csv_files %}
+        <li><a href="{% url 'pybirdai:view_csv' file %}">{{ file }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No CSV files found in the lineage directory.</p>
+{% endif %}
+{% endblock %}

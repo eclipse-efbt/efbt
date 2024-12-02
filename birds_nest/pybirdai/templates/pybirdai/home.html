@@ -14,31 +14,37 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}BIRD AI Home{% endblock %}
+{% block title %}PyBIRD AI Home{% endblock %}
 
 {% block content %}
 <h1 style="text-align: center;">Home</h1>
 <div class="task-grid">
-    <a href="{% url 'pybirdai:input_model' %}" class="task-item">
-        <img src="{% static 'images/input_model.webp' %}" alt="Concept icon">
-        <span>Input Data Model</span>
+    <a href="{% url 'pybirdai:create_bird_database' %}" class="task-item">
+        <img src="{% static 'images/create_bird_database.webp' %}" alt="create_bird_database">
+        <span>Create BIRD Database</span>
     </a>
-    <a href="{% url 'pybirdai:home' %}" class="task-item">
-        <img src="{% static 'images/transformation.webp' %}" alt="Concept icon">
-        <span>Derivation Transformations</span>
+    <a href="{% url 'pybirdai:populate_bird_metadata_database' %}" class="task-item">
+        <img src="{% static 'images/populate_bird_metadata_database.webp' %}" alt="populate_bird_metadata_database">
+        <span>Populate BIRD Metadata Database </span>
     </a>
-    <a href="{% url 'pybirdai:filters' %}" class="task-item">
-        <img src="{% static 'images/filters.webp' %}" alt="Concept icon">
-        <span>Filters</span>
+    
+    <a href="{% url 'pybirdai:create_transformations_metadata' %}" class="task-item">
+        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_transformations_metadata">
+        <span>Create Transformations Meta Data  </span>
     </a>
-    <a href="{% url 'pybirdai:joins' %}" class="task-item">
-        <img src="{% static 'images/joins.webp' %}" alt="Concept icon">
-        <span>Joins</span>
+    <a href="{% url 'pybirdai:create_transformation_rules_in_python' %}" class="task-item">
+        <img src="{% static 'images/smcubes_to_python.webp' %}" alt="smcubes_to_python">
+        <span>Create Python Transformations from Meta Data </span>
+    </a>
+    <a href="{% url 'pybirdai:insert_data_into_bird_database' %}" class="task-item" target="_blank">
+        <img src="{% static 'images/insert_data_into_bird_database.webp' %}" alt="insert_data_into_bird_database">
+        <span>Insert Data into BIRD  Database </span>
     </a>
     <a href="{% url 'pybirdai:report_templates' %}" class="task-item">
         <img src="{% static 'images/report_templates.webp' %}" alt="Concept icon">
         <span>View Populated Templates</span>
     </a>
+    
     
 </div>
 
