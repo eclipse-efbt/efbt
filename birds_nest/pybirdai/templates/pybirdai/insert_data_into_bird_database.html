@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Insert Data into BIRD  Database</h1>
+
+<p>
+    <a href="{% url 'pybirdai:home'%}" >Back to the PyBIRD AI home page</a> <br><br>
+    
+    
+    
+    There are 2 ways to insert data into the BIRD database.<br><br>
+    First you can use the UI to insert data into the database, click the link below to open the data editor and add/update/delete data in the BIRD database. For example click on INSTRMNT to create/read/update/delete rows in the INSTRMNT table in the BIRD Database.<br><br>
+    <a href="{% url 'admin:index'%}"  target="_blank">Insert data into database using the UI (opens admini UI in new web page).</a> <br><br>
+    
+    Second you can use the command line terminal to insert data into the database and run pre-prepared sql script to insert rows into the BIRD database.
+    <br><br>
+    Soon we will make a video showing how to do this, but for now we list the steps below.<br><br>
+    To do this first  stop the application if it is running by doing CTRL-C in the terminal, then get the script and store it in the birds_nest directory (not birds_nest/birds_nest) , there is an example available at <a href="https://github.com/regcommunity/FreeBIRD/blob/main/birds_nest/sqlite_inserts.sql">sqlite_inserts.sql</a>
+    <br><br>
+    Then go to the terminal, making sure you are in the birds_nest directory and that you have sqlite installed and available in your path. If you are using github codespaces you will find that sqlite is already installed and available in your path, 
+    otherwise you may need to follow the instructions in https://www.sqlite.org/index.html . Note that sqlite also provides a useful tool called sqldiff, it is good to install this also if you want to use it.<br><br>
+    Then run the following command in the terminal<br><br>
+    sqlite3 db.sqlite3 <br><br>
+    This should give you a sqlite prompt: sqlite> <br><br>
+    Then type .read sqlite_inserts.sql to run the script<br><br>
+    Then type .exit to exit the sqlite prompt and return to the terminal.<br><br>
+    This should add the data to the BIRD database, you can check this by starting the application again using 'python manage.py runserver' in the terminal and going back to the UI and viewing the data in the database.<br><br>
+    Let us imagine that you spend time making good input data and you want to share it with someone else, how can you do this? <br><br>
+    Firstly you could just share the whole sqlite database with someone else. It is all stored in the single file called db.sqlite3 . However this also shares your setup of the metadata database, which you might want to keep seperate.
+    <br><br>
+    A better way is to turn the data into a set of SQL insert statements, that can be run on another database. You can do this with the following steps.<br><br>
+    Stop the application if it is running by doing CTRL-C in the terminal.<br><br>
+    First , in the birds_nest directory, do 'cp db.sqlite3 db_copy.sqlite3' to create a copy of the database as it is now.<br><br>
+    Start the application again by doing python manage.py runserver in the terminal<br><br>
+    Then using the UI for adding data, add your data, this will add it to the   database that is stored in the db.sqlite3 file.<br><br>
+    Stop the application again by doing CTRL-C  in the terminal.<br><br>
+    Then to get a set of SQL insert statements that show just the data that you added, run the following command in the terminal:<br><br>
+    sqldiff  db_copy.sqlite3 db.sqlite3 > sql_inserts.sql <br><br>
+    This will create a new file called sql_inserts.sql in the birds_nest directory, which contains the SQL insert statements to add the data to the BIRD database.  <br><br>
+    Note that this file is not necesseraly created with the type of encoding that you need, for example it may well created in UTF-16, but most likely you need it in UTF-8 to use it. You need to convert it then to UTF-8.
+     If you are using Github codespaces or VSCode this is quite simple, as you can see the encoding in the bottom right of VSCode (like UTF-16) click on it, and choose save as encoding UTF-8 in the options that appear in the command box.
+    <br><br>
+    In that file created,  delete items that are not needed, these are lines related to the metadata of the database related to recording the history of changes.
+    <br>
+    <br>
+    
+    For example  in the file you will find lines like this:<br><br>
+    UPDATE auth_user SET last_login='2024-11-22 11:55:50.798085' WHERE id=1;<br>
+INSERT INTO django_admin_log(id,object_id,object_repr,action_flag,change_message,content_type_id,user_id,action_time) VALUES(1,'id1','INSTRMNT object (id1)',1,'[{"added": {}}]',7,1,'2024-11-22 11:56:36.791863');<br>
+INSERT INTO django_content_type(id,app_label,model) VALUES(7,'pybirdai','instrmnt');<br>
+INSERT INTO django_session(rowid,session_key,session_data,expire_date) VALUES(1,'ajvjk686wm1nbturfje9oizp2kg3bemz','.eJxVjMEOwiAQRP-FsyGlLgU8evcbyLK7SNXQpLQn47_bJj3oZQ7z3sxbRVyXEtcmcxxZXZRRp98uIT2l7oAfWO-Tpqku85j0ruiDNn2bWF7Xw_07KNjKtrYJJMmZcmbqTD9AcJlDAAZnADxKcLCFzZ1LmHsAStxlsW5A7zyR-nwBALQ4rA:1tESGM:W1wtwMSi5Oz2fIPMmvCCF78Kw2SWUF03kkOhI2WqYAw','2024-12-06 11:55:50.802344');<br>
+INSERT INTO pybirdai_instrmnt(rowid,test_id,INSTRMNT_uniqueID,DT_RFRNC,INSTRMNT_ID,RPRTNG_AGNT_ID,ACCMLTD_CVRG_RT,ACCNTNG_HDG_INDCTR,CMMRCL_RL_ESTT_LN_INDCTR,CRRNCY,CRRNT_LTV_RT,CSH_RSRV_AMNT,DT_CSH_RSRV_MTRTY,DT_INCPTN,DT_LGL_FNL_MTRTY,DT_ORGNL_CSH_RSRV_AMNT,DT_STTLMNT,FDCRY,INSTRMNT_TYP_ORGN,LTGTN_STTS,NMNL_AMNT,NTNL_AMNT,OFF_BLNC_SHT_AMNT,ORGNL_CSH_RSRV_AMNT,RPYMNT_RGHTS,RVCBL_INDCTR,RVLVNG_LN_INDCTR,SGNFCNT_ASST_CLSS,TYP_CMMTMNT,TYP_INSTRMNT,TYP_RSK,theBLNC_SHT_NTTNG_id,theCRDT_FCLTY_id,theFNNCL_CNTRCT_id) VALUES(1,'test1','id1',NULL,'id1',NULL,NULL,'1',NULL,NULL,NULL,NULL,'2024-11-22 11:56:25',NULL,'2024-11-22 11:56:24','2024-11-22 11:56:27',NULL,'1',NULL,NULL,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);<br>
+UPDATE sqlite_sequence SET seq=1 WHERE rowid=2;<br>
+UPDATE sqlite_sequence SET seq=7 WHERE rowid=3;<br>
+<br><br>
+Then the only lines you need are inserts into tables starting with pybirdai_ , so after deleting the lines not needed it would look like this: <br>
+INSERT INTO pybirdai_instrmnt(rowid,test_id,INSTRMNT_uniqueID,DT_RFRNC,INSTRMNT_ID,RPRTNG_AGNT_ID,ACCMLTD_CVRG_RT,ACCNTNG_HDG_INDCTR,CMMRCL_RL_ESTT_LN_INDCTR,CRRNCY,CRRNT_LTV_RT,CSH_RSRV_AMNT,DT_CSH_RSRV_MTRTY,DT_INCPTN,DT_LGL_FNL_MTRTY,DT_ORGNL_CSH_RSRV_AMNT,DT_STTLMNT,FDCRY,INSTRMNT_TYP_ORGN,LTGTN_STTS,NMNL_AMNT,NTNL_AMNT,OFF_BLNC_SHT_AMNT,ORGNL_CSH_RSRV_AMNT,RPYMNT_RGHTS,RVCBL_INDCTR,RVLVNG_LN_INDCTR,SGNFCNT_ASST_CLSS,TYP_CMMTMNT,TYP_INSTRMNT,TYP_RSK,theBLNC_SHT_NTTNG_id,theCRDT_FCLTY_id,theFNNCL_CNTRCT_id) VALUES(1,'test1','id1',NULL,'id1',NULL,NULL,'1',NULL,NULL,NULL,NULL,'2024-11-22 11:56:25',NULL,'2024-11-22 11:56:24','2024-11-22 11:56:27',NULL,'1',NULL,NULL,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+<br><br>
+
+This file can then be shared with others and they can insert the data into their database by running the commands described earlier. <br><br>
+Note that the other users using this  may have problems if they have a different structure for thir BIRD atabase. 
+This can happen if they have deleted more derived columns than you have in your database, and replaced them with functions for derivation rules, 
+or alternatively if they have tried to make some custom additional columns.
+ In this case it may be possbile to make minor changes to the sql_insert_file to insert only relevant columns.
+If for example someone made the file before creating any derivation rules.
+ And another user has already replaced the column GRSS_CRRYING_AMNT in the ABSTRCT_INSTRMNT_RL table with a function for derivation rules,
+  then you could delete the column and value from GRSS_CRRYING_AMNT in the sql_inserts_file and it would work.
+
+
+
+    
+   
+{% endblock %}

@@ -1,0 +1,39 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create BIRD Database{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">Create Transformations Metadata</h1>
+<div class="task-grid">
+
+    <a href="{% url 'pybirdai:create_transformation_rules_configuration' %}" class="task-item">
+        <img src="{% static 'images/transformations_configuration.webp' %}" alt="create_transformation_rules_configuration">
+        <span>Import Transformation Rules Metadata Configuration</span>
+    </a>
+    <a href="{% url 'pybirdai:create_transformation_rules_in_smcubes' %}" class="task-item">
+        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_transformation_rules_in_smcubes">
+        <span>Create Transformation Rules Metadata</span>
+    </a>
+    <a href="{% url 'pybirdai:home' %}" class="task-item">
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+        <span>Back to the PyBIRD AI Home Page</span>
+    </a>
+    
+
+
+</div>
+{% endblock %}

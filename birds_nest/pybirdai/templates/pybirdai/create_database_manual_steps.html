@@ -1,0 +1,65 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+
+{% block content %}
+<p style="text-align: center;"> <a href="{% url 'pybirdai:create_bird_database'%}">Back to the Create Database Page</a><p>
+<h1>Create Database Manual Steps</h1>
+
+<p>Do these things manually from the command line<br><br>
+
+Stop the server by hitting CTRL-C in the terminal or command window running the django server.<br><br>
+
+Look in birds_nest\results\database_configuration directory for the results which is a models.py file and an admin.py file. <br><br>
+
+Copy the content of models.py into birds_nest\pybirdai\bird_data_model.py<br><br>
+
+If using the LDM , then delete these 2 lines (which are accidental included twice ) from bird_data_model.py<br><br>
+
+from .bird_data_model import NT_MMBR_EU<br><br>
+
+admin.site.register(NT_MMBR_EU)<br><br>
+
+At this point you can add executable derivation rules if you wish to everide the derived columns  in the EIL, this will be covered in a seperate wiki page.<br><br>
+
+Using an  editor, append the contents of the birds_nest\results\admin.py file (except for the first line ‘from django.contrib import admin’ to birds_nest\pybirdai\admin.py<br><br>
+
+Make sure those files are saved. <br><br>
+
+run the command in the terminal: python manage.py makemigrations pybirdai <br><br>
+
+If using the ldm you might see a message complaining about the use of a double underscore in a relationship, name (OTHR_INTNGBL_ASST_NT_TKN_INT_PSSSSN_to__to_Model_Context_specifies_Other_intangible_asset_not_taken_into_possessions) then you can delete the extra underscore in the ldm_models.py file.<br><br>
+
+run the command in the terminal: python manage.py migrate <br><br>
+
+you will see some warnings like ‘ SQLite does not support comments on columns (db_comment) ‘ which is fine<br><br>
+
+By default Django uses the sqlite database but it can be conigured to use other databases liek Postgres, oracle or SQLServer, you can log into the database and do some queries now if you wish<br><br>
+
+make the admin user: <br><br>
+
+python manage.py createsuperuser <br><br>
+
+complete the prompts for user name , email and password<br><br>
+
+
+run the command in the terminal to restart the server:  python manage.py runserver<br><br>
+
+go to back to website and choose Check the autogenerate UI<br><br>
+</p>
+
+
+
+   
+
+{% endblock %}

@@ -11,51 +11,91 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.sdd_models import *
-
+from pybirdai.bird_meta_data_model import *
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 class ImportDatabaseToSDDModel(object):
     '''
     Class responsible for the import of  SDD csv files
     into an instance of the analaysis model
     '''
-    def import_sdd(self,sdd_context):
+    def import_sdd(self, sdd_context):
         '''
-        Import SDD csv files into an instance of the analysis model
+        Import SDD csv files into an instance of the analysis model, using parallel execution
+        where possible for better performance.
         '''
-        
+        #print the current time
+        print("Starting import at:")
+        print(datetime.now())
+        # Basic setup - these need to run sequentially as later steps depend on them
         ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportDatabaseToSDDModel.create_frameworks(self, sdd_context)
         ImportDatabaseToSDDModel.create_all_domains(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_members(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_variables(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_rol_cube_structures(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_rol_cubes(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_rol_cube_structure_items(self, sdd_context)
-
-        ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies_nodes(
-            self, sdd_context)
-        ImportDatabaseToSDDModel.create_member_mappings(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_member_mapping_items(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_mapping_to_cubes(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_mapping_definitions(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_variable_mappings(self, sdd_context)
-        ImportDatabaseToSDDModel.create_all_variable_mapping_items(self, sdd_context)
-                
-        ImportDatabaseToSDDModel.create_report_tables(self, sdd_context)
-        ImportDatabaseToSDDModel.create_table_cells(self, sdd_context)
-        ImportDatabaseToSDDModel.create_axis(self, sdd_context)
-        ImportDatabaseToSDDModel.create_axis_ordinates(self, sdd_context)
-        ImportDatabaseToSDDModel.create_ordinate_items(self, sdd_context)
-        ImportDatabaseToSDDModel.create_cell_positions(self, sdd_context)
-
-        ImportDatabaseToSDDModel.create_combinations(self, sdd_context)
-        ImportDatabaseToSDDModel.create_combination_items(self, sdd_context)
-        ImportDatabaseToSDDModel.create_cube_to_combination(self, sdd_context)
-
-        ImportDatabaseToSDDModel.create_cube_links(self, sdd_context)
-        ImportDatabaseToSDDModel.create_cube_structure_item_links(self, sdd_context)
         
+        # Group 1 - Independent base entities
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_all_members, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_variables, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_rol_cube_structures, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_rol_cubes, self, sdd_context)
+            ]
+            # Wait for all tasks to complete
+            for future in futures:
+                future.result()
+
+        # Group 2 - Dependent on base entities but independent of each other
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_all_rol_cube_structure_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_member_mappings, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_mapping_definitions, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_variable_mappings, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_combinations, self, sdd_context)
+            ]
+            for future in futures:
+                future.result()
+
+        # Group 3 - Dependent on previous groups but independent of each other
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies_nodes, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_member_mapping_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_mapping_to_cubes, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_all_variable_mapping_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_combination_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_cube_to_combination, self, sdd_context)
+            ]
+            for future in futures:
+                future.result()
+
+        # Group 4 - Report-related items that can run in parallel
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_report_tables, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_axis, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_table_cells, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_cube_links, self, sdd_context)
+            ]
+            for future in futures:
+                future.result()
+
+        # Group 5 - Final dependent items
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [
+                executor.submit(ImportDatabaseToSDDModel.create_axis_ordinates, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_ordinate_items, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_cell_positions, self, sdd_context),
+                executor.submit(ImportDatabaseToSDDModel.create_cube_structure_item_links, self, sdd_context)
+            ]
+            for future in futures:
+                future.result()
+
+
+            #print the current time
+        print("Ending import at:")
+        print(datetime.now())
 
     def create_all_mapping_definitions(self, context):
         '''
@@ -94,31 +134,31 @@ class ImportDatabaseToSDDModel(object):
         '''
         import all the rol cube structures
         '''
-        context.rol_cube_structure_dictionary = {}
+        context.bird_cube_structure_dictionary = {}
         for rol_cube_structure in CUBE_STRUCTURE.objects.all():
-            context.rol_cube_structure_dictionary[
+            context.bird_cube_structure_dictionary[
                 rol_cube_structure.cube_structure_id] = rol_cube_structure
 
     def create_all_rol_cubes(self, context):
         '''
         import all the rol cubes
         '''
-        context.rol_cube_dictionary = {}
+        context.bird_cube_dictionary = {}
         for rol_cube in CUBE.objects.all():
-            context.rol_cube_dictionary[rol_cube.cube_id] = rol_cube
+            context.bird_cube_dictionary[rol_cube.cube_id] = rol_cube
 
     def create_all_rol_cube_structure_items(self, context):
         '''
         import all the rol cube structure items
         '''
-        context.rol_cube_structure_item_dictionary = {}
+        context.bird_cube_structure_item_dictionary = {}
         for rol_cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
             try:
-                context.rol_cube_structure_item_dictionary[
+                context.bird_cube_structure_item_dictionary[
                     rol_cube_structure_item.cube_structure_id.cube_structure_id
                 ].append(rol_cube_structure_item)
             except KeyError:
-                context.rol_cube_structure_item_dictionary[
+                context.bird_cube_structure_item_dictionary[
                     rol_cube_structure_item.cube_structure_id.cube_structure_id
                 ] = [rol_cube_structure_item]
 
@@ -156,20 +196,20 @@ class ImportDatabaseToSDDModel(object):
         '''
         import all the domains
         '''
-        context.nonref_domain_dictionary = {}
+        context.domain_dictionary = {}
         for domain in DOMAIN.objects.all():
-            context.nonref_domain_dictionary[domain.domain_id] = domain
+            context.domain_dictionary[domain.domain_id] = domain
 
         
     def create_all_members(self, context):
         '''
         Import all the members
         '''
-        context.nonref_member_dictionary = {}
+        context.member_dictionary = {}
         context.member_id_to_domain_map = {}
         context.member_id_to_member_code_map = {}
         for member in MEMBER.objects.all():
-            context.nonref_member_dictionary[member.member_id] = member
+            context.member_dictionary[member.member_id] = member
             context.member_id_to_domain_map[member] = member.domain_id
             context.member_id_to_member_code_map[member.member_id] = member.code
 
@@ -177,12 +217,12 @@ class ImportDatabaseToSDDModel(object):
         '''
         import all the variables
         '''
-        context.nonref_variable_dictionary = {}
+        context.variable_dictionary = {}
         context.variable_to_domain_map = {}
         context.variable_to_long_names_map = {}
         context.variable_to_primary_concept_map = {}
         for variable in VARIABLE.objects.all():
-            context.nonref_variable_dictionary[variable.variable_id] = variable
+            context.variable_dictionary[variable.variable_id] = variable
             context.variable_to_domain_map[variable.variable_id] = variable.domain_id
             context.variable_to_long_names_map[variable.variable_id] = variable.name
             context.variable_to_primary_concept_map[variable.variable_id] = variable.primary_concept
@@ -338,7 +378,7 @@ class ImportDatabaseToSDDModel(object):
         '''
         Import all the cube to combination
         '''
-        context.cube_to_combination_dictionary = {}
+        context.combination_to_rol_cube_map = {}
         for cube_to_combination in CUBE_TO_COMBINATION.objects.all():
             try:
                 context.combination_to_rol_cube_map[

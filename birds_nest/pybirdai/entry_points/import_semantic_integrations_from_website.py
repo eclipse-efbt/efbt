@@ -36,7 +36,7 @@ class RunImportSemanticIntegrationsFromWebsite(AppConfig):
         This method sets up the necessary contexts, creates reference domains
         and variables, and imports the website data into the SDD model.
         """
-        from pybirdai.sdd_models import MAINTENANCE_AGENCY
+        from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
         from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
             ImportWebsiteToSDDModel
         )
@@ -54,7 +54,7 @@ class RunImportSemanticIntegrationsFromWebsite(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        ImportDatabaseToSDDModel().import_sdd(sdd_context)
+        # ImportDatabaseToSDDModel().import_sdd(sdd_context)
         ImportWebsiteToSDDModel().import_semantic_integrations_from_sdd(sdd_context)
 
 def ready(self):

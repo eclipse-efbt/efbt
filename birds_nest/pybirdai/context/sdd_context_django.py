@@ -26,24 +26,22 @@ class SDDContext(object):
     # the directory where we save our outputs.
     output_directory = ""
 
+    subdomain_to_domain_map = {}
+    subdomain_enumeration_dictionary = {}
     members_that_are_nodes = {}
     member_plus_hierarchy_to_child_literals = {}
     domain_to_hierarchy_dictionary = {}
     combinations_dictionary = {}
-    nonref_member_dictionary = {}
-    nonref_domain_dictionary = {}
-    nonref_variable_dictionary= {}
-    ref_member_dictionary = {}
-    ref_domain_dictionary = {}
-    ref_variable_dictionary= {}
+    member_dictionary = {}
+    domain_dictionary = {}
+    variable_dictionary= {}
     member_hierarchy_dictionary = {}
     member_hierarchy_node_dictionary = {}
-    rol_cube_structure_dictionary = {}
-    rol_cube_dictionary = {}
-    rol_cube_structure_item_dictionary = {}
     bird_cube_structure_dictionary = {}
     bird_cube_dictionary = {}
     bird_cube_structure_item_dictionary = {}
+    bird_cube_structure_dictionary = {}
+
     combination_dictionary = {}
     combination_item_dictionary = {}
     combination_to_rol_cube_map = {}
@@ -67,6 +65,7 @@ class SDDContext(object):
     agency_dictionary = {}
     framework_dictionary = {}
     subdomain_to_items_map = {}
+    subdomain_dictionary = {}
     # For the reference output layers we record a map between variables
     # and domains
     variable_to_domain_map = {}

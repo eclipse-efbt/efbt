@@ -1,0 +1,28 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Import SQLDEveloper EIL Files</h1>
+
+<p>Using the SQLDEveloper Tools, export the EIL CSV files from the BIRD database, following the instructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Export-Files-from-SQLDeveloper">here</a> and then upload them by clicking the browse button  below to choose files, and then the upload button below</p>
+
+
+   
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="eil_files" multiple>
+    <button type="submit">Upload Files</button>
+</form>
+
+{% endblock %}
