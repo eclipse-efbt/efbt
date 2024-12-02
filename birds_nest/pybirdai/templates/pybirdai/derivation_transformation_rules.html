@@ -9,9 +9,11 @@
     For each derivation rule, We have a clear location for where the code should live, users need to do the last step of translating the psuedocode into actual python code.<br><br>
     This <a href="https://youtu.be/MY5drY3RlJs">video</a>   explains how to change the psuedocode for derivation transformation rules into executable Python code.<br><br>
 
-    The exmple code used for the GRSS_CRRYNG_AMNT derived attribute is available  <a href="https://github.com/regcommunity/FreeBIRD/blob/main/birds_nest/pybirdai/ldm_models.py#L648">here</a><br><br>
+    The example code used for the GRSS_CRRYNG_AMNT derived attribute is available  <a href="https://github.com/regcommunity/FreeBIRD/blob/main/birds_nest/pybirdai/bird_data_model.py#L645">here</a><br><br>
+    If you copy this function be sure to copy from the very start of the line above @property , because Python  is very sensitive to the difference between tabs and spaces (and so are Python programmers!)
 
-    When you are just changing derived fields like GRSS_CRRYNG_AMNT into functions, you do not need to re-run the creation and migration of the database for the functions to work and be called, note that unitl you do then they will be fields in the database.
+
+    When you are just changing derived fields like GRSS_CRRYNG_AMNT into functions, you do not need to re-run the creation and migration of the database for the functions to work and be called, note that until you do then they will be fields in the database.
 </p>
 
 
