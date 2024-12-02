@@ -106,7 +106,7 @@ class SQLDevLDMImport(object):
         later we will set supertypes of the targets to be the arcs class
         later we will set the arc to be a contained class of the source
         '''
-        file_location = context.file_directory + os.sep + "arcs.csv"
+        file_location = context.file_directory + os.sep + "ldm" + os.sep + "arcs.csv"
         header_skipped = False
         # A dictionary from entity to its arcs
         entity_to_arc_dictionary = SQLDevLDMImport.get_entity_to_arc_dictionary(self,context,file_location)
