@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Duplicate Primary Members</h1>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cube Structure Item Link ID</th>
+                    <th>Primary Cube Variable Code</th>
+                    <th>Foreign Cube Variable Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for link in duplicate_links %}
+                <tr>
+                    <td>{{ link.cube_structure_item_link_id }}</td>
+                    <td>{{ link.primary_cube_variable_code.variable_id.variable_id }}</td>
+                    <td>{{ link.foreign_cube_variable_code.variable_id.variable_id }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="page-link">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">previous</a>
+            {% endif %}
+
+            <span class="current-page">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-link">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        color: #2c3e50;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #eee;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+        margin-bottom: 20px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 800px;
+        background-color: white;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        color: #2c3e50;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9em;
+        letter-spacing: 0.5px;
+    }
+
+    tr:hover {
+        background-color: #f5f8fa;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Pagination styles */
+    .pagination {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .step-links {
+        display: inline-block;
+        padding: 10px;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-link {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 0 4px;
+        color: #2c3e50;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .page-link:hover {
+        background-color: #f5f8fa;
+    }
+
+    .current-page {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 0 4px;
+        background-color: #f8f9fa;
+        color: #2c3e50;
+        border-radius: 4px;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+
+        .page-title {
+            font-size: 1.5em;
+        }
+
+        th, td {
+            padding: 8px 10px;
+        }
+    }
+
+    /* Zebra striping */
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Optional: Add some spacing between columns */
+    td:not(:last-child), th:not(:last-child) {
+        border-right: 1px solid #e1e1e1;
+    }
+</style>
+{% endblock %} 
