@@ -19,7 +19,7 @@ from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
-    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION, 
+    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE
 )
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
@@ -43,6 +43,9 @@ from .process_steps.upload_files.file_uploader import FileUploader
 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 from .entry_points.upload_joins_configuration import UploadJoinsConfiguration
 from django.template.loader import render_to_string
+from django.db.models import Count
+from django.views.generic import ListView
+
 
 
 # Helper function for paginated modelformset views
@@ -573,4 +576,27 @@ def output_layers(request):
 def delete_combination(request, combination_id):
     return delete_item(request, COMBINATION, 'combination_id', 'combinations')
 
+class DuplicatePrimaryMemberIdListView(ListView):
+    template_name = 'pybirdai/duplicate_primary_member_id_list.html'
+    context_object_name = 'duplicate_links'
+    paginate_by = 10  # Number of items per page
+
+    def get_queryset(self):
+        duplicate_ids = CUBE_STRUCTURE_ITEM_LINK.objects.values('primary_cube_variable_code').annotate(
+            count=Count('cube_structure_item_link_id')
+        ).filter(count__gt=1).values_list('primary_cube_variable_code', flat=True)
+        
+        return CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+            primary_cube_variable_code__in=duplicate_ids
+        ).select_related(
+            'primary_cube_variable_code',
+            'foreign_cube_variable_code'
+        ).order_by('cube_structure_item_link_id')
+
+class JoinIdentifierListView(ListView):
+    template_name = 'pybirdai/join_identifier_list.html'
+    context_object_name = 'join_identifiers'
+    
+    def get_queryset(self):
+        return CubeLink.objects.values_list('join_identifier', flat=True).distinct().order_by('join_identifier')
 
