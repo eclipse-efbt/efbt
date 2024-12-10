@@ -45,6 +45,7 @@ from .entry_points.upload_joins_configuration import UploadJoinsConfiguration
 from django.template.loader import render_to_string
 from django.db.models import Count
 from django.views.generic import ListView
+from django.urls import reverse
 
 
 
@@ -582,21 +583,124 @@ class DuplicatePrimaryMemberIdListView(ListView):
     paginate_by = 10  # Number of items per page
 
     def get_queryset(self):
-        duplicate_ids = CUBE_STRUCTURE_ITEM_LINK.objects.values('primary_cube_variable_code').annotate(
+        # First, find the combinations of primary_cube_id and primary_cube_variable_code 
+        # that have duplicates within their group
+        duplicate_groups = CUBE_STRUCTURE_ITEM_LINK.objects.values(
+            'cube_link_id__foreign_cube_id', 
+            'foreign_cube_variable_code',
+            'cube_link_id__join_identifier'
+        ).annotate(
             count=Count('cube_structure_item_link_id')
-        ).filter(count__gt=1).values_list('primary_cube_variable_code', flat=True)
-        
+        ).filter(count__gt=1)
+
+        # Then get all the CUBE_STRUCTURE_ITEM_LINK records that match these combinations
         return CUBE_STRUCTURE_ITEM_LINK.objects.filter(
-            primary_cube_variable_code__in=duplicate_ids
+            cube_link_id__foreign_cube_id__in=[
+                group['cube_link_id__foreign_cube_id'] 
+                for group in duplicate_groups
+            ],
+            foreign_cube_variable_code__in=[
+                group['foreign_cube_variable_code'] 
+                for group in duplicate_groups
+            ],
+            cube_link_id__join_identifier__in=[
+                group['cube_link_id__join_identifier'] 
+                for group in duplicate_groups
+            ]
         ).select_related(
+            'cube_link_id__foreign_cube_id', 
+            'cube_link_id__primary_cube_id',
+            'foreign_cube_variable_code',
             'primary_cube_variable_code',
-            'foreign_cube_variable_code'
-        ).order_by('cube_structure_item_link_id')
+            'cube_link_id'
+        ).order_by('cube_link_id')
 
 class JoinIdentifierListView(ListView):
     template_name = 'pybirdai/join_identifier_list.html'
     context_object_name = 'join_identifiers'
     
     def get_queryset(self):
-        return CubeLink.objects.values_list('join_identifier', flat=True).distinct().order_by('join_identifier')
+        return CUBE_LINK.objects.values_list('join_identifier', flat=True).distinct().order_by('join_identifier')
+
+def duplicate_primary_member_id_list(request):
+    # Get unique values for dropdowns
+    foreign_cubes = CUBE_STRUCTURE_ITEM_LINK.objects.values_list(
+        'cube_link_id__foreign_cube_id__cube_id', 
+        flat=True
+    ).distinct().order_by('cube_link_id__foreign_cube_id__cube_id')
+    
+    primary_cubes = CUBE_STRUCTURE_ITEM_LINK.objects.values_list(
+        'cube_link_id__primary_cube_id__cube_id', 
+        flat=True
+    ).distinct().order_by('cube_link_id__primary_cube_id__cube_id')
+
+    # First, find the combinations that have duplicates
+    duplicate_groups = CUBE_STRUCTURE_ITEM_LINK.objects.values(
+        'cube_link_id__foreign_cube_id', 
+        'foreign_cube_variable_code',
+        'cube_link_id__join_identifier'
+    ).annotate(
+        count=Count('cube_structure_item_link_id')
+    ).filter(count__gt=1)
+
+    # Build the base queryset for duplicates
+    queryset = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+        cube_link_id__foreign_cube_id__in=[
+            group['cube_link_id__foreign_cube_id'] 
+            for group in duplicate_groups
+        ],
+        foreign_cube_variable_code__in=[
+            group['foreign_cube_variable_code'] 
+            for group in duplicate_groups
+        ],
+        cube_link_id__join_identifier__in=[
+            group['cube_link_id__join_identifier'] 
+            for group in duplicate_groups
+        ]
+    ).select_related(
+        'cube_link_id__foreign_cube_id', 
+        'cube_link_id__primary_cube_id',
+        'foreign_cube_variable_code',
+        'primary_cube_variable_code',
+        'cube_link_id'
+    )
+
+    # Apply filters if they exist in the request
+    foreign_cube = request.GET.get('foreign_cube')
+    primary_cube = request.GET.get('primary_cube')
+    
+    if foreign_cube:
+        queryset = queryset.filter(cube_link_id__foreign_cube_id__cube_id__icontains=foreign_cube)
+    if primary_cube:
+        queryset = queryset.filter(cube_link_id__primary_cube_id__cube_id__icontains=primary_cube)
+    
+    # Pagination
+    paginator = Paginator(queryset.order_by('cube_link_id'), 25)
+    page = request.GET.get('page')
+    duplicate_links = paginator.get_page(page)
+    
+    return render(request, 'pybirdai/duplicate_primary_member_id_list.html', {
+        'duplicate_links': duplicate_links,
+        'is_paginated': True,
+        'page_obj': duplicate_links,
+        'foreign_cubes': foreign_cubes,
+        'primary_cubes': primary_cubes,
+    })
+
+@require_http_methods(["POST"])
+def delete_cube_structure_item_link(request, cube_structure_item_link_id):
+    try:
+        link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
+        link.delete()
+        messages.success(request, 'Link deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting link: {str(e)}')
+    
+    # Preserve the filter parameters in the redirect
+    params = request.GET.copy()
+    params.pop('page', None)  # Remove page parameter to avoid invalid page numbers
+    redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
+    if params:
+        redirect_url += f'?{params.urlencode()}'
+    return redirect(redirect_url)
 
