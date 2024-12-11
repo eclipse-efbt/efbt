@@ -23,6 +23,32 @@
 </ul>
 {% endif %}
 
+<!-- Add filter form -->
+<form method="get" class="filter-form">
+    <div class="filters">
+        <div class="filter-group">
+            <label for="foreign_cube">Foreign Cube:</label>
+            <select name="foreign_cube" id="foreign_cube">
+                <option value="">All</option>
+                {% for cube in foreign_cubes %}
+                <option value="{{ cube }}" {% if selected_foreign_cube == cube %}selected{% endif %}>{{ cube }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="join_identifier">Product Identifier:</label>
+            <select name="join_identifier" id="join_identifier">
+                <option value="">All</option>
+                {% for identifier in join_identifiers %}
+                <option value="{{ identifier }}" {% if selected_identifier == identifier %}selected{% endif %}>{{ identifier }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Apply Filters</button>
+        <a href="{% url 'pybirdai:edit_cube_links' %}" class="reset-button">Reset Filters</a>
+    </div>
+</form>
+
 <form method="post">
     {% csrf_token %}
     {{ formset.management_form }}

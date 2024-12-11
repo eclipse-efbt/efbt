@@ -177,10 +177,10 @@ class JoinsMetaDataCreator:
                                         cube_link.primary_cube_id = primary_cube
                                         cube_link.cube_link_id = (
                                             f"{report_template}:"
-                                            f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
+                                            f"{input_entity.cube_structure_id}:{table_part[1]}"
                                         )
                                     else:
-                                        cube_link.cube_link_id = f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
+                                        cube_link.cube_link_id = f"{input_entity.cube_structure_id}:{table_part[1]}"
                                         print(f"cube_link.primary_cube_id not found for {table}")
                                     cube_link.foreign_cube_id = generated_output_layer
 

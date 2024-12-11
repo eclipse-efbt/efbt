@@ -91,4 +91,5 @@ urlpatterns = [
     path('delete-combination/<str:combination_id>/', views.delete_combination, name='delete_combination'),
     path('join-identifiers/', JoinIdentifierListView.as_view(), name='join_identifier_list'),
     path('duplicate-primary-member-ids/', views.duplicate_primary_member_id_list, name='duplicate_primary_member_id_list'),
+    path('add-cube-structure-item-link/', views.add_cube_structure_item_link, name='add_cube_structure_item_link'),
 ]
