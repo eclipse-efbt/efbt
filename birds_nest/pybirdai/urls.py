@@ -15,6 +15,7 @@ from . import views
 from . import report_views
 
 from django.views.generic import TemplateView
+from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
 app_name = 'pybirdai'  # Add this line if using namespaces
 
@@ -88,6 +89,7 @@ urlpatterns = [
     path('combination-items/', views.combination_items, name='combination_items'),
     path('output-layers/', views.output_layers, name='output_layers'),
     path('delete-combination/<str:combination_id>/', views.delete_combination, name='delete_combination'),
-    
-
+    path('join-identifiers/', JoinIdentifierListView.as_view(), name='join_identifier_list'),
+    path('duplicate-primary-member-ids/', views.duplicate_primary_member_id_list, name='duplicate_primary_member_id_list'),
+    path('add-cube-structure-item-link/', views.add_cube_structure_item_link, name='add_cube_structure_item_link'),
 ]
