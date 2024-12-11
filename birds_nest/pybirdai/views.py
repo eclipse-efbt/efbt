@@ -19,8 +19,8 @@ from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
-    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION, 
-    COMBINATION, COMBINATION_ITEM, CUBE
+    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
+    COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM
 )
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
@@ -43,6 +43,11 @@ from .process_steps.upload_files.file_uploader import FileUploader
 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 from .entry_points.upload_joins_configuration import UploadJoinsConfiguration
 from django.template.loader import render_to_string
+from django.db.models import Count, F
+from django.views.generic import ListView
+from django.urls import reverse
+from .context.sdd_context_django import SDDContext
+
 
 
 # Helper function for paginated modelformset views
@@ -336,10 +341,79 @@ def edit_member_mapping_items(request):
     return paginated_modelformset_view(request, MEMBER_MAPPING_ITEM, 'pybirdai/edit_member_mapping_items.html')
 
 def edit_cube_links(request):
-    return paginated_modelformset_view(request, CUBE_LINK, 'pybirdai/edit_cube_links.html', order_by='cube_link_id')
+    # Get unique values for filters
+    foreign_cubes = CUBE_LINK.objects.values_list('foreign_cube_id', flat=True).distinct()
+    join_identifiers = CUBE_LINK.objects.values_list('join_identifier', flat=True).distinct()
+    
+    # Get filter values from request
+    selected_foreign_cube = request.GET.get('foreign_cube', '')
+    selected_identifier = request.GET.get('join_identifier', '')
+    
+    # Apply filters and ordering
+    queryset = CUBE_LINK.objects.all().order_by('cube_link_id')  # Add default ordering
+    if selected_foreign_cube:
+        queryset = queryset.filter(foreign_cube_id=selected_foreign_cube)
+    if selected_identifier:
+        queryset = queryset.filter(join_identifier=selected_identifier)
+    
+    # Add pagination and formset creation
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(queryset, 20)
+    page_obj = paginator.get_page(page_number)
+    
+    ModelFormSet = modelformset_factory(CUBE_LINK, fields='__all__', extra=0)
+    formset = ModelFormSet(queryset=page_obj.object_list)
+    
+    context = {
+        'formset': formset,
+        'page_obj': page_obj,
+        'foreign_cubes': foreign_cubes,
+        'join_identifiers': join_identifiers,
+        'selected_foreign_cube': selected_foreign_cube,
+        'selected_identifier': selected_identifier,
+    }
+    return render(request, 'pybirdai/edit_cube_links.html', context)
 
 def edit_cube_structure_item_links(request):
-    return paginated_modelformset_view(request, CUBE_STRUCTURE_ITEM_LINK, 'pybirdai/edit_cube_structure_item_links.html', order_by='cube_structure_item_link_id')
+    # Get unique values for dropdowns
+    queryset = CUBE_STRUCTURE_ITEM_LINK.objects.all().order_by('cube_structure_item_link_id')
+    unique_cube_links = queryset.values_list('cube_link_id', flat=True).distinct()
+    unique_foreign_cube_variable_codes = queryset.values_list('foreign_cube_variable_code', flat=True).distinct()
+    unique_primary_cube_variable_codes = queryset.values_list('primary_cube_variable_code', flat=True).distinct()
+
+    # Get filter values from request
+    selected_cube_link = request.GET.get('cube_link', '')
+    selected_foreign_code = request.GET.get('foreign_code', '')
+    selected_primary_code = request.GET.get('primary_code', '')
+
+    # Apply filters
+    if selected_cube_link:
+        queryset = queryset.filter(cube_link_id=selected_cube_link)
+    if selected_foreign_code:
+        queryset = queryset.filter(foreign_cube_variable_code=selected_foreign_code)
+    if selected_primary_code:
+        queryset = queryset.filter(primary_cube_variable_code=selected_primary_code)
+
+    # Add pagination and formset creation
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(queryset, 20)
+    page_obj = paginator.get_page(page_number)
+    
+    ModelFormSet = modelformset_factory(CUBE_STRUCTURE_ITEM_LINK, fields='__all__', extra=0)
+    formset = ModelFormSet(queryset=page_obj.object_list)
+
+    # Get all CUBE_STRUCTURE_ITEM instances for the dropdowns
+    cube_structure_items = CUBE_STRUCTURE_ITEM.objects.all().order_by('variable_id')
+    
+    context = {
+        'formset': formset,
+        'page_obj': page_obj,
+        'unique_cube_links': unique_cube_links,
+        'cube_structure_items': cube_structure_items,
+        'selected_cube_link': selected_cube_link,
+    }
+    
+    return render(request, 'pybirdai/edit_cube_structure_item_links.html', context)
 
 def edit_mapping_to_cubes(request):
     return paginated_modelformset_view(request, MAPPING_TO_CUBE, 'pybirdai/edit_mapping_to_cubes.html')
@@ -387,7 +461,27 @@ def delete_cube_link(request, cube_link_id):
     return delete_item(request, CUBE_LINK, 'cube_link_id', 'edit_cube_links')
 
 def delete_cube_structure_item_link(request, cube_structure_item_link_id):
-    return delete_item(request, CUBE_STRUCTURE_ITEM_LINK, 'cube_structure_item_link_id', 'edit_cube_structure_item_links')
+    
+    try:
+        
+        link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
+        link.delete()
+        sdd_context = SDDContext()
+        try:
+            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[link.cube_link_id.cube_link_id]
+            for cube_structure_item_link in cube_structure_item_links:
+                if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
+                    cube_structure_item_links.remove(cube_structure_item_link)
+                    break
+        except KeyError:
+            pass
+        
+        messages.success(request, 'Link deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting link: {str(e)}')
+    
+    # Redirect back to the edit page
+    return redirect('pybirdai:edit_cube_structure_item_links')
 
 def delete_mapping_to_cube(request, mapping_to_cube_id):
     return delete_item(request, MAPPING_TO_CUBE, 'id', 'edit_mapping_to_cubes')
@@ -573,4 +667,167 @@ def output_layers(request):
 def delete_combination(request, combination_id):
     return delete_item(request, COMBINATION, 'combination_id', 'combinations')
 
+class DuplicatePrimaryMemberIdListView(ListView):
+    template_name = 'pybirdai/duplicate_primary_member_id_list.html'
+    context_object_name = 'duplicate_links'
+    paginate_by = 10  # Number of items per page
+
+    def get_queryset(self):
+        # First, find the combinations of primary_cube_id and primary_cube_variable_code 
+        # that have duplicates within their group
+        duplicate_groups = CUBE_STRUCTURE_ITEM_LINK.objects.values(
+            'cube_link_id__foreign_cube_id', 
+            'foreign_cube_variable_code',
+            'cube_link_id__join_identifier'
+        ).annotate(
+            count=Count('cube_structure_item_link_id')
+        ).filter(count__gt=1)
+
+        # Then get all the CUBE_STRUCTURE_ITEM_LINK records that match these combinations
+        return CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+            cube_link_id__foreign_cube_id__in=[
+                group['cube_link_id__foreign_cube_id'] 
+                for group in duplicate_groups
+            ],
+            foreign_cube_variable_code__in=[
+                group['foreign_cube_variable_code'] 
+                for group in duplicate_groups
+            ],
+            cube_link_id__join_identifier__in=[
+                group['cube_link_id__join_identifier'] 
+                for group in duplicate_groups
+            ]
+        ).select_related(
+            'cube_link_id__foreign_cube_id', 
+            'cube_link_id__primary_cube_id',
+            'foreign_cube_variable_code',
+            'primary_cube_variable_code',
+            'cube_link_id'
+        ).order_by('cube_link_id')
+
+class JoinIdentifierListView(ListView):
+    template_name = 'pybirdai/join_identifier_list.html'
+    context_object_name = 'join_identifiers'
+    
+    def get_queryset(self):
+        return CUBE_LINK.objects.values_list('join_identifier', flat=True).distinct().order_by('join_identifier')
+
+def duplicate_primary_member_id_list(request):
+    # Get unique values for dropdowns
+    foreign_cubes = CUBE_STRUCTURE_ITEM_LINK.objects.values_list(
+        'cube_link_id__foreign_cube_id__cube_id', 
+        flat=True
+    ).distinct().order_by('cube_link_id__foreign_cube_id__cube_id')
+    
+    primary_cubes = CUBE_STRUCTURE_ITEM_LINK.objects.values_list(
+        'cube_link_id__primary_cube_id__cube_id', 
+        flat=True
+    ).distinct().order_by('cube_link_id__primary_cube_id__cube_id')
+
+    # First, find the combinations that have duplicates
+    duplicate_groups = CUBE_STRUCTURE_ITEM_LINK.objects.values(
+        'cube_link_id__foreign_cube_id', 
+        'foreign_cube_variable_code',
+        'cube_link_id__join_identifier'
+    ).annotate(
+        count=Count('cube_structure_item_link_id')
+    ).filter(count__gt=1)
+
+    # Build the base queryset for duplicates
+    queryset = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+        cube_link_id__foreign_cube_id__in=[
+            group['cube_link_id__foreign_cube_id'] 
+            for group in duplicate_groups
+        ],
+        foreign_cube_variable_code__in=[
+            group['foreign_cube_variable_code'] 
+            for group in duplicate_groups
+        ],
+        cube_link_id__join_identifier__in=[
+            group['cube_link_id__join_identifier'] 
+            for group in duplicate_groups
+        ]
+    ).select_related(
+        'cube_link_id__foreign_cube_id', 
+        'cube_link_id__primary_cube_id',
+        'foreign_cube_variable_code',
+        'primary_cube_variable_code',
+        'cube_link_id'
+    )
+
+    # Apply filters if they exist in the request
+    foreign_cube = request.GET.get('foreign_cube')
+    primary_cube = request.GET.get('primary_cube')
+    
+    if foreign_cube:
+        queryset = queryset.filter(cube_link_id__foreign_cube_id__cube_id__icontains=foreign_cube)
+    if primary_cube:
+        queryset = queryset.filter(cube_link_id__primary_cube_id__cube_id__icontains=primary_cube)
+    
+    # Pagination
+    paginator = Paginator(queryset.order_by('cube_link_id'), 25)
+    page = request.GET.get('page')
+    duplicate_links = paginator.get_page(page)
+    
+    return render(request, 'pybirdai/duplicate_primary_member_id_list.html', {
+        'duplicate_links': duplicate_links,
+        'is_paginated': True,
+        'page_obj': duplicate_links,
+        'foreign_cubes': foreign_cubes,
+        'primary_cubes': primary_cubes,
+    })
+
+@require_http_methods(["POST"])
+def delete_cube_structure_item_link(request, cube_structure_item_link_id):
+    
+    try:
+        
+        link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
+        link.delete()
+        sdd_context = SDDContext()
+        try:
+            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[link.cube_link_id.cube_link_id]
+            for cube_structure_item_link in cube_structure_item_links:
+                if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
+                    cube_structure_item_links.remove(cube_structure_item_link)
+                    break
+        except KeyError:
+            pass
+        messages.success(request, 'Link deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting link: {str(e)}')
+    
+    # Preserve the filter parameters in the redirect
+    params = request.GET.copy()
+    params.pop('page', None)  # Remove page parameter to avoid invalid page numbers
+    redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
+    if params:
+        redirect_url += f'?{params.urlencode()}'
+    return redirect(redirect_url)
+
+@require_http_methods(["POST"])
+def add_cube_structure_item_link(request):
+    try:
+        # Get the user-provided ID
+        cube_structure_item_link_id = request.POST['cube_structure_item_link_id']
+        
+        # Get the CUBE_LINK instance
+        cube_link = get_object_or_404(CUBE_LINK, cube_link_id=request.POST['cube_link_id'])
+        
+        # Get the CUBE_STRUCTURE_ITEM instances
+        foreign_cube_variable = get_object_or_404(CUBE_STRUCTURE_ITEM, id=request.POST['foreign_cube_variable_code'])
+        primary_cube_variable = get_object_or_404(CUBE_STRUCTURE_ITEM, id=request.POST['primary_cube_variable_code'])
+        
+        # Create the new link with the user-provided ID
+        new_link = CUBE_STRUCTURE_ITEM_LINK.objects.create(
+            cube_structure_item_link_id=cube_structure_item_link_id,
+            cube_link_id=cube_link,
+            foreign_cube_variable_code=foreign_cube_variable,
+            primary_cube_variable_code=primary_cube_variable
+        )
+        messages.success(request, 'New cube structure item link created successfully.')
+    except Exception as e:
+        messages.error(request, f'Error creating link: {str(e)}')
+    
+    return redirect('pybirdai:edit_cube_structure_item_links')
 
