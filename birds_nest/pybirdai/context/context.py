@@ -26,6 +26,8 @@ class Context(object):
     enrich_ldm_relationships = False
     use_codes = True
 
+    reference_data_class_list = []
+
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.
@@ -58,8 +60,10 @@ class Context(object):
         nsPrefix='il_entities')
     
 
-    
+    skip_reference_data_in_ldm = True
     reports_dictionary = {}
+
+    classification_types = {}
 
     enum_literals_map = {}
 

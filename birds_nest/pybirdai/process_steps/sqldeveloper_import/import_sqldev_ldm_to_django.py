@@ -77,7 +77,7 @@ class RegDNAToDJango(object):
                 output_file.write('class ' + elclass.name + '(' + elclass.eSuperTypes[0].name + '):\r\n')
             else:
                 output_file.write('class ' + elclass.name + '(models.Model):\r\n')
-            output_file.write('\ttest_id = models.CharField("test_id",max_length=255,default=None, blank=True, null=True)\r\n')
+                output_file.write('\ttest_id = models.CharField("test_id",max_length=255,default=None, blank=True, null=True)\r\n')
             for elmember in elclass.eStructuralFeatures:
                 if  isinstance(elmember ,ELAttribute):
                     if isinstance(elmember.eAttributeType, ELEnum):
