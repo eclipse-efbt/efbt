@@ -34,6 +34,7 @@ from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
 from .entry_points.execute_datapoint import RunExecuteDataPoint
 from .entry_points.upload_sqldev_eil_files import UploadSQLDevEILFiles
+from .entry_points.upload_sqldev_eldm_files import UploadSQLDevELDMFiles
 from .entry_points.upload_technical_export_files import UploadTechnicalExportFiles
 from .entry_points.create_django_models import RunCreateDjangoModels
 import os
@@ -268,7 +269,21 @@ def upload_sqldev_eil_files(request):
     """
     return HttpResponse(html_response)
     
+def upload_sqldev_eldm_files(request):
+    if request.method == 'GET':
+        # Show the upload form
+        return render(request, 'pybirdai/upload_sqldev_eldm_files.html')
+    elif request.method == 'POST':
+        # Handle the file upload
+        app_config = UploadSQLDevELDMFiles('pybirdai', 'birds_nest')
+        app_config.upload_sqldev_eldm_files(request)
+        html_response = f"""
+        <h3>Uploaded SQLDeveloper ELDMFiles.</h3>
 
+        <p> Go back to <a href="/pybirdai/create-bird-database">Create BIRD Database</a></p>
+    """
+    return HttpResponse(html_response)
+        
 def upload_technical_export_files(request):
     if request.method == 'GET':
         # Show the upload form
