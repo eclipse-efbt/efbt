@@ -71,6 +71,52 @@ class FileUploader:
             'files': uploaded_files
         }
         
+    def upload_sqldev_eldm_files(self, sdd_context, request=None):
+        """
+        Handle the upload of SQLDeveloper ELDM files.
+        """
+        print("Uploading SQLDeveloper ELDM files")
+
+        
+        if not request or not request.FILES:
+            return {
+                'status': 'error',
+                'message': 'No files were uploaded'
+            }
+            
+        uploaded_files = []
+        resource_directory = sdd_context.file_directory
+        eldm_directory = os.path.join(resource_directory, 'ldm')
+        # delete all files in the directory
+        for file in os.listdir(eldm_directory):
+            os.remove(os.path.join(eldm_directory, file))
+
+        for file in request.FILES.getlist('eldm_files'):
+            try:
+                # You might want to add file validation here
+                # For example, check file extension, size, etc.
+                
+                # Handle the file upload
+                # Example: save to a specific directory
+                
+                self._save_file(file, eldm_directory)
+                uploaded_files.append({
+                    'name': file.name,
+                    'path': eldm_directory,
+                    'size': file.size
+                })
+                
+            except Exception as e:
+                return {
+                    'status': 'error',
+                    'message': f'Error uploading file {file.name}: {str(e)}'
+                }
+        
+        return {
+            'status': 'success',
+            'files': uploaded_files
+        }
+        
     def upload_technical_export_files(self, sdd_context, request=None):
         """
         Handle the upload of Technical Export files.

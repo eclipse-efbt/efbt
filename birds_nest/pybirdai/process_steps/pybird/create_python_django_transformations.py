@@ -23,6 +23,7 @@ class CreatePythonTransformations:
         '''
         Read in the transformation meta data and create python classes
         '''
+        
         CreatePythonTransformations.delete_generated_python_join_files(context)
         CreatePythonTransformations.create_output_classes( sdd_context)
         CreatePythonTransformations.create_slice_classes(sdd_context)
