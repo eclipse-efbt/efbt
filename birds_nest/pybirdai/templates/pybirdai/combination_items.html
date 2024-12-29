@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Edit Combination Items</h1>
-
+<a href="{% url 'pybirdai:review_filters' %}">Back to Review  Filters</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -11,6 +11,67 @@
 </ul>
 {% endif %}
 
+<style>
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 1em;
+    }
+    table {
+        min-width: 100%;
+        white-space: nowrap;
+    }
+    th, td {
+        padding: 8px;
+        border: 1px solid #ddd;
+    }
+    .filter-form {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    .filter-form label {
+        margin-right: 10px;
+    }
+    .filter-form input {
+        margin-right: 20px;
+        padding: 5px;
+    }
+    .filter-form button {
+        padding: 5px 15px;
+    }
+    .filter-form select {
+        margin-right: 20px;
+        padding: 5px;
+        min-width: 200px;
+    }
+</style>
+
+<!-- Filter Form -->
+<form method="get" class="filter-form">
+    <label for="variable_id">Variable ID:</label>
+    <select id="variable_id" name="variable_id">
+        <option value="">All Variables</option>
+        {% for vid in unique_variable_ids %}
+            <option value="{{ vid }}" {% if vid == selected_variable_id %}selected{% endif %}>{{ vid }}</option>
+        {% endfor %}
+    </select>
+    
+    <label for="member_id">Member ID:</label>
+    <select id="member_id" name="member_id">
+        <option value="">All Members</option>
+        {% for mid in unique_member_ids %}
+            <option value="{{ mid }}" {% if mid == selected_member_id %}selected{% endif %}>{{ mid }}</option>
+        {% endfor %}
+    </select>
+    
+    <button type="submit">Apply Filters</button>
+    {% if request.GET.variable_id or request.GET.member_id %}
+        <a href="{% url 'pybirdai:combination_items' %}">Clear Filters</a>
+    {% endif %}
+</form>
+
 <form method="post">
     {% csrf_token %}
     {{ formset.management_form }}
@@ -18,17 +79,10 @@
         <table>
             <thead>
                 <tr>
-                    <th>Maintenance Agency</th>
-                    <th>Combination Item ID</th>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Valid From</th>
-                    <th>Valid To</th>
-                    <th>Version</th>
                     <th>Combination ID</th>
                     <th>Variable ID</th>
                     <th>Member ID</th>
+                    <th>Member Hierarchy</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -36,24 +90,17 @@
                 {% for form in formset %}
                 {{ form.id }}
                 <tr>
-                    <td>{{ form.maintenance_agency_id }}</td>
-                    <td>{{ form.combination_item_id }}</td>
-                    <td>{{ form.code }}</td>
-                    <td>{{ form.name }}</td>
-                    <td>{{ form.description }}</td>
-                    <td>{{ form.valid_from }}</td>
-                    <td>{{ form.valid_to }}</td>
-                    <td>{{ form.version }}</td>
                     <td>{{ form.combination_id }}</td>
                     <td>{{ form.variable_id }}</td>
                     <td>{{ form.member_id }}</td>
+                    <td>{{ form.member_hierarchy }}</td>
                     <td>
-                        
+                        <button type="button" onclick="confirmDelete('{{ form.instance.id }}')">Delete</button>
                     </td>
                 </tr>
                 {% if form.errors %}
                 <tr>
-                    <td colspan="12">
+                    <td colspan="5">
                         {{ form.errors }}
                     </td>
                 </tr>
@@ -84,5 +131,21 @@
     </span>
 </div>
 
+<script>
+function confirmDelete(itemId) {
+    if (confirm('Are you sure you want to delete this combination item?')) {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'pybirdai:delete_combination_item' 0 %}".replace('0', itemId);
+        var csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = '{{ csrf_token }}';
+        form.appendChild(csrfInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
 
 {% endblock %} 

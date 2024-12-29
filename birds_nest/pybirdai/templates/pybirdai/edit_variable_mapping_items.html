@@ -23,6 +23,80 @@
 </ul>
 {% endif %}
 
+<!-- Add New Variable Mapping Item Button -->
+<button type="button" onclick="showNewItemForm()" class="create-button">Create New Variable Mapping Item</button>
+
+<!-- Add New Item Form (Hidden by default) -->
+<div id="newItemForm" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Create New Variable Mapping Item</h2>
+        <form method="post" action="{% url 'pybirdai:create_variable_mapping_item' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="variable_mapping_id">Variable Mapping:</label>
+                <select name="variable_mapping_id" id="variable_mapping_id" required>
+                    {% for mapping in all_variable_mappings %}
+                        <option value="{{ mapping.variable_mapping_id }}">{{ mapping.variable_mapping_id }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="is_source">Is Source:</label>
+                <select name="is_source" id="is_source" required>
+                    <option value="Y">Yes</option>
+                    <option value="N">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="variable">Variable:</label>
+                <select name="variable" id="variable" required>
+                    {% for var in all_variables %}
+                        <option value="{{ var.variable_id }}">{{ var.variable_id }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="valid_from">Valid From:</label>
+                <input type="datetime-local" id="valid_from" name="valid_from">
+            </div>
+            <div class="form-group">
+                <label for="valid_to">Valid To:</label>
+                <input type="datetime-local" id="valid_to" name="valid_to">
+            </div>
+            <div class="form-buttons">
+                <button type="submit" class="submit-button">Create</button>
+                <button type="button" onclick="hideNewItemForm()" class="cancel-button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add filter form -->
+<div class="filters">
+    <form method="get" class="filter-form">
+        <div class="filter-group">
+            <label for="variable_mapping">Variable Mapping:</label>
+            <select name="variable_mapping" id="variable_mapping">
+                <option value="">All</option>
+                {% for mapping in unique_variable_mappings %}
+                <option value="{{ mapping }}" {% if selected_variable_mapping == mapping %}selected{% endif %}>{{ mapping }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="variable">Variable:</label>
+            <select name="variable" id="variable">
+                <option value="">All</option>
+                {% for var in unique_variables %}
+                <option value="{{ var }}" {% if selected_variable == var %}selected{% endif %}>{{ var }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="filter-button">Apply Filters</button>
+        <a href="{% url 'pybirdai:edit_variable_mapping_items' %}" class="clear-button">Clear Filters</a>
+    </form>
+</div>
+
 <form method="post">
     {% csrf_token %}
     {{ formset.management_form }}
@@ -99,6 +173,14 @@ function confirmDelete(itemId) {
         form.submit();
     }
 }
+
+function showNewItemForm() {
+    document.getElementById('newItemForm').style.display = 'block';
+}
+
+function hideNewItemForm() {
+    document.getElementById('newItemForm').style.display = 'none';
+}
 </script>
 
 <style>
@@ -115,6 +197,142 @@ function confirmDelete(itemId) {
     }
     th {
         background-color: #f2f2f2;
+    }
+
+    /* Add new filter styles */
+    .filters {
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+
+    .filters form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filters label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .filters select {
+        padding: 6px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .filter-button, .clear-button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .filter-button {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .clear-button {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .filter-button:hover {
+        background-color: #0056b3;
+    }
+
+    .clear-button:hover {
+        background-color: #5a6268;
+    }
+
+    .create-button {
+        margin-bottom: 20px;
+        padding: 8px 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .create-button:hover {
+        background-color: #45a049;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 4px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .form-buttons {
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    .form-buttons button {
+        margin-left: 10px;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .submit-button {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .cancel-button {
+        background-color: #f44336;
+        color: white;
     }
 </style>
 {% endblock %}
