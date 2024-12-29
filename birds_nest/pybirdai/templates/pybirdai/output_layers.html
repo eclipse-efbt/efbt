@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Edit Output Layers</h1>
-
+<a href="{% url 'pybirdai:review_filters' %}">Back to Review  Filters</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -81,4 +81,53 @@
         {% endif %}
     </span>
 </div>
+
+<script>
+function confirmDelete(cubeId) {
+    if (confirm('Are you sure you want to delete this cube?')) {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'pybirdai:delete_cube' 0 %}".replace('0', cubeId);
+        var csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = '{{ csrf_token }}';
+        form.appendChild(csrfInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+
+<style>
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 1em;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 2000px; /* Set minimum width to ensure horizontal scroll */
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+        position: sticky;
+        top: 0;
+    }
+    .pagination {
+        margin-top: 20px;
+    }
+    /* Make form inputs expand to fill cells */
+    td input, td select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 4px;
+    }
+</style>
 {% endblock %} 

@@ -1,0 +1,170 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+{% load pybirdai_extras %}
+
+{% block content %}
+<h1>View Member Mapping Items By Row</h1>
+<a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<!-- Member Mapping Selection Form -->
+<div class="filters">
+    <form method="get" class="filter-form">
+        <div class="filter-group">
+            <label for="member_mapping">Select Member Mapping:</label>
+            <select name="member_mapping" id="member_mapping" onchange="this.form.submit()">
+                <option value="">Select a Member Mapping</option>
+                {% for mapping in member_mappings %}
+                <option value="{{ mapping.member_mapping_id }}" {% if selected_mapping == mapping.member_mapping_id %}selected{% endif %}>
+                    {{ mapping.member_mapping_id }} - {{ mapping.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+</div>
+
+{% if selected_mapping %}
+    <div class="table-container">
+        <table>
+            <tr>
+                <th rowspan="2">Row</th>
+                {% if source_variables %}
+                    <th colspan="{{ source_variables|length }}" class="source-section">Source Variables</th>
+                {% endif %}
+                {% if target_variables %}
+                    <th colspan="{{ target_variables|length }}" class="target-section">Target Variables</th>
+                {% endif %}
+            </tr>
+            <tr>
+                {% for var in source_variables %}
+                    <th class="source-header">{{ var }}</th>
+                {% endfor %}
+                {% for var in target_variables %}
+                    <th class="target-header">{{ var }}</th>
+                {% endfor %}
+            </tr>
+            {% for row_number, row_data in items_by_row.items %}
+                <tr>
+                    <td class="row-number">{{ row_number }}</td>
+                    {% for var in source_variables %}
+                        <td class="source-cell">
+                            {% with item=row_data.items|get_dict_item:var %}
+                                {% if item %}
+                                    {{ item.member.member_id }}
+                                    {% if item.member_hierarchy %}
+                                        <br><small>({{ item.member_hierarchy }})</small>
+                                    {% endif %}
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    {% endfor %}
+                    {% for var in target_variables %}
+                        <td class="target-cell">
+                            {% with item=row_data.items|get_dict_item:var %}
+                                {% if item %}
+                                    {{ item.member.member_id }}
+                                    {% if item.member_hierarchy %}
+                                        <br><small>({{ item.member_hierarchy }})</small>
+                                    {% endif %}
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}
+
+<style>
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin: 2em 0;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 1em;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+        position: sticky;
+        top: 0;
+    }
+    .source-section {
+        background-color: #2c5282;
+        color: white;
+        text-align: center;
+    }
+    .target-section {
+        background-color: #276749;
+        color: white;
+        text-align: center;
+    }
+    .source-header {
+        background-color: #e6f3ff;
+    }
+    .target-header {
+        background-color: #f0fff0;
+    }
+    .source-cell {
+        background-color: #f8fbff;
+    }
+    .target-cell {
+        background-color: #f8fff8;
+    }
+    .row-number {
+        font-weight: bold;
+        background-color: #f2f2f2;
+    }
+    .filters {
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+    .filter-group {
+        margin-bottom: 10px;
+    }
+    .filter-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .filter-group select {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+    small {
+        color: #666;
+        font-style: italic;
+    }
+</style>
+{% endblock %} 

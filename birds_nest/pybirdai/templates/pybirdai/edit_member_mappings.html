@@ -14,6 +14,46 @@
 
 {% block content %}
 <h1>Edit Member Mappings</h1>
+<a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
+
+<div style="margin: 20px 0;">
+    <button type="button" onclick="showNewMappingForm()" class="create-button">Create New Member Mapping</button>
+</div>
+
+<!-- Add New Member Mapping Form -->
+<div id="newMappingForm" style="display: none;" class="modal">
+    <div class="modal-content">
+        <h2>Create New Member Mapping</h2>
+        <form method="post" action="{% url 'pybirdai:create_member_mapping' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" name="name" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="code">Code:</label>
+                <input type="text" name="code" id="code" required>
+            </div>
+            <div class="form-group">
+                <label for="maintenance_agency_id">Maintenance Agency:</label>
+                <select name="maintenance_agency_id" id="maintenance_agency_id">
+                    <option value="">Select Agency</option>
+                    {% for agency in maintenance_agencies %}
+                        <option value="{{ agency.maintenance_agency_id }}">{{ agency.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="member_mapping_id">Member Mapping ID:</label>
+                <input type="text" name="member_mapping_id" id="member_mapping_id" required>
+            </div>
+            <div class="button-group">
+                <button type="submit">Create</button>
+                <button type="button" onclick="hideNewMappingForm()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 {% if messages %}
 <ul class="messages">
@@ -97,6 +137,14 @@ function confirmDelete(memberMappingId) {
         form.submit();
     }
 }
+
+function showNewMappingForm() {
+    document.getElementById('newMappingForm').style.display = 'block';
+}
+
+function hideNewMappingForm() {
+    document.getElementById('newMappingForm').style.display = 'none';
+}
 </script>
 
 <style>
@@ -122,6 +170,65 @@ function confirmDelete(memberMappingId) {
     }
     .pagination {
         margin-top: 20px;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .button-group {
+        margin-top: 20px;
+        text-align: right;
+    }
+    
+    .button-group button {
+        margin-left: 10px;
+    }
+    
+    .create-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .create-button:hover {
+        background-color: #45a049;
     }
 </style>
 {% endblock %}

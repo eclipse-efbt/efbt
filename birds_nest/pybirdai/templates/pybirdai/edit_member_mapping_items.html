@@ -14,6 +14,7 @@
 
 {% block content %}
 <h1>Edit Member Mapping Items</h1>
+<a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
 
 {% if messages %}
 <ul class="messages">
@@ -22,6 +23,120 @@
     {% endfor %}
 </ul>
 {% endif %}
+
+<!-- Add filter form -->
+<div class="filters">
+    <form method="get" class="filter-form">
+        <div class="filters">
+            <div class="filter-group">
+                <label for="member_mapping">Member Mapping:</label>
+                <select name="member_mapping" id="member_mapping">
+                    <option value="">All</option>
+                    {% for mapping in member_mappings %}
+                    <option value="{{ mapping }}" {% if selected_member_mapping == mapping %}selected{% endif %}>{{ mapping }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="member">Member:</label>
+                <select name="member" id="member">
+                    <option value="">All</option>
+                    {% for member in members %}
+                    <option value="{{ member }}" {% if selected_member == member %}selected{% endif %}>{{ member }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="variable">Variable:</label>
+                <select name="variable" id="variable">
+                    <option value="">All</option>
+                    {% for var in variables %}
+                    <option value="{{ var }}" {% if selected_variable == var %}selected{% endif %}>{{ var }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="is_source">Is Source:</label>
+                <select name="is_source" id="is_source">
+                    <option value="">All</option>
+                    <option value="True" {% if selected_is_source == 'True' %}selected{% endif %}>Yes</option>
+                    <option value="False" {% if selected_is_source == 'False' %}selected{% endif %}>No</option>
+                </select>
+            </div>
+            <button type="submit" class="filter-button">Apply Filters</button>
+            <a href="{% url 'pybirdai:edit_member_mapping_items' %}" class="clear-button">Clear Filters</a>
+        </div>
+    </form>
+</div>
+
+<!-- Add New Button -->
+<div class="add-new-section">
+    <button type="button" onclick="showAddForm()" class="add-button">Add New Member Mapping Item</button>
+</div>
+
+<!-- Add New Form (Hidden by default) -->
+<div id="addMemberMappingItemForm" class="add-form" style="display: none;">
+    <form method="post" action="{% url 'pybirdai:add_member_mapping_item' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="is_source">Is Source:</label>
+            <select name="is_source" id="is_source" required>
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="member">Member:</label>
+            <select name="member" id="member" required>
+                <option value="">Select Member</option>
+                {% for member in all_members %}
+                <option value="{{ member.member_id }}">{{ member.member_id }} - {{ member.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="variable">Variable:</label>
+            <select name="variable" id="variable" required>
+                <option value="">Select Variable</option>
+                {% for variable in all_variables %}
+                <option value="{{ variable.variable_id }}">{{ variable.variable_id }} - {{ variable.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="row">Row:</label>
+            <input type="number" name="row" id="row" required>
+        </div>
+        <div class="form-group">
+            <label for="member_mapping_id">Member Mapping:</label>
+            <select name="member_mapping_id" id="member_mapping_id" required>
+                <option value="">Select Member Mapping</option>
+                {% for mapping in all_member_mappings %}
+                <option value="{{ mapping.member_mapping_id }}">{{ mapping.member_mapping_id }} - {{ mapping.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="member_hierarchy">Member Hierarchy:</label>
+            <select name="member_hierarchy" id="member_hierarchy">
+                <option value="">Select Member Hierarchy</option>
+                {% for hierarchy in all_member_hierarchies %}
+                <option value="{{ hierarchy.member_hierarchy_id }}">{{ hierarchy.member_hierarchy_id }} - {{ hierarchy.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="valid_from">Valid From:</label>
+            <input type="date" name="valid_from" id="valid_from">
+        </div>
+        <div class="form-group">
+            <label for="valid_to">Valid To:</label>
+            <input type="date" name="valid_to" id="valid_to">
+        </div>
+        <button type="submit" class="submit-button">Create Item</button>
+        <button type="button" onclick="hideAddForm()" class="cancel-button">Cancel</button>
+    </form>
+</div>
 
 <form method="post">
     {% csrf_token %}
@@ -105,6 +220,14 @@ function confirmDelete(itemId) {
         form.submit();
     }
 }
+
+function showAddForm() {
+    document.getElementById('addMemberMappingItemForm').style.display = 'block';
+}
+
+function hideAddForm() {
+    document.getElementById('addMemberMappingItemForm').style.display = 'none';
+}
 </script>
 
 <style>
@@ -130,6 +253,132 @@ function confirmDelete(itemId) {
     }
     .pagination {
         margin-top: 20px;
+    }
+    .filters {
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+    
+    .filters form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+    }
+    
+    .filters label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    .filters select {
+        padding: 6px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        min-width: 200px;
+    }
+    
+    .filter-button, .clear-button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .filter-button {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    .clear-button {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .filter-button:hover {
+        background-color: #0056b3;
+    }
+    
+    .clear-button:hover {
+        background-color: #5a6268;
+    }
+
+    .add-new-section {
+        margin: 20px 0;
+    }
+
+    .add-button {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .add-button:hover {
+        background-color: #218838;
+    }
+
+    .add-form {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+        max-width: 500px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    .form-group input[type="checkbox"] {
+        width: auto;
+    }
+
+    .submit-button {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .cancel-button {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+
+    .cancel-button:hover {
+        background-color: #5a6268;
     }
 </style>
 {% endblock %}

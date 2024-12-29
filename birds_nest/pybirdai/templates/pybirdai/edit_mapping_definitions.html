@@ -14,6 +14,66 @@
 
 {% block content %}
 <h1>Edit Mapping Definitions</h1>
+<a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
+
+<div class="action-buttons">
+    <button type="button" class="create-button" onclick="showNewMappingForm()">Create New Mapping Definition</button>
+</div>
+
+<!-- New Mapping Form (Hidden by default) -->
+<div id="newMappingForm" style="display: none;" class="form-container">
+    <h2>Create New Mapping Definition</h2>
+    <form method="post" action="{% url 'pybirdai:create_mapping_definition' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="code">Code:</label>
+            <input type="text" id="code" name="code" required>
+        </div>
+        <div class="form-group">
+            <label for="maintenance_agency_id">Maintenance Agency:</label>
+            <select id="maintenance_agency_id" name="maintenance_agency_id">
+                <option value="">Select Agency</option>
+                {% for agency in maintenance_agencies %}
+                <option value="{{ agency.maintenance_agency_id }}">{{ agency.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="mapping_id">Mapping ID:</label>
+            <input type="text" id="mapping_id" name="mapping_id" required>
+        </div>
+        <div class="form-group">
+            <label for="mapping_type">Mapping Type:</label>
+            <input type="text" id="mapping_type" name="mapping_type" required>
+        </div>
+        <div class="form-group">
+            <label for="member_mapping_id">Member Mapping:</label>
+            <select id="member_mapping_id" name="member_mapping_id">
+                <option value="">Select Member Mapping</option>
+                {% for mapping in member_mappings %}
+                <option value="{{ mapping.member_mapping_id }}">{{ mapping.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="variable_mapping_id">Variable Mapping:</label>
+            <select id="variable_mapping_id" name="variable_mapping_id">
+                <option value="">Select Variable Mapping</option>
+                {% for mapping in variable_mappings %}
+                <option value="{{ mapping.variable_mapping_id }}">{{ mapping.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-buttons">
+            <button type="submit">Create</button>
+            <button type="button" onclick="hideNewMappingForm()">Cancel</button>
+        </div>
+    </form>
+</div>
 
 {% if messages %}
 <ul class="messages">
@@ -103,6 +163,14 @@ function confirmDelete(mappingId) {
         form.submit();
     }
 }
+
+function showNewMappingForm() {
+    document.getElementById('newMappingForm').style.display = 'block';
+}
+
+function hideNewMappingForm() {
+    document.getElementById('newMappingForm').style.display = 'none';
+}
 </script>
 
 <style>
@@ -114,7 +182,7 @@ function confirmDelete(mappingId) {
     table {
         border-collapse: collapse;
         width: 100%;
-        min-width: 1200px; /* Adjust this value based on your table's content */
+        min-width: 1200px;
     }
     th, td {
         border: 1px solid #ddd;
@@ -128,6 +196,64 @@ function confirmDelete(mappingId) {
     }
     .pagination {
         margin-top: 20px;
+    }
+    .action-buttons {
+        margin: 20px 0;
+    }
+    .create-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        border: none;
+        cursor: pointer;
+    }
+    .create-button:hover {
+        background-color: #45a049;
+    }
+    .form-container {
+        max-width: 600px;
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .form-buttons {
+        margin-top: 20px;
+    }
+    .form-buttons button {
+        margin-right: 10px;
+        padding: 8px 15px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+    }
+    .form-buttons button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .form-buttons button[type="button"] {
+        background-color: #f44336;
+        color: white;
     }
 </style>
 {% endblock %}
