@@ -14,7 +14,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.forms import modelformset_factory
 from django.core.paginator import Paginator
-from django.db import transaction
+from django.db import transaction, connection
 from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from .bird_meta_data_model import (
@@ -51,6 +51,7 @@ from django.urls import reverse
 from .context.sdd_context_django import SDDContext
 from urllib.parse import unquote
 import logging
+import zipfile
 
 
 
@@ -1473,4 +1474,51 @@ def view_member_mapping_items_by_row(request):
     }
     
     return render(request, 'pybirdai/view_member_mapping_items_by_row.html', context)
+
+def export_database_to_csv(request):
+    if request.method == 'GET':
+        return render(request, 'pybirdai/export_database.html')
+    elif request.method == 'POST':
+        # Create a zip file in memory
+        response = HttpResponse(content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename="database_export.zip"'
+        
+        with zipfile.ZipFile(response, 'w') as zip_file:
+            # Get all table names from SQLite
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'django_%'")
+                tables = cursor.fetchall()
+            
+            # Export each table to a CSV file
+            for table in tables:
+                table_name = table[0]
+                with connection.cursor() as cursor:
+                    # Get column names
+                    cursor.execute(f"SELECT * FROM {table_name} LIMIT 0")
+                    headers = [desc[0] for desc in cursor.description]
+                    
+                    # Get data
+                    cursor.execute(f"SELECT * FROM {table_name}")
+                    rows = cursor.fetchall()
+                    
+                    # Create CSV in memory
+                    csv_content = []
+                    csv_content.append(','.join(headers))
+                    for row in rows:
+                        # Convert all values to strings and handle None values
+                        csv_row = [str(val) if val is not None else '' for val in row]
+                        # Escape commas and quotes in values
+                        processed_row = []
+                        for val in csv_row:
+                            if ',' in val or '"' in val:
+                                escaped_val = val.replace('"', '""')
+                                processed_row.append(f'"{escaped_val}"')
+                            else:
+                                processed_row.append(val)
+                        csv_content.append(','.join(processed_row))
+                    
+                    # Add CSV to zip file
+                    zip_file.writestr(f"{table_name}.csv", '\n'.join(csv_content))
+        
+        return response
 

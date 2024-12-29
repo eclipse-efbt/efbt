@@ -105,4 +105,5 @@ urlpatterns = [
     path('edit_member_mapping_items/', views.edit_member_mapping_items, name='edit_member_mapping_items'),
     path('add_member_mapping_item/', views.add_member_mapping_item, name='add_member_mapping_item'),
     path('view_member_mapping_items_by_row/', views.view_member_mapping_items_by_row, name='view_member_mapping_items_by_row'),
+    path('export-database-to-csv/', views.export_database_to_csv, name='export_database_to_csv'),
 ]
