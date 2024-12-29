@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Cube Structure Item Links</h1>
-
+<a href="{% url 'pybirdai:review_join_meta_data' %}">Back to Review  Transformations Rules MetaData</a>
 <!-- Modify the filters div -->
 <div class="filters">
     <form id="filterForm">
@@ -50,30 +50,33 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="cube_structure_item_link_id">Cube Structure Item Link ID:</label>
-            <input type="text" name="cube_structure_item_link_id" required>
+            <input type="text" name="cube_structure_item_link_id" id="cube_structure_item_link_id" readonly required>
         </div>
         <div class="form-group">
-            <label for="cube_link_id">Cube Link:</label>
-            <select name="cube_link_id" required>
-                {% for value in unique_cube_links %}
-                <option value="{{ value }}">{{ value }}</option>
-                {% endfor %}
-            </select>
+            <input type="hidden" name="cube_link_id" value="{{ selected_cube_link }}">
         </div>
         <div class="form-group">
             <label for="foreign_cube_variable_code">Foreign Cube Variable Code:</label>
-            <select name="foreign_cube_variable_code" required>
-                {% for item in cube_structure_items %}
-                <option value="{{ item.id }}">{{ item.variable_id }}</option>
-                {% endfor %}
+            <select name="foreign_cube_variable_code" id="foreign_cube_variable_code" required {% if not selected_cube_link %}disabled{% endif %} onchange="updateLinkId()">
+                {% if not selected_cube_link %}
+                    <option value="">Please select a Cube Link first</option>
+                {% else %}
+                    {% for item in foreign_cube_items %}
+                    <option value="{{ item.id }}" data-variable-id="{{ item.variable_id.variable_id }}">{{ item.variable_id.variable_id }}</option>
+                    {% endfor %}
+                {% endif %}
             </select>
         </div>
         <div class="form-group">
             <label for="primary_cube_variable_code">Primary Cube Variable Code:</label>
-            <select name="primary_cube_variable_code" required>
-                {% for item in cube_structure_items %}
-                <option value="{{ item.id }}">{{ item.variable_id }}</option>
-                {% endfor %}
+            <select name="primary_cube_variable_code" id="primary_cube_variable_code" required {% if not selected_cube_link %}disabled{% endif %} onchange="updateLinkId()">
+                {% if not selected_cube_link %}
+                    <option value="">Please select a Cube Link first</option>
+                {% else %}
+                    {% for item in primary_cube_items %}
+                    <option value="{{ item.id }}" data-variable-id="{{ item.variable_id.variable_id }}">{{ item.variable_id.variable_id }}</option>
+                    {% endfor %}
+                {% endif %}
             </select>
         </div>
         <button type="submit" class="submit-button">Create Link</button>
@@ -313,10 +316,34 @@ function confirmDelete(cubeStructureItemLinkId) {
 <script>
     function showAddForm() {
         document.getElementById('addLinkForm').style.display = 'block';
+        updateLinkId(); // Initialize the ID when form is shown
     }
 
     function hideAddForm() {
         document.getElementById('addLinkForm').style.display = 'none';
+    }
+
+    function updateLinkId() {
+        const cubeLinkId = "{{ selected_cube_link }}";
+        const foreignSelect = document.getElementById('foreign_cube_variable_code');
+        const primarySelect = document.getElementById('primary_cube_variable_code');
+        
+        let foreignVariableId = '';
+        let primaryVariableId = '';
+        
+        if (foreignSelect.selectedOptions.length > 0) {
+            foreignVariableId = foreignSelect.selectedOptions[0].getAttribute('data-variable-id');
+        }
+        
+        if (primarySelect.selectedOptions.length > 0) {
+            primaryVariableId = primarySelect.selectedOptions[0].getAttribute('data-variable-id');
+        }
+        
+        const linkId = [cubeLinkId, foreignVariableId, primaryVariableId]
+            .filter(Boolean)  // Remove empty values
+            .join(':');
+            
+        document.getElementById('cube_structure_item_link_id').value = linkId;
     }
 </script>
 
