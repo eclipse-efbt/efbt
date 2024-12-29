@@ -14,6 +14,73 @@
 
 {% block content %}
 <h1>Edit Mapping to Cubes</h1>
+<a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
+
+<!-- Create New Mapping to Cube Form -->
+<div class="create-new-section">
+    <h2>Create New Mapping to Cube</h2>
+    <form method="post" action="{% url 'pybirdai:create_mapping_to_cube' %}" class="create-form">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="new_mapping">Mapping Definition:</label>
+                <select name="mapping" id="new_mapping" required>
+                    <option value="">Select Mapping</option>
+                    {% for mapping in mapping_definitions %}
+                        <option value="{{ mapping.mapping_id }}">{{ mapping.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="new_cube_mapping">Cube Mapping:</label>
+                <select name="cubeMapping" id="new_cube_mapping" required>
+                    <option value="">Select Cube</option>
+                    {% for cube in cube_mappings %}
+                        <option value="{{ cube }}">{{ cube }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="new_valid_from">Valid From:</label>
+                <input type="date" name="valid_from" id="new_valid_from" required>
+            </div>
+            <div class="form-group">
+                <label for="new_valid_to">Valid To:</label>
+                <input type="date" name="valid_to" id="new_valid_to">
+            </div>
+        </div>
+        <button type="submit" class="create-button">Create New Mapping</button>
+    </form>
+</div>
+
+<!-- Add filter form -->
+<form method="get" class="filter-form">
+    <div class="filter-container">
+        <div class="filter-item">
+            <label for="mapping_filter">Mapping Definition:</label>
+            <select name="mapping_filter" id="mapping_filter">
+                <option value="">All</option>
+                {% for mapping in mapping_definitions %}
+                    <option value="{{ mapping.mapping_id }}" {% if mapping.mapping_id|stringformat:"s" == request.GET.mapping_filter %}selected{% endif %}>
+                        {{ mapping.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="cube_filter">Cube Mapping:</label>
+            <select name="cube_filter" id="cube_filter">
+                <option value="">All</option>
+                {% for cube in cube_mappings %}
+                    <option value="{{ cube }}" {% if cube|stringformat:"s" == request.GET.cube_filter %}selected{% endif %}>
+                        {{ cube }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Apply Filters</button>
+    </div>
+</form>
 
 {% if messages %}
 <ul class="messages">
@@ -105,23 +172,125 @@ function confirmDelete(mappingToCubeId) {
         overflow-x: auto;
         margin-bottom: 1em;
     }
+    
     table {
         border-collapse: collapse;
         width: 100%;
-        min-width: 800px; /* Adjust this value based on your table's content */
+        min-width: 800px;
     }
+    
     th, td {
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left;
     }
+    
     th {
         background-color: #f2f2f2;
         position: sticky;
         top: 0;
     }
+    
     .pagination {
         margin-top: 20px;
+    }
+    
+    .filter-form {
+        margin: 20px 0;
+        width: 100%;
+    }
+    
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;  /* Allow wrapping */
+        gap: 15px;
+        width: 100%;
+        padding: 10px;
+        background-color: #f8f8f8;
+        border-radius: 4px;
+    }
+    
+    .filter-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 200px;
+    }
+    
+    .filter-form select {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .filter-form button {
+        height: 35px;
+        padding: 0 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        align-self: flex-end;
+        margin-top: auto;  /* Push button to bottom */
+    }
+
+    .filter-form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Styles for Create New section */
+    .create-new-section {
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-radius: 4px;
+        margin: 20px 0;
+    }
+
+    .create-new-section h2 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1.5em;
+    }
+
+    .create-form .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .form-group select,
+    .form-group input {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .create-button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .create-button:hover {
+        background-color: #218838;
     }
 </style>
 {% endblock %}
