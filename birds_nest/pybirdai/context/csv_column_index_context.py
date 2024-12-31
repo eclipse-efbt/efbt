@@ -114,10 +114,7 @@ class ColumnIndexes(object):
     
     variable_set_variable_set_id = 1
     
-    
-    
-   
-    
+
     cube_structure_item_variable_index = 1
     cube_structure_item_class_id_index = 0
     cube_structure_item_subdomain_index = 5
@@ -167,7 +164,7 @@ class ColumnIndexes(object):
     axis_table_id =  6
     axis_is_open_axis = 7
     
-    axis_ordinate_id = 0
+    axis_ordinate_axis_ordinate_id = 0
     axis_ordinate_is_abstract_header = 1
     axis_ordinate_code = 2
     axis_ordinate_order = 3
@@ -215,8 +212,8 @@ class ColumnIndexes(object):
     cube_mapping_destination_cube_id = 5
     cube_mapping_description = 6
 
-    mapping_defintion_maintenance_agency_id = 0
-    mapping_definition_id = 1
+    mapping_definition_maintenance_agency_id = 0
+    mapping_definition_mapping_id = 1
     mapping_definition_name = 2
     mapping_definition_mapping_type = 3
     mapping_definition_code = 4

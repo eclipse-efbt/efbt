@@ -572,7 +572,7 @@ class ImportWebsiteToSDDModel(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    axis_ordinate_id = row[ColumnIndexes().axis_ordinate_id]
+                    axis_ordinate_id = row[ColumnIndexes().axis_ordinate_axis_ordinate_id]
                     axis_ordinate_is_abstract_header = row[ColumnIndexes().axis_ordinate_is_abstract_header]
                     axis_ordinate_code = row[ColumnIndexes().axis_ordinate_code]
                     axis_ordinate_order = row[ColumnIndexes().axis_ordinate_order]
@@ -863,7 +863,7 @@ class ImportWebsiteToSDDModel(object):
             rows = list(csv.reader(csvfile))[1:]  # Skip header
             
             for row in rows:
-                mapping_id = row[ColumnIndexes().mapping_definition_id]
+                mapping_id = row[ColumnIndexes().mapping_definition_mapping_id]
                 if mapping_id.startswith("SHS_"):
                     continue
                     

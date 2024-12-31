@@ -51,8 +51,11 @@ class CreateExecutableFilters:
         file.write("from .output_tables import *\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
 
-        
-        for cube_id, combination_list in sdd_context.combination_to_rol_cube_map.items():
+        # create a copy of combination_to_rol_cube_map which is ordered by cube_id
+        cube_ids = sorted(sdd_context.combination_to_rol_cube_map.keys())   
+        for cube_id in cube_ids:
+            combination_list = sdd_context.combination_to_rol_cube_map[cube_id]
+            
             report_html_file.write("<tr><td><a href=\"{% url 'pybirdai:show_report' '" + cube_id +'.html' + "'%}\">" +cube_id + "</a></td></tr>\n")   
             filter_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  cube_id +'.html', "a",  encoding='utf-8') 
             

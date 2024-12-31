@@ -23,6 +23,7 @@ from .bird_meta_data_model import (
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
     MAINTENANCE_AGENCY,  MEMBER_HIERARCHY
 )
+from . import bird_meta_data_model
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
 from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
@@ -52,6 +53,10 @@ from .context.sdd_context_django import SDDContext
 from urllib.parse import unquote
 import logging
 import zipfile
+from .context.csv_column_index_context import ColumnIndexes
+from django.apps import apps
+from django.db import models
+import inspect
 
 
 
@@ -1483,6 +1488,14 @@ def export_database_to_csv(request):
         response = HttpResponse(content_type='application/zip')
         response['Content-Disposition'] = 'attachment; filename="database_export.zip"'
         
+        # Get all model classes from bird_meta_data_model
+        valid_table_names = set()
+        model_map = {}  # Store model classes for reference
+        for name, obj in inspect.getmembers(bird_meta_data_model):
+            if inspect.isclass(obj) and issubclass(obj, models.Model) and obj != models.Model:
+                valid_table_names.add(obj._meta.db_table)
+                model_map[obj._meta.db_table] = obj
+        
         with zipfile.ZipFile(response, 'w') as zip_file:
             # Get all table names from SQLite
             with connection.cursor() as cursor:
@@ -1491,34 +1504,90 @@ def export_database_to_csv(request):
             
             # Export each table to a CSV file
             for table in tables:
+                is_meta_data_table = False
                 table_name = table[0]
-                with connection.cursor() as cursor:
-                    # Get column names
-                    cursor.execute(f"SELECT * FROM {table_name} LIMIT 0")
-                    headers = [desc[0] for desc in cursor.description]
+                
+                if table_name in valid_table_names:
+                    is_meta_data_table = True
+                    # Get the model class for this table
+                    model_class = model_map[table_name]
                     
-                    # Get data
-                    cursor.execute(f"SELECT * FROM {table_name}")
-                    rows = cursor.fetchall()
+                    # Get fields in the order they're defined in the model
+                    fields = model_class._meta.fields
+                    headers = []
+                    db_headers = []
+                    for field in fields:
+                        # Skip the id field
+                        if field.name == 'id':
+                            continue
+                        headers.append(field.name.upper())  # Convert header to uppercase
+                        # If it's a foreign key, append _id for the actual DB column
+                        if isinstance(field, models.ForeignKey):
+                            db_headers.append(f"{field.name}_id")
+                        else:
+                            db_headers.append(field.name)
                     
                     # Create CSV in memory
                     csv_content = []
                     csv_content.append(','.join(headers))
-                    for row in rows:
-                        # Convert all values to strings and handle None values
-                        csv_row = [str(val) if val is not None else '' for val in row]
-                        # Escape commas and quotes in values
-                        processed_row = []
-                        for val in csv_row:
-                            if ',' in val or '"' in val:
-                                escaped_val = val.replace('"', '""')
-                                processed_row.append(f'"{escaped_val}"')
-                            else:
-                                processed_row.append(val)
-                        csv_content.append(','.join(processed_row))
                     
-                    # Add CSV to zip file
-                    zip_file.writestr(f"{table_name}.csv", '\n'.join(csv_content))
+                    # Get data with escaped column names
+                    with connection.cursor() as cursor:
+                        escaped_headers = [f'"{h}"' if h == 'order' else h for h in db_headers]
+                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name}")
+                        rows = cursor.fetchall()
+                        
+                        for row in rows:
+                            # Convert all values to strings and handle None values
+                            csv_row = [str(val) if val is not None else '' for val in row]
+                            # Escape commas and quotes in values
+                            processed_row = []
+                            for val in csv_row:
+                                if ',' in val or '"' in val:
+                                    escaped_val = val.replace('"', '""')
+                                    processed_row.append(f'"{escaped_val}"')
+                                else:
+                                    processed_row.append(val)
+                            csv_content.append(','.join(processed_row))
+                else:
+                    # Fallback for tables without models
+                    with connection.cursor() as cursor:
+                        # Get column names
+                        cursor.execute(f"SELECT * FROM {table_name} LIMIT 0")
+                        headers = []
+                        column_names = []
+                        for desc in cursor.description:
+                            # Skip the id column
+                            if desc[0].lower() != 'id':
+                                headers.append(desc[0].upper())
+                                column_names.append(desc[0])
+                        
+                        # Get data with escaped column names
+                        escaped_headers = [f'"{h.lower()}"' if h.lower() == 'order' else h.lower() for h in column_names]
+                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name}")
+                        rows = cursor.fetchall()
+                        
+                        # Create CSV in memory
+                        csv_content = []
+                        csv_content.append(','.join(headers))
+                        for row in rows:
+                            # Convert all values to strings and handle None values
+                            csv_row = [str(val) if val is not None else '' for val in row]
+                            # Escape commas and quotes in values
+                            processed_row = []
+                            for val in csv_row:
+                                if ',' in val or '"' in val:
+                                    escaped_val = val.replace('"', '""')
+                                    processed_row.append(f'"{escaped_val}"')
+                                else:
+                                    processed_row.append(val)
+                            csv_content.append(','.join(processed_row))
+                
+                # Add CSV to zip file
+                if is_meta_data_table:
+                    zip_file.writestr(f"{table_name.replace('pybirdai_', '')}.csv", '\n'.join(csv_content))
+                else:
+                    zip_file.writestr(f"{table_name.replace('pybirdai_', 'bird_')}.csv", '\n'.join(csv_content))
         
         return response
 
