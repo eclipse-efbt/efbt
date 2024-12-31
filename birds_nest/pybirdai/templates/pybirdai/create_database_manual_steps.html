@@ -24,11 +24,13 @@ Look in birds_nest\results\database_configuration directory for the results whic
 
 Copy the content of models.py into birds_nest\pybirdai\bird_data_model.py<br><br>
 
-If using the LDM , then delete these 2 lines (which are accidental included twice ) from bird_data_model.py<br><br>
+If using the LDM , then delete these 2 lines (which are accidental included twice ) from admin.py<br><br>
 
 from .bird_data_model import NT_MMBR_EU<br><br>
 
 admin.site.register(NT_MMBR_EU)<br><br>
+
+If using the ldm you will  see that the name of one relationship contains a double undescore which is not valid in django (OTHR_INTNGBL_ASST_NT_TKN_INT_PSSSSN_to__to_Model_Context_specifies_Other_intangible_asset_not_taken_into_possessions) ,  you should delete that extra underscore in the bird_data_model.py file.<br><br>
 
 At this point you can add executable derivation rules if you wish to everide the derived columns  in the EIL, this will be covered in a seperate wiki page.<br><br>
 
@@ -36,9 +38,11 @@ Using an  editor, append the contents of the birds_nest\results\admin.py file (e
 
 Make sure those files are saved. <br><br>
 
+
 run the command in the terminal: python manage.py makemigrations pybirdai <br><br>
 
-If using the ldm you might see a message complaining about the use of a double underscore in a relationship, name (OTHR_INTNGBL_ASST_NT_TKN_INT_PSSSSN_to__to_Model_Context_specifies_Other_intangible_asset_not_taken_into_possessions) then you can delete the extra underscore in the ldm_models.py file.<br><br>
+This might take a few minutes for the LDM, but it should be quick for the Input Layer<br><br>
+
 
 run the command in the terminal: python manage.py migrate <br><br>
 

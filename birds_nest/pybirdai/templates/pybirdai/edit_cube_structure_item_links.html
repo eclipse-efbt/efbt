@@ -14,6 +14,22 @@
 
 {% block content %}
 <h1>Edit Cube Structure Item Links</h1>
+<a href="{% url 'pybirdai:review_join_meta_data' %}">Back to Review  Transformations Rules MetaData</a>
+<!-- Modify the filters div -->
+<div class="filters">
+    <form id="filterForm">
+        <label for="cubeLinkFilter">Cube Link:</label>
+        <select id="cubeLinkFilter" name="cube_link">
+            <option value="">All</option>
+            {% for value in unique_cube_links %}
+            <option value="{{ value }}" {% if selected_cube_link == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="filter-button">Apply Filters</button>
+        <button type="button" onclick="clearFilters()" class="clear-button">Clear Filters</button>
+    </form>
+</div>
 
 {% if messages %}
 <ul class="messages">
@@ -22,6 +38,51 @@
     {% endfor %}
 </ul>
 {% endif %}
+
+<!-- Add New Link Button -->
+<div class="add-new-section">
+    <button type="button" onclick="showAddForm()" class="add-button">Add New Cube Structure Item Link</button>
+</div>
+
+<!-- Add New Link Form (Hidden by default) -->
+<div id="addLinkForm" class="add-form" style="display: none;">
+    <form method="post" action="{% url 'pybirdai:add_cube_structure_item_link' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="cube_structure_item_link_id">Cube Structure Item Link ID:</label>
+            <input type="text" name="cube_structure_item_link_id" id="cube_structure_item_link_id" readonly required>
+        </div>
+        <div class="form-group">
+            <input type="hidden" name="cube_link_id" value="{{ selected_cube_link }}">
+        </div>
+        <div class="form-group">
+            <label for="foreign_cube_variable_code">Foreign Cube Variable Code:</label>
+            <select name="foreign_cube_variable_code" id="foreign_cube_variable_code" required {% if not selected_cube_link %}disabled{% endif %} onchange="updateLinkId()">
+                {% if not selected_cube_link %}
+                    <option value="">Please select a Cube Link first</option>
+                {% else %}
+                    {% for item in foreign_cube_items %}
+                    <option value="{{ item.id }}" data-variable-id="{{ item.variable_id.variable_id }}">{{ item.variable_id.variable_id }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="primary_cube_variable_code">Primary Cube Variable Code:</label>
+            <select name="primary_cube_variable_code" id="primary_cube_variable_code" required {% if not selected_cube_link %}disabled{% endif %} onchange="updateLinkId()">
+                {% if not selected_cube_link %}
+                    <option value="">Please select a Cube Link first</option>
+                {% else %}
+                    {% for item in primary_cube_items %}
+                    <option value="{{ item.id }}" data-variable-id="{{ item.variable_id.variable_id }}">{{ item.variable_id.variable_id }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <button type="submit" class="submit-button">Create Link</button>
+        <button type="button" onclick="hideAddForm()" class="cancel-button">Cancel</button>
+    </form>
+</div>
 
 <form method="post">
     {% csrf_token %}
@@ -32,26 +93,34 @@
                 <tr>
                     <th>Cube Structure Item Link ID</th>
                     <th>Cube Link</th>
+                    <th>Foreign Cube Structure Item</th>
+                    <th>Primary Cube Structure Item</th>
                     <th>Foreign Cube Variable Code</th>
                     <th>Primary Cube Variable Code</th>
+                    <th>Foreign Cube ID</th>
+                    <th>Primary Cube ID</th>
                     <th>Delete</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
                 {% for form in formset %}
                 {{ form.id }}
                 <tr>
-                    <td>{{ form.cube_structure_item_link_id }}</td>
-                    <td>{{ form.cube_link_id }}</td>
-                    <td>{{ form.foreign_cube_variable_code }}</td>
-                    <td>{{ form.primary_cube_variable_code }}</td>
+                    <td>{{ form.instance.cube_structure_item_link_id }}</td>
+                    <td>{{ form.instance.cube_link_id }}</td>
+                    <td>{{ form.instance.foreign_cube_variable_code }}</td>
+                    <td>{{ form.instance.primary_cube_variable_code }}</td>
+                    <td>{{ form.instance.foreign_cube_variable_code.variable_id }}</td>
+                    <td>{{ form.instance.primary_cube_variable_code.variable_id }}</td>
+                    <td>{{ form.instance.cube_link_id.foreign_cube_id }}</td>
+                    <td>{{ form.instance.cube_link_id.primary_cube_id }}</td>
                     <td>
                         <button type="button" onclick="confirmDelete('{{ form.instance.cube_structure_item_link_id }}')">Delete</button>
                     </td>
                 </tr>
                 {% if form.errors %}
                 <tr>
-                    <td colspan="5">
+                    <td colspan="9">
                         {{ form.errors }}
                     </td>
                 </tr>
@@ -82,6 +151,151 @@
     </span>
 </div>
 
+<!-- Add this CSS -->
+<style>
+    .filters {
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+    
+    .filters form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+    }
+    
+    .filters label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    .filters select {
+        padding: 6px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        min-width: 200px;
+    }
+    
+    .filter-button, .clear-button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .filter-button {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    .clear-button {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .filter-button:hover {
+        background-color: #0056b3;
+    }
+    
+    .clear-button:hover {
+        background-color: #5a6268;
+    }
+
+    .add-new-section {
+        margin: 20px 0;
+    }
+
+    .add-button {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .add-button:hover {
+        background-color: #218838;
+    }
+
+    .add-form {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+        max-width: 500px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    .submit-button {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .cancel-button {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+
+    .cancel-button:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<!-- Replace the existing JavaScript with this -->
+<script>
+document.getElementById('filterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Build the query string
+    const params = new URLSearchParams();
+    const cubeLink = document.getElementById('cubeLinkFilter').value;
+    
+    if (cubeLink) params.append('cube_link', cubeLink);
+    
+    // Redirect with the filters
+    window.location.href = `${window.location.pathname}?${params.toString()}`;
+});
+
+function clearFilters() {
+    window.location.href = window.location.pathname;
+}
+</script>
+
 <script>
 function confirmDelete(cubeStructureItemLinkId) {
     if (confirm('Are you sure you want to delete this cube structure item link?')) {
@@ -97,6 +311,40 @@ function confirmDelete(cubeStructureItemLinkId) {
         form.submit();
     }
 }
+</script>
+
+<script>
+    function showAddForm() {
+        document.getElementById('addLinkForm').style.display = 'block';
+        updateLinkId(); // Initialize the ID when form is shown
+    }
+
+    function hideAddForm() {
+        document.getElementById('addLinkForm').style.display = 'none';
+    }
+
+    function updateLinkId() {
+        const cubeLinkId = "{{ selected_cube_link }}";
+        const foreignSelect = document.getElementById('foreign_cube_variable_code');
+        const primarySelect = document.getElementById('primary_cube_variable_code');
+        
+        let foreignVariableId = '';
+        let primaryVariableId = '';
+        
+        if (foreignSelect.selectedOptions.length > 0) {
+            foreignVariableId = foreignSelect.selectedOptions[0].getAttribute('data-variable-id');
+        }
+        
+        if (primarySelect.selectedOptions.length > 0) {
+            primaryVariableId = primarySelect.selectedOptions[0].getAttribute('data-variable-id');
+        }
+        
+        const linkId = [cubeLinkId, foreignVariableId, primaryVariableId]
+            .filter(Boolean)  // Remove empty values
+            .join(':');
+            
+        document.getElementById('cube_structure_item_link_id').value = linkId;
+    }
 </script>
 
 <style>

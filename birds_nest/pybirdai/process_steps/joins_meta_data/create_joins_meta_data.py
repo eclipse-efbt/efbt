@@ -57,7 +57,7 @@ class JoinsMetaDataCreator:
                 generated_output_layer = self.find_output_layer_cube(
                     sdd_context, report_template, framework)
                 if generated_output_layer:
-                    self.add_table_parts_il(context, sdd_context, 
+                    self.add_join_for_products_il(context, sdd_context, 
                                          generated_output_layer, framework)
 
     def create_ldm_entity_to_linked_entities_map(self, context: Any, 
@@ -85,11 +85,11 @@ class JoinsMetaDataCreator:
                     context.ldm_entity_to_linked_tables_map[model.__name__] = \
                         related_entities_string
 
-    def add_table_parts_il(self, context: Any, sdd_context: Any, 
+    def add_join_for_products_il(self, context: Any, sdd_context: Any, 
                            generated_output_layer: Any, 
                            framework: str) -> None:
         """
-        Add table parts for the input layer.
+        Add join for products for the input layer.
 
         Args:
             context (Any): The context object containing necessary data.
@@ -102,10 +102,10 @@ class JoinsMetaDataCreator:
             if framework == "FINREP_REF" 
             else context.tables_for_main_category_map_ae
         )
-        table_parts_to_linked_tables_map = (
-            context.table_parts_to_linked_tables_map_finrep 
+        join_for_products_to_linked_tables_map = (
+            context.join_for_products_to_linked_tables_map_finrep 
             if framework == "FINREP_REF" 
-            else context.table_parts_to_linked_tables_map_ae
+            else context.join_for_products_to_linked_tables_map_ae
         )
         table_and_part_tuple_map = (
             context.table_and_part_tuple_map_finrep 
@@ -125,13 +125,13 @@ class JoinsMetaDataCreator:
                         inputLayerTable = self.find_input_layer_cube(
                             sdd_context, table, framework
                         )
-                        table_parts = table_and_part_tuple_map[mc]
+                        join_for_products = table_and_part_tuple_map[mc]
 
-                        for table_part in table_parts:
-                            print(f"table_part:{table_part}")
+                        for join_for_product in join_for_products:
+                            print(f"join_for_product:{join_for_product}")
                             print(inputLayerTable)
                             input_entity_list = [inputLayerTable]
-                            linked_tables = table_parts_to_linked_tables_map[table_part]
+                            linked_tables = join_for_products_to_linked_tables_map[join_for_product]
                             linked_tables_list = linked_tables.split(":")
                             if (inputLayerTable and 
                                 inputLayerTable.cube_structure_id not in linked_tables_list):
@@ -165,22 +165,22 @@ class JoinsMetaDataCreator:
                                 if the_input_table:
                                     input_entity_list.append(the_input_table)
 
-                            if table_part[0] == table:
+                            if join_for_product[0] == table:
                                 for input_entity in input_entity_list:
                                     print(f"input_entity:{input_entity}")
                                     cube_link = CUBE_LINK()
-                                    cube_link.description = f"{table_part[0]}:{mc}:{table_part[1]}:{input_entity.cube_structure_id}"
-                                    cube_link.name = f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
-                                    cube_link.join_identifier = table_part[1]
+                                    cube_link.description = f"{join_for_product[0]}:{mc}:{join_for_product[1]}:{input_entity.cube_structure_id}"
+                                    cube_link.name = f"{join_for_product[0]}:{join_for_product[1]}:{input_entity.cube_structure_id}"
+                                    cube_link.join_identifier = join_for_product[1]
                                     primary_cube = sdd_context.bird_cube_dictionary.get(input_entity.cube_structure_id)
                                     if primary_cube:
                                         cube_link.primary_cube_id = primary_cube
                                         cube_link.cube_link_id = (
                                             f"{report_template}:"
-                                            f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
+                                            f"{input_entity.cube_structure_id}:{join_for_product[1]}"
                                         )
                                     else:
-                                        cube_link.cube_link_id = f"{table_part[0]}:{table_part[1]}:{input_entity.cube_structure_id}"
+                                        cube_link.cube_link_id = f"{input_entity.cube_structure_id}:{join_for_product[1]}"
                                         print(f"cube_link.primary_cube_id not found for {table}")
                                     cube_link.foreign_cube_id = generated_output_layer
 
@@ -207,7 +207,7 @@ class JoinsMetaDataCreator:
                                             cube_links_to_create.append(cube_link)
 
                                         
-                                        self.add_field_to_field_lineage_to_rules_for_table_part(
+                                        self.add_field_to_field_lineage_to_rules_for_join_for_product(
                                             context, sdd_context, generated_output_layer, 
                                             input_entity, mc, report_template, 
                                             framework, cube_link, cube_structure_item_links_to_create
@@ -232,14 +232,14 @@ class JoinsMetaDataCreator:
         #if context.save_derived_sdd_items and cube_structure_item_links_to_create:
         #    CUBE_STRUCTURE_ITEM_LINK.objects.bulk_create(cube_structure_item_links_to_create, batch_size=1000)
 
-    def add_field_to_field_lineage_to_rules_for_table_part(
+    def add_field_to_field_lineage_to_rules_for_join_for_product(
             self, context: Any, sdd_context: Any,
             output_entity: Any, input_entity: Any,
             category: str, report_template: str, 
             framework: str, cube_link: Any,
             cube_structure_item_links_to_create: List) -> None:
         """
-        Add field-to-field lineage rules for a table part.
+        Add field-to-field lineage rules for a join for product.
 
         Args:
             context (Any): The context object containing necessary data.

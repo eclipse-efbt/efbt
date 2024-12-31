@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Cube Links</h1>
-
+<a href="{% url 'pybirdai:review_join_meta_data' %}">Back to Review  Transformations Rules MetaData</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -22,6 +22,100 @@
     {% endfor %}
 </ul>
 {% endif %}
+
+<!-- Add filter form -->
+<form method="get" class="filter-form">
+    <div class="filters">
+        <div class="filter-group">
+            <label for="foreign_cube">Foreign Cube:</label>
+            <select name="foreign_cube" id="foreign_cube">
+                <option value="">All</option>
+                {% for cube in foreign_cubes %}
+                <option value="{{ cube }}" {% if selected_foreign_cube == cube %}selected{% endif %}>{{ cube }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="join_identifier">Product Identifier:</label>
+            <select name="join_identifier" id="join_identifier">
+                <option value="">All</option>
+                {% for identifier in join_identifiers %}
+                <option value="{{ identifier }}" {% if selected_identifier == identifier %}selected{% endif %}>{{ identifier }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Apply Filters</button>
+        <a href="{% url 'pybirdai:edit_cube_links' %}" class="reset-button">Reset Filters</a>
+    </div>
+</form>
+
+<!-- Add New Link Button -->
+<div class="add-new-section">
+    <button type="button" onclick="showAddForm()" class="add-button">Add New Cube Link</button>
+</div>
+
+<!-- Add New Link Form (Hidden by default) -->
+<div id="addLinkForm" class="add-form" style="display: none;">
+    <form method="post" action="{% url 'pybirdai:add_cube_link' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="cube_link_id">Cube Link ID:</label>
+            <input type="text" name="cube_link_id" id="cube_link_id" readonly required>
+        </div>
+        <div class="form-group">
+            <label for="code">Code:</label>
+            <input type="text" name="code" id="code">
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name">
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <input type="text" name="description" id="description">
+        </div>
+        <div class="form-group">
+            <label for="order_relevance">Order Relevance:</label>
+            <input type="number" name="order_relevance" id="order_relevance">
+        </div>
+        <div class="form-group">
+            <label for="primary_cube_id">Primary Cube:</label>
+            <select name="primary_cube_id" id="primary_cube_id" required onchange="updateLinkId()">
+                {% for cube in all_cubes %}
+                <option value="{{ cube.cube_id }}">{{ cube.cube_id }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="foreign_cube_id">Foreign Cube:</label>
+            <select name="foreign_cube_id" id="foreign_cube_id" required onchange="updateLinkId()">
+                {% if selected_foreign_cube %}
+                    {% for cube in all_cubes %}
+                    <option value="{{ cube.cube_id }}" {% if cube.cube_id == selected_foreign_cube %}selected{% endif %}>{{ cube.cube_id }}</option>
+                    {% endfor %}
+                {% else %}
+                    {% for cube in all_cubes %}
+                    <option value="{{ cube.cube_id }}">{{ cube.cube_id }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cube_link_type">Cube Link Type:</label>
+            <input type="text" name="cube_link_type" id="cube_link_type">
+        </div>
+        <div class="form-group">
+            <label for="join_identifier">Join Identifier:</label>
+            <input type="text" name="join_identifier" id="join_identifier" 
+                   value="{{ selected_identifier }}"
+                   oninput="updateLinkId()" 
+                   onblur="updateLinkId()"
+                   required>
+        </div>
+        <button type="submit" class="submit-button">Create Link</button>
+        <button type="button" onclick="hideAddForm()" class="cancel-button">Cancel</button>
+    </form>
+</div>
 
 <form method="post">
     {% csrf_token %}
@@ -62,7 +156,7 @@
                     <td>{{ form.primary_cube_id }}</td>
                     <td>{{ form.foreign_cube_id }}</td>
                     <td>{{ form.cube_link_type }}</td>
-                    <td>{{ form.product_identifier }}</td>
+                    <td>{{ form.join_identifier }}</td>
                     <td>
                         <button type="button" onclick="confirmDelete('{{ form.instance.cube_link_id }}')">Delete</button>
                     </td>
@@ -115,6 +209,43 @@ function confirmDelete(cubeLinkId) {
         form.submit();
     }
 }
+
+function showAddForm() {
+    document.getElementById('addLinkForm').style.display = 'block';
+    updateLinkId(); // Remove setTimeout and call directly
+}
+
+function hideAddForm() {
+    document.getElementById('addLinkForm').style.display = 'none';
+}
+
+function updateLinkId() {
+    const foreignCube = document.getElementById('foreign_cube_id').value || '';
+    const primaryCube = document.getElementById('primary_cube_id').value || '';
+    const joinIdentifier = document.getElementById('addLinkForm').querySelector('[name="join_identifier"]').value || '';
+    
+    console.log('Updating link ID with:', {foreignCube, primaryCube, joinIdentifier}); // Debug log
+    
+    // Always create the ID if we have any values, even if some are empty
+    const linkId = `${foreignCube}:${primaryCube}:${joinIdentifier}`;
+    document.getElementById('cube_link_id').value = linkId;
+}
+
+// Add event listeners when the document loads
+document.addEventListener('DOMContentLoaded', function() {
+    const joinIdentifierInput = document.getElementById('join_identifier');
+    const foreignCubeSelect = document.getElementById('foreign_cube_id');
+    const primaryCubeSelect = document.getElementById('primary_cube_id');
+    
+    joinIdentifierInput.addEventListener('input', updateLinkId);
+    joinIdentifierInput.addEventListener('change', updateLinkId);
+    joinIdentifierInput.addEventListener('blur', updateLinkId);
+    foreignCubeSelect.addEventListener('change', updateLinkId);
+    primaryCubeSelect.addEventListener('change', updateLinkId);
+    
+    // Initial update
+    updateLinkId();
+});
 </script>
 
 <style>
@@ -140,6 +271,76 @@ function confirmDelete(cubeLinkId) {
     }
     .pagination {
         margin-top: 20px;
+    }
+
+    .add-new-section {
+        margin: 20px 0;
+    }
+
+    .add-button {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .add-button:hover {
+        background-color: #218838;
+    }
+
+    .add-form {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+        max-width: 500px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    .submit-button {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .cancel-button {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+
+    .cancel-button:hover {
+        background-color: #5a6268;
     }
 </style>
 {% endblock %}

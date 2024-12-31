@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Export Database to CSV{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Export Database to CSV Files</h1>
+    <a href="{% url 'pybirdai:home'%}" >Back to the PyBIRD AI home page</a> <br><br>
+    
+    <p>Click the button below to export all database tables to CSV files. Each table will be exported to a separate CSV file, and all files will be bundled in a zip archive.</p>
+    
+    <form method="post" id="exportForm">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary" id="exportButton">Export Database</button>
+    </form>
+    
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <p>Exporting database tables to CSV files... Please wait.</p>
+    </div>
+    
+    <div id="successMessage" style="display: none;" class="alert alert-success">
+        <p>Export completed successfully! Your download should start automatically.</p>
+    </div>
+    
+    <div class="mt-4">
+        <h3>Notes:</h3>
+        <ul>
+            <li>Each table will be exported to a separate CSV file</li>
+            <li>The CSV files will be named after their corresponding tables</li>
+            <li>All files will be bundled in a zip archive</li>
+            <li>Headers in the CSV files will match the database column names</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    
+    .mt-4 {
+        margin-top: 2rem;
+    }
+    
+    ul {
+        list-style-type: disc;
+        margin-left: 1.5rem;
+    }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .alert {
+        padding: 15px;
+        margin: 20px 0;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    
+    #loadingIndicator {
+        text-align: center;
+        margin: 20px 0;
+    }
+</style>
+
+<script>
+document.getElementById('exportForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading indicator and disable button
+    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('exportButton').disabled = true;
+    document.getElementById('successMessage').style.display = 'none';
+    
+    // Submit the form
+    fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Export failed');
+        return response.blob();
+    })
+    .then(blob => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'database_export.zip';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        // Show success message
+        document.getElementById('successMessage').style.display = 'block';
+    })
+    .catch(error => {
+        alert('Error during export: ' + error.message);
+    })
+    .finally(() => {
+        // Hide loading indicator and enable button
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('exportButton').disabled = false;
+    });
+});
+</script>
+{% endblock %} 
