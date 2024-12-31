@@ -121,6 +121,7 @@ class CreateOutputLayers:
         output_layer_cube = CUBE()
         output_layer_cube.cube_id = cube_name
         output_layer_cube.name = cube_name
+        output_layer_cube.cube_type = 'RC'    
 
         output_layer_cube_structure = CUBE_STRUCTURE()
         output_layer_cube_structure.cube_structure_id = f"{cube_name}_cube_structure"

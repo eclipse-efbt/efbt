@@ -26,6 +26,8 @@ class Context(object):
     enrich_ldm_relationships = False
     use_codes = True
 
+    reference_data_class_list = []
+
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.
@@ -58,8 +60,10 @@ class Context(object):
         nsPrefix='il_entities')
     
 
-    
+    skip_reference_data_in_ldm = True
     reports_dictionary = {}
+
+    classification_types = {}
 
     enum_literals_map = {}
 
@@ -81,17 +85,17 @@ class Context(object):
     main_category_to_name_map_finrep = {}
     main_category_to_name_map_ae = {}
 
-    table_parts_to_main_category_map_finrep = {}
-    table_parts_to_main_category_map_ae = {}
+    join_for_products_to_main_category_map_finrep = {}
+    join_for_products_to_main_category_map_ae = {}
     
     tables_for_main_category_map_finrep = {}
     tables_for_main_category_map_ae = {}
 
-    table_parts_to_linked_tables_map_finrep = {}
-    table_parts_to_linked_tables_map_ae = {}
+    join_for_products_to_linked_tables_map_finrep = {}
+    join_for_products_to_linked_tables_map_ae = {}
 
-    table_parts_to_to_filter_map_finrep = {}
-    table_parts_to_to_filter_map_ae = {}
+    join_for_products_to_to_filter_map_finrep = {}
+    join_for_products_to_to_filter_map_ae = {}
 
     table_and_part_tuple_map_finrep = {}
     table_and_part_tuple_map_ae = {}

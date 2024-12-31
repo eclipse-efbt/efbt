@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Unique Join Identifiers</h1>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Join Identifier</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for identifier in join_identifiers %}
+            <tr>
+                <td>{{ identifier }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table-container {
+        width: 100%;
+        margin-bottom: 1em;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+{% endblock %} 
