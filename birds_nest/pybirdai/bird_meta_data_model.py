@@ -11,20 +11,36 @@
 #    Neil Mackenzie - initial API and implementation
 from django.db import models
 
+# All CSV headers are listed as comments above their respective classes
 
 class SUBDOMAIN(models.Model):
-    subdomain_id = models.CharField("subdomain_id", max_length=255, primary_key=True)
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
+    # CSV Headers: MAINTENANCE_AGENCY_ID,SUBDOMAIN_ID,NAME,DOMAIN_ID,IS_LISTED,CODE,FACET_ID,DESCRIPTION,IS_NATURAL
+    maintenance_agency_id = models.ForeignKey(
+        "MAINTENANCE_AGENCY",
+        models.SET_NULL,
+        blank=True,
+        null=True,
     )
+    subdomain_id = models.CharField("subdomain_id", max_length=255, primary_key=True)
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
     domain_id = models.ForeignKey(
         "DOMAIN",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    is_listed = models.BooleanField("is_listed", default=None, blank=True, null=True)
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    facet_id = models.ForeignKey(
+        "FACET_COLLECTION",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
+    is_natural = models.BooleanField("is_natural", default=None, blank=True, null=True)
 
     class Meta:
         verbose_name = "SUBDOMAIN"
@@ -32,18 +48,22 @@ class SUBDOMAIN(models.Model):
 
 
 class SUBDOMAIN_ENUMERATION(models.Model):
-    subdomain_id = models.ForeignKey(
-        "SUBDOMAIN",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
+    # CSV Headers: MEMBER_ID,SUBDOMAIN_ID,VALID_FROM,VALID_TO,ORDER
     member_id = models.ForeignKey(
         "MEMBER",
         models.SET_NULL,
         blank=True,
         null=True,
     )
+    subdomain_id = models.ForeignKey(
+        "SUBDOMAIN",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
+    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
+    order = models.BigIntegerField("order", default=None, blank=True, null=True)
 
     class Meta:
         verbose_name = "SUBDOMAIN_ENUMERATION"
@@ -51,8 +71,21 @@ class SUBDOMAIN_ENUMERATION(models.Model):
 
 
 class DOMAIN(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,DOMAIN_ID,NAME,IS_ENUMERATED,DESCRIPTION,DATA_TYPE,CODE,FACET_ID,IS_REFERENCE
+    maintenance_agency_id = models.ForeignKey(
+        "MAINTENANCE_AGENCY",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    domain_id = models.CharField("domain_id", max_length=255, primary_key=True)
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    is_enumerated = models.BooleanField(
+        "is_enumerated", default=None, blank=True, null=True
+    )
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
     FACET_VALUE_TYPE = {
         "BigInteger": "BigInteger",
         "Boolean": "Boolean",
@@ -80,41 +113,20 @@ class DOMAIN(models.Model):
         blank=True,
         null=True,
     )
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
-    domain_id = models.CharField("domain_id", max_length=255, primary_key=True)
-
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
     facet_id = models.ForeignKey(
         "FACET_COLLECTION",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    is_enumerated = models.BooleanField(
-        "is_enumerated", default=None, blank=True, null=True
-    )
-
     is_reference = models.BooleanField(
         "is_reference", default=None, blank=True, null=True
     )
 
-    maintenance_agency_id = models.ForeignKey(
-        "MAINTENANCE_AGENCY",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
     class Meta:
         verbose_name = "DOMAIN"
         verbose_name_plural = "DOMAINs"
-
 
 class FACET_COLLECTION(models.Model):
     code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
@@ -164,13 +176,15 @@ class FACET_COLLECTION(models.Model):
 
 
 class MAINTENANCE_AGENCY(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,CODE,NAME,DESCRIPTION
     maintenance_agency_id = models.CharField(
         "maintenance_agency_id", max_length=255, primary_key=True
     )
-
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "MAINTENANCE_AGENCY"
@@ -178,29 +192,25 @@ class MAINTENANCE_AGENCY(models.Model):
 
 
 class MEMBER(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
-    domain_id = models.ForeignKey(
-        "DOMAIN",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,MEMBER_ID,CODE,NAME,DOMAIN_ID,DESCRIPTION
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     member_id = models.CharField("member_id", max_length=255, primary_key=True)
-
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    domain_id = models.ForeignKey(
+        "DOMAIN",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "MEMBER"
@@ -208,31 +218,30 @@ class MEMBER(models.Model):
 
 
 class MEMBER_HIERARCHY(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
-    domain_id = models.ForeignKey(
-        "DOMAIN",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,MEMBER_HIERARCHY_ID,CODE,DOMAIN_ID,NAME,DESCRIPTION,IS_MAIN_HIERARCHY
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     member_hierarchy_id = models.CharField(
         "member_hierarchy_id", max_length=255, primary_key=True
     )
-
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    domain_id = models.ForeignKey(
+        "DOMAIN",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
+    is_main_hierarchy = models.BooleanField(
+        "is_main_hierarchy", default=None, blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "MEMBER_HIERARCHY"
@@ -240,19 +249,13 @@ class MEMBER_HIERARCHY(models.Model):
 
 
 class MEMBER_HIERARCHY_NODE(models.Model):
-    comparator = models.CharField(
-        "comparator", max_length=255, default=None, blank=True, null=True
-    )
-
-    level = models.BigIntegerField("level", default=None, blank=True, null=True)
-
+    # CSV Headers: MEMBER_HIERARCHY_ID,MEMBER_ID,LEVEL,PARENT_MEMBER_ID,COMPARATOR,OPERATOR,VALID_FROM,VALID_TO
     member_hierarchy_id = models.ForeignKey(
         "MEMBER_HIERARCHY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     member_id = models.ForeignKey(
         "MEMBER",
         models.SET_NULL,
@@ -260,11 +263,7 @@ class MEMBER_HIERARCHY_NODE(models.Model):
         null=True,
         related_name="member_id_in_hierarchy",
     )
-
-    operator = models.CharField(
-        "operator", max_length=255, default=None, blank=True, null=True
-    )
-
+    level = models.BigIntegerField("level", default=None, blank=True, null=True)
     parent_member_id = models.ForeignKey(
         "MEMBER",
         models.SET_NULL,
@@ -272,9 +271,13 @@ class MEMBER_HIERARCHY_NODE(models.Model):
         null=True,
         related_name="parent_member_id",
     )
-
+    comparator = models.CharField(
+        "comparator", max_length=255, default=None, blank=True, null=True
+    )
+    operator = models.CharField(
+        "operator", max_length=255, default=None, blank=True, null=True
+    )
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
 
     class Meta:
@@ -283,33 +286,31 @@ class MEMBER_HIERARCHY_NODE(models.Model):
 
 
 class VARIABLE(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
-    domain_id = models.ForeignKey(
-        "DOMAIN",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,VARIABLE_ID,CODE,NAME,DOMAIN_ID,DESCRIPTION,PRIMARY_CONCEPT,IS_DECOMPOSED
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
+    variable_id = models.CharField("variable_id", max_length=255, primary_key=True)
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    domain_id = models.ForeignKey(
+        "DOMAIN",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
     primary_concept = models.CharField(
         "primary_concept", max_length=255, default=None, blank=True, null=True
     )
-
-    variable_id = models.CharField("variable_id", max_length=255, primary_key=True)
-
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    is_decomposed = models.BooleanField(
+        "is_decomposed", default=None, blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "VARIABLE"
@@ -317,6 +318,7 @@ class VARIABLE(models.Model):
 
 
 class VARIABLE_SET(models.Model):
+    # CSV Headers: MAINTENANCE_AGENCY_ID,VARIABLE_SET_ID,NAME,CODE,DESCRIPTION
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
@@ -324,15 +326,11 @@ class VARIABLE_SET(models.Model):
         null=True,
         related_name = "variable_set_maintenance_agency"
     )
-
     variable_set_id = models.CharField(
         "variable_set_id", max_length=255, primary_key=True
     )
-
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
     code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
     description = models.CharField(
         "description", max_length=255, default=None, blank=True, null=True
     )
@@ -343,33 +341,28 @@ class VARIABLE_SET(models.Model):
 
 
 class VARIABLE_SET_ENUMERATION(models.Model):
+    # CSV Headers: VARIABLE_SET_ID,VARIABLE_ID,VALID_FROM,VALID_TO,SUBDOMAIN_ID,IS_FLOW,ORDER
     variable_set_id = models.ForeignKey(
         "VARIABLE_SET",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     variable_id = models.ForeignKey(
         "VARIABLE",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
-
     subdomain_id = models.ForeignKey(
         "SUBDOMAIN",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     is_flow = models.BooleanField("is_flow", default=None, blank=True, null=True)
-
     order = models.BigIntegerField("order", default=None, blank=True, null=True)
 
     class Meta:
@@ -378,22 +371,32 @@ class VARIABLE_SET_ENUMERATION(models.Model):
 
 
 class FRAMEWORK(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
-    framework_id = models.CharField("framework_id", max_length=255, primary_key=True)
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,FRAMEWORK_ID,NAME,CODE,DESCRIPTION,FRAMEWORK_TYPE,REPORTING_POPULATION,OTHER_LINKS,ORDER,FRAMEWORK_STATUS
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
+    framework_id = models.CharField("framework_id", max_length=255, primary_key=True)
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
+    framework_type = models.CharField(
+        "framework_type", max_length=255, default=None, blank=True, null=True
+    )
+    reporting_population = models.CharField(
+        "reporting_population", max_length=255, default=None, blank=True, null=True
+    )
+    other_links = models.CharField(
+        "other_links", max_length=255, default=None, blank=True, null=True
+    )
+    order = models.BigIntegerField("order", default=None, blank=True, null=True)
+    framework_status = models.CharField(
+        "framework_status", max_length=255, default=None, blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "FRAMEWORK"
@@ -401,20 +404,18 @@ class FRAMEWORK(models.Model):
 
 
 class MEMBER_MAPPING(models.Model):
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,MEMBER_MAPPING_ID,NAME,CODE
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     member_mapping_id = models.CharField(
         "member_mapping_id", max_length=255, primary_key=True
     )
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
 
     class Meta:
         verbose_name = "MEMBER_MAPPING"
@@ -422,32 +423,34 @@ class MEMBER_MAPPING(models.Model):
 
 
 class MEMBER_MAPPING_ITEM(models.Model):
-    is_source = models.CharField(
-        "is_source", max_length=255, default=None, blank=True, null=True
-    )
-
-    member = models.ForeignKey(
-        "MEMBER",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
-    variable = models.ForeignKey(
-        "VARIABLE",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
-    row = models.CharField("row", max_length=255, default=None, blank=True, null=True)
-
+    # CSV Headers: MEMBER_MAPPING_ID,MEMBER_MAPPING_ROW,VARIABLE_ID,IS_SOURCE,MEMBER_ID,VALID_FROM,VALID_TO
     member_mapping_id = models.ForeignKey(
         "MEMBER_MAPPING",
         models.SET_NULL,
         blank=True,
         null=True,
     )
+    member_mapping_row = models.CharField("row", max_length=255, default=None, blank=True, null=True)
+    variable_id = models.ForeignKey(
+        "VARIABLE",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    is_source = models.CharField(
+        "is_source", max_length=255, default=None, blank=True, null=True
+    )
+
+    member_id = models.ForeignKey(
+        "MEMBER",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    
+
+    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
+    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
 
     member_hierarchy = models.ForeignKey(
         "MEMBER_HIERARCHY",
@@ -455,37 +458,30 @@ class MEMBER_MAPPING_ITEM(models.Model):
         blank=True,
         null=True,
     )
-
-    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
-    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
-
     class Meta:
         verbose_name = "MEMBER_MAPPING_ITEM"
         verbose_name_plural = "MEMBER_MAPPING_ITEMs"
 
 
 class VARIABLE_MAPPING_ITEM(models.Model):
+    # CSV Headers: VARIABLE_MAPPING_ID,VARIABLE_ID,IS_SOURCE,VALID_FROM,VALID_TO
     variable_mapping_id = models.ForeignKey(
         "VARIABLE_MAPPING",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    is_source = models.CharField(
-        "is_source", max_length=255, default=None, blank=True, null=True
-    )
-
+    # we should really change theis to variable_id for consistancy
     variable = models.ForeignKey(
         "VARIABLE",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
+    is_source = models.CharField(
+        "is_source", max_length=255, default=None, blank=True, null=True
+    )
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
 
     class Meta:
@@ -494,20 +490,18 @@ class VARIABLE_MAPPING_ITEM(models.Model):
 
 
 class VARIABLE_MAPPING(models.Model):
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
+    # CSV Headers: VARIABLE_MAPPING_ID,MAINTENANCE_AGENCY_ID,CODE,NAME
+    variable_mapping_id = models.CharField(
+        "variable_mapping_id", max_length=255, primary_key=True
+    )
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    variable_mapping_id = models.CharField(
-        "variable_mapping_id", max_length=255, primary_key=True
-    )
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
 
     class Meta:
         verbose_name = "VARIABLE_MAPPING"
@@ -515,15 +509,20 @@ class VARIABLE_MAPPING(models.Model):
 
 
 class MAPPING_TO_CUBE(models.Model):
+    # CSV Headers: CUBE_MAPPING_ID,MAPPING_ID,VALID_FROM,VALID_TO
+
+    # need to rename these next 2 fields for consistancy
+    cubeMapping = models.CharField(
+        "cubeMapping", max_length=255, default=None, blank=True, null=True
+    )
+
     mapping = models.ForeignKey(
         "MAPPING_DEFINITION",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-    cubeMapping = models.CharField(
-        "cubeMapping", max_length=255, default=None, blank=True, null=True
-    )
+    
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
 
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
@@ -534,30 +533,28 @@ class MAPPING_TO_CUBE(models.Model):
 
 
 class MAPPING_DEFINITION(models.Model):
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,MAPPING_ID,NAME,MAPPING_TYPE,CODE,ALGORITHM,MEMBER_MAPPING_ID,VARIABLE_MAPPING_ID
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     mapping_id = models.CharField("mapping_id", max_length=255, primary_key=True)
-
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
     mapping_type = models.CharField(
         "mapping_type", max_length=255, default=None, blank=True, null=True
     )
-
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    algorithm = models.CharField(
+        "algorithm", max_length=255, default=None, blank=True, null=True
+    )
     member_mapping_id = models.ForeignKey(
         "MEMBER_MAPPING",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     variable_mapping_id = models.ForeignKey(
         "VARIABLE_MAPPING",
         models.SET_NULL,
@@ -571,31 +568,25 @@ class MAPPING_DEFINITION(models.Model):
 
 
 class AXIS(models.Model):
+    # CSV Headers: AXIS_ID,CODE,ORIENTATION,ORDER,NAME,DESCRIPTION,TABLE_ID,IS_OPEN_AXIS
     axis_id = models.CharField("axis_id", max_length=255, primary_key=True)
-
     code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
-    is_open_axis = models.BooleanField(
-        "is_open_axis", default=None, blank=True, null=True
-    )
-
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
-    order = models.BigIntegerField("order", default=None, blank=True, null=True)
-
     orientation = models.CharField(
         "orientation", max_length=255, default=None, blank=True, null=True
     )
-
+    order = models.BigIntegerField("order", default=None, blank=True, null=True)
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
     table_id = models.ForeignKey(
         "TABLE",
         models.SET_NULL,
         blank=True,
         null=True,
+    )
+    is_open_axis = models.BooleanField(
+        "is_open_axis", default=None, blank=True, null=True
     )
 
     class Meta:
@@ -604,41 +595,33 @@ class AXIS(models.Model):
 
 
 class AXIS_ORDINATE(models.Model):
+    # CSV Headers: AXIS_ORDINATE_ID,IS_ABSTRACT_HEADER,CODE,ORDER,LEVEL,PATH,AXIS_ID,PARENT_AXIS_ORDINATE_ID,NAME,DESCRIPTION
+    axis_ordinate_id = models.CharField(
+        "axis_ordinate_id", max_length=255, primary_key=True
+    )
+    is_abstract_header = models.BooleanField(
+        "is_abstract_header", default=None, blank=True, null=True
+    )
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    order = models.BigIntegerField("order", default=None, blank=True, null=True)
+    level = models.BigIntegerField("level", default=None, blank=True, null=True)
+    path = models.CharField("path", max_length=255, default=None, blank=True, null=True)
     axis_id = models.ForeignKey(
         "AXIS",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    axis_ordinate_id = models.CharField(
-        "axis_ordinate_id", max_length=255, primary_key=True
-    )
-
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
-    is_abstract_header = models.BooleanField(
-        "is_open_axis", default=None, blank=True, null=True
-    )
-
-    level = models.BigIntegerField("level", default=None, blank=True, null=True)
-
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
-    order = models.BigIntegerField("order", default=None, blank=True, null=True)
-
     parent_axis_ordinate_id = models.ForeignKey(
         "AXIS_ORDINATE",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    path = models.CharField("path", max_length=255, default=None, blank=True, null=True)
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "AXIS_ORDINATE"
@@ -646,15 +629,15 @@ class AXIS_ORDINATE(models.Model):
 
 
 class CELL_POSITION(models.Model):
-    axis_ordinate_id = models.ForeignKey(
-        "AXIS_ORDINATE",
+    # CSV Headers: CELL_ID,AXIS_ORDINATE_ID
+    cell_id = models.ForeignKey(
+        "TABLE_CELL",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    cell_id = models.ForeignKey(
-        "TABLE_CELL",
+    axis_ordinate_id = models.ForeignKey(
+        "AXIS_ORDINATE",
         models.SET_NULL,
         blank=True,
         null=True,
@@ -666,35 +649,34 @@ class CELL_POSITION(models.Model):
 
 
 class ORDINATE_ITEM(models.Model):
+    # CSV Headers: AXIS_ORDINATE_ID,VARIABLE_ID,MEMBER_ID,MEMBER_HIERARCHY_ID,MEMBER_HIERARCHY_VALID_FROM,STARTING_MEMBER_ID,IS_STARTING_MEMBER_INCLUDED
     axis_ordinate_id = models.ForeignKey(
         "AXIS_ORDINATE",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    is_starting_member_included = models.CharField(
-        "is_starting_member_included",
-        max_length=255,
-        default=None,
-        blank=True,
-        null=True,
-    )
-
-    member_hierarchy_id = models.ForeignKey(
-        "MEMBER_HIERARCHY",
+    variable_id = models.ForeignKey(
+        "VARIABLE",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     member_id = models.ForeignKey(
         "MEMBER",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
+    member_hierarchy_id = models.ForeignKey(
+        "MEMBER_HIERARCHY",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    member_hierarchy_valid_from = models.DateTimeField(
+        "member_hierarchy_valid_from", default=None, blank=True, null=True
+    )
     starting_member_id = models.ForeignKey(
         "MEMBER",
         models.SET_NULL,
@@ -702,10 +684,10 @@ class ORDINATE_ITEM(models.Model):
         null=True,
         related_name="starting_member_id",
     )
-
-    variable_id = models.ForeignKey(
-        "VARIABLE",
-        models.SET_NULL,
+    is_starting_member_included = models.CharField(
+        "is_starting_member_included",
+        max_length=255,
+        default=None,
         blank=True,
         null=True,
     )
@@ -716,30 +698,24 @@ class ORDINATE_ITEM(models.Model):
 
 
 class TABLE(models.Model):
+    # CSV Headers: TABLE_ID,NAME,CODE,DESCRIPTION,MAINTENANCE_AGENCY_ID,VERSION,VALID_FROM,VALID_TO
+    table_id = models.CharField("table_id", max_length=255, primary_key=True)
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
     code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
     description = models.CharField(
         "description", max_length=255, default=None, blank=True, null=True
     )
-
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
-    table_id = models.CharField("table_id", max_length=255, primary_key=True)
-
-    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
-    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
-
     version = models.CharField(
         "version", max_length=255, default=None, blank=True, null=True
     )
+    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
+    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
 
     class Meta:
         verbose_name = "TABLE"
@@ -747,9 +723,13 @@ class TABLE(models.Model):
 
 
 class TABLE_CELL(models.Model):
+    # CSV Headers: CELL_ID,IS_SHADED,COMBINATION_ID,TABLE_ID,SYSTEM_DATA_CODE
     cell_id = models.CharField("cell_id", max_length=255, primary_key=True)
-
-    is_shaded = models.BooleanField("is_open_axis", default=None, blank=True, null=True)
+    is_shaded = models.BooleanField("is_shaded", default=None, blank=True, null=True)
+    #rename to combination_id
+    table_cell_combination_id = models.CharField(
+        "table_cell_combination_id", max_length=255, default=None, blank=True, null=True
+    )
 
     table_id = models.ForeignKey(
         "TABLE",
@@ -757,11 +737,11 @@ class TABLE_CELL(models.Model):
         blank=True,
         null=True,
     )
-
-    table_cell_combination_id = models.CharField(
-        "table_cell_combination_id", max_length=255, default=None, blank=True, null=True
+    system_data_code = models.CharField(
+        "system_data_code", max_length=255, default=None, blank=True, null=True
     )
 
+    
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
 
     class Meta:
@@ -770,29 +750,23 @@ class TABLE_CELL(models.Model):
 
 
 class CUBE_STRUCTURE(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
-    cube_structure_id = models.CharField(
-        "cube_structure_id", max_length=255, primary_key=True
-    )
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,CUBE_STRUCTURE_ID,NAME,CODE,DESCRIPTION,VALID_FROM,VALID_TO,VERSION
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
+    cube_structure_id = models.CharField(
+        "cube_structure_id", max_length=255, primary_key=True
+    )
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
-
     version = models.CharField(
         "version", max_length=255, default=None, blank=True, null=True
     )
@@ -803,25 +777,49 @@ class CUBE_STRUCTURE(models.Model):
 
 
 class CUBE_STRUCTURE_ITEM(models.Model):
-    attribute_associated_variable = models.ForeignKey(
-        "VARIABLE",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="attribute_associated_variable",
-    )
-
+    # CSV Headers: CUBE_STRUCTURE_ID,CUBE_VARIABLE_CODE,VARIABLE_ID,ROLE,ORDER,SUBDOMAIN_ID,VARIABLE_SET_ID,MEMBER_ID,DIMENSION_TYPE,ATTRIBUTE_ASSOCIATED_VARIABLE,IS_FLOW,IS_MANDATORY,DESCRIPTION,IS_IMPLEMENTED
     cube_structure_id = models.ForeignKey(
         "CUBE_STRUCTURE",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
+    cube_variable_code = models.CharField(
+        "cube_variable_code", max_length=255, default=None, blank=True, null=True
     )
-
+    variable_id = models.ForeignKey(
+        "VARIABLE",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    TYP_RL = {
+        "O": "O",
+        "A": "A",
+        "D": "D",
+    }
+    role = models.CharField(
+        "role", max_length=255, choices=TYP_RL, default=None, blank=True, null=True
+    )
+    order = models.BigIntegerField("order", default=None, blank=True, null=True)
+    subdomain_id = models.ForeignKey(
+        "SUBDOMAIN",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    variable_set_id = models.ForeignKey(
+        "VARIABLE_SET",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    member_id = models.ForeignKey(
+        "MEMBER",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
     TYP_DMNSN = {
         "B": "B",
         "M": "M",
@@ -836,51 +834,25 @@ class CUBE_STRUCTURE_ITEM(models.Model):
         blank=True,
         null=True,
     )
-
-    is_flow = models.BooleanField("is_flow", default=None, blank=True, null=True)
-
-    is_mandatory = models.BooleanField(
-        "is_mandatory", default=None, blank=True, null=True
-    )
-
-    member_id = models.ForeignKey(
-        "MEMBER",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
-    order = models.BigIntegerField("order", default=None, blank=True, null=True)
-
-    TYP_RL = {
-        "O": "O",
-        "A": "A",
-        "D": "D",
-    }
-    role = models.CharField(
-        "role", max_length=255, choices=TYP_RL, default=None, blank=True, null=True
-    )
-
-    variable_id = models.ForeignKey(
+    attribute_associated_variable = models.ForeignKey(
         "VARIABLE",
         models.SET_NULL,
         blank=True,
         null=True,
+        related_name="attribute_associated_variable",
     )
-
+    is_flow = models.BooleanField("is_flow", default=None, blank=True, null=True)
+    is_mandatory = models.BooleanField(
+        "is_mandatory", default=None, blank=True, null=True
+    )
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
+    is_implemented = models.BooleanField(
+        "is_implemented", default=None, blank=True, null=True
+    )
     is_identifier = models.BooleanField(
         "is_identifier", default=None, blank=True, null=True
-    )
-
-    cube_variable_code = models.CharField(
-        "cube_variable_code", max_length=255, default=None, blank=True, null=True
-    )
-
-    subdomain_id = models.ForeignKey(
-        "SUBDOMAIN",
-        models.SET_NULL,
-        blank=True,
-        null=True,
     )
 
     class Meta:
@@ -889,51 +861,49 @@ class CUBE_STRUCTURE_ITEM(models.Model):
 
 
 class CUBE(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
-    cube_id = models.CharField("cube_id", max_length=255, primary_key=True)
-
-    cube_structure_id = models.ForeignKey(
-        "CUBE_STRUCTURE",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
-    cube_type = models.CharField(
-        "cube_type", max_length=255, default=None, blank=True, null=True
-    )
-
-    description = models.CharField(
-        "description", max_length=255, default=None, blank=True, null=True
-    )
-
-    framework_id = models.ForeignKey(
-        "FRAMEWORK",
-        models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-
-    is_allowed = models.BooleanField("is_allowed", default=None, blank=True, null=True)
-
+    # CSV Headers: MAINTENANCE_AGENCY_ID,CUBE_ID,NAME,CODE,FRAMEWORK_ID,CUBE_STRUCTURE_ID,CUBE_TYPE,IS_ALLOWED,VALID_FROM,VALID_TO,VERSION,DESCRIPTION,PUBLISHED,DATASET_URL,FILTERS,DI_EXPORT
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
+    cube_id = models.CharField("cube_id", max_length=255, primary_key=True)
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
-    published = models.BooleanField("published", default=None, blank=True, null=True)
-
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    framework_id = models.ForeignKey(
+        "FRAMEWORK",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    cube_structure_id = models.ForeignKey(
+        "CUBE_STRUCTURE",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    cube_type = models.CharField(
+        "cube_type", max_length=255, default=None, blank=True, null=True
+    )
+    is_allowed = models.BooleanField("is_allowed", default=None, blank=True, null=True)
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
-
     version = models.CharField(
         "version", max_length=255, default=None, blank=True, null=True
+    )
+    description = models.CharField(
+        "description", max_length=255, default=None, blank=True, null=True
+    )
+    published = models.BooleanField("published", default=None, blank=True, null=True)
+    dataset_url = models.CharField(
+        "dataset_url", max_length=255, default=None, blank=True, null=True
+    )
+    filters = models.CharField(
+        "filters", max_length=255, default=None, blank=True, null=True
+    )
+    di_export = models.CharField(
+        "di_export", max_length=255, default=None, blank=True, null=True
     )
 
     class Meta:
@@ -942,35 +912,28 @@ class CUBE(models.Model):
 
 
 class CUBE_LINK(models.Model):
+    # nned to find the correct csv headers
+    # CSV Headers: MAINTENANCE_AGENCY_ID,CUBE_LINK_ID,CODE,NAME,DESCRIPTION,VALID_FROM,VALID_TO,VERSION,ORDER_RELEVANCE,PRIMARY_CUBE_ID,FOREIGN_CUBE_ID,CUBE_LINK_TYPE,JOIN_IDENTIFIER
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
     cube_link_id = models.CharField("cube_link_id", max_length=255, primary_key=True)
-
     code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
     name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
     description = models.CharField(
         "description", max_length=255, default=None, blank=True, null=True
     )
-
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
-
     version = models.CharField(
         "version", max_length=255, default=None, blank=True, null=True
     )
-
     order_relevance = models.BigIntegerField(
         "order_relevance", default=None, blank=True, null=True
     )
-
     primary_cube_id = models.ForeignKey(
         "CUBE",
         models.SET_NULL,
@@ -978,7 +941,6 @@ class CUBE_LINK(models.Model):
         null=True,
         related_name="primary_cube_in_cube_link",
     )
-
     foreign_cube_id = models.ForeignKey(
         "CUBE",
         models.SET_NULL,
@@ -986,11 +948,9 @@ class CUBE_LINK(models.Model):
         null=True,
         related_name="foreign_cube_in_cube_link",
     )
-
     cube_link_type = models.CharField(
         "cube_link_type", max_length=255, default=None, blank=True, null=True
     )
-
     join_identifier = models.CharField(
         "join_identifier", max_length=255, default=None, blank=True, null=True
     )
@@ -1034,28 +994,23 @@ class CUBE_STRUCTURE_ITEM_LINK(models.Model):
 
 
 class COMBINATION(models.Model):
-    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
-
+    # CSV Headers: COMBINATION_ID,CODE,NAME,MAINTENANCE_AGENCY_ID,VERSION,VALID_FROM,VALID_TO
     combination_id = models.CharField(
         "combination_id", max_length=255, primary_key=True
     )
-
+    code = models.CharField("code", max_length=255, default=None, blank=True, null=True)
+    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    name = models.CharField("name", max_length=255, default=None, blank=True, null=True)
-
-    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
-    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
-
     version = models.CharField(
         "version", max_length=255, default=None, blank=True, null=True
     )
+    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
+    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
 
     metric = models.ForeignKey(
         "VARIABLE",
@@ -1070,22 +1025,33 @@ class COMBINATION(models.Model):
 
 
 class COMBINATION_ITEM(models.Model):
+    # CSV Headers: COMBINATION_ID,VARIABLE_ID,SUBDOMAIN_ID,VARIABLE_SET_ID,MEMBER_ID
     combination_id = models.ForeignKey(
         "COMBINATION",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    member_id = models.ForeignKey(
-        "MEMBER",
+    variable_id = models.ForeignKey(
+        "VARIABLE",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    variable_id = models.ForeignKey(
-        "VARIABLE",
+    subdomain_id = models.ForeignKey(
+        "SUBDOMAIN",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    variable_set_id = models.ForeignKey(
+        "VARIABLE_SET",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    member_id = models.ForeignKey(
+        "MEMBER",
         models.SET_NULL,
         blank=True,
         null=True,
@@ -1104,15 +1070,15 @@ class COMBINATION_ITEM(models.Model):
 
 
 class CUBE_TO_COMBINATION(models.Model):
-    combination_id = models.ForeignKey(
-        "COMBINATION",
+    # CSV Headers: CUBE_ID,COMBINATION_ID
+    cube_id = models.ForeignKey(
+        "CUBE",
         models.SET_NULL,
         blank=True,
         null=True,
     )
-
-    cube_id = models.ForeignKey(
-        "CUBE",
+    combination_id = models.ForeignKey(
+        "COMBINATION",
         models.SET_NULL,
         blank=True,
         null=True,
@@ -1124,20 +1090,13 @@ class CUBE_TO_COMBINATION(models.Model):
 
 
 class MEMBER_LINK(models.Model):
-    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
-
-    is_linked = models.BooleanField("is_linked", default=None, blank=True, null=True)
-
-    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
-
-    foreign_member_id = models.ForeignKey(
-        "MEMBER",
+    # CSV Headers: CUBE_STRUCTURE_ITEM_LINK_ID,PRIMARY_MEMBER_ID,FOREIGN_MEMBER_ID,IS_LINKED,VALID_FROM,VALID_TO
+    cube_structure_item_link_id = models.ForeignKey(
+        "CUBE_STRUCTURE_ITEM_LINK",
         models.SET_NULL,
         blank=True,
         null=True,
-        related_name="foreign_member",
     )
-
     primary_member_id = models.ForeignKey(
         "MEMBER",
         models.SET_NULL,
@@ -1145,13 +1104,16 @@ class MEMBER_LINK(models.Model):
         null=True,
         related_name="primary_member",
     )
-
-    cube_structure_item_link_id = models.ForeignKey(
-        "CUBE_STRUCTURE_ITEM_LINK",
+    foreign_member_id = models.ForeignKey(
+        "MEMBER",
         models.SET_NULL,
         blank=True,
         null=True,
+        related_name="foreign_member",
     )
+    is_linked = models.BooleanField("is_linked", default=None, blank=True, null=True)
+    valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
+    valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
 
     class Meta:
         verbose_name = "MEMBER_LINK"
