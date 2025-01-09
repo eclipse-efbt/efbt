@@ -39,6 +39,7 @@ from .entry_points.upload_sqldev_eil_files import UploadSQLDevEILFiles
 from .entry_points.upload_sqldev_eldm_files import UploadSQLDevELDMFiles
 from .entry_points.upload_technical_export_files import UploadTechnicalExportFiles
 from .entry_points.create_django_models import RunCreateDjangoModels
+from .entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
 import os
 import csv
 from pathlib import Path
@@ -1590,4 +1591,44 @@ def export_database_to_csv(request):
                     zip_file.writestr(f"{table_name.replace('pybirdai_', 'bird_')}.csv", '\n'.join(csv_content))
         
         return response
+
+def bird_diffs_and_corrections(request):
+    """
+    View function for displaying BIRD diffs and corrections page.
+    """
+    return render(request, 'pybirdai/bird_diffs_and_corrections.html')
+
+def convert_ldm_to_sdd_hierarchies(request):
+    """View for converting LDM hierarchies to SDD hierarchies."""
+    if request.GET.get('execute') == 'true':
+        try:
+            RunConvertLDMToSDDHierarchies.run_convert_hierarchies()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading(
+        request,
+        'Converting LDM Hierarchies to SDD Hierarchies',
+        'Successfully converted LDM hierarchies to SDD hierarchies.',
+        reverse('pybirdai:bird_diffs_and_corrections'),
+        'BIRD Export Diffs and Corrections'
+    )
+
+def view_ldm_to_sdd_results(request):
+    """View for displaying the LDM to SDD hierarchy conversion results."""
+    results_dir = os.path.join(settings.BASE_DIR, 'results', 'ldm_to_sdd_hierarchies')
+    
+    # Read the CSV files
+    csv_data = {}
+    for filename in ['member_hierarchy.csv', 'member_hierarchy_node.csv', 'missing_members.csv']:
+        filepath = os.path.join(results_dir, filename)
+        if os.path.exists(filepath):
+            with open(filepath, 'r', newline='') as f:
+                reader = csv.reader(f)
+                headers = next(reader)  # Get headers
+                rows = list(reader)     # Get data rows
+                csv_data[filename] = {'headers': headers, 'rows': rows}
+    
+    return render(request, 'pybirdai/view_ldm_to_sdd_results.html', {'csv_data': csv_data})
 

@@ -1,0 +1,39 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Input Structures{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align: center;">BIRD Export Diffs and Corrections</h1>
+<div class="task-grid">
+    <a href="{% url 'pybirdai:export_database_to_csv' %}" class="task-item">
+        <img src="{% static 'images/export_db.webp' %}" alt="Export DB to CSV">
+        <span>Export Database to CSV Files</span>
+    </a>
+    <a href="{% url 'pybirdai:convert_ldm_to_sdd_hierarchies' %}" class="task-item">
+        <img src="{% static 'images/hierarchy_icon.webp' %}" alt="Convert Hierarchies">
+        <span>Convert LDM Hierarchies to SDD Hierarchies (Use only with LDM model loaded)</span>
+    </a>
+    <a href="{% url 'pybirdai:view_ldm_to_sdd_results' %}" class="task-item">
+        <img src="{% static 'images/review_checkpoint.webp' %}" alt="View Results">
+        <span>View LDM to SDD Hierarchy Conversion Results</span>
+    </a>
+    <a href="{% url 'pybirdai:home' %}" class="task-item">
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+        <span>Back to the PyBIRD AI Home Page</span>
+    </a>
+</div>
+{% endblock %}
