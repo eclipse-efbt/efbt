@@ -16,9 +16,14 @@
 <p style="text-align: center;"> <a href="{% url 'pybirdai:create_bird_database'%}">Back to the Create Database Page</a><p>
 <h1>Create Database Manual Steps</h1>
 
-<p>Do these things manually from the command line<br><br>
+These steps create a databasefor storing financial data such as bonbds and loan in folloeing the BIRD datamodel.<br><br>
+PyBIRD AI uses the Django framework; by default Django uses the sqlite database but it can be conigured to use other databases like Postgres, Oracle or SQLServer<br><br>
+
+<p>To create the database, do these things manually from the command line:<br><br>
 
 Stop the server by hitting CTRL-C in the terminal or command window running the django server.<br><br>
+
+If you previously created the database, yout will need to delete the old one. This can be done by deleting the db.sqlite3 file in the birds_nest directory.<br><br>
 
 Look in birds_nest\results\database_configuration directory for the results which is a models.py file and an admin.py file. <br><br>
 
@@ -32,7 +37,6 @@ admin.site.register(NT_MMBR_EU)<br><br>
 
 If using the ldm you will  see that the name of one relationship contains a double undescore which is not valid in django (OTHR_INTNGBL_ASST_NT_TKN_INT_PSSSSN_to__to_Model_Context_specifies_Other_intangible_asset_not_taken_into_possessions) ,  you should delete that extra underscore in the bird_data_model.py file.<br><br>
 
-At this point you can add executable derivation rules if you wish to everide the derived columns  in the EIL, this will be covered in a seperate wiki page.<br><br>
 
 Using an  editor, append the contents of the birds_nest\results\admin.py file (except for the first line ‘from django.contrib import admin’ to birds_nest\pybirdai\admin.py<br><br>
 
@@ -48,7 +52,7 @@ run the command in the terminal: python manage.py migrate <br><br>
 
 you will see some warnings like ‘ SQLite does not support comments on columns (db_comment) ‘ which is fine<br><br>
 
-By default Django uses the sqlite database but it can be conigured to use other databases liek Postgres, oracle or SQLServer, you can log into the database and do some queries now if you wish<br><br>
+You can log into the database and do some queries now if you wish<br><br>
 
 make the admin user: <br><br>
 
