@@ -384,10 +384,10 @@ def edit_variable_mappings(request):
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
-            messages.success(request, 'VARIABLE_MAPPING updated successfully.')
+            messages.success(request, 'Variable Mappings updated successfully.')
             return redirect(request.path)
         else:
-            messages.error(request, 'There was an error updating the VARIABLE_MAPPING.')
+            messages.error(request, 'There was an error updating the Variable Mappings.')
     else:
         formset = ModelFormSet(queryset=page_obj.object_list)
     
@@ -401,22 +401,22 @@ def edit_variable_mappings(request):
 def edit_variable_mapping_items(request):
     # Get unique values for filters
     unique_variable_mappings = VARIABLE_MAPPING_ITEM.objects.values_list('variable_mapping_id', flat=True).distinct()
-    unique_variables = VARIABLE_MAPPING_ITEM.objects.values_list('variable', flat=True).distinct()
+    unique_variables = VARIABLE_MAPPING_ITEM.objects.values_list('variable_id', flat=True).distinct()
     
     # Get all variable mappings and variables for the create form
     all_variable_mappings = VARIABLE_MAPPING.objects.all().order_by('variable_mapping_id')
     all_variables = VARIABLE.objects.all().order_by('variable_id')
     
     # Get filter values from request
-    selected_variable_mapping = request.GET.get('variable_mapping', '')
-    selected_variable = request.GET.get('variable', '')
+    selected_variable_mapping = request.GET.get('variable_mapping_id', '')
+    selected_variable = request.GET.get('variable_id', '')
     
     # Apply filters and ordering
     queryset = VARIABLE_MAPPING_ITEM.objects.all().order_by('id')
     if selected_variable_mapping:
         queryset = queryset.filter(variable_mapping_id=selected_variable_mapping)
     if selected_variable:
-        queryset = queryset.filter(variable=selected_variable)
+        queryset = queryset.filter(variable_id=selected_variable)
     
     # Add pagination and formset creation
     page_number = request.GET.get('page', 1)
@@ -443,13 +443,13 @@ def create_variable_mapping_item(request):
         try:
             # Get form data
             variable_mapping = get_object_or_404(VARIABLE_MAPPING, variable_mapping_id=request.POST.get('variable_mapping_id'))
-            variable = get_object_or_404(VARIABLE, variable_id=request.POST.get('variable'))
+            variable = get_object_or_404(VARIABLE, variable_id=request.POST.get('variable_id'))
             
             # Create new item
             item = VARIABLE_MAPPING_ITEM(
                 variable_mapping_id=variable_mapping,
                 is_source=request.POST.get('is_source'),
-                variable=variable,
+                variable_id=variable,
                 valid_from=request.POST.get('valid_from') or None,
                 valid_to=request.POST.get('valid_to') or None
             )
@@ -495,8 +495,8 @@ def edit_member_mappings(request):
 def edit_member_mapping_items(request):
     # Get unique values for filters
     member_mappings = MEMBER_MAPPING_ITEM.objects.values_list('member_mapping_id', flat=True).distinct()
-    members = MEMBER_MAPPING_ITEM.objects.values_list('member', flat=True).distinct()
-    variables = MEMBER_MAPPING_ITEM.objects.values_list('variable', flat=True).distinct()
+    members = MEMBER_MAPPING_ITEM.objects.values_list('member_id', flat=True).distinct()
+    variables = MEMBER_MAPPING_ITEM.objects.values_list('variable_id', flat=True).distinct()
     
     # Get all available choices for dropdowns
     all_member_mappings = MEMBER_MAPPING.objects.all().order_by('member_mapping_id')
@@ -505,9 +505,9 @@ def edit_member_mapping_items(request):
     all_member_hierarchies = MEMBER_HIERARCHY.objects.all().order_by('member_hierarchy_id')
     
     # Get filter values from request
-    selected_member_mapping = request.GET.get('member_mapping', '')
-    selected_member = request.GET.get('member', '')
-    selected_variable = request.GET.get('variable', '')
+    selected_member_mapping = request.GET.get('member_mapping_id', '')
+    selected_member = request.GET.get('member_id', '')
+    selected_variable = request.GET.get('variable_id', '')
     selected_is_source = request.GET.get('is_source', '')
     
     # Apply filters
@@ -515,9 +515,9 @@ def edit_member_mapping_items(request):
     if selected_member_mapping:
         queryset = queryset.filter(member_mapping_id=selected_member_mapping)
     if selected_member:
-        queryset = queryset.filter(member=selected_member)
+        queryset = queryset.filter(member_id=selected_member)
     if selected_variable:
-        queryset = queryset.filter(variable=selected_variable)
+        queryset = queryset.filter(variable_id=selected_variable)
     if selected_is_source:
         # Handle both lowercase and uppercase boolean strings
         if selected_is_source.lower() == 'true':
@@ -648,20 +648,20 @@ def edit_mapping_to_cubes(request):
     cube_filter = request.GET.get('cube_filter')
     
     # Start with all objects and order them
-    queryset = MAPPING_TO_CUBE.objects.all().order_by('mapping__name', 'cubeMapping')
+    queryset = MAPPING_TO_CUBE.objects.all().order_by('mapping__name', 'cube_mapping_id')
     
     # Apply filters if they exist
     if mapping_filter:
         queryset = queryset.filter(mapping__mapping_id=mapping_filter)
     if cube_filter:
-        queryset = queryset.filter(cubeMapping=cube_filter)
+        queryset = queryset.filter(cube_mapping_id=cube_filter)
         
     # Get all mapping definitions and unique cube mappings for the dropdowns
     mapping_definitions = MAPPING_DEFINITION.objects.all().order_by('name')
     cube_mappings = (MAPPING_TO_CUBE.objects
-                    .values_list('cubeMapping', flat=True)
+                    .values_list('cube_mapping_id', flat=True)
                     .distinct()
-                    .order_by('cubeMapping'))
+                    .order_by('cube_mapping_id'))
     
     # Paginate after filtering
     paginator = Paginator(queryset, 10)  # Show 10 items per page
@@ -671,7 +671,7 @@ def edit_mapping_to_cubes(request):
     # Create formset for the current page
     MappingToCubeFormSet = modelformset_factory(
         MAPPING_TO_CUBE,
-        fields=('mapping', 'cubeMapping', 'valid_from', 'valid_to'),
+        fields=('mapping_id', 'cube_mapping_id', 'valid_from', 'valid_to'),
         extra=0
     )
     
@@ -730,18 +730,19 @@ def create_mapping_definition(request):
 
 # Delete views for various models
 def delete_item(request, model, id_field, redirect_view, decoded_id=None):
-    id_value = decoded_id if decoded_id is not None else request.POST.get(id_field)
-    item = get_object_or_404(model, **{id_field: id_value})
-    if request.method == 'POST':
-        try:
-            item.delete()
-            messages.success(request, f'{model.__name__} deleted successfully.')
-        except Exception as e:
-            messages.error(request, f'Error deleting {model.__name__}: {str(e)}')
+    try:
+        id_value = decoded_id if decoded_id is not None else request.POST.get('id')
+        if id_value is None:
+            id_value = request.POST.get(id_field)
+        item = get_object_or_404(model, **{id_field: id_value})
+        item.delete()
+        messages.success(request, f'{model.__name__} deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting {model.__name__}: {str(e)}')
     return redirect(f'pybirdai:{redirect_view}')
 
 def delete_variable_mapping(request, variable_mapping_id):
-    return delete_item(request, VARIABLE_MAPPING, 'variable_mapping_id', 'edit_variable_mappings')
+    return delete_item(request, VARIABLE_MAPPING, 'variable_mapping_id', 'edit_variable_mappings', variable_mapping_id)
 
 def execute_data_point(request, data_point_id):
     app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
@@ -757,14 +758,57 @@ def execute_data_point(request, data_point_id):
     """
     return HttpResponse(html_response)
 
-def delete_variable_mapping_item(request, item_id):
-    return delete_item(request, VARIABLE_MAPPING_ITEM, 'id', 'edit_variable_mapping_items')
+def delete_variable_mapping_item(request):
+    if request.method == 'POST':
+        try:
+            variable_mapping_id = request.GET.get('variable_mapping_id')
+            variable_id = request.GET.get('variable_id')
+            is_source = request.GET.get('is_source')
+            
+            # Get the item using the composite key
+            item = get_object_or_404(
+                VARIABLE_MAPPING_ITEM,
+                variable_mapping_id=variable_mapping_id,
+                variable_id=variable_id,
+                is_source=is_source
+            )
+            
+            item.delete()
+            messages.success(request, 'Variable Mapping Item deleted successfully.')
+        except Exception as e:
+            messages.error(request, f'Error deleting Variable Mapping Item: {str(e)}')
+    
+    return redirect('pybirdai:edit_variable_mapping_items')
 
 def delete_member_mapping(request, member_mapping_id):
     return delete_item(request, MEMBER_MAPPING, 'member_mapping_id', 'edit_member_mappings')
 
 def delete_member_mapping_item(request, item_id):
-    return delete_item(request, MEMBER_MAPPING_ITEM, 'id', 'edit_member_mapping_items')
+    if request.method == 'POST':
+        try:
+            # Get the composite key fields from GET parameters
+            member_mapping_id = request.GET.get('member_mapping_id')
+            member_id = request.GET.get('member_id')
+            variable_id = request.GET.get('variable_id')
+            is_source = request.GET.get('is_source')
+            member_mapping_row = request.GET.get('member_mapping_row')
+            
+            # Get the item using the composite key
+            item = get_object_or_404(
+                MEMBER_MAPPING_ITEM,
+                member_mapping_id=member_mapping_id,
+                member_id=member_id,
+                variable_id=variable_id,
+                is_source=is_source,
+                member_mapping_row=member_mapping_row
+            )
+            
+            item.delete()
+            messages.success(request, 'Member Mapping Item deleted successfully.')
+        except Exception as e:
+            messages.error(request, f'Error deleting MEMBER_MAPPING_ITEM: {str(e)}')
+    
+    return redirect('pybirdai:edit_member_mapping_items')
 
 def delete_cube_link(request, cube_link_id):
     return delete_item(request, CUBE_LINK, 'cube_link_id', 'edit_cube_links')
@@ -1372,8 +1416,8 @@ def add_member_mapping_item(request):
         try:
             # Extract data from POST request
             is_source = request.POST.get('is_source', '').lower()  # Convert to lowercase for consistency
-            member_id = request.POST.get('member')
-            variable_id = request.POST.get('variable')
+            member_id = request.POST.get('member_id')
+            variable_id = request.POST.get('variable_id')
             row = request.POST.get('row')
             member_mapping_id = request.POST.get('member_mapping_id')
             member_hierarchy_id = request.POST.get('member_hierarchy')
@@ -1389,8 +1433,8 @@ def add_member_mapping_item(request):
             # Create new member mapping item
             MEMBER_MAPPING_ITEM.objects.create(
                 is_source=is_source,
-                member=member,
-                variable=variable,
+                member_id=member,
+                variable_id=variable,
                 row=row,
                 member_mapping_id=member_mapping,
                 member_hierarchy=member_hierarchy,
@@ -1408,8 +1452,8 @@ def create_mapping_to_cube(request):
     if request.method == 'POST':
         try:
             # Get form data
-            mapping_id = request.POST.get('mapping')
-            cube_mapping = request.POST.get('cubeMapping')
+            mapping_id = request.POST.get('mapping_id')
+            cube_mapping = request.POST.get('cube_mapping_id')
             valid_from = request.POST.get('valid_from')
             valid_to = request.POST.get('valid_to')
 
@@ -1418,8 +1462,8 @@ def create_mapping_to_cube(request):
 
             # Create new mapping to cube
             mapping_to_cube = MAPPING_TO_CUBE(
-                mapping=mapping,
-                cubeMapping=cube_mapping,
+                mapping_id=mapping,
+                cube_mapping_id=cube_mapping,
                 valid_from=valid_from if valid_from else None,
                 valid_to=valid_to if valid_to else None
             )
@@ -1448,13 +1492,13 @@ def view_member_mapping_items_by_row(request):
         
         # First pass: collect variables and organize items by row
         for item in items:
-            row = item.row
+            row = item.member_mapping_row
             if row not in items_by_row:
                 items_by_row[row] = {'items': {}}
             
             # Add item to the row dictionary, using variable as key
-            if item.variable:
-                var_id = item.variable.variable_id
+            if item.variable_id:
+                var_id = item.variable_id.variable_id
                 items_by_row[row]['items'][var_id] = item
                 
                 # Track whether this variable is used as source or target

@@ -170,11 +170,11 @@ class ImportDatabaseToSDDModel(object):
         for mapping_to_cube in MAPPING_TO_CUBE.objects.all():
             try:
                 mapping_to_cube_list = context.mapping_to_cube_dictionary[
-                    mapping_to_cube.cubeMapping]
+                    mapping_to_cube.cube_mapping_id]
                 mapping_to_cube_list.append(mapping_to_cube)
             except KeyError:
                 context.mapping_to_cube_dictionary[
-                    mapping_to_cube.cubeMapping] = [mapping_to_cube]
+                    mapping_to_cube.cube_mapping_id] = [mapping_to_cube]
 
     def create_maintenance_agencies(self, context):
         '''

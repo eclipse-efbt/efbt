@@ -68,7 +68,7 @@ class MainCategoryFinder(object):
         Returns:
             list: Deduplicated list of members.
         """
-        return list({item.member for item in member_mapping_items})
+        return list({item.member_id for item in member_mapping_items})
 
     def create_join_for_product_to_main_category_map(self, context, sdd_context, framework):
         '''

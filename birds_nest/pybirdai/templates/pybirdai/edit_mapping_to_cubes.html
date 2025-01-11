@@ -33,7 +33,7 @@
             </div>
             <div class="form-group">
                 <label for="new_cube_mapping">Cube Mapping:</label>
-                <select name="cubeMapping" id="new_cube_mapping" required>
+                <select name="cube_mapping_id" id="new_cube_mapping" required>
                     <option value="">Select Cube</option>
                     {% for cube in cube_mappings %}
                         <option value="{{ cube }}">{{ cube }}</option>
@@ -109,7 +109,7 @@
                 {{ form.id }}
                 <tr>
                     <td>{{ form.mapping }}</td>
-                    <td>{{ form.cubeMapping }}</td>
+                    <td>{{ form.cube_mapping_id }}</td>
                     <td>{{ form.valid_from }}</td>
                     <td>{{ form.valid_to }}</td>
                     <td>
