@@ -90,9 +90,18 @@
                 {% for form in formset %}
                 {{ form.id }}
                 <tr>
-                    <td>{{ form.combination_id }}</td>
-                    <td>{{ form.variable_id }}</td>
-                    <td>{{ form.member_id }}</td>
+                    <td>
+                        {{ form.combination_id }}
+                        <input type="hidden" id="combination_id_{{ form.instance.id }}" value="{{ form.instance.combination_id.combination_id }}">
+                    </td>
+                    <td>
+                        {{ form.variable_id }}
+                        <input type="hidden" id="variable_id_{{ form.instance.id }}" value="{{ form.instance.variable_id.variable_id }}">
+                    </td>
+                    <td>
+                        {{ form.member_id }}
+                        <input type="hidden" id="member_id_{{ form.instance.id }}" value="{{ form.instance.member_id.member_id }}">
+                    </td>
                     <td>{{ form.member_hierarchy }}</td>
                     <td>
                         <button type="button" onclick="confirmDelete('{{ form.instance.id }}')">Delete</button>
@@ -137,11 +146,35 @@ function confirmDelete(itemId) {
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = "{% url 'pybirdai:delete_combination_item' 0 %}".replace('0', itemId);
+        
+        // Add CSRF token
         var csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = 'csrfmiddlewaretoken';
         csrfInput.value = '{{ csrf_token }}';
         form.appendChild(csrfInput);
+        
+        // Add combination_id
+        var combinationInput = document.createElement('input');
+        combinationInput.type = 'hidden';
+        combinationInput.name = 'combination_id';
+        combinationInput.value = document.getElementById('combination_id_' + itemId).value;
+        form.appendChild(combinationInput);
+        
+        // Add variable_id
+        var variableInput = document.createElement('input');
+        variableInput.type = 'hidden';
+        variableInput.name = 'variable_id';
+        variableInput.value = document.getElementById('variable_id_' + itemId).value;
+        form.appendChild(variableInput);
+        
+        // Add member_id
+        var memberInput = document.createElement('input');
+        memberInput.type = 'hidden';
+        memberInput.name = 'member_id';
+        memberInput.value = document.getElementById('member_id_' + itemId).value;
+        form.appendChild(memberInput);
+        
         document.body.appendChild(form);
         form.submit();
     }

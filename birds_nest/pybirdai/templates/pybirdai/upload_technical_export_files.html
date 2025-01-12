@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Import Report Template Files</h1>
-
+<a href="{% url 'pybirdai:populate_bird_metadata_database' %}">Back to Populate BIRD Metadata Database</a>
 <p>Using the BIRD website, export the  CSV files related to report tempaltes, following the instructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Downloading-Files-from-the-ECB-website">here</a>  <br><br>
     and then upload them by clicking the browse button  below to choose files, and then the upload button <br><br>
 If you are using Github codespaces you will find that it does not let you upload the larger files, so instead you should go to the editor in Github Codespaces, and go to the directory birds_nest\resources\technical_export and right click on this directory and choose 'upload' and upload the csv files into that directory.
