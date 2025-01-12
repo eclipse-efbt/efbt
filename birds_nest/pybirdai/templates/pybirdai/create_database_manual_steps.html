@@ -16,7 +16,7 @@
 <p style="text-align: center;"> <a href="{% url 'pybirdai:create_bird_database'%}">Back to the Create Database Page</a><p>
 <h1>Create Database Manual Steps</h1>
 
-These steps create a databasefor storing financial data such as bonbds and loan in folloeing the BIRD datamodel.<br><br>
+These steps create a database for storing financial data such as bonds and loans following the BIRD datamodel.<br><br>
 PyBIRD AI uses the Django framework; by default Django uses the sqlite database but it can be conigured to use other databases like Postgres, Oracle or SQLServer<br><br>
 
 <p>To create the database, do these things manually from the command line:<br><br>
@@ -42,7 +42,7 @@ Using an  editor, append the contents of the birds_nest\results\admin.py file (e
 
 Make sure those files are saved. <br><br>
 
-
+In the terminal/command line make sure you are in the birds_nest directory , if not type cd .\birds_nest\ to change into that directory<br><br>
 run the command in the terminal: python manage.py makemigrations pybirdai <br><br>
 
 This might take a few minutes for the LDM, but it should be quick for the Input Layer<br><br>
