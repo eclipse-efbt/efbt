@@ -1650,10 +1650,21 @@ def export_database_to_csv(request):
                     csv_content = []
                     csv_content.append(','.join(headers))
                     
-                    # Get data with escaped column names
+                    # Get data with escaped column names and ordered by primary key
                     with connection.cursor() as cursor:
                         escaped_headers = [f'"{h}"' if h == 'order' else h for h in db_headers]
-                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name}")
+                        # Get primary key column name
+                        cursor.execute(f"PRAGMA table_info({table_name})")
+                        table_info = cursor.fetchall()
+                        pk_column = None
+                        for col in table_info:
+                            if col[5] == 1:  # 5 is the index for pk flag in table_info
+                                pk_column = col[1]  # 1 is the index for column name
+                                break
+                        
+                        # Build ORDER BY clause
+                        order_by = f"ORDER BY {pk_column}" if pk_column else "ORDER BY rowid"  # rowid is always available in SQLite
+                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} {order_by}")
                         rows = cursor.fetchall()
                         
                         for row in rows:
@@ -1681,9 +1692,9 @@ def export_database_to_csv(request):
                                 headers.append(desc[0].upper())
                                 column_names.append(desc[0])
                         
-                        # Get data with escaped column names
+                        # Get data with escaped column names and ordered by rowid
                         escaped_headers = [f'"{h.lower()}"' if h.lower() == 'order' else h.lower() for h in column_names]
-                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name}")
+                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} ORDER BY rowid")
                         rows = cursor.fetchall()
                         
                         # Create CSV in memory
