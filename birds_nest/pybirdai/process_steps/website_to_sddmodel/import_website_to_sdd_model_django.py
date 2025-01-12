@@ -781,9 +781,9 @@ class ImportWebsiteToSDDModel(object):
                         else:
                             member_mapping_item = MEMBER_MAPPING_ITEM()
                             member_mapping_item.is_source = is_source
-                            member_mapping_item.member = member
-                            member_mapping_item.variable = variable
-                            member_mapping_item.row = row_number
+                            member_mapping_item.member_id = member
+                            member_mapping_item.variable_id = variable
+                            member_mapping_item.member_mapping_row = row_number
                             member_mapping_item.member_mapping_id  = ImportWebsiteToSDDModel.find_member_mapping_with_id(
                                                 self,context,member_mapping_id)
 
@@ -913,8 +913,8 @@ class ImportWebsiteToSDDModel(object):
                     
                     if not mapping_to_cube_mapping_id.startswith("M_SHS"):
                         mapping_to_cube = MAPPING_TO_CUBE(
-                            mapping=ImportWebsiteToSDDModel.find_mapping_definition_with_id(self, context, mapping_to_cube_mapping_id),
-                            cubeMapping=ImportWebsiteToSDDModel.replace_dots(self, mapping_to_cube_cube_mapping_id),
+                            mapping_id=ImportWebsiteToSDDModel.find_mapping_definition_with_id(self, context, mapping_to_cube_mapping_id),
+                            cube_mapping_id=ImportWebsiteToSDDModel.replace_dots(self, mapping_to_cube_cube_mapping_id),
                             valid_from=mapping_to_cube_valid_from,
                             valid_to=mapping_to_cube_valid_to
                         )
@@ -922,7 +922,7 @@ class ImportWebsiteToSDDModel(object):
                         mapping_to_cubes_to_create.append(mapping_to_cube)
                         
                         mapping_to_cube_list = context.mapping_to_cube_dictionary.setdefault(
-                            mapping_to_cube.cubeMapping, [])
+                            mapping_to_cube.cube_mapping_id, [])
                         mapping_to_cube_list.append(mapping_to_cube)
 
         if context.save_sdd_to_db and mapping_to_cubes_to_create:
@@ -998,7 +998,7 @@ class ImportWebsiteToSDDModel(object):
                     continue
                     
                 variable_mapping_item = VARIABLE_MAPPING_ITEM(
-                    variable=variable,
+                    variable_id=variable,
                     variable_mapping_id=ImportWebsiteToSDDModel.find_variable_mapping_with_id(
                         self, context, mapping_id),
                     is_source=row[ColumnIndexes().variable_mapping_item_is_source],
