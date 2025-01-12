@@ -648,11 +648,11 @@ def edit_mapping_to_cubes(request):
     cube_filter = request.GET.get('cube_filter')
     
     # Start with all objects and order them
-    queryset = MAPPING_TO_CUBE.objects.all().order_by('mapping__name', 'cube_mapping_id')
+    queryset = MAPPING_TO_CUBE.objects.all().order_by('mapping_id__name', 'cube_mapping_id')
     
     # Apply filters if they exist
     if mapping_filter:
-        queryset = queryset.filter(mapping__mapping_id=mapping_filter)
+        queryset = queryset.filter(mapping_id__mapping_id=mapping_filter)
     if cube_filter:
         queryset = queryset.filter(cube_mapping_id=cube_filter)
         
@@ -811,33 +811,70 @@ def delete_member_mapping_item(request, item_id):
     return redirect('pybirdai:edit_member_mapping_items')
 
 def delete_cube_link(request, cube_link_id):
-    return delete_item(request, CUBE_LINK, 'cube_link_id', 'edit_cube_links')
+    try:
+        link = get_object_or_404(CUBE_LINK, cube_link_id=cube_link_id)
+        link.delete()
+        messages.success(request, 'CUBE_LINK deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting CUBE_LINK: {str(e)}')
+    return redirect('pybirdai:edit_cube_links')
 
 def delete_cube_structure_item_link(request, cube_structure_item_link_id):
-    
     try:
-        
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
+        # Store the cube_link_id before deleting
+        cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
         link.delete()
-        sdd_context = SDDContext()
-        try:
-            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[link.cube_link_id.cube_link_id]
-            for cube_structure_item_link in cube_structure_item_links:
-                if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
-                    cube_structure_item_links.remove(cube_structure_item_link)
-                    break
-        except KeyError:
-            pass
+        
+        # Only update the context map if we had a cube_link_id
+        if cube_link_id:
+            sdd_context = SDDContext()
+            try:
+                cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                for cube_structure_item_link in cube_structure_item_links:
+                    if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
+                        cube_structure_item_links.remove(cube_structure_item_link)
+                        break
+            except KeyError:
+                pass
         
         messages.success(request, 'Link deleted successfully.')
     except Exception as e:
         messages.error(request, f'Error deleting link: {str(e)}')
     
-    # Redirect back to the edit page
-    return redirect('pybirdai:edit_cube_structure_item_links')
+    # Check the referer to determine which page to redirect back to
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'edit-cube-structure-item-links' in referer:
+        redirect_url = reverse('pybirdai:edit_cube_structure_item_links')
+    else:
+        # Preserve the filter parameters in the redirect for duplicate_primary_member_id_list
+        params = request.GET.copy()
+        params.pop('page', None)  # Remove page parameter to avoid invalid page numbers
+        redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
+        if params:
+            redirect_url += f'?{params.urlencode()}'
+    
+    return redirect(redirect_url)
 
 def delete_mapping_to_cube(request, mapping_to_cube_id):
-    return delete_item(request, MAPPING_TO_CUBE, 'id', 'edit_mapping_to_cubes')
+    try:
+        # Get the mapping_id and cube_mapping_id from the POST data
+        mapping_id = request.POST.get('mapping_id')
+        cube_mapping_id = request.POST.get('cube_mapping_id')
+        
+        if not all([mapping_id, cube_mapping_id]):
+            raise ValueError("Missing required fields for deletion")
+            
+        # Get the item using the composite key fields
+        item = MAPPING_TO_CUBE.objects.get(
+            mapping_id=MAPPING_DEFINITION.objects.get(mapping_id=mapping_id),
+            cube_mapping_id=cube_mapping_id
+        )
+        item.delete()
+        messages.success(request, 'MAPPING_TO_CUBE deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting MAPPING_TO_CUBE: {str(e)}')
+    return redirect('pybirdai:edit_mapping_to_cubes')
 
 def delete_mapping_definition(request, mapping_id):
     return delete_item(request, MAPPING_DEFINITION, 'mapping_id', 'edit_mapping_definitions')
@@ -1103,10 +1140,36 @@ def output_layers(request):
 
 
 def delete_combination(request, combination_id):
-    return delete_item(request, COMBINATION, 'combination_id', 'combinations')
+    try:
+        combination = get_object_or_404(COMBINATION, combination_id=combination_id)
+        combination.delete()
+        messages.success(request, 'COMBINATION deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting COMBINATION: {str(e)}')
+    return redirect('pybirdai:combinations')
 
 def delete_combination_item(request, item_id):
-    return delete_item(request, COMBINATION_ITEM, 'id', 'combination_items')
+    try:
+        # Get the item using the combination_id, variable_id, and member_id
+        # We need to get these from the form data since we don't have a primary key
+        combination_id = request.POST.get('combination_id')
+        variable_id = request.POST.get('variable_id')
+        member_id = request.POST.get('member_id')
+        
+        if not all([combination_id, variable_id, member_id]):
+            raise ValueError("Missing required fields for deletion")
+            
+        # Get the item using the composite key fields
+        item = COMBINATION_ITEM.objects.get(
+            combination_id=COMBINATION.objects.get(combination_id=combination_id),
+            variable_id=VARIABLE.objects.get(variable_id=variable_id),
+            member_id=MEMBER.objects.get(member_id=member_id)
+        )
+        item.delete()
+        messages.success(request, 'COMBINATION_ITEM deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting COMBINATION_ITEM: {str(e)}')
+    return redirect('pybirdai:combination_items')
 
 class DuplicatePrimaryMemberIdListView(ListView):
     template_name = 'pybirdai/duplicate_primary_member_id_list.html'
@@ -1298,27 +1361,38 @@ def delete_cube_structure_item_link(request, cube_structure_item_link_id):
     try:
         
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
+        # Store the cube_link_id before deleting
+        cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
         link.delete()
-        sdd_context = SDDContext()
-        try:
-            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[link.cube_link_id.cube_link_id]
-            for cube_structure_item_link in cube_structure_item_links:
-                if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
-                    cube_structure_item_links.remove(cube_structure_item_link)
-                    break
-        except KeyError:
-            pass
+        
+        # Only update the context map if we had a cube_link_id
+        if cube_link_id:
+            sdd_context = SDDContext()
+            try:
+                cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                for cube_structure_item_link in cube_structure_item_links:
+                    if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
+                        cube_structure_item_links.remove(cube_structure_item_link)
+                        break
+            except KeyError:
+                pass
         
         messages.success(request, 'Link deleted successfully.')
     except Exception as e:
         messages.error(request, f'Error deleting link: {str(e)}')
     
-    # Preserve the filter parameters in the redirect
-    params = request.GET.copy()
-    params.pop('page', None)  # Remove page parameter to avoid invalid page numbers
-    redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
-    if params:
-        redirect_url += f'?{params.urlencode()}'
+    # Check the referer to determine which page to redirect back to
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'edit-cube-structure-item-links' in referer:
+        redirect_url = reverse('pybirdai:edit_cube_structure_item_links')
+    else:
+        # Preserve the filter parameters in the redirect for duplicate_primary_member_id_list
+        params = request.GET.copy()
+        params.pop('page', None)  # Remove page parameter to avoid invalid page numbers
+        redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
+        if params:
+            redirect_url += f'?{params.urlencode()}'
+    
     return redirect(redirect_url)
 
 @require_http_methods(["POST"])
