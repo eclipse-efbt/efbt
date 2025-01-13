@@ -29,15 +29,6 @@ Look in birds_nest\results\database_configuration directory for the results whic
 
 Copy the content of models.py into birds_nest\pybirdai\bird_data_model.py<br><br>
 
-If using the LDM , then delete these 2 lines (which are accidental included twice ) from admin.py<br><br>
-
-from .bird_data_model import NT_MMBR_EU<br><br>
-
-admin.site.register(NT_MMBR_EU)<br><br>
-
-If using the ldm you will  see that the name of one relationship contains a double undescore which is not valid in django (OTHR_INTNGBL_ASST_NT_TKN_INT_PSSSSN_to__to_Model_Context_specifies_Other_intangible_asset_not_taken_into_possessions) ,  you should delete that extra underscore in the bird_data_model.py file.<br><br>
-
-
 Using an  editor, append the contents of the birds_nest\results\admin.py file (except for the first line ‘from django.contrib import admin’ to birds_nest\pybirdai\admin.py<br><br>
 
 Make sure those files are saved. <br><br>
