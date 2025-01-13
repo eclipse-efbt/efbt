@@ -9,7 +9,7 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.forms import modelformset_factory
@@ -21,7 +21,7 @@ from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
-    MAINTENANCE_AGENCY,  MEMBER_HIERARCHY
+    MAINTENANCE_AGENCY,  MEMBER_HIERARCHY, DOMAIN
 )
 from . import bird_meta_data_model
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
@@ -1760,4 +1760,111 @@ def view_ldm_to_sdd_results(request):
                 csv_data[filename] = {'headers': headers, 'rows': rows}
     
     return render(request, 'pybirdai/view_ldm_to_sdd_results.html', {'csv_data': csv_data})
+
+def import_members_from_csv(request):
+    if request.method == 'GET':
+        return render(request, 'pybirdai/import_members.html')
+    elif request.method == 'POST':
+        try:
+            csv_file = request.FILES.get('csvFile')
+            if not csv_file:
+                return HttpResponseBadRequest('No file was uploaded')
+            
+            if not csv_file.name.endswith('.csv'):
+                return HttpResponseBadRequest('File must be a CSV')
+            
+            # Read the CSV file
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
+            
+            # Validate headers
+            required_fields = {'MEMBER_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
+            headers = set(reader.fieldnames)
+            if not required_fields.issubset(headers):
+                missing = required_fields - headers
+                return HttpResponseBadRequest(f'Missing required columns: {", ".join(missing)}')
+            
+            # Process each row
+            members_to_create = []
+            for row in reader:
+                try:
+                    # Look up the domain
+                    domain = DOMAIN.objects.get(domain_id=row['DOMAIN_ID'])
+                    
+                    member = MEMBER(
+                        member_id=row['MEMBER_ID'],
+                        code=row['CODE'],
+                        name=row['NAME'],
+                        description=row['DESCRIPTION'],
+                        domain_id=domain
+                    )
+                    members_to_create.append(member)
+                except DOMAIN.DoesNotExist:
+                    return HttpResponseBadRequest(f'Domain with ID {row["DOMAIN_ID"]} not found')
+            
+            # Bulk create the members
+            if members_to_create:
+                MEMBER.objects.bulk_create(members_to_create)
+            
+            return JsonResponse({'message': 'Import successful', 'count': len(members_to_create)})
+            
+        except Exception as e:
+            return HttpResponseBadRequest(str(e))
+
+def import_variables_from_csv(request):
+    if request.method == 'GET':
+        return render(request, 'pybirdai/import_variables.html')
+    elif request.method == 'POST':
+        try:
+            csv_file = request.FILES.get('csvFile')
+            if not csv_file:
+                return HttpResponseBadRequest('No file was uploaded')
+            
+            if not csv_file.name.endswith('.csv'):
+                return HttpResponseBadRequest('File must be a CSV')
+            
+            # Read the CSV file
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
+            
+            # Validate headers
+            required_fields = {'VARIABLE_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
+            headers = set(reader.fieldnames)
+            if not required_fields.issubset(headers):
+                missing = required_fields - headers
+                return HttpResponseBadRequest(f'Missing required columns: {", ".join(missing)}')
+            
+            # Get SDDContext instance
+            sdd_context = SDDContext()
+            
+            # Process each row
+            variables_to_create = []
+            for row in reader:
+                try:
+                    # Look up the domain
+                    domain = DOMAIN.objects.get(domain_id=row['DOMAIN_ID'])
+                    
+                    variable = VARIABLE(
+                        variable_id=row['VARIABLE_ID'],
+                        code=row['CODE'],
+                        name=row['NAME'],
+                        description=row['DESCRIPTION'],
+                        domain_id=domain
+                    )
+                    variables_to_create.append(variable)
+                except DOMAIN.DoesNotExist:
+                    return HttpResponseBadRequest(f'Domain with ID {row["DOMAIN_ID"]} not found')
+            
+            # Bulk create the variables
+            if variables_to_create:
+                created_variables = VARIABLE.objects.bulk_create(variables_to_create)
+                
+                # Update SDDContext variable dictionary
+                for variable in created_variables:
+                    sdd_context.variable_dictionary[variable.variable_id] = variable
+            
+            return JsonResponse({'message': 'Import successful', 'count': len(variables_to_create)})
+            
+        except Exception as e:
+            return HttpResponseBadRequest(str(e))
 
