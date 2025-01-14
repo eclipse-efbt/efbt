@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Edit Output Layers</h1>
-<a href="{% url 'pybirdai:review_filters' %}">Back to Review  Filters</a>
+<h1>Output Layers</h1>
+<a href="{% url 'pybirdai:review_filters' %}">Back to Review Filters</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -11,57 +11,40 @@
 </ul>
 {% endif %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ formset.management_form }}
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Maintenance Agency</th>
-                    <th>Cube ID</th>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Valid From</th>
-                    <th>Valid To</th>
-                    <th>Version</th>
-                    <th>Cube Type</th>
-                    <th>Cube Structure ID</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in formset %}
-                {{ form.id }}
-                <tr>
-                    <td>{{ form.maintenance_agency_id }}</td>
-                    <td>{{ form.cube_id }}</td>
-                    <td>{{ form.code }}</td>
-                    <td>{{ form.name }}</td>
-                    <td>{{ form.description }}</td>
-                    <td>{{ form.valid_from }}</td>
-                    <td>{{ form.valid_to }}</td>
-                    <td>{{ form.version }}</td>
-                    <td>{{ form.cube_type }}</td>
-                    <td>{{ form.cube_structure_id }}</td>
-                    <td>
-                        <button type="button" onclick="confirmDelete('{{ form.instance.cube_id }}')">Delete</button>
-                    </td>
-                </tr>
-                {% if form.errors %}
-                <tr>
-                    <td colspan="11">
-                        {{ form.errors }}
-                    </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <button type="submit">Save Changes</button>
-</form>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Maintenance Agency</th>
+                <th>Cube ID</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Valid From</th>
+                <th>Valid To</th>
+                <th>Version</th>
+                <th>Cube Type</th>
+                <th>Cube Structure ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in formset %}
+            <tr>
+                <td>{{ form.instance.maintenance_agency_id }}</td>
+                <td>{{ form.instance.cube_id }}</td>
+                <td>{{ form.instance.code }}</td>
+                <td>{{ form.instance.name }}</td>
+                <td>{{ form.instance.description }}</td>
+                <td>{{ form.instance.valid_from }}</td>
+                <td>{{ form.instance.valid_to }}</td>
+                <td>{{ form.instance.version }}</td>
+                <td>{{ form.instance.cube_type }}</td>
+                <td>{{ form.instance.cube_structure_id }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 <!-- Pagination -->
 <div class="pagination">
@@ -81,23 +64,6 @@
         {% endif %}
     </span>
 </div>
-
-<script>
-function confirmDelete(cubeId) {
-    if (confirm('Are you sure you want to delete this cube?')) {
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = "{% url 'pybirdai:delete_cube' 0 %}".replace('0', cubeId);
-        var csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = 'csrfmiddlewaretoken';
-        csrfInput.value = '{{ csrf_token }}';
-        form.appendChild(csrfInput);
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-</script>
 
 <style>
     .table-container {
@@ -122,12 +88,6 @@ function confirmDelete(cubeId) {
     }
     .pagination {
         margin-top: 20px;
-    }
-    /* Make form inputs expand to fill cells */
-    td input, td select {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 4px;
     }
 </style>
 {% endblock %} 

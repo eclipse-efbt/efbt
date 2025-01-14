@@ -117,63 +117,50 @@
     </form>
 </div>
 
-<form method="post">
-    {% csrf_token %}
-    {{ formset.management_form }}
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Maintenance Agency</th>
-                    <th>Cube Link ID</th>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Valid From</th>
-                    <th>Valid To</th>
-                    <th>Version</th>
-                    <th>Order Relevance</th>
-                    <th>Primary Cube</th>
-                    <th>Foreign Cube</th>
-                    <th>Cube Link Type</th>
-                    <th>Product Identifier</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in formset %}
-                {{ form.id }}
-                <tr>
-                    <td>{{ form.maintenance_agency_id }}</td>
-                    <td>{{ form.cube_link_id }}</td>
-                    <td>{{ form.code }}</td>
-                    <td>{{ form.name }}</td>
-                    <td>{{ form.description }}</td>
-                    <td>{{ form.valid_from }}</td>
-                    <td>{{ form.valid_to }}</td>
-                    <td>{{ form.version }}</td>
-                    <td>{{ form.order_relevance }}</td>
-                    <td>{{ form.primary_cube_id }}</td>
-                    <td>{{ form.foreign_cube_id }}</td>
-                    <td>{{ form.cube_link_type }}</td>
-                    <td>{{ form.join_identifier }}</td>
-                    <td>
-                        <button type="button" onclick="confirmDelete('{{ form.instance.cube_link_id }}')">Delete</button>
-                    </td>
-                </tr>
-                {% if form.errors %}
-                <tr>
-                    <td colspan="14">
-                        {{ form.errors }}
-                    </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <button type="submit">Save Changes</button>
-</form>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Maintenance Agency</th>
+                <th>Cube Link ID</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Valid From</th>
+                <th>Valid To</th>
+                <th>Version</th>
+                <th>Order Relevance</th>
+                <th>Primary Cube</th>
+                <th>Foreign Cube</th>
+                <th>Cube Link Type</th>
+                <th>Product Identifier</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in formset %}
+            <tr>
+                <td>{{ form.instance.maintenance_agency_id }}</td>
+                <td>{{ form.instance.cube_link_id }}</td>
+                <td>{{ form.instance.code }}</td>
+                <td>{{ form.instance.name }}</td>
+                <td>{{ form.instance.description }}</td>
+                <td>{{ form.instance.valid_from }}</td>
+                <td>{{ form.instance.valid_to }}</td>
+                <td>{{ form.instance.version }}</td>
+                <td>{{ form.instance.order_relevance }}</td>
+                <td>{{ form.instance.primary_cube_id }}</td>
+                <td>{{ form.instance.foreign_cube_id }}</td>
+                <td>{{ form.instance.cube_link_type }}</td>
+                <td>{{ form.instance.join_identifier }}</td>
+                <td>
+                    <button type="button" onclick="confirmDelete('{{ form.instance.cube_link_id }}')">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 <!-- Pagination -->
 <div class="pagination">
@@ -197,16 +184,32 @@
 <script>
 function confirmDelete(cubeLinkId) {
     if (confirm('Are you sure you want to delete this cube link?')) {
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = "{% url 'pybirdai:delete_cube_link' 0 %}".replace('0', cubeLinkId);
-        var csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = 'csrfmiddlewaretoken';
-        csrfInput.value = '{{ csrf_token }}';
-        form.appendChild(csrfInput);
-        document.body.appendChild(form);
-        form.submit();
+        fetch("{% url 'pybirdai:delete_cube_link' 0 %}".replace('0', cubeLinkId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Error deleting cube link');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.reload();
+            } else {
+                alert('Error deleting cube link. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message || 'Error deleting cube link. Please try again.');
+        });
     }
 }
 

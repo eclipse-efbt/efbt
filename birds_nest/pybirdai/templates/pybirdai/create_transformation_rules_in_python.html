@@ -24,11 +24,19 @@
     
     <a href="{% url 'pybirdai:run_create_executable_filters' %}" class="task-item">
         <img src="{% static 'images/executable.webp' %}" alt="executable">
-        <span>Create Executable Filters</span>
+        <span>Create Executable Filters (Fast in Memory)</span>
     </a>
     <a href="{% url 'pybirdai:run_create_python_joins' %}" class="task-item">
         <img src="{% static 'images/executable.webp' %}" alt="executable">
-        <span>Create Executable Joins</span>
+        <span>Create Executable Joins (Fast in Memory)</span>
+    </a>
+    <a href="{% url 'pybirdai:run_create_executable_filters_from_db' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="executable">
+        <span>Create Executable Filters (Slower from DB)</span>
+    </a>
+    <a href="{% url 'pybirdai:run_create_python_joins_from_db' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="executable">
+        <span>Create Executable Joins (Slower from DB)</span>
     </a>
     <a href="{% url 'pybirdai:derivation_transformation_rules' %}" class="task-item">
         <img src="{% static 'images/formula.webp' %}" alt="formula">

@@ -97,6 +97,94 @@ class ImportDatabaseToSDDModel(object):
         print("Ending import at:")
         print(datetime.now())
 
+    def import_sdd_for_filters(self, sdd_context, tables_to_import):
+        '''
+        Import only the necessary tables for filters from the database.
+        This is a faster version of import_sdd that only imports tables needed for filters.
+        Tables are imported in groups based on their dependencies.
+        '''
+        print("Starting selective import at:")
+        print(datetime.now())
+
+        # Group 1 - Base tables with no dependencies
+        if 'MAINTENANCE_AGENCY' in tables_to_import:
+            ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
+        if 'DOMAIN' in tables_to_import:
+            ImportDatabaseToSDDModel.create_all_domains(self, sdd_context)
+        
+        # Group 2 - Tables that depend only on DOMAIN and MAINTENANCE_AGENCY
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = []
+            if 'MEMBER' in tables_to_import:
+                futures.append(executor.submit(ImportDatabaseToSDDModel.create_all_members, self, sdd_context))
+            if 'VARIABLE' in tables_to_import:
+                futures.append(executor.submit(ImportDatabaseToSDDModel.create_all_variables, self, sdd_context))
+            if 'MEMBER_HIERARCHY' in tables_to_import:
+                futures.append(executor.submit(ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies, self, sdd_context))
+            if 'CUBE' in tables_to_import:
+                futures.append(executor.submit(ImportDatabaseToSDDModel.create_all_rol_cubes, self, sdd_context))
+            for future in futures:
+                future.result()
+
+        # Group 3 - Tables that depend on MEMBER and MEMBER_HIERARCHY
+        if 'MEMBER_HIERARCHY_NODE' in tables_to_import:
+            ImportDatabaseToSDDModel.create_all_nonref_member_hierarchies_nodes(self, sdd_context)
+
+        # Group 4 - Tables that depend on VARIABLE and MAINTENANCE_AGENCY
+        if 'COMBINATION' in tables_to_import:
+            ImportDatabaseToSDDModel.create_combinations(self, sdd_context)
+
+        # Group 5 - Tables that depend on COMBINATION
+        if 'COMBINATION_ITEM' in tables_to_import:
+            ImportDatabaseToSDDModel.create_combination_items(self, sdd_context)
+
+        # Group 6 - Tables that depend on both CUBE and COMBINATION
+        if 'CUBE_TO_COMBINATION' in tables_to_import:
+            ImportDatabaseToSDDModel.create_cube_to_combination(self, sdd_context)
+
+        print("Ending selective import at:")
+        print(datetime.now())
+
+    def import_sdd_for_joins(self, sdd_context, tables_to_import):
+        '''
+        Import only the necessary tables for joins from the database.
+        This is a faster version of import_sdd that only imports tables needed for joins.
+        Tables are imported in groups based on their dependencies.
+        '''
+        print("Starting selective import at:")
+        print(datetime.now())
+
+        # Group 1 - Base tables with no dependencies
+        if 'MAINTENANCE_AGENCY' in tables_to_import:
+            ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
+        if 'DOMAIN' in tables_to_import:
+            ImportDatabaseToSDDModel.create_all_domains(self, sdd_context)
+        
+        # Group 2 - Tables that depend only on DOMAIN and MAINTENANCE_AGENCY
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = []
+            if 'VARIABLE' in tables_to_import:
+                futures.append(executor.submit(ImportDatabaseToSDDModel.create_all_variables, self, sdd_context))
+            if 'CUBE' in tables_to_import:
+                futures.append(executor.submit(ImportDatabaseToSDDModel.create_all_rol_cubes, self, sdd_context))
+            for future in futures:
+                future.result()
+
+        # Group 3 - Tables that depend on CUBE_STRUCTURE and VARIABLE
+        if 'CUBE_STRUCTURE_ITEM' in tables_to_import:
+            ImportDatabaseToSDDModel.create_all_rol_cube_structure_items(self, sdd_context)
+
+        # Group 4 - Tables that depend on CUBE
+        if 'CUBE_LINK' in tables_to_import:
+            ImportDatabaseToSDDModel.create_cube_links(self, sdd_context)
+
+        # Group 5 - Tables that depend on CUBE_LINK and CUBE_STRUCTURE_ITEM
+        if 'CUBE_STRUCTURE_ITEM_LINK' in tables_to_import:
+            ImportDatabaseToSDDModel.create_cube_structure_item_links(self, sdd_context)
+
+        print("Ending selective import at:")
+        print(datetime.now())
+
     def create_all_mapping_definitions(self, context):
         '''
         import all the mapping definitions
