@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Import Variables from CSV{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Import Variables from CSV File</h1>
+    <a href="{% url 'pybirdai:bird_diffs_and_corrections'%}" >Back to BIRD Export Diffs and Corrections</a> <br><br>
+    
+    <p>Upload a CSV file containing variable data to import into the database. The CSV file should follow the same structure as the variable.csv export.</p>
+    
+    <form method="post" id="importForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="csvFile">Select CSV File:</label>
+            <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="importButton">Import Variables</button>
+    </form>
+    
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <p>Importing variables from CSV... Please wait.</p>
+    </div>
+    
+    <div id="successMessage" style="display: none;" class="alert alert-success">
+        <p>Import completed successfully!</p>
+    </div>
+
+    <div id="errorMessage" style="display: none;" class="alert alert-danger">
+        <p id="errorText"></p>
+    </div>
+    
+    <div class="mt-4">
+        <h3>CSV File Requirements:</h3>
+        <ul>
+            <li>The file must be in CSV format</li>
+            <li>The first row must contain column headers matching the variable table fields</li>
+            <li>Required columns: VARIABLE_ID, CODE, NAME, DESCRIPTION, DOMAIN_ID</li>
+            <li>Optional columns will use default values if not provided</li>
+            <li>The file should use UTF-8 encoding</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-control-file {
+        display: block;
+        margin: 0.5rem 0;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        margin: 1rem 0;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    
+    .mt-4 {
+        margin-top: 2rem;
+    }
+    
+    ul {
+        list-style-type: disc;
+        margin-left: 1.5rem;
+    }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .alert {
+        padding: 15px;
+        margin: 20px 0;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    
+    #loadingIndicator {
+        text-align: center;
+        margin: 20px 0;
+    }
+</style>
+
+<script>
+document.getElementById('importForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading indicator and disable button
+    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('importButton').disabled = true;
+    document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+    
+    // Submit the form
+    fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error(text || 'Import failed');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Show success message
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('csvFile').value = ''; // Clear the file input
+    })
+    .catch(error => {
+        document.getElementById('errorText').textContent = error.message;
+        document.getElementById('errorMessage').style.display = 'block';
+    })
+    .finally(() => {
+        // Hide loading indicator and enable button
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('importButton').disabled = false;
+    });
+});
+</script>
+{% endblock %} 

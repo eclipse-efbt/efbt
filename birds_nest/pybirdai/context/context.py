@@ -21,7 +21,7 @@ class Context(object):
     '''
     # variables to configure the behaviour
     
-    ldm_or_il = 'il'
+    ldm_or_il = 'ldm'
 
     enrich_ldm_relationships = False
     use_codes = True
