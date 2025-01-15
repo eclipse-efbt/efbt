@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Edit Combinations</h1>
+<h1>View Combinations</h1>
 <a href="{% url 'pybirdai:review_filters' %}">Back to Review  Filters</a>
 
 {% if messages %}
@@ -12,55 +12,38 @@
 </ul>
 {% endif %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ formset.management_form }}
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Maintenance Agency</th>
-                    <th>Combination ID</th>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Valid From</th>
-                    <th>Valid To</th>
-                    <th>Version</th>
-                    <th>Combination Type</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in formset %}
-                {{ form.id }}
-                <tr>
-                    <td>{{ form.maintenance_agency_id }}</td>
-                    <td>{{ form.combination_id }}</td>
-                    <td>{{ form.code }}</td>
-                    <td>{{ form.name }}</td>
-                    <td>{{ form.description }}</td>
-                    <td>{{ form.valid_from }}</td>
-                    <td>{{ form.valid_to }}</td>
-                    <td>{{ form.version }}</td>
-                    <td>{{ form.combination_type }}</td>
-                    <td>
-                        <button type="button" onclick="confirmDelete('{{ form.instance.combination_id }}')">Delete</button>
-                    </td>
-                </tr>
-                {% if form.errors %}
-                <tr>
-                    <td colspan="10">
-                        {{ form.errors }}
-                    </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <button type="submit">Save Changes</button>
-</form>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Maintenance Agency</th>
+                <th>Combination ID</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Valid From</th>
+                <th>Valid To</th>
+                <th>Version</th>
+                <th>Combination Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in formset %}
+            <tr>
+                <td>{{ form.maintenance_agency_id.value }}</td>
+                <td>{{ form.combination_id.value }}</td>
+                <td>{{ form.code.value }}</td>
+                <td>{{ form.name.value }}</td>
+                <td>{{ form.description.value }}</td>
+                <td>{{ form.valid_from.value }}</td>
+                <td>{{ form.valid_to.value }}</td>
+                <td>{{ form.version.value }}</td>
+                <td>{{ form.combination_type.value }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 <!-- Pagination -->
 <div class="pagination">
@@ -80,23 +63,6 @@
         {% endif %}
     </span>
 </div>
-
-<script>
-function confirmDelete(combinationId) {
-    if (confirm('Are you sure you want to delete this combination?')) {
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = "{% url 'pybirdai:delete_combination' 0 %}".replace('0', combinationId);
-        var csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = 'csrfmiddlewaretoken';
-        csrfInput.value = '{{ csrf_token }}';
-        form.appendChild(csrfInput);
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-</script>
 
 <style>
     .table-container {

@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Variable Mapping Items</h1>
-<p><a href="{% url 'pybirdai:review_semantic_integrations' %}">Back to Semantic Integrations</a></p>
+<p><a href="{% url 'pybirdai:review_semantic_integrations' %}">Back to Review Semantic Integrations</a></p>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -43,13 +43,13 @@
             <div class="form-group">
                 <label for="is_source">Is Source:</label>
                 <select name="is_source" id="is_source" required>
-                    <option value="Y">Yes</option>
-                    <option value="N">No</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="variable">Variable:</label>
-                <select name="variable" id="variable" required>
+                <label for="variable_id">Variable:</label>
+                <select name="variable_id" id="variable_id" required>
                     {% for var in all_variables %}
                         <option value="{{ var.variable_id }}">{{ var.variable_id }}</option>
                     {% endfor %}
@@ -75,17 +75,17 @@
 <div class="filters">
     <form method="get" class="filter-form">
         <div class="filter-group">
-            <label for="variable_mapping">Variable Mapping:</label>
-            <select name="variable_mapping" id="variable_mapping">
+            <label for="variable_mapping_id">Variable Mapping:</label>
+            <select name="variable_mapping_id" id="variable_mapping_id">
                 <option value="">All</option>
-                {% for mapping in unique_variable_mappings %}
-                <option value="{{ mapping }}" {% if selected_variable_mapping == mapping %}selected{% endif %}>{{ mapping }}</option>
+                {% for mapping_id in unique_variable_mappings %}
+                <option value="{{ mapping_id }}" {% if selected_variable_mapping == mapping_id %}selected{% endif %}>{{ mapping_id }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="filter-group">
-            <label for="variable">Variable:</label>
-            <select name="variable" id="variable">
+            <label for="variable_id">Variable:</label>
+            <select name="variable_id" id="variable_id">
                 <option value="">All</option>
                 {% for var in unique_variables %}
                 <option value="{{ var }}" {% if selected_variable == var %}selected{% endif %}>{{ var }}</option>
@@ -118,11 +118,11 @@
                 <tr>
                     <td>{{ form.variable_mapping_id }}</td>
                     <td>{{ form.is_source }}</td>
-                    <td>{{ form.variable }}</td>
+                    <td>{{ form.variable_id }}</td>
                     <td>{{ form.valid_from }}</td>
                     <td>{{ form.valid_to }}</td>
                     <td>
-                        <button type="button" onclick="confirmDelete('{{ form.instance.id }}')">Delete</button>
+                        <button type="button" onclick="confirmDelete('{{ form.instance.variable_mapping_id.variable_mapping_id }}', '{{ form.instance.variable_id.variable_id }}', '{{ form.instance.is_source }}')">Delete</button>
                     </td>
                 </tr>
                 {% if form.errors %}
@@ -159,11 +159,11 @@
 </div>
 
 <script>
-function confirmDelete(itemId) {
+function confirmDelete(variableMappingId, variableId, isSource) {
     if (confirm('Are you sure you want to delete this variable mapping item?')) {
         var form = document.createElement('form');
         form.method = 'POST';
-        form.action = "{% url 'pybirdai:delete_variable_mapping_item' 0 %}".replace('0', itemId);
+        form.action = "{% url 'pybirdai:delete_variable_mapping_item' %}?variable_mapping_id=" + encodeURIComponent(variableMappingId) + "&variable_id=" + encodeURIComponent(variableId) + "&is_source=" + encodeURIComponent(isSource);
         var csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = 'csrfmiddlewaretoken';

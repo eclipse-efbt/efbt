@@ -471,8 +471,8 @@ class VARIABLE_MAPPING_ITEM(models.Model):
         blank=True,
         null=True,
     )
-    # we should really change theis to variable_id for consistancy
-    variable = models.ForeignKey(
+
+    variable_id = models.ForeignKey(
         "VARIABLE",
         models.SET_NULL,
         blank=True,
@@ -511,12 +511,11 @@ class VARIABLE_MAPPING(models.Model):
 class MAPPING_TO_CUBE(models.Model):
     # CSV Headers: CUBE_MAPPING_ID,MAPPING_ID,VALID_FROM,VALID_TO
 
-    # need to rename these next 2 fields for consistancy
-    cubeMapping = models.CharField(
-        "cubeMapping", max_length=255, default=None, blank=True, null=True
+    cube_mapping_id = models.CharField(
+        "cube_mapping_id", max_length=255, default=None, blank=True, null=True
     )
 
-    mapping = models.ForeignKey(
+    mapping_id = models.ForeignKey(
         "MAPPING_DEFINITION",
         models.SET_NULL,
         blank=True,
@@ -912,7 +911,7 @@ class CUBE(models.Model):
 
 
 class CUBE_LINK(models.Model):
-    # nned to find the correct csv headers
+    # need to find the correct csv headers
     # CSV Headers: MAINTENANCE_AGENCY_ID,CUBE_LINK_ID,CODE,NAME,DESCRIPTION,VALID_FROM,VALID_TO,VERSION,ORDER_RELEVANCE,PRIMARY_CUBE_ID,FOREIGN_CUBE_ID,CUBE_LINK_TYPE,JOIN_IDENTIFIER
     maintenance_agency_id = models.ForeignKey(
         "MAINTENANCE_AGENCY",

@@ -1,36 +1,46 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Export Database to CSV{% endblock %}
+{% block title %}Import Variables from CSV{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>Export Database to CSV Files</h1>
+    <h1>Import Variables from CSV File</h1>
     <a href="{% url 'pybirdai:bird_diffs_and_corrections'%}" >Back to BIRD Export Diffs and Corrections</a> <br><br>
     
-    <p>Click the button below to export all database tables to CSV files. Each table will be exported to a separate CSV file, and all files will be bundled in a zip archive.</p>
+    <p>Upload a CSV file containing variable data to import into the database. The CSV file should follow the same structure as the variable.csv export.</p>
     
-    <form method="post" id="exportForm">
+    <p>If you are looking for the single INSTRMNT_TYP Variable to enrich the BIRD LDM then you can find it <a href="https://github.com/regcommunity/FreeBIRD/blob/main/initial_correction/variable_typ_instrmnt.csv">here</a>.</p>
+    <form method="post" id="importForm" enctype="multipart/form-data">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary" id="exportButton">Export Database</button>
+        <div class="form-group">
+            <label for="csvFile">Select CSV File:</label>
+            <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="importButton">Import Variables</button>
     </form>
     
     <div id="loadingIndicator" style="display: none;">
         <div class="spinner"></div>
-        <p>Exporting database tables to CSV files... Please wait.</p>
+        <p>Importing variables from CSV... Please wait.</p>
     </div>
     
     <div id="successMessage" style="display: none;" class="alert alert-success">
-        <p>Export completed successfully! Your download should start automatically.</p>
+        <p>Import completed successfully!</p>
+    </div>
+
+    <div id="errorMessage" style="display: none;" class="alert alert-danger">
+        <p id="errorText"></p>
     </div>
     
     <div class="mt-4">
-        <h3>Notes:</h3>
+        <h3>CSV File Requirements:</h3>
         <ul>
-            <li>Each table will be exported to a separate CSV file</li>
-            <li>The CSV files will be named after their corresponding tables</li>
-            <li>All files will be bundled in a zip archive</li>
-            <li>Headers in the CSV files will match the database column names</li>
+            <li>The file must be in CSV format</li>
+            <li>The first row must contain column headers matching the variable table fields</li>
+            <li>Required columns: VARIABLE_ID, CODE, NAME, DESCRIPTION, DOMAIN_ID</li>
+            <li>Optional columns will use default values if not provided</li>
+            <li>The file should use UTF-8 encoding</li>
         </ul>
     </div>
 </div>
@@ -42,6 +52,15 @@
         padding: 0 1rem;
     }
     
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-control-file {
+        display: block;
+        margin: 0.5rem 0;
+    }
+    
     .btn-primary {
         background-color: #007bff;
         border-color: #007bff;
@@ -49,6 +68,7 @@
         padding: 0.5rem 1rem;
         border-radius: 0.25rem;
         cursor: pointer;
+        margin: 1rem 0;
     }
     
     .btn-primary:hover {
@@ -93,6 +113,12 @@
         border-color: #c3e6cb;
     }
     
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    
     #loadingIndicator {
         text-align: center;
         margin: 20px 0;
@@ -100,13 +126,14 @@
 </style>
 
 <script>
-document.getElementById('exportForm').addEventListener('submit', function(e) {
+document.getElementById('importForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     // Show loading indicator and disable button
     document.getElementById('loadingIndicator').style.display = 'block';
-    document.getElementById('exportButton').disabled = true;
+    document.getElementById('importButton').disabled = true;
     document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
     
     // Submit the form
     fetch(this.action, {
@@ -117,29 +144,26 @@ document.getElementById('exportForm').addEventListener('submit', function(e) {
         }
     })
     .then(response => {
-        if (!response.ok) throw new Error('Export failed');
-        return response.blob();
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error(text || 'Import failed');
+            });
+        }
+        return response.json();
     })
-    .then(blob => {
-        // Create download link
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'database_export.zip';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        
+    .then(data => {
         // Show success message
         document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('csvFile').value = ''; // Clear the file input
     })
     .catch(error => {
-        alert('Error during export: ' + error.message);
+        document.getElementById('errorText').textContent = error.message;
+        document.getElementById('errorMessage').style.display = 'block';
     })
     .finally(() => {
         // Hide loading indicator and enable button
         document.getElementById('loadingIndicator').style.display = 'none';
-        document.getElementById('exportButton').disabled = false;
+        document.getElementById('importButton').disabled = false;
     });
 });
 </script>

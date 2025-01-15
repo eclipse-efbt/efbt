@@ -48,7 +48,42 @@ class RunCreateExecutableJoins(AppConfig):
         #ImportDatabaseToSDDModel().import_sdd(sdd_context)
         CreatePythonTransformations().create_python_joins(context, sdd_context)
 
+    @staticmethod
+    def create_python_joins_from_db():
+        """Execute the process of creating generation rules from the database when the app is ready."""
+        from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
+            ImportDatabaseToSDDModel
+        )
+        from pybirdai.context.sdd_context_django import SDDContext
+        from pybirdai.context.context import Context
+        from pybirdai.process_steps.pybird.create_python_django_transformations import (
+            CreatePythonTransformations
+        )
 
-def ready(self):
+        base_dir = settings.BASE_DIR 
+        sdd_context = SDDContext()
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.output_directory = os.path.join(base_dir, 'results')
+        
+        context = Context()
+        context.file_directory = sdd_context.file_directory
+        context.output_directory = sdd_context.output_directory
+
+        # Only import the necessary tables for joins
+        importer = ImportDatabaseToSDDModel()
+        
+        importer.import_sdd_for_joins(sdd_context, [
+            'MAINTENANCE_AGENCY',
+            'DOMAIN',
+            'VARIABLE',
+            'CUBE',
+            'CUBE_STRUCTURE',
+            'CUBE_STRUCTURE_ITEM',
+            'CUBE_LINK',
+            'CUBE_STRUCTURE_ITEM_LINK'
+        ])
+        CreatePythonTransformations().create_python_joins(context, sdd_context)
+
+    def ready(self):
         # This method is still needed for Django's AppConfig
         pass
