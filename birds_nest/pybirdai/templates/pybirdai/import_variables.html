@@ -10,6 +10,7 @@
     
     <p>Upload a CSV file containing variable data to import into the database. The CSV file should follow the same structure as the variable.csv export.</p>
     
+    <p>If you are looking for the single INSTRMNT_TYP Variable to enrich the BIRD LDM then you can find it <a href="https://github.com/regcommunity/FreeBIRD_LDM/blob/main/initial_correction/variable_typ_instrmnt.csv">here</a>.</p>
     <form method="post" id="importForm" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
