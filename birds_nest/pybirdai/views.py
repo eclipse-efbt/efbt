@@ -9,7 +9,7 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.forms import modelformset_factory
@@ -21,7 +21,7 @@ from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
-    MAINTENANCE_AGENCY,  MEMBER_HIERARCHY
+    MAINTENANCE_AGENCY,  MEMBER_HIERARCHY, DOMAIN
 )
 from . import bird_meta_data_model
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
@@ -39,6 +39,7 @@ from .entry_points.upload_sqldev_eil_files import UploadSQLDevEILFiles
 from .entry_points.upload_sqldev_eldm_files import UploadSQLDevELDMFiles
 from .entry_points.upload_technical_export_files import UploadTechnicalExportFiles
 from .entry_points.create_django_models import RunCreateDjangoModels
+from .entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
 import os
 import csv
 from pathlib import Path
@@ -262,7 +263,7 @@ def run_create_executable_filters(request):
     
     return create_response_with_loading(
         request,
-        "Creating Executable Filters (approx 2 minutes on a fast desktop, dont press the back button on this web page)",
+        "Creating Executable Filters (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Create executable filters process completed successfully",
         '/pybirdai/create-transformation-rules-in-python',
         "Create Transformations Rules in Python"
@@ -383,10 +384,10 @@ def edit_variable_mappings(request):
         if formset.is_valid():
             with transaction.atomic():
                 formset.save()
-            messages.success(request, 'VARIABLE_MAPPING updated successfully.')
+            messages.success(request, 'Variable Mappings updated successfully.')
             return redirect(request.path)
         else:
-            messages.error(request, 'There was an error updating the VARIABLE_MAPPING.')
+            messages.error(request, 'There was an error updating the Variable Mappings.')
     else:
         formset = ModelFormSet(queryset=page_obj.object_list)
     
@@ -400,22 +401,22 @@ def edit_variable_mappings(request):
 def edit_variable_mapping_items(request):
     # Get unique values for filters
     unique_variable_mappings = VARIABLE_MAPPING_ITEM.objects.values_list('variable_mapping_id', flat=True).distinct()
-    unique_variables = VARIABLE_MAPPING_ITEM.objects.values_list('variable', flat=True).distinct()
+    unique_variables = VARIABLE_MAPPING_ITEM.objects.values_list('variable_id', flat=True).distinct()
     
     # Get all variable mappings and variables for the create form
     all_variable_mappings = VARIABLE_MAPPING.objects.all().order_by('variable_mapping_id')
     all_variables = VARIABLE.objects.all().order_by('variable_id')
     
     # Get filter values from request
-    selected_variable_mapping = request.GET.get('variable_mapping', '')
-    selected_variable = request.GET.get('variable', '')
+    selected_variable_mapping = request.GET.get('variable_mapping_id', '')
+    selected_variable = request.GET.get('variable_id', '')
     
     # Apply filters and ordering
     queryset = VARIABLE_MAPPING_ITEM.objects.all().order_by('id')
     if selected_variable_mapping:
         queryset = queryset.filter(variable_mapping_id=selected_variable_mapping)
     if selected_variable:
-        queryset = queryset.filter(variable=selected_variable)
+        queryset = queryset.filter(variable_id=selected_variable)
     
     # Add pagination and formset creation
     page_number = request.GET.get('page', 1)
@@ -442,13 +443,13 @@ def create_variable_mapping_item(request):
         try:
             # Get form data
             variable_mapping = get_object_or_404(VARIABLE_MAPPING, variable_mapping_id=request.POST.get('variable_mapping_id'))
-            variable = get_object_or_404(VARIABLE, variable_id=request.POST.get('variable'))
+            variable = get_object_or_404(VARIABLE, variable_id=request.POST.get('variable_id'))
             
             # Create new item
             item = VARIABLE_MAPPING_ITEM(
                 variable_mapping_id=variable_mapping,
                 is_source=request.POST.get('is_source'),
-                variable=variable,
+                variable_id=variable,
                 valid_from=request.POST.get('valid_from') or None,
                 valid_to=request.POST.get('valid_to') or None
             )
@@ -494,8 +495,8 @@ def edit_member_mappings(request):
 def edit_member_mapping_items(request):
     # Get unique values for filters
     member_mappings = MEMBER_MAPPING_ITEM.objects.values_list('member_mapping_id', flat=True).distinct()
-    members = MEMBER_MAPPING_ITEM.objects.values_list('member', flat=True).distinct()
-    variables = MEMBER_MAPPING_ITEM.objects.values_list('variable', flat=True).distinct()
+    members = MEMBER_MAPPING_ITEM.objects.values_list('member_id', flat=True).distinct()
+    variables = MEMBER_MAPPING_ITEM.objects.values_list('variable_id', flat=True).distinct()
     
     # Get all available choices for dropdowns
     all_member_mappings = MEMBER_MAPPING.objects.all().order_by('member_mapping_id')
@@ -504,9 +505,9 @@ def edit_member_mapping_items(request):
     all_member_hierarchies = MEMBER_HIERARCHY.objects.all().order_by('member_hierarchy_id')
     
     # Get filter values from request
-    selected_member_mapping = request.GET.get('member_mapping', '')
-    selected_member = request.GET.get('member', '')
-    selected_variable = request.GET.get('variable', '')
+    selected_member_mapping = request.GET.get('member_mapping_id', '')
+    selected_member = request.GET.get('member_id', '')
+    selected_variable = request.GET.get('variable_id', '')
     selected_is_source = request.GET.get('is_source', '')
     
     # Apply filters
@@ -514,9 +515,9 @@ def edit_member_mapping_items(request):
     if selected_member_mapping:
         queryset = queryset.filter(member_mapping_id=selected_member_mapping)
     if selected_member:
-        queryset = queryset.filter(member=selected_member)
+        queryset = queryset.filter(member_id=selected_member)
     if selected_variable:
-        queryset = queryset.filter(variable=selected_variable)
+        queryset = queryset.filter(variable_id=selected_variable)
     if selected_is_source:
         # Handle both lowercase and uppercase boolean strings
         if selected_is_source.lower() == 'true':
@@ -647,20 +648,20 @@ def edit_mapping_to_cubes(request):
     cube_filter = request.GET.get('cube_filter')
     
     # Start with all objects and order them
-    queryset = MAPPING_TO_CUBE.objects.all().order_by('mapping__name', 'cubeMapping')
+    queryset = MAPPING_TO_CUBE.objects.all().order_by('mapping_id__name', 'cube_mapping_id')
     
     # Apply filters if they exist
     if mapping_filter:
-        queryset = queryset.filter(mapping__mapping_id=mapping_filter)
+        queryset = queryset.filter(mapping_id__mapping_id=mapping_filter)
     if cube_filter:
-        queryset = queryset.filter(cubeMapping=cube_filter)
+        queryset = queryset.filter(cube_mapping_id=cube_filter)
         
     # Get all mapping definitions and unique cube mappings for the dropdowns
     mapping_definitions = MAPPING_DEFINITION.objects.all().order_by('name')
     cube_mappings = (MAPPING_TO_CUBE.objects
-                    .values_list('cubeMapping', flat=True)
+                    .values_list('cube_mapping_id', flat=True)
                     .distinct()
-                    .order_by('cubeMapping'))
+                    .order_by('cube_mapping_id'))
     
     # Paginate after filtering
     paginator = Paginator(queryset, 10)  # Show 10 items per page
@@ -670,7 +671,7 @@ def edit_mapping_to_cubes(request):
     # Create formset for the current page
     MappingToCubeFormSet = modelformset_factory(
         MAPPING_TO_CUBE,
-        fields=('mapping', 'cubeMapping', 'valid_from', 'valid_to'),
+        fields=('mapping_id', 'cube_mapping_id', 'valid_from', 'valid_to'),
         extra=0
     )
     
@@ -729,18 +730,19 @@ def create_mapping_definition(request):
 
 # Delete views for various models
 def delete_item(request, model, id_field, redirect_view, decoded_id=None):
-    id_value = decoded_id if decoded_id is not None else request.POST.get(id_field)
-    item = get_object_or_404(model, **{id_field: id_value})
-    if request.method == 'POST':
-        try:
-            item.delete()
-            messages.success(request, f'{model.__name__} deleted successfully.')
-        except Exception as e:
-            messages.error(request, f'Error deleting {model.__name__}: {str(e)}')
+    try:
+        id_value = decoded_id if decoded_id is not None else request.POST.get('id')
+        if id_value is None:
+            id_value = request.POST.get(id_field)
+        item = get_object_or_404(model, **{id_field: id_value})
+        item.delete()
+        messages.success(request, f'{model.__name__} deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting {model.__name__}: {str(e)}')
     return redirect(f'pybirdai:{redirect_view}')
 
 def delete_variable_mapping(request, variable_mapping_id):
-    return delete_item(request, VARIABLE_MAPPING, 'variable_mapping_id', 'edit_variable_mappings')
+    return delete_item(request, VARIABLE_MAPPING, 'variable_mapping_id', 'edit_variable_mappings', variable_mapping_id)
 
 def execute_data_point(request, data_point_id):
     app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
@@ -756,43 +758,161 @@ def execute_data_point(request, data_point_id):
     """
     return HttpResponse(html_response)
 
-def delete_variable_mapping_item(request, item_id):
-    return delete_item(request, VARIABLE_MAPPING_ITEM, 'id', 'edit_variable_mapping_items')
+def delete_variable_mapping_item(request):
+    if request.method == 'POST':
+        try:
+            variable_mapping_id = request.GET.get('variable_mapping_id')
+            variable_id = request.GET.get('variable_id')
+            is_source = request.GET.get('is_source')
+            
+            # Get the item using the composite key
+            item = get_object_or_404(
+                VARIABLE_MAPPING_ITEM,
+                variable_mapping_id=variable_mapping_id,
+                variable_id=variable_id,
+                is_source=is_source
+            )
+            
+            item.delete()
+            messages.success(request, 'Variable Mapping Item deleted successfully.')
+        except Exception as e:
+            messages.error(request, f'Error deleting Variable Mapping Item: {str(e)}')
+    
+    return redirect('pybirdai:edit_variable_mapping_items')
 
 def delete_member_mapping(request, member_mapping_id):
     return delete_item(request, MEMBER_MAPPING, 'member_mapping_id', 'edit_member_mappings')
 
 def delete_member_mapping_item(request, item_id):
-    return delete_item(request, MEMBER_MAPPING_ITEM, 'id', 'edit_member_mapping_items')
+    if request.method == 'POST':
+        try:
+            # Get the composite key fields from GET parameters
+            member_mapping_id = request.GET.get('member_mapping_id')
+            member_id = request.GET.get('member_id')
+            variable_id = request.GET.get('variable_id')
+            is_source = request.GET.get('is_source')
+            member_mapping_row = request.GET.get('member_mapping_row')
+            
+            # Get the item using the composite key
+            item = get_object_or_404(
+                MEMBER_MAPPING_ITEM,
+                member_mapping_id=member_mapping_id,
+                member_id=member_id,
+                variable_id=variable_id,
+                is_source=is_source,
+                member_mapping_row=member_mapping_row
+            )
+            
+            item.delete()
+            messages.success(request, 'Member Mapping Item deleted successfully.')
+        except Exception as e:
+            messages.error(request, f'Error deleting MEMBER_MAPPING_ITEM: {str(e)}')
+    
+    return redirect('pybirdai:edit_member_mapping_items')
 
 def delete_cube_link(request, cube_link_id):
-    return delete_item(request, CUBE_LINK, 'cube_link_id', 'edit_cube_links')
-
-def delete_cube_structure_item_link(request, cube_structure_item_link_id):
-    
     try:
+        link = get_object_or_404(CUBE_LINK, cube_link_id=cube_link_id)
         
-        link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
-        link.delete()
+        # Update the in-memory dictionaries
         sdd_context = SDDContext()
+        
+        # Remove from cube_link_dictionary
         try:
-            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[link.cube_link_id.cube_link_id]
-            for cube_structure_item_link in cube_structure_item_links:
-                if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
-                    cube_structure_item_links.remove(cube_structure_item_link)
-                    break
+            del sdd_context.cube_link_dictionary[cube_link_id]
         except KeyError:
             pass
+            
+        # Remove from cube_link_to_foreign_cube_map
+        try:
+            del sdd_context.cube_link_to_foreign_cube_map[cube_link_id]
+        except KeyError:
+            pass
+            
+        # Remove from cube_link_to_join_identifier_map
+        try:
+            del sdd_context.cube_link_to_join_identifier_map[cube_link_id]
+        except KeyError:
+            pass
+            
+        # Remove from cube_link_to_join_for_report_id_map
+        try:
+            del sdd_context.cube_link_to_join_for_report_id_map[cube_link_id]
+        except KeyError:
+            pass
+        
+        # Delete the database record
+        link.delete()
+        messages.success(request, 'CUBE_LINK deleted successfully.')
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        messages.error(request, f'Error deleting CUBE_LINK: {str(e)}')
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+def delete_cube_structure_item_link(request, cube_structure_item_link_id):
+    try:
+        link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
+        # Store the cube_link_id before deleting
+        cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
+        link.delete()
+        
+        # Update the in-memory dictionaries
+        sdd_context = SDDContext()
+        
+        # Remove from cube_structure_item_links_dictionary
+        try:
+            del sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id]
+        except KeyError:
+            pass
+            
+        # Remove from cube_structure_item_link_to_cube_link_map
+        if cube_link_id:
+            try:
+                cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                for cube_structure_item_link in cube_structure_item_links:
+                    if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
+                        cube_structure_item_links.remove(cube_structure_item_link)
+                        break
+            except KeyError:
+                pass
         
         messages.success(request, 'Link deleted successfully.')
     except Exception as e:
         messages.error(request, f'Error deleting link: {str(e)}')
     
-    # Redirect back to the edit page
-    return redirect('pybirdai:edit_cube_structure_item_links')
+    # Check the referer to determine which page to redirect back to
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'edit-cube-structure-item-links' in referer:
+        redirect_url = reverse('pybirdai:edit_cube_structure_item_links')
+    else:
+        # Preserve the filter parameters in the redirect for duplicate_primary_member_id_list
+        params = request.GET.copy()
+        params.pop('page', None)  # Remove page parameter to avoid invalid page numbers
+        redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
+        if params:
+            redirect_url += f'?{params.urlencode()}'
+    
+    return redirect(redirect_url)
 
 def delete_mapping_to_cube(request, mapping_to_cube_id):
-    return delete_item(request, MAPPING_TO_CUBE, 'id', 'edit_mapping_to_cubes')
+    try:
+        # Get the mapping_id and cube_mapping_id from the POST data
+        mapping_id = request.POST.get('mapping_id')
+        cube_mapping_id = request.POST.get('cube_mapping_id')
+        
+        if not all([mapping_id, cube_mapping_id]):
+            raise ValueError("Missing required fields for deletion")
+            
+        # Get the item using the composite key fields
+        item = MAPPING_TO_CUBE.objects.get(
+            mapping_id=MAPPING_DEFINITION.objects.get(mapping_id=mapping_id),
+            cube_mapping_id=cube_mapping_id
+        )
+        item.delete()
+        messages.success(request, 'MAPPING_TO_CUBE deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting MAPPING_TO_CUBE: {str(e)}')
+    return redirect('pybirdai:edit_mapping_to_cubes')
 
 def delete_mapping_definition(request, mapping_id):
     return delete_item(request, MAPPING_DEFINITION, 'mapping_id', 'edit_mapping_definitions')
@@ -1058,10 +1178,36 @@ def output_layers(request):
 
 
 def delete_combination(request, combination_id):
-    return delete_item(request, COMBINATION, 'combination_id', 'combinations')
+    try:
+        combination = get_object_or_404(COMBINATION, combination_id=combination_id)
+        combination.delete()
+        messages.success(request, 'COMBINATION deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting COMBINATION: {str(e)}')
+    return redirect('pybirdai:combinations')
 
 def delete_combination_item(request, item_id):
-    return delete_item(request, COMBINATION_ITEM, 'id', 'combination_items')
+    try:
+        # Get the item using the combination_id, variable_id, and member_id
+        # We need to get these from the form data since we don't have a primary key
+        combination_id = request.POST.get('combination_id')
+        variable_id = request.POST.get('variable_id')
+        member_id = request.POST.get('member_id')
+        
+        if not all([combination_id, variable_id, member_id]):
+            raise ValueError("Missing required fields for deletion")
+            
+        # Get the item using the composite key fields
+        item = COMBINATION_ITEM.objects.get(
+            combination_id=COMBINATION.objects.get(combination_id=combination_id),
+            variable_id=VARIABLE.objects.get(variable_id=variable_id),
+            member_id=MEMBER.objects.get(member_id=member_id)
+        )
+        item.delete()
+        messages.success(request, 'COMBINATION_ITEM deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting COMBINATION_ITEM: {str(e)}')
+    return redirect('pybirdai:combination_items')
 
 class DuplicatePrimaryMemberIdListView(ListView):
     template_name = 'pybirdai/duplicate_primary_member_id_list.html'
@@ -1249,31 +1395,48 @@ def show_gaps(request):
 
 @require_http_methods(["POST"])
 def delete_cube_structure_item_link(request, cube_structure_item_link_id):
-    
     try:
-        
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
+        # Store the cube_link_id before deleting
+        cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
         link.delete()
+        
+        # Update the in-memory dictionaries
         sdd_context = SDDContext()
+        
+        # Remove from cube_structure_item_links_dictionary
         try:
-            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[link.cube_link_id.cube_link_id]
-            for cube_structure_item_link in cube_structure_item_links:
-                if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
-                    cube_structure_item_links.remove(cube_structure_item_link)
-                    break
+            del sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id]
         except KeyError:
             pass
+            
+        # Remove from cube_structure_item_link_to_cube_link_map
+        if cube_link_id:
+            try:
+                cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                for cube_structure_item_link in cube_structure_item_links:
+                    if cube_structure_item_link.cube_structure_item_link_id == cube_structure_item_link_id:
+                        cube_structure_item_links.remove(cube_structure_item_link)
+                        break
+            except KeyError:
+                pass
         
         messages.success(request, 'Link deleted successfully.')
     except Exception as e:
         messages.error(request, f'Error deleting link: {str(e)}')
     
-    # Preserve the filter parameters in the redirect
-    params = request.GET.copy()
-    params.pop('page', None)  # Remove page parameter to avoid invalid page numbers
-    redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
-    if params:
-        redirect_url += f'?{params.urlencode()}'
+    # Check the referer to determine which page to redirect back to
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'edit-cube-structure-item-links' in referer:
+        redirect_url = reverse('pybirdai:edit_cube_structure_item_links')
+    else:
+        # Preserve the filter parameters in the redirect for duplicate_primary_member_id_list
+        params = request.GET.copy()
+        params.pop('page', None)  # Remove page parameter to avoid invalid page numbers
+        redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
+        if params:
+            redirect_url += f'?{params.urlencode()}'
+    
     return redirect(redirect_url)
 
 @require_http_methods(["POST"])
@@ -1296,6 +1459,19 @@ def add_cube_structure_item_link(request):
             foreign_cube_variable_code=foreign_cube_variable,
             primary_cube_variable_code=primary_cube_variable
         )
+        
+        # Update the in-memory dictionaries
+        sdd_context = SDDContext()
+        
+        # Add to cube_structure_item_links_dictionary
+        sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id] = new_link
+        
+        # Add to cube_structure_item_link_to_cube_link_map
+        try:
+            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(new_link)
+        except KeyError:
+            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id] = [new_link]
+        
         messages.success(request, 'New cube structure item link created successfully.')
     except Exception as e:
         messages.error(request, f'Error creating link: {str(e)}')
@@ -1321,6 +1497,25 @@ def add_cube_link(request):
             cube_link_type=request.POST.get('cube_link_type'),
             join_identifier=request.POST.get('join_identifier')
         )
+        
+        # Update the in-memory dictionaries
+        sdd_context = SDDContext()
+        
+        # Add to cube_link_dictionary
+        sdd_context.cube_link_dictionary[new_link.cube_link_id] = new_link
+        
+        # Add to cube_link_to_foreign_cube_map
+        sdd_context.cube_link_to_foreign_cube_map[new_link.cube_link_id] = new_link.foreign_cube_id
+        
+        # Add to cube_link_to_join_identifier_map
+        if new_link.join_identifier:
+            sdd_context.cube_link_to_join_identifier_map[new_link.cube_link_id] = new_link.join_identifier
+        
+        # Add to cube_link_to_join_for_report_id_map
+        # Note: This might need additional logic depending on how join_for_report_id is determined
+        if new_link.join_identifier:
+            sdd_context.cube_link_to_join_for_report_id_map[new_link.cube_link_id] = new_link.join_identifier
+        
         messages.success(request, 'New cube link created successfully.')
     except Exception as e:
         messages.error(request, f'Error creating cube link: {str(e)}')
@@ -1371,8 +1566,8 @@ def add_member_mapping_item(request):
         try:
             # Extract data from POST request
             is_source = request.POST.get('is_source', '').lower()  # Convert to lowercase for consistency
-            member_id = request.POST.get('member')
-            variable_id = request.POST.get('variable')
+            member_id = request.POST.get('member_id')
+            variable_id = request.POST.get('variable_id')
             row = request.POST.get('row')
             member_mapping_id = request.POST.get('member_mapping_id')
             member_hierarchy_id = request.POST.get('member_hierarchy')
@@ -1388,8 +1583,8 @@ def add_member_mapping_item(request):
             # Create new member mapping item
             MEMBER_MAPPING_ITEM.objects.create(
                 is_source=is_source,
-                member=member,
-                variable=variable,
+                member_id=member,
+                variable_id=variable,
                 row=row,
                 member_mapping_id=member_mapping,
                 member_hierarchy=member_hierarchy,
@@ -1407,8 +1602,8 @@ def create_mapping_to_cube(request):
     if request.method == 'POST':
         try:
             # Get form data
-            mapping_id = request.POST.get('mapping')
-            cube_mapping = request.POST.get('cubeMapping')
+            mapping_id = request.POST.get('mapping_id')
+            cube_mapping = request.POST.get('cube_mapping_id')
             valid_from = request.POST.get('valid_from')
             valid_to = request.POST.get('valid_to')
 
@@ -1417,8 +1612,8 @@ def create_mapping_to_cube(request):
 
             # Create new mapping to cube
             mapping_to_cube = MAPPING_TO_CUBE(
-                mapping=mapping,
-                cubeMapping=cube_mapping,
+                mapping_id=mapping,
+                cube_mapping_id=cube_mapping,
                 valid_from=valid_from if valid_from else None,
                 valid_to=valid_to if valid_to else None
             )
@@ -1447,13 +1642,13 @@ def view_member_mapping_items_by_row(request):
         
         # First pass: collect variables and organize items by row
         for item in items:
-            row = item.row
+            row = item.member_mapping_row
             if row not in items_by_row:
                 items_by_row[row] = {'items': {}}
             
             # Add item to the row dictionary, using variable as key
-            if item.variable:
-                var_id = item.variable.variable_id
+            if item.variable_id:
+                var_id = item.variable_id.variable_id
                 items_by_row[row]['items'][var_id] = item
                 
                 # Track whether this variable is used as source or target
@@ -1531,10 +1726,21 @@ def export_database_to_csv(request):
                     csv_content = []
                     csv_content.append(','.join(headers))
                     
-                    # Get data with escaped column names
+                    # Get data with escaped column names and ordered by primary key
                     with connection.cursor() as cursor:
                         escaped_headers = [f'"{h}"' if h == 'order' else h for h in db_headers]
-                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name}")
+                        # Get primary key column name
+                        cursor.execute(f"PRAGMA table_info({table_name})")
+                        table_info = cursor.fetchall()
+                        pk_column = None
+                        for col in table_info:
+                            if col[5] == 1:  # 5 is the index for pk flag in table_info
+                                pk_column = col[1]  # 1 is the index for column name
+                                break
+                        
+                        # Build ORDER BY clause
+                        order_by = f"ORDER BY {pk_column}" if pk_column else "ORDER BY rowid"  # rowid is always available in SQLite
+                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} {order_by}")
                         rows = cursor.fetchall()
                         
                         for row in rows:
@@ -1562,9 +1768,9 @@ def export_database_to_csv(request):
                                 headers.append(desc[0].upper())
                                 column_names.append(desc[0])
                         
-                        # Get data with escaped column names
+                        # Get data with escaped column names and ordered by rowid
                         escaped_headers = [f'"{h.lower()}"' if h.lower() == 'order' else h.lower() for h in column_names]
-                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name}")
+                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} ORDER BY rowid")
                         rows = cursor.fetchall()
                         
                         # Create CSV in memory
@@ -1590,4 +1796,179 @@ def export_database_to_csv(request):
                     zip_file.writestr(f"{table_name.replace('pybirdai_', 'bird_')}.csv", '\n'.join(csv_content))
         
         return response
+
+def bird_diffs_and_corrections(request):
+    """
+    View function for displaying BIRD diffs and corrections page.
+    """
+    return render(request, 'pybirdai/bird_diffs_and_corrections.html')
+
+def convert_ldm_to_sdd_hierarchies(request):
+    """View for converting LDM hierarchies to SDD hierarchies."""
+    if request.GET.get('execute') == 'true':
+        try:
+            RunConvertLDMToSDDHierarchies.run_convert_hierarchies()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading(
+        request,
+        'Converting LDM Hierarchies to SDD Hierarchies',
+        'Successfully converted LDM hierarchies to SDD hierarchies.',
+        reverse('pybirdai:bird_diffs_and_corrections'),
+        'BIRD Export Diffs and Corrections'
+    )
+
+def view_ldm_to_sdd_results(request):
+    """View for displaying the LDM to SDD hierarchy conversion results."""
+    results_dir = os.path.join(settings.BASE_DIR, 'results', 'ldm_to_sdd_hierarchies')
+    
+    # Read the CSV files
+    csv_data = {}
+    for filename in ['member_hierarchy.csv', 'member_hierarchy_node.csv', 'missing_members.csv']:
+        filepath = os.path.join(results_dir, filename)
+        if os.path.exists(filepath):
+            with open(filepath, 'r', newline='') as f:
+                reader = csv.reader(f)
+                headers = next(reader)  # Get headers
+                rows = list(reader)     # Get data rows
+                csv_data[filename] = {'headers': headers, 'rows': rows}
+    
+    return render(request, 'pybirdai/view_ldm_to_sdd_results.html', {'csv_data': csv_data})
+
+def import_members_from_csv(request):
+    if request.method == 'GET':
+        return render(request, 'pybirdai/import_members.html')
+    elif request.method == 'POST':
+        try:
+            csv_file = request.FILES.get('csvFile')
+            if not csv_file:
+                return HttpResponseBadRequest('No file was uploaded')
+            
+            if not csv_file.name.endswith('.csv'):
+                return HttpResponseBadRequest('File must be a CSV')
+            
+            # Read the CSV file
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
+            
+            # Validate headers
+            required_fields = {'MEMBER_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
+            headers = set(reader.fieldnames)
+            if not required_fields.issubset(headers):
+                missing = required_fields - headers
+                return HttpResponseBadRequest(f'Missing required columns: {", ".join(missing)}')
+            
+            # Process each row
+            members_to_create = []
+            for row in reader:
+                try:
+                    # Look up the domain
+                    domain = DOMAIN.objects.get(domain_id=row['DOMAIN_ID'])
+                    
+                    member = MEMBER(
+                        member_id=row['MEMBER_ID'],
+                        code=row['CODE'],
+                        name=row['NAME'],
+                        description=row['DESCRIPTION'],
+                        domain_id=domain
+                    )
+                    members_to_create.append(member)
+                except DOMAIN.DoesNotExist:
+                    return HttpResponseBadRequest(f'Domain with ID {row["DOMAIN_ID"]} not found')
+            
+            # Bulk create the members
+            if members_to_create:
+                MEMBER.objects.bulk_create(members_to_create)
+            
+            return JsonResponse({'message': 'Import successful', 'count': len(members_to_create)})
+            
+        except Exception as e:
+            return HttpResponseBadRequest(str(e))
+
+def import_variables_from_csv(request):
+    if request.method == 'GET':
+        return render(request, 'pybirdai/import_variables.html')
+    elif request.method == 'POST':
+        try:
+            csv_file = request.FILES.get('csvFile')
+            if not csv_file:
+                return HttpResponseBadRequest('No file was uploaded')
+            
+            if not csv_file.name.endswith('.csv'):
+                return HttpResponseBadRequest('File must be a CSV')
+            
+            # Read the CSV file
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
+            
+            # Validate headers
+            required_fields = {'VARIABLE_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
+            headers = set(reader.fieldnames)
+            if not required_fields.issubset(headers):
+                missing = required_fields - headers
+                return HttpResponseBadRequest(f'Missing required columns: {", ".join(missing)}')
+            
+            # Get SDDContext instance
+            sdd_context = SDDContext()
+            
+            # Process each row
+            variables_to_create = []
+            for row in reader:
+                try:
+                    # Look up the domain
+                    domain = DOMAIN.objects.get(domain_id=row['DOMAIN_ID'])
+                    
+                    variable = VARIABLE(
+                        variable_id=row['VARIABLE_ID'],
+                        code=row['CODE'],
+                        name=row['NAME'],
+                        description=row['DESCRIPTION'],
+                        domain_id=domain
+                    )
+                    variables_to_create.append(variable)
+                except DOMAIN.DoesNotExist:
+                    return HttpResponseBadRequest(f'Domain with ID {row["DOMAIN_ID"]} not found')
+            
+            # Bulk create the variables
+            if variables_to_create:
+                created_variables = VARIABLE.objects.bulk_create(variables_to_create)
+                
+                # Update SDDContext variable dictionary
+                for variable in created_variables:
+                    sdd_context.variable_dictionary[variable.variable_id] = variable
+            
+            return JsonResponse({'message': 'Import successful', 'count': len(variables_to_create)})
+            
+        except Exception as e:
+            return HttpResponseBadRequest(str(e))
+
+def run_create_executable_filters_from_db(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
+        app_config.run_create_executable_filters_from_db()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Creating Executable Filters from Database (approx 1 minute on a fast desktop, dont press the back button on this web page)",
+        "Create executable filters from database process completed successfully",
+        '/pybirdai/create-transformation-rules-in-python',
+        "Create Transformations Rules in Python"
+    )
+
+def run_create_python_joins_from_db(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
+        app_config.create_python_joins_from_db()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Creating Python Joins from Database (approx 1 minute on a fast desktop, dont press the back button on this web page)",
+        "Created Executable Joins from Database in Python",
+        '/pybirdai/create-transformation-rules-in-python',
+        "Create Transformations Rules in Python"
+    )
 

@@ -1,4 +1,3 @@
-
 # coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
@@ -16,10 +15,14 @@ from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
 from django.apps import apps
 from django.db.models import QuerySet
+from django.db.models.fields.related import ReverseOneToOneDescriptor
+
 class CSVConverter:
 
 	def persist_object_as_csv(theObject,useLongNames):
-		
+		print("persist_object_as_csv theObject: " + str(theObject))
+		#if 'FNNCL_ASST_INSTRMNT_DRVD_DT' in str(theObject):
+		#	import pdb;pdb.set_trace()
 		fileName = ""
 		base_dir = settings.BASE_DIR 
 		output_directory = os.path.join(base_dir, 'results','lineage')
@@ -38,6 +41,8 @@ class CSVConverter:
 		except Exception as e: 
 			print("Exception  " + str(e)  )
 			print("File " + fileName  + " already exists" )
+
+		print("persist_object_as_csv succesfully written: " + str(theObject))
 
 	def get_table_name(theObject):
 		table_name = None
@@ -104,7 +109,9 @@ class CSVConverter:
 			references = [method for method in dir(theObject.__class__) if not callable(
 				getattr(theObject.__class__, method)) and not method.startswith('__')]
 			for relationship in references:
-				if not(relationship == "objects") and not(relationship == "_meta") and not(relationship.endswith("_domain")):
+				if not(relationship == "objects") and not(relationship == "_meta") and\
+					  not(relationship.endswith("_domain")) and\
+						not isinstance(getattr(theObject.__class__,relationship),ReverseOneToOneDescriptor):
 					cardinality = 1
 					if not (relationship is None):
 						cardinality = 1
@@ -163,7 +170,9 @@ class CSVConverter:
 					getattr(theObject.__class__, method)) and not method.startswith('__')]
 			firstItem = True
 			for  eStructuralFeature in  sfs:
-				if not(eStructuralFeature == "objects") and not(eStructuralFeature == "_meta") and not(eStructuralFeature.endswith("_domain")):
+				if not(eStructuralFeature == "objects") and not(eStructuralFeature == "_meta") and\
+					  not(eStructuralFeature.endswith("_domain")) and\
+						not isinstance(getattr(theObject.__class__,eStructuralFeature),ReverseOneToOneDescriptor):
 				#boolean relationship = (eStructuralFeature instanceof EReference)
 					relationship = True
 					cardinality = 1

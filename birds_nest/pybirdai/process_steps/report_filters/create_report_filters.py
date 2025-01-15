@@ -200,7 +200,7 @@ class CreateReportFilters:
                     dpm_var_id = var_id.variable_id.replace('EBA_', 'DPM_')
                     variable_mapping_items = var_mapping_dict[dpm_var_id]
                     # Use next() with generator expression for early exit
-                    return next((item.variable for item in variable_mapping_items 
+                    return next((item.variable_id for item in variable_mapping_items 
                                if item.is_source == 'false'), None)
                 except KeyError:
                     print(f"Could not find variable mapping for {var_id.variable_id}")
@@ -257,7 +257,7 @@ class CreateReportFilters:
         non_ref_set = set(non_ref_tuple_list)  # Convert to set for O(1) lookups
         
         for mapping in relevant_mappings:
-            member_mapping = mapping.mapping.member_mapping_id
+            member_mapping = mapping.mapping_id.member_mapping_id
             if not member_mapping:
                 continue
             
@@ -266,13 +266,13 @@ class CreateReportFilters:
             
             for member_mapping_items in member_mapping_item_row_dict.values():
                 # Group items by is_source for faster processing
-                source_items = [(item.variable, item.member) for item in member_mapping_items 
+                source_items = [(item.variable_id, item.member_id) for item in member_mapping_items 
                               if item.is_source == 'true']
                 
                 # Check if all source items are in non_ref_tuple_list
                 if all(item in non_ref_set for item in source_items):
                     ref_tuple_list.extend(
-                        (item.variable, item.member, item.member_hierarchy)
+                        (item.variable_id, item.member_id, item.member_hierarchy)
                         for item in member_mapping_items
                         if item.is_source != 'true'
                     )
@@ -294,7 +294,7 @@ class CreateReportFilters:
         member_mapping_items = sdd_context.member_mapping_items_dictionary[member_mapping.member_mapping_id]
             
         for member_mapping_item in member_mapping_items:
-            member_mapping_item_row_dict.setdefault(member_mapping_item.row, []).append(member_mapping_item)
+            member_mapping_item_row_dict.setdefault(member_mapping_item.member_mapping_row, []).append(member_mapping_item)
 
         return member_mapping_item_row_dict
 

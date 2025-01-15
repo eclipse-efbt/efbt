@@ -16,42 +16,7 @@
 <h1>Edit Mapping to Cubes</h1>
 <a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
 
-<!-- Create New Mapping to Cube Form -->
-<div class="create-new-section">
-    <h2>Create New Mapping to Cube</h2>
-    <form method="post" action="{% url 'pybirdai:create_mapping_to_cube' %}" class="create-form">
-        {% csrf_token %}
-        <div class="form-grid">
-            <div class="form-group">
-                <label for="new_mapping">Mapping Definition:</label>
-                <select name="mapping" id="new_mapping" required>
-                    <option value="">Select Mapping</option>
-                    {% for mapping in mapping_definitions %}
-                        <option value="{{ mapping.mapping_id }}">{{ mapping.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="new_cube_mapping">Cube Mapping:</label>
-                <select name="cubeMapping" id="new_cube_mapping" required>
-                    <option value="">Select Cube</option>
-                    {% for cube in cube_mappings %}
-                        <option value="{{ cube }}">{{ cube }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="new_valid_from">Valid From:</label>
-                <input type="date" name="valid_from" id="new_valid_from" required>
-            </div>
-            <div class="form-group">
-                <label for="new_valid_to">Valid To:</label>
-                <input type="date" name="valid_to" id="new_valid_to">
-            </div>
-        </div>
-        <button type="submit" class="create-button">Create New Mapping</button>
-    </form>
-</div>
+
 
 <!-- Add filter form -->
 <form method="get" class="filter-form">
@@ -60,9 +25,9 @@
             <label for="mapping_filter">Mapping Definition:</label>
             <select name="mapping_filter" id="mapping_filter">
                 <option value="">All</option>
-                {% for mapping in mapping_definitions %}
-                    <option value="{{ mapping.mapping_id }}" {% if mapping.mapping_id|stringformat:"s" == request.GET.mapping_filter %}selected{% endif %}>
-                        {{ mapping.name }}
+                {% for mapping_id in mapping_definitions %}
+                    <option value="{{ mapping_id.mapping_id }}" {% if mapping_id.mapping_id|stringformat:"s" == request.GET.mapping_filter %}selected{% endif %}>
+                        {{ mapping_id.name }}
                     </option>
                 {% endfor %}
             </select>
@@ -81,7 +46,42 @@
         <button type="submit">Apply Filters</button>
     </div>
 </form>
-
+<!-- Create New Mapping to Cube Form -->
+<div class="create-new-section">
+    <h2>Create New Mapping to Cube</h2>
+    <form method="post" action="{% url 'pybirdai:create_mapping_to_cube' %}" class="create-form">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="new_mapping">Mapping Definition:</label>
+                <select name="mapping_id" id="new_mapping" required>
+                    <option value="">Select Mapping</option>
+                    {% for mapping_id in mapping_definitions %}
+                        <option value="{{ mapping_id.mapping_id }}">{{ mapping_id.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="new_cube_mapping">Cube Mapping:</label>
+                <select name="cube_mapping_id" id="new_cube_mapping" required>
+                    <option value="">Select Cube</option>
+                    {% for cube in cube_mappings %}
+                        <option value="{{ cube }}">{{ cube }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="new_valid_from">Valid From:</label>
+                <input type="date" name="valid_from" id="new_valid_from" required>
+            </div>
+            <div class="form-group">
+                <label for="new_valid_to">Valid To:</label>
+                <input type="date" name="valid_to" id="new_valid_to">
+            </div>
+        </div>
+        <button type="submit" class="create-button">Create New Mapping</button>
+    </form>
+</div>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -108,8 +108,14 @@
                 {% for form in formset %}
                 {{ form.id }}
                 <tr>
-                    <td>{{ form.mapping }}</td>
-                    <td>{{ form.cubeMapping }}</td>
+                    <td>
+                        {{ form.mapping_id }}
+                        <input type="hidden" id="mapping_id_{{ form.instance.id }}" value="{{ form.instance.mapping_id.mapping_id }}">
+                    </td>
+                    <td>
+                        {{ form.cube_mapping_id }}
+                        <input type="hidden" id="cube_mapping_id_{{ form.instance.id }}" value="{{ form.instance.cube_mapping_id }}">
+                    </td>
                     <td>{{ form.valid_from }}</td>
                     <td>{{ form.valid_to }}</td>
                     <td>
@@ -155,11 +161,28 @@ function confirmDelete(mappingToCubeId) {
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = "{% url 'pybirdai:delete_mapping_to_cube' 0 %}".replace('0', mappingToCubeId);
+        
+        // Add CSRF token
         var csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = 'csrfmiddlewaretoken';
         csrfInput.value = '{{ csrf_token }}';
         form.appendChild(csrfInput);
+        
+        // Add mapping_id
+        var mappingInput = document.createElement('input');
+        mappingInput.type = 'hidden';
+        mappingInput.name = 'mapping_id';
+        mappingInput.value = document.getElementById('mapping_id_' + mappingToCubeId).value;
+        form.appendChild(mappingInput);
+        
+        // Add cube_mapping_id
+        var cubeInput = document.createElement('input');
+        cubeInput.type = 'hidden';
+        cubeInput.name = 'cube_mapping_id';
+        cubeInput.value = document.getElementById('cube_mapping_id_' + mappingToCubeId).value;
+        form.appendChild(cubeInput);
+        
         document.body.appendChild(form);
         form.submit();
     }
