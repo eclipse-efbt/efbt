@@ -34,7 +34,9 @@ class Orchestration:
 					print("LookupError: " + table_name)
 
 				if relevant_model:
+					print("relevant_model: " + str(relevant_model))
 					newObject = relevant_model.objects.all()
+					print("newObject: " + str(newObject))
 					if newObject:
 						setattr(theObject,eReference,newObject)
 						CSVConverter.persist_object_as_csv(newObject,True);						

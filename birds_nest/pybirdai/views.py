@@ -263,7 +263,7 @@ def run_create_executable_filters(request):
     
     return create_response_with_loading(
         request,
-        "Creating Executable Filters (approx 2 minutes on a fast desktop, dont press the back button on this web page)",
+        "Creating Executable Filters (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Create executable filters process completed successfully",
         '/pybirdai/create-transformation-rules-in-python',
         "Create Transformations Rules in Python"
@@ -813,11 +813,41 @@ def delete_member_mapping_item(request, item_id):
 def delete_cube_link(request, cube_link_id):
     try:
         link = get_object_or_404(CUBE_LINK, cube_link_id=cube_link_id)
+        
+        # Update the in-memory dictionaries
+        sdd_context = SDDContext()
+        
+        # Remove from cube_link_dictionary
+        try:
+            del sdd_context.cube_link_dictionary[cube_link_id]
+        except KeyError:
+            pass
+            
+        # Remove from cube_link_to_foreign_cube_map
+        try:
+            del sdd_context.cube_link_to_foreign_cube_map[cube_link_id]
+        except KeyError:
+            pass
+            
+        # Remove from cube_link_to_join_identifier_map
+        try:
+            del sdd_context.cube_link_to_join_identifier_map[cube_link_id]
+        except KeyError:
+            pass
+            
+        # Remove from cube_link_to_join_for_report_id_map
+        try:
+            del sdd_context.cube_link_to_join_for_report_id_map[cube_link_id]
+        except KeyError:
+            pass
+        
+        # Delete the database record
         link.delete()
         messages.success(request, 'CUBE_LINK deleted successfully.')
+        return JsonResponse({'status': 'success'})
     except Exception as e:
         messages.error(request, f'Error deleting CUBE_LINK: {str(e)}')
-    return redirect('pybirdai:edit_cube_links')
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 def delete_cube_structure_item_link(request, cube_structure_item_link_id):
     try:
@@ -826,9 +856,17 @@ def delete_cube_structure_item_link(request, cube_structure_item_link_id):
         cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
         link.delete()
         
-        # Only update the context map if we had a cube_link_id
+        # Update the in-memory dictionaries
+        sdd_context = SDDContext()
+        
+        # Remove from cube_structure_item_links_dictionary
+        try:
+            del sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id]
+        except KeyError:
+            pass
+            
+        # Remove from cube_structure_item_link_to_cube_link_map
         if cube_link_id:
-            sdd_context = SDDContext()
             try:
                 cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
                 for cube_structure_item_link in cube_structure_item_links:
@@ -1357,17 +1395,23 @@ def show_gaps(request):
 
 @require_http_methods(["POST"])
 def delete_cube_structure_item_link(request, cube_structure_item_link_id):
-    
     try:
-        
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
         # Store the cube_link_id before deleting
         cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
         link.delete()
         
-        # Only update the context map if we had a cube_link_id
+        # Update the in-memory dictionaries
+        sdd_context = SDDContext()
+        
+        # Remove from cube_structure_item_links_dictionary
+        try:
+            del sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id]
+        except KeyError:
+            pass
+            
+        # Remove from cube_structure_item_link_to_cube_link_map
         if cube_link_id:
-            sdd_context = SDDContext()
             try:
                 cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
                 for cube_structure_item_link in cube_structure_item_links:
@@ -1415,6 +1459,19 @@ def add_cube_structure_item_link(request):
             foreign_cube_variable_code=foreign_cube_variable,
             primary_cube_variable_code=primary_cube_variable
         )
+        
+        # Update the in-memory dictionaries
+        sdd_context = SDDContext()
+        
+        # Add to cube_structure_item_links_dictionary
+        sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id] = new_link
+        
+        # Add to cube_structure_item_link_to_cube_link_map
+        try:
+            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(new_link)
+        except KeyError:
+            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id] = [new_link]
+        
         messages.success(request, 'New cube structure item link created successfully.')
     except Exception as e:
         messages.error(request, f'Error creating link: {str(e)}')
@@ -1440,6 +1497,25 @@ def add_cube_link(request):
             cube_link_type=request.POST.get('cube_link_type'),
             join_identifier=request.POST.get('join_identifier')
         )
+        
+        # Update the in-memory dictionaries
+        sdd_context = SDDContext()
+        
+        # Add to cube_link_dictionary
+        sdd_context.cube_link_dictionary[new_link.cube_link_id] = new_link
+        
+        # Add to cube_link_to_foreign_cube_map
+        sdd_context.cube_link_to_foreign_cube_map[new_link.cube_link_id] = new_link.foreign_cube_id
+        
+        # Add to cube_link_to_join_identifier_map
+        if new_link.join_identifier:
+            sdd_context.cube_link_to_join_identifier_map[new_link.cube_link_id] = new_link.join_identifier
+        
+        # Add to cube_link_to_join_for_report_id_map
+        # Note: This might need additional logic depending on how join_for_report_id is determined
+        if new_link.join_identifier:
+            sdd_context.cube_link_to_join_for_report_id_map[new_link.cube_link_id] = new_link.join_identifier
+        
         messages.success(request, 'New cube link created successfully.')
     except Exception as e:
         messages.error(request, f'Error creating cube link: {str(e)}')
@@ -1867,4 +1943,32 @@ def import_variables_from_csv(request):
             
         except Exception as e:
             return HttpResponseBadRequest(str(e))
+
+def run_create_executable_filters_from_db(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
+        app_config.run_create_executable_filters_from_db()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Creating Executable Filters from Database (approx 1 minute on a fast desktop, dont press the back button on this web page)",
+        "Create executable filters from database process completed successfully",
+        '/pybirdai/create-transformation-rules-in-python',
+        "Create Transformations Rules in Python"
+    )
+
+def run_create_python_joins_from_db(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
+        app_config.create_python_joins_from_db()
+        return JsonResponse({'status': 'success'})
+    
+    return create_response_with_loading(
+        request,
+        "Creating Python Joins from Database (approx 1 minute on a fast desktop, dont press the back button on this web page)",
+        "Created Executable Joins from Database in Python",
+        '/pybirdai/create-transformation-rules-in-python',
+        "Create Transformations Rules in Python"
+    )
 
