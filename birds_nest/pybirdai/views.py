@@ -1568,7 +1568,7 @@ def add_member_mapping_item(request):
             is_source = request.POST.get('is_source', '').lower()  # Convert to lowercase for consistency
             member_id = request.POST.get('member_id')
             variable_id = request.POST.get('variable_id')
-            row = request.POST.get('row')
+            member_mapping_row = request.POST.get('member_mapping_row')
             member_mapping_id = request.POST.get('member_mapping_id')
             member_hierarchy_id = request.POST.get('member_hierarchy')
             valid_from = request.POST.get('valid_from') or None
@@ -1585,7 +1585,7 @@ def add_member_mapping_item(request):
                 is_source=is_source,
                 member_id=member,
                 variable_id=variable,
-                row=row,
+                member_mapping_row=member_mapping_row,
                 member_mapping_id=member_mapping,
                 member_hierarchy=member_hierarchy,
                 valid_from=valid_from,
