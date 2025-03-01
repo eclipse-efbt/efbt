@@ -88,7 +88,7 @@ class CreateExecutableFilters:
                     file.write("\tdef calc_referenced_items(self):\n")
                     file.write("\t\titems = self." + cube_id + "_Table." + cube_id + "s\n")
                     file.write("\t\tfor item in items:\n")
-                    file.write("\t\t\tfilter_passsed = False\n")
+                    file.write("\t\t\tfilter_passed = True\n")
                     combination_item_list = []
                     try:
                         combination_item_list =  sdd_context.combination_item_dictionary[combination.combination_id.combination_id]
@@ -104,9 +104,12 @@ class CreateExecutableFilters:
                         for leaf_node_member in leaf_node_members:
                             file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n")
                         file.write("\t\t\t\tFalse:\n")
-                        file.write("\t\t\t\tfilter_passed = True\n")
-                        file.write("\t\t\tif filter_passed:\n")
-                        file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
+                        file.write("\t\t\t\tpass\n")
+                        file.write("\t\t\telse:\n")
+                        file.write("\t\t\t\tfilter_passed = False\n")
+                        
+                    file.write("\t\t\tif filter_passed:\n")
+                    file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
                     file.write("\tdef init(self):\n")
                     file.write("\t\tOrchestration().init(self)\n")
                     file.write("\t\tself.calc_referenced_items()\n")
