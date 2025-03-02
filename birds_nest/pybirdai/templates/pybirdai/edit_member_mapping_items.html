@@ -89,8 +89,8 @@
             <label for="member_id">Member:</label>
             <select name="member_id" id="member_id" required>
                 <option value="">Select Member</option>
-                {% for member_id in all_members %}
-                <option value="{{ member_id }}">{{ member_id }} - {{ member_id.name }}</option>
+                {% for member in all_members %}
+                <option value="{{ member.member_id }}">{{ member.member_id }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -98,14 +98,14 @@
             <label for="variable_id">Variable:</label>
             <select name="variable_id" id="variable_id" required>
                 <option value="">Select Variable</option>
-                {% for variable_id in all_variables %}
-                <option value="{{ variable.variable_id }}">{{ variable_id.variable_id }} - {{ variable_id.name }}</option>
+                {% for variable in all_variables %}
+                <option value="{{ variable.variable_id }}">{{ variable.variable_id }} - {{ variable.name }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="form-group">
-            <label for="row">Row:</label>
-            <input type="number" name="row" id="row" required>
+            <label for="member_mapping_row">Row:</label>
+            <input type="number" name="member_mapping_row" id="member_mapping_row" required>
         </div>
         <div class="form-group">
             <label for="member_mapping_id">Member Mapping:</label>
