@@ -35,6 +35,7 @@ class CreatePythonTransformations:
         file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  'output_tables.py', "a",  encoding='utf-8') 
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         file.write("from datetime import datetime\n")
+        file.write("from pybirdai.annotations.decorators import lineage\n")
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             print(f"report_id: {report_id}")
             file.write("from ." + report_id  + "_logic import *\n")
@@ -50,6 +51,7 @@ class CreatePythonTransformations:
                 variable = cube_structure_item.variable_id
 
                 domain = variable.domain_id.domain_id
+                file.write('\t@lineage(dependencies={"unionOfLayers.'+ variable.variable_id +'"})\n')
                 if domain == 'String':
                     file.write('\tdef ' + variable.variable_id + '(self) -> str:\n')
                 elif domain == 'Integer':
@@ -92,6 +94,7 @@ class CreatePythonTransformations:
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
             file.write("from datetime import datetime\n")
+            file.write("from pybirdai.annotations.decorators import lineage\n")
         
             file.write("\nclass " + report_id + "_UnionItem:\n")
             file.write("\tbase = None #" + report_id + "_Base\n")
@@ -105,6 +108,7 @@ class CreatePythonTransformations:
                 variable = cube_structure_item.variable_id
 
                 domain = variable.domain_id.domain_id
+                file.write('\t@lineage(dependencies={"base.'+ variable.variable_id +'"})\n')
                 if domain == 'String':
                     file.write('\tdef ' + variable.variable_id + '(self) -> str:\n')
                 elif domain == 'Integer':
@@ -213,6 +217,7 @@ class CreatePythonTransformations:
                                 file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + " = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
                                 primary_cubes_added.append(cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
                         for cube_structure_item_link in cube_structure_item_links:
+                            file.write('\t@lineage(dependencies={"'+ cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + '.' + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id +'"})\n')
                             file.write("\tdef " + cube_structure_item_link.foreign_cube_variable_code.variable_id.variable_id + "(self):\n")
                             file.write("\t\treturn self." +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
 
