@@ -15,10 +15,18 @@ from pybirdai.process_steps.pybird.csv_converter import CSVConverter
 
 import importlib
 class Orchestration:
-
-	
+	# Class variable to track initialized objects
+	_initialized_objects = set()
 	
 	def init(self,theObject):
+		# Check if this object has already been initialized
+		object_id = id(theObject)
+		if object_id in Orchestration._initialized_objects:
+			print(f"Object of type {theObject.__class__.__name__} already initialized, skipping.")
+			return
+		
+		# Mark this object as initialized
+		Orchestration._initialized_objects.add(object_id)
 		
 		references = [method for method in dir(theObject.__class__) if not callable(
 		getattr(theObject.__class__, method)) and not method.startswith('__')]
@@ -56,14 +64,34 @@ class Orchestration:
 
 					setattr(theObject,eReference,newObject)
 
+	@classmethod
+	def reset_initialization(cls):
+		"""
+		Reset the initialization tracking.
+		This can be useful for testing or when re-initialization is required.
+		"""
+		cls._initialized_objects.clear()
+		print("Initialization tracking has been reset.")
+		
+	@classmethod
+	def is_initialized(cls, obj):
+		"""
+		Check if an object has been initialized.
+		
+		Args:
+			obj: The object to check
+			
+		Returns:
+			bool: True if the object has been initialized, False otherwise
+		"""
+		return id(obj) in cls._initialized_objects
+
 	def createObjectFromReferenceType(eReference):
-		
-		
 		try:
 			cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
 			new_object = cls()		
 			return new_object;	
-		except :
+		except:
 			print("Error: " + eReference)
 		
 		
