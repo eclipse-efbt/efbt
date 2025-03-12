@@ -82,6 +82,7 @@ class CreatePythonTransformations:
             file.write("\t\treturn items\n" )
             file.write("\tdef init(self):\n" )
             file.write("\t\tOrchestration().init(self)\n" )
+            file.write("\t\tself." + report_id + "s = []\n" )
             file.write("\t\tself." + report_id + "s.extend(self.calc_" + report_id + "s())\n" )
             file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
             file.write("\t\treturn None\n" )
@@ -179,7 +180,7 @@ class CreatePythonTransformations:
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
                         if cube_link.join_identifier not in join_ids_added:     
-                            file.write("\t\tfor item in " + report_id + "_" + cube_link.join_identifier.replace(' ','_') + "_Table." + cube_link.join_identifier.replace(' ','_') + "s:\n")
+                            file.write("\t\tfor item in self." + report_id + "_" + cube_link.join_identifier.replace(' ','_') + "_Table." + cube_link.join_identifier.replace(' ','_') + "s:\n")
                             file.write("\t\t\tnewItem = " + report_id + "_UnionItem()\n")
                             file.write("\t\t\tnewItem.base = item\n")
                             file.write("\t\t\titems.append(newItem)\n")
@@ -189,6 +190,7 @@ class CreatePythonTransformations:
 
             file.write("\tdef init(self):\n")
             file.write("\t\tOrchestration().init(self)\n")
+            file.write("\t\tself." + report_id + "_UnionItems = []\n")
             file.write("\t\tself." + report_id + "_UnionItems.extend(self.calc_" + report_id + "_UnionItems())\n")
             file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
             file.write("\t\treturn None\n")
@@ -253,6 +255,7 @@ class CreatePythonTransformations:
                     file.write("\t\treturn items\n")
                     file.write("\tdef init(self):\n")
                     file.write("\t\tOrchestration().init(self)\n")
+                    file.write("\t\tself." + join_id.replace(' ','_') + "s = []\n")                    
                     file.write("\t\tself." + join_id.replace(' ','_') + "s.extend(self.calc_" + join_id.replace(' ','_') + "s())\n")
                     file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
 
