@@ -112,6 +112,7 @@ class CreateExecutableFilters:
                     file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
                     file.write("\tdef init(self):\n")
                     file.write("\t\tOrchestration().init(self)\n")
+                    file.write("\t\tself." + cube_id + "s = []\n")
                     file.write("\t\tself.calc_referenced_items()\n")
                     file.write("\t\treturn None\n")
             
