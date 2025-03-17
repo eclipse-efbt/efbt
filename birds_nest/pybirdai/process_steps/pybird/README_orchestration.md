@@ -8,16 +8,16 @@ The Orchestration class now includes functionality to track which objects have b
 
 ## Key Features
 
-### Single Initialization
+### Single Initialization with Reference Handling
 
-Objects are now initialized only once. If the `init` method is called on an object that has already been initialized, the initialization will be skipped.
+Objects are now initialized only once. If the `init` method is called on an object that has already been initialized, the initialization will be skipped, but references will still be properly set to ensure the object can be used correctly.
 
 ```python
-# First initialization - will proceed
+# First initialization - will proceed with full initialization
 Orchestration().init(my_object)
 
-# Second initialization - will be skipped
-Orchestration().init(my_object)  # This will print a message and return without re-initializing
+# Second initialization - will skip full initialization but ensure references are set
+Orchestration().init(my_object)  # This will print a message and only set necessary references
 ```
 
 ### Checking Initialization Status
@@ -47,6 +47,15 @@ The initialization tracking is implemented using a class-level set that stores t
 1. Tracking persists across multiple instances of the Orchestration class
 2. Objects are uniquely identified by their memory address (via `id()`)
 3. The tracking has minimal memory overhead
+
+### Reference Handling
+
+When an object is already initialized and the `init` method is called again, the system:
+1. Skips the full initialization process
+2. Still ensures that all table references are properly set
+3. Only sets references that are currently `None`
+
+This ensures that objects can be safely reused without losing their references, preventing `NoneType` errors when accessing attributes.
 
 ## Testing
 
