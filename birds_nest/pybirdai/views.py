@@ -2775,23 +2775,24 @@ def update_mapping_row(request):
                     logger.debug(f"Variable code: {variable}, Member: {member}")
                     variable_name, variable_code = variable.split(" ")[0], variable.split(" ")[1].strip("(").rstrip(")")
                     variable_obj = VARIABLE.objects.filter(code=variable_code,name=variable_name).first()
-                    member_obj = MEMBER.objects.get(member_id=member)
-                    logger.debug(f"Adding target mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
-
-                    new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
-                        member_mapping_id=mapping_def.member_mapping_id,
-                        member_mapping_row=row_index,
-                        variable_id=variable_obj,
-                        member_id=member_obj,
-                        is_source='false'
-                    )
-                    try:
-                        member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                            new_mm_item.member_mapping_id.member_mapping_id]
-                        member_mapping_list.append(new_mm_item)
-                    except KeyError:
-                        sdd_context.member_mapping_items_dictionary[
-                            new_mm_item.member_mapping_id.member_mapping_id] = [new_mm_item]
+                    if not( member == "None"):
+                        member_obj = MEMBER.objects.get(member_id=member)
+                        logger.debug(f"Adding target mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
+                    
+                        new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
+                            member_mapping_id=mapping_def.member_mapping_id,
+                            member_mapping_row=row_index,
+                            variable_id=variable_obj,
+                            member_id=member_obj,
+                            is_source='false'
+                        )
+                        try:
+                            member_mapping_list = sdd_context.member_mapping_items_dictionary[
+                                new_mm_item.member_mapping_id.member_mapping_id]
+                            member_mapping_list.append(new_mm_item)
+                        except KeyError:
+                            sdd_context.member_mapping_items_dictionary[
+                                new_mm_item.member_mapping_id.member_mapping_id] = [new_mm_item]
         logger.info(f"Successfully updated row {row_index} in mapping {mapping_id}")
         return JsonResponse({'success': True})
     except Exception as e:

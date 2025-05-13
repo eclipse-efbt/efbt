@@ -384,6 +384,11 @@ function editRow() {
 
         if (select) {
             // Find the option that matches the cell value and select it
+            // add the value None to the select options
+            const noneOption = document.createElement('option');
+            noneOption.value = 'None';
+            noneOption.textContent = 'None';
+            select.appendChild(noneOption);
             const matchingOption = Array.from(select.options).find(option => option.textContent.trim() === cellValue);
             if (matchingOption) {
                 select.value = matchingOption.value;
