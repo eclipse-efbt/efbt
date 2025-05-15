@@ -22,11 +22,13 @@ class ExecuteDataPoint:
         klass = globals()['Cell_' +data_point_id]
         datapoint = klass()
         datapoint.init()
-        return str(datapoint.metric_value())
-    
+        metric_value = str(datapoint.metric_value())
+        del datapoint
+        return metric_value
+
     def delete_lineage_data():
         base_dir = settings.BASE_DIR
         lineage_dir = os.path.join(base_dir, 'results', 'lineage')
         for file in os.listdir(lineage_dir):
-            os.remove(os.path.join(lineage_dir, file))
-
+            if file != "__init__.py":
+                os.remove(os.path.join(lineage_dir, file))
