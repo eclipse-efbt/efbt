@@ -76,6 +76,7 @@ from .utils.mapping_library import (
     cascade_member_mapping_changes,
     process_mapping_chain
 )
+from .utils.utils_views import ensure_results_directory,process_test_results_files
 import time
 from datetime import datetime
 from django.views.decorators.clickjacking import xframe_options_exempt

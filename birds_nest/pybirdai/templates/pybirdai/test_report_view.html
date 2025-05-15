@@ -1,0 +1,185 @@
+<!-- Copyright 2025 Arfa Digital Consulting
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. -->
+
+{% extends 'base.html' %} {% load static %} {% block title %}PyBIRD AI Home{% endblock %} {% block content %}
+<style>
+    /* Clean, high-impact styling */
+    body {
+        font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    h1, h3, h4 {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 2rem 0;
+        font-size: 2.5rem;
+    }
+
+    h3 {
+        color: #3498db;
+    }
+
+    h4 {
+        font-weight: 500;
+    }
+
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header, .datapoint-header {
+        background-color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-header {
+        justify-content: space-between;
+        border-bottom: 1px solid #eaeaea;
+        padding: 1rem 1.5rem;
+        border-radius: 8px 8px 0 0 !important;
+        transition: background-color 0.2s;
+    }
+
+    .datapoint-header {
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .card-header:hover {
+        background-color: #f0f4f8;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        background-color: #fff;
+    }
+
+    .test-row {
+        margin: 15px 0;
+        padding: 10px;
+        border-radius: 6px;
+        transition: background-color 0.2s;
+    }
+
+    .test-row:hover {
+        background-color: #f8f9fa;
+    }
+
+    .result-icon {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+
+    .pass {
+        background-color: #2ecc71;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+    }
+
+    .fail {
+        background-color: #e74c3c;
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+    }
+
+    .test-name {
+        font-weight: 600;
+        margin-right: 15px;
+        color: #2c3e50;
+    }
+
+    .test-details {
+        margin-left: 26px;
+        color: #7f8c8d;
+        font-size: 0.95rem;
+    }
+
+    .rotate-icon {
+        transition: transform 0.3s;
+        color: #3498db;
+    }
+
+    .rotate-icon.open {
+        transform: rotate(180deg);
+    }
+
+    a {
+        color: #3498db;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    a:hover {
+        color: #2980b9;
+        text-decoration: underline;
+    }
+</style>
+<a href="{% url 'pybirdai:home'%}">Back to the PyBIRD AI Home Page</a>
+<h1>Test Results</h1>
+
+{% for template in templates %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse" href="#template{{ forloop.counter }}" role="button" aria-expanded="false" aria-controls="template{{ forloop.counter }}">
+        <h3 class="mb-0">{{ template.name }}</h3>
+        <i class="fas fa-chevron-down rotate-icon"></i>
+    </div>
+    <div class="collapse" id="template{{ forloop.counter }}">
+        <div class="card-body">
+            {% for datapoint in template.datapoints %}
+            <div class="datapoint-header">
+                <h4 class="mb-0">{{ datapoint.name }}</h4>
+            </div>
+                <div id="datapoint{{ forloop.parentloop.counter }}_{{ forloop.counter }}">
+                    <div class="card-body">
+                    {% for scenario in datapoint.scenarios %}
+                    <div class="test-row">
+                        <span class="test-name">{{ scenario.name }}</span>
+                        <div class="result-icon {% if scenario.passed %}pass{% else %}fail{% endif %}"></div>
+                        <!--<div class="test-details">
+                            {% for test in scenario.tests %}
+                                Test {{forloop.counter }}: {% if test.passed %}✓{% else %}✗{% endif %}
+                                {% if not forloop.last %} | {% endif %}
+                            {% endfor %}
+                        </div>-->
+                    </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
