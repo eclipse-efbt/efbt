@@ -17,6 +17,7 @@ from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatFi
 import os
 import csv
 from typing import List, Any
+from django.db import connection
 
 from pybirdai.process_steps.joins_meta_data.ldm_search import ELDMSearch
 
@@ -24,6 +25,41 @@ class TransformationMetaDataDestroyer:
     """
     A class for creating generation rules for reports and tables.
     """
+
+    def delete_output_concepts(self, context: Any, sdd_context: Any, framework: str) -> None:
+        """
+        Generate generation rules for the given context and framework.
+
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+        """
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM pybirdai_cube_to_combination")
+            cursor.execute("DELETE FROM pybirdai_combination_item")
+            cursor.execute("DELETE FROM pybirdai_combination")
+            cursor.execute("DELETE FROM pybirdai_cube where cube_structure_id_id like '%structure'") 
+            cursor.execute("DELETE FROM pybirdai_cube_structure_item where cube_structure_id_id like '%structure'")
+            cursor.execute("DELETE FROM pybirdai_cube_structure where cube_structure_id like '%structure'")
+            print("DELETE FROM pybirdai_cube_structure where cube_structure_id like '%structure'")
+
+        # check if we should really delete all of these or just some.
+        
+        for key,value in sdd_context.bird_cube_dictionary.items():
+            if key.endswith('_cube_structure'):
+                del sdd_context.bird_cube_dictionary[key]
+        for key,value in sdd_context.bird_cube_structure_item_dictionary.items():
+            if key.endswith('_cube_structure'):
+                del sdd_context.bird_cube_structure_item_dictionary[key]
+        for key,value in sdd_context.bird_cube_structure_dictionary.items():
+            if key.endswith('_cube_structure'):
+                del sdd_context.bird_cube_structure_dictionary[key]
+
+        sdd_context.combination_item_dictionary = {}
+        sdd_context.combination_dictionary = {}
+        sdd_context.combination_to_rol_cube_map = {}
+
 
     def delete_joins_meta_data(self, context: Any, sdd_context: Any, framework: str) -> None:
         """
@@ -36,6 +72,41 @@ class TransformationMetaDataDestroyer:
         """
         CUBE_LINK.objects.all().delete()
         CUBE_STRUCTURE_ITEM_LINK.objects.all().delete()
+
+        sdd_context.cube_link_dictionary = {}
+        sdd_context.cube_link_to_foreign_cube_map = {}
+        sdd_context.cube_link_to_join_identifier_map = {}
+        sdd_context.cube_link_to_join_for_report_id_map = {}
+        sdd_context.cube_structure_item_links_dictionary = {}
+        sdd_context.cube_structure_item_link_to_cube_link_map = {}
+        
+
+    def delete_semantic_integration_meta_data(self, context: Any, sdd_context: Any, framework: str) -> None:
+        """
+        Generate generation rules for the given context and framework.
+
+        Args:
+            context (Any): The context object containing necessary data.
+            sdd_context (Any): The SDD context object.
+            framework (str): The framework being used (e.g., "FINREP_REF").
+        """
+       
+
+        MAPPING_TO_CUBE.objects.all().delete()
+        MAPPING_DEFINITION.objects.all().delete()
+        VARIABLE_MAPPING_ITEM.objects.all().delete()
+        VARIABLE_MAPPING.objects.all().delete()
+        MEMBER_MAPPING_ITEM.objects.all().delete()
+        MEMBER_MAPPING.objects.all().delete()
+
+        sdd_context.mapping_definition_dictionary = {}
+        sdd_context.variable_mapping_dictionary = {}
+        sdd_context.variable_mapping_item_dictionary = {}
+        sdd_context.member_mapping_dictionary = {}
+        sdd_context.member_mapping_items_dictionary = {}
+        sdd_context.mapping_to_cube_dictionary = {}
+
+        TransformationMetaDataDestroyer.delete_joins_meta_data(self,context,sdd_context,framework)
 
     def delete_bird_metadata_database(self, context: Any, sdd_context: Any, framework: str) -> None:
         """
