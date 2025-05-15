@@ -127,7 +127,7 @@ class JoinsMetaDataCreator:
                         )
                         join_for_products = table_and_part_tuple_map[mc]
 
-                        for join_for_product in join_for_products:
+                        for join_for_product in join_for_products:                            
                             print(f"join_for_product:{join_for_product}")
                             print(inputLayerTable)
                             input_entity_list = [inputLayerTable]
@@ -140,22 +140,20 @@ class JoinsMetaDataCreator:
                             for the_table in linked_tables_list:
                                 extra_linked_tables = []
                                 try:
-                                    if the_table.endswith("_ELDM"):
-                                        extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table]
-                                    else:
-                                        extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table + "_ELDM"]
+                                    #if the_table.endswith("_ELDM"):
+                                    extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table]
+                                    #else:
+                                    #    extra_linked_tables_string = context.ldm_entity_to_linked_tables_map[the_table + "_ELDM"]
                                     extra_linked_tables = extra_linked_tables_string.split(":")
                                 except KeyError:
                                     pass
 
                                 for extra_table in extra_linked_tables:
-                                    if extra_table not in linked_tables_list:
+                                    if extra_table not in extra_tables:
                                         extra_tables.append(extra_table)
 
                             for extra_table in extra_tables:
-                                if extra_table.endswith("_ELDM"):
-                                    linked_tables_list.append(extra_table[:-5])
-                                else:
+                                if extra_table not in linked_tables_list:
                                     linked_tables_list.append(extra_table)
 
                             for the_table in linked_tables_list:
@@ -203,15 +201,18 @@ class JoinsMetaDataCreator:
                                             sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
                                         except KeyError:
                                             sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
-                                        if context.save_derived_sdd_items:
-                                            cube_links_to_create.append(cube_link)
+                                        
 
                                         
-                                        self.add_field_to_field_lineage_to_rules_for_join_for_product(
+                                        num_of_cube_link_items = self.add_field_to_field_lineage_to_rules_for_join_for_product(
                                             context, sdd_context, generated_output_layer, 
                                             input_entity, mc, report_template, 
                                             framework, cube_link, cube_structure_item_links_to_create
                                         )
+
+                                        if context.save_derived_sdd_items:
+                                            if num_of_cube_link_items > 0:
+                                                cube_links_to_create.append(cube_link)
 
                                 
                 except KeyError:
@@ -251,6 +252,7 @@ class JoinsMetaDataCreator:
             framework (str): The framework being used (e.g., "FINREP_REF").
             cube_link (Any): The cube link object.
         """
+        num_of_cube_link_items = 0
         for output_item in sdd_context.bird_cube_structure_item_dictionary[
                 output_entity.cube_id + '_cube_structure']:
             if self.valid_operation(context, output_item, framework, 
@@ -281,6 +283,8 @@ class JoinsMetaDataCreator:
                             
                         if context.save_derived_sdd_items:
                             cube_structure_item_links_to_create.append(csil)
+                            num_of_cube_link_items = num_of_cube_link_items + 1
+        return num_of_cube_link_items
 
     def valid_operation(self, context: Any, output_item: Any, framework: str, category: str, report_template: str) -> bool:
         """
@@ -342,7 +346,11 @@ class JoinsMetaDataCreator:
 
         if target_domain and  not ((target_domain.domain_id == "String") or (target_domain.domain_id == "Date") or (target_domain.domain_id == "Integer") or (target_domain.domain_id == "Boolean") or (target_domain.domain_id == "Float")     ):            
             if input_entity:
-                field_list = sdd_context.bird_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                field_list = []
+                try:
+                    field_list = sdd_context.bird_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                except KeyError:
+                    pass
                 for csi in field_list:
                     variable = csi.variable_id
                     if variable and variable.domain_id.domain_id == target_domain.domain_id:
@@ -351,7 +359,11 @@ class JoinsMetaDataCreator:
             output_variable_name = output_item.variable_id.variable_id
             if output_variable_name:
                 if input_entity:
-                    field_list = sdd_context.bird_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                    field_list = []
+                    try:
+                        field_list = sdd_context.bird_cube_structure_item_dictionary[input_entity.cube_structure_id]
+                    except KeyError:
+                        pass
                     for csi in field_list:
                         variable = csi.variable_id
                         if variable and variable.name == output_variable_name:

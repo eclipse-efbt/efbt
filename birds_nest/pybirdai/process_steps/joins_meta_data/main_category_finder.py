@@ -120,9 +120,13 @@ class MainCategoryFinder(object):
         )
 
         cell_instrmnt_ids_list = self._get_cell_instrmnt_ids(combination_items)
-        if cell_instrmnt_ids_list:
+        cell_scrty_derivative_list = self._get_cell_scrty_derivative_ids(combination_items)
+        if len(cell_instrmnt_ids_list) > 0:
             self._update_categories(context, cube_name, cell_instrmnt_ids_list,
                                     main_categories_in_scope, "TYP_INSTRMNT")
+        elif len(cell_scrty_derivative_list)>0:
+            self._update_categories(context, cube_name, cell_scrty_derivative_list,
+                                    main_categories_in_scope, "SCRTY_EXCHNG_TRDBL_DRVTV_TYP")
         else:
             self._process_accounting_items(context, combination_items,
                                            cube_name, main_categories_in_scope)
@@ -141,9 +145,32 @@ class MainCategoryFinder(object):
         cell_instrmnt_ids_list = []
         for combination_item in combination_items:
             if combination_item.variable_id and combination_item.variable_id.variable_id == "TYP_INSTRMNT":
-                if combination_item.member_id not in cell_instrmnt_ids_list:
-                    cell_instrmnt_ids_list.append(combination_item.member_id)
+                #ignore the member TYP_INSTRMNT_-1
+                if not (combination_item.member_id.member_id == 'TYP_INSTRMNT_-1'):
+                    if combination_item.member_id not in cell_instrmnt_ids_list:
+                        cell_instrmnt_ids_list.append(combination_item.member_id)
+                else:
+                    print("ignoring TYP_INSTRMNT_-1")
         return cell_instrmnt_ids_list
+    
+    def _get_cell_scrty_derivative_ids(self, combination_items):
+        """
+        Get cell instrument IDs from combination items.
+
+        Args:
+            combination_items (list): List of combination items.
+
+        Returns:
+            list: List of cell instrument IDs.
+        """
+        cell_scrty_derivative_list = []
+        for combination_item in combination_items:
+            if combination_item.variable_id and combination_item.variable_id.variable_id == "SCRTY_EXCHNG_TRDBL_DRVTV_TYP":
+                #ignore the member SCRTY_EXCHNG_TRDBL_DRVTV_TYP_-1
+                if not (combination_item.member_id.member_id == 'SCRTY_EXCHNG_TRDBL_DRVTV_TYP_-1'):
+                    if combination_item.member_id not in cell_scrty_derivative_list:
+                        cell_scrty_derivative_list.append(combination_item.member_id)
+        return cell_scrty_derivative_list
 
     def _update_categories(self, context, cube_name, ids_list, main_categories_in_scope, prefix):
         """
