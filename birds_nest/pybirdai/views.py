@@ -905,6 +905,53 @@ def delete_cube_link(request, cube_link_id):
         messages.error(request, f'Error deleting CUBE_LINK: {str(e)}')
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
+@require_http_methods(["POST"])
+def bulk_delete_cube_structure_item_links(request):
+    sdd_context = SDDContext()
+    selected_ids = request.POST.getlist('selected_items')
+
+    if not selected_ids:
+        messages.warning(request, "No items selected for deletion.")
+        return redirect('pybirdai:duplicate_primary_member_id_list')
+
+    try:
+        # Fetch the links before deleting to get related cube_link_ids
+        links_to_delete = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+            cube_structure_item_link_id__in=selected_ids
+        ).select_related('cube_link_id')
+
+        deleted_count, _ = links_to_delete.delete()
+
+        # Update the in-memory dictionaries for each deleted link
+        for link in links_to_delete:
+            cube_structure_item_link_id = link.cube_structure_item_link_id
+            cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
+
+            # Remove from cube_structure_item_links_dictionary
+            try:
+                del sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id]
+            except KeyError:
+                pass
+
+            # Remove from cube_structure_item_link_to_cube_link_map
+            if cube_link_id and cube_link_id in sdd_context.cube_structure_item_link_to_cube_link_map:
+                 # Create a new list excluding the deleted link
+                sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id] = [
+                    item for item in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                    if item.cube_structure_item_link_id != cube_structure_item_link_id
+                ]
+                # If the list becomes empty, remove the key from the map
+                if not sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]:
+                     del sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+
+
+        messages.success(request, f"{deleted_count} link(s) deleted successfully.")
+    except Exception as e:
+        messages.error(request, f'Error during bulk deletion: {str(e)}')
+
+    # Redirect back to the duplicate list page, resetting filters
+    return redirect('pybirdai:duplicate_primary_member_id_list')
+
 def delete_cube_structure_item_link(request, cube_structure_item_link_id):
     try:
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
@@ -973,7 +1020,7 @@ def delete_mapping_to_cube(request, mapping_to_cube_id):
         except KeyError:
             print(f"KeyError: {item.cube_mapping_id},{item.mapping_id.mapping_id}")
         item.delete()
-        
+
         messages.success(request, 'MAPPING_TO_CUBE deleted successfully.')
     except Exception as e:
         messages.error(request, f'Error deleting MAPPING_TO_CUBE: {str(e)}')
@@ -2732,18 +2779,18 @@ def update_mapping_row(request):
                 member_mapping_row=row_index
             )
             logger.debug(f"Deleting {existing_items.count()} existing items from row {row_index}")
-            try:                
+            try:
                 # delete existing items if they are in this list
                 for mm_item in existing_items:
                     member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                    mm_item.member_mapping_id.member_mapping_id]  
+                    mm_item.member_mapping_id.member_mapping_id]
                     for item in member_mapping_list:
                         if item.member_mapping_row == row_index:
                             member_mapping_list.remove(item)
             except KeyError:
                 pass
             existing_items.delete()
-            
+
             # Add new source items
             logger.debug(f"Adding {len(source_data.get('variabless', []))} source items")
             for variable, member in zip(source_data.get('variabless', []), source_data.get('members', [])):
@@ -2779,7 +2826,7 @@ def update_mapping_row(request):
                     if not( member == "None"):
                         member_obj = MEMBER.objects.get(member_id=member)
                         logger.debug(f"Adding target mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
-                    
+
                         new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
                             member_mapping_id=mapping_def.member_mapping_id,
                             member_mapping_row=row_index,

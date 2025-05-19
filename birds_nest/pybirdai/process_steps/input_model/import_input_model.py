@@ -39,7 +39,7 @@ class ImportInputModel(object):
         ImportInputModel._create_subdomain_to_domain_map(sdd_context)
         ImportInputModel._process_models(sdd_context, context)
 
-    
+
     def _create_maintenance_agency(sdd_context):
         """
         Create a maintenance agency named 'REF' and add it to the SDD context.
@@ -66,16 +66,16 @@ class ImportInputModel(object):
                 maintenance_agency_id="SDD_DOMAIN"
             )
         ]
-        
+
         # Bulk create all agencies
-        created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies)
-        
+        created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies, ignore_conflicts=True)
+
         # Update dictionary with created instances
         sdd_context.agency_dictionary.update({
             agency.code: agency for agency in created_agencies
         })
 
-    
+
     def _create_primitive_domains(sdd_context):
         """
         Create a 'String' domain and add it to the SDD context.
@@ -94,9 +94,9 @@ class ImportInputModel(object):
             )
             domains.append(domain)
             sdd_context.domain_dictionary[domain_type] = domain
-        
+
         # Bulk create all domains
-        DOMAIN.objects.bulk_create(domains)
+        DOMAIN.objects.bulk_create(domains, ignore_conflicts=True)
 
     def _create_subdomain_to_domain_map(sdd_context):
         file_location = sdd_context.file_directory + os.sep + "technical_export" + os.sep + "subdomain.csv"
@@ -152,7 +152,7 @@ class ImportInputModel(object):
             bird_cube_cube_structure.save()
             bird_cube.save()
 
-    
+
     def _process_fields(model, sdd_context, context):
         """
         Process all fields of the given model.
@@ -202,11 +202,11 @@ class ImportInputModel(object):
 
         # Bulk create all objects
         if variables_to_create and sdd_context.save_sdd_to_db:
-            VARIABLE.objects.bulk_create(variables_to_create)
+            VARIABLE.objects.bulk_create(variables_to_create, ignore_conflicts=True)
 
         if cube_structure_items_to_create and context.save_derived_sdd_items:
             for item in cube_structure_items_to_create:
-                item.save() 
+                item.save()
             #CUBE_STRUCTURE_ITEM.objects.bulk_create(cube_structure_items_to_create)
 
     @staticmethod
@@ -223,7 +223,7 @@ class ImportInputModel(object):
             return sdd_context.domain_dictionary['Float']
         return None
 
-    
+
     def _create_domain_and_subdomain_if_needed(field, sdd_context):
         """
         Create a domain for the field if it doesn't exist and add it to the
@@ -298,19 +298,18 @@ class ImportInputModel(object):
 
             # Bulk create all objects
             if domains_to_create and sdd_context.save_sdd_to_db:
-                DOMAIN.objects.bulk_create(domains_to_create)
-            
+                DOMAIN.objects.bulk_create(domains_to_create, ignore_conflicts=True)
+
             if subdomains_to_create and sdd_context.save_sdd_to_db:
-                SUBDOMAIN.objects.bulk_create(subdomains_to_create)
-            
+                SUBDOMAIN.objects.bulk_create(subdomains_to_create, ignore_conflicts=True)
+
             if members_to_create and sdd_context.save_sdd_to_db:
-                MEMBER.objects.bulk_create(members_to_create)
-            
+                MEMBER.objects.bulk_create(members_to_create, ignore_conflicts=True)
+
             if subdomain_enums_to_create and sdd_context.save_sdd_to_db:
-                SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create)
+                SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create, ignore_conflicts=True)
 
             return sdd_context.domain_dictionary.get(domain_id), subdomain
 
         except AttributeError:
             return None, None
-
