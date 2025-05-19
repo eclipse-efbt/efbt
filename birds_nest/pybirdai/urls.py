@@ -127,5 +127,5 @@ urlpatterns = [
     # path('return_cubelink_visualisation/?cube_id', views.return_cubelink_visualisation, name='return_cubelink_visualisation'),
     path('return_cubelink_visualisation/?cube_id=<int:cube_id>&join_identifier=<str:join_identifier>&in_md=<str:in_md>', views.return_cubelink_visualisation, name='return_cubelink_visualisation'),
     path('test_report_view/', views.test_report_view, name='test_report_view'),
-    
+    path('bulk-delete-cube-structure-item-links/', views.bulk_delete_cube_structure_item_links, name='bulk_delete_cube_structure_item_links'),
 ]
