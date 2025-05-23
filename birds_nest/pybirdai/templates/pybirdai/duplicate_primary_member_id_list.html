@@ -40,8 +40,13 @@
         {# NOTE: The action URL needs to be defined in your urls.py and handled by a view #}
         {# that processes bulk deletion. This view should then redirect back to this page #}
         {# without filters to fulfill the "clicking delete resets the filters" requirement. #}
-        <form method="POST" action="{% url 'pybirdai:bulk_delete_cube_structure_item_links' %}" id="bulk-delete-form">
+        <form method="POST" action="{% url 'pybirdai:bulk_delete_cube_structure_item_links' %}?page={{ page_obj.paginator.num_pages }}{% if request.GET.foreign_cube %}&foreign_cube={{ request.GET.foreign_cube }}{% endif %}{% if request.GET.primary_cube %}&primary_cube={{ request.GET.primary_cube }}{% endif %}" id="bulk-delete-form">
             {% csrf_token %}
+            {# Add a bulk delete button #}
+            <div class="bulk-actions">
+                 {# Button is disabled by default and enabled by JavaScript when items are selected #}
+                <button type="submit" class="delete-button" id="bulk-delete-button" disabled>Delete Selected</button>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -69,8 +74,8 @@
                         <td>{{ link.cube_link_id.cube_link_id }}</td>
                         <td>
                             {# Keep individual delete form - relies on its view redirecting to reset filters #}
-                            <form method="POST" action="{% url 'pybirdai:delete_cube_structure_item_link' link.cube_structure_item_link_id %}"
-                                  onsubmit="return confirm('Are you sure you want to delete this link?');"
+                            <form method="POST" action="{% url 'pybirdai:delete_cube_structure_item_link_dupl' link.cube_structure_item_link_id %}"
+                                  onsubmit="return confirm('Are you sure you want to delete these links?');"
                                   style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="delete-button">Delete</button>
@@ -81,11 +86,7 @@
                 </tbody>
             </table>
 
-            {# Add a bulk delete button #}
-            <div class="bulk-actions">
-                 {# Button is disabled by default and enabled by JavaScript when items are selected #}
-                <button type="submit" class="delete-button" id="bulk-delete-button" disabled>Delete Selected</button>
-            </div>
+
         </form>
     </div>
 
@@ -103,9 +104,9 @@
             </span>
 
             {% if page_obj.has_next %}
-                {# Modify pagination links to reset filters by pointing to the base URL + page #}
-                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}?page={{ page_obj.next_page_number }}" class="page-link">next</a>
-                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}?page={{ page_obj.paginator.num_pages }}" class="page-link">last &raquo;</a>
+                {# Modify pagination links to keep filters #}
+                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}?page={{ page_obj.next_page_number }}{% if request.GET.foreign_cube %}&foreign_cube={{ request.GET.foreign_cube }}{% endif %}{% if request.GET.primary_cube %}&primary_cube={{ request.GET.primary_cube }}{% endif %}" class="page-link">next</a>
+                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}?page={{ page_obj.paginator.num_pages }}{% if request.GET.foreign_cube %}&foreign_cube={{ request.GET.foreign_cube }}{% endif %}{% if request.GET.primary_cube %}&primary_cube={{ request.GET.primary_cube }}{% endif %}" class="page-link">last &raquo;</a>
             {% endif %}
         </span>
     </div>

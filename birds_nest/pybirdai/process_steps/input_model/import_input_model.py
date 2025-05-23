@@ -18,6 +18,7 @@ import csv
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 from django.db import transaction
+from uuid import uuid4
 
 
 class ImportInputModel(object):
@@ -34,6 +35,7 @@ class ImportInputModel(object):
                          storing created elements.
             context: The context object containing configuration settings.
         """
+        sdd_context.csi_counter = dict()
         ImportInputModel._create_maintenance_agency(sdd_context)
         ImportInputModel._create_primitive_domains(sdd_context)
         ImportInputModel._create_subdomain_to_domain_map(sdd_context)
@@ -188,12 +190,19 @@ class ImportInputModel(object):
                 sdd_context.variable_dictionary[variable_id] = variable
 
             # Create cube structure item
+
             if context.save_derived_sdd_items:
+                csid = sdd_context.bird_cube_structure_dictionary[field.model.__name__]
+                variable_id_ = sdd_context.variable_dictionary[variable_id]
+                if (csid,variable_id) not in sdd_context.csi_counter:
+                    sdd_context.csi_counter[(csid,variable_id)] = 0
                 csi = CUBE_STRUCTURE_ITEM(
-                    cube_structure_id=sdd_context.bird_cube_structure_dictionary[field.model.__name__],
-                    variable_id=sdd_context.variable_dictionary[variable_id],
-                    subdomain_id=subdomain
+                    cube_structure_id=csid,
+                    variable_id=variable_id_,
+                    subdomain_id=subdomain,
+                    cube_variable_code = "__".join([csid.cube_structure_id,variable_id_.variable_id,str(sdd_context.csi_counter[(csid,variable_id)])])
                 )
+                sdd_context.csi_counter[(csid,variable_id)] += 1
                 cube_structure_items_to_create.append(csi)
                 #key = f"{csi.cube_structure_id.cube_structure_id}:{csi.variable_id.variable_id}"
                 if csi.cube_structure_id.cube_structure_id not in sdd_context.bird_cube_structure_item_dictionary.keys():

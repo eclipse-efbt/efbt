@@ -1,0 +1,3 @@
+MAINTENANCE_AGENCY_ID,VARIABLE_ID,CODE,NAME,DOMAIN_ID,DESCRIPTION,PRIMARY_CONCEPT,IS_DECOMPOSED
+ECB,TYP_INSTRMNT,TYP_INSTRMNT,TYP_INSTRMNT,TYP_INSTRMNT,Classification of the instrument according to the type of contractual terms agreed between the parties.,,
+ECB,TYP_ACCNTNG_ITM,TYP_ACCNTNG_ITM,TYP_ACCNTNG_ITM,TYP_ACCNTNG_ITM,Classification of the typ of accounting item,,
