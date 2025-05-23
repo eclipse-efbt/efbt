@@ -27,7 +27,7 @@ class MainCategoryFinder(object):
         '''
         Create maps of information related to the EBA main category
         '''
-        
+
         MainCategoryFinder.create_main_category_to_name_map(self, context,
                                                             sdd_context, framework)
         MainCategoryFinder.create_report_to_main_category_map(
@@ -93,7 +93,7 @@ class MainCategoryFinder(object):
         '''
         Look through the generated report and create a map of reports to main categories
         '''
-        
+
         main_categories_in_scope = (
             context.main_categories_in_scope_finrep if full_framework_name == "FINREP_REF"
             else context.main_categories_in_scope_ae
@@ -130,7 +130,7 @@ class MainCategoryFinder(object):
         else:
             self._process_accounting_items(context, combination_items,
                                            cube_name, main_categories_in_scope)
-            
+
 
     def _get_cell_instrmnt_ids(self, combination_items):
         """
@@ -152,7 +152,7 @@ class MainCategoryFinder(object):
                 else:
                     print("ignoring TYP_INSTRMNT_-1")
         return cell_instrmnt_ids_list
-    
+
     def _get_cell_scrty_derivative_ids(self, combination_items):
         """
         Get cell instrument IDs from combination items.
@@ -209,7 +209,7 @@ class MainCategoryFinder(object):
             if combination_item.variable_id and combination_item.variable_id.variable_id == "TYP_ACCNTNG_ITM":
                 if combination_item.member_id not in cell_accntng_itm_ids_list:
                     cell_accntng_itm_ids_list.append(combination_item.member_id)
-                
+
         self._update_categories(context, cube_name, cell_accntng_itm_ids_list, main_categories_in_scope, "TYP_ACCNTNG_ITM")
 
     #def create_draft_join_for_product_file(self, context, sdd_context, framework):
@@ -248,10 +248,10 @@ class MainCategoryFinder(object):
     #                    f.write(definition + ",TYP_INSTRMNT," + \
     #                            target_instrument_type.replace(',',' ').\
     #                                replace('TYP_INSTRMNT_','') + "," + mc +'\n')
-    #            else:  
+    #            else:
     #                target_accounting_type = MainCategoryFinder.\
     #                            get_target_accounting_type_from_mapping(
-    #                            self,sdd_context,mc_member) 
+    #                            self,sdd_context,mc_member)
     #                if not(target_accounting_type is  None):
     #                    f.write(definition + ",TYP_ACCNTNG_ITM," + \
     #                            target_accounting_type.replace(',',' ').\
@@ -302,7 +302,8 @@ class MainCategoryFinder(object):
                     main_category = context.join_for_products_to_main_category_map_finrep[join_for_product_name]
                     tables_for_main_category_map.setdefault(main_category, []).append(il_table)
                 except KeyError:
-                    print(f"Could not find main category for join for product {join_for_product_name}")
+                    # print(f"Could not find main category for join for product {join_for_product_name}")
+                    pass
 
     def create_join_for_products_for_main_category_map(self, context, sdd_context, framework):
         '''

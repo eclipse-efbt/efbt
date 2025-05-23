@@ -800,7 +800,7 @@ class ImportWebsiteToSDDModel(object):
             print(f"Missing member {missing_member}")
         for missing_variable in missing_variables:
             print(f"Missing variable {missing_variable}")
-        #ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context,missing_variables)
+        ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context,missing_variables)
         ImportWebsiteToSDDModel.save_missing_mapping_members_to_csv(context,missing_members)
 
     def save_missing_mapping_variables_to_csv(context,missing_variables):
@@ -819,7 +819,7 @@ class ImportWebsiteToSDDModel(object):
             for mem in missing_members:
                 writer.writerow([mem[0],mem[1],mem[2],mem[3]])
 
-        #ImportWebsiteToSDDModel.create_mappings_warnings_summary(context,missing_members)
+        ImportWebsiteToSDDModel.create_mappings_warnings_summary(context,missing_members)
 
     def create_mappings_warnings_summary(context,missing_members):
         filename = context.output_directory + os.sep + "generated_mapping_warnings" + os.sep + "mappings_warnings_summary.csv"
