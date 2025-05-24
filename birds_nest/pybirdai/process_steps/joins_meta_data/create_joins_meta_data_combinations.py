@@ -16,9 +16,12 @@ from pybirdai.bird_meta_data_model import *
 from django.apps import apps
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 import os
+import json
 import csv
 from typing import List, Any, Tuple
 from pybirdai.process_steps.joins_meta_data.member_hierarchy_service import MemberHierarchyService
+import itertools
+import traceback
 
 from pybirdai.process_steps.joins_meta_data.ldm_search import ELDMSearch
 
@@ -46,7 +49,7 @@ class JoinsMetaDataCreator:
         """
         self.add_reports(context, sdd_context, framework)
 
-    def do_stuff_and_prepare_context(self, context: Any, sdd_context: Any) -> None:
+    def do_stuff_and_prepare_context(self, context: Any, sdd_context: Any):
 
         context.combination_item_dictionary = {}
         for combination_item in COMBINATION_ITEM.objects.all():
@@ -60,7 +63,7 @@ class JoinsMetaDataCreator:
                 ] = [combination_item]
 
         self.member_hierarchy_service = MemberHierarchyService()
-        self.member_hierarchy_service.prepare_node_dictionaries_and_lists(sdd_context)
+        sdd_context = self.member_hierarchy_service.prepare_node_dictionaries_and_lists(sdd_context)
 
         all_main_categories = set(sum(context.report_to_main_category_map.values(),[]))
         context.category_to_combinations = {
@@ -84,7 +87,7 @@ class JoinsMetaDataCreator:
             for domain in DOMAIN.objects.all()
         }
 
-        return context
+        return context,sdd_context
 
 
     def add_reports(self, context: Any, sdd_context: Any, framework: str) -> None:
@@ -100,7 +103,7 @@ class JoinsMetaDataCreator:
                                      f"in_scope_reports_{framework}.csv")
         self.create_ldm_entity_to_linked_entities_map(context, sdd_context)
 
-        context = self.do_stuff_and_prepare_context(context, sdd_context)
+        context,sdd_context = self.do_stuff_and_prepare_context(context, sdd_context)
 
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -167,6 +170,7 @@ class JoinsMetaDataCreator:
         )
         cube_links_to_create = []  # New list to collect CUBE_LINK objects
         cube_structure_item_links_to_create = []  # New list for CUBE_STRUCTURE_ITEM_LINK objects
+        num_of_cube_link_items = 0
 
         try:
             report_template = generated_output_layer.name
@@ -239,23 +243,20 @@ class JoinsMetaDataCreator:
                                     if cube_link.cube_link_id not in sdd_context.cube_link_dictionary:
                                         sdd_context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
                                         foreign_cube = cube_link.foreign_cube_id
-                                        try:
-                                            sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
-                                        except KeyError:
-                                            sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = [cube_link]
                                         join_identifier = cube_link.join_identifier
-                                        try:
-                                            sdd_context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
-                                        except KeyError:
-                                            sdd_context.cube_link_to_join_identifier_map[join_identifier] = [cube_link]
-
                                         join_for_report_id = foreign_cube.cube_id + ":" + cube_link.join_identifier
-                                        try:
-                                            sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
-                                        except KeyError:
-                                            sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
 
+                                        if foreign_cube.cube_id not in sdd_context.cube_link_to_foreign_cube_map:
+                                            sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = []
+                                        sdd_context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
 
+                                        if join_identifier not in sdd_context.cube_link_to_join_identifier_map:
+                                            sdd_context.cube_link_to_join_identifier_map[join_identifier] = []
+                                        sdd_context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
+
+                                        if join_for_report_id not in sdd_context.cube_link_to_join_for_report_id_map:
+                                            sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = []
+                                        sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
 
                                         num_of_cube_link_items = self.add_field_to_field_lineage_to_rules_for_join_for_product(
                                             context, sdd_context, generated_output_layer,
@@ -263,17 +264,15 @@ class JoinsMetaDataCreator:
                                             framework, cube_link, cube_structure_item_links_to_create
                                         )
 
-                                        if context.save_derived_sdd_items:
-                                            if num_of_cube_link_items > 0:
-                                                cube_links_to_create.append(cube_link)
+                                        if context.save_derived_sdd_items and num_of_cube_link_items > 0:
+                                            cube_links_to_create.append(cube_link)
 
 
                 except KeyError:
-                    pass
-                    # print(f"no tables for main category:{mc}")
+                    # traceback.print_exc()
+                    print(f"no tables for main category:{mc}")
         except KeyError:
-            pass
-            # print(f"no main category for report :{report_template}")
+            print(f"no main category for report :{report_template}")
 
         # Bulk create all collected CUBE_LINK objects
         if context.save_derived_sdd_items and cube_links_to_create:
@@ -282,7 +281,8 @@ class JoinsMetaDataCreator:
         # Bulk create all collected CUBE_STRUCTURE_ITEM_LINK objects
         for item in cube_structure_item_links_to_create:
             # print(item.foreign_cube_variable_code.variable_id)
-            #import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
+            # print(item.__dict__)
             item.save()
         #import pdb;pdb.set_trace()
         #if context.save_derived_sdd_items and cube_structure_item_links_to_create:
@@ -314,32 +314,32 @@ class JoinsMetaDataCreator:
             if operation_exists:
                 input_columns = self.find_variables_with_same_members(context,
                     sdd_context, output_item, input_entity)
-
                 if input_columns:
                     for input_column in input_columns:
-                        csil = CUBE_STRUCTURE_ITEM_LINK()
-                        csil.foreign_cube_variable_code = output_item
-                        csil.cube_structure_item_link_id = (
-                            f"{cube_link.cube_link_id}:"
-                            f"{csil.foreign_cube_variable_code.variable_id.variable_id}"
-                        )
-                        csil.primary_cube_variable_code = input_column
-                        if not(csil.primary_cube_variable_code.variable_id is None):
-                            csil.cube_structure_item_link_id += (
-                            f":{csil.primary_cube_variable_code.variable_id.variable_id}"
-                        )
-                        csil.cube_link_id = cube_link
-                        sdd_context.cube_structure_item_links_dictionary[csil.cube_structure_item_link_id] = csil
-
-                        try:
-                            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(csil)
-                        except KeyError:
-                            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id] = [csil]
-
+                        csil,sdd_context = self.provide_csilink(output_item,input_column,cube_link,sdd_context)
                         if context.save_derived_sdd_items:
                             cube_structure_item_links_to_create.append(csil)
                             num_of_cube_link_items = num_of_cube_link_items + 1
         return num_of_cube_link_items
+
+    def provide_csilink(self,output_item,input_column,cube_link,sdd_context):
+        csil = CUBE_STRUCTURE_ITEM_LINK()
+        csil.foreign_cube_variable_code = output_item
+        csil.primary_cube_variable_code = input_column
+        csil.cube_link_id = cube_link
+
+        csil.cube_structure_item_link_id = ":".join([
+            f"{cube_link.cube_link_id}",
+            f"{csil.foreign_cube_variable_code.variable_id.variable_id}",
+            f"{csil.primary_cube_variable_code.variable_id.variable_id}"
+        ])
+
+        sdd_context.cube_structure_item_links_dictionary[csil.cube_structure_item_link_id] = csil
+
+        if cube_link.cube_link_id not in sdd_context.cube_structure_item_link_to_cube_link_map:
+            sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id] = []
+        sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(csil)
+        return csil,sdd_context
 
     def valid_operation(self, context: Any, output_item: Any, framework: str, category: str, report_template: str) -> bool:
         """
@@ -407,18 +407,18 @@ class JoinsMetaDataCreator:
         related_variables = []
         target_domain = output_item.variable_id.domain_id if output_item.variable_id else None
         output_members = context.variable_members_in_combinations.get(output_item.variable_id,set())
-        all_output_members = {}
-        for output_member in output_members:
-            hierarchy = sdd_context.domain_to_hierarchy_dictionary[output_member.domain_id]
-            all_output_members.union(
-                set(self.member_hierarchy_service.get_member_list_considering_hierarchies(sdd_context,output_member,hierarchy))
-            )
+        hierarchies = sdd_context.domain_to_hierarchy_dictionary.get(output_item.variable_id.domain_id,[])
+        all_output_members = output_members.copy()
+        if hierarchies:
+            for output_member, hierarchy in itertools.product(output_members, hierarchies):
+                all_output_members.update(
+                    self.member_hierarchy_service.get_member_list_considering_hierarchies(sdd_context,output_member,hierarchy)
+                )
         IGNORED_DOMAINS = ["String", "Date", "Integer", "Boolean", "Float"]
 
         field_list = sdd_context.bird_cube_structure_item_dictionary.get(input_entity.cube_structure_id, [])
 
         if target_domain and target_domain.domain_id and target_domain.domain_id not in IGNORED_DOMAINS:
-            related_variables = []
             for csi in field_list:
                 bool_1 = csi.variable_id and csi.variable_id.domain_id
                 bool_2 = context.domain_to_member.get(csi.variable_id.domain_id,set()).intersection(
@@ -435,6 +435,7 @@ class JoinsMetaDataCreator:
                 csi for csi in field_list
                 if csi.variable_id and csi.variable_id.name == output_variable_name
             ]
+        print("related_variables:", related_variables)
         return related_variables
 
 
