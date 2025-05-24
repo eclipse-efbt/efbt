@@ -18,6 +18,7 @@ from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatFi
 import os
 import csv
 from typing import List, Any, Tuple
+from pybirdai.process_steps.joins_meta_data.member_hierarchy_service import MemberHierarchyService
 
 from pybirdai.process_steps.joins_meta_data.ldm_search import ELDMSearch
 
@@ -45,7 +46,7 @@ class JoinsMetaDataCreator:
         """
         self.add_reports(context, sdd_context, framework)
 
-    def do_stuff_and_prepare_context(self, context: Any) -> None:
+    def do_stuff_and_prepare_context(self, context: Any, sdd_context: Any) -> None:
 
         context.combination_item_dictionary = {}
         for combination_item in COMBINATION_ITEM.objects.all():
@@ -57,6 +58,9 @@ class JoinsMetaDataCreator:
                 context.combination_item_dictionary[
                     combination_item.combination_id
                 ] = [combination_item]
+
+        self.member_hierarchy_service = MemberHierarchyService()
+        self.member_hierarchy_service.prepare_node_dictionaries_and_lists(sdd_context)
 
         all_main_categories = set(sum(context.report_to_main_category_map.values(),[]))
         context.category_to_combinations = {
@@ -96,7 +100,7 @@ class JoinsMetaDataCreator:
                                      f"in_scope_reports_{framework}.csv")
         self.create_ldm_entity_to_linked_entities_map(context, sdd_context)
 
-        context = self.do_stuff_and_prepare_context(context)
+        context = self.do_stuff_and_prepare_context(context, sdd_context)
 
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -403,6 +407,12 @@ class JoinsMetaDataCreator:
         related_variables = []
         target_domain = output_item.variable_id.domain_id if output_item.variable_id else None
         output_members = context.variable_members_in_combinations.get(output_item.variable_id,set())
+        all_output_members = {}
+        for output_member in output_members:
+            hierarchy = sdd_context.domain_to_hierarchy_dictionary[output_member.domain_id]
+            all_output_members.union(
+                set(self.member_hierarchy_service.get_member_list_considering_hierarchies(sdd_context,output_member,hierarchy))
+            )
         IGNORED_DOMAINS = ["String", "Date", "Integer", "Boolean", "Float"]
 
         field_list = sdd_context.bird_cube_structure_item_dictionary.get(input_entity.cube_structure_id, [])
@@ -411,7 +421,10 @@ class JoinsMetaDataCreator:
             related_variables = []
             for csi in field_list:
                 bool_1 = csi.variable_id and csi.variable_id.domain_id
-                bool_2 = context.domain_to_member.get(csi.variable_id.domain_id,set()).intersection(output_members)
+                bool_2 = context.domain_to_member.get(csi.variable_id.domain_id,set()).intersection(
+                    # output_members
+                    all_output_members
+                )
                 if bool_1 and bool_2:
                     related_variables.append(csi)
             return related_variables
