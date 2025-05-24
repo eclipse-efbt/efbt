@@ -435,7 +435,8 @@ class JoinsMetaDataCreator:
                 csi for csi in field_list
                 if csi.variable_id and csi.variable_id.name == output_variable_name
             ]
-        print("related_variables:", related_variables)
+        if not related_variables:
+            logging.warning(f"No related variables found for {output_item}")
         return related_variables
 
 
@@ -463,6 +464,7 @@ class JoinsMetaDataCreator:
             for csi in field_list:
                 if csi.variable_id and csi.variable_id.domain_id and target_domain.domain_id and csi.variable_id.domain_id.domain_id == target_domain.domain_id:
                     related_variables.append(csi)
+
             return related_variables
 
         output_variable_name = output_item.variable_id.variable_id if output_item.variable_id else None
@@ -471,6 +473,7 @@ class JoinsMetaDataCreator:
                 csi for csi in field_list
                 if csi.variable_id and csi.variable_id.name == output_variable_name
             ]
+
         return related_variables
 
 
