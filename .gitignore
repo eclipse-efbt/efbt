@@ -6,3 +6,4 @@ birds_nest/pybirdai/process_steps/filter_code
 birds_nest/pybirdai/templates/pybirdai/F_*
 birds_nest/uv.lock
 create_joins_metadata.log
+birds_nest/pybirdai/bird_data_model.py
