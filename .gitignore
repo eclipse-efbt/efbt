@@ -12,3 +12,4 @@ birds_nest/pybirdai/admin.py
 .DS_Store
 **/db.sqlite3
 db.sqlite3
+birds_nest/pybirdai/migrations/*
