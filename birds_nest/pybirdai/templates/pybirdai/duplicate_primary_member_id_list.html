@@ -95,8 +95,8 @@
         <span class="step-links">
             {% if page_obj.has_previous %}
                 {# Modify pagination links to reset filters by pointing to the base URL + page #}
-                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}?page=1" class="page-link">&laquo; first</a>
-                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}?page={{ page_obj.previous_page_number }}" class="page-link">previous</a>
+                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}?page=1{% if request.GET.foreign_cube %}&foreign_cube={{ request.GET.foreign_cube }}{% endif %}{% if request.GET.primary_cube %}&primary_cube={{ request.GET.primary_cube }}{% endif %}" class="page-link">&laquo; first</a>
+                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}?page={{ page_obj.previous_page_number }}{% if request.GET.foreign_cube %}&foreign_cube={{ request.GET.foreign_cube }}{% endif %}{% if request.GET.primary_cube %}&primary_cube={{ request.GET.primary_cube }}{% endif %}" class="page-link">previous</a>
             {% endif %}
 
             <span class="current-page">
