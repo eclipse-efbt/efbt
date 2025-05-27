@@ -1,0 +1,1 @@
+Read README.md, CLAUDE.md, ai_docs/*, and run git ls-files to understand this codebase.
