@@ -22,6 +22,7 @@ class ColumnIndexes(object):
     framework_code = 3
     framework_description = 4
 
+    cube_maintenance_agency_id = 0
     cube_class_name_index = 2
     cube_class_code_index = 3
     cube_object_id_index = 1

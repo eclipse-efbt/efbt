@@ -44,10 +44,10 @@ class CreatePythonTransformations:
         cube_link_to_foreign_cube_map__ = {
             rolc_id:cube_links
             for rolc_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items()
-            if rolc_id == "ANCRDT_INSTRMNT_C_1"
+            if "ANCRDT" in rolc_id
         }
         for rolc_id, cube_links in cube_link_to_foreign_cube_map__.items():
-            logger.info(f"rolc_id: {rolc_id}")
+            # logger.info(f"rolc_id: {rolc_id}")
             file.write("from ." + rolc_id  + "_logic import *\n")
             file.write("\nclass " + rolc_id + ":\n")
             file.write("\tunionOfLayers = None #  " + rolc_id + "_UnionItem  unionOfLayers\n")
@@ -99,7 +99,7 @@ class CreatePythonTransformations:
         cube_link_to_foreign_cube_map__ = {
             rolc_id:cube_links
             for rolc_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items()
-            if rolc_id == "ANCRDT_INSTRMNT_C_1"
+            if "ANCRDT" in rolc_id
         }
 
         for rolc_id, cube_links in cube_link_to_foreign_cube_map__.items():
@@ -115,7 +115,7 @@ class CreatePythonTransformations:
             cube_structure_items = []
             cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[rolc_id]
             for cube_structure_item in cube_structure_items:
-                logger.info(f"cube_structure_item: {cube_structure_item}")
+                # logger.info(f"cube_structure_item: {cube_structure_item}")
                 variable = cube_structure_item.variable_id
                 if cube_structure_item.variable_id.variable_id == "NEVS":
                     continue
@@ -148,7 +148,7 @@ class CreatePythonTransformations:
                 file.write("\tpass\n")
 
             for cube_structure_item in cube_structure_items:
-                logger.info(f"cube_structure_item: {cube_structure_item}")
+                # logger.info(f"cube_structure_item: {cube_structure_item}")
                 variable = cube_structure_item.variable_id
                 if cube_structure_item.variable_id.variable_id == "NEVS":
                     continue
@@ -287,7 +287,7 @@ class CreatePythonTransformations:
                     file.write(table_class)
                     cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[rolc_id]
                     for cube_structure_item in cube_structure_items:
-                        logger.info(f"cube_structure_item: {cube_structure_item}")
+                        # logger.info(f"cube_structure_item: {cube_structure_item}")
                         variable = cube_structure_item.variable_id
                         if cube_structure_item.variable_id.variable_id == "NEVS":
                             continue
@@ -351,7 +351,7 @@ class CreatePythonTransformations:
 
                     cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[rolc_id]
                     for cube_structure_item in cube_structure_items:
-                        logger.info(f"cube_structure_item: {cube_structure_item}")
+                        # logger.info(f"cube_structure_item: {cube_structure_item}")
                         variable = cube_structure_item.variable_id
                         if cube_structure_item.variable_id.variable_id == "NEVS":
                             continue
