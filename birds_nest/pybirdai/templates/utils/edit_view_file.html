@@ -1,0 +1,233 @@
+<!--
+Copyright 2025 Arfa Digital Consulting
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit File{% endblock %}
+{% block content %}
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldgutter.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/dialog/dialog.min.css">
+<style>
+    .CodeMirror {
+        height: 500px;
+        border: 1px solid #ddd;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .editor-toolbar {
+        padding: 10px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-bottom: none;
+    }
+    .editor-toolbar .btn {
+        margin-right: 5px;
+    }
+    .file-info {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2>Transformation Editor</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Select File</h5>
+        </div>
+        <div class="card-body">
+            <form id="fileSelectForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="fileSelect">Choose a file:</label>
+                    <input type="file" class="form-control" id="fileSelect" name="file_path">
+                </div>
+                <!-- <button type="submit" class="btn btn-primary mt-2">Load File</button> -->
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Edit: {{ file_name }}</h5>
+            <span id="fileNameSaver" hidden>{{ file_name }}</span>
+            <!-- <button id="refreshBtn" class="btn btn-secondary">Refresh</button> -->
+        </div>
+        <div class="card-body">
+            <form id="fileEditForm" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="file_path" value="{{ current_file }}">
+                <div class="editor-toolbar">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="btnIndent">Indent</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="btnFind">Find</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="btnReplace">Replace</button>
+                    <select id="themeSelect" class="form-control form-control-sm d-inline-block" style="width: auto;">
+                        <option value="default" selected>Default Theme</option>
+                        <option value="dracula">Dracula</option>
+                        <!-- <option value="monokai">Monokai</option>
+                        <option value="solarized">Solarized</option> -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="fileContent" name="content">{{ file_content }}</textarea>
+                </div>
+                <div class="file-info mt-2 mb-2">
+                    <span id="lineCount">Lines: 0</span> |
+                    <span id="charCount">Characters: 0</span>
+                </div>
+                <button type="button" onclick="document.getElementById('downloadBtn').click()" class="btn btn-success mt-3">Export Changes</button>
+                <a href="" id="downloadBtn" hidden>Click here to save your file</a>
+            </form>
+        </div>
+    </div>
+
+    {% if message %}
+    <div class="alert alert-{{ message_type }}">
+        {{ message }}
+    </div>
+    {% endif %}
+</div>
+
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/search.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/searchcursor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/dialog/dialog.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldcode.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldgutter.js"></script>
+
+<!-- Language modes -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/jinja2/jinja2.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize CodeMirror
+    var fileExtension = "{{ current_file|default:'py' }}".split('.').pop().toLowerCase();
+    var mode = "text/plain";
+
+    // Set mode based on file extension
+    switch(fileExtension) {
+        case 'html':
+            mode = "text/html";
+            break;
+        case 'js':
+            mode = "text/javascript";
+            break;
+        case 'css':
+            mode = "text/css";
+            break;
+        case 'py':
+            mode = "text/x-python";
+            break;
+        case 'jinja2':
+        case 'j2':
+        case 'html.j2':
+            mode = {name: "jinja2", base: "text/html"};
+            break;
+    }
+
+    // Check if file content element exists (might not on initial load)
+    var fileContentElement = document.getElementById('fileContent');
+    if (fileContentElement) {
+        // Initialize CodeMirror
+        var editor = CodeMirror.fromTextArea(fileContentElement, {
+            mode: mode,
+            theme: 'default',
+            lineNumbers: true,
+            lineWrapping: true,
+            indentUnit: 4,
+            smartIndent: true,
+            matchBrackets: true,
+            foldGutter: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+            extraKeys: {
+                "Ctrl-Space": "autocomplete",
+                "Tab": function(cm) {
+                    var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                    cm.replaceSelection(spaces);
+                }
+            }
+
+        });
+
+        // Update line and character count
+        function updateStats() {
+            var content = editor.getValue();
+            document.getElementById('lineCount').textContent = 'Lines: ' + editor.lineCount();
+            document.getElementById('charCount').textContent = 'Characters: ' + content.length;
+        }
+
+        // Update download link
+        function updateLink(file_name) {
+          var a = document.getElementById("downloadBtn");
+          var file = new Blob([document.getElementById('fileContent').value], {type: "text/plain"});
+          a.href = URL.createObjectURL(file);
+          a.download = file_name;
+        }
+
+        editor.on('change', updateStats);
+        updateStats();
+        updateLink(document.getElementById('fileNameSaver').textContent);
+
+
+        // Theme selector
+        document.getElementById('themeSelect').addEventListener('change', function() {
+            editor.setOption('theme', this.value);
+        });
+
+        // Indent button
+        document.getElementById('btnIndent').addEventListener('click', function() {
+            editor.execCommand('indentAuto');
+        });
+
+        // Find button
+        document.getElementById('btnFind').addEventListener('click', function() {
+            editor.execCommand('find');
+        });
+
+        // Replace button
+        document.getElementById('btnReplace').addEventListener('click', function() {
+            editor.execCommand('replace');
+        });
+
+        // Submit form with CodeMirror content
+        document.getElementById('fileEditForm').addEventListener('submit', function() {
+            editor.save();
+        });
+    }
+
+    // Handle file selection change
+    document.getElementById('fileSelect').addEventListener('change', function() {
+        document.getElementById('fileSelectForm').submit();
+    });
+
+
+});
+</script>
+{% endblock %}
