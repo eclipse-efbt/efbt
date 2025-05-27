@@ -60,6 +60,7 @@ class ImportInputModel(object):
             print("No extra variables loaded (file not found or empty).")
 
 
+
     def _create_maintenance_agency(sdd_context):
         """
         Create a maintenance agency named 'REF' and add it to the SDD context.
@@ -306,6 +307,7 @@ class ImportInputModel(object):
                 logging.info("Party_role cube structure items to be created :: %s", len(cube_structure_items_to_create))
             for item in cube_structure_items_to_create:
                 item.save()
+            #CUBE_STRUCTURE_ITEM.objects.bulk_create(cube_structure_items_to_create)
 
     @staticmethod
     def _get_default_domain(field, sdd_context):
@@ -404,6 +406,14 @@ class ImportInputModel(object):
             if members_to_create and sdd_context.save_sdd_to_db:
                 MEMBER.objects.bulk_create(members_to_create, ignore_conflicts=True)
                 
+                DOMAIN.objects.bulk_create(domains_to_create)
+
+            if subdomains_to_create and sdd_context.save_sdd_to_db:
+                SUBDOMAIN.objects.bulk_create(subdomains_to_create)
+
+            if members_to_create and sdd_context.save_sdd_to_db:
+                MEMBER.objects.bulk_create(members_to_create)
+
             if subdomain_enums_to_create and sdd_context.save_sdd_to_db:
                 SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create, ignore_conflicts=True)
 
