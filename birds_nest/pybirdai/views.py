@@ -5111,7 +5111,7 @@ def import_ancrdt_model(request):
     """View function to import ANCRDT model"""
     if request.GET.get('execute') == 'true':
         try:
-            RunANCRDTImport.run_ancrdt_importer()
+            RunANCRDTImport.run_import()
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
@@ -5159,15 +5159,15 @@ def anacredit_transformation_results_endpoint(request):
         output_dir = client.request_and_save(
             tree_root_ids="ANCRDT",
             tree_root_type="FRAMEWORK",
-            output_dir="resources/technical_export/",
+            output_dir="resources/technical_export",
             format_type="csv",
             include_mapping_content=False,
             include_rendering_content=False,
             include_transformation_content=False,
             only_currently_valid_metadata=False
         )
-        creator = JoinsMetaDataCreatorANCRDT()
-        creator.generate_joins_meta_data()
+        RunANCRDTImport.run_import()
+        JoinsMetaDataCreatorANCRDT().generate_joins_meta_data()
         RunCreateExecutableJoins.create_python_joins_from_db()
 
     return create_response_with_loading(
@@ -5187,7 +5187,7 @@ def fetch_ancrdt_data(request):
         output_dir = client.request_and_save(
             tree_root_ids="ANCRDT",
             tree_root_type="FRAMEWORK",
-            output_dir="resources/technical_export/",
+            output_dir="resources/technical_export",
             format_type="csv",
             include_mapping_content=False,
             include_rendering_content=False,
