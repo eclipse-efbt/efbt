@@ -13,6 +13,7 @@ from django.urls import path
 
 from . import views
 from . import report_views
+from . import aorta_views
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -128,4 +129,10 @@ urlpatterns = [
     path('return_cubelink_visualisation/?cube_id=<int:cube_id>&join_identifier=<str:join_identifier>&in_md=<str:in_md>', views.return_cubelink_visualisation, name='return_cubelink_visualisation'),
     path('test_report_view/', views.test_report_view, name='test_report_view'),
     
+    # AORTA Lineage Tracking API endpoints
+    path('api/aorta/trails/', aorta_views.AortaTrailListView.as_view(), name='aorta-trail-list'),
+    path('api/aorta/trails/<int:trail_id>/', aorta_views.AortaTrailDetailView.as_view(), name='aorta-trail-detail'),
+    path('api/aorta/values/<int:value_id>/lineage/', aorta_views.AortaValueLineageView.as_view(), name='aorta-value-lineage'),
+    path('api/aorta/tables/<int:table_id>/dependencies/', aorta_views.AortaTableDependenciesView.as_view(), name='aorta-table-dependencies'),
+    path('api/aorta/trails/<int:trail_id>/graph/', aorta_views.AortaLineageGraphView.as_view(), name='aorta-lineage-graph'),
 ]
