@@ -31,3 +31,4 @@
 __pycache__/
 *.html
 uv.lock
+**/uv.lock
