@@ -204,7 +204,7 @@ def main():
     output_dir = client.request_and_save(
         tree_root_ids="ANCRDT",
         tree_root_type="FRAMEWORK",
-        output_dir="results/csv",
+        output_dir="resources/technical_export/ancrdt/technical_export",
         format_type="csv",
         include_mapping_content=False,
         include_rendering_content=False,
