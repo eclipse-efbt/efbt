@@ -63,8 +63,8 @@ class RunANCRDTImport(AppConfig):
     def run_import():
         DjangoSetup.configure_django()
         from pybirdai.context.context import Context
-        from pybirdai.context.sdd_context_django import SDDContext
-        from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
+        from pybirdai.context.sdd_context_django_ancrdt import SDDContext
+        from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django_ancrdt import (
             ImportWebsiteToSDDModel
         )
         # Move the content of the ready() method here
@@ -80,7 +80,7 @@ class RunANCRDTImport(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        import_anacrdt_path = "technical_export"+os.sep+"ancrdt"
+        import_anacrdt_path = "technical_export"#+os.sep+"ancrdt"
         ancrdt_include = True
         if not sdd_context.exclude_reference_info_from_website:
             ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context,import_anacrdt_path,ancrdt_include)

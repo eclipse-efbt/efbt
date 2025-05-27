@@ -121,6 +121,7 @@ class JoinsMetaDataCreatorANCRDT:
         for val in self.join_map.values():
 
             mock_join_identifier = val["join_identifier"]
+            print(val)
             rolc_cube = CUBE.objects.get(cube_id=val["rolc"])
             ilc_cubes = []
             for cube in val["ilc"]:
