@@ -27,3 +27,4 @@ birds_nest/startup.sh
 birds_nest/github_fetcher.log
 birds_nest/automode_config.json
 *.sql
+!birds_nest/pybirdai/templates/pybirdai/create_transformation_rules_in_smcubes.html
