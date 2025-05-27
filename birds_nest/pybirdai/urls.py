@@ -127,5 +127,14 @@ urlpatterns = [
     # path('return_cubelink_visualisation/?cube_id', views.return_cubelink_visualisation, name='return_cubelink_visualisation'),
     path('return_cubelink_visualisation/?cube_id=<int:cube_id>&join_identifier=<str:join_identifier>&in_md=<str:in_md>', views.return_cubelink_visualisation, name='return_cubelink_visualisation'),
     path('test_report_view/', views.test_report_view, name='test_report_view'),
-    
+    path('edit-member-links-page/', views.edit_member_links_page, name='edit_member_links_page'),
+    path('add-member-link/', views.add_member_link, name='add_member_link'),
+    path('edit-member-link/', views.edit_member_link, name='edit_member_link'),
+    path('delete-member-link/', views.delete_member_link, name='delete_member_link'),
+    path('download-member-link-template/', views.download_member_link_template, name='download_member_link_template'),
+    path('upload-member-link-template/', views.upload_member_link_template, name='upload_member_link_template'),
+    path('import_ancrdt_model/', views.import_ancrdt_model, name='import_ancrdt_model'),
+    path('create_joins_meta_data_ancrdt/', views.create_joins_meta_data_ancrdt, name='create_joins_meta_data_ancrdt'),
+    path('create_executable_joins_ancrdt/', views.create_executable_joins_ancrdt, name='create_executable_joins_ancrdt'),
+    path('edit_view_file/', views.edit_view_file, name='edit_view_file')
 ]
