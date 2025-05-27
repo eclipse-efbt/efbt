@@ -36,10 +36,10 @@ class ImportInputModel(object):
         """
         ImportInputModel._create_maintenance_agency(sdd_context)
         ImportInputModel._create_primitive_domains(sdd_context)
-        ImportInputModel._create_subdomain_to_domain_map(sdd_context)
+        ImportInputModel._create_subdomain_to_domain_map(sdd_context,alternative_folder=context.alternative_folder_for_subdomains)
         ImportInputModel._process_models(sdd_context, context)
 
-    
+
     def _create_maintenance_agency(sdd_context):
         """
         Create a maintenance agency named 'REF' and add it to the SDD context.
@@ -66,16 +66,16 @@ class ImportInputModel(object):
                 maintenance_agency_id="SDD_DOMAIN"
             )
         ]
-        
+
         # Bulk create all agencies
         created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies)
-        
+
         # Update dictionary with created instances
         sdd_context.agency_dictionary.update({
             agency.code: agency for agency in created_agencies
         })
 
-    
+
     def _create_primitive_domains(sdd_context):
         """
         Create a 'String' domain and add it to the SDD context.
@@ -94,12 +94,13 @@ class ImportInputModel(object):
             )
             domains.append(domain)
             sdd_context.domain_dictionary[domain_type] = domain
-        
+
         # Bulk create all domains
         DOMAIN.objects.bulk_create(domains)
 
-    def _create_subdomain_to_domain_map(sdd_context):
-        file_location = sdd_context.file_directory + os.sep + "technical_export" + os.sep + "subdomain.csv"
+    def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str="sqldev_subdomains"):
+        file_location = sdd_context.file_directory + os.sep + (alternative_folder or "technical_export") + os.sep + "subdomain.csv"
+
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -152,7 +153,7 @@ class ImportInputModel(object):
             bird_cube_cube_structure.save()
             bird_cube.save()
 
-    
+
     def _process_fields(model, sdd_context, context):
         """
         Process all fields of the given model.
@@ -206,7 +207,7 @@ class ImportInputModel(object):
 
         if cube_structure_items_to_create and context.save_derived_sdd_items:
             for item in cube_structure_items_to_create:
-                item.save() 
+                item.save()
             #CUBE_STRUCTURE_ITEM.objects.bulk_create(cube_structure_items_to_create)
 
     @staticmethod
@@ -223,7 +224,7 @@ class ImportInputModel(object):
             return sdd_context.domain_dictionary['Float']
         return None
 
-    
+
     def _create_domain_and_subdomain_if_needed(field, sdd_context):
         """
         Create a domain for the field if it doesn't exist and add it to the
@@ -299,13 +300,13 @@ class ImportInputModel(object):
             # Bulk create all objects
             if domains_to_create and sdd_context.save_sdd_to_db:
                 DOMAIN.objects.bulk_create(domains_to_create)
-            
+
             if subdomains_to_create and sdd_context.save_sdd_to_db:
                 SUBDOMAIN.objects.bulk_create(subdomains_to_create)
-            
+
             if members_to_create and sdd_context.save_sdd_to_db:
                 MEMBER.objects.bulk_create(members_to_create)
-            
+
             if subdomain_enums_to_create and sdd_context.save_sdd_to_db:
                 SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create)
 
@@ -313,4 +314,3 @@ class ImportInputModel(object):
 
         except AttributeError:
             return None, None
-

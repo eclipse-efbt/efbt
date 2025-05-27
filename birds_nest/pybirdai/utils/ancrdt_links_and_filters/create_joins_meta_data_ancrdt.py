@@ -121,7 +121,6 @@ class JoinsMetaDataCreatorANCRDT:
         for val in self.join_map.values():
 
             mock_join_identifier = val["join_identifier"]
-            print(val)
             rolc_cube = CUBE.objects.get(cube_id=val["rolc"])
             ilc_cubes = []
             for cube in val["ilc"]:
@@ -138,11 +137,7 @@ class JoinsMetaDataCreatorANCRDT:
                 cube.cube_id: self.fetch_cube_structure_items_dict(cube)
                 for cube in ilc_cubes
             }
-
-            flag_log = False
-            if mock_join_identifier == "Non Negotiable bonds":
-                flag_log = True
-            comparison_results = self.compare(rolc_items_to_match, ilc_items_to_match,ignored_domains,flag_log)
+            comparison_results = self.compare(rolc_items_to_match, ilc_items_to_match,ignored_domains)
 
             for (rolc, ilc), matches in comparison_results.items():
                 rolc_cube = CUBE.objects.get(cube_id=rolc)
@@ -203,18 +198,17 @@ class JoinsMetaDataCreatorANCRDT:
         for (key_rolc, value_rolc), (key_ilc, value_ilc) in cube_iter:
             cube_items_iter = itertools.product(value_rolc.items(), value_ilc.items())
             for (variable_rolc, infos_rolc), (variable_ilc, infos_ilc) in cube_items_iter:
-                filter_ignored = (infos_rolc["domain"] == infos_ilc["domain"]) and (infos_ilc["domain"] not in ignored_domains)
-                filter_enum = MEMBER.objects.all().filter(domain_id = infos_rolc["domain"]) and MEMBER.objects.all().filter(domain_id = infos_ilc["domain"])
-                if filter_enum and filter_ignored:
-                    members = {}
-                    if infos_rolc["subdomain"] and infos_ilc["subdomain"]:
-                        members = self.fetch_members(infos_rolc["subdomain"]).intersection(
-                            self.fetch_members(infos_ilc["subdomain"])
-                        )
+                if "NEVS" in variable_rolc.name:
+                    continue
+                if infos_rolc["domain"] in ignored_domains or infos_ilc["domain"] in ignored_domains:
+                    continue
+                members = self.fetch_members(infos_rolc["subdomain"]).intersection(
+                    self.fetch_members(infos_ilc["subdomain"])
+                )
+                if members:
                     if (key_rolc, key_ilc) not in matched_variables:
                         matched_variables[(key_rolc, key_ilc)] = {}
-                    if members:
-                        matched_variables[(key_rolc, key_ilc)][(variable_rolc.variable_id, variable_ilc.variable_id)] = members
+                    matched_variables[(key_rolc, key_ilc)][(variable_rolc.variable_id, variable_ilc.variable_id)] = members
         return matched_variables
 
     def fetch_members(self,subdomain):
@@ -222,6 +216,8 @@ class JoinsMetaDataCreatorANCRDT:
         members = MEMBER.objects.all().filter(
             subdomain_enumeration__subdomain_id = subdomain
         )
+        if not members:
+            return set()
         return set(members)
 
     def fetch_cube_structure_items_dict(self, cube):

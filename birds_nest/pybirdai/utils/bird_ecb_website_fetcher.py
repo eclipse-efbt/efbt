@@ -149,7 +149,7 @@ class BirdEcbWebsiteClient:
         else:
             dir_name = tree_root_ids.lower()
 
-        path_to_results = f"{output_dir}/{dir_name}"
+        path_to_results = output_dir or f"{output_dir}/{dir_name}"
         RESPONSE_ZIP = "response.zip"
 
         if not os.path.exists(path_to_results):
@@ -185,7 +185,7 @@ def main():
     output_dir = client.request_and_save(
         tree_root_ids="ANCRDT",
         tree_root_type="FRAMEWORK",
-        output_dir="resources/technical_export/",
+        output_dir="resources/technical_export",
         format_type="csv",
         include_mapping_content=False,
         include_rendering_content=False,
