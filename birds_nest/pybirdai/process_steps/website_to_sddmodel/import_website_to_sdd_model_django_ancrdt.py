@@ -428,13 +428,21 @@ class ImportWebsiteToSDDModel(object):
             writer.writerows(missing_members)
 
     def save_missing_variables_to_csv(context,missing_variables):
+<<<<<<< HEAD
         filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_variables_ancrdt.csv"
+=======
+        filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_variables.csv"
+>>>>>>> 7c2aae0f (>fix : changes to make the feature work (for now). Another change was to download the ANCRDT framework from the website)
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(missing_variables)
 
     def save_missing_children_to_csv(context,missing_children):
+<<<<<<< HEAD
         filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_children_ancrdt.csv"
+=======
+        filename = context.output_directory + os.sep + "generated_hierarchy_warnings" + os.sep + "missing_children.csv"
+>>>>>>> 7c2aae0f (>fix : changes to make the feature work (for now). Another change was to download the ANCRDT framework from the website)
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(missing_children)
@@ -1063,7 +1071,14 @@ class ImportWebsiteToSDDModel(object):
         '''
         Find an existing member hierarchy with this id
         '''
+<<<<<<< HEAD
         return context.member_hierarchy_dictionary[element_id]
+=======
+        try:
+            return context.member_hierarchy_dictionary[element_id]
+        except KeyError:
+            return None
+>>>>>>> 7c2aae0f (>fix : changes to make the feature work (for now). Another change was to download the ANCRDT framework from the website)
 
     def find_variable_with_id(self,context, element_id):
         '''
@@ -1078,7 +1093,14 @@ class ImportWebsiteToSDDModel(object):
         '''
         Find an existing maintenance agency with this id
         '''
+<<<<<<< HEAD
         return context.agency_dictionary[element_id]
+=======
+        try:
+            return context.agency_dictionary[element_id]
+        except KeyError:
+            return None
+>>>>>>> 7c2aae0f (>fix : changes to make the feature work (for now). Another change was to download the ANCRDT framework from the website)
 
     def find_domain_with_id(self,context, element_id):
         '''
