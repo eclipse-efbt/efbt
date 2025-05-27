@@ -136,5 +136,7 @@ urlpatterns = [
     path('import_ancrdt_model/', views.import_ancrdt_model, name='import_ancrdt_model'),
     path('create_joins_meta_data_ancrdt/', views.create_joins_meta_data_ancrdt, name='create_joins_meta_data_ancrdt'),
     path('create_executable_joins_ancrdt/', views.create_executable_joins_ancrdt, name='create_executable_joins_ancrdt'),
-    path('edit_view_file/', views.edit_view_file, name='edit_view_file')
+    path('edit_view_file/', views.edit_view_file, name='edit_view_file'),
+    path('anacredit_transformation_results_endpoint', views.anacredit_transformation_results_endpoint, name='anacredit_transformation_results_endpoint'),
+    path('fetch_ancredit_data', views.fetch_ancrdt_data, name='fetch_ancredit_data')
 ]

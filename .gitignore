@@ -6,3 +6,9 @@ birds_nest/pybirdai/process_steps/filter_code
 birds_nest/pybirdai/templates/pybirdai/F_*
 *.sql
 !birds_nest/pybirdai/templates/pybirdai/create_transformation_rules_in_smcubes.html
+birds_nest/pybirdai/migrations/*
+uv.lock
+**/uv.lock
+**/pybirdai/admin.py
+**/pybirdai/bird_data_model.py
+**/tmp
