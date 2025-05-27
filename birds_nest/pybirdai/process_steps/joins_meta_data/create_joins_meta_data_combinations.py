@@ -9,6 +9,7 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements and enhancements
 #
 
 import logging
