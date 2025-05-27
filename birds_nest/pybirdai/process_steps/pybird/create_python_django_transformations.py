@@ -14,6 +14,9 @@ from pybirdai.entry_points.utils_processor import get_utils_processor as Utils
 from pybirdai.bird_meta_data_model import *
 import os
 from django.conf import settings
+from pybirdai.process_steps.pybird.orchestration import Orchestration
+from pybirdai.models import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction
+from datetime import datetime
 
 
 class CreatePythonTransformations:
@@ -23,6 +26,12 @@ class CreatePythonTransformations:
         '''
         Read in the transformation meta data and create python classes
         '''
+        
+        # Initialize AORTA tracking
+        orchestration = Orchestration()
+        if hasattr(context, 'enable_lineage') and context.enable_lineage:
+            orchestration.init_with_lineage(None, f"Transformation_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+            print("AORTA lineage tracking enabled for transformation generation")
         
         CreatePythonTransformations.delete_generated_python_join_files(context)
         CreatePythonTransformations.create_output_classes( sdd_context)
@@ -35,7 +44,7 @@ class CreatePythonTransformations:
         file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  'output_tables.py', "a",  encoding='utf-8') 
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         file.write("from datetime import datetime\n")
-        file.write("from pybirdai.annotations.decorators import lineage\n")
+        file.write("from pybirdai.annotations.decorators import lineage, track_table_init\n")
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
             print(f"report_id: {report_id}")
             file.write("from ." + report_id  + "_logic import *\n")
@@ -80,10 +89,12 @@ class CreatePythonTransformations:
             file.write("\t\t\tnewItem.unionOfLayers = item\n" )
             file.write("\t\t\titems.append(newItem)\n" )
             file.write("\t\treturn items\n" )
+            file.write("\t@track_table_init\n" )
             file.write("\tdef init(self):\n" )
             file.write("\t\tOrchestration().init(self)\n" )
             file.write("\t\tself." + report_id + "s = []\n" )
             file.write("\t\tself." + report_id + "s.extend(self.calc_" + report_id + "s())\n" )
+            file.write("\t\tfrom pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
             file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
             file.write("\t\treturn None\n" )
             file.write('\n')

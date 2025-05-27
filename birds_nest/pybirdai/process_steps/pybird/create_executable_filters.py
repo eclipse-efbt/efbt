@@ -12,6 +12,9 @@
 
 from pybirdai.entry_points.utils_processor import get_utils_processor as Utils
 from django.conf import settings
+from pybirdai.process_steps.pybird.orchestration import Orchestration
+from pybirdai.models import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction
+from datetime import datetime
 
 import os
 
@@ -33,6 +36,12 @@ class CreateExecutableFilters:
         CreateExecutableFilters.delete_generated_python_filter_files(self, context)
         CreateExecutableFilters.delete_generated_html_filter_files(self, context)
         CreateExecutableFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
+        
+        # Initialize AORTA tracking
+        orchestration = Orchestration()
+        if hasattr(context, 'enable_lineage') and context.enable_lineage:
+            orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+            print("AORTA lineage tracking enabled for filter generation")
         file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep +  'report_cells.py', "a",  encoding='utf-8') 
         report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  'report_templates.html', "a",  encoding='utf-8') 
         report_html_file.write("{% extends 'base.html' %}\n")
@@ -50,6 +59,7 @@ class CreateExecutableFilters:
         file.write("from pybirdai.bird_data_model import *\n")
         file.write("from .output_tables import *\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
+        file.write("from pybirdai.annotations.decorators import lineage\n")
 
         # create a copy of combination_to_rol_cube_map which is ordered by cube_id
         cube_ids = sorted(sdd_context.combination_to_rol_cube_map.keys())   
@@ -80,6 +90,7 @@ class CreateExecutableFilters:
                     file.write("class Cell_" + combination.combination_id.combination_id + ":\n")
                     file.write("\t" + cube_id + "_Table = None\n")
                     file.write("\t" + cube_id + "s = []\n")
+                    file.write("\t@lineage(dependencies={\"" + cube_id + "s\"})\n")
                     file.write("\tdef metric_value(self):\n"  )
                     file.write("\t\ttotal = 0\n")
                     file.write("\t\tfor item in self." + cube_id + "s:\n")

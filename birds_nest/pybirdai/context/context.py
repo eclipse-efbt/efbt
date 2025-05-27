@@ -21,6 +21,8 @@ class Context(object):
     '''
     # variables to configure the behaviour
 
+    enable_lineage = True
+
     enrich_ldm_relationships = False
     use_codes = True
 
