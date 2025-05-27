@@ -43,6 +43,9 @@ from .entry_points.delete_semantic_integrations import RunDeleteSemanticIntegrat
 from .entry_points.delete_output_concepts import RunDeleteOutputConcepts
 from .utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from .entry_points.import_export_mapping_join_metadata import RunExporterJoins, RunImporterJoins,RunMappingJoinsEIL_LDM
+
+
+from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
 from .entry_points.execute_datapoint import RunExecuteDataPoint
@@ -5108,7 +5111,6 @@ def import_ancrdt_model(request):
     """View function to import ANCRDT model"""
     if request.GET.get('execute') == 'true':
         try:
-            from pybirdai.utils.ancrdt_links_and_filters.ancrdt_importer import RunANCRDTImport
             RunANCRDTImport.run_ancrdt_importer()
             return JsonResponse({'status': 'success'})
         except Exception as e:
@@ -5125,7 +5127,6 @@ def import_ancrdt_model(request):
 def create_joins_meta_data_ancrdt(request):
     """View function to create joins meta data ANCRDT"""
     if request.GET.get('execute') == 'true':
-        from pybirdai.utils.ancrdt_links_and_filters.create_joins_meta_data_ancrdt import JoinsMetaDataCreatorANCRDT
         creator = JoinsMetaDataCreatorANCRDT()
         result = creator.generate_joins_meta_data()
 
@@ -5140,7 +5141,6 @@ def create_joins_meta_data_ancrdt(request):
 def create_executable_joins_ancrdt(request):
     """View function to create executable joins ANCRDT"""
     if request.GET.get('execute') == 'true':
-        from pybirdai.utils.ancrdt_links_and_filters.create_executable_joins_ancrdt import RunCreateExecutableJoins
         RunCreateExecutableJoins.create_python_joins_from_db()
 
     return create_response_with_loading(
@@ -5154,9 +5154,54 @@ def create_executable_joins_ancrdt(request):
 def anacredit_transformation_results_endpoint(request):
     if request.method != 'GET':
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    if request.GET.get('execute') == 'true':
+        client = BirdEcbWebsiteClient()
+        output_dir = client.request_and_save(
+            tree_root_ids="ANCRDT",
+            tree_root_type="FRAMEWORK",
+            output_dir="resources/technical_export/",
+            format_type="csv",
+            include_mapping_content=False,
+            include_rendering_content=False,
+            include_transformation_content=False,
+            only_currently_valid_metadata=False
+        )
+        creator = JoinsMetaDataCreatorANCRDT()
+        creator.generate_joins_meta_data()
+        RunCreateExecutableJoins.create_python_joins_from_db()
 
-    results : dict = {}
-    return JsonResponse({'success': False, 'results': results})
+    return create_response_with_loading(
+        request,
+        'Fetching ANCRDT data, create join metadata and create executable joins',
+        'Successfully went through all the steps of the ANCRDT transformation rules creation',
+        '/pybirdai/',
+        'Proceed to Homepage'
+    )
+
+def fetch_ancrdt_data(request):
+    output_dir = ""
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    if request.GET.get('execute') == 'true':
+        client = BirdEcbWebsiteClient()
+        output_dir = client.request_and_save(
+            tree_root_ids="ANCRDT",
+            tree_root_type="FRAMEWORK",
+            output_dir="resources/technical_export/",
+            format_type="csv",
+            include_mapping_content=False,
+            include_rendering_content=False,
+            include_transformation_content=False,
+            only_currently_valid_metadata=False
+        )
+
+    return create_response_with_loading(
+        request,
+        'Fetching ANCRDT data from the BIRD Website',
+        f'Successfully fetched the ANCRDT data from the BIRD Website, data is in {output_dir}',
+        '/pybirdai/',
+        'Proceed to Homepage'
+    )
 
 @require_http_methods(["GET", "POST"])
 def edit_view_file(request):

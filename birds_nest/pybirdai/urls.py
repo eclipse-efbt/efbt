@@ -760,4 +760,10 @@ urlpatterns = [
         toolbox_views.get_framework_summary_api,
         name="get_framework_summary_api",
     ),
+    path(
+        "anacredit_transformation_results_endpoint",
+        views.anacredit_transformation_results_endpoint,
+        name="anacredit_transformation_results_endpoint",
+    ),
+    path("fetch_ancredit_data", views.fetch_ancrdt_data, name="fetch_ancredit_data"),
 ]

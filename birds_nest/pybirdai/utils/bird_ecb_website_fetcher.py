@@ -194,7 +194,8 @@ class BirdEcbWebsiteClient:
 
         # Extract contents and clean up
         with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
-            zip_ref.extractall(path_to_results)
+            for file in zip_ref.infolist():
+                zip_ref.extract(file, path_to_results)
 
         os.remove(RESPONSE_ZIP)
         return path_to_results
@@ -204,7 +205,7 @@ def main():
     output_dir = client.request_and_save(
         tree_root_ids="ANCRDT",
         tree_root_type="FRAMEWORK",
-        output_dir="resources/technical_export/ancrdt/technical_export",
+        output_dir="resources/technical_export/",
         format_type="csv",
         include_mapping_content=False,
         include_rendering_content=False,
