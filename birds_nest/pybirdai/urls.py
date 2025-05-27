@@ -11,6 +11,7 @@ from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 app_name = "pybirdai"
 urlpatterns = [
     path("", views.home_view, name="home"),
+    path("dpm-data/", views.dpm_data_view, name="dpm_data"),
     path("automode/", views.automode_view, name="automode"),
     path(
         "automode/create-database/",
