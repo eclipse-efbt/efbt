@@ -23,6 +23,8 @@ class Context(object):
     
     ldm_or_il = 'ldm'
 
+    enable_lineage = True
+
     enrich_ldm_relationships = False
     use_codes = True
 
