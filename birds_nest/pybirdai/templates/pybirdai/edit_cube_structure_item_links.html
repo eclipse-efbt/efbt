@@ -9,6 +9,7 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa (Arfa Digital Consulting) - improvements
 -->
 {% extends 'base.html' %}
 
@@ -159,48 +160,48 @@
         background-color: #f8f9fa;
         border-radius: 5px;
     }
-    
+
     .filters form {
         display: flex;
         flex-wrap: wrap;
         gap: 15px;
         align-items: flex-end;
     }
-    
+
     .filters label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
     }
-    
+
     .filters select {
         padding: 6px 12px;
         border: 1px solid #ced4da;
         border-radius: 4px;
         min-width: 200px;
     }
-    
+
     .filter-button, .clear-button {
         padding: 8px 16px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
     }
-    
+
     .filter-button {
         background-color: #007bff;
         color: white;
     }
-    
+
     .clear-button {
         background-color: #6c757d;
         color: white;
     }
-    
+
     .filter-button:hover {
         background-color: #0056b3;
     }
-    
+
     .clear-button:hover {
         background-color: #5a6268;
     }
@@ -280,13 +281,13 @@
 <script>
 document.getElementById('filterForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
+
     // Build the query string
     const params = new URLSearchParams();
     const cubeLink = document.getElementById('cubeLinkFilter').value;
-    
+
     if (cubeLink) params.append('cube_link', cubeLink);
-    
+
     // Redirect with the filters
     window.location.href = `${window.location.pathname}?${params.toString()}`;
 });
@@ -327,22 +328,22 @@ function confirmDelete(cubeStructureItemLinkId) {
         const cubeLinkId = "{{ selected_cube_link }}";
         const foreignSelect = document.getElementById('foreign_cube_variable_code');
         const primarySelect = document.getElementById('primary_cube_variable_code');
-        
+
         let foreignVariableId = '';
         let primaryVariableId = '';
-        
+
         if (foreignSelect.selectedOptions.length > 0) {
             foreignVariableId = foreignSelect.selectedOptions[0].getAttribute('data-variable-id');
         }
-        
+
         if (primarySelect.selectedOptions.length > 0) {
             primaryVariableId = primarySelect.selectedOptions[0].getAttribute('data-variable-id');
         }
-        
+
         const linkId = [cubeLinkId, foreignVariableId, primaryVariableId]
             .filter(Boolean)  // Remove empty values
             .join(':');
-            
+
         document.getElementById('cube_structure_item_link_id').value = linkId;
     }
 </script>
