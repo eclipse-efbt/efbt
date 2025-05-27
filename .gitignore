@@ -26,3 +26,4 @@ birds_nest/resources/variable_typ_instrmnt.csv
 birds_nest/startup.sh
 birds_nest/github_fetcher.log
 birds_nest/automode_config.json
+*.sql
