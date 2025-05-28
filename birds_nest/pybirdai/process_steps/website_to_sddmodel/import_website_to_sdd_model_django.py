@@ -148,7 +148,7 @@ class ImportWebsiteToSDDModel(object):
                     is_reference = row[ColumnIndexes().domain_domain_is_reference]
                     domain_name = row[ColumnIndexes().domain_domain_name_index]
 
-                    include = True
+                    include = False
                     if (ref) and (maintenence_agency == "ECB"):
                         include = True
                     if (not ref) and not (maintenence_agency == "ECB"):
@@ -201,7 +201,7 @@ class ImportWebsiteToSDDModel(object):
                     if (member_name is None) or (member_name == ""):
                         member_name = member_id
 
-                    include = True
+                    include = False
                     if (ref) and (maintenence_agency == "ECB"):
                         include = True
                     if (not ref) and not (maintenence_agency == "ECB"):
@@ -250,7 +250,7 @@ class ImportWebsiteToSDDModel(object):
                     variable_id = row[ColumnIndexes().variable_variable_true_id]
                     primary_concept = row[ColumnIndexes().variable_primary_concept]
 
-                    include = True
+                    include = False
                     if (ref) and (maintenence_agency == "ECB"):
                         include = True
                     if (not ref) and not (maintenence_agency == "ECB"):
