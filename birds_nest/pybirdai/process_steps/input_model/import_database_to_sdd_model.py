@@ -31,7 +31,7 @@ class ImportDatabaseToSDDModel(object):
         ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportDatabaseToSDDModel.create_frameworks(self, sdd_context)
         ImportDatabaseToSDDModel.create_all_domains(self, sdd_context)
-        
+
         # Group 1 - Independent base entities
         with ThreadPoolExecutor(max_workers=4) as executor:
             futures = [
@@ -111,7 +111,7 @@ class ImportDatabaseToSDDModel(object):
             ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
         if 'DOMAIN' in tables_to_import:
             ImportDatabaseToSDDModel.create_all_domains(self, sdd_context)
-        
+
         # Group 2 - Tables that depend only on DOMAIN and MAINTENANCE_AGENCY
         with ThreadPoolExecutor(max_workers=4) as executor:
             futures = []
@@ -159,7 +159,7 @@ class ImportDatabaseToSDDModel(object):
             ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
         if 'DOMAIN' in tables_to_import:
             ImportDatabaseToSDDModel.create_all_domains(self, sdd_context)
-        
+
         # Group 2 - Tables that depend only on DOMAIN and MAINTENANCE_AGENCY
         with ThreadPoolExecutor(max_workers=2) as executor:
             futures = []
@@ -193,7 +193,7 @@ class ImportDatabaseToSDDModel(object):
         for mapping_definition in MAPPING_DEFINITION.objects.all():
             context.mapping_definition_dictionary[
                 mapping_definition.mapping_id] = mapping_definition
-            
+
     def create_all_variable_mappings(self, context):
         '''
         import all the variable mappings
@@ -217,7 +217,7 @@ class ImportDatabaseToSDDModel(object):
                 context.variable_mapping_item_dictionary[
                     variable_mapping_item.variable_mapping_id.variable_mapping_id
                 ] = [variable_mapping_item]
-        
+
     def create_all_rol_cube_structures(self, context):
         '''
         import all the rol cube structures
@@ -271,7 +271,7 @@ class ImportDatabaseToSDDModel(object):
         context.agency_dictionary = {}
         for agency in MAINTENANCE_AGENCY.objects.all():
             context.agency_dictionary[agency.maintenance_agency_id] = agency
-        
+
     def create_frameworks(self, context):
         '''
         Import all frameworks
@@ -279,7 +279,7 @@ class ImportDatabaseToSDDModel(object):
         context.framework_dictionary = {}
         for framework in FRAMEWORK.objects.all():
             context.framework_dictionary[framework.framework_id] = framework
-    
+
     def create_all_domains(self, context):
         '''
         import all the domains
@@ -288,7 +288,7 @@ class ImportDatabaseToSDDModel(object):
         for domain in DOMAIN.objects.all():
             context.domain_dictionary[domain.domain_id] = domain
 
-        
+
     def create_all_members(self, context):
         '''
         Import all the members
@@ -314,7 +314,7 @@ class ImportDatabaseToSDDModel(object):
             context.variable_to_domain_map[variable.variable_id] = variable.domain_id
             context.variable_to_long_names_map[variable.variable_id] = variable.name
             context.variable_to_primary_concept_map[variable.variable_id] = variable.primary_concept
-   
+
     def create_all_nonref_member_hierarchies(self, context):
         '''
         Import all non-reference member hierarchies
@@ -323,8 +323,8 @@ class ImportDatabaseToSDDModel(object):
         for hierarchy in MEMBER_HIERARCHY.objects.all():
             context.member_hierarchy_dictionary[
                 hierarchy.member_hierarchy_id] = hierarchy
-        
-                    
+
+
     def create_all_nonref_member_hierarchies_nodes(self, context):
         '''
         Import all non-reference member hierarchy nodes
@@ -337,7 +337,7 @@ class ImportDatabaseToSDDModel(object):
                 member_name = member.member_id
             context.member_hierarchy_node_dictionary[
                 hierarchy_node.member_hierarchy_id.member_hierarchy_id + ":" + member_name
-            ] = hierarchy_node  
+            ] = hierarchy_node
 
     def create_report_tables (self, context):
         '''
@@ -363,7 +363,7 @@ class ImportDatabaseToSDDModel(object):
         for axis_ordinate in AXIS_ORDINATE.objects.all():
             context.axis_ordinate_dictionary[
                 axis_ordinate.axis_ordinate_id] = axis_ordinate
-        
+
     def create_ordinate_items(self, sdd_context):
         '''
         import all the axis_ordinate from the rendering package
@@ -376,7 +376,7 @@ class ImportDatabaseToSDDModel(object):
                 ordinate_item_list.append(ordinate_item)
             except KeyError:
                 sdd_context.axis_ordinate_to_ordinate_items_map[
-                    ordinate_item.axis_ordinate_id.axis_ordinate_id] = [ordinate_item]   
+                    ordinate_item.axis_ordinate_id.axis_ordinate_id] = [ordinate_item]
 
     def create_table_cells(self, context):
         '''
@@ -386,7 +386,7 @@ class ImportDatabaseToSDDModel(object):
         context.table_to_table_cell_dictionary = {}
         for table_cell in TABLE_CELL.objects.all():
             context.table_cell_dictionary[table_cell.cell_id] = table_cell
-            
+
 
             table_cell_list = []
             try:
@@ -397,7 +397,7 @@ class ImportDatabaseToSDDModel(object):
                     table_cell.table_id] = table_cell_list
 
             table_cell_list.append(table_cell)
-                               
+
 
     def create_cell_positions(self, context):
         '''
@@ -413,7 +413,7 @@ class ImportDatabaseToSDDModel(object):
 
                 context.cell_positions_dictionary[
                     cell_position.cell_id.cell_id] = [cell_position]
-        
+
 
     def create_member_mappings(self, context):
         '''
@@ -423,8 +423,8 @@ class ImportDatabaseToSDDModel(object):
         for member_mapping in MEMBER_MAPPING.objects.all():
             context.member_mapping_dictionary[
                 member_mapping.member_mapping_id] = member_mapping
-        
-                        
+
+
     def create_all_member_mapping_items(self, context):
         ''' import all the member mappings from the rendering package'''
         context.member_mapping_items_dictionary = {}
@@ -437,7 +437,7 @@ class ImportDatabaseToSDDModel(object):
                 context.member_mapping_items_dictionary[
                     member_mapping_item.member_mapping_id.member_mapping_id
                 ] = [member_mapping_item]
-                
+
     def create_combination_items(self, context):
         '''
         Import all the combination items
@@ -508,11 +508,11 @@ class ImportDatabaseToSDDModel(object):
     def create_cube_structure_item_links(self, context):
         '''
         Import all the cube structure item links
-        '''     
+        '''
         context.cube_structure_item_links_dictionary = {}
         context.cube_structure_item_link_to_cube_link_map = {}
         for cube_structure_item_link in CUBE_STRUCTURE_ITEM_LINK.objects.all():
-            context.cube_structure_item_links_dictionary[cube_structure_item_link.cube_structure_item_link_id] = cube_structure_item_link    
+            context.cube_structure_item_links_dictionary[cube_structure_item_link.cube_structure_item_link_id] = cube_structure_item_link
             cube_link = cube_structure_item_link.cube_link_id
             try:
                 context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(cube_structure_item_link)
