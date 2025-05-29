@@ -100,13 +100,16 @@ class CreateExecutableFilters:
                                                                                       combination_item.member_id,
                                                                                       combination_item.member_hierarchy)
                         
-                        file.write("\t\t\tif ")
-                        for leaf_node_member in leaf_node_members:
-                            file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n")
-                        file.write("\t\t\t\tFalse:\n")
-                        file.write("\t\t\t\tpass\n")
-                        file.write("\t\t\telse:\n")
-                        file.write("\t\t\t\tfilter_passed = False\n")
+                        if len(leaf_node_members) > 0:
+                            file.write("\t\t\tif ")
+                            for leaf_node_member in leaf_node_members:
+                                file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n")
+                            file.write("\t\t\t\tFalse:\n")
+                            file.write("\t\t\t\tpass\n")
+                            file.write("\t\t\telse:\n")
+                            file.write("\t\t\t\tfilter_passed = False\n")
+                        else:
+                            print("No leaf node members for " + combination_item.variable_id.name +":" + combination_item.member_id.member_id)
                         
                     file.write("\t\t\tif filter_passed:\n")
                     file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
