@@ -12,3 +12,14 @@ uv.lock
 **/pybirdai/admin.py
 **/pybirdai/bird_data_model.py
 **/tmp
+birds_nest/uv.lock
+create_joins_metadata.log
+birds_nest/pybirdai/bird_data_model.py
+birds_nest/pybirdai/admin.py
+**/.DS_Store
+.DS_Store
+**/db.sqlite3
+db.sqlite3
+birds_nest/pybirdai/migrations/*
+birds_nest/resources/variable_typ_instrmnt.csv
+

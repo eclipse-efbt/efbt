@@ -39,8 +39,8 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
         ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
-  
-        
+
+
 
     def import_semantic_integrations_from_sdd(self, sdd_context):
         '''
@@ -87,12 +87,12 @@ class ImportWebsiteToSDDModel(object):
                     maintenance_agency.code = code
                     maintenance_agency.description = description
                     maintenance_agency.maintenance_agency_id = ImportWebsiteToSDDModel.replace_dots(self, id)
-                    
+
                     agencies_to_create.append(maintenance_agency)
                     context.agency_dictionary[id] = maintenance_agency
 
         if context.save_sdd_to_db and agencies_to_create:
-            MAINTENANCE_AGENCY.objects.bulk_create(agencies_to_create, batch_size=1000)
+            MAINTENANCE_AGENCY.objects.bulk_create(agencies_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_frameworks(self, context):
         '''
@@ -118,12 +118,12 @@ class ImportWebsiteToSDDModel(object):
                     framework.code = code
                     framework.description = description
                     framework.framework_id = ImportWebsiteToSDDModel.replace_dots(self, id)
-                    
+
                     frameworks_to_create.append(framework)
                     context.framework_dictionary[ImportWebsiteToSDDModel.replace_dots(self, id)] = framework
 
         if context.save_sdd_to_db and frameworks_to_create:
-            FRAMEWORK.objects.bulk_create(frameworks_to_create, batch_size=1000)
+            FRAMEWORK.objects.bulk_create(frameworks_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_all_domains(self, context, ref):
         '''
@@ -147,13 +147,13 @@ class ImportWebsiteToSDDModel(object):
                     is_enumerated = row[ColumnIndexes().domain_domain_is_enumerated]
                     is_reference = row[ColumnIndexes().domain_domain_is_reference]
                     domain_name = row[ColumnIndexes().domain_domain_name_index]
-                    
+
                     include = False
                     if (ref) and (maintenence_agency == "ECB"):
                         include = True
                     if (not ref) and not (maintenence_agency == "ECB"):
                         include = True
-                        
+
                     if include:
                         domain = DOMAIN(name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
                         if ref:
@@ -175,7 +175,7 @@ class ImportWebsiteToSDDModel(object):
                             context.domain_dictionary[domain.domain_id] = domain
 
         if context.save_sdd_to_db and domains_to_create:
-            DOMAIN.objects.bulk_create(domains_to_create, batch_size=1000)
+            DOMAIN.objects.bulk_create(domains_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_all_members(self, context, ref):
         '''
@@ -197,16 +197,16 @@ class ImportWebsiteToSDDModel(object):
                     member_id = row[ColumnIndexes().member_member_id_index]
                     member_name = row[ColumnIndexes().member_member_name_index]
                     maintenence_agency = row[ColumnIndexes().member_member_maintenence_agency]
-                    
+
                     if (member_name is None) or (member_name == ""):
                         member_name = member_id
-                        
+
                     include = False
                     if (ref) and (maintenence_agency == "ECB"):
                         include = True
                     if (not ref) and not (maintenence_agency == "ECB"):
                         include = True
-                        
+
                     if include:
                         member = MEMBER(name=ImportWebsiteToSDDModel.replace_dots(self, member_id))
                         member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
@@ -226,7 +226,7 @@ class ImportWebsiteToSDDModel(object):
                             context.member_id_to_member_code_map[member.member_id] = code
 
         if context.save_sdd_to_db and members_to_create:
-            MEMBER.objects.bulk_create(members_to_create, batch_size=1000)
+            MEMBER.objects.bulk_create(members_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_all_variables(self, context, ref):
         '''
@@ -249,13 +249,13 @@ class ImportWebsiteToSDDModel(object):
                     name = row[ColumnIndexes().variable_long_name_index]
                     variable_id = row[ColumnIndexes().variable_variable_true_id]
                     primary_concept = row[ColumnIndexes().variable_primary_concept]
-                    
+
                     include = False
                     if (ref) and (maintenence_agency == "ECB"):
                         include = True
                     if (not ref) and not (maintenence_agency == "ECB"):
                         include = True
-                        
+
                     if include:
                         variable = VARIABLE(name=ImportWebsiteToSDDModel.replace_dots(self, variable_id))
                         maintenance_agency_id = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
@@ -275,7 +275,7 @@ class ImportWebsiteToSDDModel(object):
                             context.variable_to_primary_concept_map[variable.variable_id] = primary_concept
 
         if context.save_sdd_to_db and variables_to_create:
-            VARIABLE.objects.bulk_create(variables_to_create, batch_size=1000)
+            VARIABLE.objects.bulk_create(variables_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_all_parent_members_with_children_locally(self, context):
         print("Creating all parent members with children locally")
@@ -283,33 +283,33 @@ class ImportWebsiteToSDDModel(object):
         parent_members_to_create = []
         parent_members_child_triples = []
         missing_children = []
-        
+
         # Pre-fetch all hierarchies for faster lookup
         hierarchy_cache = {}
-        
+
         with open(f"{context.file_directory}/technical_export/member_hierarchy_node.csv", encoding='utf-8') as csvfile:
             next(csvfile)  # Skip header more efficiently
             for row in csv.reader(csvfile):
                 parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id]
                 member_id = row[ColumnIndexes().member_hierarchy_node_member_id]
                 hierarchy_id = row[ColumnIndexes().member_hierarchy_node_hierarchy_id]
-                
+
                 if not parent_member_id:
                     continue
-                    
+
                 if hierarchy_id not in hierarchy_cache:
                     hierarchy_cache[hierarchy_id] = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
-                
+
                 hierarchy = hierarchy_cache[hierarchy_id]
                 if hierarchy:
                     domain = hierarchy.domain_id
                     parent_members_child_triples.append((parent_member_id,member_id,domain))
                     parent_members.add(parent_member_id)
-                
+
         # Process parent-child relationships in batches
         for parent_member_id, member_id, domain in parent_members_child_triples:
             if member_id in parent_members:
-                if not any(parent_member_id in d for d in (context.members_that_are_nodes, 
+                if not any(parent_member_id in d for d in (context.members_that_are_nodes,
                                                          context.member_dictionary,
                                                          context.member_dictionary)):
                     parent_member = MEMBER(
@@ -340,14 +340,14 @@ class ImportWebsiteToSDDModel(object):
                     )
                     parent_members_to_create.append(parent_member)
                     context.members_that_are_nodes[parent_member_id] = parent_member
-                    
+
                     context.member_dictionary[parent_member.member_id] = parent_member
                     if not (parent_member.domain_id is None) and not (parent_member.domain_id == ""):
                         context.member_id_to_domain_map[parent_member] = domain
                         context.member_id_to_member_code_map[parent_member.member_id] = parent_member.member_id
 
         if context.save_sdd_to_db and parent_members_to_create:
-            MEMBER.objects.bulk_create(parent_members_to_create, batch_size=5000)  # Increased batch size
+            MEMBER.objects.bulk_create(parent_members_to_create, batch_size=5000,ignore_conflicts=True)  # Increased batch size
 
         ImportWebsiteToSDDModel.save_missing_children_to_csv(context,missing_children)
 
@@ -357,7 +357,7 @@ class ImportWebsiteToSDDModel(object):
         '''
         missing_domains = set()  # Using set for faster lookups
         hierarchies_to_create = []
-        
+
         with open(f"{context.file_directory}/technical_export/member_hierarchy.csv", encoding='utf-8') as csvfile:
             next(csvfile)  # Skip header more efficiently
             for row in csv.reader(csvfile):
@@ -369,7 +369,7 @@ class ImportWebsiteToSDDModel(object):
 
                 maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency_id)
                 domain = ImportWebsiteToSDDModel.find_domain_with_id(self,context,domain_id)
-                
+
                 if domain is None:
                     missing_domains.add(domain_id)
                     continue
@@ -382,13 +382,13 @@ class ImportWebsiteToSDDModel(object):
                     maintenance_agency_id=maintenance_agency,
                     domain_id=domain
                 )
-                
+
                 if hierarchy.member_hierarchy_id not in context.member_hierarchy_dictionary:
                     hierarchies_to_create.append(hierarchy)
                     context.member_hierarchy_dictionary[hierarchy.member_hierarchy_id] = hierarchy
 
         if context.save_sdd_to_db and hierarchies_to_create:
-            MEMBER_HIERARCHY.objects.bulk_create(hierarchies_to_create, batch_size=5000)  # Increased batch size
+            MEMBER_HIERARCHY.objects.bulk_create(hierarchies_to_create, batch_size=5000,ignore_conflicts=True)  # Increased batch size
 
         if missing_domains:
             ImportWebsiteToSDDModel.save_missing_domains_to_csv(context, list(missing_domains))
@@ -417,8 +417,8 @@ class ImportWebsiteToSDDModel(object):
             writer = csv.writer(csvfile)
             writer.writerows(missing_children)
 
-    
-        
+
+
 
     def create_all_member_hierarchies_nodes(self, context):
         '''
@@ -468,7 +468,7 @@ class ImportWebsiteToSDDModel(object):
                                 context.member_hierarchy_node_dictionary[hierarchy_id + ":" + member_id] = hierarchy_node
 
         if context.save_sdd_to_db and nodes_to_create:
-            MEMBER_HIERARCHY_NODE.objects.bulk_create(nodes_to_create, batch_size=1000)
+            MEMBER_HIERARCHY_NODE.objects.bulk_create(nodes_to_create, batch_size=1000,ignore_conflicts=True)
 
         ImportWebsiteToSDDModel.save_missing_members_to_csv(context,missing_members)
         ImportWebsiteToSDDModel.save_missing_hierarchies_to_csv(context,missing_hierarchies)
@@ -521,7 +521,7 @@ class ImportWebsiteToSDDModel(object):
                     context.report_tables_dictionary[table.table_id] = table
 
         if context.save_sdd_to_db and tables_to_create:
-            TABLE.objects.bulk_create(tables_to_create, batch_size=1000)
+            TABLE.objects.bulk_create(tables_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_axis(self, context):
         '''
@@ -556,7 +556,7 @@ class ImportWebsiteToSDDModel(object):
                     context.axis_dictionary[axis.axis_id] = axis
 
         if context.save_sdd_to_db and axes_to_create:
-            AXIS.objects.bulk_create(axes_to_create, batch_size=1000)
+            AXIS.objects.bulk_create(axes_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_axis_ordinates(self, context):
         '''
@@ -595,7 +595,7 @@ class ImportWebsiteToSDDModel(object):
                     context.axis_ordinate_dictionary[axis_ordinate.axis_ordinate_id] = axis_ordinate
 
         if context.save_sdd_to_db and ordinates_to_create:
-            AXIS_ORDINATE.objects.bulk_create(ordinates_to_create, batch_size=1000)
+            AXIS_ORDINATE.objects.bulk_create(ordinates_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_ordinate_items(self, context):
         '''
@@ -640,7 +640,7 @@ class ImportWebsiteToSDDModel(object):
                         context.axis_ordinate_to_ordinate_items_map[ordinate_item.axis_ordinate_id.axis_ordinate_id] = [ordinate_item]
 
         if context.save_sdd_to_db and ordinate_items_to_create:
-            ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=1000)
+            ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_table_cells(self, context):
         '''
@@ -675,7 +675,7 @@ class ImportWebsiteToSDDModel(object):
                         table_cell_list.append(table_cell)
 
         if context.save_sdd_to_db and table_cells_to_create:
-            TABLE_CELL.objects.bulk_create(table_cells_to_create, batch_size=1000)
+            TABLE_CELL.objects.bulk_create(table_cells_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_cell_positions(self, context):
         '''
@@ -707,7 +707,7 @@ class ImportWebsiteToSDDModel(object):
                         cell_positions_list.append(cell_position)
 
         if context.save_sdd_to_db and cell_positions_to_create:
-            CELL_POSITION.objects.bulk_create(cell_positions_to_create, batch_size=1000)
+            CELL_POSITION.objects.bulk_create(cell_positions_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_member_mappings(self, context):
         '''
@@ -739,13 +739,13 @@ class ImportWebsiteToSDDModel(object):
                         context.member_mapping_dictionary[member_mapping_id] = member_mapping
 
         if context.save_sdd_to_db and member_mappings_to_create:
-            MEMBER_MAPPING.objects.bulk_create(member_mappings_to_create, batch_size=1000)
+            MEMBER_MAPPING.objects.bulk_create(member_mappings_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_all_member_mappings_items(self, context):
         '''
         Import all member mapping items from the rendering package CSV file using bulk create
         '''
-        
+
         file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member_mapping_item.csv"
         header_skipped = False
         missing_members = []
@@ -767,14 +767,14 @@ class ImportWebsiteToSDDModel(object):
                                                             self,member_id,context)
                         variable = ImportWebsiteToSDDModel.find_variable_with_id(
                                                             self,context,variable_id)
-                        
+
                         if member is None:
                             if member_id not in missing_members:
                                 missing_members.append((member_id,member_mapping_id,row_number,variable_id))
                         if variable is None:
                             if variable_id not in missing_variables:
                                 missing_variables.append((variable_id,'',''))
-                                
+
 
                         if member is None or variable is None:
                             pass
@@ -787,7 +787,7 @@ class ImportWebsiteToSDDModel(object):
                             member_mapping_item.member_mapping_id  = ImportWebsiteToSDDModel.find_member_mapping_with_id(
                                                 self,context,member_mapping_id)
 
-                            if context.save_sdd_to_db:  
+                            if context.save_sdd_to_db:
                                 member_mapping_items_to_create.append(member_mapping_item)
                             try:
                                 member_mapping_items_list = context.member_mapping_items_dictionary[member_mapping_id]
@@ -795,12 +795,12 @@ class ImportWebsiteToSDDModel(object):
                             except KeyError:
                                 context.member_mapping_items_dictionary[member_mapping_id] = [member_mapping_item]
         if context.save_sdd_to_db and member_mapping_items_to_create:
-            MEMBER_MAPPING_ITEM.objects.bulk_create(member_mapping_items_to_create, batch_size=1000)
+            MEMBER_MAPPING_ITEM.objects.bulk_create(member_mapping_items_to_create, batch_size=1000,ignore_conflicts=True)
         for missing_member in missing_members:
             print(f"Missing member {missing_member}")
         for missing_variable in missing_variables:
             print(f"Missing variable {missing_variable}")
-        #ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context,missing_variables)
+        ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context,missing_variables)
         ImportWebsiteToSDDModel.save_missing_mapping_members_to_csv(context,missing_members)
 
     def save_missing_mapping_variables_to_csv(context,missing_variables):
@@ -811,7 +811,7 @@ class ImportWebsiteToSDDModel(object):
             for var in missing_variables:
                 writer.writerow([var[0],var[1],var[2]])
 
-    def save_missing_mapping_members_to_csv(context,missing_members):   
+    def save_missing_mapping_members_to_csv(context,missing_members):
         filename = context.output_directory + os.sep + "generated_mapping_warnings" + os.sep + "mappings_missing_members.csv"
         with open(filename, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
@@ -854,29 +854,29 @@ class ImportWebsiteToSDDModel(object):
         '''
         file_location = context.file_directory + os.sep + "technical_export" + os.sep + "mapping_definition.csv"
         mapping_definitions_to_create = []
-        
+
         # Cache lookups
         member_mapping_cache = {}
         variable_mapping_cache = {}
-        
+
         with open(file_location, encoding='utf-8') as csvfile:
             rows = list(csv.reader(csvfile))[1:]  # Skip header
-            
+
             for row in rows:
                 mapping_id = row[ColumnIndexes().mapping_definition_mapping_id]
                 if mapping_id.startswith("SHS_"):
                     continue
-                    
+
                 member_mapping_id = row[ColumnIndexes().mapping_definition_member_mapping_id]
                 if member_mapping_id not in member_mapping_cache:
                     member_mapping_cache[member_mapping_id] = ImportWebsiteToSDDModel.find_member_mapping_with_id(
                         self, context, member_mapping_id)
-                    
+
                 variable_mapping_id = row[ColumnIndexes().mapping_definition_variable_mapping_id]
                 if variable_mapping_id not in variable_mapping_cache:
                     variable_mapping_cache[variable_mapping_id] = ImportWebsiteToSDDModel.find_variable_mapping_with_id(
                         self, context, variable_mapping_id)
-                    
+
                 mapping_definition = MAPPING_DEFINITION(
                     mapping_id=mapping_id,
                     name=row[ColumnIndexes().mapping_definition_name],
@@ -890,7 +890,7 @@ class ImportWebsiteToSDDModel(object):
                 context.mapping_definition_dictionary[mapping_id] = mapping_definition
 
         if context.save_sdd_to_db and mapping_definitions_to_create:
-            MAPPING_DEFINITION.objects.bulk_create(mapping_definitions_to_create, batch_size=5000)
+            MAPPING_DEFINITION.objects.bulk_create(mapping_definitions_to_create, batch_size=5000,ignore_conflicts=True)
 
     def create_all_mapping_to_cubes(self, context):
         '''
@@ -910,7 +910,7 @@ class ImportWebsiteToSDDModel(object):
                     mapping_to_cube_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_cube_mapping_id]
                     mapping_to_cube_valid_from = row[ColumnIndexes().mapping_to_cube_valid_from]
                     mapping_to_cube_valid_to = row[ColumnIndexes().mapping_to_cube_valid_to]
-                    
+
                     if not mapping_to_cube_mapping_id.startswith("M_SHS"):
                         mapping_to_cube = MAPPING_TO_CUBE(
                             mapping_id=ImportWebsiteToSDDModel.find_mapping_definition_with_id(self, context, mapping_to_cube_mapping_id),
@@ -920,31 +920,31 @@ class ImportWebsiteToSDDModel(object):
                         )
 
                         mapping_to_cubes_to_create.append(mapping_to_cube)
-                        
+
                         mapping_to_cube_list = context.mapping_to_cube_dictionary.setdefault(
                             mapping_to_cube.cube_mapping_id, [])
                         mapping_to_cube_list.append(mapping_to_cube)
 
         if context.save_sdd_to_db and mapping_to_cubes_to_create:
-            MAPPING_TO_CUBE.objects.bulk_create(mapping_to_cubes_to_create, batch_size=1000)
+            MAPPING_TO_CUBE.objects.bulk_create(mapping_to_cubes_to_create, batch_size=1000,ignore_conflicts=True)
 
     def create_all_variable_mappings(self, context):
         '''
         Import all variable mappings from the rendering package CSV file
         '''
         file_location = context.file_directory + os.sep + "technical_export" + os.sep + "variable_mapping.csv"
-        
+
         # Pre-filter SHS_ entries and build batch
         variable_mappings_to_create = []
-        
+
         # Read entire CSV at once instead of line by line
         with open(file_location, encoding='utf-8') as csvfile:
             rows = list(csv.reader(csvfile))[1:]  # Skip header
-            
+
             # Process in a single pass
             for row in rows:
                 variable_mapping_id = row[ColumnIndexes().variable_mapping_variable_mapping_id]
-                
+
                 if not variable_mapping_id.startswith("SHS_") and variable_mapping_id not in context.variable_mapping_dictionary:
                     variable_mapping = VARIABLE_MAPPING(
                         variable_mapping_id=variable_mapping_id,
@@ -953,13 +953,13 @@ class ImportWebsiteToSDDModel(object):
                         code=row[ColumnIndexes().variable_mapping_code],
                         name=row[ColumnIndexes().variable_mapping_name]
                     )
-                    
+
                     variable_mappings_to_create.append(variable_mapping)
                     context.variable_mapping_dictionary[variable_mapping_id] = variable_mapping
 
         # Single bulk create with larger batch size
         if context.save_sdd_to_db and variable_mappings_to_create:
-            VARIABLE_MAPPING.objects.bulk_create(variable_mappings_to_create, batch_size=5000)
+            VARIABLE_MAPPING.objects.bulk_create(variable_mappings_to_create, batch_size=5000,ignore_conflicts=True)
 
     def create_all_variable_mapping_items(self, context):
         '''
@@ -968,27 +968,27 @@ class ImportWebsiteToSDDModel(object):
         file_location = context.file_directory + os.sep + "technical_export" + os.sep + "variable_mapping_item.csv"
         missing_variables = []
         variable_mapping_items_to_create = []
-        
+
         # Cache variable lookups
         variable_cache = {}
-        
+
         with open(file_location, encoding='utf-8') as csvfile:
             rows = list(csv.reader(csvfile))[1:]  # Skip header
-            
+
             for row in rows:
                 mapping_id = row[ColumnIndexes().varaible_mapping_item_variable_mapping_id]
                 if mapping_id.startswith("SHS_"):
                     continue
-                    
+
                 variable_id = row[ColumnIndexes().variable_mapping_item_variable_id]
-                
+
                 # Use cached variable lookup
                 if variable_id not in variable_cache:
                     variable_cache[variable_id] = ImportWebsiteToSDDModel.find_variable_with_id(
                         self, context, variable_id)
-                
+
                 variable = variable_cache[variable_id]
-                
+
                 if variable is None:
                     missing_variables.append((
                         variable_id,
@@ -996,7 +996,7 @@ class ImportWebsiteToSDDModel(object):
                         row[ColumnIndexes().variable_mapping_item_valid_to]
                     ))
                     continue
-                    
+
                 variable_mapping_item = VARIABLE_MAPPING_ITEM(
                     variable_id=variable,
                     variable_mapping_id=ImportWebsiteToSDDModel.find_variable_mapping_with_id(
@@ -1007,13 +1007,13 @@ class ImportWebsiteToSDDModel(object):
                 )
 
                 variable_mapping_items_to_create.append(variable_mapping_item)
-                
+
                 # Build dictionary in a single operation
                 context.variable_mapping_item_dictionary.setdefault(mapping_id, []).append(variable_mapping_item)
 
         # Single bulk create with larger batch size
         if context.save_sdd_to_db and variable_mapping_items_to_create:
-            VARIABLE_MAPPING_ITEM.objects.bulk_create(variable_mapping_items_to_create, batch_size=5000)
+            VARIABLE_MAPPING_ITEM.objects.bulk_create(variable_mapping_items_to_create, batch_size=5000,ignore_conflicts=True)
 
         if missing_variables:
             ImportWebsiteToSDDModel.save_missing_mapping_variables_to_csv(context, missing_variables)
@@ -1062,7 +1062,7 @@ class ImportWebsiteToSDDModel(object):
                 return context.variable_dictionary[element_id]
             except KeyError:
                 return None
-            
+
     def find_maintenance_agency_with_id(self,context, element_id):
         '''
         Find an existing maintenance agency with this id
@@ -1084,7 +1084,7 @@ class ImportWebsiteToSDDModel(object):
                 return return_item
             except KeyError:
                 return None
-            
+
     def find_table_with_id(self, context, table_id):
         '''
         Get the report table with the given id
@@ -1126,7 +1126,7 @@ class ImportWebsiteToSDDModel(object):
         Replace dots with underscores in the given text
         '''
         return text.replace('.', '_')
-    
+
     def find_variable_mapping_with_id(self, context, variable_mapping_id):
         '''
         Get the variable mapping with the given id
@@ -1135,7 +1135,7 @@ class ImportWebsiteToSDDModel(object):
             return context.variable_mapping_dictionary[variable_mapping_id]
         except KeyError:
             return None
-        
+
     def find_mapping_definition_with_id(self, context, mapping_definition_id):
         '''
         get the mapping definition with the given id
@@ -1159,4 +1159,3 @@ class ImportWebsiteToSDDModel(object):
         mapping_warnings_dir = os.path.join(base_dir, 'results', 'generated_mapping_warnings')
         for file in os.listdir(mapping_warnings_dir):
             os.remove(os.path.join(mapping_warnings_dir, file))
-

@@ -139,4 +139,8 @@ urlpatterns = [
     path('edit_view_file/', views.edit_view_file, name='edit_view_file'),
     path('anacredit_transformation_results_endpoint/', views.anacredit_transformation_results_endpoint, name='anacredit_transformation_results_endpoint'),
     path('fetch_ancredit_data/', views.fetch_ancrdt_data, name='fetch_ancredit_data')
+    path('bulk-delete-cube-structure-item-links/', views.bulk_delete_cube_structure_item_links, name='bulk_delete_cube_structure_item_links'),
+    path('delete-cube-structure-item-link-dupl/<str:cube_structure_item_link_id>/', views.delete_cube_structure_item_link_dupl, name='delete_cube_structure_item_link_dupl'),
+    path('run-full-setup/', views.run_full_setup, name='run_full_setup')
+
 ]
