@@ -406,6 +406,7 @@ class JoinsMetaDataCreator:
             List[Any]: A list of matching variables.
         """
         related_variables = []
+        
         target_domain = output_item.variable_id.domain_id if output_item.variable_id else None
         output_members = context.variable_members_in_combinations.get(output_item.variable_id,set())
         hierarchies = sdd_context.domain_to_hierarchy_dictionary.get(output_item.variable_id.domain_id,[])
@@ -420,16 +421,65 @@ class JoinsMetaDataCreator:
         field_list = sdd_context.bird_cube_structure_item_dictionary.get(input_entity.cube_structure_id, [])
 
         if target_domain and target_domain.domain_id and target_domain.domain_id not in IGNORED_DOMAINS:
+            # Early exit if no output members to compare
+            if not all_output_members:
+                return related_variables
+            
+            # Initialize subdomain enumeration cache if not exists
+            if not hasattr(sdd_context, 'subdomain_enumeration_cache'):
+                sdd_context.subdomain_enumeration_cache = {}
+            
+            # Collect all unique subdomains from field_list to batch load
+            subdomains_to_load = set()
+            for csi in field_list:
+                if csi.variable_id and csi.variable_id.domain_id and csi.subdomain_id:
+                    subdomain_id = csi.subdomain_id.subdomain_id
+                    if subdomain_id not in sdd_context.subdomain_enumeration_cache:
+                        subdomains_to_load.add(subdomain_id)
+            
+            # Batch load subdomain enumerations for all subdomains at once
+            if subdomains_to_load:
+                from django.db.models import Prefetch
+                subdomain_enums = SUBDOMAIN_ENUMERATION.objects.filter(
+                    subdomain_id__subdomain_id__in=subdomains_to_load
+                ).select_related('member_id', 'subdomain_id')
+                
+                # Group by subdomain_id for caching
+                for enum in subdomain_enums:
+                    subdomain_id = enum.subdomain_id.subdomain_id
+                    if subdomain_id not in sdd_context.subdomain_enumeration_cache:
+                        sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
+                    sdd_context.subdomain_enumeration_cache[subdomain_id].add(enum.member_id)
+                
+                # Mark empty subdomains to avoid future queries
+                for subdomain_id in subdomains_to_load:
+                    if subdomain_id not in sdd_context.subdomain_enumeration_cache:
+                        sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
+            
+            # Now process field_list using cached data
             for csi in field_list:
                 bool_1 = csi.variable_id and csi.variable_id.domain_id
-                bool_2 = context.domain_to_member.get(csi.variable_id.domain_id,set()).intersection(
-                    # output_members
-                    all_output_members
-                )
+                if not bool_1:
+                    continue
+                    
+                subdomain = csi.subdomain_id
+                bool_2 = False
+                if subdomain:
+                    subdomain_id = subdomain.subdomain_id
+                    # Use cached subdomain enumeration data
+                    subdomain_members = sdd_context.subdomain_enumeration_cache.get(subdomain_id, set())
+                    bool_2 = bool(subdomain_members.intersection(all_output_members))
+                else:
+                    #print(f"no subdomain for {csi}:{csi.variable_id}:{csi.cube_structure_id.cube_structure_id}")
+                    bool_2 = False
+                    
                 if bool_1 and bool_2:
+                    # if output_item.variable_id.variable_id == 'TYP_INSTRMNT':
+                    #    import pdb;pdb.set_trace()
                     related_variables.append(csi)
             return related_variables
 
+        logging.warning(f"CHECKING OUTPUT VARIABLE NAME FOR {output_item}")
         output_variable_name = output_item.variable_id.variable_id if output_item.variable_id else None
         if output_variable_name:
             related_variables = [
