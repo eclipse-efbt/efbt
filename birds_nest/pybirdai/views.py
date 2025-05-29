@@ -36,7 +36,8 @@ from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
 from .entry_points.delete_joins_metadata import RunDeleteJoinsMetadata
 from .entry_points.delete_semantic_integrations import RunDeleteSemanticIntegrations
 from .entry_points.delete_output_concepts import RunDeleteOutputConcepts
-from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+from .utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+from .entry_points.import_export_mapping_join_metadata import RunExporterJoins, RunImporterJoins,RunMappingJoinsEIL_LDM
 from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
 from .entry_points.execute_datapoint import RunExecuteDataPoint
@@ -909,7 +910,96 @@ def delete_cube_link(request, cube_link_id):
         messages.error(request, f'Error deleting CUBE_LINK: {str(e)}')
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-def delete_cube_structure_item_link(request, cube_structure_item_link_id):
+@require_http_methods(["POST"])
+def bulk_delete_cube_structure_item_links(request):
+    logger.info("Received request to bulk delete CUBE_STRUCTURE_ITEM_LINK items.")
+    sdd_context = SDDContext()
+    selected_ids = request.POST.getlist('selected_items')
+
+    if not selected_ids:
+        logger.warning("No items selected for bulk deletion.")
+        messages.warning(request, "No items selected for deletion.")
+        return redirect('pybirdai:duplicate_primary_member_id_list')
+
+    logger.debug(f"Selected IDs for deletion: {selected_ids}")
+
+    try:
+        # Fetch the links before deleting to get related cube_link_ids
+        logger.debug(f"Fetching {len(selected_ids)} CUBE_STRUCTURE_ITEM_LINK objects for deletion.")
+        links_to_delete = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+            cube_structure_item_link_id__in=selected_ids
+        ).select_related('cube_link_id')
+        logger.debug(f"Fetched {links_to_delete.count()} objects.")
+
+        logger.info("Starting bulk deletion of CUBE_STRUCTURE_ITEM_LINK objects from database.")
+        deleted_count, _ = links_to_delete.delete()
+        logger.info(f"Database deletion complete. Deleted {deleted_count} link(s).")
+
+        logger.info("Updating in-memory SDDContext dictionaries.")
+        # Update the in-memory dictionaries for each deleted link
+        for link in links_to_delete:
+            cube_structure_item_link_id = link.cube_structure_item_link_id
+            cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
+            logger.debug(f"Processing deleted link ID: {cube_structure_item_link_id} (Cube Link ID: {cube_link_id})")
+
+            # Remove from cube_structure_item_links_dictionary
+            try:
+                del sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id]
+                logger.debug(f"Removed link ID {cube_structure_item_link_id} from cube_structure_item_links_dictionary.")
+            except KeyError:
+                logger.debug(f"Link ID {cube_structure_item_link_id} not found in cube_structure_item_links_dictionary (possibly already removed or never loaded).")
+                pass # Already removed or not present
+
+            # Remove from cube_structure_item_link_to_cube_link_map
+            if cube_link_id:
+                if cube_link_id in sdd_context.cube_structure_item_link_to_cube_link_map:
+                    # Create a new list excluding the deleted link
+                    original_count = len(sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id])
+                    sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id] = [
+                        item for item in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                        if item.cube_structure_item_link_id != cube_structure_item_link_id
+                    ]
+                    new_count = len(sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id])
+                    logger.debug(f"Removed link ID {cube_structure_item_link_id} from cube_structure_item_link_to_cube_link_map for Cube Link ID {cube_link_id}. List size changed from {original_count} to {new_count}.")
+
+                    # If the list becomes empty, remove the key from the map
+                    if not sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]:
+                        del sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                        logger.debug(f"Removed empty list for Cube Link ID {cube_link_id} from cube_structure_item_link_to_cube_link_map.")
+                else:
+                     logger.debug(f"Cube Link ID {cube_link_id} not found in cube_structure_item_link_to_cube_link_map.")
+
+
+        messages.success(request, f"{deleted_count} link(s) deleted successfully.")
+        logger.info(f"Bulk deletion process completed successfully. {deleted_count} link(s) deleted.")
+    except Exception as e:
+        logger.error(f'Error during bulk deletion: {str(e)}', exc_info=True)
+        messages.error(request, f'Error during bulk deletion: {str(e)}')
+
+    # Redirect back to the duplicate list page, resetting filters
+    logger.info("Redirecting back to the duplicate primary member ID list page.")
+    # Preserve the filter parameters in the redirect for duplicate_primary_member_id_list
+    params = request.GET.copy()
+    # print(params) # Keep or remove print as needed, removing for clean output
+    # Build the redirect URL
+    redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
+    page = params.get('page',1)
+    redirect_url += f'?page={page}' # Start with page 1
+
+    # Append foreign_cube filter if present
+    foreign_cube = params.get('foreign_cube')
+    if foreign_cube:
+        redirect_url += f'&foreign_cube={foreign_cube}'
+
+    # Append primary_cube filter if present
+    primary_cube = params.get('primary_cube')
+    if primary_cube:
+        redirect_url += f'&primary_cube={primary_cube}'
+
+    # print(redirect_url) # Keep or remove print as needed, removing for clean output
+    return redirect(redirect_url)
+
+def delete_cube_structure_item_link_dupl(request, cube_structure_item_link_id):
     try:
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
         # Store the cube_link_id before deleting
@@ -2816,7 +2906,6 @@ def test_report_view(request):
     }
     return render(request, 'pybirdai/test_report_view.html', context)
 
-
 def edit_member_links_page(request):
     if request.method != 'GET':
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
@@ -3221,3 +3310,80 @@ def edit_view_file(request):
             }
 
     return render(request, 'utils/edit_view_file.html',context=context)
+
+def run_full_setup(request):
+    """
+    Runs all necessary steps to set up the BIRD metadata database:
+    - Deletes existing metadata
+    - Populates with BIRD datamodel metadata (from sqldev)
+    - Populates with BIRD report templates
+    - Imports hierarchies (from website)
+    - Imports semantic integration (from website)
+    - Creates filters and executable filters
+    - Creates joins metadata
+    This function now uses the create_response_with_loading pattern
+    to handle the execution via AJAX on a loading page.
+    """
+
+    if request.GET.get('execute') == 'true':
+        logger.info("Starting full setup...")
+
+        delete_cmd = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
+        delete_cmd.run_delete_bird_metadata_database()
+        logger.info("Deleted existing bird metadata.")
+
+        # Populate bird metadata database with BIRD datamodel metadata
+        # Based on run_import_input_model_from_sqldev example
+        import_model_cmd = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
+        import_model_cmd.ready()
+        logger.info("Imported input model from sqldev.")
+
+        # Populate bird metadata database with BIRD report templates
+        # Based on import_report_templates example
+        import_reports_cmd = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
+        import_reports_cmd.run_import()
+        logger.info("Imported report templates from website.")
+
+        # Import hierarchies from BIRD Website
+        # Based on run_import_hierarchies example
+        import_hierarchies_cmd = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
+        import_hierarchies_cmd.import_hierarchies()
+        logger.info("Imported hierarchies from website.")
+
+        # Import semantic integration from bird website
+        # Based on run_import_semantic_integrations_from_website example
+        import_semantic_cmd = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
+        import_semantic_cmd.import_mappings_from_website()
+        logger.info("Imported semantic integrations from website.")
+
+        app_config = RunCreateFilters('pybirdai', 'birds_nest')
+        app_config.run_create_filters()
+        logger.info("Created filters and executable filters.")
+
+        app_config = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
+        app_config.run_create_joins_meta_data()
+        logger.info("Created joins metadata.")
+
+        app_config = RunExporterJoins('pybirdai', 'birds_nest')
+        app_config.run_export_joins_meta_data()
+        logger.info("Exported joins metadata successfully.")
+
+        # app_config = RunImporterJoins('pybirdai', 'birds_nest')
+        # app_config.run_import_joins_meta_data()
+        # logger.info("Imported joins metadata successfully.")
+
+        app_config = RunMappingJoinsEIL_LDM('pybirdai', 'birds_nest')
+        app_config.run_mapping_joins_meta_data()
+        logger.info("Mapped joins metadata successfully.")
+
+
+        logger.info("Full setup completed successfully.")
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Running Full BIRD Metadata Database Setup (This may take several minutes. Please do not navigate away from this page.)",
+        "Full BIRD Metadata Database Setup completed successfully.",
+        '/pybirdai/edit-cube-links/',
+        "Edit Cube Links"
+    )
