@@ -88,7 +88,7 @@ class DatabaseConnector:
         """Get quadruples of linked cube structure items"""
         logger.info("Building linked cube structure items for cube_link_id: %s", cube_link.cube_link_id)
         DjangoSetup.configure_django()
-        from pybirdai.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK
+        from pybirdai.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK,CUBE_STRUCTURE,CUBE_STRUCTURE_ITEM
 
         linked_items = []
         structure_item_links = cls.get_cube_structure_item_links(cube_link)
@@ -106,6 +106,8 @@ class DatabaseConnector:
 
     @staticmethod
     def create_visualization_json(linked_cube_structure_items):
+        DjangoSetup.configure_django()
+        from pybirdai.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK,CUBE_STRUCTURE,CUBE_STRUCTURE_ITEM
         """Create JSON structure for visualization"""
         logger.info("Creating visualization JSON from %d linked items", len(linked_cube_structure_items))
         nodes = {}
@@ -150,6 +152,20 @@ class DatabaseConnector:
                 'targetItem': foreign_item.variable_id.variable_id,
                 'linkType': "primary" # Default linkType since we no longer have link object
             })
+
+
+            # Change for #1533
+            #
+            foreign_structure = CUBE_STRUCTURE.objects.get(cube=foreign_cube)
+            items = CUBE_STRUCTURE_ITEM.objects.all().filter(cube_structure_id = foreign_structure)
+            items_as_node = {tuple(_.values()) for _ in nodes[foreign_cube.cube_id]['items']}
+
+            for item in items:
+                if (item.variable_id.variable_id,item.description) not in items_as_node:
+                    nodes[foreign_cube.cube_id]['items'].append({
+                        'code': item.variable_id.variable_id,
+                        'name': item.description
+                    })
 
         json_data = {
             'nodes': list(nodes.values()),
