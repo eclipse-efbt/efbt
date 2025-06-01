@@ -129,5 +129,11 @@ urlpatterns = [
     path('test_report_view/', views.test_report_view, name='test_report_view'),
     path('bulk-delete-cube-structure-item-links/', views.bulk_delete_cube_structure_item_links, name='bulk_delete_cube_structure_item_links'),
     path('delete-cube-structure-item-link-dupl/<str:cube_structure_item_link_id>/', views.delete_cube_structure_item_link_dupl, name='delete_cube_structure_item_link_dupl'),
-    path('run-full-setup/', views.run_full_setup, name='run_full_setup')
+    path('member_hierarchy_editor/', views.member_hierarchy_editor, name='member_hierarchy_editor'),
+    path('member_hierarchy_editor/<str:hierarchy_id>/', views.member_hierarchy_editor, name='member_hierarchy_editor'),
+    path('add_member_to_hierarchy/', views.add_member_to_hierarchy, name='add_member_to_hierarchy'),
+    path('delete_member_from_hierarchy/', views.delete_member_from_hierarchy, name='delete_member_from_hierarchy'),
+    path('edit_hierarchy_node/', views.edit_hierarchy_node, name='edit_hierarchy_node'),
+    path('get_members_by_domain/', views.get_members_by_domain, name='get_members_by_domain'),
+    path('get_subdomain_enumerations/', views.get_subdomain_enumerations, name='get_subdomain_enumerations')
 ]
