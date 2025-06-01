@@ -129,5 +129,6 @@ urlpatterns = [
     path('test_report_view/', views.test_report_view, name='test_report_view'),
     path('bulk-delete-cube-structure-item-links/', views.bulk_delete_cube_structure_item_links, name='bulk_delete_cube_structure_item_links'),
     path('delete-cube-structure-item-link-dupl/<str:cube_structure_item_link_id>/', views.delete_cube_structure_item_link_dupl, name='delete_cube_structure_item_link_dupl'),
-    path('run-full-setup/', views.run_full_setup, name='run_full_setup')
+    path('run-full-setup/', views.run_full_setup, name='run_full_setup'),
+    path("import_bird_data_from_csv_export/", views.import_bird_data_from_csv_export, name='import_bird_data_from_csv_export'),
 ]

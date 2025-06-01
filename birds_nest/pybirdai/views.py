@@ -1895,6 +1895,10 @@ def export_database_to_csv(request):
                         cursor.execute(f"PRAGMA table_info({table_name})")
                         table_info = cursor.fetchall()
                         pk_column = None
+
+                        # two changes for the export sorting :
+                        # - one change here to consider composite key or being happy with row_id (combination item, se, csi)
+                        # - adding composite key into the model
                         for col in table_info:
                             if col[5] == 1:  # 5 is the index for pk flag in table_info
                                 pk_column = col[1]  # 1 is the index for column name
@@ -2979,3 +2983,17 @@ def run_full_setup(request):
         '/pybirdai/edit-cube-links/',
         "Edit Cube Links"
     )
+
+def import_bird_data_from_csv_export(request):
+    """
+    Django endpoint for importing metadata from CSV files.
+    """
+    from .utils import import_from_metadata_export
+
+    if request.method == 'GET':
+        return render(request, 'pybirdai/import_database.html')
+
+    files = json.loads(request.body.decode("utf-8"))
+    import_from_metadata_export.CSVDataImporter().import_from_csv_strings(files)
+
+    return JsonResponse({'message': 'Import successful'})
