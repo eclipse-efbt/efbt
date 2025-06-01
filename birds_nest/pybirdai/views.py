@@ -22,7 +22,8 @@ from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
-    MAINTENANCE_AGENCY,  MEMBER_HIERARCHY, DOMAIN
+    MAINTENANCE_AGENCY,  MEMBER_HIERARCHY, DOMAIN,MEMBER_HIERARCHY_NODE,
+    SUBDOMAIN, SUBDOMAIN_ENUMERATION
 )
 import json
 from . import bird_meta_data_model
@@ -2979,3 +2980,377 @@ def run_full_setup(request):
         '/pybirdai/edit-cube-links/',
         "Edit Cube Links"
     )
+
+def member_hierarchy_editor(request, hierarchy_id=None):
+    """
+    View function for rendering the member hierarchy editor page.
+
+    Args:
+        request: HTTP request object
+        hierarchy_id: Optional hierarchy ID to display specific hierarchy
+
+    Returns:
+        Rendered template response with hierarchy data
+    """
+    logger.info(f"Rendering member hierarchy page for hierarchy_id: {hierarchy_id}")
+
+    # Get all member hierarchies for the dropdown
+    hierarchies = MEMBER_HIERARCHY.objects.all().order_by('name')
+
+    context = {
+        'hierarchies': hierarchies,
+        'selected_hierarchy_id': hierarchy_id
+    }
+
+    # If a specific hierarchy is selected, get its details
+    if hierarchy_id:
+        try:
+            hierarchy = MEMBER_HIERARCHY.objects.get(member_hierarchy_id=hierarchy_id)
+            hierarchy_nodes = MEMBER_HIERARCHY_NODE.objects.filter(
+                member_hierarchy_id=hierarchy
+            ).order_by('level')
+
+            # Build tree structure from hierarchy nodes
+            def build_hierarchy_tree(nodes):
+                """Build a tree structure from flat hierarchy nodes and generate HTML"""
+                node_dict = {}
+                root_nodes = []
+
+                # First pass: create node dictionary
+                for node in nodes:
+                    node_dict[node.member_id.member_id if node.member_id else None] = {
+                        'node': node,
+                        'children': []
+                    }
+
+                # Second pass: build parent-child relationships
+                for node in nodes:
+                    current_member_id = node.member_id.member_id if node.member_id else None
+                    parent_member_id = node.parent_member_id.member_id if node.parent_member_id else None
+
+                    if parent_member_id and parent_member_id in node_dict:
+                        # Add current node as child of parent
+                        node_dict[parent_member_id]['children'].append(node_dict[current_member_id])
+                    else:
+                        # No parent, this is a root node
+                        root_nodes.append(node_dict[current_member_id])
+
+                def generate_html_recursive(tree_nodes, level=0):
+                    """Recursively generate HTML for hierarchy nodes"""
+                    html = '<ul class="tree-list">\n'
+                    for tree_node in tree_nodes:
+                        node = tree_node['node']
+                        margin_left = (level) * 10
+
+                        html += f'    <li class="tree-node level-{node.level}" style="margin-left: {margin_left}px; padding: 15px;">\n'
+                        html += f'        <div class="node-content">\n'
+                        html += f'            <strong>{node.member_id.name if node.member_id else "N/A"} ({node.member_id.code if node.member_id else "N/A"})</strong>\n'
+                        html += f'            <div class="node-details">\n'
+                        html += f'                Level: {node.level}'
+                        if hasattr(node, 'order') and node.order:
+                            html += f' | Order: {node.order}'
+                        if node.comparator:
+                            html += f' | Comparator: {node.comparator}'
+                        if node.operator:
+                            html += f' | Operator: {node.operator}'
+                        html += f'\n            </div>\n'
+                        html += f'            <div class="node-actions">\n'
+                        html += f'                <button class="btn btn-sm btn-warning" onclick="editNode({node.id})">Edit</button>\n'
+                        html += f'                <button class="btn btn-sm btn-danger" onclick="deleteNode({node.id})">Delete</button>\n'
+                        html += f'            </div>\n'
+                        html += f'        </div>\n'
+
+                        # Recursively add children
+                        if tree_node['children']:
+                            html += generate_html_recursive(tree_node['children'], level + 1)
+
+                        html += f'    </li>\n'
+                    html += '</ul>\n'
+                    return html
+
+                return {
+                    'tree_structure': root_nodes,
+                    'html': generate_html_recursive(root_nodes)
+                }
+
+            hierarchy_tree = build_hierarchy_tree(hierarchy_nodes)
+
+            # Get all domains for member selection
+            domains = [hierarchy.domain_id]
+
+            # Get subdomain enumerations for comparator and operator options
+            subdomains = [SUBDOMAIN.objects.all().filter(domain_id=domains[0])]
+            subdomain_enums = SUBDOMAIN_ENUMERATION.objects.all().filter(subdomain_id__in=subdomains).order_by('subdomain_id')
+
+            context.update({
+                'selected_hierarchy': hierarchy,
+                'hierarchy_nodes': hierarchy_nodes,
+                'hierarchy_tree': hierarchy_tree,
+                'domains': domains,
+                'subdomains': subdomains,
+                'subdomain_enums': subdomain_enums
+            })
+
+        except MEMBER_HIERARCHY.DoesNotExist:
+            logger.error(f"Member hierarchy {hierarchy_id} not found")
+            context['error'] = f"Member hierarchy {hierarchy_id} not found"
+
+    return render(request, 'pybirdai/member_hierarchy_editor.html', context)
+
+def add_member_to_hierarchy(request):
+    """
+    Endpoint for adding a member to a member hierarchy.
+
+    Args:
+        request: HTTP request object with POST data
+
+    Returns:
+        JSON response with status
+    """
+    logger.info("Handling add member to hierarchy request")
+    if request.method != "POST":
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+    try:
+        data = json.loads(request.body)
+        hierarchy_id = data.get('hierarchy_id')
+        member_id = data.get('member_id')
+        parent_member_id = data.get('parent_member_id')
+        level = data.get('level', 1)
+        comparator = data.get('comparator', '')
+        operator = data.get('operator', '')
+
+        # Get the hierarchy object
+        hierarchy = MEMBER_HIERARCHY.objects.get(member_hierarchy_id=hierarchy_id)
+
+        # Get the member object
+        member = MEMBER.objects.get(member_id=member_id)
+
+        # Get parent member if specified
+        parent_member = None
+        if parent_member_id:
+            parent_member = MEMBER.objects.get(member_id=parent_member_id)
+
+        # Create new hierarchy node
+        new_node = MEMBER_HIERARCHY_NODE.objects.create(
+            member_hierarchy_id=hierarchy,
+            member_id=member,
+            parent_member_id=parent_member,
+            level=level,
+            comparator=comparator,
+            operator=operator
+        )
+
+        logger.info(f"Successfully added member {member_id} to hierarchy {hierarchy_id}")
+        return JsonResponse({
+            'status': 'success',
+            'node_id': new_node.id,
+            'message': 'Member added to hierarchy successfully'
+        })
+
+    except MEMBER_HIERARCHY.DoesNotExist:
+        logger.error(f"Member hierarchy {hierarchy_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Member hierarchy not found'})
+    except MEMBER.DoesNotExist:
+        logger.error(f"Member {member_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Member not found'})
+    except Exception as e:
+        logger.error(f"Error adding member to hierarchy: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def delete_member_from_hierarchy(request):
+    """
+    Endpoint for deleting a member from a member hierarchy.
+    Handles cascading deletion of child nodes.
+
+    Args:
+        request: HTTP request object with POST data
+
+    Returns:
+        JSON response with status
+    """
+    logger.info("Handling delete member from hierarchy request")
+    if request.method != "POST":
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+    try:
+        data = json.loads(request.body)
+        node_id = data.get('node_id')
+        force_delete = data.get('force_delete', False)
+
+        # Get the hierarchy node
+        node = MEMBER_HIERARCHY_NODE.objects.get(id=node_id)
+
+        # Check if this node has children
+        children = MEMBER_HIERARCHY_NODE.objects.filter(parent_member_id=node.member_id)
+
+        if children.exists() and not force_delete:
+            # Return warning about children
+            child_count = children.count()
+            return JsonResponse({
+                'status': 'warning',
+                'message': f'This member has {child_count} child member(s). Do you want to delete them as well?',
+                'has_children': True,
+                'child_count': child_count
+            })
+
+        # Use atomic transaction for deletion
+        with transaction.atomic():
+            if children.exists():
+                # Recursively delete all children
+                def delete_children(parent_member):
+                    child_nodes = MEMBER_HIERARCHY_NODE.objects.filter(
+                        parent_member_id=parent_member,
+                        member_hierarchy_id=node.member_hierarchy_id
+                    )
+                    for child_node in child_nodes:
+                        delete_children(child_node.member_id)
+                        child_node.delete()
+
+                delete_children(node.member_id)
+
+            # Delete the node itself
+            node.delete()
+
+        logger.info(f"Successfully deleted node {node_id} from hierarchy")
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Member deleted from hierarchy successfully'
+        })
+
+    except MEMBER_HIERARCHY_NODE.DoesNotExist:
+        logger.error(f"Hierarchy node {node_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Hierarchy node not found'})
+    except Exception as e:
+        logger.error(f"Error deleting member from hierarchy: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def edit_hierarchy_node(request):
+    """
+    Endpoint for editing a hierarchy node (member, comparator, operator).
+
+    Args:
+        request: HTTP request object with POST data
+
+    Returns:
+        JSON response with status
+    """
+    logger.info("Handling edit hierarchy node request")
+    if request.method != "POST":
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+    try:
+        data = json.loads(request.body)
+        node_id = data.get('node_id')
+        member_id = data.get('member_id')
+        comparator = data.get('comparator', '')
+        operator = data.get('operator', '')
+        level = data.get('level')
+
+        # Get the hierarchy node
+        node = MEMBER_HIERARCHY_NODE.objects.get(id=node_id)
+
+        # Update member if provided
+        if member_id:
+            member = MEMBER.objects.get(member_id=member_id)
+            node.member_id = member
+
+        # Update other fields
+        if comparator is not None:
+            node.comparator = comparator
+        if operator is not None:
+            node.operator = operator
+        if level is not None:
+            node.level = level
+
+        node.save()
+
+        logger.info(f"Successfully updated hierarchy node {node_id}")
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Hierarchy node updated successfully'
+        })
+
+    except MEMBER_HIERARCHY_NODE.DoesNotExist:
+        logger.error(f"Hierarchy node {node_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Hierarchy node not found'})
+    except MEMBER.DoesNotExist:
+        logger.error(f"Member {member_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Member not found'})
+    except Exception as e:
+        logger.error(f"Error editing hierarchy node: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def get_members_by_domain(request, domain_id):
+    """
+    Get members for a specific domain (for dropdown population).
+
+    Args:
+        request: HTTP request object
+        domain_id: ID of domain to get members for
+
+    Returns:
+        JSON response with members data
+    """
+    logger.info(f"Getting members for domain {domain_id}")
+    try:
+        domain = DOMAIN.objects.get(domain_id=domain_id)
+        members = MEMBER.objects.filter(domain_id=domain).order_by('name')
+
+        member_data = []
+        for member in members:
+            member_data.append({
+                'member_id': member.member_id,
+                'code': member.code,
+                'name': member.name,
+                'description': member.description
+            })
+
+        return JsonResponse({
+            'status': 'success',
+            'members': member_data
+        })
+
+    except DOMAIN.DoesNotExist:
+        logger.error(f"Domain {domain_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Domain not found'})
+    except Exception as e:
+        logger.error(f"Error getting members by domain: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def get_subdomain_enumerations(request, subdomain_id):
+    """
+    Get subdomain enumerations for comparator/operator dropdowns.
+
+    Args:
+        request: HTTP request object
+        subdomain_id: ID of subdomain to get enumerations for
+
+    Returns:
+        JSON response with enumeration data
+    """
+    logger.info(f"Getting subdomain enumerations for subdomain {subdomain_id}")
+    try:
+        subdomain = SUBDOMAIN.objects.get(subdomain_id=subdomain_id)
+        enumerations = SUBDOMAIN_ENUMERATION.objects.filter(subdomain_id=subdomain).order_by('name')
+
+        enum_data = []
+        for enum in enumerations:
+            enum_data.append({
+                'enumeration_id': enum.enumeration_id,
+                'code': enum.code,
+                'name': enum.name,
+                'description': enum.description
+            })
+
+        return JsonResponse({
+            'status': 'success',
+            'enumerations': enum_data
+        })
+
+    except SUBDOMAIN.DoesNotExist:
+        logger.error(f"Subdomain {subdomain_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Subdomain not found'})
+    except Exception as e:
+        logger.error(f"Error getting subdomain enumerations: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})

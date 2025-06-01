@@ -1,0 +1,788 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Member Hierarchy Editor{% endblock %}
+
+{% block content %}
+<style>
+    .fullscreen-container {
+        min-height: 100vh;
+        background-color: #f8f9fa;
+    }
+
+    .header-bar {
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .header-content h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 300;
+    }
+
+    .header-controls {
+        display: flex;
+        gap: 10px;
+    }
+
+    .hierarchy-selection {
+        max-width: 500px;
+    }
+
+    .hierarchy-selection label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .hierarchy-selection select {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .content-area {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .hierarchy-info {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .hierarchy-info h2 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .hierarchy-display {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .tree-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .tree-node {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        transition: all 0.3s ease;
+    }
+
+    .tree-node:hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+
+    .node-content strong {
+        color: #333;
+        font-size: 1.1rem;
+    }
+
+    .node-details {
+        background: rgba(102, 126, 234, 0.1);
+        padding: 8px;
+        border-radius: 5px;
+        margin-top: 8px;
+    }
+
+    .node-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+    /* Modal Styles */
+    .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9) translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px 15px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        font-weight: 300;
+    }
+
+    .close {
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 1;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .close:hover {
+        opacity: 1;
+    }
+
+    .modal-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-1px);
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .btn-warning:hover {
+        background: #e0a800;
+        transform: translateY(-1px);
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-1px);
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    /* Alert Styles */
+    .alert {
+        padding: 15px;
+        margin: 20px;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    /* Loading Indicator */
+    #loadingIndicator {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        text-align: center;
+        z-index: 1001;
+    }
+
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="fullscreen-container">
+    <!-- Top Header Bar -->
+    <div class="header-bar">
+        <div class="header-content">
+            <h1>Member Hierarchy Editor</h1>
+            <div class="header-controls">
+                <a href="{% url 'pybirdai:bird_diffs_and_corrections'%}" class="btn btn-secondary">Back to BIRD Export Diffs and Corrections</a>
+                {% if selected_hierarchy %}
+                    <button class="btn btn-primary" onclick="openAddMemberModal()">Add Member</button>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Hierarchy Selection -->
+        <div class="hierarchy-selection">
+            <label for="hierarchySelect">Select Member Hierarchy:</label>
+            <select class="form-control" id="hierarchySelect" onchange="loadHierarchy()">
+                <option value="">-- Select a hierarchy --</option>
+                {% for hierarchy in hierarchies %}
+                    <option value="{{ hierarchy.member_hierarchy_id }}"
+                        {% if hierarchy.member_hierarchy_id == selected_hierarchy_id %}selected{% endif %}>
+                        {{ hierarchy.name }} - {{ hierarchy.description }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    {% if selected_hierarchy %}
+    <div id="hierarchyContent" class="content-area">
+        <div class="hierarchy-info">
+            <h2>{{ selected_hierarchy.name }}</h2>
+            <p>{{ selected_hierarchy.description }}</p>
+        </div>
+
+        <!-- Simple Hierarchy Display -->
+        <div class="hierarchy-display">
+            {% if hierarchy_nodes %}
+                <div class="simple-tree">
+                    <h3>Hierarchy Structure</h3>
+                    <ul class="tree-list">
+                        {% for node in hierarchy_nodes %}
+                            <li class="tree-node level-{{ node.level }}" style="margin-left: {{ node.level|add:'-1'|floatformat:0 }}0px; padding: 15px;">
+                                <div class="node-content">
+                                    <strong>{{ node.member_id.name }} ({{ node.member_id.code }})</strong>
+                                    <div class="node-details">
+                                        Level: {{ node.level }} | Order: {{ node.order }}
+                                        {% if node.comparator %}| Comparator: {{ node.comparator }}{% endif %}
+                                        {% if node.operator %}| Operator: {{ node.operator }}{% endif %}
+                                    </div>
+                                    <div class="node-actions">
+                                        <button class="btn btn-sm btn-warning" onclick="editNode({{ node.id }})">Edit</button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteNode({{ node.id }})">Delete</button>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <div class="no-data">
+                    <p>No members in this hierarchy yet.</p>
+                    <button class="btn btn-primary" onclick="openAddMemberModal()">Add First Member</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing... Please wait.</p>
+    </div>
+
+    <div id="successMessage" style="display: none;" class="alert alert-success">
+        <p id="successText"></p>
+    </div>
+
+    <div id="errorMessage" style="display: none;" class="alert alert-danger">
+        <p id="errorText"></p>
+    </div>
+
+    <div id="warningMessage" style="display: none;" class="alert alert-warning">
+        <p id="warningText"></p>
+        <button class="btn btn-danger" id="forceDeleteBtn">Delete All</button>
+        <button class="btn btn-secondary" onclick="hideWarning()">Cancel</button>
+    </div>
+</div>
+
+<!-- Add Member Modal -->
+<div id="addMemberModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add Member to Hierarchy</h3>
+            <span class="close" onclick="closeAddMemberModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="addMemberForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="domainSelect">Domain:</label>
+                    <select class="form-control" id="domainSelect" onchange="loadMembersByDomain()" required>
+                        <option value="">-- Select a domain --</option>
+                        {% for domain in domains %}
+                            <option value="{{ domain.domain_id }}">{{ domain.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="memberSelect">Member:</label>
+                    <select class="form-control" id="memberSelect" required>
+                        <option value="">-- Select a member --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="parentMemberSelect">Parent Member (optional):</label>
+                    <select class="form-control" id="parentMemberSelect">
+                        <option value="">-- No parent --</option>
+                        {% for node in hierarchy_nodes %}
+                            <option value="{{ node.member_id.member_id }}">{{ node.member_id.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="levelInput">Level:</label>
+                    <input type="number" class="form-control" id="levelInput" value="1" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="orderInput">Order:</label>
+                    <input type="number" class="form-control" id="orderInput" value="1" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="comparatorInput">Comparator (optional):</label>
+                    <input type="text" class="form-control" id="comparatorInput" placeholder="Enter comparator">
+                </div>
+                <div class="form-group">
+                    <label for="operatorInput">Operator (optional):</label>
+                    <input type="text" class="form-control" id="operatorInput" placeholder="Enter operator">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Member</button>
+                <button type="button" class="btn btn-secondary" onclick="closeAddMemberModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Node Modal -->
+<div id="editModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Hierarchy Node</h3>
+            <span class="close" onclick="closeEditModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="editNodeForm">
+                <input type="hidden" id="editNodeId">
+                <div class="form-group">
+                    <label for="editDomainSelect">Domain:</label>
+                    <select class="form-control" id="editDomainSelect" onchange="loadEditMembersByDomain()">
+                        <option value="">-- Select a domain --</option>
+                        {% for domain in domains %}
+                            <option value="{{ domain.domain_id }}">{{ domain.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editMemberSelect">Member:</label>
+                    <select class="form-control" id="editMemberSelect">
+                        <option value="">-- Select a member --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editLevelInput">Level:</label>
+                    <input type="number" class="form-control" id="editLevelInput" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="editOrderInput">Order:</label>
+                    <input type="number" class="form-control" id="editOrderInput" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="editComparatorInput">Comparator:</label>
+                    <input type="text" class="form-control" id="editComparatorInput">
+                </div>
+                <div class="form-group">
+                    <label for="editOperatorInput">Operator:</label>
+                    <input type="text" class="form-control" id="editOperatorInput">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentDeleteNodeId = null;
+
+function loadHierarchy() {
+    const hierarchyId = document.getElementById('hierarchySelect').value;
+    if (hierarchyId) {
+        window.location.href = `{% url 'pybirdai:member_hierarchy_editor' %}${hierarchyId}/`;
+    } else {
+        window.location.href = `{% url 'pybirdai:member_hierarchy_editor' %}`;
+    }
+}
+
+function openAddMemberModal() {
+    document.getElementById('addMemberModal').style.display = 'block';
+}
+
+function closeAddMemberModal() {
+    document.getElementById('addMemberModal').style.display = 'none';
+}
+
+function loadMembersByDomain() {
+    const domainId = document.getElementById('domainSelect').value;
+    const memberSelect = document.getElementById('memberSelect');
+
+    memberSelect.innerHTML = '<option value="">-- Select a member --</option>';
+
+    if (!domainId) return;
+
+    fetch(`/get_members_by_domain/${domainId}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                data.members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.member_id;
+                    option.textContent = `${member.name} (${member.code})`;
+                    memberSelect.appendChild(option);
+                });
+            }
+        })
+        .catch(error => console.error('Error loading members:', error));
+}
+
+function loadEditMembersByDomain() {
+    const domainId = document.getElementById('editDomainSelect').value;
+    const memberSelect = document.getElementById('editMemberSelect');
+
+    memberSelect.innerHTML = '<option value="">-- Select a member --</option>';
+
+    if (!domainId) return;
+
+    fetch(`/get_members_by_domain/${domainId}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                data.members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.member_id;
+                    option.textContent = `${member.name} (${member.code})`;
+                    memberSelect.appendChild(option);
+                });
+            }
+        })
+        .catch(error => console.error('Error loading members:', error));
+}
+
+function showMessage(type, text) {
+    hideAllMessages();
+    const messageDiv = document.getElementById(type + 'Message');
+    const textElement = document.getElementById(type + 'Text');
+    textElement.textContent = text;
+    messageDiv.style.display = 'block';
+
+    if (type === 'success') {
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 3000);
+    }
+}
+
+function hideAllMessages() {
+    document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('warningMessage').style.display = 'none';
+}
+
+function hideWarning() {
+    document.getElementById('warningMessage').style.display = 'none';
+    currentDeleteNodeId = null;
+}
+
+document.getElementById('addMemberForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const hierarchyId = {{ selected_hierarchy_id|default:"null" }};
+    if (!hierarchyId) {
+        showMessage('error', 'No hierarchy selected');
+        return;
+    }
+
+    const formData = {
+        hierarchy_id: hierarchyId,
+        member_id: document.getElementById('memberSelect').value,
+        parent_member_id: document.getElementById('parentMemberSelect').value || null,
+        level: parseInt(document.getElementById('levelInput').value),
+        order: parseInt(document.getElementById('orderInput').value),
+        comparator: document.getElementById('comparatorInput').value,
+        operator: document.getElementById('operatorInput').value
+    };
+
+    if (!formData.member_id) {
+        showMessage('error', 'Please select a member');
+        return;
+    }
+
+    document.getElementById('loadingIndicator').style.display = 'block';
+
+    fetch('/add_member_to_hierarchy/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showMessage('success', data.message);
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            showMessage('error', data.message);
+        }
+    })
+    .catch(error => {
+        showMessage('error', 'Error adding member: ' + error.message);
+    })
+    .finally(() => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+    });
+});
+
+function deleteNode(nodeId) {
+    currentDeleteNodeId = nodeId;
+
+    fetch('/delete_member_from_hierarchy/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({ node_id: nodeId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showMessage('success', data.message);
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else if (data.status === 'warning') {
+            document.getElementById('warningText').textContent = data.message;
+            document.getElementById('warningMessage').style.display = 'block';
+        } else {
+            showMessage('error', data.message);
+        }
+    })
+    .catch(error => {
+        showMessage('error', 'Error deleting member: ' + error.message);
+    });
+}
+
+document.getElementById('forceDeleteBtn').addEventListener('click', function() {
+    if (!currentDeleteNodeId) return;
+
+    fetch('/delete_member_from_hierarchy/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            node_id: currentDeleteNodeId,
+            force_delete: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showMessage('success', data.message);
+            hideWarning();
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            showMessage('error', data.message);
+        }
+    })
+    .catch(error => {
+        showMessage('error', 'Error deleting member: ' + error.message);
+    });
+});
+
+function editNode(nodeId) {
+    document.getElementById('editNodeId').value = nodeId;
+    document.getElementById('editModal').style.display = 'block';
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+document.getElementById('editNodeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const nodeId = document.getElementById('editNodeId').value;
+    const formData = {
+        node_id: nodeId,
+        member_id: document.getElementById('editMemberSelect').value || null,
+        level: parseInt(document.getElementById('editLevelInput').value) || null,
+        order: parseInt(document.getElementById('editOrderInput').value) || null,
+        comparator: document.getElementById('editComparatorInput').value,
+        operator: document.getElementById('editOperatorInput').value
+    };
+
+    fetch('/edit_hierarchy_node/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showMessage('success', data.message);
+            closeEditModal();
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            showMessage('error', data.message);
+        }
+    })
+    .catch(error => {
+        showMessage('error', 'Error editing node: ' + error.message);
+    });
+});
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('editModal');
+    if (event.target == modal) {
+        closeEditModal();
+    }
+}
+</script>
+{% endblock %}
