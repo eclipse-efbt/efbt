@@ -23,6 +23,10 @@
         <img src="{% static 'images/export_db.webp' %}" alt="Export DB to CSV">
         <span>Export Database to CSV Files</span>
     </a>
+    <a href="{% url 'pybirdai:import_database_to_csv' %}" class="task-item">
+        <img src="{% static 'images/export_db.webp' %}" alt="Import DB from CSVs">
+        <span>Import Database from CSV Files</span>
+    </a>
     <a href="{% url 'pybirdai:import_members_from_csv' %}" class="task-item">
         <img src="{% static 'images/import_members.webp' %}" alt="Import Members">
         <span>Import Members from CSV File</span>
