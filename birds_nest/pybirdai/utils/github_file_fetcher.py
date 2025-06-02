@@ -342,9 +342,43 @@ def main():
     # Initialize the fetcher with the FreeBIRD repository
     fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
 
-    # Fetch test fixtures and templates
+    # STEP 1: Fetch specific database derivation model file
+    logger.info("STEP 1: Fetching specific derivation model file")
+    print("STEP 1: Fetching specific derivation model file")
+    remote_dir = "birds_nest/pybirdai"
+    remote_file_name = "bird_data_model.py"
+    local_target_dir = "resources/derivation_implementation"
+    local_target_file_name = "bird_data_model_with_derivation.py"
+
+    # Fetch contents of the directory containing the target file
+    files_in_dir = fetcher.fetch_files(remote_dir)
+    found_file_info = None
+    for item in files_in_dir:
+        if item.get('name') == remote_file_name and item.get('type') == 'file':
+            found_file_info = item
+            break
+
+    if found_file_info:
+        # Construct the local path
+        local_path = os.path.join(local_target_dir, local_target_file_name)
+        # Ensure the local directory exists
+        os.makedirs(local_target_dir, exist_ok=True)
+        logger.info(f"Attempting to download {remote_file_name} to {local_path}")
+        # Download the file
+        download_success = fetcher.download_file(found_file_info, local_path)
+        if download_success:
+            logger.info(f"Successfully downloaded {remote_file_name} to {local_path}")
+        else:
+            logger.error(f"Failed to download {remote_file_name}")
+    else:
+        logger.warning(f"File {remote_file_name} not found in {remote_dir}")
+        print(f"File {remote_file_name} not found in {remote_dir}")
+
+    # STEP 2: Fetch database export files (existing step)
     fetch_database_export_files(fetcher)
-    fetch_test_fixtures(fetcher, "")
+
+    # STEP 3: Fetch test fixtures and templates (existing step)
+    fetch_test_fixtures(fetcher, "") # base_url argument is unused in the current function implementation
 
     logger.info("File fetching process completed successfully!")
     print("File fetching process completed!")
