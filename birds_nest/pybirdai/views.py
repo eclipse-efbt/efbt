@@ -82,6 +82,7 @@ from .utils.utils_views import ensure_results_directory,process_test_results_fil
 import time
 from datetime import datetime
 from django.views.decorators.clickjacking import xframe_options_exempt
+from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
 
 
 
@@ -422,6 +423,12 @@ def index(request):
 
 def home_view(request):
     return render(request, 'pybirdai/home.html')
+
+def automode_view(request):
+    return render(request, 'pybirdai/automode.html')
+
+def step_by_step_mode_view(request):
+    return render(request, 'pybirdai/step_by_step_mode.html')
 
 # CRUD views for various models
 def edit_variable_mappings(request):
@@ -1237,6 +1244,177 @@ def create_response_with_loading(request, task_title, success_message, return_ur
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return HttpResponse(html_response)
+
+def create_response_with_loading_extended(request, task_title, success_message, return_url, return_link_text):
+    """
+    Extended version of create_response_with_loading with better timeout handling
+    for long-running processes like database setup.
+    """
+    html_response = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                .loading-overlay {{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    z-index: 9999;
+                }}
+
+                .loading-spinner {{
+                    width: 50px;
+                    height: 50px;
+                    border: 5px solid #f3f3f3;
+                    border-top: 5px solid #3498db;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin-bottom: 20px;
+                }}
+
+                @keyframes spin {{
+                    0% {{ transform: rotate(0deg); }}
+                    100% {{ transform: rotate(360deg); }}
+                }}
+
+                .loading-message {{
+                    font-size: 18px;
+                    color: #333;
+                    text-align: center;
+                    max-width: 500px;
+                }}
+
+                .task-info {{
+                    padding: 20px;
+                    max-width: 600px;
+                    margin: 0 auto;
+                }}
+
+                #success-message {{
+                    display: none;
+                    margin-top: 20px;
+                    padding: 15px;
+                    background-color: #d4edda;
+                    border: 1px solid #c3e6cb;
+                    border-radius: 4px;
+                    color: #155724;
+                }}
+
+                #error-message {{
+                    display: none;
+                    margin-top: 20px;
+                    padding: 15px;
+                    background-color: #f8d7da;
+                    border: 1px solid #f5c6cb;
+                    border-radius: 4px;
+                    color: #721c24;
+                }}
+
+                .progress-text {{
+                    margin-top: 10px;
+                    font-size: 14px;
+                    color: #666;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="task-info">
+                <h3>{task_title}</h3>
+                <div id="loading-overlay" class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-message">
+                        Please wait while the task completes...<br>
+                        <div class="progress-text">This process may take several minutes. Please do not close this window.</div>
+                    </div>
+                </div>
+                <div id="success-message">
+                    <p>{success_message}</p>
+                    <p>Go back to <a href="{return_url}">{return_link_text}</a></p>
+                </div>
+                <div id="error-message">
+                    <p><strong>Error:</strong> <span id="error-text"></span></p>
+                    <p>Please check the server logs for more details.</p>
+                    <p>Go back to <a href="{return_url}">{return_link_text}</a></p>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {{
+                    // Show loading immediately
+                    document.getElementById('loading-overlay').style.display = 'flex';
+                    document.getElementById('success-message').style.display = 'none';
+                    document.getElementById('error-message').style.display = 'none';
+
+                    // Start the task execution after a small delay to ensure loading is visible
+                    setTimeout(() => {{
+                        // Create AbortController for timeout handling
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout
+
+                        fetch(window.location.href + '?execute=true', {{
+                            method: 'GET',
+                            headers: {{
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }},
+                            signal: controller.signal
+                        }})
+                        .then(response => {{
+                            clearTimeout(timeoutId);
+                            if (!response.ok) {{
+                                throw new Error(`HTTP ${{response.status}}: ${{response.statusText}}`);
+                            }}
+                            return response.json();
+                        }})
+                        .then(data => {{
+                            if (data.status === 'success') {{
+                                // Hide loading and show success
+                                document.getElementById('loading-overlay').style.display = 'none';
+                                document.getElementById('success-message').style.display = 'block';
+                                
+                                // Update success message with instructions if provided
+                                const successDiv = document.getElementById('success-message');
+                                let successContent = '<p>{success_message}</p>';
+                                
+                                if (data.instructions) {{
+                                    successContent += '<div style="margin-top: 15px; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">';
+                                    successContent += '<h4 style="margin-top: 0; color: #856404;">Next Steps:</h4>';
+                                    successContent += '<ol style="margin-bottom: 0;">';
+                                    data.instructions.forEach(instruction => {{
+                                        successContent += '<li style="margin-bottom: 5px;">' + instruction + '</li>';
+                                    }});
+                                    successContent += '</ol></div>';
+                                }}
+                                
+                                successContent += '<p>Go back to <a href="{return_url}">{return_link_text}</a></p>';
+                                successDiv.innerHTML = successContent;
+                                successDiv.style.display = 'block';
+                            }} else {{
+                                throw new Error(data.message || 'Task failed');
+                            }}
+                        }})
+                        .catch(error => {{
+                            clearTimeout(timeoutId);
+                            console.error('Error:', error);
+                            
+                            // Hide loading and show error
+                            document.getElementById('loading-overlay').style.display = 'none';
+                            document.getElementById('error-text').textContent = error.message;
+                            document.getElementById('error-message').style.display = 'block';
+                        }});
+                    }}, 100); // Small delay to ensure loading screen is visible
+                }});
+            </script>
+        </body>
+        </html>
+    """
 
     return HttpResponse(html_response)
 
@@ -2135,6 +2313,41 @@ def run_create_python_joins_from_db(request):
         "Create Transformations Rules in Python"
     )
 
+def run_create_python_transformations_from_db(request):
+    """
+    Runs both Python filters and joins generation from database sequentially.
+    This is used as the third task in automode after database and transformations setup.
+    """
+    if request.GET.get('execute') == 'true':
+        logger.info("Starting Python transformations generation from database...")
+        
+        try:
+            # Step 1: Create executable filters from database
+            logger.info("Step 1: Creating executable filters from database...")
+            filters_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
+            filters_config.run_create_executable_filters_from_db()
+            logger.info("Successfully created executable filters from database.")
+            
+            # Step 2: Create Python joins from database
+            logger.info("Step 2: Creating Python joins from database...")
+            joins_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
+            joins_config.create_python_joins_from_db()
+            logger.info("Successfully created Python joins from database.")
+            
+            logger.info("Python transformations generation completed successfully.")
+            return JsonResponse({'status': 'success'})
+            
+        except Exception as e:
+            logger.error(f"Python transformations generation failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading(
+        request,
+        "Creating Python Transformations from Database (Creating executable filters and Python joins - approx 2 minutes, please don't navigate away)",
+        "Python transformations generation completed successfully! Executable filters and Python joins have been created from the database.",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
 
 def return_semantic_integration_menu(request: Any, mapping_id: str = "") -> Any:
     """Returns semantic integration menu view.
@@ -2904,12 +3117,84 @@ def test_report_view(request):
     return render(request, 'pybirdai/test_report_view.html', context)
 
 
+def load_variables_from_csv_file(csv_file_path):
+    """
+    Helper function to load variables from a CSV file.
+    Used by run_full_setup to load extra variables.
+    """
+    try:
+        import csv
+        from .context.sdd_context_django import SDDContext
+        
+        if not os.path.exists(csv_file_path):
+            logger.warning(f"Extra variables CSV file not found: {csv_file_path}")
+            return 0
+        
+        logger.info(f"Loading extra variables from: {csv_file_path}")
+        
+        # Read the CSV file
+        with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            
+            # Validate headers
+            required_fields = {'VARIABLE_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
+            headers = set(reader.fieldnames)
+            if not required_fields.issubset(headers):
+                missing = required_fields - headers
+                logger.error(f'Missing required columns in extra_variables.csv: {", ".join(missing)}')
+                return 0
+            
+            # Get SDDContext instance
+            sdd_context = SDDContext()
+            
+            # Process each row
+            variables_to_create = []
+            for row in reader:
+                try:
+                    # Look up the domain
+                    domain = DOMAIN.objects.get(domain_id=row['DOMAIN_ID'])
+                    
+                    variable = VARIABLE(
+                        variable_id=row['VARIABLE_ID'],
+                        code=row['CODE'],
+                        name=row['NAME'],
+                        description=row['DESCRIPTION'],
+                        domain_id=domain
+                    )
+                    variables_to_create.append(variable)
+                except DOMAIN.DoesNotExist:
+                    logger.error(f'Domain with ID {row["DOMAIN_ID"]} not found in extra_variables.csv')
+                    continue
+                except Exception as e:
+                    logger.error(f'Error processing variable row in extra_variables.csv: {str(e)}')
+                    continue
+            
+            # Bulk create the variables
+            if variables_to_create:
+                created_variables = VARIABLE.objects.bulk_create(variables_to_create)
+                
+                # Update SDDContext variable dictionary
+                for variable in created_variables:
+                    sdd_context.variable_dictionary[variable.variable_id] = variable
+                
+                logger.info(f"Successfully loaded {len(created_variables)} extra variables from CSV")
+                return len(created_variables)
+            else:
+                logger.info("No extra variables to load from CSV")
+                return 0
+                
+    except Exception as e:
+        logger.error(f"Error loading extra variables from CSV: {str(e)}")
+        return 0
+
+
 def run_full_setup(request):
     """
     Runs all necessary steps to set up the BIRD metadata database:
     - Deletes existing metadata
     - Populates with BIRD datamodel metadata (from sqldev)
     - Populates with BIRD report templates
+    - Loads extra variables from CSV file
     - Imports hierarchies (from website)
     - Imports semantic integration (from website)
     - Creates filters and executable filters
@@ -2936,6 +3221,15 @@ def run_full_setup(request):
         import_reports_cmd = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
         import_reports_cmd.run_import()
         logger.info("Imported report templates from website.")
+
+        # Load extra variables from CSV file
+        base_dir = settings.BASE_DIR
+        extra_variables_path = os.path.join(base_dir, 'resources', 'extra_variables', 'extra_variables.csv')
+        variables_loaded = load_variables_from_csv_file(extra_variables_path)
+        if variables_loaded > 0:
+            logger.info(f"Loaded {variables_loaded} extra variables from CSV file.")
+        else:
+            logger.info("No extra variables loaded (file not found or empty).")
 
         # Import hierarchies from BIRD Website
         # Based on run_import_hierarchies example
@@ -2980,6 +3274,7 @@ def run_full_setup(request):
         '/pybirdai/edit-cube-links/',
         "Edit Cube Links"
     )
+
 
 def member_hierarchy_editor(request, hierarchy_id=None):
     """
@@ -3354,3 +3649,83 @@ def get_subdomain_enumerations(request, subdomain_id):
     except Exception as e:
         logger.error(f"Error getting subdomain enumerations: {str(e)}", exc_info=True)
         return JsonResponse({'status': 'error', 'message': str(e)})
+
+def automode_create_database(request):
+    if request.GET.get('execute') == 'true':
+        try:
+            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+            app_config.run_automode_database_setup()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Database preparation completed successfully!',
+                'instructions': [
+                    'The database configuration files have been generated.',
+                    'To complete the setup:',
+                    '1. Stop the Django server (Ctrl+C in the terminal)',
+                    '2. Run: python manage.py complete_automode_setup',
+                    '3. Restart the server: python manage.py runserver 0.0.0.0:8000',
+                    '4. Your database will be ready to use!'
+                ]
+            })
+        except Exception as e:
+            logger.error(f"Automode database setup failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading_extended(
+        request,
+        "Creating BIRD Database (Automode) - Preparing database configuration files (this won't restart the server)",
+        "Database preparation completed successfully! Please follow the instructions to complete the setup.",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
+def test_automode_components(request):
+    """Test view to verify automode components work individually."""
+    if request.GET.get('execute') == 'true':
+        try:
+            from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
+            from django.conf import settings
+            import os
+            
+            # Test basic setup
+            base_dir = settings.BASE_DIR
+            logger.info(f"Base directory: {base_dir}")
+            
+            # Check if required directories exist
+            resources_dir = os.path.join(base_dir, 'resources')
+            results_dir = os.path.join(base_dir, 'results')
+            ldm_dir = os.path.join(resources_dir, 'ldm')
+            
+            logger.info(f"Resources directory exists: {os.path.exists(resources_dir)}")
+            logger.info(f"Results directory exists: {os.path.exists(results_dir)}")
+            logger.info(f"LDM directory exists: {os.path.exists(ldm_dir)}")
+            
+            if os.path.exists(ldm_dir):
+                ldm_files = os.listdir(ldm_dir)
+                logger.info(f"LDM files: {ldm_files}")
+            
+            # Test creating a simple Django model instance
+            app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
+            logger.info("RunCreateDjangoModels instance created successfully")
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Basic components test passed',
+                'base_dir': str(base_dir),
+                'resources_exists': os.path.exists(resources_dir),
+                'results_exists': os.path.exists(results_dir),
+                'ldm_exists': os.path.exists(ldm_dir)
+            })
+            
+        except Exception as e:
+            logger.error(f"Test failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading_extended(
+        request,
+        "Testing Automode Components",
+        "Component test completed successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
