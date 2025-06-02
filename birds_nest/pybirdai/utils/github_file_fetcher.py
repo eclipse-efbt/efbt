@@ -80,7 +80,7 @@ class GitHubFileFetcher:
             if content_type == "directory":
                 print(f"Found folder: {item_name}")
                 # Recursively get commit info for subfolder
-                subfolder_path = item_path.replace(f"birds_nest/{folder_path}/", "") if folder_path else item_name
+                subfolder_path = item_path.replace(f"birds_nest", ".") if folder_path else item_name
                 try:
                     self._get_commit_info_recursive(subfolder_path, branch)
                 except requests.exceptions.RequestException as e:
@@ -88,8 +88,6 @@ class GitHubFileFetcher:
                         print(f"URL not found for subfolder: {subfolder_path}")
                         continue
                     raise e
-            else:
-                print(f"Found file: {item_name}")
 
         result = {
             "tree": tree_items,
@@ -292,7 +290,6 @@ def fetch_test_fixtures(fetcher, base_url):
 
                         if local_file_path.endswith('.py') or local_file_path.endswith('.sql'):
                             with open(local_file_path, 'wb') as f:
-                                print("I wrote file; ", local_file_path, raw_url)
                                 f.write(response.content)
 
     # Recursively fetch all files and directories
