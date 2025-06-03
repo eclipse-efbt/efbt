@@ -334,7 +334,7 @@ class GitHubFileFetcher:
     def fetch_test_fixture(self, folder_data):
         file_tree = folder_data.get('fileTree', {})
         logger.debug(f"Processing file tree with {len(file_tree)} directories")
-        it_ = map(lambda item_data : item_data.get("items", []), file_tree.values())
+        it_ = sum(list(map(lambda item_data : item_data.get("items", []), file_tree.values())), [])
 
         for item in it_:
             right_content_type = item['contentType'] == 'file'
@@ -422,6 +422,7 @@ def main():
     fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
 
     logger.info("STEP 1: Fetching specific derivation model file")
+
     fetcher.fetch_derivation_model_file(
         "birds_nest/pybirdai",
         "bird_data_model.py",
