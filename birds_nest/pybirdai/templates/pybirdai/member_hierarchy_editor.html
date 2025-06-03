@@ -609,7 +609,7 @@ Editor{% endblock %} {% block content %}
     let currentDeleteNodeId = null;
 
     function loadHierarchy() {
-        const hierarchyId = document.getElementById('hierarchySelect').value;
+        const hierarchyId = document.getElementById("hierarchySelect").value;
         if (hierarchyId) {
             window.location.href = `{% url 'pybirdai:member_hierarchy_editor' %}${hierarchyId}/`;
         } else {
@@ -618,251 +618,287 @@ Editor{% endblock %} {% block content %}
     }
 
     function openAddMemberModal() {
-        document.getElementById('addMemberModal').style.display = 'block';
+        document.getElementById("addMemberModal").style.display = "block";
     }
 
     function closeAddMemberModal() {
-        document.getElementById('addMemberModal').style.display = 'none';
+        document.getElementById("addMemberModal").style.display = "none";
     }
 
     function loadMembersByDomain() {
-        const domainId = document.getElementById('domainSelect').value;
-        const memberSelect = document.getElementById('memberSelect');
+        const domainId = document.getElementById("domainSelect").value;
+        const memberSelect = document.getElementById("memberSelect");
 
-        memberSelect.innerHTML = '<option value="">-- Select a member --</option>';
+        memberSelect.innerHTML =
+            '<option value="">-- Select a member --</option>';
 
         if (!domainId) return;
 
-        fetch(`/get_members_by_domain/${domainId}/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    data.members.forEach(member => {
-                        const option = document.createElement('option');
+        fetch(`/pybirdai/get_members_by_domain/${domainId}/`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    data.members.forEach((member) => {
+                        const option = document.createElement("option");
                         option.value = member.member_id;
                         option.textContent = `${member.name} (${member.code})`;
                         memberSelect.appendChild(option);
                     });
                 }
             })
-            .catch(error => console.error('Error loading members:', error));
+            .catch((error) => console.error("Error loading members:", error));
     }
 
     function loadEditMembersByDomain() {
-        const domainId = document.getElementById('editDomainSelect').value;
-        const memberSelect = document.getElementById('editMemberSelect');
+        const domainId = document.getElementById("editDomainSelect").value;
+        const memberSelect = document.getElementById("editMemberSelect");
 
-        memberSelect.innerHTML = '<option value="">-- Select a member --</option>';
+        memberSelect.innerHTML =
+            '<option value="">-- Select a member --</option>';
 
         if (!domainId) return;
 
-        fetch(`/get_members_by_domain/${domainId}/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    data.members.forEach(member => {
-                        const option = document.createElement('option');
+        fetch(`/pybirdai/get_members_by_domain/${domainId}/`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    data.members.forEach((member) => {
+                        const option = document.createElement("option");
                         option.value = member.member_id;
                         option.textContent = `${member.name} (${member.code})`;
                         memberSelect.appendChild(option);
                     });
                 }
             })
-            .catch(error => console.error('Error loading members:', error));
+            .catch((error) => console.error("Error loading members:", error));
     }
 
     function showMessage(type, text) {
         hideAllMessages();
-        const messageDiv = document.getElementById(type + 'Message');
-        const textElement = document.getElementById(type + 'Text');
+        const messageDiv = document.getElementById(type + "Message");
+        const textElement = document.getElementById(type + "Text");
         textElement.textContent = text;
-        messageDiv.style.display = 'block';
+        messageDiv.style.display = "block";
 
-        if (type === 'success') {
+        if (type === "success") {
             setTimeout(() => {
-                messageDiv.style.display = 'none';
+                messageDiv.style.display = "none";
             }, 3000);
         }
     }
 
     function hideAllMessages() {
-        document.getElementById('successMessage').style.display = 'none';
-        document.getElementById('errorMessage').style.display = 'none';
-        document.getElementById('warningMessage').style.display = 'none';
+        document.getElementById("successMessage").style.display = "none";
+        document.getElementById("errorMessage").style.display = "none";
+        document.getElementById("warningMessage").style.display = "none";
     }
 
     function hideWarning() {
-        document.getElementById('warningMessage').style.display = 'none';
+        document.getElementById("warningMessage").style.display = "none";
         currentDeleteNodeId = null;
     }
 
-    document.getElementById('addMemberForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    document
+        .getElementById("addMemberForm")
+        .addEventListener("submit", function (e) {
+            e.preventDefault();
 
-        const hierarchyId = {{ selected_hierarchy_id|default:"null" }};
-        if (!hierarchyId) {
-            showMessage('error', 'No hierarchy selected');
-            return;
-        }
-
-        const formData = {
-            hierarchy_id: hierarchyId,
-            member_id: document.getElementById('memberSelect').value,
-            parent_member_id: document.getElementById('parentMemberSelect').value || null,
-            level: parseInt(document.getElementById('levelInput').value),
-            order: parseInt(document.getElementById('orderInput').value),
-            comparator: document.getElementById('comparatorInput').value,
-            operator: document.getElementById('operatorInput').value
-        };
-
-        if (!formData.member_id) {
-            showMessage('error', 'Please select a member');
-            return;
-        }
-
-        document.getElementById('loadingIndicator').style.display = 'block';
-
-        fetch('/add_member_to_hierarchy/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showMessage('success', data.message);
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            } else {
-                showMessage('error', data.message);
+            const hierarchyId = `{{ selected_hierarchy_id|default:"null" }}`;
+            if (!hierarchyId) {
+                showMessage("error", "No hierarchy selected");
+                return;
             }
-        })
-        .catch(error => {
-            showMessage('error', 'Error adding member: ' + error.message);
-        })
-        .finally(() => {
-            document.getElementById('loadingIndicator').style.display = 'none';
+
+            const formData = {
+                hierarchy_id: hierarchyId,
+                member_id: document.getElementById("memberSelect").value,
+                parent_member_id:
+                    document.getElementById("parentMemberSelect").value || null,
+                level: parseInt(document.getElementById("levelInput").value),
+                order: parseInt(document.getElementById("orderInput").value),
+                comparator:
+                    document.getElementById("comparatorInput").value || "",
+                operator: document.getElementById("operatorInput").value || "",
+            };
+
+            if (!formData.member_id) {
+                showMessage("error", "Please select a member");
+                return;
+            }
+
+            document.getElementById("loadingIndicator").style.display = "block";
+
+            fetch("/pybirdai/add_member_to_hierarchy/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector(
+                        "[name=csrfmiddlewaretoken]",
+                    ).value,
+                },
+                body: JSON.stringify(formData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        showMessage("success", data.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        showMessage("error", data.message);
+                    }
+                })
+                .catch((error) => {
+                    showMessage(
+                        "error",
+                        "Error adding member: " + error.message,
+                    );
+                })
+                .finally(() => {
+                    document.getElementById("loadingIndicator").style.display =
+                        "none";
+                });
         });
-    });
 
     function deleteNode(nodeId) {
         currentDeleteNodeId = nodeId;
 
-        fetch('/delete_member_from_hierarchy/', {
-            method: 'POST',
+        fetch("/delete_member_from_hierarchy/", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector(
+                    "[name=csrfmiddlewaretoken]",
+                ).value,
             },
-            body: JSON.stringify({ node_id: nodeId })
+            body: JSON.stringify({ node_id: nodeId }),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showMessage('success', data.message);
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            } else if (data.status === 'warning') {
-                document.getElementById('warningText').textContent = data.message;
-                document.getElementById('warningMessage').style.display = 'block';
-            } else {
-                showMessage('error', data.message);
-            }
-        })
-        .catch(error => {
-            showMessage('error', 'Error deleting member: ' + error.message);
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    showMessage("success", data.message);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else if (data.status === "warning") {
+                    document.getElementById("warningText").textContent =
+                        data.message;
+                    document.getElementById("warningMessage").style.display =
+                        "block";
+                } else {
+                    showMessage("error", data.message);
+                }
+            })
+            .catch((error) => {
+                showMessage("error", "Error deleting member: " + error.message);
+            });
     }
 
-    document.getElementById('forceDeleteBtn').addEventListener('click', function() {
-        if (!currentDeleteNodeId) return;
+    document
+        .getElementById("forceDeleteBtn")
+        .addEventListener("click", function () {
+            if (!currentDeleteNodeId) return;
 
-        fetch('/delete_member_from_hierarchy/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: JSON.stringify({
-                node_id: currentDeleteNodeId,
-                force_delete: true
+            fetch("/delete_member_from_hierarchy/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector(
+                        "[name=csrfmiddlewaretoken]",
+                    ).value,
+                },
+                body: JSON.stringify({
+                    node_id: currentDeleteNodeId,
+                    force_delete: true,
+                }),
             })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showMessage('success', data.message);
-                hideWarning();
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            } else {
-                showMessage('error', data.message);
-            }
-        })
-        .catch(error => {
-            showMessage('error', 'Error deleting member: ' + error.message);
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        showMessage("success", data.message);
+                        hideWarning();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        showMessage("error", data.message);
+                    }
+                })
+                .catch((error) => {
+                    showMessage(
+                        "error",
+                        "Error deleting member: " + error.message,
+                    );
+                });
         });
-    });
 
     function editNode(nodeId) {
-        document.getElementById('editNodeId').value = nodeId;
-        document.getElementById('editModal').style.display = 'block';
+        document.getElementById("editNodeId").value = nodeId;
+        document.getElementById("editModal").style.display = "block";
     }
 
     function closeEditModal() {
-        document.getElementById('editModal').style.display = 'none';
+        document.getElementById("editModal").style.display = "none";
     }
 
-    document.getElementById('editNodeForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    document
+        .getElementById("editNodeForm")
+        .addEventListener("submit", function (e) {
+            e.preventDefault();
 
-        const nodeId = document.getElementById('editNodeId').value;
-        const formData = {
-            node_id: nodeId,
-            member_id: document.getElementById('editMemberSelect').value || null,
-            level: parseInt(document.getElementById('editLevelInput').value) || null,
-            order: parseInt(document.getElementById('editOrderInput').value) || null,
-            comparator: document.getElementById('editComparatorInput').value,
-            operator: document.getElementById('editOperatorInput').value
-        };
+            const nodeId = document.getElementById("editNodeId").value;
+            const formData = {
+                node_id: nodeId,
+                member_id:
+                    document.getElementById("editMemberSelect").value || null,
+                level:
+                    parseInt(document.getElementById("editLevelInput").value) ||
+                    null,
+                order:
+                    parseInt(document.getElementById("editOrderInput").value) ||
+                    null,
+                comparator: document.getElementById("editComparatorInput")
+                    .value,
+                operator: document.getElementById("editOperatorInput").value,
+            };
 
-        fetch('/edit_hierarchy_node/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showMessage('success', data.message);
-                closeEditModal();
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            } else {
-                showMessage('error', data.message);
-            }
-        })
-        .catch(error => {
-            showMessage('error', 'Error editing node: ' + error.message);
+            fetch("/edit_hierarchy_node/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": document.querySelector(
+                        "[name=csrfmiddlewaretoken]",
+                    ).value,
+                },
+                body: JSON.stringify(formData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        showMessage("success", data.message);
+                        closeEditModal();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        showMessage("error", data.message);
+                    }
+                })
+                .catch((error) => {
+                    showMessage(
+                        "error",
+                        "Error editing node: " + error.message,
+                    );
+                });
         });
-    });
 
     // Close modal when clicking outside of it
-    window.onclick = function(event) {
-        const modal = document.getElementById('editModal');
+    window.onclick = function (event) {
+        const modal = document.getElementById("editModal");
         if (event.target == modal) {
             closeEditModal();
         }
-    }
+    };
 </script>
 {% endblock %}
