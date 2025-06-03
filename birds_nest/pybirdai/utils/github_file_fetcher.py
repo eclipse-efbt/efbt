@@ -35,6 +35,70 @@ class GitHubFileFetcher:
 
         logger.info(f"Configured for repository: {self.owner}/{self.repo}")
 
+    def _handle_request_error(self, error, context):
+        """
+        Common error handling for HTTP requests.
+
+        Args:
+            error (Exception): The exception that occurred
+            context (str): Context description for logging
+
+        Returns:
+            bool: True if error was a 404 (not found), False for other errors
+        """
+        if "404" in str(error) or "Not Found" in str(error):
+            logger.warning(f"URL not found: {context}")
+            print(f"URL not found: {context}")
+            return True
+        logger.error(f"Request exception for {context}: {error}")
+        return False
+
+    def _ensure_directory_exists(self, path):
+        """
+        Ensure a directory exists, creating it if necessary.
+
+        Args:
+            path (str): Directory path to create
+        """
+        os.makedirs(path, exist_ok=True)
+
+    def _construct_raw_url(self, file_path, branch="main"):
+        """
+        Construct a raw GitHub URL for direct file download.
+
+        Args:
+            file_path (str): Path to the file in the repository
+            branch (str): Git branch name
+
+        Returns:
+            str: Raw GitHub URL
+        """
+        return f"https://raw.githubusercontent.com/{self.owner}/{self.repo}/{branch}/{file_path}"
+
+    def _download_from_raw_url(self, raw_url, local_path):
+        """
+        Download a file from a raw GitHub URL.
+
+        Args:
+            raw_url (str): Raw GitHub URL
+            local_path (str): Local path to save the file
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            response = requests.get(raw_url)
+            response.raise_for_status()
+
+            with open(local_path, 'wb') as f:
+                f.write(response.content)
+
+            logger.info(f"Successfully downloaded file to: {local_path}")
+            return True
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to download from {raw_url}: {e}")
+            return False
+
     def get_commit_info(self, folder_path="", branch="main"):
         """
         Get commit information for files in a GitHub repository folder.
@@ -53,11 +117,8 @@ class GitHubFileFetcher:
             logger.info(f"Successfully retrieved commit info for {folder_path}")
             return result
         except requests.exceptions.RequestException as e:
-            if "404" in str(e) or "Not Found" in str(e):
-                logger.warning(f"URL not found: {folder_path}")
-                print(f"URL not found: {folder_path}")
+            if self._handle_request_error(e, folder_path):
                 return {}
-            logger.error(f"Request exception while getting commit info: {e}")
             raise e
 
     def _get_commit_info_recursive(self, folder_path="", branch="main"):
@@ -107,11 +168,8 @@ class GitHubFileFetcher:
                 try:
                     self._get_commit_info_recursive(subfolder_path, branch)
                 except requests.exceptions.RequestException as e:
-                    if "404" in str(e) or "Not Found" in str(e):
-                        logger.warning(f"URL not found for subfolder: {subfolder_path}")
-                        print(f"URL not found for subfolder: {subfolder_path}")
+                    if self._handle_request_error(e, f"subfolder: {subfolder_path}"):
                         continue
-                    logger.error(f"Error processing subfolder {subfolder_path}: {e}")
                     raise e
 
         # Construct result structure
@@ -205,135 +263,156 @@ class GitHubFileFetcher:
             print(f"Error downloading file: {e}")
             return None
 
-def fetch_directory_recursively(fetcher, folder_path, local_base_path):
-    """
-    Recursively fetch all files and directories from a GitHub folder.
+    def fetch_directory_recursively(self, folder_path, local_base_path):
+        """
+        Recursively fetch all files and directories from a GitHub folder.
 
-    Args:
-        fetcher (GitHubFileFetcher): The fetcher instance
-        folder_path (str): Remote folder path in the repository
-        local_base_path (str): Local base path to save files
-    """
-    logger.info(f"Recursively fetching directory: {folder_path} to {local_base_path}")
+        Args:
+            folder_path (str): Remote folder path in the repository
+            local_base_path (str): Local base path to save files
+        """
+        logger.info(f"Recursively fetching directory: {folder_path} to {local_base_path}")
 
-    # Get list of files and directories in the current folder
-    files = fetcher.fetch_files(folder_path)
+        # Get list of files and directories in the current folder
+        files = self.fetch_files(folder_path)
 
-    for item in files:
-        name = item.get('name', 'Unknown')
-        item_type = item.get('type', 'Unknown')
+        for item in files:
+            name = item.get('name', 'Unknown')
+            item_type = item.get('type', 'Unknown')
 
-        if item_type == 'dir':
-            # Process subdirectory recursively
-            sub_folder_path = f"{folder_path}/{name}" if folder_path else name
-            local_sub_path = os.path.join(local_base_path, name)
+            if item_type == 'dir':
+                # Process subdirectory recursively
+                sub_folder_path = f"{folder_path}/{name}" if folder_path else name
+                local_sub_path = os.path.join(local_base_path, name)
 
-            logger.debug(f"Creating directory: {local_sub_path}")
-            os.makedirs(local_sub_path, exist_ok=True)
+                logger.debug(f"Creating directory: {local_sub_path}")
+                self._ensure_directory_exists(local_sub_path)
 
-            # Recursive call for subdirectory
-            fetch_directory_recursively(fetcher, sub_folder_path, local_sub_path)
-        elif item_type == 'file':
-            # Download individual file
-            local_file_path = os.path.join(local_base_path, name)
-            logger.debug(f"Downloading file: {name} to {local_file_path}")
-            fetcher.download_file(item, local_file_path)
+                # Recursive call for subdirectory
+                self.fetch_directory_recursively(sub_folder_path, local_sub_path)
+            elif item_type == 'file':
+                # Download individual file
+                local_file_path = os.path.join(local_base_path, name)
+                logger.debug(f"Downloading file: {name} to {local_file_path}")
+                self.download_file(item, local_file_path)
 
-def fetch_database_export_files(fetcher):
-    """
-    Fetch and organize database export files into categorized folders.
+    def fetch_database_export_files(self):
+        """
+        Fetch and organize database export files into categorized folders.
+        """
+        # Fetch files from the database export directory
+        files = self.fetch_files("export/database_export_ldm")
+        logger.info(f"Found {len(files)} database export files")
 
-    Args:
-        fetcher (GitHubFileFetcher): The fetcher instance
-        base_url (str): Base URL (currently unused but kept for compatibility)
-    """
-    logger.info("STEP 1: Starting to fetch Database Export Files")
-    print("STEP 1: Fetching Database Export Files")
+        for file_info in files:
+            name = file_info.get('name', 'Unknown')
+            logger.debug(f"Processing database export file: {name}")
 
-    # Fetch files from the database export directory
-    files = fetcher.fetch_files("export/database_export_ldm")
-    logger.info(f"Found {len(files)} database export files")
+            # Categorize files based on their names
+            if "bird" in name:
+                folder = "bird"
+            elif "auth" in name:
+                folder = "admin"
+            else:
+                folder = "technical_export"
 
-    for file_info in files:
-        name = file_info.get('name', 'Unknown')
-        logger.debug(f"Processing database export file: {name}")
+            logger.debug(f"Categorized {name} into folder: {folder}")
 
-        # Categorize files based on their names
-        if "bird" in name:
-            folder = "bird"
-        elif "auth" in name:
-            folder = "admin"
-        else:
-            folder = "technical_export"
+            # Create the target directory structure
+            save_path = os.path.join("resources", folder)
+            self._ensure_directory_exists(save_path)
 
-        logger.debug(f"Categorized {name} into folder: {folder}")
+            # Download the file to the appropriate category folder
+            local_file_path = os.path.join(save_path, name)
+            result = self.download_file(file_info, local_file_path)
 
-        # Create the target directory structure
-        save_path = os.path.join("resources", folder)
-        os.makedirs(save_path, exist_ok=True)
+            if result:
+                logger.info(f"Successfully saved database export file: {local_file_path}")
+            else:
+                logger.warning(f"Failed to download database export file: {name}")
 
-        # Download the file to the appropriate category folder
-        local_file_path = os.path.join(save_path, name)
-        result = fetcher.download_file(file_info, local_file_path)
-
-        if result:
-            logger.info(f"Successfully saved database export file: {local_file_path}")
-        else:
-            logger.warning(f"Failed to download database export file: {name}")
-
-def fetch_test_fixtures(fetcher, base_url):
-    """
-    Fetch test fixtures and templates from the repository.
-
-    Args:
-        fetcher (GitHubFileFetcher): The fetcher instance
-        base_url (str): Base URL (currently unused but kept for compatibility)
-    """
-    logger.info("STEP 2: Starting to fetch Test Fixtures")
-    print("STEP 2: Fetching Test Fixtures")
-
-    # Get commit information for the test fixtures directory
-    fetcher.get_commit_info("tests/fixtures/templates/")
-    logger.info("Retrieved commit info for test fixtures")
-
-    # Process all cached file information
-    for folder_data in fetcher.files.values():
+    def fetch_test_fixture(self, folder_data):
         file_tree = folder_data.get('fileTree', {})
         logger.debug(f"Processing file tree with {len(file_tree)} directories")
+        it_ = map(lambda item_data : item_data.get("items", []), file_tree.values())
 
-        for item_data in file_tree.values():
-            for item in item_data.get("items", []):
-                # Filter for files in the pybirdai/tests/ directory
-                if (item['contentType'] == 'file' and
-                    "pybirdai/tests/" in os.path.join("pybirdai", item['path'].replace('birds_nest/', ''))):
+        for item in it_:
+            right_content_type = item['contentType'] == 'file'
+            right_path = "pybirdai/tests/" in os.path.join("pybirdai", item['path'].replace('birds_nest/', ''))
 
-                    file_path = item['path']
-                    relative_path = file_path.replace('birds_nest/', '')
-                    local_file_path = os.path.join("pybirdai", relative_path)
+            if not (right_content_type and right_path):
+                continue
 
-                    logger.debug(f"Processing test fixture file: {file_path}")
+            file_path = item['path']
+            relative_path = file_path.replace('birds_nest/', '')
+            local_file_path = os.path.join("pybirdai", relative_path)
 
-                    # Create directory structure if it doesn't exist
-                    os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
+            logger.debug(f"Processing test fixture file: {file_path}")
 
-                    # Only download Python and SQL files
-                    if local_file_path.endswith(('.py', '.sql')):
-                        logger.debug(f"Downloading test fixture: {relative_path}")
+            # Create directory structure if it doesn't exist
+            self._ensure_directory_exists(os.path.dirname(local_file_path))
 
-                        # Construct raw GitHub URL for direct file download
-                        raw_url = f"https://raw.githubusercontent.com/{fetcher.owner}/{fetcher.repo}/main/{file_path}"
+            # Only download Python and SQL files
+            if not local_file_path.endswith(('.py', '.sql')):
+                continue
 
-                        try:
-                            response = requests.get(raw_url)
-                            response.raise_for_status()
+            logger.debug(f"Downloading test fixture: {relative_path}")
 
-                            # Save the file content
-                            with open(local_file_path, 'wb') as f:
-                                f.write(response.content)
+            # Use the reusable download method
+            raw_url = self._construct_raw_url(file_path)
+            success = self._download_from_raw_url(raw_url, local_file_path)
 
-                            logger.info(f"Successfully downloaded test fixture: {local_file_path}")
-                        except requests.exceptions.RequestException as e:
-                            logger.error(f"Failed to download test fixture {file_path}: {e}")
+            if success:
+                logger.info(f"Successfully downloaded test fixture: {local_file_path}")
+            else:
+                logger.error(f"Failed to download test fixture {file_path}")
+
+    def fetch_test_fixtures(self, base_url):
+        """
+        Fetch test fixtures and templates from the repository.
+
+        Args:
+            base_url (str): Base URL (currently unused but kept for compatibility)
+        """
+        # Get commit information for the test fixtures directory
+        self.get_commit_info("tests/fixtures/templates/")
+        logger.info("Retrieved commit info for test fixtures")
+
+        # Process all cached file information
+        for folder_data in self.files.values():
+            self.fetch_test_fixture(folder_data,)
+
+    def fetch_derivation_model_file(
+            self,
+            remote_dir = "birds_nest/pybirdai",
+            remote_file_name = "bird_data_model.py",
+            local_target_dir = "resources/derivation_implementation",
+            local_target_file_name = "bird_data_model_with_derivation.py"
+    ):
+        """Fetches the derivation model file from the specified remote directory"""
+        # Fetch contents of the directory containing the target file
+        files_in_dir = self.fetch_files(remote_dir)
+        found_file_info = None
+        for item in files_in_dir:
+            if item.get('name') == remote_file_name and item.get('type') == 'file':
+                found_file_info = item
+                break
+
+        if found_file_info:
+            # Construct the local path
+            local_path = os.path.join(local_target_dir, local_target_file_name)
+            # Ensure the local directory exists
+            self._ensure_directory_exists(local_target_dir)
+            logger.info(f"Attempting to download {remote_file_name} to {local_path}")
+            # Download the file
+            download_success = self.download_file(found_file_info, local_path)
+            if download_success:
+                logger.info(f"Successfully downloaded {remote_file_name} to {local_path}")
+            else:
+                logger.error(f"Failed to download {remote_file_name}")
+        else:
+            logger.warning(f"File {remote_file_name} not found in {remote_dir}")
+            print(f"File {remote_file_name} not found in {remote_dir}")
 
 def main():
     """Main function to orchestrate the file fetching process"""
@@ -342,43 +421,19 @@ def main():
     # Initialize the fetcher with the FreeBIRD repository
     fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
 
-    # STEP 1: Fetch specific database derivation model file
     logger.info("STEP 1: Fetching specific derivation model file")
-    print("STEP 1: Fetching specific derivation model file")
-    remote_dir = "birds_nest/pybirdai"
-    remote_file_name = "bird_data_model.py"
-    local_target_dir = "resources/derivation_implementation"
-    local_target_file_name = "bird_data_model_with_derivation.py"
+    fetcher.fetch_derivation_model_file(
+        "birds_nest/pybirdai",
+        "bird_data_model.py",
+        "resources/derivation_implementation",
+        "bird_data_model_with_derivation.py"
+    )
 
-    # Fetch contents of the directory containing the target file
-    files_in_dir = fetcher.fetch_files(remote_dir)
-    found_file_info = None
-    for item in files_in_dir:
-        if item.get('name') == remote_file_name and item.get('type') == 'file':
-            found_file_info = item
-            break
+    logger.info("STEP 2: Fetching database export files")
+    fetcher.fetch_database_export_files()
 
-    if found_file_info:
-        # Construct the local path
-        local_path = os.path.join(local_target_dir, local_target_file_name)
-        # Ensure the local directory exists
-        os.makedirs(local_target_dir, exist_ok=True)
-        logger.info(f"Attempting to download {remote_file_name} to {local_path}")
-        # Download the file
-        download_success = fetcher.download_file(found_file_info, local_path)
-        if download_success:
-            logger.info(f"Successfully downloaded {remote_file_name} to {local_path}")
-        else:
-            logger.error(f"Failed to download {remote_file_name}")
-    else:
-        logger.warning(f"File {remote_file_name} not found in {remote_dir}")
-        print(f"File {remote_file_name} not found in {remote_dir}")
-
-    # STEP 2: Fetch database export files (existing step)
-    fetch_database_export_files(fetcher)
-
-    # STEP 3: Fetch test fixtures and templates (existing step)
-    fetch_test_fixtures(fetcher, "") # base_url argument is unused in the current function implementation
+    logger.info("STEP 3: Fetching test fixtures and templates")
+    fetcher.fetch_test_fixtures("")
 
     logger.info("File fetching process completed successfully!")
     print("File fetching process completed!")
