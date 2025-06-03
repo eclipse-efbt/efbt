@@ -1378,11 +1378,11 @@ def create_response_with_loading_extended(request, task_title, success_message, 
                                 // Hide loading and show success
                                 document.getElementById('loading-overlay').style.display = 'none';
                                 document.getElementById('success-message').style.display = 'block';
-                                
+
                                 // Update success message with instructions if provided
                                 const successDiv = document.getElementById('success-message');
                                 let successContent = '<p>{success_message}</p>';
-                                
+
                                 if (data.instructions) {{
                                     successContent += '<div style="margin-top: 15px; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">';
                                     successContent += '<h4 style="margin-top: 0; color: #856404;">Next Steps:</h4>';
@@ -1392,7 +1392,7 @@ def create_response_with_loading_extended(request, task_title, success_message, 
                                     }});
                                     successContent += '</ol></div>';
                                 }}
-                                
+
                                 successContent += '<p>Go back to <a href="{return_url}">{return_link_text}</a></p>';
                                 successDiv.innerHTML = successContent;
                                 successDiv.style.display = 'block';
@@ -1403,7 +1403,7 @@ def create_response_with_loading_extended(request, task_title, success_message, 
                         .catch(error => {{
                             clearTimeout(timeoutId);
                             console.error('Error:', error);
-                            
+
                             // Hide loading and show error
                             document.getElementById('loading-overlay').style.display = 'none';
                             document.getElementById('error-text').textContent = error.message;
@@ -2320,23 +2320,23 @@ def run_create_python_transformations_from_db(request):
     """
     if request.GET.get('execute') == 'true':
         logger.info("Starting Python transformations generation from database...")
-        
+
         try:
             # Step 1: Create executable filters from database
             logger.info("Step 1: Creating executable filters from database...")
             filters_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
             filters_config.run_create_executable_filters_from_db()
             logger.info("Successfully created executable filters from database.")
-            
+
             # Step 2: Create Python joins from database
             logger.info("Step 2: Creating Python joins from database...")
             joins_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
             joins_config.create_python_joins_from_db()
             logger.info("Successfully created Python joins from database.")
-            
+
             logger.info("Python transformations generation completed successfully.")
             return JsonResponse({'status': 'success'})
-            
+
         except Exception as e:
             logger.error(f"Python transformations generation failed: {str(e)}")
             return JsonResponse({'status': 'error', 'message': str(e)})
@@ -3125,17 +3125,17 @@ def load_variables_from_csv_file(csv_file_path):
     try:
         import csv
         from .context.sdd_context_django import SDDContext
-        
+
         if not os.path.exists(csv_file_path):
             logger.warning(f"Extra variables CSV file not found: {csv_file_path}")
             return 0
-        
+
         logger.info(f"Loading extra variables from: {csv_file_path}")
-        
+
         # Read the CSV file
         with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
-            
+
             # Validate headers
             required_fields = {'VARIABLE_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
             headers = set(reader.fieldnames)
@@ -3143,17 +3143,17 @@ def load_variables_from_csv_file(csv_file_path):
                 missing = required_fields - headers
                 logger.error(f'Missing required columns in extra_variables.csv: {", ".join(missing)}')
                 return 0
-            
+
             # Get SDDContext instance
             sdd_context = SDDContext()
-            
+
             # Process each row
             variables_to_create = []
             for row in reader:
                 try:
                     # Look up the domain
                     domain = DOMAIN.objects.get(domain_id=row['DOMAIN_ID'])
-                    
+
                     variable = VARIABLE(
                         variable_id=row['VARIABLE_ID'],
                         code=row['CODE'],
@@ -3168,21 +3168,21 @@ def load_variables_from_csv_file(csv_file_path):
                 except Exception as e:
                     logger.error(f'Error processing variable row in extra_variables.csv: {str(e)}')
                     continue
-            
+
             # Bulk create the variables
             if variables_to_create:
                 created_variables = VARIABLE.objects.bulk_create(variables_to_create)
-                
+
                 # Update SDDContext variable dictionary
                 for variable in created_variables:
                     sdd_context.variable_dictionary[variable.variable_id] = variable
-                
+
                 logger.info(f"Successfully loaded {len(created_variables)} extra variables from CSV")
                 return len(created_variables)
             else:
                 logger.info("No extra variables to load from CSV")
                 return 0
-                
+
     except Exception as e:
         logger.error(f"Error loading extra variables from CSV: {str(e)}")
         return 0
@@ -3333,6 +3333,7 @@ def member_hierarchy_editor(request, hierarchy_id=None):
                 def generate_html_recursive(tree_nodes, level=0):
                     """Recursively generate HTML for hierarchy nodes"""
                     html = '<ul class="tree-list">\n'
+                    print(tree_nodes)
                     for tree_node in tree_nodes:
                         node = tree_node['node']
                         margin_left = (level) * 10
@@ -3435,6 +3436,7 @@ def add_member_to_hierarchy(request):
             comparator=comparator,
             operator=operator
         )
+        new_node.save()
 
         logger.info(f"Successfully added member {member_id} to hierarchy {hierarchy_id}")
         return JsonResponse({
@@ -3686,28 +3688,28 @@ def test_automode_components(request):
             from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
             from django.conf import settings
             import os
-            
+
             # Test basic setup
             base_dir = settings.BASE_DIR
             logger.info(f"Base directory: {base_dir}")
-            
+
             # Check if required directories exist
             resources_dir = os.path.join(base_dir, 'resources')
             results_dir = os.path.join(base_dir, 'results')
             ldm_dir = os.path.join(resources_dir, 'ldm')
-            
+
             logger.info(f"Resources directory exists: {os.path.exists(resources_dir)}")
             logger.info(f"Results directory exists: {os.path.exists(results_dir)}")
             logger.info(f"LDM directory exists: {os.path.exists(ldm_dir)}")
-            
+
             if os.path.exists(ldm_dir):
                 ldm_files = os.listdir(ldm_dir)
                 logger.info(f"LDM files: {ldm_files}")
-            
+
             # Test creating a simple Django model instance
             app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
             logger.info("RunCreateDjangoModels instance created successfully")
-            
+
             return JsonResponse({
                 'status': 'success',
                 'message': 'Basic components test passed',
@@ -3716,7 +3718,7 @@ def test_automode_components(request):
                 'results_exists': os.path.exists(results_dir),
                 'ldm_exists': os.path.exists(ldm_dir)
             })
-            
+
         except Exception as e:
             logger.error(f"Test failed: {str(e)}")
             return JsonResponse({'status': 'error', 'message': str(e)})
@@ -3728,4 +3730,3 @@ def test_automode_components(request):
         '/pybirdai/automode',
         "Back to Automode"
     )
-
