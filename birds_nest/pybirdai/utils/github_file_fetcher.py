@@ -339,14 +339,14 @@ class GitHubFileFetcher:
 
         for item in it_:
             right_content_type = item['contentType'] == 'file'
-            right_path = f"pybirdai{os.sep}tests{os.sep}" in os.path.join("pybirdai", item['path'].replace(f'birds_nest{os.sep}', ''))
+            right_path = f"pybirdai{os.sep}tests" in os.path.join("pybirdai", item['path'].replace(f'birds_nest{os.sep}', ''))
 
             if not (right_content_type and right_path):
                 continue
 
             file_path = item['path']
-            relative_path = file_path.replace(f'birds_nest{os.sep}', '')
-            local_file_path = os.path.join("pybirdai", relative_path)
+            relative_path = file_path.replace(f'birds_nest/', '').replace(f'birds_nest{os.sep}', '')
+            local_file_path = "pybirdai"+os.sep+relative_path
 
             if local_file_path in path_downloaded:
                 continue
