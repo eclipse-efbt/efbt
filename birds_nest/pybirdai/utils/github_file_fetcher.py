@@ -346,6 +346,7 @@ class GitHubFileFetcher:
 
             file_path = item['path']
             relative_path = file_path.replace('birds_nest/', '')
+
             local_file_path = os.path.join("pybirdai", relative_path)
 
             if local_file_path in path_downloaded:
@@ -382,6 +383,7 @@ class GitHubFileFetcher:
         # Get commit information for the test fixtures directory
         self.get_commit_info("tests/fixtures/templates/")
         logger.info("Retrieved commit info for test fixtures")
+        os.makedirs("pybirdai/tests/fixtures/templates/", exist_ok=True)
 
         # Process all cached file information
         path_downloaded = set()
