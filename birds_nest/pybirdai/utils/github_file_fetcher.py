@@ -93,7 +93,7 @@ class GitHubFileFetcher:
             with open(local_path, 'wb') as f:
                 f.write(response.content)
 
-            logger.info(f"Successfully downloaded file to: {local_path}")
+            # logger.info(f"Successfully downloaded file to: {local_path}")
             return True
         except requests.exceptions.RequestException as e:
             logger.error(f"Failed to download from {raw_url}: {e}")
@@ -331,10 +331,11 @@ class GitHubFileFetcher:
             else:
                 logger.warning(f"Failed to download database export file: {name}")
 
-    def fetch_test_fixture(self, folder_data):
+    def fetch_test_fixture(self, folder_data, path_downloaded = set()):
         file_tree = folder_data.get('fileTree', {})
         logger.debug(f"Processing file tree with {len(file_tree)} directories")
         it_ = sum(list(map(lambda item_data : item_data.get("items", []), file_tree.values())), [])
+        success = False
 
         for item in it_:
             right_content_type = item['contentType'] == 'file'
@@ -346,6 +347,9 @@ class GitHubFileFetcher:
             file_path = item['path']
             relative_path = file_path.replace('birds_nest/', '')
             local_file_path = os.path.join("pybirdai", relative_path)
+
+            if local_file_path in path_downloaded:
+                continue
 
             logger.debug(f"Processing test fixture file: {file_path}")
 
@@ -362,12 +366,13 @@ class GitHubFileFetcher:
             raw_url = self._construct_raw_url(file_path)
             success = self._download_from_raw_url(raw_url, local_file_path)
 
-            if success:
+            if success and local_file_path not in path_downloaded:
+                path_downloaded.add(local_file_path)
                 logger.info(f"Successfully downloaded test fixture: {local_file_path}")
             else:
                 logger.error(f"Failed to download test fixture {file_path}")
 
-    def fetch_test_fixtures(self, base_url):
+    def fetch_test_fixtures(self, base_url:str=""):
         """
         Fetch test fixtures and templates from the repository.
 
@@ -379,8 +384,9 @@ class GitHubFileFetcher:
         logger.info("Retrieved commit info for test fixtures")
 
         # Process all cached file information
+        path_downloaded = set()
         for folder_data in self.files.values():
-            self.fetch_test_fixture(folder_data,)
+            self.fetch_test_fixture(folder_data, path_downloaded)
 
     def fetch_derivation_model_file(
             self,
@@ -421,6 +427,7 @@ def main():
     # Initialize the fetcher with the FreeBIRD repository
     fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
 
+    """
     logger.info("STEP 1: Fetching specific derivation model file")
 
     fetcher.fetch_derivation_model_file(
@@ -432,9 +439,10 @@ def main():
 
     logger.info("STEP 2: Fetching database export files")
     fetcher.fetch_database_export_files()
+    """
 
     logger.info("STEP 3: Fetching test fixtures and templates")
-    fetcher.fetch_test_fixtures("")
+    fetcher.fetch_test_fixtures()
 
     logger.info("File fetching process completed successfully!")
     print("File fetching process completed!")
