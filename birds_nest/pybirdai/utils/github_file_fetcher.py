@@ -331,7 +331,7 @@ class GitHubFileFetcher:
             else:
                 logger.warning(f"Failed to download database export file: {name}")
 
-    def fetch_test_fixture(self, folder_data, path_downloaded = set()):
+    def fetch_test_fixture(self, folder_data, path_downloaded):
         file_tree = folder_data.get('fileTree', {})
         logger.debug(f"Processing file tree with {len(file_tree)} directories")
         it_ = sum(list(map(lambda item_data : item_data.get("items", []), file_tree.values())), [])
@@ -339,14 +339,13 @@ class GitHubFileFetcher:
 
         for item in it_:
             right_content_type = item['contentType'] == 'file'
-            right_path = "pybirdai/tests/" in os.path.join("pybirdai", item['path'].replace('birds_nest/', ''))
+            right_path = f"pybirdai{os.sep}tests{os.sep}" in os.path.join("pybirdai", item['path'].replace(f'birds_nest{os.sep}', ''))
 
             if not (right_content_type and right_path):
                 continue
 
             file_path = item['path']
-            relative_path = file_path.replace('birds_nest/', '')
-
+            relative_path = file_path.replace(f'birds_nest{os.sep}', '')
             local_file_path = os.path.join("pybirdai", relative_path)
 
             if local_file_path in path_downloaded:
@@ -367,7 +366,7 @@ class GitHubFileFetcher:
             raw_url = self._construct_raw_url(file_path)
             success = self._download_from_raw_url(raw_url, local_file_path)
 
-            if success and local_file_path not in path_downloaded:
+            if success:
                 path_downloaded.add(local_file_path)
                 logger.info(f"Successfully downloaded test fixture: {local_file_path}")
             else:
@@ -383,7 +382,7 @@ class GitHubFileFetcher:
         # Get commit information for the test fixtures directory
         self.get_commit_info("tests/fixtures/templates/")
         logger.info("Retrieved commit info for test fixtures")
-        os.makedirs("pybirdai/tests/fixtures/templates/", exist_ok=True)
+        os.makedirs(f"pybirdai{os.sep}tests{os.sep}fixtures{os.sep}templates{os.sep}", exist_ok=True)
 
         # Process all cached file information
         path_downloaded = set()
@@ -394,7 +393,7 @@ class GitHubFileFetcher:
             self,
             remote_dir = "birds_nest/pybirdai",
             remote_file_name = "bird_data_model.py",
-            local_target_dir = "resources/derivation_implementation",
+            local_target_dir = f"resources{os.sep}derivation_implementation",
             local_target_file_name = "bird_data_model_with_derivation.py"
     ):
         """Fetches the derivation model file from the specified remote directory"""
@@ -435,7 +434,7 @@ def main():
     fetcher.fetch_derivation_model_file(
         "birds_nest/pybirdai",
         "bird_data_model.py",
-        "resources/derivation_implementation",
+        f"resources{os.sep}derivation_implementation",
         "bird_data_model_with_derivation.py"
     )
 
