@@ -52,8 +52,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
             
             # Step 2: Check if generated files exist
             base_dir = settings.BASE_DIR
-            results_admin_path = os.path.join(base_dir, "results/database_configuration_files/admin.py")
-            results_models_path = os.path.join(base_dir, "results/database_configuration_files/models.py")
+
+            results_admin_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "admin.py")
+            results_models_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "models.py")
             
             logger.info(f"Base directory: {base_dir}")
             logger.info(f"Results models path exists: {os.path.exists(results_models_path)}")
@@ -92,13 +93,13 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info("Starting post-setup operations...")
             
             base_dir = settings.BASE_DIR
-            initial_migration_file = os.path.join(base_dir, "pybirdai/migrations/0001_initial.py")
+            initial_migration_file = os.path.join(base_dir, "pybirdai" + os.sep + "migrations" + os.sep + "0001_initial.py")
             db_file = os.path.join(base_dir, "db.sqlite3")
-            pybirdai_admin_path = os.path.join(base_dir, "pybirdai/admin.py")
-            pybirdai_meta_data_model_path = os.path.join(base_dir, "pybirdai/bird_meta_data_model.py")
-            results_admin_path = os.path.join(base_dir, "results/database_configuration_files/admin.py")
-            pybirdai_models_path = os.path.join(base_dir, "pybirdai/bird_data_model.py")
-            results_models_path = os.path.join(base_dir, "results/database_configuration_files/models.py")
+            pybirdai_admin_path = os.path.join(base_dir, "pybirdai" + os.sep + "admin.py")
+            pybirdai_meta_data_model_path = os.path.join(base_dir, "pybirdai" + os.sep + "bird_meta_data_model.py")
+            results_admin_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "admin.py")
+            pybirdai_models_path = os.path.join(base_dir, "pybirdai" + os.sep + "bird_data_model.py")
+            results_models_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "models.py")
             
             # Cleanup existing files
             logger.info("Cleaning up existing files...")
