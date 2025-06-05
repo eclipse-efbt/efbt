@@ -1377,11 +1377,10 @@ def create_response_with_loading_extended(request, task_title, success_message, 
                                 // Hide loading and show success
                                 document.getElementById('loading-overlay').style.display = 'none';
                                 document.getElementById('success-message').style.display = 'block';
-                  
                                 // Update success message with instructions if provided
                                 const successDiv = document.getElementById('success-message');
                                 let successContent = '<p>{success_message}</p>';
-                                
+
                                 if (data.instructions) {{
                                     successContent += '<div style="margin-top: 15px; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">';
                                     successContent += '<h4 style="margin-top: 0; color: #856404;">Next Steps:</h4>';
@@ -3134,8 +3133,6 @@ def load_variables_from_csv_file(csv_file_path):
         # Read the CSV file
         with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
-
-
             # Validate headers
             required_fields = {'VARIABLE_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
             headers = set(reader.fieldnames)
@@ -3146,8 +3143,6 @@ def load_variables_from_csv_file(csv_file_path):
 
             # Get SDDContext instance
             sdd_context = SDDContext()
-
-
             # Process each row
             variables_to_create = []
             for row in reader:
@@ -3169,7 +3164,6 @@ def load_variables_from_csv_file(csv_file_path):
                 except Exception as e:
                     logger.error(f'Error processing variable row in extra_variables.csv: {str(e)}')
                     continue
-
 
             # Bulk create the variables
             if variables_to_create:
@@ -3306,6 +3300,20 @@ def automode_create_database(request):
         "Back to Automode"
     )
 
+def automode_import_bird_metamodel_from_website(request):
+    if request.GET.get('execute') == 'true':
+        from pybirdai.utils import bird_ecb_website_fetcher
+        client = bird_ecb_website_fetcher.BirdEcbWebsiteClient()
+        print(client.request_and_save_all())
+
+    return create_response_with_loading(
+        request,
+        "Importing BIRD Metamodel from Website (Automode)",
+        "BIRD Metamodel import completed successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
 def test_automode_components(request):
     """Test view to verify automode components work individually."""
     if request.GET.get('execute') == 'true':
@@ -3317,8 +3325,6 @@ def test_automode_components(request):
             # Test basic setup
             base_dir = settings.BASE_DIR
             logger.info(f"Base directory: {base_dir}")
-
-
             # Check if required directories exist
             resources_dir = os.path.join(base_dir, 'resources')
             results_dir = os.path.join(base_dir, 'results')
@@ -3335,7 +3341,6 @@ def test_automode_components(request):
             # Test creating a simple Django model instance
             app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
             logger.info("RunCreateDjangoModels instance created successfully")
-
 
             return JsonResponse({
                 'status': 'success',
