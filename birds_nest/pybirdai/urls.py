@@ -135,5 +135,6 @@ urlpatterns = [
     path('bulk-delete-cube-structure-item-links/', views.bulk_delete_cube_structure_item_links, name='bulk_delete_cube_structure_item_links'),
     path('delete-cube-structure-item-link-dupl/<str:cube_structure_item_link_id>/', views.delete_cube_structure_item_link_dupl, name='delete_cube_structure_item_link_dupl'),
     path('run-full-setup/', views.run_full_setup, name='run_full_setup'),
+    path('automode-import-bird-metamodel-from-website/', views.automode_import_bird_metamodel_from_website, name='automode_import_bird_metamodel_from_website'),
     path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources')
 ]
