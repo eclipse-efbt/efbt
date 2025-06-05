@@ -141,4 +141,6 @@ urlpatterns = [
     path('edit_hierarchy_node/', views.edit_hierarchy_node, name='edit_hierarchy_node'),
     path('get_members_by_domain/<str:domain_id>/', views.get_members_by_domain, name='get_members_by_domain'),
     path('get_subdomain_enumerations/', views.get_subdomain_enumerations, name='get_subdomain_enumerations')
+    path('run-full-setup/', views.run_full_setup, name='run_full_setup'),
+    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources')
 ]
