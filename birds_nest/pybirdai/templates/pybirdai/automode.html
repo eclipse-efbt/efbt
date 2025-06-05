@@ -30,23 +30,41 @@ Documentation on creating these files is to follow, basically they list the repo
 
 <div class="task-grid">
     <a href="{% url 'pybirdai:automode_create_database' %}" class="task-item">
-        <img src="{% static 'images/create_bird_database.webp' %}" alt="create_the_database">
+        <img
+            src="{% static 'images/create_bird_database.webp' %}"
+            alt="create_the_database"
+        />
         <span>Create the database</span>
     </a>
     <a href="{% url 'pybirdai:run_full_setup' %}" class="task-item">
-        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_the_transformations">
+        <img
+            src="{% static 'images/create_transformations_metadata.webp' %}"
+            alt="create_the_transformations"
+        />
         <span>Create the SMCubes transformations</span>
     </a>
     <a href="{% url 'pybirdai:automode' %}" class="task-item">
-        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_the_transformations">
+        <img
+            src="{% static 'images/create_transformations_metadata.webp' %}"
+            alt="create_the_transformations"
+        />
         <span>Compare To Fine-tuned SMCubes transformations</span>
     </a>
     <a href="{% url 'pybirdai:automode' %}" class="task-item">
-        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_the_transformations">
+        <img
+            src="{% static 'images/create_transformations_metadata.webp' %}"
+            alt="create_the_transformations"
+        />
         <span>Use Fine-tuned SMCubes transformations</span>
     </a>
-    <a href="{% url 'pybirdai:run_create_python_transformations_from_db' %}" class="task-item">
-        <img src="{% static 'images/smcubes_to_python.webp' %}" alt="create_python_transformations">
+    <a
+        href="{% url 'pybirdai:run_create_python_transformations_from_db' %}"
+        class="task-item"
+    >
+        <img
+            src="{% static 'images/smcubes_to_python.webp' %}"
+            alt="create_python_transformations"
+        />
         <span>Create Python transformations</span>
     </a>
     <a href="{% url 'pybirdai:automode_import_bird_metamodel_from_website' %}" class="task-item">
@@ -55,8 +73,26 @@ Documentation on creating these files is to follow, basically they list the repo
     </a>
     <a href="{% url 'pybirdai:home' %}" class="task-item" style="display: inline-flex; max-width: 200px;">
         <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+    </a>
+    <a
+        href="{% url 'pybirdai:run_fetch_curated_resources' %}"
+        class="task-item"
+    >
+        <img
+            src="{% static 'images/smcubes_to_python.webp' %}"
+            alt="run_fetch_curated_resources"
+        />
+        <span>Fetch Curated Resources</span>
+    </a>
+
+    <a
+        href="{% url 'pybirdai:home' %}"
+        class="task-item"
+        style="display: inline-flex; max-width: 200px"
+    >
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow" />
         <span>Back to Home</span>
     </a>
 </div>
 
-{% endblock %}
+{% endblock %} 

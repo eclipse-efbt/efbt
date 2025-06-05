@@ -1377,7 +1377,6 @@ def create_response_with_loading_extended(request, task_title, success_message, 
                                 // Hide loading and show success
                                 document.getElementById('loading-overlay').style.display = 'none';
                                 document.getElementById('success-message').style.display = 'block';
-
                                 // Update success message with instructions if provided
                                 const successDiv = document.getElementById('success-message');
                                 let successContent = '<p>{success_message}</p>';
@@ -3134,7 +3133,6 @@ def load_variables_from_csv_file(csv_file_path):
         # Read the CSV file
         with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
-
             # Validate headers
             required_fields = {'VARIABLE_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
             headers = set(reader.fieldnames)
@@ -3145,7 +3143,6 @@ def load_variables_from_csv_file(csv_file_path):
 
             # Get SDDContext instance
             sdd_context = SDDContext()
-
             # Process each row
             variables_to_create = []
             for row in reader:
@@ -3328,7 +3325,6 @@ def test_automode_components(request):
             # Test basic setup
             base_dir = settings.BASE_DIR
             logger.info(f"Base directory: {base_dir}")
-
             # Check if required directories exist
             resources_dir = os.path.join(base_dir, 'resources')
             results_dir = os.path.join(base_dir, 'results')
@@ -3366,3 +3362,54 @@ def test_automode_components(request):
         '/pybirdai/automode',
         "Back to Automode"
     )
+
+
+def run_fetch_curated_resources(request):
+    """Test view to verify automode components work individually."""
+    if request.GET.get('execute') == 'true':
+        try:
+            from pybirdai.utils import github_file_fetcher
+
+            fetcher = github_file_fetcher.GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
+
+
+            logger.info("STEP 1: Fetching specific derivation model file")
+
+            fetcher.fetch_derivation_model_file(
+                "birds_nest/pybirdai",
+                "bird_data_model.py",
+                f"resources{os.sep}derivation_implementation",
+                "bird_data_model_with_derivation.py"
+            )
+
+            logger.info("STEP 2: Fetching database export files")
+            fetcher.fetch_database_export_files()
+
+
+            logger.info("STEP 3: Fetching test fixtures and templates")
+            fetcher.fetch_test_fixtures()
+
+            logger.info("File fetching process completed successfully!")
+            print("File fetching process completed!")
+
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Basic components test passed',
+                'base_dir': str(base_dir),
+                'resources_exists': os.path.exists(resources_dir),
+                'results_exists': os.path.exists(results_dir),
+                'ldm_exists': os.path.exists(ldm_dir)
+            })
+
+        except Exception as e:
+            logger.error(f"Test failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading_extended(
+        request,
+        "Fetching Test Components and derived fields",
+        "Test components and derived fields fetched successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
