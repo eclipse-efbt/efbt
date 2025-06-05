@@ -346,7 +346,7 @@ class GitHubFileFetcher:
 
             file_path = item['path']
             relative_path = file_path.replace(f'birds_nest/', '').replace(f'birds_nest{os.sep}', '')
-            local_file_path = "pybirdai"+os.sep+relative_path
+            local_file_path = relative_path
 
             if local_file_path in path_downloaded:
                 continue
@@ -357,7 +357,7 @@ class GitHubFileFetcher:
             self._ensure_directory_exists(os.path.dirname(local_file_path))
 
             # Only download Python and SQL files
-            if not local_file_path.endswith(('.py', '.sql')):
+            if not local_file_path.endswith(('.py', '.sql', ".json")):
                 continue
 
             logger.debug(f"Downloading test fixture: {relative_path}")
@@ -438,9 +438,9 @@ def main():
         "bird_data_model_with_derivation.py"
     )
 
+
     logger.info("STEP 2: Fetching database export files")
     fetcher.fetch_database_export_files()
-
 
     logger.info("STEP 3: Fetching test fixtures and templates")
     fetcher.fetch_test_fixtures()
