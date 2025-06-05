@@ -53,6 +53,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
             
             # Step 2: Check if generated files exist
             base_dir = settings.BASE_DIR
+
             results_admin_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "admin.py")
             results_models_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "models.py")
             
