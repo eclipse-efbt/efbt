@@ -13,46 +13,126 @@
 
 {% extends 'base.html' %}
 {% load static %}
-
-{% block title %}Automode{% endblock %}
-
-{% block content %}
-<h1 style="text-align: center;">Automode</h1>
-<p>In Automode we create the database implementation, and executable transformation rules in one go. We first need to set up the source files holding the BIRD database and transformation meta data in the correct directories <br></p>
-<p>By Default we use the ELDM to create the database, if you want to use the EIL you must set the flag ldm_or_il = 'il' in the /birds_nest/pybirdai/context/context.py file and restart the server<br></p>
-<p>Using the SQLDeveloper Tool, export the ELDM or IL CSV files from the BIRD database, following the instructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Export-Files-from-SQLDeveloper">here</a> and put them into the birds_nest/reources/ldm directory if using the ELDM or birds_nest/reources/il directory if using the EIL.<br></p>
-<p>To create the transformations we need the csv files related to the SMCubes artefacts of BIRD and store them under the birds_nest/resources/technical_export directory. We can get these from the BIRD website by following the instructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Downloading-Files-from-the-ECB-website">here</a><br></p>
-<p>When creating the transformation rules we need to setup some configuration files and store them unser the birds_nest/resources/joins_configuration directory. We can get these from the BIRD website by following the isntructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Downloading-Files-from-the-ECB-website">here</a><br></p>
-<p>Currently there are 3 configuration files, and ready made versions are available <a href="https://github.com/regcommunity/FreeBIRD/tree/main/joins_configuration">here</a> <br> Theses files are in_scope_reports_FINREP_REF.csv , join_for_product_ldm_definitions_FINREP_REF.csv , And join_for_product_to_reference_category_FINREP_REF.csv<br>
-Documentation on creating these files is to follow, basically they list the reports in scope, and show which tables are joined togther in the BIRD LDM  for each product used in reports (like debt securities used in Finrep) . We could also create a configuration file to show which BIRD IL tables are used for each product used in reports. <br>
-
+{% block title %}
+Automode
+{% endblock%} {% block content %}
+<h1 style="text-align: center">Automode</h1>
+<p>
+    In Automode we create the database implementation, and executable
+    transformation rules in one go. We first need to set up the source files
+    holding the BIRD database and transformation meta data in the correct
+    directories <br />
+</p>
+<p>
+    By Default we use the ELDM to create the database, if you want to use the
+    EIL you must set the flag ldm_or_il = 'il' in the
+    /birds_nest/pybirdai/context/context.py file and restart the server<br />
+</p>
+<p>
+    Using the SQLDeveloper Tool, export the ELDM or IL CSV files from the BIRD
+    database, following the instructions
+    <a
+        href="https://github.com/eclipse-efbt/efbt/wiki/Export-Files-from-SQLDeveloper"
+        >here</a
+    >
+    and put them into the birds_nest/reources/ldm directory if using the ELDM or
+    birds_nest/reources/il directory if using the EIL.<br />
+</p>
+<p>
+    To create the transformations we need the csv files related to the SMCubes
+    artefacts of BIRD and store them under the
+    birds_nest/resources/technical_export directory. We can get these from the
+    BIRD website by following the instructions
+    <a
+        href="https://github.com/eclipse-efbt/efbt/wiki/Downloading-Files-from-the-ECB-website"
+        >here</a
+    ><br />
+</p>
+<p>
+    When creating the transformation rules we need to setup some configuration
+    files and store them unser the birds_nest/resources/joins_configuration
+    directory. We can get these from the BIRD website by following the
+    isntructions
+    <a
+        href="https://github.com/eclipse-efbt/efbt/wiki/Downloading-Files-from-the-ECB-website"
+        >here</a
+    ><br />
+</p>
+<p>
+    Currently there are 3 configuration files, and ready made versions are
+    available
+    <a
+        href="https://github.com/regcommunity/FreeBIRD/tree/main/joins_configuration"
+        >here</a
+    >
+    <br />
+    Theses files are in_scope_reports_FINREP_REF.csv ,
+    join_for_product_ldm_definitions_FINREP_REF.csv , And
+    join_for_product_to_reference_category_FINREP_REF.csv<br />
+    Documentation on creating these files is to follow, basically they list the
+    reports in scope, and show which tables are joined togther in the BIRD LDM
+    for each product used in reports (like debt securities used in Finrep) . We
+    could also create a configuration file to show which BIRD IL tables are used
+    for each product used in reports. <br />
 </p>
 <div class="task-grid">
     <a href="{% url 'pybirdai:automode_create_database' %}" class="task-item">
-        <img src="{% static 'images/create_bird_database.webp' %}" alt="create_the_database">
+        <img
+            src="{% static 'images/create_bird_database.webp' %}"
+            alt="create_the_database"
+        />
         <span>Create the database</span>
     </a>
     <a href="{% url 'pybirdai:run_full_setup' %}" class="task-item">
-        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_the_transformations">
+        <img
+            src="{% static 'images/create_transformations_metadata.webp' %}"
+            alt="create_the_transformations"
+        />
         <span>Create the SMCubes transformations</span>
     </a>
     <a href="{% url 'pybirdai:automode' %}" class="task-item">
-        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_the_transformations">
+        <img
+            src="{% static 'images/create_transformations_metadata.webp' %}"
+            alt="create_the_transformations"
+        />
         <span>Compare To Fine-tuned SMCubes transformations</span>
     </a>
     <a href="{% url 'pybirdai:automode' %}" class="task-item">
-        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_the_transformations">
+        <img
+            src="{% static 'images/create_transformations_metadata.webp' %}"
+            alt="create_the_transformations"
+        />
         <span>Use Fine-tuned SMCubes transformations</span>
     </a>
-    <a href="{% url 'pybirdai:run_create_python_transformations_from_db' %}" class="task-item">
-        <img src="{% static 'images/smcubes_to_python.webp' %}" alt="create_python_transformations">
+    <a
+        href="{% url 'pybirdai:run_create_python_transformations_from_db' %}"
+        class="task-item"
+    >
+        <img
+            src="{% static 'images/smcubes_to_python.webp' %}"
+            alt="create_python_transformations"
+        />
         <span>Create Python transformations</span>
     </a>
+    <a
+        href="{% url 'pybirdai:run_fetch_curated_resources' %}"
+        class="task-item"
+    >
+        <img
+            src="{% static 'images/smcubes_to_python.webp' %}"
+            alt="run_fetch_curated_resources"
+        />
+        <span>Fetch Curated Resources</span>
+    </a>
 
-    <a href="{% url 'pybirdai:home' %}" class="task-item" style="display: inline-flex; max-width: 200px;">
-        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+    <a
+        href="{% url 'pybirdai:home' %}"
+        class="task-item"
+        style="display: inline-flex; max-width: 200px"
+    >
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow" />
         <span>Back to Home</span>
     </a>
 </div>
 
-{% endblock %} 
+{% endblock %}

@@ -428,7 +428,7 @@ def main():
     # Initialize the fetcher with the FreeBIRD repository
     fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
 
-    """
+
     logger.info("STEP 1: Fetching specific derivation model file")
 
     fetcher.fetch_derivation_model_file(
@@ -440,7 +440,7 @@ def main():
 
     logger.info("STEP 2: Fetching database export files")
     fetcher.fetch_database_export_files()
-    """
+
 
     logger.info("STEP 3: Fetching test fixtures and templates")
     fetcher.fetch_test_fixtures()
