@@ -141,7 +141,9 @@ class RunDatabaseSetup(AppConfig):
     # --- Run Django management commands ---
 
     logger.info("Running makemigrations command...")
-    makemigrations_command = "uv run manage.py makemigrations"
+
+    makemigrations_command = "uv run manage.py makemigrations pybirdai"
+
     # Note: os.system returns exit status, 0 usually means success
     status = os.system(makemigrations_command)
     if status != 0:
