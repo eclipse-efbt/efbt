@@ -138,6 +138,8 @@ urlpatterns = [
     path('automode-import-bird-metamodel-from-website/', views.automode_import_bird_metamodel_from_website, name='automode_import_bird_metamodel_from_website'),
     path('automode/configure/', views.automode_configure, name='automode_configure'),
     path('automode/execute/', views.automode_execute, name='automode_execute'),
+    path('automode/continue-post-restart/', views.automode_continue_post_restart, name='automode_continue_post_restart'),
+    path('automode/debug-config/', views.automode_debug_config, name='automode_debug_config'),
     path('automode/status/', views.automode_status, name='automode_status'),
     path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources')
 ]

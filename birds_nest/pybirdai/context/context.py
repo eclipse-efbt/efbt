@@ -117,7 +117,23 @@ class Context(object):
     save_derived_sdd_items = True
 
     def _get_configured_data_model_type(self):
-        """Get the configured data model type from AutomodeConfiguration."""
+        """Get the configured data model type from temporary file or AutomodeConfiguration."""
+        # First try to read from temporary configuration file
+        try:
+            import os
+            import json
+            # Use the same path as in views.py
+            temp_config_path = os.path.join('.', 'automode_config.json')
+            if os.path.exists(temp_config_path):
+                with open(temp_config_path, 'r') as f:
+                    config_data = json.load(f)
+                data_model_type = config_data.get('data_model_type', 'ELDM')
+                return 'ldm' if data_model_type == 'ELDM' else 'il'
+        except Exception:
+            # If temp file fails, try database
+            pass
+        
+        # Fallback to database configuration
         try:
             # Import here to avoid circular imports
             from ..bird_meta_data_model import AutomodeConfiguration
