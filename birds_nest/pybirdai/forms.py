@@ -13,11 +13,126 @@
 from django import forms
 from django.core.exceptions import ValidationError
 import re
-from .bird_meta_data_model import AutomodeConfiguration
+
+
+class AutomodeConfigurationSessionForm(forms.Form):
+    """Form for configuring automode data sources and settings (session-based)."""
+    
+    DATA_MODEL_CHOICES = [
+        ('ELDM', 'ELDM (Logical Data Model)'),
+        ('EIL', 'EIL (Input Layer)'),
+    ]
+    
+    TECHNICAL_EXPORT_SOURCE_CHOICES = [
+        ('BIRD_WEBSITE', 'BIRD Website'),
+        ('GITHUB', 'GitHub Repository'),
+        ('MANUAL_UPLOAD', 'Manual Upload'),
+    ]
+    
+    CONFIG_FILES_SOURCE_CHOICES = [
+        ('MANUAL', 'Manual Upload'),
+        ('GITHUB', 'GitHub Repository'),
+    ]
+    
+    WHEN_TO_STOP_CHOICES = [
+        ('RESOURCE_DOWNLOAD', 'Stop after resource download and move to step by step mode'),
+        ('DATABASE_CREATION', 'Stop after database creation'),
+        ('SMCUBES_RULES', 'Stop after creation of SMCubes generation rules for custom configuration before python generation'),
+        ('PYTHON_CODE', 'Use previous customisation and stop after generating Python code'),
+        ('FULL_EXECUTION', 'Do everything including creating Python code and running the test suite'),
+    ]
+    
+    data_model_type = forms.ChoiceField(
+        choices=DATA_MODEL_CHOICES,
+        initial='ELDM',
+        widget=forms.RadioSelect(),
+        help_text='Select whether to use ELDM or EIL data model'
+    )
+    
+    technical_export_source = forms.ChoiceField(
+        choices=TECHNICAL_EXPORT_SOURCE_CHOICES,
+        initial='BIRD_WEBSITE',
+        widget=forms.RadioSelect(),
+        help_text='Source for technical export files'
+    )
+    
+    technical_export_github_url = forms.URLField(
+        required=False,
+        initial='https://github.com/regcommunity/FreeBIRD',
+        help_text='GitHub repository URL for technical export files (when GitHub source is selected)'
+    )
+    
+    config_files_source = forms.ChoiceField(
+        choices=CONFIG_FILES_SOURCE_CHOICES,
+        initial='MANUAL',
+        widget=forms.RadioSelect(),
+        help_text='Source for configuration files (joins, extra variables)'
+    )
+    
+    config_files_github_url = forms.URLField(
+        required=False,
+        initial='https://github.com/regcommunity/FreeBIRD',
+        help_text='GitHub repository URL for configuration files (when GitHub source is selected)'
+    )
+    
+    when_to_stop = forms.ChoiceField(
+        choices=WHEN_TO_STOP_CHOICES,
+        initial='RESOURCE_DOWNLOAD',
+        widget=forms.RadioSelect(),
+        help_text='Defines how far to take automode processing before stopping'
+    )
+    
+    # Add github_token as a non-model field for security (not stored in database)
+    github_token = forms.CharField(
+        max_length=255,
+        required=False,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'ghp_xxxxxxxxxxxxxxxxxxxx (optional for private repos)',
+            'style': 'display: none;'
+        }),
+        help_text='GitHub personal access token for private repositories (not stored in database)'
+    )
+    
+    def clean_technical_export_github_url(self):
+        """Validate technical export GitHub URL."""
+        url = self.cleaned_data.get('technical_export_github_url')
+        source = self.cleaned_data.get('technical_export_source')
+        
+        if source == 'GITHUB':
+            if not url:
+                raise ValidationError('GitHub URL is required when GitHub is selected as source.')
+            
+            if not self._is_valid_github_url(url):
+                raise ValidationError('Please enter a valid GitHub repository URL.')
+        
+        return url
+    
+    def clean_config_files_github_url(self):
+        """Validate configuration files GitHub URL."""
+        url = self.cleaned_data.get('config_files_github_url')
+        source = self.cleaned_data.get('config_files_source')
+        
+        if source == 'GITHUB':
+            if not url:
+                raise ValidationError('GitHub URL is required when GitHub is selected as source.')
+            
+            if not self._is_valid_github_url(url):
+                raise ValidationError('Please enter a valid GitHub repository URL.')
+        
+        return url
+    
+    def _is_valid_github_url(self, url):
+        """Check if URL is a valid GitHub repository URL."""
+        # Allow both with and without .git suffix
+        github_pattern = re.compile(
+            r'^https://github\.com/[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+(\.git)?/?$'
+        )
+        return bool(github_pattern.match(url))
 
 
 class AutomodeConfigurationForm(forms.ModelForm):
-    """Form for configuring automode data sources and settings."""
+    """Form for configuring automode data sources and settings (model-based)."""
     
     # Add github_token as a non-model field for security (not stored in database)
     github_token = forms.CharField(
@@ -32,6 +147,7 @@ class AutomodeConfigurationForm(forms.ModelForm):
     )
     
     class Meta:
+        from .bird_meta_data_model import AutomodeConfiguration
         model = AutomodeConfiguration
         fields = [
             'data_model_type',

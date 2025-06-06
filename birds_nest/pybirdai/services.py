@@ -14,7 +14,6 @@ import os
 import logging
 import requests
 from django.core.exceptions import ValidationError
-from .bird_meta_data_model import AutomodeConfiguration
 from .utils.github_file_fetcher import GitHubFileFetcher
 from .utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from .context.context import Context
@@ -438,6 +437,72 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
             logger.info(f"Successfully downloaded {files_downloaded} LDM files")
         
         return files_downloaded
+    
+    def fetch_generated_python_files(self, target_directory: str, force_refresh: bool = False):
+        """
+        Fetch generated Python files from the repository's filter_code directory.
+        
+        Args:
+            target_directory (str): Local directory to save generated Python files
+            force_refresh (bool): Force re-download even if files exist
+            
+        Returns:
+            int: Number of Python files downloaded
+        """
+        logger.info(f"Fetching generated Python files to {target_directory}")
+        
+        # Ensure target directory exists
+        self._ensure_directory_exists(target_directory)
+        
+        # Clear directory if force refresh is requested
+        if force_refresh:
+            logger.info("Force refresh enabled - clearing existing generated Python files")
+            self._clear_directory(target_directory)
+            logger.info("Cleared existing generated Python files due to force refresh")
+        
+        # Look for Python files in the filter_code directory
+        filter_code_path = "birds_nest/pybirdai/process_steps/filter_code"
+        files_downloaded = 0
+        
+        try:
+            logger.info(f"Fetching Python files from {filter_code_path}")
+            files = self.fetch_files(filter_code_path)
+            logger.info(f"Raw files response: {len(files)} items")
+            
+            python_files = [f for f in files if f.get('type') == 'file' and f.get('name', '').endswith('.py')]
+            logger.info(f"Found {len(python_files)} Python files")
+            
+            if not python_files:
+                logger.warning(f"No Python files found in {filter_code_path}")
+                return 0
+            
+            logger.info(f"Found {len(python_files)} Python files in {filter_code_path}")
+            
+            # Download each Python file
+            for file_info in python_files:
+                file_name = file_info.get('name')
+                local_path = os.path.join(target_directory, file_name)
+                
+                # Skip if file exists and not forcing refresh
+                if os.path.exists(local_path) and not force_refresh:
+                    logger.debug(f"Skipping existing Python file: {file_name}")
+                    continue
+                    
+                result = self.download_file(file_info, local_path)
+                if result:
+                    files_downloaded += 1
+                    logger.info(f"Downloaded generated Python file: {file_name}")
+            
+        except Exception as e:
+            logger.error(f"Error accessing {filter_code_path}: {e}")
+            return 0
+        
+        if files_downloaded == 0:
+            logger.warning("No new Python files downloaded from filter_code directory")
+        else:
+            logger.info(f"Successfully downloaded {files_downloaded} generated Python files")
+        
+        return files_downloaded
 
 
 class AutomodeConfigurationService:
@@ -496,7 +561,7 @@ class AutomodeConfigurationService:
             logger.error(f"Error validating GitHub repository {url}: {e}")
             return False
     
-    def apply_configuration(self, config: AutomodeConfiguration):
+    def apply_configuration(self, config):
         """
         Apply the given configuration to the system context.
         
@@ -514,7 +579,7 @@ class AutomodeConfigurationService:
         
         logger.info(f"Configuration applied successfully: data_model={config.data_model_type}")
     
-    def fetch_files_from_source(self, config: AutomodeConfiguration, github_token: str = None, force_refresh: bool = False):
+    def fetch_files_from_source(self, config, github_token: str = None, force_refresh: bool = False):
         """
         Fetch files based on the configuration settings.
         
@@ -531,6 +596,7 @@ class AutomodeConfigurationService:
         results = {
             'technical_export': 0,
             'config_files': 0,
+            'generated_python': 0,
             'errors': []
         }
         
@@ -559,6 +625,26 @@ class AutomodeConfigurationService:
             # MANUAL source doesn't need automatic fetching
         except Exception as e:
             error_msg = f"Error fetching configuration files: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
+        
+        # Fetch generated Python files if using GitHub sources
+        try:
+            # Determine which GitHub URL to use for Python files
+            github_url_for_python = None
+            if config.technical_export_source == 'GITHUB':
+                github_url_for_python = config.technical_export_github_url
+            elif config.config_files_source == 'GITHUB':
+                github_url_for_python = config.config_files_github_url
+            
+            if github_url_for_python:
+                results['generated_python'] = self._fetch_generated_python_from_github(
+                    github_url_for_python, github_token, force_refresh
+                )
+            else:
+                logger.info("No GitHub source configured - skipping generated Python files download")
+        except Exception as e:
+            error_msg = f"Error fetching generated Python files: {str(e)}"
             logger.error(error_msg)
             results['errors'].append(error_msg)
         
@@ -626,6 +712,15 @@ class AutomodeConfigurationService:
         
         return fetcher.fetch_configuration_files(base_dir, force_refresh)
     
+    def _fetch_generated_python_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
+        """Fetch generated Python files from GitHub repository."""
+        logger.info(f"Fetching generated Python files from GitHub: {github_url}")
+        
+        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
+        target_dir = "resources/generated_python"
+        
+        return fetcher.fetch_generated_python_files(target_dir, force_refresh)
+    
     def _check_manual_technical_export_files(self) -> int:
         """
         Check for manually uploaded technical export files.
@@ -652,7 +747,7 @@ class AutomodeConfigurationService:
         
         return file_count
     
-    def execute_automode_setup(self, config: AutomodeConfiguration, github_token: str = None, force_refresh: bool = False):
+    def execute_automode_setup(self, config, github_token: str = None, force_refresh: bool = False):
         """
         Execute the complete automode setup process with the given configuration.
         
@@ -754,6 +849,140 @@ class AutomodeConfigurationService:
             logger.error(error_msg)
             results['errors'].append(error_msg)
             
+        return results
+    
+    def execute_automode_setup_with_database_creation(self, config, github_token: str = None, force_refresh: bool = False):
+        """
+        Execute the complete automode setup process with correct step ordering.
+        
+        Flow: Fetch Resources → Create Database → Wait for Restart → Continue based on when_to_stop
+        
+        Args:
+            config: Configuration object (from temporary file)
+            github_token (str, optional): GitHub personal access token
+            force_refresh (bool): Force refresh of all data
+            
+        Returns:
+            dict: Results of the setup process
+        """
+        logger.info("Starting automode setup with correct step ordering")
+        
+        results = {
+            'files_fetched': {},
+            'database_created': False,
+            'server_restart_required': False,
+            'setup_completed': False,
+            'errors': []
+        }
+        
+        try:
+            # Step 1: Fetch files based on configuration FIRST
+            logger.info("Step 1: Fetching technical resources and configuration files...")
+            fetch_results = self.fetch_files_from_source(config, github_token, force_refresh)
+            results['files_fetched'] = fetch_results
+            logger.info(f"Resource fetching completed: {fetch_results}")
+            
+            # Check if when_to_stop is RESOURCE_DOWNLOAD
+            if config.when_to_stop == 'RESOURCE_DOWNLOAD':
+                logger.info("Stopping after resource download as configured")
+                results['stopped_at'] = 'RESOURCE_DOWNLOAD'
+                results['next_steps'] = 'Move to step by step mode for manual processing'
+                results['setup_completed'] = True
+                return results
+            
+            # Step 2: Create the database and Django models
+            logger.info("Step 2: Creating database and Django models...")
+            database_results = self._create_bird_database()
+            results['database_created'] = True
+            results['server_restart_required'] = True
+            logger.info("Database and Django models created successfully")
+            
+            # At this point, the database setup process will have triggered a server restart message
+            # We should NOT continue automatically - the user needs to restart the server manually
+            logger.info("⚠️  SERVER RESTART REQUIRED - User must restart server manually to apply model changes")
+            
+            # Check if when_to_stop is DATABASE_CREATION
+            if config.when_to_stop == 'DATABASE_CREATION':
+                logger.info("Setup complete - stopped after database creation as configured")
+                results['stopped_at'] = 'DATABASE_CREATION'
+                results['next_steps'] = 'Please restart the server manually to apply Django model changes, then proceed with next steps.'
+                results['setup_completed'] = True
+                return results
+            
+            # For other when_to_stop options, we also need to wait for server restart
+            if config.when_to_stop == 'FULL_EXECUTION':
+                results['stopped_at'] = 'SERVER_RESTART_REQUIRED'
+                results['next_steps'] = 'Please restart the server manually to apply Django model changes. Generated Python files will be transferred during restart process.'
+                results['setup_completed'] = False  # Not fully completed until restart
+            else:
+                results['stopped_at'] = 'SERVER_RESTART_REQUIRED'
+                results['next_steps'] = 'Please restart the server manually to apply Django model changes. After restart, continue based on your when_to_stop setting.'
+                results['setup_completed'] = False  # Not fully completed until restart
+            
+            logger.info("Automode setup initial phase completed - awaiting manual server restart")
+            
+        except Exception as e:
+            error_msg = f"Error during automode setup with database creation: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
+        
+        return results
+    
+    def execute_automode_post_restart(self, config):
+        """
+        Execute automode steps that require the database to be available (after server restart).
+        This continues the process after the user has restarted the server.
+        
+        Args:
+            config: Configuration object from temporary file
+            
+        Returns:
+            dict: Results of the post-restart execution
+        """
+        logger.info("Starting automode execution after server restart")
+        
+        results = {
+            'smcubes_rules': {},
+            'python_code': {},
+            'full_execution': {},
+            'setup_completed': False,
+            'errors': []
+        }
+        
+        try:
+            # Now we can safely execute further steps based on when_to_stop
+            if config.when_to_stop == 'SMCUBES_RULES':
+                logger.info("Proceeding to SMCubes rules creation...")
+                smcubes_results = self._create_smcubes_transformations()
+                results['smcubes_rules'] = smcubes_results
+                results['stopped_at'] = 'SMCUBES_RULES'
+                results['next_steps'] = 'SMCubes generation rules created. Ready for custom configuration.'
+                results['setup_completed'] = True
+                
+            elif config.when_to_stop == 'PYTHON_CODE':
+                logger.info("Python code generation not yet implemented")
+                results['errors'].append("Python code generation option is not yet implemented")
+                results['stopped_at'] = 'PYTHON_CODE'
+                results['setup_completed'] = False
+                
+            elif config.when_to_stop == 'FULL_EXECUTION':
+                logger.info("Full execution with testing completed during database setup")
+                results['stopped_at'] = 'FULL_EXECUTION'
+                results['next_steps'] = 'Generated Python files have been transferred to filter_code directory. System ready for testing.'
+                results['setup_completed'] = True
+            else:
+                # Should not reach here normally
+                results['stopped_at'] = 'UNKNOWN'
+                results['next_steps'] = 'Unknown when_to_stop configuration'
+                results['setup_completed'] = True
+            
+            logger.info("Automode post-restart execution completed")
+            
+        except Exception as e:
+            error_msg = f"Error during automode post-restart execution: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
+        
         return results
     
     def _create_bird_database(self):
