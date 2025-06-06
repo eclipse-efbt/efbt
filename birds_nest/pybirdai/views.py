@@ -3413,3 +3413,221 @@ def run_fetch_curated_resources(request):
         "Back to Automode"
     )
 
+
+def automode_configure(request):
+    """Handle automode configuration form submission."""
+    from .bird_meta_data_model import AutomodeConfiguration
+    from .forms import AutomodeConfigurationForm
+    from .services import AutomodeConfigurationService
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    if request.method == 'POST':
+        try:
+            # Get or create active configuration
+            config = AutomodeConfiguration.get_active_configuration()
+            if not config:
+                config = AutomodeConfiguration()
+            
+            form = AutomodeConfigurationForm(request.POST, instance=config)
+            
+            if form.is_valid():
+                # Validate GitHub URLs if GitHub is selected
+                service = AutomodeConfigurationService()
+                
+                if form.cleaned_data['technical_export_source'] == 'GITHUB':
+                    url = form.cleaned_data['technical_export_github_url']
+                    token = form.cleaned_data.get('github_token')
+                    if not service.validate_github_repository(url, token):
+                        error_msg = f'Technical export GitHub repository is not accessible: {url}'
+                        if not token:
+                            error_msg += '. For private repositories, please provide a GitHub Personal Access Token.'
+                        else:
+                            error_msg += '. Please check your token has "repo" permissions and is valid.'
+                        return JsonResponse({
+                            'success': False,
+                            'error': error_msg
+                        })
+                
+                if form.cleaned_data['config_files_source'] == 'GITHUB':
+                    url = form.cleaned_data['config_files_github_url']
+                    token = form.cleaned_data.get('github_token')
+                    if not service.validate_github_repository(url, token):
+                        error_msg = f'Configuration files GitHub repository is not accessible: {url}'
+                        if not token:
+                            error_msg += '. For private repositories, please provide a GitHub Personal Access Token.'
+                        else:
+                            error_msg += '. Please check your token has "repo" permissions and is valid.'
+                        return JsonResponse({
+                            'success': False,
+                            'error': error_msg
+                        })
+                
+                # Save configuration
+                config = form.save()
+                logger.info(f"Automode configuration saved: {config}")
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Configuration saved successfully',
+                    'config_id': config.id
+                })
+            else:
+                # Return form errors
+                errors = []
+                for field, field_errors in form.errors.items():
+                    for error in field_errors:
+                        errors.append(f"{field}: {error}")
+                
+                return JsonResponse({
+                    'success': False,
+                    'error': '; '.join(errors)
+                })
+                
+        except Exception as e:
+            logger.error(f"Error saving automode configuration: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': f'Error saving configuration: {str(e)}'
+            })
+    
+    # GET request - return current configuration
+    try:
+        config = AutomodeConfiguration.get_active_configuration()
+        form = AutomodeConfigurationForm(instance=config)
+        
+        return JsonResponse({
+            'success': True,
+            'config': {
+                'data_model_type': config.data_model_type if config else 'ELDM',
+                'technical_export_source': config.technical_export_source if config else 'BIRD_WEBSITE',
+                'technical_export_github_url': config.technical_export_github_url if config else '',
+                'config_files_source': config.config_files_source if config else 'MANUAL',
+                'config_files_github_url': config.config_files_github_url if config else '',
+                'when_to_stop': config.when_to_stop if config else 'RESOURCE_DOWNLOAD'
+            }
+        })
+    except Exception as e:
+        logger.error(f"Error retrieving automode configuration: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Error retrieving configuration: {str(e)}'
+        })
+
+
+def automode_execute(request):
+    """Execute automode setup with current configuration."""
+    from .bird_meta_data_model import AutomodeConfiguration
+    from .services import AutomodeConfigurationService
+    from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    if request.method == 'POST':
+        try:
+            # Get current configuration
+            config = AutomodeConfiguration.get_active_configuration()
+            if not config:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'No configuration found. Please configure automode first.'
+                })
+            
+            # Check confirmation
+            confirm_execution = request.POST.get('confirm_execution') == 'on'
+            if not confirm_execution:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Execution must be confirmed.'
+                })
+            
+            force_refresh = request.POST.get('force_refresh') == 'on'
+            github_token = request.POST.get('github_token', '').strip() or None
+            
+            # Execute automode setup
+            service = AutomodeConfigurationService()
+            results = service.execute_automode_setup(config, github_token, force_refresh)
+            
+            if results['errors']:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Execution completed with errors: ' + '; '.join(results['errors']),
+                    'results': results
+                })
+            else:
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Automode setup executed successfully',
+                    'results': results
+                })
+                
+        except Exception as e:
+            logger.error(f"Error executing automode setup: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': f'Error executing setup: {str(e)}'
+            })
+    
+    # GET request not supported for execution
+    return JsonResponse({
+        'success': False,
+        'error': 'GET method not supported for execution'
+    })
+
+
+def automode_status(request):
+    """Get current automode configuration status and file information."""
+    from .bird_meta_data_model import AutomodeConfiguration
+    import os
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    try:
+        config = AutomodeConfiguration.get_active_configuration()
+        
+        # Check file existence
+        file_status = {
+            'technical_export': {
+                'directory': 'resources/technical_export',
+                'exists': os.path.exists('resources/technical_export'),
+                'file_count': len(os.listdir('resources/technical_export')) if os.path.exists('resources/technical_export') else 0
+            },
+            'joins_configuration': {
+                'directory': 'resources/joins_configuration',
+                'exists': os.path.exists('resources/joins_configuration'),
+                'file_count': len(os.listdir('resources/joins_configuration')) if os.path.exists('resources/joins_configuration') else 0
+            },
+            'extra_variables': {
+                'directory': 'resources/extra_variables',
+                'exists': os.path.exists('resources/extra_variables'),
+                'file_count': len(os.listdir('resources/extra_variables')) if os.path.exists('resources/extra_variables') else 0
+            },
+            'ldm': {
+                'directory': 'resources/ldm',
+                'exists': os.path.exists('resources/ldm'),
+                'file_count': len(os.listdir('resources/ldm')) if os.path.exists('resources/ldm') else 0
+            }
+        }
+        
+        return JsonResponse({
+            'success': True,
+            'configuration': {
+                'exists': config is not None,
+                'data_model_type': config.data_model_type if config else None,
+                'technical_export_source': config.technical_export_source if config else None,
+                'config_files_source': config.config_files_source if config else None,
+                'last_updated': config.updated_at.isoformat() if config else None
+            },
+            'file_status': file_status
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting automode status: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Error getting status: {str(e)}'
+        })
+

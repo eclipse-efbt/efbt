@@ -255,3 +255,25 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
 2. **Repository Access Issues**: Provide clear error messages and fallback options
 3. **User Configuration Errors**: Comprehensive validation and preview functionality
 4. **Breaking Changes**: Maintain backward compatibility during transition
+
+## Extras
+we should allow user to add a personal access token to access private github repositories, it should ot be stored locally
+
+## New 'when to stop' feature
+
+in Automade we add another option that states how far to take processing, ie.. when to stop.
+
+The options for whan to stop are:
+
+
+1. stop after resource download and move to step by step mode
+2. stop after creation of SMCubes generation rules for  custom configuration before python generation
+3. use previous customisation and stop after generating Python code
+4. do everything including creating Python code and running the test suite.
+
+Option 1 is just the standard behaviour
+Option 2 means that we should run the existing Python code that will 'create the SMCubes Transformations'
+Option 3 and option 4 will be left for later implementation
+
+
+
