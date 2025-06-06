@@ -1,0 +1,329 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=5 operation='do' %}">Task 5: Python Transformation Rules</a>
+<span class="breadcrumb-separator">›</span>
+<span>Do</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 5: Python Transformation Rules Creation - Do</h1>
+    
+    {% if task_execution.status == 'completed' %}
+    <div class="alert alert-success">
+        <strong>✓ Task Completed</strong>
+        <p>Python transformation code has been generated successfully.</p>
+        <p>{{ task_execution.execution_data.files_generated|default:0 }} Python files created.</p>
+        <a href="{% url 'pybirdai:workflow_task' task_number=5 operation='review' %}" class="btn btn-primary">Go to Review</a>
+    </div>
+    {% elif task_execution.status == 'failed' %}
+    <div class="alert alert-danger">
+        <strong>✗ Task Failed</strong>
+        <p>{{ task_execution.error_message }}</p>
+        <p>Please fix the issues and try again.</p>
+    </div>
+    {% elif task_execution.status == 'running' %}
+    <div class="alert alert-info">
+        <strong>🔄 Task Running</strong>
+        <p>Generating Python transformation code...</p>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ task_execution.execution_data.progress|default:0 }}%"></div>
+        </div>
+        <p class="mt-2">Current: {{ task_execution.execution_data.current_file|default:"Initializing..." }}</p>
+    </div>
+    {% endif %}
+    
+    <h2>Python Code Generation Process</h2>
+    
+    <div class="generation-phases">
+        <div class="phase-card">
+            <h3>1. Filter Code Generation</h3>
+            <p>Convert SMCubes filters to executable Python code</p>
+            <div class="phase-details">
+                <ul>
+                    <li>Generate filter functions</li>
+                    <li>Create filter classes</li>
+                    <li>Build filter orchestration</li>
+                    <li>Add performance optimizations</li>
+                </ul>
+                {% if task_execution.execution_data.filter_code_generated %}
+                <div class="phase-stats">
+                    <span class="stat-item">
+                        <strong>{{ task_execution.execution_data.filter_functions|default:0 }}</strong> Filter Functions
+                    </span>
+                    <span class="stat-item">
+                        <strong>{{ task_execution.execution_data.filter_files|default:0 }}</strong> Python Files
+                    </span>
+                </div>
+                <span class="status-badge completed">✓ Completed</span>
+                {% elif task_execution.status == 'running' and task_execution.execution_data.current_phase == 'filters' %}
+                <span class="status-badge running">🔄 In Progress</span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="phase-card">
+            <h3>2. Join Code Generation</h3>
+            <p>Create executable join operations</p>
+            <div class="phase-details">
+                <ul>
+                    <li>Generate join methods</li>
+                    <li>Create data merging logic</li>
+                    <li>Build relationship handlers</li>
+                    <li>Implement join optimization</li>
+                </ul>
+                {% if task_execution.execution_data.join_code_generated %}
+                <div class="phase-stats">
+                    <span class="stat-item">
+                        <strong>{{ task_execution.execution_data.join_methods|default:0 }}</strong> Join Methods
+                    </span>
+                    <span class="stat-item">
+                        <strong>{{ task_execution.execution_data.join_files|default:0 }}</strong> Python Files
+                    </span>
+                </div>
+                <span class="status-badge completed">✓ Completed</span>
+                {% elif task_execution.status == 'running' and task_execution.execution_data.current_phase == 'joins' %}
+                <span class="status-badge running">🔄 In Progress</span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="phase-card">
+            <h3>3. Transformation Code Generation</h3>
+            <p>Generate complex transformation logic</p>
+            <div class="phase-details">
+                <ul>
+                    <li>Create transformation functions</li>
+                    <li>Generate aggregation logic</li>
+                    <li>Build calculation methods</li>
+                    <li>Implement data validators</li>
+                </ul>
+                {% if task_execution.execution_data.transformation_code_generated %}
+                <div class="phase-stats">
+                    <span class="stat-item">
+                        <strong>{{ task_execution.execution_data.transformation_functions|default:0 }}</strong> Functions
+                    </span>
+                    <span class="stat-item">
+                        <strong>{{ task_execution.execution_data.transformation_files|default:0 }}</strong> Python Files
+                    </span>
+                </div>
+                <span class="status-badge completed">✓ Completed</span>
+                {% elif task_execution.status == 'running' and task_execution.execution_data.current_phase == 'transformations' %}
+                <span class="status-badge running">🔄 In Progress</span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="phase-card">
+            <h3>4. Test Case Generation</h3>
+            <p>Create unit tests for generated code</p>
+            <div class="phase-details">
+                <ul>
+                    <li>Generate test fixtures</li>
+                    <li>Create test methods</li>
+                    <li>Build validation tests</li>
+                    <li>Generate performance tests</li>
+                </ul>
+                {% if task_execution.execution_data.tests_generated %}
+                <div class="phase-stats">
+                    <span class="stat-item">
+                        <strong>{{ task_execution.execution_data.test_cases|default:0 }}</strong> Test Cases
+                    </span>
+                    <span class="stat-item">
+                        <strong>{{ task_execution.execution_data.test_files|default:0 }}</strong> Test Files
+                    </span>
+                </div>
+                <span class="status-badge completed">✓ Completed</span>
+                {% elif task_execution.status == 'running' and task_execution.execution_data.current_phase == 'tests' %}
+                <span class="status-badge running">🔄 In Progress</span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    {% if task_execution.status == 'pending' %}
+    <form method="post" style="margin-top: 30px;">
+        {% csrf_token %}
+        
+        <div class="generation-options">
+            <h3>Code Generation Options</h3>
+            
+            <div class="option-group">
+                <h4>Code Style</h4>
+                <div class="form-group">
+                    <label for="code_style">Python Code Style:</label>
+                    <select name="code_style" id="code_style" class="form-control">
+                        <option value="pep8" selected>PEP 8 Standard</option>
+                        <option value="black">Black Formatter</option>
+                        <option value="google">Google Style</option>
+                    </select>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="add_type_hints" id="add_type_hints" checked>
+                    <label class="form-check-label" for="add_type_hints">
+                        Add type hints (Python 3.6+)
+                    </label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="add_docstrings" id="add_docstrings" checked>
+                    <label class="form-check-label" for="add_docstrings">
+                        Generate comprehensive docstrings
+                    </label>
+                </div>
+            </div>
+            
+            <div class="option-group">
+                <h4>Performance Options</h4>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="use_pandas" id="use_pandas" checked>
+                    <label class="form-check-label" for="use_pandas">
+                        Use pandas for data operations
+                    </label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="enable_caching" id="enable_caching" checked>
+                    <label class="form-check-label" for="enable_caching">
+                        Enable result caching
+                    </label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="parallel_execution" id="parallel_execution">
+                    <label class="form-check-label" for="parallel_execution">
+                        Generate parallel execution support
+                    </label>
+                </div>
+            </div>
+            
+            <div class="option-group">
+                <h4>Testing Options</h4>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="generate_tests" id="generate_tests" checked>
+                    <label class="form-check-label" for="generate_tests">
+                        Generate unit tests
+                    </label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="generate_fixtures" id="generate_fixtures" checked>
+                    <label class="form-check-label" for="generate_fixtures">
+                        Generate test fixtures
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Start Python Code Generation</button>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+    {% endif %}
+</div>
+
+<style>
+.generation-phases {
+    display: grid;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.phase-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.phase-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.phase-details {
+    margin-top: 15px;
+}
+
+.phase-details ul {
+    margin: 10px 0;
+    padding-left: 20px;
+    color: #6c757d;
+}
+
+.phase-stats {
+    display: flex;
+    gap: 20px;
+    margin: 15px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 4px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-item strong {
+    font-size: 24px;
+    color: #0d6efd;
+}
+
+.generation-options {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.option-group {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.option-group:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.option-group h4 {
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+</style>
+
+<script>
+// Auto-refresh if task is running
+{% if task_execution.status == 'running' %}
+setTimeout(function() {
+    location.reload();
+}, 3000);
+{% endif %}
+</script>
+{% endblock %}

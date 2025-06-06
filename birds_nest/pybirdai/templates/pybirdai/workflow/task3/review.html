@@ -1,0 +1,238 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}">Task 3: SMCubes Core Creation</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 3: SMCubes Core Creation - Review</h1>
+    
+    <h2>Import Summary</h2>
+    
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h3>Hierarchies</h3>
+            <dl>
+                <dt>Member Hierarchies:</dt>
+                <dd>{{ execution_data.member_hierarchy_count|default:0 }}</dd>
+                
+                <dt>Domain Hierarchies:</dt>
+                <dd>{{ execution_data.domain_hierarchy_count|default:0 }}</dd>
+                
+                <dt>Variable Hierarchies:</dt>
+                <dd>{{ execution_data.variable_hierarchy_count|default:0 }}</dd>
+                
+                <dt>Total Nodes:</dt>
+                <dd>{{ execution_data.total_hierarchy_nodes|default:0 }}</dd>
+            </dl>
+        </div>
+        
+        <div class="summary-card">
+            <h3>Semantic Integrations</h3>
+            <dl>
+                <dt>Integration Rules:</dt>
+                <dd>{{ execution_data.semantic_integration_count|default:0 }}</dd>
+                
+                <dt>Mapped Variables:</dt>
+                <dd>{{ execution_data.mapped_variable_count|default:0 }}</dd>
+                
+                <dt>Mapping Definitions:</dt>
+                <dd>{{ execution_data.mapping_definition_count|default:0 }}</dd>
+            </dl>
+        </div>
+        
+        <div class="summary-card">
+            <h3>Cube Structures</h3>
+            <dl>
+                <dt>Cubes Created:</dt>
+                <dd>{{ execution_data.cube_count|default:0 }}</dd>
+                
+                <dt>Dimensions:</dt>
+                <dd>{{ execution_data.dimension_count|default:0 }}</dd>
+                
+                <dt>Measures:</dt>
+                <dd>{{ execution_data.measure_count|default:0 }}</dd>
+            </dl>
+        </div>
+        
+        <div class="summary-card">
+            <h3>Report Templates</h3>
+            <dl>
+                <dt>Templates Created:</dt>
+                <dd>{{ execution_data.template_count|default:0 }}</dd>
+                
+                <dt>Report Tables:</dt>
+                <dd>{{ execution_data.table_count|default:0 }}</dd>
+                
+                <dt>Cell Definitions:</dt>
+                <dd>{{ execution_data.cell_count|default:0 }}</dd>
+            </dl>
+        </div>
+    </div>
+    
+    <h2>Validation Results</h2>
+    
+    <div class="validation-section">
+        <h3>Hierarchy Validation</h3>
+        {% if execution_data.hierarchy_errors %}
+        <div class="alert alert-warning">
+            <h4>Issues Found:</h4>
+            <ul>
+                {% for error in execution_data.hierarchy_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div class="alert alert-success">
+            <strong>✓ All hierarchies validated successfully</strong>
+        </div>
+        {% endif %}
+        
+        <div class="validation-details">
+            <h4>Missing Members Report</h4>
+            <p><a href="{% url 'missing_members' %}" target="_blank">View Missing Members Report →</a></p>
+            
+            <h4>Hierarchy Structure</h4>
+            <p><a href="{% url 'review_import_hierarchies' %}" target="_blank">Review Import Hierarchies →</a></p>
+        </div>
+    </div>
+    
+    <div class="validation-section">
+        <h3>Semantic Integration Validation</h3>
+        {% if execution_data.semantic_errors %}
+        <div class="alert alert-warning">
+            <h4>Issues Found:</h4>
+            <ul>
+                {% for error in execution_data.semantic_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div class="alert alert-success">
+            <strong>✓ All semantic integrations validated successfully</strong>
+        </div>
+        {% endif %}
+        
+        <div class="validation-details">
+            <h4>Integration Review</h4>
+            <p><a href="{% url 'review_semantic_integrations' %}" target="_blank">Review Semantic Integrations →</a></p>
+        </div>
+    </div>
+    
+    <div class="validation-section">
+        <h3>Report Template Validation</h3>
+        {% if execution_data.template_errors %}
+        <div class="alert alert-warning">
+            <h4>Issues Found:</h4>
+            <ul>
+                {% for error in execution_data.template_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div class="alert alert-success">
+            <strong>✓ All report templates validated successfully</strong>
+        </div>
+        {% endif %}
+        
+        <div class="validation-details">
+            <h4>Template Review</h4>
+            <p><a href="{% url 'review_report_templates' %}" target="_blank">Review Report Templates →</a></p>
+            
+            <h4>Mapping Warnings</h4>
+            <p><a href="{% url 'mappings_warnings_summary' %}" target="_blank">View Mapping Warnings Summary →</a></p>
+        </div>
+    </div>
+    
+    <div class="form-actions" style="margin-top: 30px;">
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" name="mark_reviewed" class="btn btn-success">Mark as Reviewed</button>
+        </form>
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
+        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}" class="btn btn-primary">Proceed to Task 4</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.summary-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.summary-card dl {
+    margin: 0;
+}
+
+.summary-card dt {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.summary-card dd {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.validation-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.validation-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.validation-details {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #dee2e6;
+}
+
+.validation-details h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #6c757d;
+}
+
+.validation-details p {
+    margin-bottom: 10px;
+}
+
+.validation-details a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.validation-details a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

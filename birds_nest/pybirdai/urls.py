@@ -13,6 +13,7 @@ from django.urls import path
 
 from . import views
 from . import report_views
+from . import workflow_views
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -141,5 +142,11 @@ urlpatterns = [
     path('automode/continue-post-restart/', views.automode_continue_post_restart, name='automode_continue_post_restart'),
     path('automode/debug-config/', views.automode_debug_config, name='automode_debug_config'),
     path('automode/status/', views.automode_status, name='automode_status'),
-    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources')
+    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources'),
+    
+    # Workflow URLs for 6-task UI
+    path('workflow/', workflow_views.workflow_dashboard, name='workflow_dashboard'),
+    path('workflow/task/<int:task_number>/<str:operation>/', workflow_views.workflow_task_router, name='workflow_task'),
+    path('workflow/automode/', workflow_views.workflow_automode, name='workflow_automode'),
+    path('workflow/task/<int:task_number>/status/', workflow_views.workflow_task_status, name='workflow_task_status'),
 ]
