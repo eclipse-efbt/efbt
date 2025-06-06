@@ -1,0 +1,123 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block workflow_content %}
+<h1>BIRD Data Processing Workflow</h1>
+
+<!-- Progress Bar -->
+<div class="progress-bar">
+    <div class="progress-fill" style="width: {{ progress }}%;">
+        {{ progress }}% Complete
+    </div>
+</div>
+
+<!-- Task Grid -->
+<div class="task-grid">
+    <div class="task-card">
+        <h3>Task</h3>
+    </div>
+    <div class="task-card">
+        <h3>Do</h3>
+    </div>
+    <div class="task-card">
+        <h3>Review</h3>
+    </div>
+    <div class="task-card">
+        <h3>Compare</h3>
+    </div>
+    
+    {% for task in task_grid %}
+    <div class="task-card {% if forloop.counter == workflow_session.current_task %}active{% endif %}">
+        <h3>{{ forloop.counter }}. {{ task.task_name }}</h3>
+    </div>
+    
+    <div class="task-card">
+        <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}" 
+           class="operation-btn {{ task.operations.do.status }}">
+            Do
+            {% if task.operations.do.status == 'completed' %}✓{% endif %}
+            {% if task.operations.do.status == 'running' %}🔄{% endif %}
+            {% if task.operations.do.status == 'failed' %}✗{% endif %}
+            {% if task.operations.do.status == 'paused' %}⏸️{% endif %}
+        </a>
+    </div>
+    
+    <div class="task-card">
+        <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}" 
+           class="operation-btn {{ task.operations.review.status }}">
+            Review
+            {% if task.operations.review.status == 'completed' %}✓{% endif %}
+        </a>
+    </div>
+    
+    <div class="task-card">
+        <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='compare' %}" 
+           class="operation-btn {{ task.operations.compare.status }}">
+            Compare
+            {% if task.operations.compare.status == 'completed' %}✓{% endif %}
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Quick Actions -->
+<div class="task-content">
+    <h2>Quick Actions</h2>
+    
+    <div style="display: flex; gap: 20px; margin-top: 20px;">
+        <div style="flex: 1;">
+            <h3>Automode Execution</h3>
+            <p>Run tasks automatically up to a selected point</p>
+            <form method="post" action="{% url 'pybirdai:workflow_automode' %}">
+                {% csrf_token %}
+                <select name="target_task" class="form-control" style="margin-bottom: 10px;">
+                    <option value="1">Task 1: Resource Download</option>
+                    <option value="2">Task 2: Database Creation</option>
+                    <option value="3">Task 3: SMCubes Core Creation</option>
+                    <option value="4">Task 4: SMCubes Transformation Rules</option>
+                    <option value="5">Task 5: Python Transformation Rules</option>
+                    <option value="6" selected>Task 6: Full Execution</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Run Automode</button>
+            </form>
+        </div>
+        
+        <div style="flex: 1;">
+            <h3>System Status</h3>
+            <ul>
+                <li>Database: {% if database_ready %}✅ Ready{% else %}❌ Not created{% endif %}</li>
+                <li>Configuration: {% if workflow_session.configuration %}✅ Configured{% else %}❌ Not configured{% endif %}</li>
+                <li>Session ID: {{ workflow_session.session_id|slice:":8" }}...</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Legend -->
+<div class="task-content" style="margin-top: 20px;">
+    <h3>Status Legend</h3>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <span><span class="operation-btn" style="padding: 2px 8px;">⏳</span> Pending</span>
+        <span><span class="operation-btn running" style="padding: 2px 8px;">🔄</span> Running</span>
+        <span><span class="operation-btn completed" style="padding: 2px 8px;">✓</span> Completed</span>
+        <span><span class="operation-btn failed" style="padding: 2px 8px;">✗</span> Failed</span>
+        <span><span class="operation-btn paused" style="padding: 2px 8px;">⏸️</span> Paused</span>
+        <span><span class="operation-btn invalidated" style="padding: 2px 8px;">🔄</span> Invalidated</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block workflow_js %}
+// Auto-refresh every 5 seconds if any task is running
+var hasRunningTasks = false;
+{% for task in task_grid %}
+    {% if task.operations.do.status == 'running' or task.operations.review.status == 'running' or task.operations.compare.status == 'running' %}
+    hasRunningTasks = true;
+    {% endif %}
+{% endfor %}
+
+if (hasRunningTasks) {
+    setInterval(function() {
+        location.reload();
+    }, 5000);
+}
+{% endblock %}

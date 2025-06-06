@@ -1,0 +1,331 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}">Task 4: SMCubes Transformation Rules</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 4: SMCubes Transformation Rules - Review</h1>
+    
+    <h2>Generation Summary</h2>
+    
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h3>Filters Created</h3>
+            <div class="metric-value">{{ execution_data.filter_count|default:0 }}</div>
+            <p>Business rule filters generated</p>
+        </div>
+        
+        <div class="summary-card">
+            <h3>Joins Created</h3>
+            <div class="metric-value">{{ execution_data.join_count|default:0 }}</div>
+            <p>Data relationship joins</p>
+        </div>
+        
+        <div class="summary-card">
+            <h3>Transformations</h3>
+            <div class="metric-value">{{ execution_data.transformation_count|default:0 }}</div>
+            <p>Transformation rules</p>
+        </div>
+        
+        <div class="summary-card">
+            <h3>Validation Status</h3>
+            <div class="metric-value">
+                {% if execution_data.validation_complete %}
+                <span style="color: #28a745;">✓ Passed</span>
+                {% else %}
+                <span style="color: #dc3545;">✗ Failed</span>
+                {% endif %}
+            </div>
+            <p>Rule validation</p>
+        </div>
+    </div>
+    
+    <h2>Filter Analysis</h2>
+    
+    <div class="analysis-section">
+        <div class="filter-categories">
+            <h3>Filter Categories</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Count</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data Quality Filters</td>
+                        <td>45</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>Business Rule Filters</td>
+                        <td>78</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>Validation Filters</td>
+                        <td>32</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>Performance Filters</td>
+                        <td>15</td>
+                        <td><span class="badge badge-warning">Optimizing</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="filter-complexity">
+            <h3>Filter Complexity</h3>
+            <div class="complexity-chart">
+                <div class="complexity-bar">
+                    <div class="bar-segment simple" style="width: 30%;" title="Simple: 30%"></div>
+                    <div class="bar-segment moderate" style="width: 45%;" title="Moderate: 45%"></div>
+                    <div class="bar-segment complex" style="width: 25%;" title="Complex: 25%"></div>
+                </div>
+                <div class="complexity-legend">
+                    <span><span class="legend-box simple"></span> Simple</span>
+                    <span><span class="legend-box moderate"></span> Moderate</span>
+                    <span><span class="legend-box complex"></span> Complex</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h2>Join Analysis</h2>
+    
+    <div class="analysis-section">
+        <h3>Join Performance Metrics</h3>
+        <ul>
+            <li>Average join complexity: <strong>3.2</strong> tables</li>
+            <li>Optimized join paths: <strong>85%</strong></li>
+            <li>Index coverage: <strong>92%</strong></li>
+            <li>Estimated performance gain: <strong>+45%</strong></li>
+        </ul>
+        
+        <h3>Join Types Distribution</h3>
+        <div class="join-types">
+            <div class="join-type">
+                <span class="join-label">Inner Joins:</span>
+                <span class="join-count">28</span>
+            </div>
+            <div class="join-type">
+                <span class="join-label">Left Joins:</span>
+                <span class="join-count">12</span>
+            </div>
+            <div class="join-type">
+                <span class="join-label">Full Outer Joins:</span>
+                <span class="join-count">5</span>
+            </div>
+            <div class="join-type">
+                <span class="join-label">Cross Joins:</span>
+                <span class="join-count">3</span>
+            </div>
+        </div>
+    </div>
+    
+    <h2>Validation Results</h2>
+    
+    {% if execution_data.validation_errors %}
+    <div class="alert alert-warning">
+        <h4>Validation Issues</h4>
+        <ul>
+            {% for error in execution_data.validation_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        <strong>✓ All Validations Passed</strong>
+        <p>All transformation rules have been validated successfully.</p>
+    </div>
+    {% endif %}
+    
+    <div class="review-actions">
+        <h3>Review Actions</h3>
+        <div class="action-links">
+            <a href="{% url 'review_filters' %}" target="_blank" class="btn btn-outline-primary">
+                Review Filters in Detail
+            </a>
+            <a href="#" class="btn btn-outline-primary">
+                View Join Execution Plan
+            </a>
+            <a href="#" class="btn btn-outline-primary">
+                Export Rule Documentation
+            </a>
+        </div>
+    </div>
+    
+    <div class="form-actions" style="margin-top: 30px;">
+        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
+        <a href="{% url 'pybirdai:workflow_task' task_number=5 operation='do' %}" class="btn btn-primary">Proceed to Task 5</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.summary-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #6c757d;
+}
+
+.metric-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #0d6efd;
+    margin: 10px 0;
+}
+
+.summary-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.analysis-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.analysis-section h3 {
+    margin-top: 0;
+}
+
+.table {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.badge-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.badge-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.complexity-chart {
+    margin-top: 15px;
+}
+
+.complexity-bar {
+    display: flex;
+    height: 30px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.bar-segment {
+    height: 100%;
+}
+
+.bar-segment.simple {
+    background-color: #28a745;
+}
+
+.bar-segment.moderate {
+    background-color: #ffc107;
+}
+
+.bar-segment.complex {
+    background-color: #dc3545;
+}
+
+.complexity-legend {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.legend-box.simple {
+    background-color: #28a745;
+}
+
+.legend-box.moderate {
+    background-color: #ffc107;
+}
+
+.legend-box.complex {
+    background-color: #dc3545;
+}
+
+.join-types {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.join-type {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.join-label {
+    font-weight: 500;
+}
+
+.join-count {
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.review-actions {
+    margin-top: 30px;
+}
+
+.action-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+</style>
+{% endblock %}
