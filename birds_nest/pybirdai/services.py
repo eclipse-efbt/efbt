@@ -542,6 +542,9 @@ class AutomodeConfigurationService:
                 results['technical_export'] = self._fetch_technical_export_from_github(
                     config.technical_export_github_url, github_token, force_refresh
                 )
+            elif config.technical_export_source == 'MANUAL_UPLOAD':
+                # Manual upload - no automatic fetching, user uploads files manually
+                results['technical_export'] = self._check_manual_technical_export_files()
         except Exception as e:
             error_msg = f"Error fetching technical export files: {str(e)}"
             logger.error(error_msg)
@@ -623,6 +626,32 @@ class AutomodeConfigurationService:
         
         return fetcher.fetch_configuration_files(base_dir, force_refresh)
     
+    def _check_manual_technical_export_files(self) -> int:
+        """
+        Check for manually uploaded technical export files.
+        
+        Returns:
+            int: Number of technical export files found
+        """
+        logger.info("Checking for manually uploaded technical export files")
+        
+        target_dir = "resources/technical_export"
+        file_count = 0
+        
+        if os.path.exists(target_dir):
+            csv_files = [f for f in os.listdir(target_dir) if f.endswith('.csv')]
+            file_count = len(csv_files)
+            logger.info(f"Found {file_count} manually uploaded CSV files in {target_dir}")
+            
+            if file_count > 0:
+                logger.info(f"Manual technical export files: {csv_files}")
+            else:
+                logger.warning("No CSV files found in technical export directory for manual upload mode")
+        else:
+            logger.warning(f"Technical export directory {target_dir} does not exist for manual upload mode")
+        
+        return file_count
+    
     def execute_automode_setup(self, config: AutomodeConfiguration, github_token: str = None, force_refresh: bool = False):
         """
         Execute the complete automode setup process with the given configuration.
@@ -659,6 +688,13 @@ class AutomodeConfigurationService:
                 results['stopped_at'] = 'RESOURCE_DOWNLOAD'
                 results['next_steps'] = 'Move to step by step mode for manual processing'
                 
+            elif config.when_to_stop == 'DATABASE_CREATION':
+                logger.info("Proceeding to database creation...")
+                database_results = self._create_bird_database()
+                results['database_creation'] = database_results
+                results['stopped_at'] = 'DATABASE_CREATION'
+                results['next_steps'] = 'BIRD database created successfully. Ready for next steps.'
+                
             elif config.when_to_stop == 'SMCUBES_RULES':
                 logger.info("Proceeding to SMCubes rules creation...")
                 smcubes_results = self._create_smcubes_transformations()
@@ -686,12 +722,12 @@ class AutomodeConfigurationService:
     def _create_smcubes_transformations(self):
         """
         Create SMCubes transformation rules for custom configuration.
-        This implements the equivalent of the 'Create the SMCubes transformations' step.
+        This reuses the existing run_full_setup functionality from views.py.
         
         Returns:
             dict: Results of the SMCubes transformation creation process
         """
-        logger.info("Starting SMCubes transformations creation...")
+        logger.info("Starting SMCubes transformations creation using run_full_setup functionality...")
         
         results = {
             'database_setup': False,
@@ -702,75 +738,56 @@ class AutomodeConfigurationService:
         }
         
         try:
-            # Import the necessary modules for the full setup process
-            from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
-            from .entry_points.import_input_model import RunImportInputModelFromSQLDev
-            from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
-            from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
-            from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
-            from .entry_points.create_filters import RunCreateFilters
-            from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
-            from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
+            # Call the core full setup logic from views.py
+            from . import views
+            views.execute_full_setup_core()
             
-            # Step 1: Clean up existing metadata
-            logger.info("Step 1: Deleting existing BIRD metadata...")
-            delete_cmd = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
-            delete_cmd.run_delete_bird_metadata_database()
-            logger.info("Deleted existing bird metadata.")
-            
-            # Step 2: Import input model (from sqldev files)
-            logger.info("Step 2: Importing input model...")
-            import_cmd = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
-            import_cmd.ready()
-            logger.info("Input model imported successfully.")
-            
-            # Step 3: Import report templates from website
-            logger.info("Step 3: Importing report templates from website...")
-            import_templates_cmd = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
-            import_templates_cmd.ready()
-            logger.info("Report templates imported successfully.")
-            
-            # Step 4: Import hierarchy analysis from website
-            logger.info("Step 4: Importing hierarchy analysis from website...")
-            import_hierarchy_cmd = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
-            import_hierarchy_cmd.ready()
-            logger.info("Hierarchy analysis imported successfully.")
-            
-            # Step 5: Import semantic integrations from website
-            logger.info("Step 5: Importing semantic integrations from website...")
-            import_semantic_cmd = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
-            import_semantic_cmd.ready()
-            logger.info("Semantic integrations imported successfully.")
-            
-            results['metadata_population'] = True
-            
-            # Step 6: Create filters
-            logger.info("Step 6: Creating filters...")
-            create_filters_cmd = RunCreateFilters('pybirdai', 'birds_nest')
-            create_filters_cmd.ready()
-            logger.info("Filters created successfully.")
-            
-            # Step 7: Create executable filters
-            logger.info("Step 7: Creating executable filters...")
-            create_executable_filters_cmd = RunCreateExecutableFilters('pybirdai', 'birds_nest')
-            create_executable_filters_cmd.ready()
-            logger.info("Executable filters created successfully.")
-            
-            results['filters_creation'] = True
-            
-            # Step 8: Create joins metadata
-            logger.info("Step 8: Creating joins metadata...")
-            create_joins_cmd = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
-            create_joins_cmd.ready()
-            logger.info("Joins metadata created successfully.")
-            
-            results['joins_creation'] = True
             results['database_setup'] = True
+            results['metadata_population'] = True
+            results['filters_creation'] = True
+            results['joins_creation'] = True
             
             logger.info("SMCubes transformations creation completed successfully")
             
         except Exception as e:
             error_msg = f"Error during SMCubes transformations creation: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
+            
+        return results
+    
+    def _create_bird_database(self):
+        """
+        Create the BIRD database using the automode database setup functionality.
+        This implements the equivalent of the 'Create the database' step.
+        
+        Returns:
+            dict: Results of the database creation process
+        """
+        logger.info("Starting BIRD database creation...")
+        
+        results = {
+            'django_models_created': False,
+            'database_setup_completed': False,
+            'errors': []
+        }
+        
+        try:
+            # Import the automode database setup module
+            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            
+            # Run the automode database setup
+            logger.info("Executing automode database setup...")
+            database_setup = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+            database_setup.run_automode_database_setup()
+            
+            results['django_models_created'] = True
+            results['database_setup_completed'] = True
+            
+            logger.info("BIRD database creation completed successfully")
+            
+        except Exception as e:
+            error_msg = f"Error during BIRD database creation: {str(e)}"
             logger.error(error_msg)
             results['errors'].append(error_msg)
             

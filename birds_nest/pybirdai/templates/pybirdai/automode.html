@@ -56,9 +56,13 @@
                         <input type="radio" name="technical_export_source" value="BIRD_WEBSITE" id="tech_export_website" checked onchange="updateFormVisibility()">
                         <label for="tech_export_website" style="margin-left: 8px;">BIRD Website (ECB API)</label>
                     </div>
-                    <div style="margin-bottom: 10px;">
+                    <div style="margin-bottom: 8px;">
                         <input type="radio" name="technical_export_source" value="GITHUB" id="tech_export_github" onchange="updateFormVisibility()">
                         <label for="tech_export_github" style="margin-left: 8px;">GitHub Repository</label>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <input type="radio" name="technical_export_source" value="MANUAL_UPLOAD" id="tech_export_manual" onchange="updateFormVisibility()">
+                        <label for="tech_export_manual" style="margin-left: 8px;">Manual Upload</label>
                     </div>
                     <div id="tech_export_github_url_container" style="display: none; margin-left: 20px; margin-top: 10px;">
                         <input type="url" name="technical_export_github_url" id="tech_export_github_url" 
@@ -121,6 +125,14 @@
                         <div>
                             <strong>Stop after resource download</strong><br>
                             <small style="color: #666;">Download files and move to step by step mode (default behavior)</small>
+                        </div>
+                    </label>
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
+                        <input type="radio" name="when_to_stop" value="DATABASE_CREATION" 
+                               style="margin-right: 10px; margin-top: 2px;">
+                        <div>
+                            <strong>Stop after database creation</strong><br>
+                            <small style="color: #666;">Create the BIRD database and stop</small>
                         </div>
                     </label>
                     <label style="display: flex; align-items: flex-start; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
