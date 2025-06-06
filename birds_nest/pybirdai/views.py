@@ -3184,6 +3184,65 @@ def load_variables_from_csv_file(csv_file_path):
         return 0
 
 
+def execute_full_setup_core():
+    """
+    Core business logic for running the full BIRD metadata database setup.
+    This can be called from both view and service contexts.
+    """
+    logger.info("Starting full setup...")
+
+    delete_cmd = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
+    delete_cmd.run_delete_bird_metadata_database()
+    logger.info("Deleted existing bird metadata.")
+
+    # Populate bird metadata database with BIRD datamodel metadata
+    import_model_cmd = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
+    import_model_cmd.ready()
+    logger.info("Imported input model from sqldev.")
+
+    # Populate bird metadata database with BIRD report templates
+    import_reports_cmd = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
+    import_reports_cmd.run_import()
+    logger.info("Imported report templates from website.")
+
+    # Load extra variables from CSV file
+    base_dir = settings.BASE_DIR
+    extra_variables_path = os.path.join(base_dir, 'resources', 'extra_variables', 'extra_variables.csv')
+    variables_loaded = load_variables_from_csv_file(extra_variables_path)
+    if variables_loaded > 0:
+        logger.info(f"Loaded {variables_loaded} extra variables from CSV file.")
+    else:
+        logger.info("No extra variables loaded (file not found or empty).")
+
+    # Import hierarchies from BIRD Website
+    import_hierarchies_cmd = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
+    import_hierarchies_cmd.import_hierarchies()
+    logger.info("Imported hierarchies from website.")
+
+    # Import semantic integration from bird website
+    import_semantic_cmd = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
+    import_semantic_cmd.import_mappings_from_website()
+    logger.info("Imported semantic integrations from website.")
+
+    app_config = RunCreateFilters('pybirdai', 'birds_nest')
+    app_config.run_create_filters()
+    logger.info("Created filters and executable filters.")
+
+    app_config = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
+    app_config.run_create_joins_meta_data()
+    logger.info("Created joins metadata.")
+
+    app_config = RunExporterJoins('pybirdai', 'birds_nest')
+    app_config.run_export_joins_meta_data()
+    logger.info("Exported joins metadata successfully.")
+
+    app_config = RunMappingJoinsEIL_LDM('pybirdai', 'birds_nest')
+    app_config.run_mapping_joins_meta_data()
+    logger.info("Mapped joins metadata successfully.")
+
+    logger.info("Full setup completed successfully.")
+
+
 def run_full_setup(request):
     """
     Runs all necessary steps to set up the BIRD metadata database:
@@ -3200,67 +3259,7 @@ def run_full_setup(request):
     """
 
     if request.GET.get('execute') == 'true':
-        logger.info("Starting full setup...")
-
-        delete_cmd = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
-        delete_cmd.run_delete_bird_metadata_database()
-        logger.info("Deleted existing bird metadata.")
-
-        # Populate bird metadata database with BIRD datamodel metadata
-        # Based on run_import_input_model_from_sqldev example
-        import_model_cmd = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
-        import_model_cmd.ready()
-        logger.info("Imported input model from sqldev.")
-
-        # Populate bird metadata database with BIRD report templates
-        # Based on import_report_templates example
-        import_reports_cmd = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
-        import_reports_cmd.run_import()
-        logger.info("Imported report templates from website.")
-
-        # Load extra variables from CSV file
-        base_dir = settings.BASE_DIR
-        extra_variables_path = os.path.join(base_dir, 'resources', 'extra_variables', 'extra_variables.csv')
-        variables_loaded = load_variables_from_csv_file(extra_variables_path)
-        if variables_loaded > 0:
-            logger.info(f"Loaded {variables_loaded} extra variables from CSV file.")
-        else:
-            logger.info("No extra variables loaded (file not found or empty).")
-
-        # Import hierarchies from BIRD Website
-        # Based on run_import_hierarchies example
-        import_hierarchies_cmd = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
-        import_hierarchies_cmd.import_hierarchies()
-        logger.info("Imported hierarchies from website.")
-
-        # Import semantic integration from bird website
-        # Based on run_import_semantic_integrations_from_website example
-        import_semantic_cmd = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
-        import_semantic_cmd.import_mappings_from_website()
-        logger.info("Imported semantic integrations from website.")
-
-        app_config = RunCreateFilters('pybirdai', 'birds_nest')
-        app_config.run_create_filters()
-        logger.info("Created filters and executable filters.")
-
-        app_config = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
-        app_config.run_create_joins_meta_data()
-        logger.info("Created joins metadata.")
-
-        app_config = RunExporterJoins('pybirdai', 'birds_nest')
-        app_config.run_export_joins_meta_data()
-        logger.info("Exported joins metadata successfully.")
-
-        # app_config = RunImporterJoins('pybirdai', 'birds_nest')
-        # app_config.run_import_joins_meta_data()
-        # logger.info("Imported joins metadata successfully.")
-
-        app_config = RunMappingJoinsEIL_LDM('pybirdai', 'birds_nest')
-        app_config.run_mapping_joins_meta_data()
-        logger.info("Mapped joins metadata successfully.")
-
-
-        logger.info("Full setup completed successfully.")
+        execute_full_setup_core()
         return JsonResponse({'status': 'success'})
 
     return create_response_with_loading(
