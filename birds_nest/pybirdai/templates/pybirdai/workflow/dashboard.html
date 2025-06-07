@@ -286,6 +286,8 @@ document.addEventListener('DOMContentLoaded', function() {
         migrationForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            console.log('Migration form submitted via AJAX'); // Debug log
+            
             const btn = document.getElementById('migration-btn');
             const statusDiv = document.getElementById('migration-status');
             const formData = new FormData(this);
@@ -295,22 +297,27 @@ document.addEventListener('DOMContentLoaded', function() {
             statusDiv.style.display = 'block';
             statusDiv.style.background = '#e3f2fd';
             statusDiv.style.color = '#1976d2';
-            statusDiv.textContent = 'Running database migrations in subprocess. This may take several minutes...';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Running database migrations in subprocess. This may take several minutes...';
             
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Migration response received:', response); // Debug log
+                return response.json();
+            })
             .then(data => {
+                console.log('Migration response data:', data); // Debug log
                 statusDiv.style.display = 'block';
                 if (data.success) {
                     statusDiv.style.background = '#d4edda';
                     statusDiv.style.color = '#155724';
-                    statusDiv.innerHTML = 'Database migrations completed successfully!<br>The database is now ready for use.';
+                    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Database migrations completed successfully!<br>The database is now ready for use.';
                     
                     // Refresh page after success to show updated database status
                     setTimeout(() => {
@@ -319,15 +326,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     statusDiv.style.background = '#f8d7da';
                     statusDiv.style.color = '#721c24';
-                    statusDiv.innerHTML = 'Migration failed: ' + 
-                        (data.errors.length > 0 ? JSON.stringify(data.errors) : 'Unknown error');
+                    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Migration failed: ' + 
+                        (data.errors && data.errors.length > 0 ? JSON.stringify(data.errors) : data.message || 'Unknown error');
                 }
             })
             .catch(error => {
                 statusDiv.style.display = 'block';
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
-                statusDiv.textContent = 'Error: ' + error.message;
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
             })
             .finally(() => {
                 btn.disabled = false;

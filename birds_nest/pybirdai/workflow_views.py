@@ -362,8 +362,8 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
     
     if operation == 'do':
         if request.method == 'POST':
-            # Check if this is an AJAX request
-            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            # Check if this is an AJAX request (handle MockRequest objects)
+            is_ajax = hasattr(request, 'headers') and request.headers.get('X-Requested-With') == 'XMLHttpRequest'
             
             # Start SMCubes core creation
             task_execution.status = 'running task3_smcubes_core'
@@ -533,8 +533,8 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
     
     if operation == 'do':
         if request.method == 'POST':
-            # Check if this is an AJAX request
-            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            # Check if this is an AJAX request (handle MockRequest objects)
+            is_ajax = hasattr(request, 'headers') and request.headers.get('X-Requested-With') == 'XMLHttpRequest'
             
             # Start transformation rules creation
             task_execution.status = 'running'
@@ -641,8 +641,8 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
     
     if operation == 'do':
         if request.method == 'POST':
-            # Check if this is an AJAX request
-            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            # Check if this is an AJAX request (handle MockRequest objects)
+            is_ajax = hasattr(request, 'headers') and request.headers.get('X-Requested-With') == 'XMLHttpRequest'
             
             # Start Python code generation
             task_execution.status = 'running'

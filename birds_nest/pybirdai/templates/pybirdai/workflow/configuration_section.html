@@ -171,6 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('workflow-config-form').addEventListener('submit', function(e) {
         e.preventDefault();
         
+        console.log('Configuration form submitted via AJAX'); // Debug log
+        
         // Ensure hidden fields are synced before submission
         const githubUrl = document.getElementById('github_url').value;
         document.getElementById('technical_export_github_url_hidden').value = githubUrl;
@@ -178,25 +180,45 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const formData = new FormData(this);
         const statusDiv = document.getElementById('workflow-config-status');
+        const submitBtn = this.querySelector('button[type="submit"]');
+        
+        // Show loading state
+        statusDiv.style.display = 'block';
+        statusDiv.style.background = '#e3f2fd';
+        statusDiv.style.color = '#1976d2';
+        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Saving configuration...';
+        
+        // Disable submit button
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving...';
         
         fetch(this.action, {
             method: 'POST',
             body: formData,
             headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response received:', response); // Debug log
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.status);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Response data:', data); // Debug log
             statusDiv.style.display = 'block';
             if (data.success) {
                 statusDiv.style.background = '#d4edda';
                 statusDiv.style.color = '#155724';
-                statusDiv.textContent = 'Configuration saved successfully!';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Configuration saved successfully!';
             } else {
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
-                statusDiv.textContent = 'Error: ' + (data.error || 'Failed to save configuration');
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + (data.error || 'Failed to save configuration');
             }
             
             // Hide status after 5 seconds
@@ -205,10 +227,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 5000);
         })
         .catch(error => {
+            console.error('Configuration save error:', error); // Debug log
             statusDiv.style.display = 'block';
             statusDiv.style.background = '#f8d7da';
             statusDiv.style.color = '#721c24';
-            statusDiv.textContent = 'Error: ' + error.message;
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
+        })
+        .finally(() => {
+            // Re-enable submit button
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
         });
     });
 });
