@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS('Transferring generated Python files for full execution...'))
                 self._transfer_generated_python_files()
             
-            # Step 3: Run the standard database setup operations
+            # Step 3: Run the standard database setup operations with subprocess approach
             app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
             app_config.run_post_setup_operations()
             
