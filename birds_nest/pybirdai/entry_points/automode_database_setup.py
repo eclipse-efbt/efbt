@@ -212,6 +212,10 @@ class RunAutomodeDatabaseSetup(AppConfig):
         try:
             logger.info("Starting post-setup operations - STEP 1: Admin file update...")
             
+            # call into RunCreateDjangoModels to create the models.py and admin.py files
+            app_config = RunCreateDjangoModels(self.app_name, self.app_module)
+            app_config.ready()
+            
             base_dir = settings.BASE_DIR
             initial_migration_file = os.path.join(base_dir, "pybirdai" + os.sep + "migrations" + os.sep + "0001_initial.py")
             db_file = os.path.join(base_dir, "db.sqlite3")
@@ -221,6 +225,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
             pybirdai_models_path = os.path.join(base_dir, "pybirdai" + os.sep + "bird_data_model.py")
             results_models_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "models.py")
             
+
             # Cleanup existing files
             logger.info("Cleaning up existing files...")
             self._cleanup_files(initial_migration_file, db_file)

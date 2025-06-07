@@ -333,6 +333,9 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
     
     if operation == 'do':
         if request.method == 'POST':
+            # Check if this is an AJAX request
+            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            
             # Start SMCubes core creation
             task_execution.status = 'running task3_smcubes_core'
             task_execution.started_at = timezone.now()
@@ -412,9 +415,20 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
                 
+                steps_completed = len(execution_data.get('steps_completed', []))
+                success_message = f"SMCubes core creation completed successfully. {steps_completed} steps completed."
+                
+                if is_ajax:
+                    return JsonResponse({
+                        'success': True,
+                        'message': success_message,
+                        'steps_completed': steps_completed,
+                        'execution_data': execution_data
+                    })
+                
                 # Only use messages for real requests, not automode MockRequest
                 if hasattr(request, '_messages'):
-                    messages.success(request, "SMCubes core creation completed successfully")
+                    messages.success(request, success_message)
                     return redirect('pybirdai:workflow_task', task_number=3, operation='review')
                 # For automode, just return None (no redirect needed)
                 
@@ -423,6 +437,13 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                 task_execution.status = 'failed'
                 task_execution.error_message = str(e)
                 task_execution.save()
+                
+                if is_ajax:
+                    return JsonResponse({
+                        'success': False,
+                        'message': f"SMCubes core creation failed: {e}"
+                    })
+                
                 if hasattr(request, '_messages'):
                     messages.error(request, f"SMCubes core creation failed: {e}")
         
@@ -483,6 +504,9 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
     
     if operation == 'do':
         if request.method == 'POST':
+            # Check if this is an AJAX request
+            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            
             # Start transformation rules creation
             task_execution.status = 'running'
             task_execution.started_at = timezone.now()
@@ -531,8 +555,19 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
                 
+                steps_completed = len(execution_data.get('steps_completed', []))
+                success_message = f"Transformation rules created successfully. {steps_completed} steps completed."
+                
+                if is_ajax:
+                    return JsonResponse({
+                        'success': True,
+                        'message': success_message,
+                        'steps_completed': steps_completed,
+                        'execution_data': execution_data
+                    })
+                
                 if hasattr(request, '_messages'):
-                    messages.success(request, "Transformation rules created successfully")
+                    messages.success(request, success_message)
                     return redirect('pybirdai:workflow_task', task_number=4, operation='review')
                 
             except Exception as e:
@@ -540,6 +575,13 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
                 task_execution.status = 'failed'
                 task_execution.error_message = str(e)
                 task_execution.save()
+                
+                if is_ajax:
+                    return JsonResponse({
+                        'success': False,
+                        'message': f"Transformation rules creation failed: {e}"
+                    })
+                
                 if hasattr(request, '_messages'):
                     messages.error(request, f"Transformation rules creation failed: {e}")
         
@@ -570,6 +612,9 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
     
     if operation == 'do':
         if request.method == 'POST':
+            # Check if this is an AJAX request
+            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            
             # Start Python code generation
             task_execution.status = 'running'
             task_execution.started_at = timezone.now()
@@ -622,9 +667,19 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
                 
+                steps_completed = len(execution_data.get('steps_completed', []))
+                success_message = f"Python code generation completed. {steps_completed} steps completed."
+                
+                if is_ajax:
+                    return JsonResponse({
+                        'success': True,
+                        'message': success_message,
+                        'steps_completed': steps_completed,
+                        'execution_data': execution_data
+                    })
+                
                 if hasattr(request, '_messages'):
-                    steps_completed = len(execution_data.get('steps_completed', []))
-                    messages.success(request, f"Python code generation completed. {steps_completed} steps completed.")
+                    messages.success(request, success_message)
                     return redirect('pybirdai:workflow_task', task_number=5, operation='review')
                 
             except Exception as e:
@@ -632,6 +687,13 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
                 task_execution.status = 'failed'
                 task_execution.error_message = str(e)
                 task_execution.save()
+                
+                if is_ajax:
+                    return JsonResponse({
+                        'success': False,
+                        'message': f"Python code generation failed: {e}"
+                    })
+                
                 if hasattr(request, '_messages'):
                     messages.error(request, f"Python code generation failed: {e}")
         

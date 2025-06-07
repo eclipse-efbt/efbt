@@ -15,7 +15,6 @@
     <div class="alert alert-success">
         <strong>✓ Task Completed</strong>
         <p>Python transformation code has been generated successfully.</p>
-        <p>{{ task_execution.execution_data.files_generated|default:0 }} Python files created.</p>
         <a href="{% url 'pybirdai:workflow_task' task_number=5 operation='review' %}" class="btn btn-primary">Go to Review</a>
     </div>
     {% elif task_execution.status == 'failed' %}
@@ -49,14 +48,7 @@
                     <li>Add performance optimizations</li>
                 </ul>
                 {% if task_execution.execution_data.filter_code_generated %}
-                <div class="phase-stats">
-                    <span class="stat-item">
-                        <strong>{{ task_execution.execution_data.filter_functions|default:0 }}</strong> Filter Functions
-                    </span>
-                    <span class="stat-item">
-                        <strong>{{ task_execution.execution_data.filter_files|default:0 }}</strong> Python Files
-                    </span>
-                </div>
+   
                 <span class="status-badge completed">✓ Completed</span>
                 {% elif task_execution.status == 'running' and task_execution.execution_data.current_phase == 'filters' %}
                 <span class="status-badge running">🔄 In Progress</span>
@@ -77,14 +69,7 @@
                     <li>Implement join optimization</li>
                 </ul>
                 {% if task_execution.execution_data.join_code_generated %}
-                <div class="phase-stats">
-                    <span class="stat-item">
-                        <strong>{{ task_execution.execution_data.join_methods|default:0 }}</strong> Join Methods
-                    </span>
-                    <span class="stat-item">
-                        <strong>{{ task_execution.execution_data.join_files|default:0 }}</strong> Python Files
-                    </span>
-                </div>
+
                 <span class="status-badge completed">✓ Completed</span>
                 {% elif task_execution.status == 'running' and task_execution.execution_data.current_phase == 'joins' %}
                 <span class="status-badge running">🔄 In Progress</span>
@@ -96,7 +81,8 @@
         
        
     {% if task_execution.status == 'pending' %}
-    <form method="post" style="margin-top: 30px;">
+    <div id="task5-status" style="display: none;"></div>
+    <form id="task5-form" method="post" style="margin-top: 30px;">
         {% csrf_token %}
         
         <div class="generation-options">
@@ -269,5 +255,56 @@ setTimeout(function() {
     location.reload();
 }, 3000);
 {% endif %}
+
+// Handle form submission with AJAX
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('task5-form');
+    const statusDiv = document.getElementById('task5-status');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show processing message
+            statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Starting Python code generation. This may take a few minutes...</div>';
+            statusDiv.style.display = 'block';
+            
+            // Disable submit button
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...';
+            
+            // Submit form via AJAX
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'Python code generation completed successfully.') + '</div>';
+                    // Refresh page after 2 seconds to show completed status
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'Python code generation failed.') + '</div>';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Start Python Code Generation';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred. Please try again.</div>';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Start Python Code Generation';
+            });
+        });
+    }
+});
 </script>
 {% endblock %}
