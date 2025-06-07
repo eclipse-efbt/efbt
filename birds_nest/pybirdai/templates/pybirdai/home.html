@@ -19,13 +19,24 @@
 {% block content %}
 <h1 style="text-align: center;">Home</h1>
 <div class="task-grid">
-    <a href="{% url 'pybirdai:automode' %}" class="task-item">
+    <a href="{% url 'pybirdai:workflow_dashboard' %}" class="task-item">
         <img src="{% static 'images/create_bird_database.webp' %}" alt="automode">
-        <span>Automode</span>
+        <span>New Setup Page</span>
     </a>
     <a href="{% url 'pybirdai:step_by_step_mode' %}" class="task-item">
         <img src="{% static 'images/populate_bird_metadata_database.webp' %}" alt="step_by_step_mode">
-        <span>Step by step mode</span>
+        <span>Old Setup Page</span>
+    </a>
+    <a href="{% url 'pybirdai:report_templates' %}" class="task-item">
+        <img src="{% static 'images/report_templates.webp' %}" alt="Concept icon">
+        <span>View Populated Templates</span>
+    </a>        
+    <a href="{% url 'pybirdai:test_report_view' %}" class="task-item">
+        <img
+            src="{% static 'images/report_checklist.webp' %}"
+            alt="Test Reports"
+        />
+        <span>Browse Test Reports</span>
     </a>
 </div>
 

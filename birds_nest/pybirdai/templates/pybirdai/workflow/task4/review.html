@@ -11,159 +11,63 @@
 <div class="task-content">
     <h1>Task 4: SMCubes Transformation Rules - Review</h1>
     
-    <h2>Generation Summary</h2>
     
-    <div class="summary-grid">
-        <div class="summary-card">
-            <h3>Filters Created</h3>
-            <div class="metric-value">{{ execution_data.filter_count|default:0 }}</div>
-            <p>Business rule filters generated</p>
+    <h2>Filter and Join Metadata Review</h2>
+    
+    <div class="metadata-review-section">
+        <div class="review-category">
+            <h3>Filter Review</h3>
+            <p>Review the output layer and filters created in the previous steps:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:combinations' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔗</span>
+                    <span class="link-text">Show Filter Combinations</span>
+                </a>
+                <a href="{% url 'pybirdai:combination_items' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📝</span>
+                    <span class="link-text">Show Filter Combination Items</span>
+                </a>
+                <a href="{% url 'pybirdai:output_layers' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📊</span>
+                    <span class="link-text">Show Output Layers</span>
+                </a>
+                <a href="{% url 'pybirdai:review_filters' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">Complete Filter Review Dashboard</span>
+                </a>
+            </div>
         </div>
         
-        <div class="summary-card">
-            <h3>Joins Created</h3>
-            <div class="metric-value">{{ execution_data.join_count|default:0 }}</div>
-            <p>Data relationship joins</p>
-        </div>
-        
-        <div class="summary-card">
-            <h3>Transformations</h3>
-            <div class="metric-value">{{ execution_data.transformation_count|default:0 }}</div>
-            <p>Transformation rules</p>
-        </div>
-        
-        <div class="summary-card">
-            <h3>Validation Status</h3>
-            <div class="metric-value">
-                {% if execution_data.validation_complete %}
-                <span style="color: #28a745;">✓ Passed</span>
-                {% else %}
-                <span style="color: #dc3545;">✗ Failed</span>
-                {% endif %}
-            </div>
-            <p>Rule validation</p>
-        </div>
-    </div>
-    
-    <h2>Filter Analysis</h2>
-    
-    <div class="analysis-section">
-        <div class="filter-categories">
-            <h3>Filter Categories</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Count</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Data Quality Filters</td>
-                        <td>45</td>
-                        <td><span class="badge badge-success">Active</span></td>
-                    </tr>
-                    <tr>
-                        <td>Business Rule Filters</td>
-                        <td>78</td>
-                        <td><span class="badge badge-success">Active</span></td>
-                    </tr>
-                    <tr>
-                        <td>Validation Filters</td>
-                        <td>32</td>
-                        <td><span class="badge badge-success">Active</span></td>
-                    </tr>
-                    <tr>
-                        <td>Performance Filters</td>
-                        <td>15</td>
-                        <td><span class="badge badge-warning">Optimizing</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="filter-complexity">
-            <h3>Filter Complexity</h3>
-            <div class="complexity-chart">
-                <div class="complexity-bar">
-                    <div class="bar-segment simple" style="width: 30%;" title="Simple: 30%"></div>
-                    <div class="bar-segment moderate" style="width: 45%;" title="Moderate: 45%"></div>
-                    <div class="bar-segment complex" style="width: 25%;" title="Complex: 25%"></div>
-                </div>
-                <div class="complexity-legend">
-                    <span><span class="legend-box simple"></span> Simple</span>
-                    <span><span class="legend-box moderate"></span> Moderate</span>
-                    <span><span class="legend-box complex"></span> Complex</span>
-                </div>
+        <div class="review-category">
+            <h3>Join Metadata Review</h3>
+            <p>Review and validate the join metadata structures:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚠️</span>
+                    <span class="link-text">Review Duplicate Join Items</span>
+                </a>
+                <a href="{% url 'pybirdai:show_gaps' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Gaps in Join Metadata</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_cube_links' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔧</span>
+                    <span class="link-text">Edit Cube Links</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_cube_structure_item_links' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚙️</span>
+                    <span class="link-text">Edit Cube Structure Item Links</span>
+                </a>
+                <a href="{% url 'pybirdai:review_join_meta_data' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">Complete Join Metadata Dashboard</span>
+                </a>
             </div>
         </div>
     </div>
+
     
-    <h2>Join Analysis</h2>
-    
-    <div class="analysis-section">
-        <h3>Join Performance Metrics</h3>
-        <ul>
-            <li>Average join complexity: <strong>3.2</strong> tables</li>
-            <li>Optimized join paths: <strong>85%</strong></li>
-            <li>Index coverage: <strong>92%</strong></li>
-            <li>Estimated performance gain: <strong>+45%</strong></li>
-        </ul>
-        
-        <h3>Join Types Distribution</h3>
-        <div class="join-types">
-            <div class="join-type">
-                <span class="join-label">Inner Joins:</span>
-                <span class="join-count">28</span>
-            </div>
-            <div class="join-type">
-                <span class="join-label">Left Joins:</span>
-                <span class="join-count">12</span>
-            </div>
-            <div class="join-type">
-                <span class="join-label">Full Outer Joins:</span>
-                <span class="join-count">5</span>
-            </div>
-            <div class="join-type">
-                <span class="join-label">Cross Joins:</span>
-                <span class="join-count">3</span>
-            </div>
-        </div>
-    </div>
-    
-    <h2>Validation Results</h2>
-    
-    {% if execution_data.validation_errors %}
-    <div class="alert alert-warning">
-        <h4>Validation Issues</h4>
-        <ul>
-            {% for error in execution_data.validation_errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% else %}
-    <div class="alert alert-success">
-        <strong>✓ All Validations Passed</strong>
-        <p>All transformation rules have been validated successfully.</p>
-    </div>
-    {% endif %}
-    
-    <div class="review-actions">
-        <h3>Review Actions</h3>
-        <div class="action-links">
-            <a href="{% url 'review_filters' %}" target="_blank" class="btn btn-outline-primary">
-                Review Filters in Detail
-            </a>
-            <a href="#" class="btn btn-outline-primary">
-                View Join Execution Plan
-            </a>
-            <a href="#" class="btn btn-outline-primary">
-                Export Rule Documentation
-            </a>
-        </div>
-    </div>
+
     
     <div class="form-actions" style="margin-top: 30px;">
         <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
@@ -326,6 +230,69 @@
     display: flex;
     gap: 10px;
     margin-top: 15px;
+}
+
+.metadata-review-section {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.review-category {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.review-category h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.review-category p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.review-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.review-link:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+    color: #0d6efd;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.link-text {
+    font-weight: 500;
 }
 </style>
 {% endblock %}

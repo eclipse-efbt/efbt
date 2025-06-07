@@ -11,171 +11,6 @@
 <div class="task-content">
     <h1>Task 5: Python Transformation Rules - Review</h1>
     
-    <h2>Code Generation Summary</h2>
-    
-    <div class="generation-summary">
-        <div class="summary-total">
-            <h3>Total Files Generated</h3>
-            <div class="total-count">{{ execution_data.files_generated|default:0 }}</div>
-            <p>Python source files</p>
-        </div>
-        
-        <div class="summary-breakdown">
-            <div class="code-category">
-                <h4>Filter Code</h4>
-                <div class="category-stats">
-                    <span class="stat-label">Functions:</span> <strong>{{ execution_data.filter_functions|default:0 }}</strong>
-                    <span class="stat-label">Files:</span> <strong>{{ execution_data.filter_files|default:0 }}</strong>
-                </div>
-            </div>
-            
-            <div class="code-category">
-                <h4>Join Code</h4>
-                <div class="category-stats">
-                    <span class="stat-label">Methods:</span> <strong>{{ execution_data.join_methods|default:0 }}</strong>
-                    <span class="stat-label">Files:</span> <strong>{{ execution_data.join_files|default:0 }}</strong>
-                </div>
-            </div>
-            
-            <div class="code-category">
-                <h4>Transformation Code</h4>
-                <div class="category-stats">
-                    <span class="stat-label">Functions:</span> <strong>{{ execution_data.transformation_functions|default:0 }}</strong>
-                    <span class="stat-label">Files:</span> <strong>{{ execution_data.transformation_files|default:0 }}</strong>
-                </div>
-            </div>
-            
-            <div class="code-category">
-                <h4>Test Code</h4>
-                <div class="category-stats">
-                    <span class="stat-label">Test Cases:</span> <strong>{{ execution_data.test_cases|default:0 }}</strong>
-                    <span class="stat-label">Files:</span> <strong>{{ execution_data.test_files|default:0 }}</strong>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <h2>Code Quality Metrics</h2>
-    
-    <div class="quality-metrics">
-        <div class="metric-grid">
-            <div class="metric-card">
-                <h3>Code Coverage</h3>
-                <div class="metric-display">
-                    <div class="circular-progress" data-value="85">
-                        <span class="progress-value">85%</span>
-                    </div>
-                </div>
-                <p>Test coverage</p>
-            </div>
-            
-            <div class="metric-card">
-                <h3>Code Complexity</h3>
-                <div class="metric-display">
-                    <div class="complexity-score good">7.2</div>
-                </div>
-                <p>Average cyclomatic complexity</p>
-            </div>
-            
-            <div class="metric-card">
-                <h3>Documentation</h3>
-                <div class="metric-display">
-                    <div class="circular-progress" data-value="92">
-                        <span class="progress-value">92%</span>
-                    </div>
-                </div>
-                <p>Functions documented</p>
-            </div>
-            
-            <div class="metric-card">
-                <h3>Type Hints</h3>
-                <div class="metric-display">
-                    <div class="circular-progress" data-value="100">
-                        <span class="progress-value">100%</span>
-                    </div>
-                </div>
-                <p>Type annotation coverage</p>
-            </div>
-        </div>
-    </div>
-    
-    <h2>Generated Code Structure</h2>
-    
-    <div class="code-structure">
-        <pre>
-results/generated_python/
-├── filters/
-│   ├── __init__.py
-│   ├── data_quality_filters.py
-│   ├── business_rule_filters.py
-│   └── validation_filters.py
-├── joins/
-│   ├── __init__.py
-│   ├── table_joins.py
-│   └── relationship_handlers.py
-├── transformations/
-│   ├── __init__.py
-│   ├── aggregations.py
-│   ├── calculations.py
-│   └── derived_measures.py
-├── tests/
-│   ├── __init__.py
-│   ├── test_filters.py
-│   ├── test_joins.py
-│   └── test_transformations.py
-└── utils/
-    ├── __init__.py
-    └── helpers.py
-        </pre>
-    </div>
-    
-    <h2>Performance Analysis</h2>
-    
-    <div class="performance-section">
-        <h3>Optimization Applied</h3>
-        <ul>
-            <li>✓ Pandas vectorized operations used throughout</li>
-            <li>✓ Result caching implemented for expensive operations</li>
-            <li>✓ Index optimization for join operations</li>
-            <li>✓ Memory-efficient data loading strategies</li>
-            <li>✓ Parallel processing support for independent operations</li>
-        </ul>
-        
-        <h3>Estimated Performance</h3>
-        <div class="performance-estimates">
-            <div class="estimate-item">
-                <span class="estimate-label">Filter Execution:</span>
-                <span class="estimate-value">~2.5ms per 1000 records</span>
-            </div>
-            <div class="estimate-item">
-                <span class="estimate-label">Join Operations:</span>
-                <span class="estimate-value">~15ms per join</span>
-            </div>
-            <div class="estimate-item">
-                <span class="estimate-label">Transformations:</span>
-                <span class="estimate-value">~5ms per transformation</span>
-            </div>
-            <div class="estimate-item">
-                <span class="estimate-label">Total Pipeline:</span>
-                <span class="estimate-value">~45s for 100k records</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="code-actions">
-        <h3>Code Review Actions</h3>
-        <div class="action-buttons">
-            <button class="btn btn-outline-primary" onclick="viewGeneratedCode()">
-                View Generated Code
-            </button>
-            <button class="btn btn-outline-primary" onclick="runLinting()">
-                Run Code Linting
-            </button>
-            <button class="btn btn-outline-primary" onclick="downloadCode()">
-                Download Code Package
-            </button>
-        </div>
-    </div>
     
     <div class="form-actions" style="margin-top: 30px;">
         <a href="{% url 'pybirdai:workflow_task' task_number=5 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
@@ -363,6 +198,69 @@ results/generated_python/
     display: flex;
     gap: 10px;
     margin-top: 15px;
+}
+
+.metadata-review-section {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.review-category {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.review-category h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.review-category p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.review-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.review-link:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+    color: #0d6efd;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.link-text {
+    font-weight: 500;
 }
 </style>
 
