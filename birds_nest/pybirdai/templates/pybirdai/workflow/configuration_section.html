@@ -1,0 +1,140 @@
+<!-- Configuration Section for Workflow Dashboard -->
+<div class="workflow-config-section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+    <h3>Workflow Configuration</h3>
+    <p style="color: #666; font-size: 14px;">Configure data sources and preferences. Configuration is saved to a file and persists across database recreations.</p>
+    
+    <form id="workflow-config-form" method="post" action="{% url 'pybirdai:workflow_save_config' %}">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Left Column -->
+            <div>
+                <!-- Data Model Type -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Data Model Type</label>
+                    <select name="data_model_type" class="form-control" style="width: 100%; padding: 8px;">
+                        <option value="ELDM" {% if config.data_model_type == 'ELDM' %}selected{% endif %}>ELDM (Logical Data Model)</option>
+                        <option value="EIL" {% if config.data_model_type == 'EIL' %}selected{% endif %}>EIL (Input Layer)</option>
+                    </select>
+                </div>
+                
+                <!-- Clone Mode -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Clone Mode</label>
+                    <select name="clone_mode" class="form-control" style="width: 100%; padding: 8px;" disabled>
+                        <option value="false" {% if config.clone_mode == 'false' or not config.clone_mode %}selected{% endif %}>Disabled</option>
+                        <option value="true" {% if config.clone_mode == 'true' %}selected{% endif %}>Enabled</option>
+                    </select>
+                    <small style="color: #666; font-style: italic;">Clone mode functionality (coming soon)</small>
+                </div>
+                
+                <!-- Technical Export Source -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Technical Export Source</label>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px;">
+                            <input type="radio" name="technical_export_source" value="BIRD_WEBSITE" 
+                                   {% if config.technical_export_source == 'BIRD_WEBSITE' %}checked{% endif %}
+                                   onchange="updateWorkflowConfigVisibility()">
+                            BIRD ECB Website
+                        </label>
+                        <label style="display: block; margin-bottom: 5px;">
+                            <input type="radio" name="technical_export_source" value="GITHUB"
+                                   {% if config.technical_export_source == 'GITHUB' %}checked{% endif %}
+                                   onchange="updateWorkflowConfigVisibility()">
+                            GitHub Repository
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div>
+                <!-- GitHub Repository -->
+                <div class="form-group" id="github-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Repository URL</label>
+                    <input type="url" name="technical_export_github_url" class="form-control" 
+                           placeholder="https://github.com/username/repository"
+                           value="{{ config.technical_export_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
+                           style="width: 100%; padding: 8px;">
+                    <small style="color: #666;">Repository containing technical export and/or configuration files</small>
+                </div>
+                
+                <!-- GitHub Token -->
+                <div class="form-group" id="github-token-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Personal Access Token</label>
+                    <input type="password" name="github_token" class="form-control"
+                           placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (optional for private repos)"
+                           value="{{ github_token|default:'' }}"
+                           style="width: 100%; padding: 8px;">
+                    <small style="color: #666;">
+                        Required only for private repositories. 
+                        <a href="https://github.com/settings/tokens" target="_blank" style="color: #3498db;">Create token here</a>
+                        with 'repo' permissions.
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Save Button -->
+        <div style="text-align: right; margin-top: 20px;">
+            <button type="submit" class="btn btn-primary">Save Configuration</button>
+        </div>
+    </form>
+    
+    <!-- Configuration Status Message -->
+    <div id="workflow-config-status" style="display: none; margin-top: 15px; padding: 10px; border-radius: 5px;"></div>
+</div>
+
+<script>
+function updateWorkflowConfigVisibility() {
+    const githubSelected = document.querySelector('input[name="technical_export_source"]:checked').value === 'GITHUB';
+    document.getElementById('github-repo-group').style.display = githubSelected ? 'block' : 'none';
+    document.getElementById('github-token-group').style.display = githubSelected ? 'block' : 'none';
+}
+
+// Initialize visibility on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateWorkflowConfigVisibility();
+    
+    // Handle form submission
+    document.getElementById('workflow-config-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const statusDiv = document.getElementById('workflow-config-status');
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            statusDiv.style.display = 'block';
+            if (data.success) {
+                statusDiv.style.background = '#d4edda';
+                statusDiv.style.color = '#155724';
+                statusDiv.textContent = 'Configuration saved successfully!';
+            } else {
+                statusDiv.style.background = '#f8d7da';
+                statusDiv.style.color = '#721c24';
+                statusDiv.textContent = 'Error: ' + (data.error || 'Failed to save configuration');
+            }
+            
+            // Hide status after 5 seconds
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        })
+        .catch(error => {
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.textContent = 'Error: ' + error.message;
+        });
+    });
+});
+</script>
