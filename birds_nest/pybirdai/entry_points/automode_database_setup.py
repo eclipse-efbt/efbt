@@ -295,26 +295,43 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 logger.error(f"Error removing file {initial_migration_file}: {e}")
                 raise RuntimeError(f"Failed to remove file {initial_migration_file}") from e
         
-        # Remove database file
+        # Remove database file with enhanced error handling
         if os.path.exists(db_file):
             try:
-                # Check if file is locked or readonly
-                if os.path.getsize(db_file) == 0:
-                    logger.info(f"Database file {db_file} is empty, removing it")
+                # Check file properties
+                file_size = os.path.getsize(db_file)
+                logger.info(f"Database file {db_file} exists with size {file_size} bytes")
                 
+                # Try to make it writable first
+                try:
+                    os.chmod(db_file, 0o666)
+                    logger.info(f"Made database file writable: {db_file}")
+                except OSError as chmod_error:
+                    logger.warning(f"Could not change permissions for {db_file}: {chmod_error}")
+                
+                # Remove the file
                 os.remove(db_file)
-                logger.info(f"Successfully removed {db_file}")
+                logger.info(f"Successfully removed database file {db_file}")
+                
             except OSError as e:
                 logger.warning(f"Could not remove database file {db_file}: {e}")
-                # Don't fail the whole process for this - try to continue
+                # Try alternative approaches
                 try:
-                    # Try to make it writable first
-                    os.chmod(db_file, 0o666)
-                    os.remove(db_file)
-                    logger.info(f"Successfully removed {db_file} after fixing permissions")
+                    # Force remove with different approach
+                    import stat
+                    os.chmod(db_file, stat.S_IWRITE | stat.S_IREAD)
+                    os.unlink(db_file)
+                    logger.info(f"Successfully force-removed {db_file}")
                 except OSError as e2:
-                    logger.error(f"Failed to remove database file even after permission fix: {e2}")
-                    # Continue anyway - Django will handle database creation
+                    logger.warning(f"Failed to force-remove database file: {e2}")
+                    # Last resort: rename the file so Django can create a new one
+                    try:
+                        backup_name = f"{db_file}.backup.{int(time.time())}"
+                        os.rename(db_file, backup_name)
+                        logger.info(f"Renamed problematic database file to {backup_name}")
+                    except OSError as e3:
+                        logger.error(f"Could not even rename database file: {e3}")
+                        # Continue anyway - let Django handle it
     
     def _update_admin_file(self, pybirdai_admin_path, pybirdai_meta_data_model_path, results_admin_path):
         """Update the admin.py file with model registrations."""
