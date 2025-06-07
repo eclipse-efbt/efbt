@@ -1,7 +1,14 @@
 <!-- Configuration Section for Workflow Dashboard -->
 <div class="workflow-config-section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-    <h3>Workflow Configuration</h3>
-    <p style="color: #666; font-size: 14px;">Configure data sources and preferences. Configuration is saved to a file and persists across database recreations.</p>
+    <div class="config-header" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleConfigSection()">
+        <h3 style="margin: 0;">Workflow Configuration</h3>
+        <button type="button" class="btn btn-sm btn-outline-secondary" style="padding: 4px 12px; font-size: 14px;">
+            <span id="config-toggle-icon">▼</span> <span id="config-toggle-text">Hide</span>
+        </button>
+    </div>
+    
+    <div id="config-content" style="transition: max-height 0.3s ease-in-out; overflow: hidden;">
+        <p style="color: #666; font-size: 14px; margin-top: 15px;">Configure data sources and preferences. Configuration is saved to a file and persists across database recreations.</p>
     
     <form id="workflow-config-form" method="post" action="{% url 'pybirdai:workflow_save_config' %}">
         {% csrf_token %}
@@ -70,24 +77,17 @@
             
             <!-- Right Column -->
             <div>
-                <!-- Technical Export GitHub Repository -->
-                <div class="form-group" id="tech-export-github-repo-group" style="margin-bottom: 20px; display: none;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Technical Export GitHub Repository URL</label>
-                    <input type="url" name="technical_export_github_url" class="form-control" 
+                <!-- Single GitHub Repository for both sources -->
+                <div class="form-group" id="github-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Repository URL</label>
+                    <input type="url" name="github_url" id="github_url" class="form-control" 
                            placeholder="https://github.com/username/repository"
                            value="{{ config.technical_export_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
                            style="width: 100%; padding: 8px;">
-                    <small style="color: #666;">Repository containing technical export files</small>
-                </div>
-                
-                <!-- Configuration Files GitHub Repository -->
-                <div class="form-group" id="config-files-github-repo-group" style="margin-bottom: 20px; display: none;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Configuration Files GitHub Repository URL</label>
-                    <input type="url" name="config_files_github_url" class="form-control" 
-                           placeholder="https://github.com/username/repository"
-                           value="{{ config.config_files_github_url|default:'' }}"
-                           style="width: 100%; padding: 8px;">
-                    <small style="color: #666;">Repository containing configuration files (ldm, extra_variables, joins_configuration)</small>
+                    <small style="color: #666;">Repository containing both technical export and configuration files</small>
+                    <!-- Hidden fields to duplicate the value for backend compatibility -->
+                    <input type="hidden" name="technical_export_github_url" id="technical_export_github_url_hidden">
+                    <input type="hidden" name="config_files_github_url" id="config_files_github_url_hidden">
                 </div>
                 
                 <!-- GitHub Token -->
@@ -114,26 +114,67 @@
     
     <!-- Configuration Status Message -->
     <div id="workflow-config-status" style="display: none; margin-top: 15px; padding: 10px; border-radius: 5px;"></div>
+    </div><!-- End of config-content -->
 </div>
 
 <script>
+// Toggle configuration section visibility
+function toggleConfigSection() {
+    const content = document.getElementById('config-content');
+    const icon = document.getElementById('config-toggle-icon');
+    const text = document.getElementById('config-toggle-text');
+    
+    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+        content.style.maxHeight = '0px';
+        icon.textContent = '▶';
+        text.textContent = 'Show';
+    } else {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        icon.textContent = '▼';
+        text.textContent = 'Hide';
+    }
+}
+
 function updateWorkflowConfigVisibility() {
     const techExportGithubSelected = document.querySelector('input[name="technical_export_source"]:checked').value === 'GITHUB';
     const configFilesGithubSelected = document.querySelector('input[name="config_files_source"]:checked').value === 'GITHUB';
     const anyGithubSelected = techExportGithubSelected || configFilesGithubSelected;
     
-    document.getElementById('tech-export-github-repo-group').style.display = techExportGithubSelected ? 'block' : 'none';
-    document.getElementById('config-files-github-repo-group').style.display = configFilesGithubSelected ? 'block' : 'none';
+    // Show single GitHub repo field if either source is GitHub
+    document.getElementById('github-repo-group').style.display = anyGithubSelected ? 'block' : 'none';
     document.getElementById('github-token-group').style.display = anyGithubSelected ? 'block' : 'none';
+    
+    // Update hidden fields when GitHub URL changes
+    const githubUrlInput = document.getElementById('github_url');
+    if (githubUrlInput) {
+        githubUrlInput.addEventListener('input', function() {
+            document.getElementById('technical_export_github_url_hidden').value = this.value;
+            document.getElementById('config_files_github_url_hidden').value = this.value;
+        });
+    }
 }
 
 // Initialize visibility on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Set initial collapsed state
+    const content = document.getElementById('config-content');
+    content.style.maxHeight = content.scrollHeight + 'px'; // Start expanded
+    
     updateWorkflowConfigVisibility();
+    
+    // Sync GitHub URL with hidden fields on load
+    const githubUrl = document.getElementById('github_url').value;
+    document.getElementById('technical_export_github_url_hidden').value = githubUrl;
+    document.getElementById('config_files_github_url_hidden').value = githubUrl;
     
     // Handle form submission
     document.getElementById('workflow-config-form').addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        // Ensure hidden fields are synced before submission
+        const githubUrl = document.getElementById('github_url').value;
+        document.getElementById('technical_export_github_url_hidden').value = githubUrl;
+        document.getElementById('config_files_github_url_hidden').value = githubUrl;
         
         const formData = new FormData(this);
         const statusDiv = document.getElementById('workflow-config-status');
