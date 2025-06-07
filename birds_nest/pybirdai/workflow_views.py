@@ -18,6 +18,7 @@ from django.utils import timezone
 from django.urls import reverse
 import uuid
 import logging
+import os
 
 from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
 from .services import AutomodeConfigurationService
@@ -30,6 +31,24 @@ from .entry_points import (
 )
 
 logger = logging.getLogger(__name__)
+
+# In-memory storage for GitHub token (not persisted to database or file)
+_in_memory_github_token = None
+
+def _get_github_token():
+    """Get GitHub token from in-memory storage or environment variable."""
+    global _in_memory_github_token
+    return _in_memory_github_token or os.environ.get('GITHUB_TOKEN', '')
+
+def _set_github_token(token):
+    """Set GitHub token in in-memory storage."""
+    global _in_memory_github_token
+    _in_memory_github_token = token.strip() if token else None
+
+def _clear_github_token():
+    """Clear GitHub token from in-memory storage."""
+    global _in_memory_github_token
+    _in_memory_github_token = None
 
 
 def workflow_dashboard(request):
@@ -82,9 +101,17 @@ def workflow_dashboard(request):
         if os.path.exists(config_path):
             with open(config_path, 'r') as f:
                 config = json.load(f)
-                # Extract github token separately for security
-                # Try environment variable first, then config file as fallback
-                github_token = os.environ.get('GITHUB_TOKEN', config.pop('github_token', ''))
+                # Remove github_token from config if it exists (should not be persisted)
+                github_token_existed = config.pop('github_token', None) is not None
+                
+                # If we removed a github_token, save the cleaned config back to file
+                if github_token_existed:
+                    with open(config_path, 'w') as f:
+                        json.dump(config, f, indent=2)
+                    logger.info("Removed GitHub token from persistent config file for security")
+        
+        # Get GitHub token from in-memory storage or environment variable
+        github_token = _get_github_token()
         
         # Check if we're waiting for step 2 migrations
         marker_path = os.path.join(base_dir, '.migration_ready_marker')
@@ -208,9 +235,11 @@ def task1_resource_download(request, operation, task_execution, workflow_session
                     )
                     
                     service = AutomodeConfigurationService()
+                    # Get GitHub token from in-memory storage
+                    github_token = _get_github_token()
                     results = service.fetch_files_from_source(
                         config=config,
-                        github_token=config_data.get('github_token', ''),
+                        github_token=github_token,
                         force_refresh=False
                     )
                     
@@ -979,12 +1008,14 @@ def workflow_save_config(request):
             'when_to_stop': 'RESOURCE_DOWNLOAD',  # Default for workflow
         }
         
-        # Add GitHub token if provided
+        # Store GitHub token in memory only, don't persist to file
         github_token = request.POST.get('github_token', '')
         if github_token:
-            config_data['github_token'] = github_token
+            # Store in module-level variable for in-memory use (no database required)
+            _set_github_token(github_token)
         
         # Save to temporary file (reuse the automode config file)
+        # Note: GitHub token is NOT persisted to file for security
         base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         config_path = os.path.join(base_dir, 'automode_config.json')
         
@@ -1132,9 +1163,11 @@ def workflow_database_setup(request):
             )
             
             service = AutomodeConfigurationService()
+            # Get GitHub token from in-memory storage
+            github_token = _get_github_token()
             task1_results = service.fetch_files_from_source(
                 config=config,
-                github_token=config_data.get('github_token', ''),
+                github_token=github_token,
                 force_refresh=False
             )
             
