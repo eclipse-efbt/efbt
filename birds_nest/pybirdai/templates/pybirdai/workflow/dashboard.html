@@ -182,6 +182,141 @@
 
 {% block extra_js %}
 <script>
+// Database setup form AJAX handler
+document.addEventListener('DOMContentLoaded', function() {
+    const databaseSetupForm = document.getElementById('database-setup-form');
+    const databaseSetupBtn = document.getElementById('database-setup-btn');
+    const databaseSetupStatus = document.getElementById('database-setup-status');
+    
+    if (databaseSetupForm && databaseSetupBtn && databaseSetupStatus) {
+        databaseSetupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Disable button and show loading
+            databaseSetupBtn.disabled = true;
+            databaseSetupBtn.textContent = 'Setting up database...';
+            databaseSetupStatus.style.display = 'block';
+            databaseSetupStatus.style.background = '#e3f2fd';
+            databaseSetupStatus.style.color = '#1976d2';
+            databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Running database setup (Tasks 1-2)...';
+            
+            // Get form data
+            const formData = new FormData(databaseSetupForm);
+            
+            // Make AJAX request
+            fetch('/pybirdai/workflow/database-setup/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    databaseSetupStatus.style.background = '#d4edda';
+                    databaseSetupStatus.style.color = '#155724';
+                    let message = '<span style="display: inline-block; margin-right: 8px;">✅</span>' + data.message;
+                    
+                    if (data.requires_restart) {
+                        message += '<br><strong>Next:</strong> Click "Run Migrations (Step 2)" when server restarts.';
+                    }
+                    
+                    databaseSetupStatus.innerHTML = message;
+                    
+                    // Refresh page after success to show updated state
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                } else {
+                    databaseSetupStatus.style.background = '#f8d7da';
+                    databaseSetupStatus.style.color = '#721c24';
+                    databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Setup failed: ' + (data.message || 'Unknown error');
+                    
+                    databaseSetupBtn.disabled = false;
+                    databaseSetupBtn.textContent = 'Setup Database (Tasks 1-2)';
+                }
+            })
+            .catch(error => {
+                console.error('Database setup error:', error);
+                databaseSetupStatus.style.background = '#f8d7da';
+                databaseSetupStatus.style.color = '#721c24';
+                databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
+                
+                databaseSetupBtn.disabled = false;
+                databaseSetupBtn.textContent = 'Setup Database (Tasks 1-2)';
+            });
+        });
+    }
+    
+    // Automode form AJAX handler
+    const automodeForm = document.getElementById('automode-form');
+    const automodeBtn = document.getElementById('automode-btn');
+    const automodeStatus = document.getElementById('automode-status');
+    
+    if (automodeForm && automodeBtn && automodeStatus) {
+        automodeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const targetTask = automodeForm.querySelector('[name="target_task"]').value;
+            
+            // Disable button and show loading
+            automodeBtn.disabled = true;
+            automodeBtn.textContent = `Running automode to Task ${targetTask}...`;
+            automodeStatus.style.display = 'block';
+            automodeStatus.style.background = '#e3f2fd';
+            automodeStatus.style.color = '#1976d2';
+            automodeStatus.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Running automode from Task 3 to Task ${targetTask}...`;
+            
+            // Get form data
+            const formData = new FormData(automodeForm);
+            
+            // Make AJAX request
+            fetch('/pybirdai/workflow/automode/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    automodeStatus.style.background = '#d4edda';
+                    automodeStatus.style.color = '#155724';
+                    const completedTasks = data.completed_tasks || [];
+                    automodeStatus.innerHTML = `<span style="display: inline-block; margin-right: 8px;">✅</span>Automode completed successfully! Tasks completed: ${completedTasks.join(', ')}`;
+                    
+                    // Refresh page after success to show updated task status
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                } else {
+                    automodeStatus.style.background = '#f8d7da';
+                    automodeStatus.style.color = '#721c24';
+                    let errorMsg = 'Automode failed';
+                    if (data.errors && data.errors.length > 0) {
+                        errorMsg += ': ' + data.errors.map(e => `Task ${e.task}: ${e.error}`).join(', ');
+                    }
+                    automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>' + errorMsg;
+                }
+                
+                automodeBtn.disabled = false;
+                automodeBtn.textContent = 'Run Automode (from Task 3)';
+            })
+            .catch(error => {
+                console.error('Automode error:', error);
+                automodeStatus.style.background = '#f8d7da';
+                automodeStatus.style.color = '#721c24';
+                automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
+                
+                automodeBtn.disabled = false;
+                automodeBtn.textContent = 'Run Automode (from Task 3)';
+            });
+        });
+    }
+});
+
 // Simple migration starter function (available immediately)
 function startMigration() {
     console.log('startMigration() called directly!');
