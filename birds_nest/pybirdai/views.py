@@ -3166,6 +3166,7 @@ def load_variables_from_csv_file(csv_file_path):
                 except Exception as e:
                     logger.error(f'Error processing variable row in extra_variables.csv: {str(e)}')
                     continue
+
             # Bulk create the variables
             if variables_to_create:
                 created_variables = VARIABLE.objects.bulk_create(variables_to_create)
@@ -3678,6 +3679,20 @@ def automode_create_database(request):
         "Back to Automode"
     )
 
+def automode_import_bird_metamodel_from_website(request):
+    if request.GET.get('execute') == 'true':
+        from pybirdai.utils import bird_ecb_website_fetcher
+        client = bird_ecb_website_fetcher.BirdEcbWebsiteClient()
+        print(client.request_and_save_all())
+
+    return create_response_with_loading(
+        request,
+        "Importing BIRD Metamodel from Website (Automode)",
+        "BIRD Metamodel import completed successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
 def test_automode_components(request):
     """Test view to verify automode components work individually."""
     if request.GET.get('execute') == 'true':
@@ -3705,6 +3720,7 @@ def test_automode_components(request):
             # Test creating a simple Django model instance
             app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
             logger.info("RunCreateDjangoModels instance created successfully")
+
             return JsonResponse({
                 'status': 'success',
                 'message': 'Basic components test passed',
