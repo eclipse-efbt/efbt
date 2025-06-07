@@ -117,7 +117,7 @@
                 <p><strong>Step 2:</strong> Ready to run database migrations</p>
                 <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
                     {% csrf_token %}
-                    <button type="submit" id="migration-btn" class="btn btn-warning" style="width: 100%; margin-bottom: 10px;">
+                    <button type="button" id="migration-btn" class="btn btn-warning" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;">
                         Run Migrations (Step 2)
                     </button>
                 </form>
@@ -180,221 +180,193 @@
 </div>
 {% endblock %}
 
-{% block workflow_js %}
-// Auto-refresh every 5 seconds if any task is running
-var hasRunningTasks = false;
-{% if database_ready and task_grid %}
-    {% for task in task_grid %}
-        {% if task.operations.do.status == 'running' or task.operations.review.status == 'running' or task.operations.compare.status == 'running' %}
-        hasRunningTasks = true;
-        {% endif %}
-    {% endfor %}
-{% endif %}
-
-if (hasRunningTasks) {
-    setInterval(function() {
-        location.reload();
-    }, 5000);
+{% block extra_js %}
+<script>
+// Simple migration starter function (available immediately)
+function startMigration() {
+    console.log('startMigration() called directly!');
+    alert('Migration button clicked! Check console for details.');
+    
+    const btn = document.getElementById('migration-btn');
+    const statusDiv = document.getElementById('migration-status');
+    
+    if (!btn) {
+        console.error('Migration button not found!');
+        alert('Error: Migration button not found!');
+        return;
+    }
+    
+    if (!statusDiv) {
+        console.error('Migration status div not found!');
+        alert('Error: Migration status div not found!');
+        return;
+    }
+    
+    console.log('Button found:', btn);
+    console.log('Status div found:', statusDiv);
+    
+    // Get CSRF token
+    const migrationForm = document.getElementById('migration-form');
+    let csrfToken = '';
+    
+    if (migrationForm) {
+        const csrfInput = migrationForm.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfInput) {
+            csrfToken = csrfInput.value;
+            console.log('CSRF token found:', csrfToken.substring(0, 10) + '...');
+        } else {
+            console.error('CSRF input not found in form!');
+        }
+    } else {
+        console.error('Migration form not found!');
+    }
+    
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+    
+    // Start the actual migration
+    doMigration(btn, statusDiv, csrfToken);
 }
 
-// Database Setup Form Handler
-document.getElementById('database-setup-form').addEventListener('submit', function(e) {
-    e.preventDefault();
+function doMigration(btn, statusDiv, csrfToken) {
+    console.log('Starting actual migration...');
     
-    const btn = document.getElementById('database-setup-btn');
-    const statusDiv = document.getElementById('database-setup-status');
-    const formData = new FormData(this);
-    
+    // Update UI
     btn.disabled = true;
-    btn.textContent = 'Running...';
+    btn.textContent = 'Running Migrations...';
     statusDiv.style.display = 'block';
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
-    statusDiv.textContent = 'Setting up database (Tasks 1-2)...';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting database migrations...';
     
-    fetch(this.action, {
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+    
+    console.log('Sending AJAX request to /pybirdai/workflow/run-migrations/');
+    
+    // Make AJAX request
+    fetch('/pybirdai/workflow/run-migrations/', {
         method: 'POST',
         body: formData,
         headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            'X-Requested-With': 'XMLHttpRequest'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Migration response received:', response.status, response.statusText);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
     .then(data => {
-        statusDiv.style.display = 'block';
-        if (data.success) {
-            statusDiv.style.background = '#d4edda';
-            statusDiv.style.color = '#155724';
-            
-            let message = data.message + '<br>Completed tasks: ' + data.completed_tasks.join(', ');
-            
-            // Check if server restart is required
-            if (data.requires_restart) {
-                message += '<br><br><strong>⚠️ Server Restart Notice (Step 1 Complete):</strong><br>';
-                message += 'Admin files have been updated successfully.<br>';
-                message += 'Django is restarting to load the new model definitions.<br>';
-                message += 'After restart, click "Run Migrations (Step 2)" to complete database setup.<br>';
-                message += '<em>Do not close this browser tab during the restart process.</em>';
-                
-                // Show countdown and auto-refresh after restart time
-                let countdown = 5; // 5 seconds should be enough for restart
-                statusDiv.innerHTML = message + '<br><br>Auto-refresh in: <span id="countdown">' + countdown + '</span> seconds';
-                
-                const countdownInterval = setInterval(() => {
-                    countdown--;
-                    const countdownElement = document.getElementById('countdown');
-                    if (countdownElement) {
-                        countdownElement.textContent = countdown;
-                    }
-                    
-                    if (countdown <= 0) {
-                        clearInterval(countdownInterval);
-                        statusDiv.innerHTML = message + '<br><br>Refreshing page...';
-                        location.reload();
-                    }
-                }, 1000);
-            } else {
-                statusDiv.innerHTML = message;
-                // Normal refresh for non-restart scenarios
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
-            }
+        console.log('Migration response data:', data);
+        if (data.success && data.status === 'started') {
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Database migrations started in background. Polling for status...';
+            pollMigrationStatus(statusDiv, btn);
         } else {
             statusDiv.style.background = '#f8d7da';
             statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = 'Error: ' + data.message + 
-                (data.errors.length > 0 ? '<br>Errors: ' + JSON.stringify(data.errors) : '');
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Failed to start: ' + (data.message || 'Unknown error');
+            btn.disabled = false;
+            btn.textContent = 'Run Migrations (Step 2)';
         }
     })
     .catch(error => {
-        statusDiv.style.display = 'block';
+        console.error('Migration error:', error);
         statusDiv.style.background = '#f8d7da';
         statusDiv.style.color = '#721c24';
-        statusDiv.textContent = 'Error: ' + error.message;
-    })
-    .finally(() => {
+        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
         btn.disabled = false;
-        btn.textContent = 'Setup Database (Tasks 1-2)';
+        btn.textContent = 'Run Migrations (Step 2)';
     });
-});
+}
 
-// Migration Form Handler (Step 2)
-document.addEventListener('DOMContentLoaded', function() {
-    const migrationForm = document.getElementById('migration-form');
-    if (migrationForm) {
-        migrationForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+// Function to poll migration status
+function pollMigrationStatus(statusDiv, btn) {
+    const pollInterval = 2000; // Poll every 2 seconds
+    let pollCount = 0;
+    const maxPolls = 300; // Maximum 10 minutes (300 * 2 seconds)
+    
+    function checkStatus() {
+        fetch('/pybirdai/workflow/migration-status/', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Migration status:', data); // Debug log
             
-            console.log('Migration form submitted via AJAX'); // Debug log
-            
-            const btn = document.getElementById('migration-btn');
-            const statusDiv = document.getElementById('migration-status');
-            const formData = new FormData(this);
-            
-            btn.disabled = true;
-            btn.textContent = 'Running Migrations...';
-            statusDiv.style.display = 'block';
-            statusDiv.style.background = '#e3f2fd';
-            statusDiv.style.color = '#1976d2';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Running database migrations in subprocess. This may take several minutes...';
-            
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                console.log('Migration response received:', response); // Debug log
-                return response.json();
-            })
-            .then(data => {
-                console.log('Migration response data:', data); // Debug log
-                statusDiv.style.display = 'block';
-                if (data.success) {
-                    statusDiv.style.background = '#d4edda';
-                    statusDiv.style.color = '#155724';
-                    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Database migrations completed successfully!<br>The database is now ready for use.';
+            if (data.success && data.migration_status) {
+                const status = data.migration_status;
+                
+                if (status.running) {
+                    // Still running - update status message
+                    const elapsedTime = Math.round(status.elapsed_time || 0);
+                    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Database migrations running in background... (${elapsedTime}s elapsed)`;
                     
-                    // Refresh page after success to show updated database status
-                    setTimeout(() => {
-                        location.reload();
-                    }, 3000);
-                } else {
-                    statusDiv.style.background = '#f8d7da';
-                    statusDiv.style.color = '#721c24';
-                    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Migration failed: ' + 
-                        (data.errors && data.errors.length > 0 ? JSON.stringify(data.errors) : data.message || 'Unknown error');
+                    // Continue polling
+                    pollCount++;
+                    if (pollCount < maxPolls) {
+                        setTimeout(checkStatus, pollInterval);
+                    } else {
+                        // Timeout
+                        statusDiv.style.background = '#fff3cd';
+                        statusDiv.style.color = '#856404';
+                        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Migration is taking longer than expected. Please check server logs.';
+                        btn.disabled = false;
+                        btn.textContent = 'Run Migrations (Step 2)';
+                    }
+                } else if (status.completed) {
+                    // Migration completed
+                    if (status.success) {
+                        statusDiv.style.background = '#d4edda';
+                        statusDiv.style.color = '#155724';
+                        const elapsedTime = Math.round(status.elapsed_time || 0);
+                        statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">✅</span>Database migrations completed successfully in ${elapsedTime}s!<br>The database is now ready for use.`;
+                        
+                        // Refresh page after success to show updated database status
+                        setTimeout(() => {
+                            location.reload();
+                        }, 3000);
+                    } else {
+                        statusDiv.style.background = '#f8d7da';
+                        statusDiv.style.color = '#721c24';
+                        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Migration failed: ' + (status.error || status.message || 'Unknown error');
+                        
+                        btn.disabled = false;
+                        btn.textContent = 'Run Migrations (Step 2)';
+                    }
                 }
-            })
-            .catch(error => {
-                statusDiv.style.display = 'block';
+            } else {
+                // Error getting status
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
-                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
-            })
-            .finally(() => {
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking migration status';
+                
                 btn.disabled = false;
                 btn.textContent = 'Run Migrations (Step 2)';
-            });
-        });
-    }
-});
-
-// Automode Form Handler
-document.getElementById('automode-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const btn = document.getElementById('automode-btn');
-    const statusDiv = document.getElementById('automode-status');
-    const formData = new FormData(this);
-    const targetTask = formData.get('target_task');
-    
-    btn.disabled = true;
-    btn.textContent = 'Running...';
-    statusDiv.style.display = 'block';
-    statusDiv.style.background = '#e3f2fd';
-    statusDiv.style.color = '#1976d2';
-    statusDiv.textContent = `Running automode tasks 3-${targetTask}...`;
-    
-    fetch(this.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        statusDiv.style.display = 'block';
-        if (data.success) {
-            statusDiv.style.background = '#d4edda';
-            statusDiv.style.color = '#155724';
-            statusDiv.innerHTML = 'Automode completed successfully!<br>Completed tasks: ' + data.completed_tasks.join(', ');
-            
-            // Refresh page after success to show updated task status
-            setTimeout(() => {
-                location.reload();
-            }, 2000);
-        } else {
+            }
+        })
+        .catch(error => {
+            console.error('Migration status polling error:', error);
             statusDiv.style.background = '#f8d7da';
             statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = 'Automode failed: ' + 
-                (data.errors.length > 0 ? JSON.stringify(data.errors) : 'Unknown error');
-        }
-    })
-    .catch(error => {
-        statusDiv.style.display = 'block';
-        statusDiv.style.background = '#f8d7da';
-        statusDiv.style.color = '#721c24';
-        statusDiv.textContent = 'Error: ' + error.message;
-    })
-    .finally(() => {
-        btn.disabled = false;
-        btn.textContent = 'Run Automode (from Task 3)';
-    });
-});
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking migration status: ' + error.message;
+            
+            btn.disabled = false;
+            btn.textContent = 'Run Migrations (Step 2)';
+        });
+    }
+    
+    // Start polling
+    setTimeout(checkStatus, pollInterval);
+}
+</script>
+
 {% endblock %}

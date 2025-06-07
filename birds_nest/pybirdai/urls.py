@@ -150,6 +150,7 @@ urlpatterns = [
     path('workflow/automode/', workflow_views.workflow_automode, name='workflow_automode'),
     path('workflow/database-setup/', workflow_views.workflow_database_setup, name='workflow_database_setup'),
     path('workflow/run-migrations/', workflow_views.workflow_run_migrations, name='workflow_run_migrations'),
+    path('workflow/migration-status/', workflow_views.workflow_migration_status, name='workflow_migration_status'),
     path('workflow/save-config/', workflow_views.workflow_save_config, name='workflow_save_config'),
     path('workflow/task/<int:task_number>/status/', workflow_views.workflow_task_status, name='workflow_task_status'),
 ]

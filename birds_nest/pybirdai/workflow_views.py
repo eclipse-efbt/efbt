@@ -19,6 +19,8 @@ from django.urls import reverse
 import uuid
 import logging
 import os
+import threading
+import time
 
 from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
 from .services import AutomodeConfigurationService
@@ -35,6 +37,17 @@ logger = logging.getLogger(__name__)
 # In-memory storage for GitHub token (not persisted to database or file)
 _in_memory_github_token = None
 
+# In-memory storage for migration status (not persisted to database or file)
+_migration_status = {
+    'running': False,
+    'completed': False,
+    'success': False,
+    'error': None,
+    'message': '',
+    'started_at': None,
+    'completed_at': None
+}
+
 def _get_github_token():
     """Get GitHub token from in-memory storage or environment variable."""
     global _in_memory_github_token
@@ -49,6 +62,63 @@ def _clear_github_token():
     """Clear GitHub token from in-memory storage."""
     global _in_memory_github_token
     _in_memory_github_token = None
+
+def _run_migrations_async():
+    """Run migrations in background thread."""
+    global _migration_status
+    
+    try:
+        logger.info("Starting background migration process...")
+        _migration_status.update({
+            'running': True,
+            'completed': False,
+            'success': False,
+            'error': None,
+            'message': 'Running database migrations...',
+            'started_at': time.time()
+        })
+        
+        # Run the actual migration
+        from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+        
+        migration_results = app_config.run_migrations_after_restart()
+        
+        # Update status on success
+        _migration_status.update({
+            'running': False,
+            'completed': True,
+            'success': True,
+            'error': None,
+            'message': migration_results.get('message', 'Database migrations completed successfully'),
+            'completed_at': time.time()
+        })
+        
+        logger.info("Background migration process completed successfully")
+        
+    except Exception as e:
+        logger.error(f"Background migration process failed: {e}")
+        _migration_status.update({
+            'running': False,
+            'completed': True,
+            'success': False,
+            'error': str(e),
+            'message': 'Database migrations failed',
+            'completed_at': time.time()
+        })
+
+def _reset_migration_status():
+    """Reset migration status to initial state."""
+    global _migration_status
+    _migration_status.update({
+        'running': False,
+        'completed': False,
+        'success': False,
+        'error': None,
+        'message': '',
+        'started_at': None,
+        'completed_at': None
+    })
 
 
 def workflow_dashboard(request):
@@ -1037,34 +1107,60 @@ def workflow_save_config(request):
 
 @require_http_methods(["POST"])
 def workflow_run_migrations(request):
-    """Run STEP 2: Database migrations after restart"""
-    results = {
-        'success': True,
-        'completed_tasks': [],
-        'errors': []
-    }
+    """Start STEP 2: Database migrations in background thread"""
+    global _migration_status
+    
+    # Check if migrations are already running
+    if _migration_status['running']:
+        return JsonResponse({
+            'success': False,
+            'message': 'Migrations are already running. Please wait for completion.',
+            'status': 'already_running'
+        })
+    
+    # Check if migrations were recently completed
+    if _migration_status['completed']:
+        # Reset status for new run
+        _reset_migration_status()
     
     try:
-        # Run Step 2: Migrations
-        from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+        # Start migrations in background thread
+        migration_thread = threading.Thread(target=_run_migrations_async, daemon=True)
+        migration_thread.start()
         
-        migration_results = app_config.run_migrations_after_restart()
-        
-        results['completed_tasks'].append('Database migrations')
-        results['message'] = migration_results.get('message', 'Database migrations completed successfully')
-        results['database_ready'] = migration_results.get('database_ready', True)
+        return JsonResponse({
+            'success': True,
+            'message': 'Database migrations started in background. Use /workflow/migration-status/ to check progress.',
+            'status': 'started',
+            'check_status_url': '/pybirdai/workflow/migration-status/'
+        })
         
     except Exception as e:
-        logger.error(f"Database migrations failed: {e}")
-        results['success'] = False
-        results['errors'].append({
-            'task': 'migrations',
-            'error': str(e)
-        })
-        results['message'] = 'Database migrations failed'
+        logger.error(f"Failed to start migration thread: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': f'Failed to start migrations: {str(e)}',
+            'status': 'failed'
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def workflow_migration_status(request):
+    """Check the status of running migrations"""
+    global _migration_status
     
-    return JsonResponse(results)
+    status_copy = _migration_status.copy()
+    
+    # Calculate elapsed time if running
+    if status_copy['running'] and status_copy['started_at']:
+        status_copy['elapsed_time'] = time.time() - status_copy['started_at']
+    elif status_copy['completed'] and status_copy['started_at'] and status_copy['completed_at']:
+        status_copy['elapsed_time'] = status_copy['completed_at'] - status_copy['started_at']
+    
+    return JsonResponse({
+        'success': True,
+        'migration_status': status_copy
+    })
 
 
 @require_http_methods(["POST"])
