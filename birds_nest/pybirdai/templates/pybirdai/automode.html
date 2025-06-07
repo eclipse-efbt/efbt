@@ -67,6 +67,13 @@ Documentation on creating these files is to follow, basically they list the repo
         />
         <span>Create Python transformations</span>
     </a>
+    <a href="{% url 'pybirdai:automode_import_bird_metamodel_from_website' %}" class="task-item">
+        <img src="{% static 'images/smcubes_to_python.webp' %}" alt="automode_import_bird_metamodel_from_website">
+        <span>Import Bird Metamodel from Website</span>
+    </a>
+    <a href="{% url 'pybirdai:home' %}" class="task-item" style="display: inline-flex; max-width: 200px;">
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+    </a>
     <a
         href="{% url 'pybirdai:run_fetch_curated_resources' %}"
         class="task-item"
@@ -84,10 +91,8 @@ Documentation on creating these files is to follow, basically they list the repo
         style="display: inline-flex; max-width: 200px"
     >
         <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow" />
-
         <span>Back to Home</span>
     </a>
 </div>
 
 {% endblock %} 
-
