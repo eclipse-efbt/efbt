@@ -39,14 +39,52 @@
         <h3>Subtasks to be executed:</h3>
         
         <div class="subtask-item">
-            <h4>1. Import LDM/EIL Hierarchies</h4>
+            <h4>0. Clear the database</h4>
+            <p>Clear the database</p>
+            <ul>
+                <li>Clear the database</li>                
+            </ul>
+            {% if task_execution.execution_data.database_deleted %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        <div class="subtask-item">
+            <h4>1. Create Cube Structures</h4>
+            <p>Generate multidimensional cube structures for reporting</p>
+            <ul>
+                <li>Define cubes</li>
+                
+            </ul>
+            {% if task_execution.execution_data.input_model_imported %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        
+        <div class="subtask-item">
+            <h4>2. Generate Report Templates</h4>
+            <p>Create report template structures</p>
+            <ul>
+                <li>Import report definitions</li>
+                
+            </ul>
+            {% if task_execution.execution_data.report_templates_created %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        <div class="subtask-item">
+            <h4>3. Import LDM/EIL Hierarchies</h4>
             <p>Convert hierarchical structures from the imported data model</p>
             <ul>
                 <li>Process domain hierarchies</li>
-                <li>Create member hierarchies</li>
-                <li>Build variable hierarchies</li>
+                
             </ul>
-            {% if task_execution.execution_data.hierarchies_imported %}
+            {% if task_execution.execution_data.hierarchy_analysis_imported %}
             <span class="status-badge completed">✓ Completed</span>
             {% elif task_execution.status == 'running' %}
             <span class="status-badge running">🔄 Running</span>
@@ -56,7 +94,7 @@
         </div>
         
         <div class="subtask-item">
-            <h4>2. Process Semantic Integrations</h4>
+            <h4>4. Process Semantic Integrations</h4>
             <p>Import and process semantic integration definitions</p>
             <ul>
                 <li>Load semantic mappings</li>
@@ -70,35 +108,7 @@
             {% endif %}
         </div>
         
-        <div class="subtask-item">
-            <h4>3. Create Cube Structures</h4>
-            <p>Generate multidimensional cube structures for reporting</p>
-            <ul>
-                <li>Define cube dimensions</li>
-                <li>Create cube hierarchies</li>
-                <li>Setup measure definitions</li>
-            </ul>
-            {% if task_execution.execution_data.cubes_created %}
-            <span class="status-badge completed">✓ Completed</span>
-            {% else %}
-            <span class="status-badge pending">⏳ Pending</span>
-            {% endif %}
-        </div>
         
-        <div class="subtask-item">
-            <h4>4. Generate Report Templates</h4>
-            <p>Create report template structures</p>
-            <ul>
-                <li>Import report definitions</li>
-                <li>Create template mappings</li>
-                <li>Setup variable mappings</li>
-            </ul>
-            {% if task_execution.execution_data.report_templates_created %}
-            <span class="status-badge completed">✓ Completed</span>
-            {% else %}
-            <span class="status-badge pending">⏳ Pending</span>
-            {% endif %}
-        </div>
     </div>
     
     {% if task_execution.status == 'pending' %}
@@ -109,8 +119,15 @@
             <h3>Execution Options</h3>
             
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="import_hierarchies" id="import_hierarchies" checked>
-                <label class="form-check-label" for="import_hierarchies">
+                <input class="form-check-input" type="checkbox" name="delete_database" id="delete_database">
+                <label class="form-check-label" for="delete_database">
+                    Delete Existing Database Before Creation
+                </label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="import_hierarchy_analysis" id="import_hierarchy_analysis" checked>
+                <label class="form-check-label" for="import_hierarchy_analysis">
                     Import LDM/EIL Hierarchies
                 </label>
             </div>
@@ -123,8 +140,8 @@
             </div>
             
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="create_cubes" id="create_cubes" checked>
-                <label class="form-check-label" for="create_cubes">
+                <input class="form-check-input" type="checkbox" name="import_input_model" id="import_input_model" checked>
+                <label class="form-check-label" for="import_input_model">
                     Create Cube Structures
                 </label>
             </div>

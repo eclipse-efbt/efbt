@@ -66,7 +66,7 @@
                     <li>Create join specifications</li>
                     <li>Generate executable joins</li>
                 </ul>
-                {% if task_execution.execution_data.joins_created %}
+                {% if task_execution.execution_data.joins_metadata_created %}
                 <span class="status-badge completed">✓ Completed ({{ task_execution.execution_data.join_count|default:0 }} joins)</span>
                 {% elif task_execution.status == 'running' and task_execution.execution_data.current_step == 'joins' %}
                 <span class="status-badge running">🔄 In Progress</span>
@@ -76,45 +76,7 @@
             </div>
         </div>
         
-        <div class="process-step">
-            <div class="step-icon">3</div>
-            <div class="step-content">
-                <h3>Transformation Logic</h3>
-                <p>Create complex transformation rules</p>
-                <ul>
-                    <li>Build aggregation rules</li>
-                    <li>Define calculation logic</li>
-                    <li>Create derived measures</li>
-                </ul>
-                {% if task_execution.execution_data.transformations_created %}
-                <span class="status-badge completed">✓ Completed ({{ task_execution.execution_data.transformation_count|default:0 }} rules)</span>
-                {% elif task_execution.status == 'running' and task_execution.execution_data.current_step == 'transformations' %}
-                <span class="status-badge running">🔄 In Progress</span>
-                {% else %}
-                <span class="status-badge pending">⏳ Pending</span>
-                {% endif %}
-            </div>
-        </div>
-        
-        <div class="process-step">
-            <div class="step-icon">4</div>
-            <div class="step-content">
-                <h3>Validation & Optimization</h3>
-                <p>Validate and optimize transformation rules</p>
-                <ul>
-                    <li>Check rule consistency</li>
-                    <li>Optimize execution order</li>
-                    <li>Generate performance hints</li>
-                </ul>
-                {% if task_execution.execution_data.validation_complete %}
-                <span class="status-badge completed">✓ Completed</span>
-                {% elif task_execution.status == 'running' and task_execution.execution_data.current_step == 'validation' %}
-                <span class="status-badge running">🔄 In Progress</span>
-                {% else %}
-                <span class="status-badge pending">⏳ Pending</span>
-                {% endif %}
-            </div>
-        </div>
+       
     </div>
     
     {% if task_execution.status == 'pending' %}

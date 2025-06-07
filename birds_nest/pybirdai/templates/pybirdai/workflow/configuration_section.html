@@ -28,6 +28,26 @@
                     <small style="color: #666; font-style: italic;">Clone mode functionality (coming soon)</small>
                 </div>
                 
+                <!-- Configuration Files Source -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Configuration Files Source</label>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px;">
+                            <input type="radio" name="config_files_source" value="MANUAL"
+                                   {% if config.config_files_source == 'MANUAL' or not config.config_files_source %}checked{% endif %}
+                                   onchange="updateWorkflowConfigVisibility()">
+                            Manual Upload
+                        </label>
+                        <label style="display: block; margin-bottom: 5px;">
+                            <input type="radio" name="config_files_source" value="GITHUB"
+                                   {% if config.config_files_source == 'GITHUB' %}checked{% endif %}
+                                   onchange="updateWorkflowConfigVisibility()">
+                            GitHub Repository
+                        </label>
+                    </div>
+                    <small style="color: #666;">Source for configuration files (ldm, extra_variables, joins_configuration)</small>
+                </div>
+                
                 <!-- Technical Export Source -->
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">Technical Export Source</label>
@@ -50,14 +70,24 @@
             
             <!-- Right Column -->
             <div>
-                <!-- GitHub Repository -->
-                <div class="form-group" id="github-repo-group" style="margin-bottom: 20px; display: none;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Repository URL</label>
+                <!-- Technical Export GitHub Repository -->
+                <div class="form-group" id="tech-export-github-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Technical Export GitHub Repository URL</label>
                     <input type="url" name="technical_export_github_url" class="form-control" 
                            placeholder="https://github.com/username/repository"
                            value="{{ config.technical_export_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
                            style="width: 100%; padding: 8px;">
-                    <small style="color: #666;">Repository containing technical export and/or configuration files</small>
+                    <small style="color: #666;">Repository containing technical export files</small>
+                </div>
+                
+                <!-- Configuration Files GitHub Repository -->
+                <div class="form-group" id="config-files-github-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Configuration Files GitHub Repository URL</label>
+                    <input type="url" name="config_files_github_url" class="form-control" 
+                           placeholder="https://github.com/username/repository"
+                           value="{{ config.config_files_github_url|default:'' }}"
+                           style="width: 100%; padding: 8px;">
+                    <small style="color: #666;">Repository containing configuration files (ldm, extra_variables, joins_configuration)</small>
                 </div>
                 
                 <!-- GitHub Token -->
@@ -88,9 +118,13 @@
 
 <script>
 function updateWorkflowConfigVisibility() {
-    const githubSelected = document.querySelector('input[name="technical_export_source"]:checked').value === 'GITHUB';
-    document.getElementById('github-repo-group').style.display = githubSelected ? 'block' : 'none';
-    document.getElementById('github-token-group').style.display = githubSelected ? 'block' : 'none';
+    const techExportGithubSelected = document.querySelector('input[name="technical_export_source"]:checked').value === 'GITHUB';
+    const configFilesGithubSelected = document.querySelector('input[name="config_files_source"]:checked').value === 'GITHUB';
+    const anyGithubSelected = techExportGithubSelected || configFilesGithubSelected;
+    
+    document.getElementById('tech-export-github-repo-group').style.display = techExportGithubSelected ? 'block' : 'none';
+    document.getElementById('config-files-github-repo-group').style.display = configFilesGithubSelected ? 'block' : 'none';
+    document.getElementById('github-token-group').style.display = anyGithubSelected ? 'block' : 'none';
 }
 
 // Initialize visibility on page load
