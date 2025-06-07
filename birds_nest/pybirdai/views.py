@@ -3439,7 +3439,9 @@ def automode_configure(request):
                 
                 if form.cleaned_data['technical_export_source'] == 'GITHUB':
                     url = form.cleaned_data['technical_export_github_url']
-                    token = form.cleaned_data.get('github_token')
+                    # Check environment variable first, then form input
+                    import os
+                    token = os.environ.get('GITHUB_TOKEN', form.cleaned_data.get('github_token'))
                     if not service.validate_github_repository(url, token):
                         error_msg = f'Technical export GitHub repository is not accessible: {url}'
                         if not token:
@@ -3453,7 +3455,8 @@ def automode_configure(request):
                 
                 if form.cleaned_data['config_files_source'] == 'GITHUB':
                     url = form.cleaned_data['config_files_github_url']
-                    token = form.cleaned_data.get('github_token')
+                    # Check environment variable first, then form input
+                    token = os.environ.get('GITHUB_TOKEN', form.cleaned_data.get('github_token'))
                     if not service.validate_github_repository(url, token):
                         error_msg = f'Configuration files GitHub repository is not accessible: {url}'
                         if not token:
@@ -3476,7 +3479,9 @@ def automode_configure(request):
                 }
                 
                 # Store GitHub token (temporarily, for execution)
-                github_token = form.cleaned_data.get('github_token', '')
+                # Prioritize environment variable, then form input
+                import os
+                github_token = os.environ.get('GITHUB_TOKEN', form.cleaned_data.get('github_token', ''))
                 if github_token:
                     config_data['github_token'] = github_token
                 
@@ -3578,8 +3583,10 @@ def automode_execute(request):
                 })
             
             force_refresh = request.POST.get('force_refresh') == 'on'
-            # Get GitHub token from temp config or POST data
-            github_token = (temp_config_data.get('github_token') or 
+            # Get GitHub token from environment, temp config, or POST data
+            import os
+            github_token = (os.environ.get('GITHUB_TOKEN') or 
+                          temp_config_data.get('github_token') or 
                           request.POST.get('github_token', '')).strip() or None
             
             # Create a temporary configuration object from temp file data

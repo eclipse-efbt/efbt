@@ -83,7 +83,8 @@ def workflow_dashboard(request):
             with open(config_path, 'r') as f:
                 config = json.load(f)
                 # Extract github token separately for security
-                github_token = config.pop('github_token', '')
+                # Try environment variable first, then config file as fallback
+                github_token = os.environ.get('GITHUB_TOKEN', config.pop('github_token', ''))
         
         # Check if we're waiting for step 2 migrations
         marker_path = os.path.join(base_dir, '.migration_ready_marker')
@@ -333,7 +334,7 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
     if operation == 'do':
         if request.method == 'POST':
             # Start SMCubes core creation
-            task_execution.status = 'running'
+            task_execution.status = 'running task3_smcubes_core'
             task_execution.started_at = timezone.now()
             task_execution.save()
             
@@ -344,8 +345,10 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                 from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
                 from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
                 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
+                from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
                 
                 execution_data = {
+                    'database_deleted': False,
                     'hierarchies_imported': False,
                     'hierarchy_analysis_imported': False,
                     'semantic_integrations_processed': False,
@@ -356,12 +359,21 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                 
                 # Execute subtasks based on selections or run all by default
                 run_all = not any([
+                    request.POST.get('delete_database'),
                     request.POST.get('import_input_model'),
                     request.POST.get('generate_templates'),
                     request.POST.get('import_hierarchy_analysis'),
                     request.POST.get('process_semantic'),
                     
                 ])
+                
+                # Delete database if requested (should run first)
+                if request.POST.get('delete_database') or run_all:
+                    logger.info("Deleting existing database...")
+                    app_config = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
+                    app_config.run_delete_bird_metadata_database()
+                    execution_data['database_deleted'] = True
+                    execution_data['steps_completed'].append('Database deletion')
                 
                  # Import input model using ready() method (creates cubes and structures)
                 if request.POST.get('import_input_model') or run_all:
@@ -479,22 +491,19 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
             try:
                 # Import real entry point classes (using the correct class names)
                 from .entry_points.create_filters import RunCreateFilters
-                from .entry_points.create_joins_metadata import RunCreateJoinsMetadata  
-                from .entry_points.create_executable_joins import RunCreateExecutableJoins
+                from .entry_points.create_joins_metadata import RunCreateJoinsMetadata                 
                 
                 execution_data = {
                     'current_step': 'filters',
                     'filters_created': False,
                     'joins_metadata_created': False,
-                    'executable_joins_created': False,
                     'steps_completed': []
                 }
                 
                 # Execute all steps by default or based on selections
                 run_all = not any([
                     request.POST.get('generate_all_filters'),
-                    request.POST.get('create_joins_metadata'),
-                    request.POST.get('create_executable_joins')
+                    request.POST.get('create_joins_metadata'),                    
                 ])
                 
                 # Create filters
@@ -513,13 +522,6 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
                     execution_data['joins_metadata_created'] = True
                     execution_data['steps_completed'].append('Joins metadata creation')
                 
-                # Create executable joins
-                if request.POST.get('create_executable_joins') or run_all:
-                    logger.info("Creating executable joins...")
-                    execution_data['current_step'] = 'executable_joins'
-                    RunCreateExecutableJoins.create_python_joins()  # Correct method name
-                    execution_data['executable_joins_created'] = True
-                    execution_data['steps_completed'].append('Executable joins creation')
                 
                 execution_data['current_step'] = 'completed'
                 
@@ -576,6 +578,7 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
             try:
                 # Import real Python code generation entry points
                 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
+                from .entry_points.create_executable_joins import RunCreateExecutableJoins
                 
                 execution_data = {
                     'current_phase': 'filters',
@@ -589,7 +592,6 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
                 run_all = not any([
                     request.POST.get('generate_filter_code'),
                     request.POST.get('generate_join_code'), 
-                    request.POST.get('generate_transformation_code')
                 ])
                 
                 # Generate executable filter code
@@ -599,22 +601,18 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
                     RunCreateExecutableFilters.run_create_executable_filters()
                     execution_data['filter_code_generated'] = True
                     execution_data['steps_completed'].append('Executable filter code generation')
-                
+
+
                 # Note: Join and transformation code generation would use different entry points
                 # For now, marking as completed to indicate the workflow step is done
                 if request.POST.get('generate_join_code') or run_all:
                     logger.info("Join code generation (using filter infrastructure)...")
                     execution_data['current_phase'] = 'joins'
-                    # The executable joins from Task 4 already create the necessary join logic
+                    RunCreateExecutableJoins.create_python_joins()  # Correct method name
                     execution_data['join_code_generated'] = True
                     execution_data['steps_completed'].append('Join code infrastructure ready')
                 
-                if request.POST.get('generate_transformation_code') or run_all:
-                    logger.info("Transformation code generation (using existing infrastructure)...")
-                    execution_data['current_phase'] = 'transformations'
-                    # The transformation infrastructure is built into the filter/join system
-                    execution_data['transformation_code_generated'] = True
-                    execution_data['steps_completed'].append('Transformation code infrastructure ready')
+               
                 
                 execution_data['current_phase'] = 'completed'
                 

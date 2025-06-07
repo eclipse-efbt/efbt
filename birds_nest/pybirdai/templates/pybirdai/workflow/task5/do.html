@@ -94,63 +94,7 @@
             </div>
         </div>
         
-        <div class="phase-card">
-            <h3>3. Transformation Code Generation</h3>
-            <p>Generate complex transformation logic</p>
-            <div class="phase-details">
-                <ul>
-                    <li>Create transformation functions</li>
-                    <li>Generate aggregation logic</li>
-                    <li>Build calculation methods</li>
-                    <li>Implement data validators</li>
-                </ul>
-                {% if task_execution.execution_data.transformation_code_generated %}
-                <div class="phase-stats">
-                    <span class="stat-item">
-                        <strong>{{ task_execution.execution_data.transformation_functions|default:0 }}</strong> Functions
-                    </span>
-                    <span class="stat-item">
-                        <strong>{{ task_execution.execution_data.transformation_files|default:0 }}</strong> Python Files
-                    </span>
-                </div>
-                <span class="status-badge completed">✓ Completed</span>
-                {% elif task_execution.status == 'running' and task_execution.execution_data.current_phase == 'transformations' %}
-                <span class="status-badge running">🔄 In Progress</span>
-                {% else %}
-                <span class="status-badge pending">⏳ Pending</span>
-                {% endif %}
-            </div>
-        </div>
-        
-        <div class="phase-card">
-            <h3>4. Test Case Generation</h3>
-            <p>Create unit tests for generated code</p>
-            <div class="phase-details">
-                <ul>
-                    <li>Generate test fixtures</li>
-                    <li>Create test methods</li>
-                    <li>Build validation tests</li>
-                    <li>Generate performance tests</li>
-                </ul>
-                {% if task_execution.execution_data.tests_generated %}
-                <div class="phase-stats">
-                    <span class="stat-item">
-                        <strong>{{ task_execution.execution_data.test_cases|default:0 }}</strong> Test Cases
-                    </span>
-                    <span class="stat-item">
-                        <strong>{{ task_execution.execution_data.test_files|default:0 }}</strong> Test Files
-                    </span>
-                </div>
-                <span class="status-badge completed">✓ Completed</span>
-                {% elif task_execution.status == 'running' and task_execution.execution_data.current_phase == 'tests' %}
-                <span class="status-badge running">🔄 In Progress</span>
-                {% else %}
-                <span class="status-badge pending">⏳ Pending</span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    
+       
     {% if task_execution.status == 'pending' %}
     <form method="post" style="margin-top: 30px;">
         {% csrf_token %}

@@ -237,7 +237,7 @@ document.getElementById('database-setup-form').addEventListener('submit', functi
                 message += '<em>Do not close this browser tab during the restart process.</em>';
                 
                 // Show countdown and auto-refresh after restart time
-                let countdown = 45; // 45 seconds should be enough for restart
+                let countdown = 5; // 5 seconds should be enough for restart
                 statusDiv.innerHTML = message + '<br><br>Auto-refresh in: <span id="countdown">' + countdown + '</span> seconds';
                 
                 const countdownInterval = setInterval(() => {
