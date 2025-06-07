@@ -80,7 +80,8 @@
     </div>
     
     {% if task_execution.status == 'pending' %}
-    <form method="post" style="margin-top: 30px;">
+    <div id="task4-status" style="display: none;"></div>
+    <form id="task4-form" method="post" style="margin-top: 30px;">
         {% csrf_token %}
         
         <div class="configuration-section">
@@ -224,5 +225,56 @@ setTimeout(function() {
     location.reload();
 }, 3000);
 {% endif %}
+
+// Handle form submission with AJAX
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('task4-form');
+    const statusDiv = document.getElementById('task4-status');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show processing message
+            statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Starting SMCubes rules creation. This may take a few minutes...</div>';
+            statusDiv.style.display = 'block';
+            
+            // Disable submit button
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...';
+            
+            // Submit form via AJAX
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'SMCubes rules creation completed successfully.') + '</div>';
+                    // Refresh page after 2 seconds to show completed status
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'SMCubes rules creation failed.') + '</div>';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Start SMCubes Rules Creation';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred. Please try again.</div>';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Start SMCubes Rules Creation';
+            });
+        });
+    }
+});
 </script>
 {% endblock %}
