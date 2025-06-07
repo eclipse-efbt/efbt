@@ -540,7 +540,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
     def _create_migration_ready_marker(self, base_dir):
         """Create a marker file to indicate we're ready for step 2 migrations."""
         import json
-        marker_path = os.path.join(base_dir, '.migration_ready_marker')
+        # Ensure base_dir is a string (handle Path objects)
+        base_dir_str = str(base_dir)
+        marker_path = os.path.join(base_dir_str, '.migration_ready_marker')
         marker_data = {
             'step': 1,
             'timestamp': time.time(),
@@ -557,14 +559,18 @@ class RunAutomodeDatabaseSetup(AppConfig):
     
     def _check_migration_ready_marker(self, base_dir):
         """Check if the migration ready marker exists."""
-        marker_path = os.path.join(base_dir, '.migration_ready_marker')
+        # Ensure base_dir is a string (handle Path objects)
+        base_dir_str = str(base_dir)
+        marker_path = os.path.join(base_dir_str, '.migration_ready_marker')
         exists = os.path.exists(marker_path)
-        logger.info(f"Migration ready marker exists: {exists}")
+        logger.info(f"Migration ready marker exists: {exists} at {marker_path}")
         return exists
     
     def _remove_migration_ready_marker(self, base_dir):
         """Remove the migration ready marker file."""
-        marker_path = os.path.join(base_dir, '.migration_ready_marker')
+        # Ensure base_dir is a string (handle Path objects)
+        base_dir_str = str(base_dir)
+        marker_path = os.path.join(base_dir_str, '.migration_ready_marker')
         try:
             if os.path.exists(marker_path):
                 os.remove(marker_path)
