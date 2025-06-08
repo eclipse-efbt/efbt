@@ -1377,6 +1377,7 @@ def create_response_with_loading_extended(request, task_title, success_message, 
                                 // Hide loading and show success
                                 document.getElementById('loading-overlay').style.display = 'none';
                                 document.getElementById('success-message').style.display = 'block';
+
                                 // Update success message with instructions if provided
                                 const successDiv = document.getElementById('success-message');
                                 let successContent = '<p>{success_message}</p>';
@@ -2496,16 +2497,6 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
 
             logger.info(f"I created new variable mapping item: {new_variable_item.id}")
 
-            # Copy mapping definition
-            mapping_def = MAPPING_DEFINITION.objects.create(
-                mapping_id=f"{mapping_base_id}".split("__")[0]+f"__{timestamp}",
-                code=f"{mapping_base_id}".split("__")[0]+f"__{timestamp}",
-                name=f"{orig_mapping.name} ({timestamp})",
-                member_mapping_id=new_member_mapping,
-                variable_mapping_id=new_variable_mapping
-            )
-            sdd_context.mapping_definition_dictionary[mapping_def.mapping_id] = mapping_def
-
             # Copy existing member mapping items
             existing_items = MEMBER_MAPPING_ITEM.objects.filter(member_mapping_id=orig_mapping.member_mapping_id)
             for item in existing_items:
@@ -2524,68 +2515,47 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
                     sdd_context.member_mapping_items_dictionary[
                         new_item.member_mapping_id.member_mapping_id] = [new_item]
 
-        else:
-            # Create new mappings
-            new_member_mapping = MEMBER_MAPPING.objects.create(
-                member_mapping_id=f"MM_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                code=f"MM_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                name=f"Member mapping for {variable_obj.code}"
-            )
-            sdd_context.member_mapping_dictionary[new_member_mapping.member_mapping_id] = new_member_mapping
+            # Add new member mapping items
+            for member_id in members:
+                if member_id != "None":
+                    member_obj = MEMBER.objects.get(member_id=member_id)
+                    mapping_item = MEMBER_MAPPING_ITEM.objects.create(
+                        member_mapping_id=new_member_mapping,
+                        member_mapping_row=member_mapping_row,
+                        variable_id=variable_obj,
+                        member_id=member_obj,
+                        is_source=is_source
+                    )
+                    member_mapping_list = sdd_context.member_mapping_items_dictionary[
+                        mapping_item.member_mapping_id.member_mapping_id]
+                    member_mapping_list.append(mapping_item)
+            # Copy mapping definition
+            target_id = orig_mapping.mapping_id
+            target_name = orig_mapping.name
 
-            new_variable_mapping = VARIABLE_MAPPING.objects.create(
-                variable_mapping_id=f"VM_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                code=f"VM_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                name=f"Variable mapping for {variable_obj.code}"
-            )
-            sdd_context.variable_mapping_dictionary[new_variable_mapping.variable_mapping_id] = new_variable_mapping
-
+            orig_mapping.delete()
             mapping_def = MAPPING_DEFINITION.objects.create(
-                mapping_id=f"MAP_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                code=f"MAP_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                name=f"Mapping for {variable_obj.code}",
+                mapping_id=orig_mapping_id,
+                code=orig_mapping_id,
+                name=f"{target_name} ({timestamp})",
                 member_mapping_id=new_member_mapping,
                 variable_mapping_id=new_variable_mapping
             )
             sdd_context.mapping_definition_dictionary[mapping_def.mapping_id] = mapping_def
 
-        # Add new member mapping items
-        member_mapping_items = []
-        for member_id in members:
-            if member_id != "None":
-                member_obj = MEMBER.objects.get(member_id=member_id)
-                mapping_item = MEMBER_MAPPING_ITEM(
-                    member_mapping_id=new_member_mapping,
-                    member_mapping_row=member_mapping_row,
-                    variable_id=variable_obj,
-                    member_id=member_obj,
-                    is_source=is_source
-                )
-                try:
-                    member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                        mapping_item.member_mapping_id.member_mapping_id]
-                    member_mapping_list.append(mapping_item)
-                except KeyError:
-                    sdd_context.member_mapping_items_dictionary[
-                        mapping_item.member_mapping_id.member_mapping_id] = [mapping_item]
-                member_mapping_items.append(mapping_item)
+            # Create mapping to cube with version suffix
+            old_mappings = MAPPING_TO_CUBE.objects.filter(mapping_id=mapping_def)
+            if old_mappings.exists():
+                latest = old_mappings.latest('cube_mapping_id')
+                version = int(latest.cube_mapping_id.split('_v')[-1]) + 1
+                new_mapping_code = f"{latest.cube_mapping_id.split('_v')[0]}_v{version}"
+            else:
+                new_mapping_code = f"{mapping_def.code}_v1"
 
-        # Bulk create member mapping items
-        MEMBER_MAPPING_ITEM.objects.bulk_create(member_mapping_items)
-
-        # Create mapping to cube with version suffix
-        old_mappings = MAPPING_TO_CUBE.objects.filter(mapping_id=mapping_def)
-        if old_mappings.exists():
-            latest = old_mappings.latest('cube_mapping_id')
-            version = int(latest.cube_mapping_id.split('_v')[-1]) + 1
-            new_mapping_code = f"{latest.cube_mapping_id.split('_v')[0]}_v{version}"
-        else:
-            new_mapping_code = f"{mapping_def.code}_v1"
-
-        new_mapping_to_cube = MAPPING_TO_CUBE.objects.create(
-            mapping_id=mapping_def,
-            cube_mapping_id=new_mapping_code
-        )
+            new_mapping_to_cube = MAPPING_TO_CUBE.objects.create(
+                mapping_id=mapping_def,
+                cube_mapping_id=new_mapping_code
+            )
         #sdd_context.mapping_to_cube_dictionary[mapping_def] = new_mapping_to_cube
         logger.info("Variable and members added successfully")
         return JsonResponse({'status': 'success'})
@@ -3133,6 +3103,7 @@ def load_variables_from_csv_file(csv_file_path):
         # Read the CSV file
         with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
+
             # Validate headers
             required_fields = {'VARIABLE_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
             headers = set(reader.fieldnames)
@@ -3143,6 +3114,7 @@ def load_variables_from_csv_file(csv_file_path):
 
             # Get SDDContext instance
             sdd_context = SDDContext()
+
             # Process each row
             variables_to_create = []
             for row in reader:
@@ -3325,6 +3297,7 @@ def test_automode_components(request):
             # Test basic setup
             base_dir = settings.BASE_DIR
             logger.info(f"Base directory: {base_dir}")
+
             # Check if required directories exist
             resources_dir = os.path.join(base_dir, 'resources')
             results_dir = os.path.join(base_dir, 'results')
