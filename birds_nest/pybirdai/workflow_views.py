@@ -106,11 +106,13 @@ def _run_migrations_async():
             'started_at': time.time()
         })
         
-        # Run the actual migration
+        # Run the actual migration - this should ONLY run Django migrations, no file operations
         from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
         app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
         
+        logger.info("About to call run_migrations_after_restart() - this should NOT download or delete any files")
         migration_results = app_config.run_migrations_after_restart()
+        logger.info("run_migrations_after_restart() completed - no files should have been modified")
         
         # Update status on success
         _migration_status.update({
@@ -228,10 +230,13 @@ def _run_database_setup_async():
         
         service = AutomodeConfigurationService()
         github_token = _get_github_token()
+        
+        # Only force refresh if explicitly needed - preserve existing files
+        # This prevents unnecessary file deletion that can cause issues during model creation
         task1_results = service.fetch_files_from_source(
             config=config,
             github_token=github_token,
-            force_refresh=True
+            force_refresh=False  # Changed to False to preserve existing files
         )
         
         _database_setup_status['completed_tasks'].append('Task 1: Resource Download')
@@ -274,17 +279,21 @@ def _run_database_setup_async():
             })
             
             # Give frontend time to poll and get the completion status before restart
-            logger.info("Database setup completed - waiting for frontend to receive status...")
+            logger.info("Database setup completed - waiting briefly for frontend to receive status...")
             logger.info("Status updated with server_restart_required=True. Frontend should detect this in next poll.")
             
-            # Wait for frontend polling (frontend polls every 2 seconds, so 6 seconds gives 3 poll cycles)
-            restart_delay = 6
+            # Wait time to ensure frontend gets the status before restart
+            # Server restart takes ~5 seconds, so we wait 4 seconds before triggering it
+            restart_delay = 4
             for i in range(restart_delay):
                 time.sleep(1)
-                if i == 2:
-                    logger.info("Halfway through restart delay - frontend should have detected completion by now...")
-                elif i == restart_delay - 1:
-                    logger.info("Restart delay complete - triggering file operations now...")
+                logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")
+            
+            # Create marker file FIRST (before restart) so it exists when page refreshes
+            marker_path = os.path.join(base_dir, '.migration_ready_marker')
+            with open(marker_path, 'w') as f:
+                f.write('ready')
+            logger.info(f"Created migration ready marker at: {marker_path}")
             
             # Now trigger the file operations that will cause Django restart
             logger.info("Now triggering post-setup operations that will cause Django restart...")
@@ -296,11 +305,6 @@ def _run_database_setup_async():
             except Exception as e:
                 logger.error(f"Post-setup operations failed: {e}")
                 # Continue anyway - the main setup was successful
-            
-            # Create marker file
-            marker_path = os.path.join(base_dir, '.migration_ready_marker')
-            with open(marker_path, 'w') as f:
-                f.write('ready')
             
             # Add final log message that frontend can detect
             logger.warning("The restart process has been initiated. Please wait for the server to come back online.")

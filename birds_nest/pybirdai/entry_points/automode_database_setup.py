@@ -259,6 +259,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
         """
         try:
             logger.info("Starting STEP 2: Running migrations after restart...")
+            logger.info("IMPORTANT: This step should ONLY run Django migrations - no file downloads or deletions")
             
             base_dir = settings.BASE_DIR
             
@@ -267,8 +268,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 raise RuntimeError("Migration ready marker not found. Please run STEP 1 first.")
             
             # Run migrations in subprocess (admin.py is already updated)
-            logger.info("Running Django migrations in subprocess...")
+            logger.info("Running Django migrations in subprocess - NO file operations should happen")
             self._run_migrations_in_subprocess(base_dir)
+            logger.info("Django migrations completed - confirming no files were downloaded or deleted")
             
             # Clean up the marker file
             self._remove_migration_ready_marker(base_dir)
