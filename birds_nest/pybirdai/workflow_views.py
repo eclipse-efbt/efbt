@@ -48,6 +48,34 @@ _migration_status = {
     'completed_at': None
 }
 
+# In-memory storage for database setup status (not persisted to database or file)
+_database_setup_status = {
+    'running': False,
+    'completed': False,
+    'success': False,
+    'error': None,
+    'message': '',
+    'started_at': None,
+    'completed_at': None,
+    'current_task': None,
+    'completed_tasks': []
+}
+
+# In-memory storage for automode status (not persisted to database or file)
+_automode_status = {
+    'running': False,
+    'completed': False,
+    'success': False,
+    'error': None,
+    'message': '',
+    'started_at': None,
+    'completed_at': None,
+    'current_task': None,
+    'target_task': None,
+    'completed_tasks': [],
+    'task_errors': []
+}
+
 def _get_github_token():
     """Get GitHub token from in-memory storage or environment variable."""
     global _in_memory_github_token
@@ -119,6 +147,282 @@ def _reset_migration_status():
         'started_at': None,
         'completed_at': None
     })
+
+def _reset_database_setup_status():
+    """Reset database setup status to initial state."""
+    global _database_setup_status
+    _database_setup_status.update({
+        'running': False,
+        'completed': False,
+        'success': False,
+        'error': None,
+        'message': '',
+        'started_at': None,
+        'completed_at': None,
+        'current_task': None,
+        'completed_tasks': []
+    })
+
+def _reset_automode_status():
+    """Reset automode status to initial state."""
+    global _automode_status
+    _automode_status.update({
+        'running': False,
+        'completed': False,
+        'success': False,
+        'error': None,
+        'message': '',
+        'started_at': None,
+        'completed_at': None,
+        'current_task': None,
+        'target_task': None,
+        'completed_tasks': [],
+        'task_errors': []
+    })
+
+def _run_database_setup_async():
+    """Run database setup (Tasks 1-2) in background thread."""
+    global _database_setup_status
+    
+    try:
+        logger.info("Starting background database setup process...")
+        _database_setup_status.update({
+            'running': True,
+            'completed': False,
+            'success': False,
+            'error': None,
+            'message': 'Starting database setup...',
+            'started_at': time.time(),
+            'current_task': 1,
+            'completed_tasks': []
+        })
+        
+        # Import necessary modules
+        import json
+        import os
+        from django.conf import settings
+        from .bird_meta_data_model import AutomodeConfiguration
+        from .services import AutomodeConfigurationService
+        
+        # Task 1: Resource Download
+        _database_setup_status['message'] = 'Running Task 1: Resource Download...'
+        
+        # Load configuration
+        config_data = {}
+        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        config_path = os.path.join(base_dir, 'automode_config.json')
+        
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                config_data = json.load(f)
+        
+        # Create config object
+        config = AutomodeConfiguration(
+            data_model_type=config_data.get('data_model_type', 'ELDM'),
+            technical_export_source=config_data.get('technical_export_source', 'BIRD_WEBSITE'),
+            technical_export_github_url=config_data.get('technical_export_github_url', ''),
+            config_files_source=config_data.get('config_files_source', 'MANUAL'),
+            config_files_github_url=config_data.get('config_files_github_url', ''),
+            when_to_stop=config_data.get('when_to_stop', 'RESOURCE_DOWNLOAD')
+        )
+        
+        service = AutomodeConfigurationService()
+        github_token = _get_github_token()
+        task1_results = service.fetch_files_from_source(
+            config=config,
+            github_token=github_token,
+            force_refresh=True
+        )
+        
+        _database_setup_status['completed_tasks'].append('Task 1: Resource Download')
+        logger.info("Task 1 completed successfully")
+        
+        # Task 2: Database Creation
+        _database_setup_status.update({
+            'current_task': 2,
+            'message': 'Running Task 2: Database Creation...'
+        })
+        
+        from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+        
+        # This creates models and runs migrations
+        db_results = app_config.run_automode_database_setup()
+        
+        # Check if restart is required
+        if db_results.get('requires_restart'):
+            # Create marker file
+            marker_path = os.path.join(base_dir, '.migration_ready_marker')
+            with open(marker_path, 'w') as f:
+                f.write('ready')
+            
+            _database_setup_status.update({
+                'running': False,
+                'completed': True,
+                'success': True,
+                'error': None,
+                'message': 'Database setup completed. Server restart required for migrations.',
+                'completed_at': time.time(),
+                'completed_tasks': ['Task 1: Resource Download', 'Task 2: Database models created']
+            })
+        else:
+            # No restart required, setup is complete
+            _database_setup_status.update({
+                'running': False,
+                'completed': True,
+                'success': True,
+                'error': None,
+                'message': 'Database setup completed successfully!',
+                'completed_at': time.time(),
+                'completed_tasks': ['Task 1: Resource Download', 'Task 2: Database Creation']
+            })
+        
+        logger.info("Background database setup process completed successfully")
+        
+    except Exception as e:
+        logger.error(f"Background database setup process failed: {e}")
+        _database_setup_status.update({
+            'running': False,
+            'completed': True,
+            'success': False,
+            'error': str(e),
+            'message': f'Database setup failed at Task {_database_setup_status.get("current_task", "?")}',
+            'completed_at': time.time()
+        })
+
+def _run_automode_async(target_task, session_data):
+    """Run automode (Tasks 3-6) in background thread."""
+    global _automode_status
+    
+    try:
+        logger.info(f"Starting background automode process up to task {target_task}...")
+        _automode_status.update({
+            'running': True,
+            'completed': False,
+            'success': False,
+            'error': None,
+            'message': f'Starting automode from Task 3 to Task {target_task}...',
+            'started_at': time.time(),
+            'current_task': 3,
+            'target_task': target_task,
+            'completed_tasks': [],
+            'task_errors': []
+        })
+        
+        # Map task numbers to their handler functions
+        task_handlers = {
+            3: task3_smcubes_core,
+            4: task4_smcubes_rules,
+            5: task5_python_rules,
+            6: task6_full_execution,
+        }
+        
+        # Create a mock request object
+        class MockRequest:
+            def __init__(self, method='POST', post_data=None):
+                self.method = method
+                self.POST = post_data or {}
+                self.session = session_data
+                self.user = None
+                self.META = {}
+                self.headers = {'X-Requested-With': 'XMLHttpRequest'}
+        
+        # Execute tasks sequentially
+        for task_num in range(3, target_task + 1):
+            try:
+                _automode_status.update({
+                    'current_task': task_num,
+                    'message': f'Running Task {task_num}...'
+                })
+                
+                # Get or create task execution record (if database is available)
+                task_execution = None
+                workflow_session = None
+                
+                try:
+                    from django.db import connection
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT 1")  # Test database connection
+                    
+                    # Database is available, create records
+                    task_execution, _ = WorkflowTaskExecution.objects.get_or_create(
+                        task_number=task_num,
+                        operation_type='do'
+                    )
+                    
+                    session_id = session_data.get('workflow_session_id')
+                    if session_id:
+                        workflow_session = WorkflowSession.objects.filter(session_id=session_id).first()
+                except Exception as db_error:
+                    logger.warning(f"Database not available for task {task_num}: {db_error}")
+                    # Continue without database records
+                
+                # Get the appropriate task handler
+                handler = task_handlers.get(task_num)
+                if not handler:
+                    raise Exception(f"No handler found for task {task_num}")
+                
+                # Create mock request
+                mock_request = MockRequest(post_data={})
+                
+                # Call the handler
+                logger.info(f"Executing handler for task {task_num}")
+                result = handler(mock_request, 'do', task_execution, workflow_session)
+                
+                # Check if it's a JsonResponse indicating success
+                if hasattr(result, 'content'):
+                    import json
+                    response_data = json.loads(result.content)
+                    if response_data.get('success'):
+                        _automode_status['completed_tasks'].append(f'Task {task_num}')
+                        logger.info(f"Task {task_num} completed successfully")
+                    else:
+                        raise Exception(response_data.get('message', f'Task {task_num} failed'))
+                else:
+                    # If no JsonResponse, assume success
+                    _automode_status['completed_tasks'].append(f'Task {task_num}')
+                    logger.info(f"Task {task_num} completed")
+                
+            except Exception as task_error:
+                logger.error(f"Task {task_num} failed: {task_error}")
+                _automode_status['task_errors'].append({
+                    'task': task_num,
+                    'error': str(task_error)
+                })
+                # Continue with next task instead of stopping
+        
+        # Update final status
+        if _automode_status['task_errors']:
+            _automode_status.update({
+                'running': False,
+                'completed': True,
+                'success': False,
+                'error': f"Some tasks failed: {len(_automode_status['task_errors'])} errors",
+                'message': f"Automode completed with errors. Successfully completed: {', '.join(_automode_status['completed_tasks'])}",
+                'completed_at': time.time()
+            })
+        else:
+            _automode_status.update({
+                'running': False,
+                'completed': True,
+                'success': True,
+                'error': None,
+                'message': f"Automode completed successfully! Tasks completed: {', '.join(_automode_status['completed_tasks'])}",
+                'completed_at': time.time()
+            })
+        
+        logger.info("Background automode process completed")
+        
+    except Exception as e:
+        logger.error(f"Background automode process failed: {e}")
+        _automode_status.update({
+            'running': False,
+            'completed': True,
+            'success': False,
+            'error': str(e),
+            'message': f'Automode failed at Task {_automode_status.get("current_task", "?")}',
+            'completed_at': time.time()
+        })
 
 
 def workflow_dashboard(request):
@@ -911,136 +1215,96 @@ def task6_full_execution(request, operation, task_execution, workflow_session):
 
 @require_http_methods(["POST"])
 def workflow_automode(request):
-    """Enhanced automode that executes tasks up to a specified point"""
+    """Start automode tasks 3-6 in background thread"""
+    global _automode_status
     from django.db import connection
     from django.db.utils import OperationalError, ProgrammingError
+    
+    # Check if automode is already running
+    if _automode_status['running']:
+        return JsonResponse({
+            'success': False,
+            'message': 'Automode is already running. Please wait for completion.',
+            'status': 'already_running'
+        })
+    
+    # Check if automode was recently completed
+    if _automode_status['completed']:
+        # Reset status for new run
+        _reset_automode_status()
     
     target_task = int(request.POST.get('target_task', 6))
     
     # Ensure target task is at least 3 since we start from task 3
     if target_task < 3:
-        return JsonResponse({'error': 'Target task must be 3 or higher'}, status=400)
+        return JsonResponse({
+            'success': False,
+            'message': 'Target task must be 3 or higher',
+            'status': 'invalid_target'
+        }, status=400)
     
     # Check if database is available (required for automode tasks 3-6)
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='pybirdai_workflowsession';")
             if not cursor.fetchone():
-                return JsonResponse({'error': 'Database not available. Please run "Setup Database (Tasks 1-2)" first.'}, status=400)
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Database not available. Please run "Setup Database (Tasks 1-2)" first.',
+                    'status': 'database_missing'
+                }, status=400)
     except (OperationalError, ProgrammingError):
-        return JsonResponse({'error': 'Database not available. Please run "Setup Database (Tasks 1-2)" first.'}, status=400)
+        return JsonResponse({
+            'success': False,
+            'message': 'Database not available. Please run "Setup Database (Tasks 1-2)" first.',
+            'status': 'database_error'
+        }, status=400)
     
-    session_id = request.session.get('workflow_session_id')
-    if not session_id:
-        return JsonResponse({'error': 'No workflow session'}, status=400)
+    # Copy session data for background thread
+    session_data = dict(request.session)
     
-    workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+    try:
+        # Start automode in background thread
+        automode_thread = threading.Thread(
+            target=_run_automode_async, 
+            args=(target_task, session_data),
+            daemon=True
+        )
+        automode_thread.start()
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Automode started in background (tasks 3 to {target_task}). Use /workflow/automode-status/ to check progress.',
+            'status': 'started',
+            'check_status_url': '/pybirdai/workflow/automode-status/'
+        })
+        
+    except Exception as e:
+        logger.error(f"Failed to start automode thread: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': f'Failed to start automode: {str(e)}',
+            'status': 'failed'
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def workflow_automode_status(request):
+    """Check the status of running automode"""
+    global _automode_status
     
-    # Execute tasks sequentially up to target
-    results = {
+    status_copy = _automode_status.copy()
+    
+    # Calculate elapsed time if running
+    if status_copy['running'] and status_copy['started_at']:
+        status_copy['elapsed_time'] = time.time() - status_copy['started_at']
+    elif status_copy['completed'] and status_copy['started_at'] and status_copy['completed_at']:
+        status_copy['elapsed_time'] = status_copy['completed_at'] - status_copy['started_at']
+    
+    return JsonResponse({
         'success': True,
-        'completed_tasks': [],
-        'errors': []
-    }
-    
-    # Map task numbers to their handler functions
-    task_handlers = {
-        3: task3_smcubes_core,
-        4: task4_smcubes_rules,
-        5: task5_python_rules,
-        6: task6_full_execution,
-    }
-    
-    for task_num in range(3, target_task + 1):
-        try:
-            # Get or create task execution record
-            task_execution, _ = WorkflowTaskExecution.objects.get_or_create(
-                task_number=task_num,
-                operation_type='do'
-            )
-            
-            # Get the appropriate task handler
-            handler = task_handlers.get(task_num)
-            if not handler:
-                raise Exception(f"No handler found for task {task_num}")
-            
-            # Mark task as running
-            task_execution.status = 'running'
-            task_execution.started_at = timezone.now()
-            task_execution.save()
-            
-            # Create a mock request object for the handler
-            class MockRequest:
-                def __init__(self, method='POST', post_data=None):
-                    self.method = method
-                    self.POST = post_data or {}
-                    self.session = request.session
-                    self.user = request.user
-                    self.META = getattr(request, 'META', {})
-                    # Explicitly do NOT include _messages to distinguish from real requests
-            
-            # Create POST data based on task number (default selections)
-            post_data = {}
-            if task_num == 3:
-                # SMCubes Core - run all steps by default (empty POST triggers run_all)
-                post_data = {}  # Empty will trigger run_all=True
-            elif task_num == 4:
-                # SMCubes Rules - run all transformation rules by default
-                post_data = {}  # Empty will trigger run_all=True
-            elif task_num == 5:
-                # Python Rules - run all code generation by default
-                post_data = {}  # Empty will trigger run_all=True
-            elif task_num == 6:
-                # Full Execution - run datapoint execution
-                post_data = {
-                    'execution_mode': 'full',
-                    'datapoint_id': 'automode_datapoint'
-                }
-            
-            mock_request = MockRequest('POST', post_data)
-            
-            # Call the actual task handler
-            try:
-                response = handler(mock_request, 'do', task_execution, workflow_session)
-                
-                # Check if task completed successfully
-                task_execution.refresh_from_db()
-                if task_execution.status == 'completed':
-                    results['completed_tasks'].append(task_num)
-                elif task_execution.status == 'failed':
-                    results['success'] = False
-                    results['errors'].append({
-                        'task': task_num,
-                        'error': task_execution.error_message or 'Task failed'
-                    })
-                    break
-                else:
-                    # Task might be paused or still running
-                    results['completed_tasks'].append(task_num)
-                    
-            except Exception as handler_error:
-                logger.error(f"Task {task_num} handler failed: {handler_error}")
-                task_execution.status = 'failed'
-                task_execution.error_message = str(handler_error)
-                task_execution.save()
-                
-                results['success'] = False
-                results['errors'].append({
-                    'task': task_num,
-                    'error': str(handler_error)
-                })
-                break
-            
-        except Exception as e:
-            logger.error(f"Task {task_num} setup failed: {e}")
-            results['success'] = False
-            results['errors'].append({
-                'task': task_num,
-                'error': str(e)
-            })
-            break
-    
-    return JsonResponse(results)
+        'automode_status': status_copy
+    })
 
 
 def workflow_task_status(request, task_number):
@@ -1165,244 +1429,80 @@ def workflow_migration_status(request):
 
 @require_http_methods(["POST"])
 def workflow_database_setup(request):
-    """Run tasks 1-2 to setup database (Resource Download + Database Creation)"""
-    from django.db import connection
-    from django.db.utils import OperationalError, ProgrammingError
+    """Start tasks 1-2 database setup in background thread"""
+    global _database_setup_status
     
-    # Check if database tables exist first
-    database_ready = False
-    workflow_session = None
-    session_id = None
-    
-    try:
-        # Try to access session data only if database is available
-        with connection.cursor() as cursor:
-            # Check if django_session table exists
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='django_session';")
-            session_table_exists = cursor.fetchone() is not None
-            
-            # Check if WorkflowSession table exists
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='pybirdai_workflowsession';")
-            workflow_table_exists = cursor.fetchone() is not None
-        
-        if session_table_exists and workflow_table_exists:
-            database_ready = True
-            session_id = request.session.get('workflow_session_id')
-            
-            if not session_id:
-                session_id = str(uuid.uuid4())
-                request.session['workflow_session_id'] = session_id
-                workflow_session = WorkflowSession.objects.create(session_id=session_id)
-            else:
-                workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
-        
-    except (OperationalError, ProgrammingError):
-        # Database doesn't exist or tables don't exist - this is OK for setup
-        database_ready = False
-    
-    # Generate a session ID for tracking even without database
-    if not session_id:
-        session_id = str(uuid.uuid4())
-    
-    results = {
-        'success': True,
-        'completed_tasks': [],
-        'errors': [],
-        'requires_restart': False
-    }
-    
-    # Task 1: Resource Download
-    try:
-        # Only create task execution records if database is available
-        task_execution_1 = None
-        if database_ready:
-            task_execution_1, _ = WorkflowTaskExecution.objects.get_or_create(
-                task_number=1,
-                operation_type='do'
-            )
-        
-        # Load configuration from file for task execution
-        import json
-        import os
-        from django.conf import settings
-        
-        config_data = {}
-        try:
-            base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-            config_path = os.path.join(base_dir, 'automode_config.json')
-            
-            if os.path.exists(config_path):
-                with open(config_path, 'r') as f:
-                    config_data = json.load(f)
-        except Exception as e:
-            logger.error(f"Error loading configuration: {e}")
-            return JsonResponse({'error': 'Configuration not found. Please save configuration first.'}, status=400)
-        
-        # Execute Task 1: Resource Download
-        if task_execution_1:
-            task_execution_1.status = 'running'
-            task_execution_1.started_at = timezone.now()
-            task_execution_1.save()
-        
-        try:
-            # Create a config object with the data from the JSON file
-            from .bird_meta_data_model import AutomodeConfiguration
-            
-            # Create a temporary AutomodeConfiguration object (not saved to DB)
-            config = AutomodeConfiguration(
-                data_model_type=config_data.get('data_model_type', 'ELDM'),
-                technical_export_source=config_data.get('technical_export_source', 'BIRD_WEBSITE'),
-                technical_export_github_url=config_data.get('technical_export_github_url', ''),
-                config_files_source=config_data.get('config_files_source', 'MANUAL'),
-                config_files_github_url=config_data.get('config_files_github_url', ''),
-                when_to_stop=config_data.get('when_to_stop', 'RESOURCE_DOWNLOAD')
-            )
-            
-            service = AutomodeConfigurationService()
-            # Get GitHub token from in-memory storage
-            github_token = _get_github_token()
-            task1_results = service.fetch_files_from_source(
-                config=config,
-                github_token=github_token,
-                force_refresh=False
-            )
-            
-            if task_execution_1:
-                task_execution_1.execution_data = task1_results
-                task_execution_1.status = 'completed'
-                task_execution_1.completed_at = timezone.now()
-                task_execution_1.save()
-            
-            results['completed_tasks'].append(1)
-            
-        except Exception as e:
-            logger.error(f"Task 1 (Resource Download) failed: {e}")
-            if task_execution_1:
-                task_execution_1.status = 'failed'
-                task_execution_1.error_message = str(e)
-                task_execution_1.save()
-            
-            results['success'] = False
-            results['errors'].append({
-                'task': 1,
-                'error': str(e)
-            })
-            return JsonResponse(results)
-        
-        # Task 2: Database Creation
-        task_execution_2 = None
-        if database_ready:
-            task_execution_2, _ = WorkflowTaskExecution.objects.get_or_create(
-                task_number=2,
-                operation_type='do'
-            )
-            
-            task_execution_2.status = 'running'
-            task_execution_2.started_at = timezone.now()
-            task_execution_2.save()
-        
-        try:
-            # Run database setup - STEP 1 of two-step process
-            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
-            
-            # This will update admin.py and trigger restart (Step 1)
-            task2_results = app_config.run_post_setup_operations()
-            
-            if task_execution_2:
-                task_execution_2.execution_data = task2_results
-                task_execution_2.status = 'completed'
-                task_execution_2.completed_at = timezone.now()
-                task_execution_2.save()
-            
-            results['completed_tasks'].append(2)
-            
-            # Check if the result indicates server restart is required
-            if isinstance(task2_results, dict) and task2_results.get('server_restart_required'):
-                results['requires_restart'] = True
-                results['restart_message'] = task2_results.get('estimated_restart_time', 'Server will restart automatically')
-                results['setup_details'] = task2_results.get('steps_completed', [])
-                results['step'] = task2_results.get('step', 1)
-                results['next_action'] = task2_results.get('next_action', 'run_migrations_after_restart')
-            else:
-                results['requires_restart'] = True  # Database changes usually require restart
-                results['step'] = 1
-                results['next_action'] = 'run_migrations_after_restart'
-            
-        except Exception as e:
-            logger.error(f"Task 2 (Database Creation) failed: {e}")
-            
-            # Check if this is a database cleanup error that we can ignore
-            error_message = str(e).lower()
-            if 'readonly database' in error_message or 'database is locked' in error_message:
-                logger.warning(f"Database cleanup issue (non-critical): {e}")
-                # Don't fail the entire process for database cleanup issues
-                # The admin.py update and migration marker creation might still have succeeded
-                
-                # Check if the migration marker was created (indicating success)
-                import os
-                from django.conf import settings
-                marker_path = os.path.join(str(settings.BASE_DIR), '.migration_ready_marker')
-                if os.path.exists(marker_path):
-                    logger.info("Migration marker exists despite database cleanup error - treating as success")
-                    results['completed_tasks'].append(2)
-                    results['requires_restart'] = True
-                    results['step'] = 1
-                    results['next_action'] = 'run_migrations_after_restart'
-                    results['warning'] = f"Database setup completed with minor cleanup issue: {e}"
-                else:
-                    # Marker doesn't exist, this is a real failure
-                    if task_execution_2:
-                        task_execution_2.status = 'failed'
-                        task_execution_2.error_message = str(e)
-                        task_execution_2.save()
-                    
-                    results['success'] = False
-                    results['errors'].append({
-                        'task': 2,
-                        'error': str(e)
-                    })
-            else:
-                # This is a different kind of error, treat as failure
-                if task_execution_2:
-                    task_execution_2.status = 'failed'
-                    task_execution_2.error_message = str(e)
-                    task_execution_2.save()
-                
-                results['success'] = False
-                results['errors'].append({
-                    'task': 2,
-                    'error': str(e)
-                })
-    
-    except Exception as e:
-        logger.error(f"Database setup failed: {e}")
-        results['success'] = False
-        results['errors'].append({
-            'task': 'general',
-            'error': str(e)
+    # Check if setup is already running
+    if _database_setup_status['running']:
+        return JsonResponse({
+            'success': False,
+            'message': 'Database setup is already running. Please wait for completion.',
+            'status': 'already_running'
         })
     
-    if results['success']:
-        if results['requires_restart']:
-            base_message = 'Database setup completed successfully (Tasks 1-2)'
-            if results.get('restart_message'):
-                results['message'] = f"{base_message}. {results['restart_message']}"
-            else:
-                results['message'] = f"{base_message}. Server will restart automatically to apply database changes."
-            
-            # Add warning if there were non-critical issues
-            if results.get('warning'):
-                results['message'] += f" Note: {results['warning']}"
-            
-            # Add detailed steps if available
-            if results.get('setup_details'):
-                results['message'] += f" Steps completed: {', '.join(results['setup_details'])}"
-        else:
-            results['message'] = 'Database setup completed successfully (Tasks 1-2)'
-            if results.get('warning'):
-                results['message'] += f" Note: {results['warning']}"
-    else:
-        results['message'] = 'Database setup failed'
+    # Check if setup was recently completed
+    if _database_setup_status['completed']:
+        # Reset status for new run
+        _reset_database_setup_status()
     
-    return JsonResponse(results)
+    # Check configuration exists
+    import json
+    import os
+    from django.conf import settings
+    
+    try:
+        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        config_path = os.path.join(base_dir, 'automode_config.json')
+        
+        if not os.path.exists(config_path):
+            return JsonResponse({
+                'success': False,
+                'message': 'Configuration not found. Please save configuration first.',
+                'status': 'config_missing'
+            }, status=400)
+    except Exception as e:
+        logger.error(f"Error checking configuration: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': f'Error checking configuration: {str(e)}',
+            'status': 'failed'
+        }, status=500)
+    
+    try:
+        # Start database setup in background thread
+        setup_thread = threading.Thread(target=_run_database_setup_async, daemon=True)
+        setup_thread.start()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Database setup started in background. Use /workflow/database-setup-status/ to check progress.',
+            'status': 'started',
+            'check_status_url': '/pybirdai/workflow/database-setup-status/'
+        })
+        
+    except Exception as e:
+        logger.error(f"Failed to start database setup thread: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': f'Failed to start database setup: {str(e)}',
+            'status': 'failed'
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def workflow_database_setup_status(request):
+    """Check the status of running database setup"""
+    global _database_setup_status
+    
+    status_copy = _database_setup_status.copy()
+    
+    # Calculate elapsed time if running
+    if status_copy['running'] and status_copy['started_at']:
+        status_copy['elapsed_time'] = time.time() - status_copy['started_at']
+    elif status_copy['completed'] and status_copy['started_at'] and status_copy['completed_at']:
+        status_copy['elapsed_time'] = status_copy['completed_at'] - status_copy['started_at']
+    
+    return JsonResponse({
+        'success': True,
+        'database_setup_status': status_copy
+    })
