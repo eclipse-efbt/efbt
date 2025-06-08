@@ -493,7 +493,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Run makemigrations
             makemig_result = subprocess.run([
                 python_executable, 'manage.py', 'makemigrations', 'pybirdai'
-            ], capture_output=True, text=True, timeout=300)  # 5 minute timeout
+            ], capture_output=True, text=True, timeout=600)  # 10 minute timeout
             
             makemig_time = time.time() - makemig_start
             
