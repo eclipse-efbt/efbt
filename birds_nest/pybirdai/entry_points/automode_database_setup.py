@@ -15,6 +15,7 @@ import sys
 import ast
 import logging
 import subprocess
+import time
 from django.conf import settings
 from django.apps import AppConfig
 from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
@@ -52,8 +53,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
             
             # Step 2: Check if generated files exist
             base_dir = settings.BASE_DIR
-            results_admin_path = os.path.join(base_dir, "results/database_configuration_files/admin.py")
-            results_models_path = os.path.join(base_dir, "results/database_configuration_files/models.py")
+
+            results_admin_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "admin.py")
+            results_models_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "models.py")
             
             logger.info(f"Base directory: {base_dir}")
             logger.info(f"Results models path exists: {os.path.exists(results_models_path)}")
@@ -92,13 +94,13 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info("Starting post-setup operations...")
             
             base_dir = settings.BASE_DIR
-            initial_migration_file = os.path.join(base_dir, "pybirdai/migrations/0001_initial.py")
+            initial_migration_file = os.path.join(base_dir, "pybirdai" + os.sep + "migrations" + os.sep + "0001_initial.py")
             db_file = os.path.join(base_dir, "db.sqlite3")
-            pybirdai_admin_path = os.path.join(base_dir, "pybirdai/admin.py")
-            pybirdai_meta_data_model_path = os.path.join(base_dir, "pybirdai/bird_meta_data_model.py")
-            results_admin_path = os.path.join(base_dir, "results/database_configuration_files/admin.py")
-            pybirdai_models_path = os.path.join(base_dir, "pybirdai/bird_data_model.py")
-            results_models_path = os.path.join(base_dir, "results/database_configuration_files/models.py")
+            pybirdai_admin_path = os.path.join(base_dir, "pybirdai" + os.sep + "admin.py")
+            pybirdai_meta_data_model_path = os.path.join(base_dir, "pybirdai" + os.sep + "bird_meta_data_model.py")
+            results_admin_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "admin.py")
+            pybirdai_models_path = os.path.join(base_dir, "pybirdai" + os.sep + "bird_data_model.py")
+            results_models_path = os.path.join(base_dir, "results" + os.sep + "database_configuration_files" + os.sep + "models.py")
             
             # Cleanup existing files
             logger.info("Cleaning up existing files...")
@@ -112,9 +114,10 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info("Updating bird_data_model.py...")
             self._update_models_file(pybirdai_models_path, results_models_path)
             
+
             # Run Django management commands
             logger.info("Running Django management commands...")
-            self._run_django_commands(base_dir)
+            self._run_django_system_command(base_dir)
             
             logger.info("Post-setup operations completed successfully!")
             return True
@@ -176,7 +179,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 f_write.write(admin_str)
                 f_write.write("\n")
                 f_write.write(results_admin_str)
+                f_write.flush()
             
+            f_write.close()
             logger.info(f"{pybirdai_admin_path} updated successfully.")
         except IOError as e:
             logger.error(f"Error updating {pybirdai_admin_path}: {e}")
@@ -197,7 +202,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
             with open(pybirdai_models_path, "w") as f_write:
                 f_write.write("\n")
                 f_write.write(results_models_str)
-            
+                f_write.flush()
+                        
+            f_write.close()
             logger.info(f"{pybirdai_models_path} updated successfully.")
         except IOError as e:
             logger.error(f"Error updating {pybirdai_models_path}: {e}")
@@ -213,8 +220,8 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Run makemigrations using Django's call_command
             logger.info("Running makemigrations command...")
             try:
-                call_command('makemigrations', verbosity=2)
-                logger.info("Makemigrations command completed successfully.")
+                call_command('makemigrations','pybirdai', verbosity=2)
+                logger.info("Makemigrations command completed successfully2.")
             except CommandError as e:
                 logger.error(f"Makemigrations failed: {e}")
                 raise RuntimeError(f"Makemigrations failed: {e}") from e
@@ -231,3 +238,32 @@ class RunAutomodeDatabaseSetup(AppConfig):
         except Exception as e:
             logger.error(f"Django command execution failed: {e}")
             raise RuntimeError(f"Django command execution failed: {e}") from e 
+        
+    def _run_django_system_command(self, base_dir):
+        logger.info("Running makemigrations command...")
+        makemigrations_command = "python manage.py makemigrations pybirdai"
+        # Note: os.system returns exit status, 0 usually means success
+        status = os.system(makemigrations_command)
+        if status != 0:
+            logger.error(f"Makemigrations command failed with exit status {status}")
+            # Raising error if command fails
+            raise RuntimeError(f"Command failed with status {status}: {makemigrations_command}")
+        logger.info("Makemigrations command completed successfully.")
+
+        logger.info("Running migrate command...")
+        migrate_command = "python manage.py migrate"
+        status = os.system(migrate_command)
+        if status != 0:
+            logger.error(f"Migrate command failed with exit status {status}")
+            # Raising error if command fails
+            raise RuntimeError(f"Command failed with status {status}: {migrate_command}")
+        logger.info("Migrate command completed successfully.")
+
+        logger.info("Running runserver command...")
+        runserver_command = "python manage.py runserver"
+        # Note: runserver is a blocking command that starts the server.
+        # The script will likely pause here until the server is stopped.
+        # Added logging but not checking exit status as it's a server command
+        # that isn't expected to exit with 0 in normal use.
+        os.system(runserver_command)
+        logger.info("Runserver command finished (server stopped or failed to start).")
