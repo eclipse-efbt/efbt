@@ -214,17 +214,23 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 statusDiv.style.background = '#d4edda';
                 statusDiv.style.color = '#155724';
-                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Configuration saved successfully!';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Configuration saved successfully! Refreshing page...';
+                
+                // Refresh page after successful save to update UI elements that depend on marker file
+                setTimeout(() => {
+                    console.log('Refreshing page after configuration save');
+                    location.reload();
+                }, 2000); // 2 second delay to show success message
             } else {
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + (data.error || 'Failed to save configuration');
+                
+                // Hide error status after 5 seconds
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 5000);
             }
-            
-            // Hide status after 5 seconds
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 5000);
         })
         .catch(error => {
             console.error('Configuration save error:', error); // Debug log

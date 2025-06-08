@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Simple migration starter function (available immediately)
 function startMigration() {
     console.log('startMigration() called directly!');
-    alert('Migration button clicked! Check console for details.');
+ 
     
     const btn = document.getElementById('migration-btn');
     const statusDiv = document.getElementById('migration-status');
@@ -454,6 +454,8 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                     }
                 } else if (status.completed) {
                     // Setup completed
+                    console.log('Database setup completed! Status object:', status);
+                    
                     if (status.success) {
                         statusDiv.style.background = '#d4edda';
                         statusDiv.style.color = '#155724';
@@ -464,16 +466,44 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                             message += `<br>Completed: ${status.completed_tasks.join(', ')}`;
                         }
                         
-                        if (status.message && status.message.includes('restart required')) {
-                            message += '<br><strong>Next:</strong> Click "Run Migrations (Step 2)" when server restarts.';
+                        // Check for server restart requirement with comprehensive logic
+                        const serverRestartRequired = status.server_restart_required === true;
+                        const messageIndicatesRestart = status.message && (
+                            status.message.includes('restart required') || 
+                            status.message.includes('Server restart required') ||
+                            status.message.includes('server restart')
+                        );
+                        
+                        console.log('Restart check:', {
+                            serverRestartRequired,
+                            messageIndicatesRestart,
+                            message: status.message,
+                            hasRestartInfo: !!status.restart_info,
+                            hasEstimatedTime: !!status.estimated_restart_time
+                        });
+                        
+                        if (serverRestartRequired || messageIndicatesRestart) {
+                            console.log('🔄 Database setup completed - server restart required detected!');
+                            message += '<br><strong>🔄 Server restart in progress...</strong>';
+                            if (status.restart_info) {
+                                message += `<br><small>${status.restart_info}</small>`;
+                            } else if (status.estimated_restart_time) {
+                                message += `<br><small>${status.estimated_restart_time}</small>`;
+                            }
+                            statusDiv.innerHTML = message;
+                            
+                            // Handle server restart scenario
+                            handleServerRestart(statusDiv, btn);
+                        } else {
+                            console.log('✅ Database setup completed - no server restart required');
+                            statusDiv.innerHTML = message;
+                            
+                            // Regular refresh for non-restart scenarios
+                            setTimeout(() => {
+                                console.log('Refreshing page after successful setup (no restart)');
+                                location.reload();
+                            }, 3000);
                         }
-                        
-                        statusDiv.innerHTML = message;
-                        
-                        // Refresh page after success to show updated state
-                        setTimeout(() => {
-                            location.reload();
-                        }, 3000);
                     } else {
                         statusDiv.style.background = '#f8d7da';
                         statusDiv.style.color = '#721c24';
@@ -495,12 +525,26 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
         })
         .catch(error => {
             console.error('Database setup status polling error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking database setup status: ' + error.message;
             
-            btn.disabled = false;
-            btn.textContent = 'Setup Database (Tasks 1-2)';
+            // Check if this might be a server restart scenario (connection lost during polling)
+            if (error.name === 'TypeError' || error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.name === 'TimeoutError') {
+                console.log('🔄 Connection lost during database setup polling - likely server restart!');
+                // Possible server restart - show appropriate message
+                statusDiv.style.background = '#e3f2fd';
+                statusDiv.style.color = '#1976d2';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Connection lost - server is restarting...';
+                
+                // Switch to restart detection mode
+                handleServerRestart(statusDiv, btn);
+            } else {
+                // Other error - show error message
+                statusDiv.style.background = '#f8d7da';
+                statusDiv.style.color = '#721c24';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking database setup status: ' + error.message;
+                
+                btn.disabled = false;
+                btn.textContent = 'Setup Database (Tasks 1-2)';
+            }
         });
     }
     
@@ -691,6 +735,100 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
     
     // Start polling
     setTimeout(checkStatus, pollInterval);
+}
+
+// Function to handle server restart detection and UI refresh
+function handleServerRestart(statusDiv, btn) {
+    console.log('handleServerRestart() called - starting server restart detection');
+    
+    // Update UI immediately to show restart is happening
+    statusDiv.style.background = '#e3f2fd';
+    statusDiv.style.color = '#1976d2';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Server is restarting due to file changes...';
+    
+    const restartPollInterval = 1500; // Poll every 1.5 seconds for faster response
+    let restartPollCount = 0;
+    const maxRestartPolls = 80; // Maximum 2 minutes (80 * 1.5 seconds)
+    let serverWentDown = false;
+    
+    function updateRestartMessage(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        const timeStr = minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${seconds}s`;
+        
+        if (!serverWentDown) {
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Waiting for server restart... (${timeStr})`;
+        } else {
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>Server is restarting... (${timeStr})`;
+        }
+    }
+    
+    function checkServerStatus() {
+        restartPollCount++;
+        const elapsedSeconds = Math.floor(restartPollCount * 1.5);
+        
+        // Update message with elapsed time
+        updateRestartMessage(elapsedSeconds);
+        
+        // Try to ping the server
+        fetch('/pybirdai/workflow/', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            // Add timeout to detect connection issues faster
+            signal: AbortSignal.timeout(3000)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Server is back online
+                console.log('Server restart completed - server is back online');
+                statusDiv.style.background = '#d4edda';
+                statusDiv.style.color = '#155724';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Server restart completed! Refreshing page to show updated database state...';
+                
+                // Refresh page after short delay to show the updated UI
+                setTimeout(() => {
+                    console.log('Refreshing page after server restart');
+                    location.reload();
+                }, 2000);
+            } else {
+                // Server still restarting or responding with non-200 status
+                if (restartPollCount < maxRestartPolls) {
+                    setTimeout(checkServerStatus, restartPollInterval);
+                } else {
+                    // Timeout
+                    statusDiv.style.background = '#fff3cd';
+                    statusDiv.style.color = '#856404';
+                    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Server restart is taking longer than expected. Please refresh the page manually.';
+                    btn.disabled = false;
+                    btn.textContent = 'Setup Database (Tasks 1-2)';
+                }
+            }
+        })
+        .catch(error => {
+            // Server is likely still restarting (connection refused/network error)
+            if (!serverWentDown) {
+                serverWentDown = true;
+                console.log('Server restart detected - connection lost:', error.name);
+            }
+            
+            if (restartPollCount < maxRestartPolls) {
+                setTimeout(checkServerStatus, restartPollInterval);
+            } else {
+                // Timeout
+                statusDiv.style.background = '#fff3cd';
+                statusDiv.style.color = '#856404';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Server restart is taking longer than expected. Please refresh the page manually or check the server console.';
+                btn.disabled = false;
+                btn.textContent = 'Setup Database (Tasks 1-2)';
+            }
+        });
+    }
+    
+    // Start checking server status immediately, then at intervals
+    console.log('Starting server restart detection polling...');
+    setTimeout(checkServerStatus, 1000);
 }
 </script>
 
