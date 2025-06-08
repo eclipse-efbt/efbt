@@ -213,21 +213,13 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    databaseSetupStatus.style.background = '#d4edda';
-                    databaseSetupStatus.style.color = '#155724';
-                    let message = '<span style="display: inline-block; margin-right: 8px;">✅</span>' + data.message;
+                if (data.success && data.status === 'started') {
+                    databaseSetupStatus.style.background = '#e3f2fd';
+                    databaseSetupStatus.style.color = '#1976d2';
+                    databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Database setup started in background. Polling for status...';
                     
-                    if (data.requires_restart) {
-                        message += '<br><strong>Next:</strong> Click "Run Migrations (Step 2)" when server restarts.';
-                    }
-                    
-                    databaseSetupStatus.innerHTML = message;
-                    
-                    // Refresh page after success to show updated state
-                    setTimeout(() => {
-                        location.reload();
-                    }, 3000);
+                    // Start polling for status
+                    pollDatabaseSetupStatus(databaseSetupStatus, databaseSetupBtn);
                 } else {
                     databaseSetupStatus.style.background = '#f8d7da';
                     databaseSetupStatus.style.color = '#721c24';
@@ -281,28 +273,27 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    automodeStatus.style.background = '#d4edda';
-                    automodeStatus.style.color = '#155724';
-                    const completedTasks = data.completed_tasks || [];
-                    automodeStatus.innerHTML = `<span style="display: inline-block; margin-right: 8px;">✅</span>Automode completed successfully! Tasks completed: ${completedTasks.join(', ')}`;
+                if (data.success && data.status === 'started') {
+                    automodeStatus.style.background = '#e3f2fd';
+                    automodeStatus.style.color = '#1976d2';
+                    automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Automode started in background. Polling for status...';
                     
-                    // Refresh page after success to show updated task status
-                    setTimeout(() => {
-                        location.reload();
-                    }, 3000);
+                    // Start polling for status
+                    pollAutomodeStatus(automodeStatus, automodeBtn, targetTask);
                 } else {
                     automodeStatus.style.background = '#f8d7da';
                     automodeStatus.style.color = '#721c24';
-                    let errorMsg = 'Automode failed';
-                    if (data.errors && data.errors.length > 0) {
+                    let errorMsg = 'Automode failed to start';
+                    if (data.message) {
+                        errorMsg = data.message;
+                    } else if (data.errors && data.errors.length > 0) {
                         errorMsg += ': ' + data.errors.map(e => `Task ${e.task}: ${e.error}`).join(', ');
                     }
                     automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>' + errorMsg;
+                    
+                    automodeBtn.disabled = false;
+                    automodeBtn.textContent = 'Run Automode (from Task 3)';
                 }
-                
-                automodeBtn.disabled = false;
-                automodeBtn.textContent = 'Run Automode (from Task 3)';
             })
             .catch(error => {
                 console.error('Automode error:', error);
@@ -420,6 +411,103 @@ function doMigration(btn, statusDiv, csrfToken) {
     });
 }
 
+// Function to poll database setup status
+function pollDatabaseSetupStatus(statusDiv, btn) {
+    const pollInterval = 2000; // Poll every 2 seconds
+    let pollCount = 0;
+    const maxPolls = 300; // Maximum 10 minutes (300 * 2 seconds)
+    
+    function checkStatus() {
+        fetch('/pybirdai/workflow/database-setup-status/', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Database setup status:', data); // Debug log
+            
+            if (data.success && data.database_setup_status) {
+                const status = data.database_setup_status;
+                
+                if (status.running) {
+                    // Still running - update status message
+                    const elapsedTime = Math.round(status.elapsed_time || 0);
+                    let message = `<span style="display: inline-block; margin-right: 8px;">⏳</span>${status.message || 'Database setup running...'} (${elapsedTime}s elapsed)`;
+                    if (status.current_task) {
+                        message += ` - Currently on Task ${status.current_task}`;
+                    }
+                    statusDiv.innerHTML = message;
+                    
+                    // Continue polling
+                    pollCount++;
+                    if (pollCount < maxPolls) {
+                        setTimeout(checkStatus, pollInterval);
+                    } else {
+                        // Timeout
+                        statusDiv.style.background = '#fff3cd';
+                        statusDiv.style.color = '#856404';
+                        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Database setup is taking longer than expected. Please check server logs.';
+                        btn.disabled = false;
+                        btn.textContent = 'Setup Database (Tasks 1-2)';
+                    }
+                } else if (status.completed) {
+                    // Setup completed
+                    if (status.success) {
+                        statusDiv.style.background = '#d4edda';
+                        statusDiv.style.color = '#155724';
+                        const elapsedTime = Math.round(status.elapsed_time || 0);
+                        let message = `<span style="display: inline-block; margin-right: 8px;">✅</span>${status.message || 'Database setup completed successfully'} (${elapsedTime}s)`;
+                        
+                        if (status.completed_tasks && status.completed_tasks.length > 0) {
+                            message += `<br>Completed: ${status.completed_tasks.join(', ')}`;
+                        }
+                        
+                        if (status.message && status.message.includes('restart required')) {
+                            message += '<br><strong>Next:</strong> Click "Run Migrations (Step 2)" when server restarts.';
+                        }
+                        
+                        statusDiv.innerHTML = message;
+                        
+                        // Refresh page after success to show updated state
+                        setTimeout(() => {
+                            location.reload();
+                        }, 3000);
+                    } else {
+                        statusDiv.style.background = '#f8d7da';
+                        statusDiv.style.color = '#721c24';
+                        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Database setup failed: ' + (status.error || status.message || 'Unknown error');
+                        
+                        btn.disabled = false;
+                        btn.textContent = 'Setup Database (Tasks 1-2)';
+                    }
+                }
+            } else {
+                // Error getting status
+                statusDiv.style.background = '#f8d7da';
+                statusDiv.style.color = '#721c24';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking database setup status';
+                
+                btn.disabled = false;
+                btn.textContent = 'Setup Database (Tasks 1-2)';
+            }
+        })
+        .catch(error => {
+            console.error('Database setup status polling error:', error);
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking database setup status: ' + error.message;
+            
+            btn.disabled = false;
+            btn.textContent = 'Setup Database (Tasks 1-2)';
+        });
+    }
+    
+    // Start polling
+    setTimeout(checkStatus, pollInterval);
+}
+
 // Function to poll migration status
 function pollMigrationStatus(statusDiv, btn) {
     const pollInterval = 2000; // Poll every 2 seconds
@@ -496,6 +584,108 @@ function pollMigrationStatus(statusDiv, btn) {
             
             btn.disabled = false;
             btn.textContent = 'Run Migrations (Step 2)';
+        });
+    }
+    
+    // Start polling
+    setTimeout(checkStatus, pollInterval);
+}
+
+// Function to poll automode status
+function pollAutomodeStatus(statusDiv, btn, targetTask) {
+    const pollInterval = 2000; // Poll every 2 seconds
+    let pollCount = 0;
+    const maxPolls = 600; // Maximum 20 minutes (600 * 2 seconds) for automode
+    
+    function checkStatus() {
+        fetch('/pybirdai/workflow/automode-status/', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Automode status:', data); // Debug log
+            
+            if (data.success && data.automode_status) {
+                const status = data.automode_status;
+                
+                if (status.running) {
+                    // Still running - update status message
+                    const elapsedTime = Math.round(status.elapsed_time || 0);
+                    let message = `<span style="display: inline-block; margin-right: 8px;">⏳</span>${status.message || 'Automode running...'} (${elapsedTime}s elapsed)`;
+                    
+                    if (status.current_task) {
+                        message += ` - Currently on Task ${status.current_task}`;
+                        if (status.target_task) {
+                            message += ` of ${status.target_task}`;
+                        }
+                    }
+                    
+                    if (status.completed_tasks && status.completed_tasks.length > 0) {
+                        message += `<br>Completed: ${status.completed_tasks.join(', ')}`;
+                    }
+                    
+                    statusDiv.innerHTML = message;
+                    
+                    // Continue polling
+                    pollCount++;
+                    if (pollCount < maxPolls) {
+                        setTimeout(checkStatus, pollInterval);
+                    } else {
+                        // Timeout
+                        statusDiv.style.background = '#fff3cd';
+                        statusDiv.style.color = '#856404';
+                        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Automode is taking longer than expected. Please check server logs.';
+                        btn.disabled = false;
+                        btn.textContent = 'Run Automode (from Task 3)';
+                    }
+                } else if (status.completed) {
+                    // Automode completed
+                    if (status.success) {
+                        statusDiv.style.background = '#d4edda';
+                        statusDiv.style.color = '#155724';
+                        const elapsedTime = Math.round(status.elapsed_time || 0);
+                        statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">✅</span>${status.message || 'Automode completed successfully'} (${elapsedTime}s)`;
+                        
+                        // Refresh page after success to show updated task status
+                        setTimeout(() => {
+                            location.reload();
+                        }, 3000);
+                    } else {
+                        statusDiv.style.background = '#f8d7da';
+                        statusDiv.style.color = '#721c24';
+                        let errorMsg = status.message || 'Automode failed';
+                        
+                        if (status.task_errors && status.task_errors.length > 0) {
+                            errorMsg += '<br>Errors: ' + status.task_errors.map(e => `Task ${e.task}: ${e.error}`).join('<br>');
+                        }
+                        
+                        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>' + errorMsg;
+                        
+                        btn.disabled = false;
+                        btn.textContent = 'Run Automode (from Task 3)';
+                    }
+                }
+            } else {
+                // Error getting status
+                statusDiv.style.background = '#f8d7da';
+                statusDiv.style.color = '#721c24';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking automode status';
+                
+                btn.disabled = false;
+                btn.textContent = 'Run Automode (from Task 3)';
+            }
+        })
+        .catch(error => {
+            console.error('Automode status polling error:', error);
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking automode status: ' + error.message;
+            
+            btn.disabled = false;
+            btn.textContent = 'Run Automode (from Task 3)';
         });
     }
     
