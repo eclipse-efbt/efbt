@@ -3272,6 +3272,20 @@ def automode_create_database(request):
         "Back to Automode"
     )
 
+def automode_import_bird_metamodel_from_website(request):
+    if request.GET.get('execute') == 'true':
+        from pybirdai.utils import bird_ecb_website_fetcher
+        client = bird_ecb_website_fetcher.BirdEcbWebsiteClient()
+        print(client.request_and_save_all())
+
+    return create_response_with_loading(
+        request,
+        "Importing BIRD Metamodel from Website (Automode)",
+        "BIRD Metamodel import completed successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
 def test_automode_components(request):
     """Test view to verify automode components work individually."""
     if request.GET.get('execute') == 'true':
@@ -3321,3 +3335,54 @@ def test_automode_components(request):
         '/pybirdai/automode',
         "Back to Automode"
     )
+
+
+def run_fetch_curated_resources(request):
+    """Test view to verify automode components work individually."""
+    if request.GET.get('execute') == 'true':
+        try:
+            from pybirdai.utils import github_file_fetcher
+
+            fetcher = github_file_fetcher.GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
+
+
+            logger.info("STEP 1: Fetching specific derivation model file")
+
+            fetcher.fetch_derivation_model_file(
+                "birds_nest/pybirdai",
+                "bird_data_model.py",
+                f"resources{os.sep}derivation_implementation",
+                "bird_data_model_with_derivation.py"
+            )
+
+            logger.info("STEP 2: Fetching database export files")
+            fetcher.fetch_database_export_files()
+
+
+            logger.info("STEP 3: Fetching test fixtures and templates")
+            fetcher.fetch_test_fixtures()
+
+            logger.info("File fetching process completed successfully!")
+            print("File fetching process completed!")
+
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Basic components test passed',
+                'base_dir': str(base_dir),
+                'resources_exists': os.path.exists(resources_dir),
+                'results_exists': os.path.exists(results_dir),
+                'ldm_exists': os.path.exists(ldm_dir)
+            })
+
+        except Exception as e:
+            logger.error(f"Test failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading_extended(
+        request,
+        "Fetching Test Components and derived fields",
+        "Test components and derived fields fetched successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
