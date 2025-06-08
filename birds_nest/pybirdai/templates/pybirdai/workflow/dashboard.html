@@ -556,7 +556,7 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
 function pollMigrationStatus(statusDiv, btn) {
     const pollInterval = 2000; // Poll every 2 seconds
     let pollCount = 0;
-    const maxPolls = 300; // Maximum 10 minutes (300 * 2 seconds)
+    const maxPolls = 450; // Maximum 15 minutes (300 * 2 seconds)
     
     function checkStatus() {
         fetch('/pybirdai/workflow/migration-status/', {
