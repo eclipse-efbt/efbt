@@ -249,6 +249,15 @@ def _run_database_setup_async():
         # This creates models and runs migrations
         db_results = app_config.run_automode_database_setup()
         
+        # Additional cleanup - remove results admin.py if it exists to prevent future duplicates
+        results_admin_path = os.path.join(base_dir, 'results', 'database_configuration_files', 'admin.py')
+        try:
+            if os.path.exists(results_admin_path):
+                os.remove(results_admin_path)
+                logger.info(f"Cleaned up results admin file: {results_admin_path}")
+        except (OSError, PermissionError) as e:
+            logger.warning(f"Could not clean up results admin file {results_admin_path}: {e}")
+        
         # Check if restart is required
         if db_results.get('requires_restart'):
             # Create marker file

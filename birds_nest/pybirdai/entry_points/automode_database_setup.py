@@ -339,7 +339,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
                         # Continue anyway - let Django handle it
     
     def _update_admin_file(self, pybirdai_admin_path, pybirdai_meta_data_model_path, results_admin_path):
-        """Update the admin.py file with model registrations."""
+        """Update the admin.py file with model registrations, avoiding duplicates."""
+        registered_models = set()
+        
         # Create initial admin.py content
         with open(pybirdai_admin_path, "w") as f_write:
             f_write.write("from django.contrib import admin\n")
@@ -349,35 +351,69 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 tree = ast.parse(f_read.read())
                 for node in ast.walk(tree):
                     if isinstance(node, ast.ClassDef) and node.name not in ["Meta", "Admin"]:
-                        f_write.write(f"from .bird_meta_data_model import {node.name}\n")
-                        f_write.write(f"admin.site.register({node.name})\n")
+                        if node.name not in registered_models:
+                            f_write.write(f"from .bird_meta_data_model import {node.name}\n")
+                            f_write.write(f"admin.site.register({node.name})\n")
+                            registered_models.add(node.name)
         
-        # Check if results admin file exists and append its content
+        # Check if results admin file exists and append its content (without duplicates)
         if not os.path.exists(results_admin_path):
             logger.warning(f"Results admin file not found: {results_admin_path}")
             return
         
         try:
-            # Read existing admin.py content
-            with open(pybirdai_admin_path, "r") as f_read:
-                admin_str = f_read.read()
-            
-            # Read content from results file
+            # Read content from results file and parse it for additional models
             with open(results_admin_path, "r") as f_read_results:
                 results_admin_str = f_read_results.read()
             
-            # Write combined content back to admin.py
-            with open(pybirdai_admin_path, "w") as f_write:
-                f_write.write(admin_str)
-                f_write.write("\n")
-                f_write.write(results_admin_str)
-                f_write.flush()
+            # Parse results admin.py content to extract model names and avoid duplicates
+            additional_content = []
+            lines = results_admin_str.split('\n')
             
-            f_write.close()
-            logger.info(f"{pybirdai_admin_path} updated successfully.")
+            for line in lines:
+                line = line.strip()
+                if line.startswith('from .bird_data_model import '):
+                    # Extract model name from import statement
+                    model_name = line.split('import ')[-1].strip()
+                    if model_name and model_name not in registered_models:
+                        additional_content.append(f"from .bird_data_model import {model_name}")
+                        additional_content.append(f"admin.site.register({model_name})")
+                        registered_models.add(model_name)
+                elif line.startswith('from django.contrib import admin'):
+                    # Skip duplicate admin import
+                    continue
+                elif line.startswith('admin.site.register('):
+                    # Skip individual register lines as they're handled with imports
+                    continue
+                elif line and not line.startswith('#'):
+                    # Include any other non-comment lines
+                    additional_content.append(line)
+            
+            # Append additional content if any
+            if additional_content:
+                with open(pybirdai_admin_path, "a") as f_append:
+                    f_append.write("\n")
+                    f_append.write("\n".join(additional_content))
+                    f_append.write("\n")
+            
+            logger.info(f"{pybirdai_admin_path} updated successfully with {len(registered_models)} unique models.")
+            
+            # Clean up the results admin.py file after successful use to prevent accumulation
+            self._cleanup_results_admin_file(results_admin_path)
+            
         except IOError as e:
             logger.error(f"Error updating {pybirdai_admin_path}: {e}")
             raise RuntimeError(f"Failed to update {pybirdai_admin_path}") from e
+    
+    def _cleanup_results_admin_file(self, results_admin_path):
+        """Clean up the results admin.py file after successful use to prevent duplicate content."""
+        try:
+            if os.path.exists(results_admin_path):
+                os.remove(results_admin_path)
+                logger.info(f"Cleaned up results admin file: {results_admin_path}")
+        except (OSError, PermissionError) as e:
+            logger.warning(f"Could not clean up results admin file {results_admin_path}: {e}")
+            # Don't raise an exception here as this is cleanup, not critical functionality
     
     def _update_models_file(self, pybirdai_models_path, results_models_path):
         """Update the bird_data_model.py file with generated models."""
