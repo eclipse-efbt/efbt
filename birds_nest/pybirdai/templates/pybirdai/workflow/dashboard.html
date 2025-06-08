@@ -746,9 +746,13 @@ function handleServerRestart(statusDiv, btn) {
     statusDiv.style.color = '#1976d2';
     statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Server is restarting due to file changes...';
     
-    const restartPollInterval = 1500; // Poll every 1.5 seconds for faster response
+    // Disable button immediately to prevent double-clicks during restart
+    btn.disabled = true;
+    btn.textContent = 'Server Restarting...';
+    
+    const restartPollInterval = 500; // Poll every 0.5 seconds for very fast response
     let restartPollCount = 0;
-    const maxRestartPolls = 80; // Maximum 2 minutes (80 * 1.5 seconds)
+    const maxRestartPolls = 120; // Maximum 1 minute (120 * 0.5 seconds)
     let serverWentDown = false;
     
     function updateRestartMessage(seconds) {
@@ -757,15 +761,15 @@ function handleServerRestart(statusDiv, btn) {
         const timeStr = minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${seconds}s`;
         
         if (!serverWentDown) {
-            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Waiting for server restart... (${timeStr})`;
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Waiting for server restart... (${timeStr})<br><small>After restart, button will change to "Run Migrations (Step 2)"</small>`;
         } else {
-            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>Server is restarting... (${timeStr})`;
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>Server is restarting... (${timeStr})<br><small>Page will refresh to show "Run Migrations" button</small>`;
         }
     }
     
     function checkServerStatus() {
         restartPollCount++;
-        const elapsedSeconds = Math.floor(restartPollCount * 1.5);
+        const elapsedSeconds = Math.floor(restartPollCount * 0.5); // Updated for 0.5s polling interval
         
         // Update message with elapsed time
         updateRestartMessage(elapsedSeconds);
@@ -777,7 +781,7 @@ function handleServerRestart(statusDiv, btn) {
                 'X-Requested-With': 'XMLHttpRequest'
             },
             // Add timeout to detect connection issues faster
-            signal: AbortSignal.timeout(3000)
+            signal: AbortSignal.timeout(8000) // Reduced to 1 second for faster failure detection
         })
         .then(response => {
             if (response.ok) {
@@ -785,13 +789,17 @@ function handleServerRestart(statusDiv, btn) {
                 console.log('Server restart completed - server is back online');
                 statusDiv.style.background = '#d4edda';
                 statusDiv.style.color = '#155724';
-                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Server restart completed! Refreshing page to show updated database state...';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Server restart completed! Refreshing page to show "Run Migrations" button...';
                 
-                // Refresh page after short delay to show the updated UI
+                // Disable the database setup button immediately to prevent double-clicks
+                btn.disabled = true;
+                btn.textContent = 'Refreshing...';
+                
+                // Refresh page after delay to ensure server is fully ready and marker file is detected
                 setTimeout(() => {
-                    console.log('Refreshing page after server restart');
+                    console.log('Refreshing page after server restart to show migration button');
                     location.reload();
-                }, 2000);
+                }, 5000); // 3 second delay to ensure server is fully ready
             } else {
                 // Server still restarting or responding with non-200 status
                 if (restartPollCount < maxRestartPolls) {
@@ -826,9 +834,18 @@ function handleServerRestart(statusDiv, btn) {
         });
     }
     
-    // Start checking server status immediately, then at intervals
+    // Start checking server status immediately (no delay)
     console.log('Starting server restart detection polling...');
-    setTimeout(checkServerStatus, 1000);
+    setTimeout(checkServerStatus, 100); // Check after just 100ms
+    
+    // Fallback: force page refresh after 45 seconds if restart detection fails
+    setTimeout(() => {
+        if (btn.disabled && btn.textContent.includes('Restarting')) {
+            console.log('Fallback: Force refreshing page after restart timeout');
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>Restart taking longer than expected - refreshing page...';
+            location.reload();
+        }
+    }, 45000); // 45 seconds fallback
 }
 </script>
 
