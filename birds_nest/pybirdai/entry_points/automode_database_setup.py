@@ -83,16 +83,13 @@ class RunAutomodeDatabaseSetup(AppConfig):
                     logger.info('Transferring generated Python files for full execution...')
                     self._transfer_generated_python_files()
                 
-                # Step 3c: Run the standard database setup operations directly
-                logger.info("Running post-setup operations directly (file updates and migrations)...")
+                # Step 3c: Prepare for post-setup operations but don't execute them yet
+                # The file modifications that trigger restart should be done by the workflow views
+                # after the status has been properly communicated to the frontend
+                logger.info("Database setup preparation completed.")
+                logger.info("Post-setup operations (file updates) will be triggered by workflow after status update.")
                 
-                # NOTE: These operations will trigger Django auto-reload, but we handle it gracefully
-                logger.warning("Django will restart due to file changes - this is expected behavior")
-                
-                # Call the post-setup operations directly
-                self.run_post_setup_operations()
-                
-                logger.info("Database migrations and setup completed successfully!")
+                logger.info("Database models and configuration completed successfully!")
                 
             except Exception as e:
                 logger.error(f"Failed to run post-setup operations: {str(e)}")

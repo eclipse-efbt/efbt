@@ -258,13 +258,9 @@ def _run_database_setup_async():
         except (OSError, PermissionError) as e:
             logger.warning(f"Could not clean up results admin file {results_admin_path}: {e}")
         
-        # Check if restart is required
-        if db_results.get('requires_restart'):
-            # Create marker file
-            marker_path = os.path.join(base_dir, '.migration_ready_marker')
-            with open(marker_path, 'w') as f:
-                f.write('ready')
-            
+        # Check if restart is required (check both field names for compatibility)
+        if db_results.get('requires_restart') or db_results.get('server_restart_required'):
+            # First, update status to show completion BEFORE triggering restart
             _database_setup_status.update({
                 'running': False,
                 'completed': True,
@@ -272,8 +268,42 @@ def _run_database_setup_async():
                 'error': None,
                 'message': 'Database setup completed. Server restart required for migrations.',
                 'completed_at': time.time(),
-                'completed_tasks': ['Task 1: Resource Download', 'Task 2: Database models created']
+                'completed_tasks': ['Task 1: Resource Download', 'Task 2: Database models created'],
+                'server_restart_required': True,
+                'restart_info': db_results.get('estimated_restart_time', 'Server will restart automatically')
             })
+            
+            # Give frontend time to poll and get the completion status before restart
+            logger.info("Database setup completed - waiting for frontend to receive status...")
+            logger.info("Status updated with server_restart_required=True. Frontend should detect this in next poll.")
+            
+            # Wait for frontend polling (frontend polls every 2 seconds, so 6 seconds gives 3 poll cycles)
+            restart_delay = 6
+            for i in range(restart_delay):
+                time.sleep(1)
+                if i == 2:
+                    logger.info("Halfway through restart delay - frontend should have detected completion by now...")
+                elif i == restart_delay - 1:
+                    logger.info("Restart delay complete - triggering file operations now...")
+            
+            # Now trigger the file operations that will cause Django restart
+            logger.info("Now triggering post-setup operations that will cause Django restart...")
+            try:
+                from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+                app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+                app_config.run_post_setup_operations()
+                logger.info("Post-setup operations completed - Django should restart now.")
+            except Exception as e:
+                logger.error(f"Post-setup operations failed: {e}")
+                # Continue anyway - the main setup was successful
+            
+            # Create marker file
+            marker_path = os.path.join(base_dir, '.migration_ready_marker')
+            with open(marker_path, 'w') as f:
+                f.write('ready')
+            
+            # Add final log message that frontend can detect
+            logger.warning("The restart process has been initiated. Please wait for the server to come back online.")
         else:
             # No restart required, setup is complete
             _database_setup_status.update({
@@ -1365,9 +1395,34 @@ def workflow_save_config(request):
         with open(config_path, 'w') as f:
             json.dump(config_data, f, indent=2)
         
+        # Delete the migration ready marker file since configuration has changed
+        # User will need to run database setup again with the new configuration
+        marker_path = os.path.join(base_dir, '.migration_ready_marker')
+        marker_removed = False
+        try:
+            if os.path.exists(marker_path):
+                os.remove(marker_path)
+                marker_removed = True
+                logger.info("Removed migration ready marker due to configuration change")
+                
+                # Also reset any in-memory status that might be stale
+                global _database_setup_status, _migration_status
+                _reset_database_setup_status()
+                _reset_migration_status()
+                logger.info("Reset workflow status due to configuration change")
+                
+        except (OSError, PermissionError) as e:
+            logger.warning(f"Could not remove migration ready marker: {e}")
+            # Don't fail the config save for this
+        
+        # Provide appropriate success message
+        message = 'Configuration saved successfully'
+        if marker_removed:
+            message += '. Previous database setup status reset - you may need to run database setup again.'
+        
         return JsonResponse({
             'success': True,
-            'message': 'Configuration saved successfully'
+            'message': message
         })
         
     except Exception as e:
