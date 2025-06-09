@@ -13,6 +13,7 @@ from django.urls import path
 
 from . import views
 from . import report_views
+from . import workflow_views
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -136,5 +137,22 @@ urlpatterns = [
     path('delete-cube-structure-item-link-dupl/<str:cube_structure_item_link_id>/', views.delete_cube_structure_item_link_dupl, name='delete_cube_structure_item_link_dupl'),
     path('run-full-setup/', views.run_full_setup, name='run_full_setup'),
     path('automode-import-bird-metamodel-from-website/', views.automode_import_bird_metamodel_from_website, name='automode_import_bird_metamodel_from_website'),
-    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources')
+    path('automode/configure/', views.automode_configure, name='automode_configure'),
+    path('automode/execute/', views.automode_execute, name='automode_execute'),
+    path('automode/continue-post-restart/', views.automode_continue_post_restart, name='automode_continue_post_restart'),
+    path('automode/debug-config/', views.automode_debug_config, name='automode_debug_config'),
+    path('automode/status/', views.automode_status, name='automode_status'),
+    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources'),
+    
+    # Workflow URLs for 6-task UI
+    path('workflow/', workflow_views.workflow_dashboard, name='workflow_dashboard'),
+    path('workflow/task/<int:task_number>/<str:operation>/', workflow_views.workflow_task_router, name='workflow_task'),
+    path('workflow/automode/', workflow_views.workflow_automode, name='workflow_automode'),
+    path('workflow/database-setup/', workflow_views.workflow_database_setup, name='workflow_database_setup'),
+    path('workflow/run-migrations/', workflow_views.workflow_run_migrations, name='workflow_run_migrations'),
+    path('workflow/migration-status/', workflow_views.workflow_migration_status, name='workflow_migration_status'),
+    path('workflow/database-setup-status/', workflow_views.workflow_database_setup_status, name='workflow_database_setup_status'),
+    path('workflow/automode-status/', workflow_views.workflow_automode_status, name='workflow_automode_status'),
+    path('workflow/save-config/', workflow_views.workflow_save_config, name='workflow_save_config'),
+    path('workflow/task/<int:task_number>/status/', workflow_views.workflow_task_status, name='workflow_task_status'),
 ]
