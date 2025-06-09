@@ -1,0 +1,199 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}">Task 3: SMCubes Core Creation</a>
+<span class="breadcrumb-separator">›</span>
+<span>Compare</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 6:  - Compare</h1>
+    
+    <h2>Comparison with Previous Version - Coming Soon</h2>
+    <h2>Replace with Previous Version - Coming Soon</h2>
+    
+
+<style>
+.comparison-controls {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.comparison-grid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.comparison-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.comparison-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.change-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.change-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.change-item.added {
+    background: #d1e7dd;
+}
+
+.change-item.modified {
+    background: #fff3cd;
+}
+
+.change-item.removed {
+    background: #f8d7da;
+}
+
+.change-icon {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 10px;
+    width: 30px;
+    text-align: center;
+}
+
+.change-item.added .change-icon {
+    color: #0f5132;
+}
+
+.change-item.modified .change-icon {
+    color: #664d03;
+}
+
+.change-item.removed .change-icon {
+    color: #842029;
+}
+
+.change-details strong {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.change-details p {
+    margin: 0;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.change-details-list {
+    margin-top: 20px;
+    border-top: 1px solid #dee2e6;
+    padding-top: 15px;
+}
+
+.change-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.change-entry {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.change-type {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 10px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.change-type.added {
+    background: #198754;
+    color: white;
+}
+
+.change-type.modified {
+    background: #ffc107;
+    color: #000;
+}
+
+.change-type.removed {
+    background: #dc3545;
+    color: white;
+}
+
+.change-name {
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.change-description {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.impact-analysis {
+    margin-top: 30px;
+}
+
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.impact-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.impact-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.impact-card ul {
+    margin: 0;
+    padding-left: 20px;
+}
+</style>
+
+<script>
+function refreshComparison() {
+    // Implementation for refreshing comparison based on selected baseline
+    const baseline = document.getElementById('baseline-version').value;
+    // Make AJAX call to refresh comparison data
+    console.log('Refreshing comparison with baseline:', baseline);
+}
+
+function exportComparisonReport() {
+    // Implementation for exporting comparison report
+    window.open('{% url "pybirdai:workflow_task" task_number=3 operation="compare" %}?export=true', '_blank');
+}
+</script>
+{% endblock %}

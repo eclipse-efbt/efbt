@@ -17,73 +17,505 @@
 {% block title %}Automode{% endblock %}
 
 {% block content %}
-<h1 style="text-align: center;">Automode</h1>
-<p>In Automode we create the database implementation, and executable transformation rules in one go. We first need to set up the source files holding the BIRD database and transformation meta data in the correct directories <br></p>
-<p>By Default we use the ELDM to create the database, if you want to use the EIL you must set the flag ldm_or_il = 'il' in the /birds_nest/pybirdai/context/context.py file and restart the server<br></p>
-<p>Using the SQLDeveloper Tool, export the ELDM or IL CSV files from the BIRD database, following the instructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Export-Files-from-SQLDeveloper">here</a> and put them into the birds_nest/reources/ldm directory if using the ELDM or birds_nest/reources/il directory if using the EIL.<br></p>
-<p>To create the transformations we need the csv files related to the SMCubes artefacts of BIRD and store them under the birds_nest/resources/technical_export directory. We can get these from the BIRD website by following the instructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Downloading-Files-from-the-ECB-website">here</a><br></p>
-<p>When creating the transformation rules we need to setup some configuration files and store them unser the birds_nest/resources/joins_configuration directory. We can get these from the BIRD website by following the isntructions <a href="https://github.com/eclipse-efbt/efbt/wiki/Downloading-Files-from-the-ECB-website">here</a><br></p>
-<p>Currently there are 3 configuration files, and ready made versions are available <a href="https://github.com/regcommunity/FreeBIRD/tree/main/joins_configuration">here</a> <br> Theses files are in_scope_reports_FINREP_REF.csv , join_for_product_ldm_definitions_FINREP_REF.csv , And join_for_product_to_reference_category_FINREP_REF.csv<br></p>
-Documentation on creating these files is to follow, basically they list the reports in scope, and show which tables are joined togther in the BIRD LDM  for each product used in reports (like debt securities used in Finrep) . We could also create a configuration file to show which BIRD IL tables are used for each product used in reports, and example of these is available <a href="https://github.com/regcommunity/FreeBIRD_EIL_with_configuration_tools/tree/main/birds_nest/resources/joins_configuration">here</a><br></p>
- <p>When we are using the LDM we need to also include a file with 2 or 3 extra variables in it for upload, this file should be placed in the directory efbt\birds_nest\resources\extra_variables  , and example of this file can be found <a href="https://github.com/regcommunity/FreeBIRD/blob/main/initial_correction/variable_typ_instrmnt.csv">here</a>  <br></p>
+<h1 style="text-align: center;">Automode Configuration</h1>
+
+<div class="configuration-container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <!-- Configuration Form -->
+    <div class="config-form-container" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+        <h2 style="color: #2c3e50; margin-bottom: 20px;">Setup Configuration</h2>
+        <p style="margin-bottom: 15px; color: #666;">Configure your data sources and preferences for automated setup. Configuration is temporarily stored in a file until the database is created.</p>
+        <div style="background: #e3f2fd; padding: 10px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #2196f3;">
+            <strong>Note:</strong> Your configuration will be saved to the database only after successful execution, when the database and models are ready.
+        </div>
+        
+        <form id="automode-config-form" method="post" action="{% url 'pybirdai:automode_configure' %}">
+            {% csrf_token %}
+            
+            <!-- Data Model Selection -->
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 10px;">
+                    Data Model Type
+                </label>
+                <div style="margin-left: 15px;">
+                    <div style="margin-bottom: 8px;">
+                        <input type="radio" name="data_model_type" value="ELDM" id="data_model_eldm" checked onchange="updateFormVisibility()">
+                        <label for="data_model_eldm" style="margin-left: 8px;">ELDM (Logical Data Model)</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="data_model_type" value="EIL" id="data_model_eil" onchange="updateFormVisibility()">
+                        <label for="data_model_eil" style="margin-left: 8px;">EIL (Input Layer)</label>
+                    </div>
+                </div>
+                <small style="color: #666; font-style: italic;">Choose the database model type for BIRD data processing</small>
+            </div>
+
+            <!-- Technical Export Source -->
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 10px;">
+                    Technical Export Files Source
+                </label>
+                <div style="margin-left: 15px;">
+                    <div style="margin-bottom: 8px;">
+                        <input type="radio" name="technical_export_source" value="BIRD_WEBSITE" id="tech_export_website" checked onchange="updateFormVisibility()">
+                        <label for="tech_export_website" style="margin-left: 8px;">BIRD Website (ECB API)</label>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <input type="radio" name="technical_export_source" value="GITHUB" id="tech_export_github" onchange="updateFormVisibility()">
+                        <label for="tech_export_github" style="margin-left: 8px;">GitHub Repository</label>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <input type="radio" name="technical_export_source" value="MANUAL_UPLOAD" id="tech_export_manual" onchange="updateFormVisibility()">
+                        <label for="tech_export_manual" style="margin-left: 8px;">Manual Upload</label>
+                    </div>
+                    <div id="tech_export_github_url_container" style="display: none; margin-left: 20px; margin-top: 10px;">
+                        <input type="url" name="technical_export_github_url" id="tech_export_github_url" 
+                               placeholder="https://github.com/username/repository" 
+                               value="https://github.com/regcommunity/FreeBIRD"
+                               style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+                <small style="color: #666; font-style: italic;">Source for SMCubes artifacts and technical metadata</small>
+            </div>
+
+            <!-- Configuration Files Source -->
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 10px;">
+                    Configuration Files Source
+                </label>
+                <div style="margin-left: 15px;">
+                    <div style="margin-bottom: 8px;">
+                        <input type="radio" name="config_files_source" value="MANUAL" id="config_files_manual" checked onchange="updateFormVisibility()">
+                        <label for="config_files_manual" style="margin-left: 8px;">Manual Upload</label>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <input type="radio" name="config_files_source" value="GITHUB" id="config_files_github" onchange="updateFormVisibility()">
+                        <label for="config_files_github" style="margin-left: 8px;">GitHub Repository</label>
+                    </div>
+                    <div id="config_files_github_url_container" style="display: none; margin-left: 20px; margin-top: 10px;">
+                        <input type="url" name="config_files_github_url" id="config_files_github_url" 
+                               placeholder="https://github.com/username/repository" 
+                               value="https://github.com/regcommunity/FreeBIRD"
+                               style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+                <small style="color: #666; font-style: italic;">Source for joins configuration and extra variables files</small>
+            </div>
+
+            <!-- GitHub Token (shown when any GitHub option is selected) -->
+            <div class="form-group" id="github_token_container" style="margin-bottom: 25px; display: none;">
+                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 10px;">
+                    GitHub Personal Access Token
+                </label>
+                <input type="password" name="github_token" id="github_token" 
+                       placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (optional for private repos)"
+                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <small style="color: #666; font-style: italic;">
+                    Optional: Required only for private repositories. 
+                    <a href="https://github.com/settings/tokens" target="_blank" style="color: #3498db;">Create token here</a>
+                    with 'repo' permissions.
+                </small>
+            </div>
+
+            <!-- When to Stop Processing -->
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 15px;">
+                    When to Stop Processing
+                </label>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
+                        <input type="radio" name="when_to_stop" value="RESOURCE_DOWNLOAD" checked 
+                               style="margin-right: 10px; margin-top: 2px;">
+                        <div>
+                            <strong>Stop after resource download</strong><br>
+                            <small style="color: #666;">Download files and move to step by step mode (default behavior)</small>
+                        </div>
+                    </label>
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
+                        <input type="radio" name="when_to_stop" value="DATABASE_CREATION" 
+                               style="margin-right: 10px; margin-top: 2px;">
+                        <div>
+                            <strong>Stop after database creation</strong><br>
+                            <small style="color: #666;">Create the BIRD database and stop</small>
+                        </div>
+                    </label>
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
+                        <input type="radio" name="when_to_stop" value="SMCUBES_RULES" 
+                               style="margin-right: 10px; margin-top: 2px;">
+                        <div>
+                            <strong>Stop after SMCubes rules creation</strong><br>
+                            <small style="color: #666;">Create SMCubes generation rules for custom configuration before Python generation</small>
+                        </div>
+                    </label>
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9; opacity: 0.6;">
+                        <input type="radio" name="when_to_stop" value="PYTHON_CODE" disabled
+                               style="margin-right: 10px; margin-top: 2px;">
+                        <div>
+                            <strong>Stop after Python code generation</strong><br>
+                            <small style="color: #666;">Use previous customisation and generate Python code (coming soon)</small>
+                        </div>
+                    </label>
+                    <label style="display: flex; align-items: flex-start; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
+                        <input type="radio" name="when_to_stop" value="FULL_EXECUTION"
+                               style="margin-right: 10px; margin-top: 2px;">
+                        <div>
+                            <strong>Full execution with testing</strong><br>
+                            <small style="color: #666;">Download generated Python files from GitHub and transfer them to filter_code directory during setup</small>
+                        </div>
+                    </label>
+                </div>
+                <small style="color: #666; font-style: italic; margin-top: 10px; display: block;">
+                    Choose how far to take automode processing before stopping
+                </small>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" id="save-config-btn" 
+                        style="background: #3498db; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                    Save Configuration
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Configuration Status -->
+    <div id="config-status" style="display: none; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+        <p id="config-status-message"></p>
+    </div>
+
+    <!-- Execution Form -->
+    <div class="execution-container" style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+        <h2 style="color: #27ae60; margin-bottom: 15px;">Execute Automode Setup</h2>
+        <p style="margin-bottom: 20px; color: #666;">Run the complete automode setup process using your current configuration.</p>
+        
+        <form id="automode-execute-form" method="post" action="{% url 'pybirdai:automode_execute' %}">
+            {% csrf_token %}
+            <div style="margin-bottom: 15px;">
+                <input type="checkbox" id="force_refresh" name="force_refresh">
+                <label for="force_refresh" style="margin-left: 8px;">Force refresh (re-download existing files)</label>
+            </div>
+            <!-- GitHub Token for Execution (hidden, copied from config form) -->
+            <input type="hidden" id="execute_github_token" name="github_token" value="">
+            <div style="margin-bottom: 20px;">
+                <input type="checkbox" id="confirm_execution" name="confirm_execution" required>
+                <label for="confirm_execution" style="margin-left: 8px;">I confirm execution with current configuration</label>
+            </div>
+            <button type="submit" id="execute-btn"
+                    style="background: #27ae60; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                Execute Setup
+            </button>
+        </form>
+    </div>
+
+    <!-- Detailed Next Steps Section -->
+    <div id="detailed-next-steps" style="display: none; background: #e8f4fd; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 2px solid #3498db;">
+        <h2 style="color: #2980b9; margin-bottom: 15px;">📋 Next Steps</h2>
+        <div id="next-steps-content" style="font-size: 16px; line-height: 1.6;">
+            <!-- Steps will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Post-Restart Execution Form -->
+    <div class="post-restart-container" style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ffeaa7;">
+        <h2 style="color: #d68910; margin-bottom: 15px;">Continue After Server Restart</h2>
+        <p style="margin-bottom: 15px; color: #666;">
+            If you've already executed the initial setup and restarted the server, 
+            use this button to continue with the remaining steps based on your "when to stop" configuration.
+        </p>
+        <div style="background: #d1ecf1; padding: 10px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #17a2b8;">
+            <strong>Note:</strong> This is only needed when your "when to stop" setting requires steps after database creation 
+            (SMCubes rules, Python code generation, etc.) and you've manually restarted the server.
+        </div>
+        
+        <form id="automode-continue-form" method="post" action="{% url 'pybirdai:automode_continue_post_restart' %}">
+            {% csrf_token %}
+            <div style="margin-bottom: 20px;">
+                <input type="checkbox" id="confirm_continuation" name="confirm_continuation" required>
+                <label for="confirm_continuation" style="margin-left: 8px;">I confirm that I have restarted the server and want to continue</label>
+            </div>
+            <button type="submit" id="continue-btn"
+                    style="background: #d68910; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                Continue After Restart
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function loadExistingConfiguration() {
+    // Load existing configuration from server
+    fetch("{% url 'pybirdai:automode_configure' %}", {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.config) {
+            const config = data.config;
+            
+            // Set data model type
+            const dataModelRadio = document.querySelector(`input[name="data_model_type"][value="${config.data_model_type}"]`);
+            if (dataModelRadio) dataModelRadio.checked = true;
+            
+            // Set technical export source
+            const techExportRadio = document.querySelector(`input[name="technical_export_source"][value="${config.technical_export_source}"]`);
+            if (techExportRadio) techExportRadio.checked = true;
+            
+            // Set technical export GitHub URL
+            const techExportUrl = document.getElementById('technical_export_github_url');
+            if (techExportUrl) techExportUrl.value = config.technical_export_github_url || '';
+            
+            // Set config files source
+            const configFilesRadio = document.querySelector(`input[name="config_files_source"][value="${config.config_files_source}"]`);
+            if (configFilesRadio) configFilesRadio.checked = true;
+            
+            // Set config files GitHub URL
+            const configFilesUrl = document.getElementById('config_files_github_url');
+            if (configFilesUrl) configFilesUrl.value = config.config_files_github_url || '';
+            
+            // Set when to stop
+            const whenToStopRadio = document.querySelector(`input[name="when_to_stop"][value="${config.when_to_stop}"]`);
+            if (whenToStopRadio) whenToStopRadio.checked = true;
+            
+            // Update form visibility after setting values
+            updateFormVisibility();
+        }
+    })
+    .catch(error => {
+        console.error('Error loading configuration:', error);
+    });
+}
+
+function updateFormVisibility() {
+    // Show/hide GitHub URL inputs based on radio button selections
+    const techExportGithub = document.getElementById('tech_export_github').checked;
+    const configFilesGithub = document.getElementById('config_files_github').checked;
+    const anyGithubSelected = techExportGithub || configFilesGithub;
+    
+    document.getElementById('tech_export_github_url_container').style.display = 
+        techExportGithub ? 'block' : 'none';
+    document.getElementById('config_files_github_url_container').style.display = 
+        configFilesGithub ? 'block' : 'none';
+    document.getElementById('github_token_container').style.display = 
+        anyGithubSelected ? 'block' : 'none';
+}
+
+function showStatus(message, type) {
+    const statusDiv = document.getElementById('config-status');
+    const messageP = document.getElementById('config-status-message');
+    
+    // Format message with proper line breaks and styling
+    const formattedMessage = message.replace(/\n/g, '<br>');
+    messageP.innerHTML = formattedMessage;
+    statusDiv.style.display = 'block';
+    
+    // Set colors based on type
+    if (type === 'success') {
+        statusDiv.style.background = '#d4edda';
+        statusDiv.style.color = '#155724';
+        statusDiv.style.border = '1px solid #c3e6cb';
+    } else if (type === 'error') {
+        statusDiv.style.background = '#f8d7da'; 
+        statusDiv.style.color = '#721c24';
+        statusDiv.style.border = '1px solid #f5c6cb';
+    }
+    
+    // Add some extra styling for better readability
+    statusDiv.style.fontSize = '14px';
+    statusDiv.style.lineHeight = '1.5';
+}
+
+function hideDetailedNextSteps() {
+    const nextStepsDiv = document.getElementById('detailed-next-steps');
+    if (nextStepsDiv) {
+        nextStepsDiv.style.display = 'none';
+    }
+}
+
+// Initialize form visibility on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateFormVisibility();
+    loadExistingConfiguration();
+    
+    // Handle configuration form submission
+    document.getElementById('automode-config-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const saveBtn = document.getElementById('save-config-btn');
+        
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return response.text().then(text => {
+                    console.log('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response: ' + text.substring(0, 100));
+                });
+            }
+            
+            return response.json();
+        })
+        .then(data => {
+            console.log('JSON response:', data);
+            if (data.success) {
+                showStatus('Configuration saved successfully!', 'success');
+            } else {
+                showStatus('Error saving configuration: ' + (data.error || 'Unknown error'), 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            showStatus('Error saving configuration: ' + error.message, 'error');
+        })
+        .finally(() => {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Configuration';
+        });
+    });
+    
+    // Handle execution form submission
+    document.getElementById('automode-execute-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Copy the GitHub token from configuration form to execution form
+        const configToken = document.getElementById('github_token').value;
+        document.getElementById('execute_github_token').value = configToken;
+        
+        const formData = new FormData(this);
+        const executeBtn = document.getElementById('execute-btn');
+        
+        executeBtn.disabled = true;
+        executeBtn.textContent = 'Executing...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let message = data.message || 'Automode setup executed successfully!';
+                
+                // Show basic success message in status
+                showStatus(message, 'success');
+                
+                // Show detailed next steps in dedicated section if server restart is required
+                if (data.results && data.results.detailed_next_steps) {
+                    const nextStepsDiv = document.getElementById('detailed-next-steps');
+                    const nextStepsContent = document.getElementById('next-steps-content');
+                    
+                    // Create formatted steps list
+                    const stepsList = data.results.detailed_next_steps.map(step => 
+                        `<div style="margin-bottom: 12px; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #3498db;">
+                            <strong>${step}</strong>
+                        </div>`
+                    ).join('');
+                    
+                    nextStepsContent.innerHTML = stepsList;
+                    nextStepsDiv.style.display = 'block';
+                    
+                    // Scroll to the next steps section
+                    nextStepsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+                // If server restart is required, also highlight the continue button
+                if (data.results && data.results.server_restart_required) {
+                    const continueContainer = document.querySelector('.post-restart-container');
+                    if (continueContainer) {
+                        continueContainer.style.background = '#fff3cd';
+                        continueContainer.style.border = '2px solid #ffc107';
+                    }
+                }
+            } else {
+                showStatus('Error executing setup: ' + (data.error || 'Unknown error'), 'error');
+            }
+        })
+        .catch(error => {
+            showStatus('Error executing setup: ' + error.message, 'error');
+        })
+        .finally(() => {
+            executeBtn.disabled = false;
+            executeBtn.textContent = 'Execute Setup';
+        });
+    });
+    
+    // Handle post-restart continuation form submission
+    document.getElementById('automode-continue-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const continueBtn = document.getElementById('continue-btn');
+        
+        continueBtn.disabled = true;
+        continueBtn.textContent = 'Continuing...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showStatus('Post-restart execution completed successfully!', 'success');
+                
+                // Hide the detailed next steps since they're no longer needed
+                hideDetailedNextSteps();
+                
+                // Show detailed results if available
+                if (data.results) {
+                    let resultMessage = data.message;
+                    if (data.results.stopped_at) {
+                        resultMessage += ` (Stopped at: ${data.results.stopped_at})`;
+                    }
+                    if (data.results.next_steps) {
+                        resultMessage += ` Next: ${data.results.next_steps}`;
+                    }
+                    showStatus(resultMessage, 'success');
+                }
+            } else {
+                showStatus('Error in post-restart execution: ' + (data.error || 'Unknown error'), 'error');
+            }
+        })
+        .catch(error => {
+            showStatus('Error in post-restart execution: ' + error.message, 'error');
+        })
+        .finally(() => {
+            continueBtn.disabled = false;
+            continueBtn.textContent = 'Continue After Restart';
+        });
+    });
+});
+</script>
 
 
 <div class="task-grid">
-    <a href="{% url 'pybirdai:automode_create_database' %}" class="task-item">
-        <img
-            src="{% static 'images/create_bird_database.webp' %}"
-            alt="create_the_database"
-        />
-        <span>Create the database</span>
-    </a>
-    <a href="{% url 'pybirdai:run_full_setup' %}" class="task-item">
-        <img
-            src="{% static 'images/create_transformations_metadata.webp' %}"
-            alt="create_the_transformations"
-        />
-        <span>Create the SMCubes transformations</span>
-    </a>
-    <a href="{% url 'pybirdai:automode' %}" class="task-item">
-        <img
-            src="{% static 'images/create_transformations_metadata.webp' %}"
-            alt="create_the_transformations"
-        />
-        <span>Compare To Fine-tuned SMCubes transformations</span>
-    </a>
-    <a href="{% url 'pybirdai:automode' %}" class="task-item">
-        <img
-            src="{% static 'images/create_transformations_metadata.webp' %}"
-            alt="create_the_transformations"
-        />
-        <span>Use Fine-tuned SMCubes transformations</span>
-    </a>
-    <a
-        href="{% url 'pybirdai:run_create_python_transformations_from_db' %}"
-        class="task-item"
-    >
-        <img
-            src="{% static 'images/smcubes_to_python.webp' %}"
-            alt="create_python_transformations"
-        />
-        <span>Create Python transformations</span>
-    </a>
-    <a href="{% url 'pybirdai:automode_import_bird_metamodel_from_website' %}" class="task-item">
-        <img src="{% static 'images/smcubes_to_python.webp' %}" alt="automode_import_bird_metamodel_from_website">
-        <span>Import Bird Metamodel from Website</span>
-    </a>
-    <a href="{% url 'pybirdai:home' %}" class="task-item" style="display: inline-flex; max-width: 200px;">
-        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
-    </a>
-    <a
-        href="{% url 'pybirdai:run_fetch_curated_resources' %}"
-        class="task-item"
-    >
-        <img
-            src="{% static 'images/smcubes_to_python.webp' %}"
-            alt="run_fetch_curated_resources"
-        />
-        <span>Fetch Curated Resources</span>
-    </a>
+    
 
     <a
         href="{% url 'pybirdai:home' %}"
