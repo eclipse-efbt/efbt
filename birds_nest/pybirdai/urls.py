@@ -140,8 +140,15 @@ urlpatterns = [
     path('delete_member_from_hierarchy/', views.delete_member_from_hierarchy, name='delete_member_from_hierarchy'),
     path('edit_hierarchy_node/', views.edit_hierarchy_node, name='edit_hierarchy_node'),
     path('get_members_by_domain/<str:domain_id>/', views.get_members_by_domain, name='get_members_by_domain'),
-    path('get_subdomain_enumerations/', views.get_subdomain_enumerations, name='get_subdomain_enumerations')
+    path('get_subdomain_enumerations/', views.get_subdomain_enumerations, name='get_subdomain_enumerations'),
     path('run-full-setup/', views.run_full_setup, name='run_full_setup'),
     path('automode-import-bird-metamodel-from-website/', views.automode_import_bird_metamodel_from_website, name='automode_import_bird_metamodel_from_website'),
-    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources')
+    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources'),
+    
+    # New hierarchy editor API endpoints
+    path('api/hierarchy/<str:hierarchy_id>/json/', views.get_hierarchy_json, name='get_hierarchy_json'),
+    path('api/hierarchy/save/', views.save_hierarchy_json, name='save_hierarchy_json'),
+    path('api/domain/<str:domain_id>/members/', views.get_domain_members_json, name='get_domain_members_json'),
+    path('api/hierarchies/', views.get_available_hierarchies_json, name='get_available_hierarchies_json'),
+    path('api/hierarchy/create/', views.create_hierarchy_from_visualization, name='create_hierarchy_from_visualization'),
 ]
