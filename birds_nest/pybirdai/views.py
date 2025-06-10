@@ -3285,7 +3285,9 @@ def member_hierarchy_editor(request, hierarchy_id=None):
     Returns:
         Rendered template response with hierarchy data
     """
-    logger.info(f"Rendering member hierarchy page for hierarchy_id: {hierarchy_id}")
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    logger.info(f"Rendering member hierarchy editor page for hierarchy_id: {hierarchy_id}")
 
     # Get all member hierarchies for the dropdown
     hierarchies = MEMBER_HIERARCHY.objects.all().order_by('name')
@@ -3299,91 +3301,18 @@ def member_hierarchy_editor(request, hierarchy_id=None):
     if hierarchy_id:
         try:
             hierarchy = MEMBER_HIERARCHY.objects.get(member_hierarchy_id=hierarchy_id)
-            hierarchy_nodes = MEMBER_HIERARCHY_NODE.objects.filter(
-                member_hierarchy_id=hierarchy
-            ).order_by('level')
 
-            # Build tree structure from hierarchy nodes
-            def build_hierarchy_tree(nodes):
-                """Build a tree structure from flat hierarchy nodes and generate HTML"""
-                node_dict = {}
-                root_nodes = []
-
-                # First pass: create node dictionary
-                for node in nodes:
-                    node_dict[node.member_id.member_id if node.member_id else None] = {
-                        'node': node,
-                        'children': []
-                    }
-
-                # Second pass: build parent-child relationships
-                for node in nodes:
-                    current_member_id = node.member_id.member_id if node.member_id else None
-                    parent_member_id = node.parent_member_id.member_id if node.parent_member_id else None
-
-                    if parent_member_id and parent_member_id in node_dict:
-                        # Add current node as child of parent
-                        node_dict[parent_member_id]['children'].append(node_dict[current_member_id])
-                    else:
-                        # No parent, this is a root node
-                        root_nodes.append(node_dict[current_member_id])
-
-                def generate_html_recursive(tree_nodes, level=0):
-                    """Recursively generate HTML for hierarchy nodes"""
-                    html = '<ul class="tree-list">\n'
-                    print(tree_nodes)
-                    for tree_node in tree_nodes:
-                        node = tree_node['node']
-                        margin_left = (level) * 10
-
-                        html += f'    <li class="tree-node level-{node.level}" style="margin-left: {margin_left}px; padding: 15px;">\n'
-                        html += f'        <div class="node-content">\n'
-                        html += f'            <strong>{node.member_id.name if node.member_id else "N/A"} ({node.member_id.code if node.member_id else "N/A"})</strong>\n'
-                        html += f'            <div class="node-details">\n'
-                        html += f'                Level: {node.level}'
-                        if hasattr(node, 'order') and node.order:
-                            html += f' | Order: {node.order}'
-                        if node.comparator:
-                            html += f' | Comparator: {node.comparator}'
-                        if node.operator:
-                            html += f' | Operator: {node.operator}'
-                        html += f'\n            </div>\n'
-                        html += f'            <div class="node-actions">\n'
-                        html += f'                <button class="btn btn-sm btn-warning" onclick="editNode({node.id})">Edit</button>\n'
-                        html += f'                <button class="btn btn-sm btn-danger" onclick="deleteNode({node.id})">Delete</button>\n'
-                        html += f'            </div>\n'
-                        html += f'        </div>\n'
-
-                        # Recursively add children
-                        if tree_node['children']:
-                            html += generate_html_recursive(tree_node['children'], level + 1)
-
-                        html += f'    </li>\n'
-                    html += '</ul>\n'
-                    return html
-
-                return {
-                    'tree_structure': root_nodes,
-                    'html': generate_html_recursive(root_nodes)
-                }
-
-            hierarchy_tree = build_hierarchy_tree(hierarchy_nodes)
-
-            # Get all domains for member selection
-            domains = [hierarchy.domain_id]
-
-            # Get subdomain enumerations for comparator and operator options
-            subdomains = [SUBDOMAIN.objects.all().filter(domain_id=domains[0])]
-            subdomain_enums = SUBDOMAIN_ENUMERATION.objects.all().filter(subdomain_id__in=subdomains).order_by('subdomain_id')
-
+            # Get hierarchy data using the integration
+            integration = get_hierarchy_integration()
+            hierarchy_data = integration.get_hierarchy_by_id(hierarchy_id)
             context.update({
                 'selected_hierarchy': hierarchy,
-                'hierarchy_nodes': hierarchy_nodes,
-                'hierarchy_tree': hierarchy_tree,
-                'domains': domains,
-                'subdomains': subdomains,
-                'subdomain_enums': subdomain_enums
+                'hierarchy_data_json': json.dumps(hierarchy_data),
+                'hierarchy_info': hierarchy_data.get('hierarchy_info', {})
             })
+            print(
+                hierarchy_data.get('hierarchy_info', {}).get('hierarchy', {})
+            )
 
         except MEMBER_HIERARCHY.DoesNotExist:
             logger.error(f"Member hierarchy {hierarchy_id} not found")
@@ -3792,3 +3721,131 @@ def run_fetch_curated_resources(request):
         "Back to Automode"
     )
 
+
+def get_hierarchy_json(request, hierarchy_id):
+    """
+    API endpoint to get hierarchy data in JSON format for the visual editor
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    try:
+        integration = get_hierarchy_integration()
+        hierarchy_data = integration.get_hierarchy_by_id(hierarchy_id)
+        return JsonResponse(hierarchy_data)
+    except Exception as e:
+        logger.error(f"Error getting hierarchy JSON for {hierarchy_id}: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def save_hierarchy_json(request):
+    """
+    API endpoint to save hierarchy data from the visual editor
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST method required'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        hierarchy_id = data.get('hierarchy_id')
+        visualization_data = data.get('data')
+
+        integration = get_hierarchy_integration()
+
+        success = integration.save_hierarchy_from_visualization(hierarchy_id, visualization_data)
+
+        return JsonResponse({
+            'success': success,
+            'message': 'Hierarchy saved successfully' if success else 'Failed to save hierarchy'
+        })
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error saving hierarchy: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_domain_members_json(request, domain_id):
+    """
+    API endpoint to get all members for a domain in JSON format
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    try:
+        integration = get_hierarchy_integration()
+        members = integration.get_domain_members(domain_id)
+        return JsonResponse({'members': members})
+    except Exception as e:
+        logger.error(f"Error getting domain members for {domain_id}: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_available_hierarchies_json(request):
+    """
+    API endpoint to get all available hierarchies in JSON format
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    try:
+        integration = get_hierarchy_integration()
+        hierarchies = integration.get_available_hierarchies()
+        return JsonResponse({'hierarchies': hierarchies})
+    except Exception as e:
+        logger.error(f"Error getting available hierarchies: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def create_hierarchy_from_visualization(request):
+    """
+    API endpoint to create a new hierarchy from visualization data
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST method required'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        hierarchy_id = data.get('hierarchy_id')
+        hierarchy_name = data.get('name')
+        domain_id = data.get('domain_id')
+        description = data.get('description', '')
+        visualization_data = data.get('data')
+
+        if not hierarchy_name or not domain_id or not visualization_data:
+            return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+        # Create new hierarchy
+        try:
+            domain = DOMAIN.objects.get(domain_id=domain_id)
+        except DOMAIN.DoesNotExist:
+            return JsonResponse({'error': 'Domain not found'}, status=404)
+
+        hierarchy = MEMBER_HIERARCHY.objects.create(
+            member_hierarchy_id=hierarchy_id,
+            name=hierarchy_name,
+            description=description,
+            domain_id=domain
+        )
+
+        # Save the visualization data
+        integration = get_hierarchy_integration()
+        success = integration.save_hierarchy_from_visualization(hierarchy_id, visualization_data)
+
+        if success:
+            return JsonResponse({
+                'success': True,
+                'hierarchy_id': hierarchy_id,
+                'message': 'Hierarchy created successfully'
+            })
+        else:
+            # Clean up the hierarchy if saving failed
+            hierarchy.delete()
+            return JsonResponse({'error': 'Failed to save hierarchy data'}, status=500)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error creating hierarchy: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
