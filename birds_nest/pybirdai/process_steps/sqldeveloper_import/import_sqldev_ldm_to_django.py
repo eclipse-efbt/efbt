@@ -24,15 +24,24 @@ class RegDNAToDJango(object):
         Documentation for the method.
         '''
 
-        #delete the existing files
+        #ensure the existing files are properly removed and recreated
+        models_path = context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'models.py'
+        admin_path = context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'admin.py'
+        
+        # Force deletion and recreation to avoid append-related duplicates
         try:    
-            os.remove(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'models.py')
-            os.remove(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'admin.py')
-        except FileNotFoundError:
+            os.remove(models_path)
+        except (FileNotFoundError, PermissionError):
+            pass
+            
+        try:    
+            os.remove(admin_path)
+        except (FileNotFoundError, PermissionError):
             pass
 
-        models_file = open(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'models.py', "a",  encoding='utf-8') 
-        admin_file = open(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'admin.py', "a",  encoding='utf-8') 
+        # Use write mode instead of append to ensure clean files
+        models_file = open(models_path, "w",  encoding='utf-8') 
+        admin_file = open(admin_path, "w",  encoding='utf-8') 
         if context.ldm_or_il == 'ldm':
             RegDNAToDJango.createDjangoForPackage(self,context.ldm_entities_package,models_file,context)
             RegDNAToDJango.createDjangoAdminForPackage(self,context.ldm_entities_package,admin_file,context)
