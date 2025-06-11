@@ -45,7 +45,7 @@ class CreateExecutableFilters:
         report_html_file.write("<body>\n")
         report_html_file.write("<h1>Report Templates</h1>\n")
         report_html_file.write("<table border=\"1\">\n") 
-        report_html_file.write("<a href=\"{% url 'pybirdai:home'%}\">Back to the PyBIRD AI Home Page</a>\n")
+        report_html_file.write("<a href=\"{% url 'pybirdai:step_by_step_mode'%}\">Back to the PyBIRD AI Home Page</a>\n")
 
         file.write("from pybirdai.bird_data_model import *\n")
         file.write("from .output_tables import *\n")

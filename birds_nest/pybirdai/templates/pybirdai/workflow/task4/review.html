@@ -1,0 +1,298 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}">Task 4: SMCubes Transformation Rules</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 4: SMCubes Transformation Rules - Review</h1>
+    
+    
+    <h2>Filter and Join Metadata Review</h2>
+    
+    <div class="metadata-review-section">
+        <div class="review-category">
+            <h3>Filter Review</h3>
+            <p>Review the output layer and filters created in the previous steps:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:combinations' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔗</span>
+                    <span class="link-text">Show Filter Combinations</span>
+                </a>
+                <a href="{% url 'pybirdai:combination_items' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📝</span>
+                    <span class="link-text">Show Filter Combination Items</span>
+                </a>
+                <a href="{% url 'pybirdai:output_layers' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📊</span>
+                    <span class="link-text">Show Output Layers</span>
+                </a>
+                <a href="{% url 'pybirdai:review_filters' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">Complete Filter Review Dashboard</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="review-category">
+            <h3>Join Metadata Review</h3>
+            <p>Review and validate the join metadata structures:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚠️</span>
+                    <span class="link-text">Review Duplicate Join Items</span>
+                </a>
+                <a href="{% url 'pybirdai:show_gaps' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Gaps in Join Metadata</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_cube_links' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔧</span>
+                    <span class="link-text">Edit Cube Links</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_cube_structure_item_links' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚙️</span>
+                    <span class="link-text">Edit Cube Structure Item Links</span>
+                </a>
+                <a href="{% url 'pybirdai:review_join_meta_data' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">Complete Join Metadata Dashboard</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+    <div class="form-actions" style="margin-top: 30px;">
+        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
+        <a href="{% url 'pybirdai:workflow_task' task_number=5 operation='do' %}" class="btn btn-primary">Proceed to Task 5</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.summary-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #6c757d;
+}
+
+.metric-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #0d6efd;
+    margin: 10px 0;
+}
+
+.summary-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.analysis-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.analysis-section h3 {
+    margin-top: 0;
+}
+
+.table {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.badge-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.badge-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.complexity-chart {
+    margin-top: 15px;
+}
+
+.complexity-bar {
+    display: flex;
+    height: 30px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.bar-segment {
+    height: 100%;
+}
+
+.bar-segment.simple {
+    background-color: #28a745;
+}
+
+.bar-segment.moderate {
+    background-color: #ffc107;
+}
+
+.bar-segment.complex {
+    background-color: #dc3545;
+}
+
+.complexity-legend {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.legend-box.simple {
+    background-color: #28a745;
+}
+
+.legend-box.moderate {
+    background-color: #ffc107;
+}
+
+.legend-box.complex {
+    background-color: #dc3545;
+}
+
+.join-types {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.join-type {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.join-label {
+    font-weight: 500;
+}
+
+.join-count {
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.review-actions {
+    margin-top: 30px;
+}
+
+.action-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.metadata-review-section {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.review-category {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.review-category h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.review-category p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.review-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.review-link:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+    color: #0d6efd;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.link-text {
+    font-weight: 500;
+}
+</style>
+{% endblock %}
