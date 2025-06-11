@@ -1858,9 +1858,9 @@ def export_database_to_csv(request):
                 model_map[obj._meta.db_table] = obj
 
         with zipfile.ZipFile(zip_file_path, 'w') as zip_file:
-            # Get all table names from SQLite
+            # Get all table names from SQLite and sort them
             with connection.cursor() as cursor:
-                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'django_%'")
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'django_%' ORDER BY name")
                 tables = cursor.fetchall()
 
             # Export each table to a CSV file
@@ -1898,18 +1898,20 @@ def export_database_to_csv(request):
                         # Get primary key column name
                         cursor.execute(f"PRAGMA table_info({table_name})")
                         table_info = cursor.fetchall()
-                        pk_column = None
+                        pk_columns = []
 
-                        # two changes for the export sorting :
-                        # - one change here to consider composite key or being happy with row_id (combination item, se, csi)
-                        # - adding composite key into the model
+                        # Collect all primary key columns for composite keys
                         for col in table_info:
                             if col[5] == 1:  # 5 is the index for pk flag in table_info
-                                pk_column = col[1]  # 1 is the index for column name
-                                break
+                                pk_columns.append(col[1])  # 1 is the index for column name
 
-                        # Build ORDER BY clause
-                        order_by = f"ORDER BY {pk_column}" if pk_column else "ORDER BY rowid"  # rowid is always available in SQLite
+                        # Build ORDER BY clause - handle composite keys and sort by all columns for consistency
+                        if pk_columns:
+                            order_by = f"ORDER BY {', '.join(pk_columns)}"
+                        else:
+                            # If no primary key, sort by all columns for consistent ordering
+                            order_by = f"ORDER BY {', '.join(escaped_headers)}"
+
                         cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} {order_by}")
                         rows = cursor.fetchall()
 
@@ -1938,9 +1940,9 @@ def export_database_to_csv(request):
                                 headers.append(desc[0].upper())
                                 column_names.append(desc[0])
 
-                        # Get data with escaped column names and ordered by rowid
+                        # Get data with escaped column names and ordered by all columns for consistency
                         escaped_headers = [f'"{h.lower()}"' if h.lower() == 'order' else h.lower() for h in column_names]
-                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} ORDER BY rowid")
+                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} ORDER BY {', '.join(escaped_headers)}")
                         rows = cursor.fetchall()
 
                         # Create CSV in memory
