@@ -1,0 +1,265 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=1 operation='do' %}">Task 1: Resource Download</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 1: Resource Download - Review</h1>
+    
+    {% if task_execution.status != 'completed' or task_execution.operation_type != 'do' %}
+    <div class="alert alert-warning">
+        <strong>⚠️ Task Not Completed</strong>
+        <p>You must complete the Do step before reviewing the results.</p>
+        <a href="{% url 'pybirdai:workflow_task' task_number=1 operation='do' %}" class="btn btn-primary">Go to Do</a>
+    </div>
+    {% else %}
+    
+    <h2>Downloaded Resources Summary</h2>
+    
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h3>Configuration</h3>
+            <dl>
+                <dt>Data Model Type:</dt>
+                <dd>{{ workflow_session.configuration.eldm_or_eil|default:"Not set" }}</dd>
+                
+                <dt>Technical Export Source:</dt>
+                <dd>{{ workflow_session.configuration.technical_export_source|default:"Not set" }}</dd>
+                
+                <dt>Configuration Source:</dt>
+                <dd>{{ workflow_session.configuration.configuration_source|default:"Not set" }}</dd>
+            </dl>
+        </div>
+        
+        <div class="summary-card">
+            <h3>File Statistics</h3>
+            {% if execution_data %}
+            <dl>
+                <dt>Technical Export Files:</dt>
+                <dd>{{ execution_data.technical_export_count|default:0 }} files</dd>
+                
+                <dt>Configuration Files:</dt>
+                <dd>{{ execution_data.configuration_count|default:0 }} files</dd>
+                
+                <dt>Total Size:</dt>
+                <dd>{{ execution_data.total_size|filesizeformat|default:"0 bytes" }}</dd>
+            </dl>
+            {% else %}
+            <p>No execution data available</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h2>Downloaded Files</h2>
+    
+    <div class="file-sections">
+        {% if execution_data.technical_exports %}
+        <div class="file-section">
+            <h3>Technical Export Files</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in execution_data.technical_exports %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.type|default:"CSV" }}</td>
+                        <td>{{ file.size|filesizeformat }}</td>
+                        <td>
+                            {% if file.valid %}
+                            <span class="badge badge-success">✓ Valid</span>
+                            {% else %}
+                            <span class="badge badge-danger">✗ Invalid</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if execution_data.configuration_files %}
+        <div class="file-section">
+            <h3>Configuration Files</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in execution_data.configuration_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.type|default:"JSON" }}</td>
+                        <td>{{ file.size|filesizeformat }}</td>
+                        <td>
+                            {% if file.valid %}
+                            <span class="badge badge-success">✓ Valid</span>
+                            {% else %}
+                            <span class="badge badge-danger">✗ Invalid</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    
+    <h2>Validation Results</h2>
+    
+    <div class="validation-results">
+        {% if execution_data.validation_errors %}
+        <div class="alert alert-warning">
+            <h4>Validation Issues Found</h4>
+            <ul>
+                {% for error in execution_data.validation_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div class="alert alert-success">
+            <strong>✓ All validations passed</strong>
+            <p>All downloaded files are valid and ready for processing.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-actions" style="margin-top: 30px;">
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" name="mark_reviewed" class="btn btn-success">Mark as Reviewed</button>
+        </form>
+        <a href="{% url 'pybirdai:workflow_task' task_number=1 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
+        <a href="{% url 'pybirdai:workflow_task' task_number=2 operation='do' %}" class="btn btn-primary">Proceed to Task 2</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+    
+    {% endif %}
+</div>
+
+<style>
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.summary-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.summary-card dl {
+    margin: 0;
+}
+
+.summary-card dt {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.summary-card dd {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.file-sections {
+    margin-bottom: 30px;
+}
+
+.file-section {
+    margin-bottom: 25px;
+}
+
+.file-section h3 {
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.table th {
+    background: #f8f9fa;
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.validation-results {
+    margin-bottom: 30px;
+}
+</style>
+{% endblock %}

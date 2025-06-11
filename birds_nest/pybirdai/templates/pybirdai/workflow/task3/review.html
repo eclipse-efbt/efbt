@@ -1,0 +1,193 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}">Task 3: SMCubes Core Creation</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 3: SMCubes Core Creation - Review</h1>
+    
+    <div class="validation-section">
+        
+        
+        <div class="validation-details">
+            <h4>Hierarchy Review Actions</h4>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:missing_children' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📊</span>
+                    <span class="link-text">Show Missing Children in Hierarchies</span>
+                </a>
+                <a href="{% url 'pybirdai:missing_members' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Missing Leaf Members in Hierarchies</span>
+                </a>
+                <a href="{% url 'pybirdai:review_import_hierarchies' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">Complete Hierarchy Review Dashboard</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="validation-section">
+        
+        
+        <div class="validation-details">
+            <h4>Semantic Integration Review Actions</h4>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:mappings_missing_members' %}" target="_blank" class="review-link">
+                    <span class="link-icon">❌</span>
+                    <span class="link-text">Show Missing Members in Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:mappings_missing_variables' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚠️</span>
+                    <span class="link-text">Show Missing Variables in Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:mappings_warnings_summary' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Warnings Summary</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_variable_mappings' %}" target="_blank" class="review-link">
+                    <span class="link-icon">✏️</span>
+                    <span class="link-text">Edit Variable Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_member_mappings' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔧</span>
+                    <span class="link-text">Edit Member Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:review_semantic_integrations' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">Complete Semantic Integration Dashboard</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+   
+    
+    <div class="form-actions" style="margin-top: 30px;">
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" name="mark_reviewed" class="btn btn-success">Mark as Reviewed</button>
+        </form>
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
+        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}" class="btn btn-primary">Proceed to Task 4</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.summary-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.summary-card dl {
+    margin: 0;
+}
+
+.summary-card dt {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.summary-card dd {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.validation-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.validation-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.validation-details {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #dee2e6;
+}
+
+.validation-details h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #6c757d;
+}
+
+.validation-details p {
+    margin-bottom: 10px;
+}
+
+.validation-details a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.validation-details a:hover {
+    text-decoration: underline;
+}
+
+.review-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.review-link:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+    color: #0d6efd;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.link-text {
+    font-weight: 500;
+}
+</style>
+{% endblock %}
