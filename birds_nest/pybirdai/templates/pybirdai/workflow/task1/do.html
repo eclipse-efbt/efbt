@@ -1,0 +1,204 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=1 operation='do' %}">Task 1: Resource Download</a>
+<span class="breadcrumb-separator">›</span>
+<span>Do</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 1: Resource Download - Do</h1>
+    
+    {% if task_execution.status == 'completed' %}
+    <div class="alert alert-success">
+        <strong>✓ Task Completed</strong>
+        <p>Resources have been downloaded successfully. You can proceed to the Review step.</p>
+        <a href="{% url 'pybirdai:workflow_task' task_number=1 operation='review' %}" class="btn btn-primary">Go to Review</a>
+    </div>
+    {% elif task_execution.status == 'failed' %}
+    <div class="alert alert-danger">
+        <strong>✗ Task Failed</strong>
+        <p>{{ task_execution.error_message }}</p>
+        <p>Please fix the issues and try again.</p>
+    </div>
+    {% endif %}
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <h2>Configuration Setup</h2>
+        
+        <div class="form-section">
+            <h3>1. Data Model Type</h3>
+            <div class="form-group">
+                <label for="{{ form.eldm_or_eil.id_for_label }}">{{ form.eldm_or_eil.label }}</label>
+                {{ form.eldm_or_eil }}
+                {% if form.eldm_or_eil.help_text %}
+                <small class="form-text text-muted">{{ form.eldm_or_eil.help_text }}</small>
+                {% endif %}
+                {% if form.eldm_or_eil.errors %}
+                <div class="text-danger">{{ form.eldm_or_eil.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>2. Technical Export Source</h3>
+            <div class="form-group">
+                <label for="{{ form.technical_export_source.id_for_label }}">{{ form.technical_export_source.label }}</label>
+                {{ form.technical_export_source }}
+                {% if form.technical_export_source.errors %}
+                <div class="text-danger">{{ form.technical_export_source.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div id="technical-export-file-group" class="form-group" style="display: none;">
+                <label for="{{ form.technical_export_file.id_for_label }}">{{ form.technical_export_file.label }}</label>
+                {{ form.technical_export_file }}
+                {% if form.technical_export_file.errors %}
+                <div class="text-danger">{{ form.technical_export_file.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>3. Configuration Files Source</h3>
+            <div class="form-group">
+                <label for="{{ form.configuration_source.id_for_label }}">{{ form.configuration_source.label }}</label>
+                {{ form.configuration_source }}
+                {% if form.configuration_source.errors %}
+                <div class="text-danger">{{ form.configuration_source.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div id="configuration-github-group" style="display: none;">
+                <div class="form-group">
+                    <label for="{{ form.configuration_github_url.id_for_label }}">{{ form.configuration_github_url.label }}</label>
+                    {{ form.configuration_github_url }}
+                    {% if form.configuration_github_url.errors %}
+                    <div class="text-danger">{{ form.configuration_github_url.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.github_token.id_for_label }}">{{ form.github_token.label }}</label>
+                    {{ form.github_token }}
+                    <small class="form-text text-muted">Optional: For private repositories</small>
+                    {% if form.github_token.errors %}
+                    <div class="text-danger">{{ form.github_token.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div id="configuration-file-group" class="form-group" style="display: none;">
+                <label for="{{ form.configuration_file.id_for_label }}">{{ form.configuration_file.label }}</label>
+                {{ form.configuration_file }}
+                {% if form.configuration_file.errors %}
+                <div class="text-danger">{{ form.configuration_file.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-actions" style="margin-top: 30px;">
+            <button type="submit" class="btn btn-primary">Download Resources</button>
+            <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.form-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.form-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show/hide file upload fields based on source selection
+    const technicalExportSource = document.getElementById('{{ form.technical_export_source.id_for_label }}');
+    const technicalExportFileGroup = document.getElementById('technical-export-file-group');
+    
+    const configurationSource = document.getElementById('{{ form.configuration_source.id_for_label }}');
+    const configurationGithubGroup = document.getElementById('configuration-github-group');
+    const configurationFileGroup = document.getElementById('configuration-file-group');
+    
+    function updateVisibility() {
+        // Technical export visibility
+        if (technicalExportSource.value === 'MANUAL') {
+            technicalExportFileGroup.style.display = 'block';
+        } else {
+            technicalExportFileGroup.style.display = 'none';
+        }
+        
+        // Configuration visibility
+        if (configurationSource.value === 'GITHUB') {
+            configurationGithubGroup.style.display = 'block';
+            configurationFileGroup.style.display = 'none';
+        } else if (configurationSource.value === 'MANUAL') {
+            configurationGithubGroup.style.display = 'none';
+            configurationFileGroup.style.display = 'block';
+        } else {
+            configurationGithubGroup.style.display = 'none';
+            configurationFileGroup.style.display = 'none';
+        }
+    }
+    
+    technicalExportSource.addEventListener('change', updateVisibility);
+    configurationSource.addEventListener('change', updateVisibility);
+    
+    // Initial visibility setup
+    updateVisibility();
+});
+</script>
+{% endblock %}
