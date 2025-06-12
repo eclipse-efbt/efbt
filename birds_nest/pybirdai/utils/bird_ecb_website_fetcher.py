@@ -124,6 +124,26 @@ class BirdEcbWebsiteClient:
         """Initialize the Bird ECB Website client."""
         self.client = BirdEcbClient()
 
+    def request_and_save_all(self, output_dir="resources/technical_export/"):
+        link = "https://bird.ecb.europa.eu/excel?entities=all&onlyCurrentlyValidMetadata=false&format=csv"
+        path_to_results = output_dir
+        RESPONSE_ZIP = "response.zip"
+        os.makedirs(path_to_results, exist_ok=True)
+        response = requests.get(link)
+
+        # Save response to temporary ZIP file
+        with open(RESPONSE_ZIP, "wb") as f:
+            f.write(response.content)
+
+        # Extract contents and clean up
+        with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
+            for file in zip_ref.infolist():
+                zip_ref.extract(file, path_to_results)
+
+        os.remove(RESPONSE_ZIP)
+        return path_to_results
+
+
     def request_and_save(self, tree_root_ids, tree_root_type="FRAMEWORK", output_dir="results/csv",
                          format_type="csv", include_mapping_content=False,
                          include_rendering_content=False, include_transformation_content=False,

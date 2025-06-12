@@ -19,7 +19,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 from django.db import transaction
 from uuid import uuid4
-
+from pybirdai.views import load_variables_from_csv_file
 
 class ImportInputModel(object):
     """
@@ -40,6 +40,15 @@ class ImportInputModel(object):
         ImportInputModel._create_primitive_domains(sdd_context)
         ImportInputModel._create_subdomain_to_domain_map(sdd_context,alternative_folder=context.alternative_folder_for_subdomains)
         ImportInputModel._process_models(sdd_context, context)
+         # Load extra variables from CSV file
+        from django.conf import settings
+        base_dir = settings.BASE_DIR
+        extra_variables_path = os.path.join(base_dir, 'resources', 'extra_variables', 'extra_variables.csv')
+        variables_loaded = load_variables_from_csv_file(extra_variables_path)
+        if variables_loaded > 0:
+            print(f"Loaded {variables_loaded} extra variables from CSV file.")
+        else:
+            print.info("No extra variables loaded (file not found or empty).")
 
 
     def _create_maintenance_agency(sdd_context):
