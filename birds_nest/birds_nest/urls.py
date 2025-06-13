@@ -27,8 +27,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from birds_nest.views import homepage_redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pybirdai/', include('pybirdai.urls')),
+    path('', homepage_redirect, name='homepage_redirect'),
 ]

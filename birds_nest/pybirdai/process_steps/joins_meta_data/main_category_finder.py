@@ -152,6 +152,25 @@ class MainCategoryFinder(object):
                 else:
                     print("ignoring TYP_INSTRMNT_-1")
         return cell_instrmnt_ids_list
+    
+    def _get_cell_scrty_derivative_ids(self, combination_items):
+        """
+        Get cell instrument IDs from combination items.
+
+        Args:
+            combination_items (list): List of combination items.
+
+        Returns:
+            list: List of cell instrument IDs.
+        """
+        cell_scrty_derivative_list = []
+        for combination_item in combination_items:
+            if combination_item.variable_id and combination_item.variable_id.variable_id == "SCRTY_EXCHNG_TRDBL_DRVTV_TYP":
+                #ignore the member SCRTY_EXCHNG_TRDBL_DRVTV_TYP_-1
+                if not (combination_item.member_id.member_id == 'SCRTY_EXCHNG_TRDBL_DRVTV_TYP_-1'):
+                    if combination_item.member_id not in cell_scrty_derivative_list:
+                        cell_scrty_derivative_list.append(combination_item.member_id)
+        return cell_scrty_derivative_list
 
     def _get_cell_scrty_derivative_ids(self, combination_items):
         """

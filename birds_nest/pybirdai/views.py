@@ -39,6 +39,7 @@ from .entry_points.delete_semantic_integrations import RunDeleteSemanticIntegrat
 from .entry_points.delete_output_concepts import RunDeleteOutputConcepts
 from .entry_points.import_export_mapping_join_metadata import RunExporterJoins, RunImporterJoins,RunMappingJoinsEIL_LDM
 
+
 from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
 from .entry_points.execute_datapoint import RunExecuteDataPoint
@@ -82,7 +83,9 @@ from .utils.utils_views import ensure_results_directory,process_test_results_fil
 import time
 from datetime import datetime
 from django.views.decorators.clickjacking import xframe_options_exempt
+
 from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+
 
 
 
@@ -1416,6 +1419,7 @@ def create_response_with_loading_extended(request, task_title, success_message, 
         </html>
     """
 
+
     return HttpResponse(html_response)
 
 def combinations(request):
@@ -2313,6 +2317,7 @@ def run_create_python_joins_from_db(request):
         "Create Transformations Rules in Python"
     )
 
+
 def run_create_python_transformations_from_db(request):
     """
     Runs both Python filters and joins generation from database sequentially.
@@ -2348,6 +2353,7 @@ def run_create_python_transformations_from_db(request):
         '/pybirdai/automode',
         "Back to Automode"
     )
+
 
 def return_semantic_integration_menu(request: Any, mapping_id: str = "") -> Any:
     """Returns semantic integration menu view.
@@ -2515,6 +2521,7 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
                 except KeyError:
                     sdd_context.member_mapping_items_dictionary[
                         new_item.member_mapping_id.member_mapping_id] = [new_item]
+
 
             # Add new member mapping items
             for member_id in members:
@@ -3005,11 +3012,12 @@ def update_mapping_row(request):
                 member_mapping_row=row_index
             )
             logger.debug(f"Deleting {existing_items.count()} existing items from row {row_index}")
-            try:
+
+            try:                
                 # delete existing items if they are in this list
                 for mm_item in existing_items:
                     member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                    mm_item.member_mapping_id.member_mapping_id]
+                    mm_item.member_mapping_id.member_mapping_id]  
                     for item in member_mapping_list:
                         if item.member_mapping_row == row_index:
                             member_mapping_list.remove(item)
@@ -3052,7 +3060,6 @@ def update_mapping_row(request):
                     if not( member == "None"):
                         member_obj = MEMBER.objects.get(member_id=member)
                         logger.debug(f"Adding target mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
-
                         new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
                             member_mapping_id=mapping_def.member_mapping_id,
                             member_mapping_row=row_index,
@@ -3084,7 +3091,6 @@ def test_report_view(request):
         'templates': list(templates.values())
     }
     return render(request, 'pybirdai/test_report_view.html', context)
-
 
 def load_variables_from_csv_file(csv_file_path):
     """
@@ -4367,5 +4373,4 @@ def automode_status(request):
             'success': False,
             'error': f'Error getting status: {str(e)}'
         })
-
 
