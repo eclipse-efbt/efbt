@@ -1,7 +1,7 @@
 *.pyc
-*.sqllite3
+*.sqlite3
 birds_nest/results/*/
 birds_nest/resources/*/
 birds_nest/pybirdai/process_steps/filter_code
 birds_nest/pybirdai/templates/pybirdai/F_*
-
+uv.lock
