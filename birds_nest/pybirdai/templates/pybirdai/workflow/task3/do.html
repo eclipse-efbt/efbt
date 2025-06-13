@@ -1,0 +1,297 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}">Task 3: SMCubes Core Creation</a>
+<span class="breadcrumb-separator">›</span>
+<span>Do</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 3: SMCubes Core Creation - Do</h1>
+    
+    {% if task_execution.status == 'completed' %}
+    <div class="alert alert-success">
+        <strong>✓ Task Completed</strong>
+        <p>SMCubes core structures have been created successfully.</p>
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}" class="btn btn-primary">Go to Review</a>
+    </div>
+    {% elif task_execution.status == 'failed' %}
+    <div class="alert alert-danger">
+        <strong>✗ Task Failed</strong>
+        <p>{{ task_execution.error_message }}</p>
+        <p>Please fix the issues and try again.</p>
+    </div>
+    {% elif task_execution.status == 'running' %}
+    <div class="alert alert-info">
+        <strong>🔄 Task Running</strong>
+        <p>SMCubes core creation is in progress. This page will refresh automatically.</p>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 50%"></div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <h2>SMCubes Core Creation Steps</h2>
+    
+    <div class="subtask-list">
+        <h3>Subtasks to be executed:</h3>
+        
+        <div class="subtask-item">
+            <h4>0. Clear the database</h4>
+            <p>Clear the database</p>
+            <ul>
+                <li>Clear the database</li>                
+            </ul>
+            {% if task_execution.execution_data.database_deleted %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        <div class="subtask-item">
+            <h4>1. Create Cube Structures</h4>
+            <p>Generate multidimensional cube structures for reporting</p>
+            <ul>
+                <li>Define cubes</li>
+                
+            </ul>
+            {% if task_execution.execution_data.input_model_imported %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        
+        <div class="subtask-item">
+            <h4>2. Generate Report Templates</h4>
+            <p>Create report template structures</p>
+            <ul>
+                <li>Import report definitions</li>
+                
+            </ul>
+            {% if task_execution.execution_data.report_templates_created %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        <div class="subtask-item">
+            <h4>3. Import LDM/EIL Hierarchies</h4>
+            <p>Convert hierarchical structures from the imported data model</p>
+            <ul>
+                <li>Process domain hierarchies</li>
+                
+            </ul>
+            {% if task_execution.execution_data.hierarchy_analysis_imported %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% elif task_execution.status == 'running' %}
+            <span class="status-badge running">🔄 Running</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        
+        <div class="subtask-item">
+            <h4>4. Process Semantic Integrations</h4>
+            <p>Import and process semantic integration definitions</p>
+            <ul>
+                <li>Load semantic mappings</li>
+                <li>Create integration structures</li>
+                <li>Validate semantic relationships</li>
+            </ul>
+            {% if task_execution.execution_data.semantic_integrations_processed %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+        </div>
+        
+        
+    </div>
+    
+    {% if task_execution.status == 'pending' %}
+    <div id="task3-status" style="display: none;"></div>
+    <form id="task3-form" method="post" style="margin-top: 30px;">
+        {% csrf_token %}
+        
+        <div class="execution-options">
+            <h3>Execution Options</h3>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="delete_database" id="delete_database">
+                <label class="form-check-label" for="delete_database">
+                    Delete Existing Database Before Creation
+                </label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="import_hierarchy_analysis" id="import_hierarchy_analysis" checked>
+                <label class="form-check-label" for="import_hierarchy_analysis">
+                    Import LDM/EIL Hierarchies
+                </label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="process_semantic" id="process_semantic" checked>
+                <label class="form-check-label" for="process_semantic">
+                    Process Semantic Integrations
+                </label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="import_input_model" id="import_input_model" checked>
+                <label class="form-check-label" for="import_input_model">
+                    Create Cube Structures
+                </label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="generate_templates" id="generate_templates" checked>
+                <label class="form-check-label" for="generate_templates">
+                    Generate Report Templates
+                </label>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Start SMCubes Core Creation</button>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+    {% endif %}
+</div>
+
+<style>
+.subtask-list {
+    margin: 20px 0;
+}
+
+.subtask-item {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.subtask-item h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.subtask-item ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.status-badge.pending {
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+.status-badge.running {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.status-badge.completed {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.execution-options {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.execution-options h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.form-check {
+    margin-bottom: 10px;
+}
+
+.progress {
+    height: 20px;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    background-color: #0d6efd;
+}
+</style>
+
+<script>
+// Auto-refresh if task is running
+{% if task_execution.status == 'running' %}
+setTimeout(function() {
+    location.reload();
+}, 3000);
+{% endif %}
+
+// Handle form submission with AJAX
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('task3-form');
+    const statusDiv = document.getElementById('task3-status');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show processing message
+            statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Starting SMCubes core creation. This may take a few minutes...</div>';
+            statusDiv.style.display = 'block';
+            
+            // Disable submit button
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...';
+            
+            // Submit form via AJAX
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'SMCubes core creation completed successfully.') + '</div>';
+                    // Refresh page after 2 seconds to show completed status
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'SMCubes core creation failed.') + '</div>';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Start SMCubes Core Creation';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred. Please try again.</div>';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Start SMCubes Core Creation';
+            });
+        });
+    }
+});
+</script>
+{% endblock %}
