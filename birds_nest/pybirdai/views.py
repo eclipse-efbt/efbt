@@ -22,7 +22,8 @@ from .bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
-    MAINTENANCE_AGENCY,  MEMBER_HIERARCHY, DOMAIN
+    MAINTENANCE_AGENCY,  MEMBER_HIERARCHY, DOMAIN,MEMBER_HIERARCHY_NODE,
+    SUBDOMAIN, SUBDOMAIN_ENUMERATION
 )
 import json
 from . import bird_meta_data_model
@@ -36,6 +37,8 @@ from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
 from .entry_points.delete_joins_metadata import RunDeleteJoinsMetadata
 from .entry_points.delete_semantic_integrations import RunDeleteSemanticIntegrations
 from .entry_points.delete_output_concepts import RunDeleteOutputConcepts
+from .entry_points.import_export_mapping_join_metadata import RunExporterJoins, RunImporterJoins,RunMappingJoinsEIL_LDM
+
 
 from .entry_points.create_executable_joins import RunCreateExecutableJoins
 from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
@@ -80,6 +83,9 @@ from .utils.utils_views import ensure_results_directory,process_test_results_fil
 import time
 from datetime import datetime
 from django.views.decorators.clickjacking import xframe_options_exempt
+
+from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+
 
 
 
@@ -420,6 +426,12 @@ def index(request):
 
 def home_view(request):
     return render(request, 'pybirdai/home.html')
+
+def automode_view(request):
+    return render(request, 'pybirdai/automode.html')
+
+def step_by_step_mode_view(request):
+    return render(request, 'pybirdai/step_by_step_mode.html')
 
 # CRUD views for various models
 def edit_variable_mappings(request):
@@ -905,7 +917,96 @@ def delete_cube_link(request, cube_link_id):
         messages.error(request, f'Error deleting CUBE_LINK: {str(e)}')
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-def delete_cube_structure_item_link(request, cube_structure_item_link_id):
+@require_http_methods(["POST"])
+def bulk_delete_cube_structure_item_links(request):
+    logger.info("Received request to bulk delete CUBE_STRUCTURE_ITEM_LINK items.")
+    sdd_context = SDDContext()
+    selected_ids = request.POST.getlist('selected_items')
+
+    if not selected_ids:
+        logger.warning("No items selected for bulk deletion.")
+        messages.warning(request, "No items selected for deletion.")
+        return redirect('pybirdai:duplicate_primary_member_id_list')
+
+    logger.debug(f"Selected IDs for deletion: {selected_ids}")
+
+    try:
+        # Fetch the links before deleting to get related cube_link_ids
+        logger.debug(f"Fetching {len(selected_ids)} CUBE_STRUCTURE_ITEM_LINK objects for deletion.")
+        links_to_delete = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+            cube_structure_item_link_id__in=selected_ids
+        ).select_related('cube_link_id')
+        logger.debug(f"Fetched {links_to_delete.count()} objects.")
+
+        logger.info("Starting bulk deletion of CUBE_STRUCTURE_ITEM_LINK objects from database.")
+        deleted_count, _ = links_to_delete.delete()
+        logger.info(f"Database deletion complete. Deleted {deleted_count} link(s).")
+
+        logger.info("Updating in-memory SDDContext dictionaries.")
+        # Update the in-memory dictionaries for each deleted link
+        for link in links_to_delete:
+            cube_structure_item_link_id = link.cube_structure_item_link_id
+            cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
+            logger.debug(f"Processing deleted link ID: {cube_structure_item_link_id} (Cube Link ID: {cube_link_id})")
+
+            # Remove from cube_structure_item_links_dictionary
+            try:
+                del sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id]
+                logger.debug(f"Removed link ID {cube_structure_item_link_id} from cube_structure_item_links_dictionary.")
+            except KeyError:
+                logger.debug(f"Link ID {cube_structure_item_link_id} not found in cube_structure_item_links_dictionary (possibly already removed or never loaded).")
+                pass # Already removed or not present
+
+            # Remove from cube_structure_item_link_to_cube_link_map
+            if cube_link_id:
+                if cube_link_id in sdd_context.cube_structure_item_link_to_cube_link_map:
+                    # Create a new list excluding the deleted link
+                    original_count = len(sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id])
+                    sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id] = [
+                        item for item in sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                        if item.cube_structure_item_link_id != cube_structure_item_link_id
+                    ]
+                    new_count = len(sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id])
+                    logger.debug(f"Removed link ID {cube_structure_item_link_id} from cube_structure_item_link_to_cube_link_map for Cube Link ID {cube_link_id}. List size changed from {original_count} to {new_count}.")
+
+                    # If the list becomes empty, remove the key from the map
+                    if not sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]:
+                        del sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
+                        logger.debug(f"Removed empty list for Cube Link ID {cube_link_id} from cube_structure_item_link_to_cube_link_map.")
+                else:
+                     logger.debug(f"Cube Link ID {cube_link_id} not found in cube_structure_item_link_to_cube_link_map.")
+
+
+        messages.success(request, f"{deleted_count} link(s) deleted successfully.")
+        logger.info(f"Bulk deletion process completed successfully. {deleted_count} link(s) deleted.")
+    except Exception as e:
+        logger.error(f'Error during bulk deletion: {str(e)}', exc_info=True)
+        messages.error(request, f'Error during bulk deletion: {str(e)}')
+
+    # Redirect back to the duplicate list page, resetting filters
+    logger.info("Redirecting back to the duplicate primary member ID list page.")
+    # Preserve the filter parameters in the redirect for duplicate_primary_member_id_list
+    params = request.GET.copy()
+    # print(params) # Keep or remove print as needed, removing for clean output
+    # Build the redirect URL
+    redirect_url = reverse('pybirdai:duplicate_primary_member_id_list')
+    page = params.get('page',1)
+    redirect_url += f'?page={page}' # Start with page 1
+
+    # Append foreign_cube filter if present
+    foreign_cube = params.get('foreign_cube')
+    if foreign_cube:
+        redirect_url += f'&foreign_cube={foreign_cube}'
+
+    # Append primary_cube filter if present
+    primary_cube = params.get('primary_cube')
+    if primary_cube:
+        redirect_url += f'&primary_cube={primary_cube}'
+
+    # print(redirect_url) # Keep or remove print as needed, removing for clean output
+    return redirect(redirect_url)
+
+def delete_cube_structure_item_link_dupl(request, cube_structure_item_link_id):
     try:
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
         # Store the cube_link_id before deleting
@@ -973,7 +1074,7 @@ def delete_mapping_to_cube(request, mapping_to_cube_id):
         except KeyError:
             print(f"KeyError: {item.cube_mapping_id},{item.mapping_id.mapping_id}")
         item.delete()
-        
+
         messages.success(request, 'MAPPING_TO_CUBE deleted successfully.')
     except Exception as e:
         messages.error(request, f'Error deleting MAPPING_TO_CUBE: {str(e)}')
@@ -1146,6 +1247,178 @@ def create_response_with_loading(request, task_title, success_message, return_ur
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return HttpResponse(html_response)
+
+def create_response_with_loading_extended(request, task_title, success_message, return_url, return_link_text):
+    """
+    Extended version of create_response_with_loading with better timeout handling
+    for long-running processes like database setup.
+    """
+    html_response = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                .loading-overlay {{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    z-index: 9999;
+                }}
+
+                .loading-spinner {{
+                    width: 50px;
+                    height: 50px;
+                    border: 5px solid #f3f3f3;
+                    border-top: 5px solid #3498db;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin-bottom: 20px;
+                }}
+
+                @keyframes spin {{
+                    0% {{ transform: rotate(0deg); }}
+                    100% {{ transform: rotate(360deg); }}
+                }}
+
+                .loading-message {{
+                    font-size: 18px;
+                    color: #333;
+                    text-align: center;
+                    max-width: 500px;
+                }}
+
+                .task-info {{
+                    padding: 20px;
+                    max-width: 600px;
+                    margin: 0 auto;
+                }}
+
+                #success-message {{
+                    display: none;
+                    margin-top: 20px;
+                    padding: 15px;
+                    background-color: #d4edda;
+                    border: 1px solid #c3e6cb;
+                    border-radius: 4px;
+                    color: #155724;
+                }}
+
+                #error-message {{
+                    display: none;
+                    margin-top: 20px;
+                    padding: 15px;
+                    background-color: #f8d7da;
+                    border: 1px solid #f5c6cb;
+                    border-radius: 4px;
+                    color: #721c24;
+                }}
+
+                .progress-text {{
+                    margin-top: 10px;
+                    font-size: 14px;
+                    color: #666;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="task-info">
+                <h3>{task_title}</h3>
+                <div id="loading-overlay" class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-message">
+                        Please wait while the task completes...<br>
+                        <div class="progress-text">This process may take several minutes. Please do not close this window.</div>
+                    </div>
+                </div>
+                <div id="success-message">
+                    <p>{success_message}</p>
+                    <p>Go back to <a href="{return_url}">{return_link_text}</a></p>
+                </div>
+                <div id="error-message">
+                    <p><strong>Error:</strong> <span id="error-text"></span></p>
+                    <p>Please check the server logs for more details.</p>
+                    <p>Go back to <a href="{return_url}">{return_link_text}</a></p>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {{
+                    // Show loading immediately
+                    document.getElementById('loading-overlay').style.display = 'flex';
+                    document.getElementById('success-message').style.display = 'none';
+                    document.getElementById('error-message').style.display = 'none';
+
+                    // Start the task execution after a small delay to ensure loading is visible
+                    setTimeout(() => {{
+                        // Create AbortController for timeout handling
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout
+
+                        fetch(window.location.href + '?execute=true', {{
+                            method: 'GET',
+                            headers: {{
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }},
+                            signal: controller.signal
+                        }})
+                        .then(response => {{
+                            clearTimeout(timeoutId);
+                            if (!response.ok) {{
+                                throw new Error(`HTTP ${{response.status}}: ${{response.statusText}}`);
+                            }}
+                            return response.json();
+                        }})
+                        .then(data => {{
+                            if (data.status === 'success') {{
+                                // Hide loading and show success
+                                document.getElementById('loading-overlay').style.display = 'none';
+                                document.getElementById('success-message').style.display = 'block';
+
+                                // Update success message with instructions if provided
+                                const successDiv = document.getElementById('success-message');
+                                let successContent = '<p>{success_message}</p>';
+
+                                if (data.instructions) {{
+                                    successContent += '<div style="margin-top: 15px; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">';
+                                    successContent += '<h4 style="margin-top: 0; color: #856404;">Next Steps:</h4>';
+                                    successContent += '<ol style="margin-bottom: 0;">';
+                                    data.instructions.forEach(instruction => {{
+                                        successContent += '<li style="margin-bottom: 5px;">' + instruction + '</li>';
+                                    }});
+                                    successContent += '</ol></div>';
+                                }}
+
+                                successContent += '<p>Go back to <a href="{return_url}">{return_link_text}</a></p>';
+                                successDiv.innerHTML = successContent;
+                                successDiv.style.display = 'block';
+                            }} else {{
+                                throw new Error(data.message || 'Task failed');
+                            }}
+                        }})
+                        .catch(error => {{
+                            clearTimeout(timeoutId);
+                            console.error('Error:', error);
+
+                            // Hide loading and show error
+                            document.getElementById('loading-overlay').style.display = 'none';
+                            document.getElementById('error-text').textContent = error.message;
+                            document.getElementById('error-message').style.display = 'block';
+                        }});
+                    }}, 100); // Small delay to ensure loading screen is visible
+                }});
+            </script>
+        </body>
+        </html>
+    """
+
 
     return HttpResponse(html_response)
 
@@ -2045,6 +2318,43 @@ def run_create_python_joins_from_db(request):
     )
 
 
+def run_create_python_transformations_from_db(request):
+    """
+    Runs both Python filters and joins generation from database sequentially.
+    This is used as the third task in automode after database and transformations setup.
+    """
+    if request.GET.get('execute') == 'true':
+        logger.info("Starting Python transformations generation from database...")
+
+        try:
+            # Step 1: Create executable filters from database
+            logger.info("Step 1: Creating executable filters from database...")
+            filters_config = RunCreateExecutableFilters('pybirdai', 'birds_nest')
+            filters_config.run_create_executable_filters_from_db()
+            logger.info("Successfully created executable filters from database.")
+
+            # Step 2: Create Python joins from database
+            logger.info("Step 2: Creating Python joins from database...")
+            joins_config = RunCreateExecutableJoins('pybirdai', 'birds_nest')
+            joins_config.create_python_joins_from_db()
+            logger.info("Successfully created Python joins from database.")
+
+            logger.info("Python transformations generation completed successfully.")
+            return JsonResponse({'status': 'success'})
+
+        except Exception as e:
+            logger.error(f"Python transformations generation failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading(
+        request,
+        "Creating Python Transformations from Database (Creating executable filters and Python joins - approx 2 minutes, please don't navigate away)",
+        "Python transformations generation completed successfully! Executable filters and Python joins have been created from the database.",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
+
 def return_semantic_integration_menu(request: Any, mapping_id: str = "") -> Any:
     """Returns semantic integration menu view.
 
@@ -2194,16 +2504,6 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
 
             logger.info(f"I created new variable mapping item: {new_variable_item.id}")
 
-            # Copy mapping definition
-            mapping_def = MAPPING_DEFINITION.objects.create(
-                mapping_id=f"{mapping_base_id}".split("__")[0]+f"__{timestamp}",
-                code=f"{mapping_base_id}".split("__")[0]+f"__{timestamp}",
-                name=f"{orig_mapping.name} ({timestamp})",
-                member_mapping_id=new_member_mapping,
-                variable_mapping_id=new_variable_mapping
-            )
-            sdd_context.mapping_definition_dictionary[mapping_def.mapping_id] = mapping_def
-
             # Copy existing member mapping items
             existing_items = MEMBER_MAPPING_ITEM.objects.filter(member_mapping_id=orig_mapping.member_mapping_id)
             for item in existing_items:
@@ -2222,68 +2522,48 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
                     sdd_context.member_mapping_items_dictionary[
                         new_item.member_mapping_id.member_mapping_id] = [new_item]
 
-        else:
-            # Create new mappings
-            new_member_mapping = MEMBER_MAPPING.objects.create(
-                member_mapping_id=f"MM_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                code=f"MM_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                name=f"Member mapping for {variable_obj.code}"
-            )
-            sdd_context.member_mapping_dictionary[new_member_mapping.member_mapping_id] = new_member_mapping
 
-            new_variable_mapping = VARIABLE_MAPPING.objects.create(
-                variable_mapping_id=f"VM_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                code=f"VM_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                name=f"Variable mapping for {variable_obj.code}"
-            )
-            sdd_context.variable_mapping_dictionary[new_variable_mapping.variable_mapping_id] = new_variable_mapping
+            # Add new member mapping items
+            for member_id in members:
+                if member_id != "None":
+                    member_obj = MEMBER.objects.get(member_id=member_id)
+                    mapping_item = MEMBER_MAPPING_ITEM.objects.create(
+                        member_mapping_id=new_member_mapping,
+                        member_mapping_row=member_mapping_row,
+                        variable_id=variable_obj,
+                        member_id=member_obj,
+                        is_source=is_source
+                    )
+                    member_mapping_list = sdd_context.member_mapping_items_dictionary[
+                        mapping_item.member_mapping_id.member_mapping_id]
+                    member_mapping_list.append(mapping_item)
+            # Copy mapping definition
+            target_id = orig_mapping.mapping_id
+            target_name = orig_mapping.name
 
+            orig_mapping.delete()
             mapping_def = MAPPING_DEFINITION.objects.create(
-                mapping_id=f"MAP_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                code=f"MAP_{variable_obj.code}".split("__")[0]+f"__{timestamp}",
-                name=f"Mapping for {variable_obj.code}",
+                mapping_id=orig_mapping_id,
+                code=orig_mapping_id,
+                name=f"{target_name} ({timestamp})",
                 member_mapping_id=new_member_mapping,
                 variable_mapping_id=new_variable_mapping
             )
             sdd_context.mapping_definition_dictionary[mapping_def.mapping_id] = mapping_def
 
-        # Add new member mapping items
-        member_mapping_items = []
-        for member_id in members:
-            if member_id != "None":
-                member_obj = MEMBER.objects.get(member_id=member_id)
-                mapping_item = MEMBER_MAPPING_ITEM(
-                    member_mapping_id=new_member_mapping,
-                    member_mapping_row=member_mapping_row,
-                    variable_id=variable_obj,
-                    member_id=member_obj,
-                    is_source=is_source
-                )
-                try:
-                    member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                        mapping_item.member_mapping_id.member_mapping_id]
-                    member_mapping_list.append(mapping_item)
-                except KeyError:
-                    sdd_context.member_mapping_items_dictionary[
-                        mapping_item.member_mapping_id.member_mapping_id] = [mapping_item]
-                member_mapping_items.append(mapping_item)
+            # Create mapping to cube with version suffix
+            old_mappings = MAPPING_TO_CUBE.objects.filter(mapping_id=mapping_def)
+            if old_mappings.exists():
+                latest = old_mappings.latest('cube_mapping_id')
+                version = int(latest.cube_mapping_id.split('_v')[-1]) + 1
+                new_mapping_code = f"{latest.cube_mapping_id.split('_v')[0]}_v{version}"
+            else:
+                new_mapping_code = f"{mapping_def.code}_v1"
 
-        # Bulk create member mapping items
-        MEMBER_MAPPING_ITEM.objects.bulk_create(member_mapping_items)
-
-        # Create mapping to cube with version suffix
-        old_mappings = MAPPING_TO_CUBE.objects.filter(mapping_id=mapping_def)
-        if old_mappings.exists():
-            latest = old_mappings.latest('cube_mapping_id')
-            version = int(latest.cube_mapping_id.split('_v')[-1]) + 1
-            new_mapping_code = f"{latest.cube_mapping_id.split('_v')[0]}_v{version}"
-        else:
-            new_mapping_code = f"{mapping_def.code}_v1"
-
-        new_mapping_to_cube = MAPPING_TO_CUBE.objects.create(
-            mapping_id=mapping_def,
-            cube_mapping_id=new_mapping_code
-        )
+            new_mapping_to_cube = MAPPING_TO_CUBE.objects.create(
+                mapping_id=mapping_def,
+                cube_mapping_id=new_mapping_code
+            )
         #sdd_context.mapping_to_cube_dictionary[mapping_def] = new_mapping_to_cube
         logger.info("Variable and members added successfully")
         return JsonResponse({'status': 'success'})
@@ -2732,6 +3012,7 @@ def update_mapping_row(request):
                 member_mapping_row=row_index
             )
             logger.debug(f"Deleting {existing_items.count()} existing items from row {row_index}")
+
             try:                
                 # delete existing items if they are in this list
                 for mm_item in existing_items:
@@ -2743,7 +3024,7 @@ def update_mapping_row(request):
             except KeyError:
                 pass
             existing_items.delete()
-            
+
             # Add new source items
             logger.debug(f"Adding {len(source_data.get('variabless', []))} source items")
             for variable, member in zip(source_data.get('variabless', []), source_data.get('members', [])):
@@ -2779,7 +3060,6 @@ def update_mapping_row(request):
                     if not( member == "None"):
                         member_obj = MEMBER.objects.get(member_id=member)
                         logger.debug(f"Adding target mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
-                    
                         new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
                             member_mapping_id=mapping_def.member_mapping_id,
                             member_mapping_row=row_index,
@@ -2811,3 +3091,1286 @@ def test_report_view(request):
         'templates': list(templates.values())
     }
     return render(request, 'pybirdai/test_report_view.html', context)
+
+def load_variables_from_csv_file(csv_file_path):
+    """
+    Helper function to load variables from a CSV file.
+    Used by run_full_setup to load extra variables.
+    """
+    try:
+        import csv
+        from .context.sdd_context_django import SDDContext
+
+        if not os.path.exists(csv_file_path):
+            logger.warning(f"Extra variables CSV file not found: {csv_file_path}")
+            return 0
+
+        logger.info(f"Loading extra variables from: {csv_file_path}")
+
+        # Read the CSV file
+        with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+
+            # Validate headers
+            required_fields = {'VARIABLE_ID', 'CODE', 'NAME', 'DESCRIPTION', 'DOMAIN_ID'}
+            headers = set(reader.fieldnames)
+            if not required_fields.issubset(headers):
+                missing = required_fields - headers
+                logger.error(f'Missing required columns in extra_variables.csv: {", ".join(missing)}')
+                return 0
+
+            # Get SDDContext instance
+            sdd_context = SDDContext()
+
+            # Process each row
+            variables_to_create = []
+            for row in reader:
+                try:
+                    # Look up the domain
+                    domain = DOMAIN.objects.get(domain_id=row['DOMAIN_ID'])
+
+                    variable = VARIABLE(
+                        variable_id=row['VARIABLE_ID'],
+                        code=row['CODE'],
+                        name=row['NAME'],
+                        description=row['DESCRIPTION'],
+                        domain_id=domain
+                    )
+                    variables_to_create.append(variable)
+                except DOMAIN.DoesNotExist:
+                    logger.error(f'Domain with ID {row["DOMAIN_ID"]} not found in extra_variables.csv')
+                    continue
+                except Exception as e:
+                    logger.error(f'Error processing variable row in extra_variables.csv: {str(e)}')
+                    continue
+
+            # Bulk create the variables
+            if variables_to_create:
+                created_variables = VARIABLE.objects.bulk_create(variables_to_create)
+
+                # Update SDDContext variable dictionary
+                for variable in created_variables:
+                    sdd_context.variable_dictionary[variable.variable_id] = variable
+
+                logger.info(f"Successfully loaded {len(created_variables)} extra variables from CSV")
+                return len(created_variables)
+            else:
+                logger.info("No extra variables to load from CSV")
+                return 0
+
+    except Exception as e:
+        logger.error(f"Error loading extra variables from CSV: {str(e)}")
+        return 0
+
+
+def execute_full_setup_core():
+    """
+    Core business logic for running the full BIRD metadata database setup.
+    This can be called from both view and service contexts.
+    """
+    logger.info("Starting full setup...")
+
+    delete_cmd = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
+    delete_cmd.run_delete_bird_metadata_database()
+    logger.info("Deleted existing bird metadata.")
+
+    # Populate bird metadata database with BIRD datamodel metadata
+    import_model_cmd = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
+    import_model_cmd.ready()
+    logger.info("Imported input model from sqldev.")
+
+    # Populate bird metadata database with BIRD report templates
+    import_reports_cmd = RunImportReportTemplatesFromWebsite('pybirdai', 'birds_nest')
+    import_reports_cmd.run_import()
+    logger.info("Imported report templates from website.")
+
+    # Load extra variables from CSV file
+    base_dir = settings.BASE_DIR
+    extra_variables_path = os.path.join(base_dir, 'resources', 'extra_variables', 'extra_variables.csv')
+    variables_loaded = load_variables_from_csv_file(extra_variables_path)
+    if variables_loaded > 0:
+        logger.info(f"Loaded {variables_loaded} extra variables from CSV file.")
+    else:
+        logger.info("No extra variables loaded (file not found or empty).")
+
+    # Import hierarchies from BIRD Website
+    import_hierarchies_cmd = RunImportHierarchiesFromWebsite('pybirdai', 'birds_nest')
+    import_hierarchies_cmd.import_hierarchies()
+    logger.info("Imported hierarchies from website.")
+
+    # Import semantic integration from bird website
+    import_semantic_cmd = RunImportSemanticIntegrationsFromWebsite('pybirdai', 'birds_nest')
+    import_semantic_cmd.import_mappings_from_website()
+    logger.info("Imported semantic integrations from website.")
+
+    app_config = RunCreateFilters('pybirdai', 'birds_nest')
+    app_config.run_create_filters()
+    logger.info("Created filters and executable filters.")
+
+    app_config = RunCreateJoinsMetadata('pybirdai', 'birds_nest')
+    app_config.run_create_joins_meta_data()
+    logger.info("Created joins metadata.")
+
+    app_config = RunExporterJoins('pybirdai', 'birds_nest')
+    app_config.run_export_joins_meta_data()
+    logger.info("Exported joins metadata successfully.")
+
+    app_config = RunMappingJoinsEIL_LDM('pybirdai', 'birds_nest')
+    app_config.run_mapping_joins_meta_data()
+    logger.info("Mapped joins metadata successfully.")
+
+    logger.info("Full setup completed successfully.")
+
+
+def run_full_setup(request):
+    """
+    Runs all necessary steps to set up the BIRD metadata database:
+    - Deletes existing metadata
+    - Populates with BIRD datamodel metadata (from sqldev)
+    - Populates with BIRD report templates
+    - Loads extra variables from CSV file
+    - Imports hierarchies (from website)
+    - Imports semantic integration (from website)
+    - Creates filters and executable filters
+    - Creates joins metadata
+    This function now uses the create_response_with_loading pattern
+    to handle the execution via AJAX on a loading page.
+    """
+
+    if request.GET.get('execute') == 'true':
+        execute_full_setup_core()
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Running Full BIRD Metadata Database Setup (This may take several minutes. Please do not navigate away from this page.)",
+        "Full BIRD Metadata Database Setup completed successfully.",
+        '/pybirdai/edit-cube-links/',
+        "Edit Cube Links"
+    )
+
+
+def member_hierarchy_editor(request, hierarchy_id=None):
+    """
+    View function for rendering the member hierarchy editor page.
+
+    Args:
+        request: HTTP request object
+        hierarchy_id: Optional hierarchy ID to display specific hierarchy
+
+    Returns:
+        Rendered template response with hierarchy data
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    logger.info(f"Rendering member hierarchy editor page for hierarchy_id: {hierarchy_id}")
+
+    # Get all member hierarchies for the dropdown
+    hierarchies = MEMBER_HIERARCHY.objects.all().order_by('name')
+
+    context = {
+        'hierarchies': hierarchies,
+        'selected_hierarchy_id': hierarchy_id
+    }
+
+    # If a specific hierarchy is selected, get its details
+    if hierarchy_id:
+        try:
+            hierarchy = MEMBER_HIERARCHY.objects.get(member_hierarchy_id=hierarchy_id)
+
+            # Get hierarchy data using the integration
+            integration = get_hierarchy_integration()
+            hierarchy_data = integration.get_hierarchy_by_id(hierarchy_id)
+            context.update({
+                'selected_hierarchy': hierarchy,
+                'hierarchy_data_json': json.dumps(hierarchy_data),
+                'hierarchy_info': hierarchy_data.get('hierarchy_info', {})
+            })
+            print(
+                hierarchy_data.get('hierarchy_info', {}).get('hierarchy', {})
+            )
+
+        except MEMBER_HIERARCHY.DoesNotExist:
+            logger.error(f"Member hierarchy {hierarchy_id} not found")
+            context['error'] = f"Member hierarchy {hierarchy_id} not found"
+
+    return render(request, 'pybirdai/member_hierarchy_editor.html', context)
+
+def add_member_to_hierarchy(request):
+    """
+    Endpoint for adding a member to a member hierarchy.
+
+    Args:
+        request: HTTP request object with POST data
+
+    Returns:
+        JSON response with status
+    """
+    logger.info("Handling add member to hierarchy request")
+    if request.method != "POST":
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+    try:
+        data = json.loads(request.body)
+        hierarchy_id = data.get('hierarchy_id')
+        member_id = data.get('member_id')
+        parent_member_id = data.get('parent_member_id')
+        level = data.get('level', 1)
+        comparator = data.get('comparator', '')
+        operator = data.get('operator', '')
+
+        # Get the hierarchy object
+        hierarchy = MEMBER_HIERARCHY.objects.get(member_hierarchy_id=hierarchy_id)
+
+        # Get the member object
+        member = MEMBER.objects.get(member_id=member_id)
+
+        # Get parent member if specified
+        parent_member = None
+        if parent_member_id:
+            parent_member = MEMBER.objects.get(member_id=parent_member_id)
+
+        # Create new hierarchy node
+        new_node = MEMBER_HIERARCHY_NODE.objects.create(
+            member_hierarchy_id=hierarchy,
+            member_id=member,
+            parent_member_id=parent_member,
+            level=level,
+            comparator=comparator,
+            operator=operator
+        )
+        new_node.save()
+
+        logger.info(f"Successfully added member {member_id} to hierarchy {hierarchy_id}")
+        return JsonResponse({
+            'status': 'success',
+            'node_id': new_node.id,
+            'message': 'Member added to hierarchy successfully'
+        })
+
+    except MEMBER_HIERARCHY.DoesNotExist:
+        logger.error(f"Member hierarchy {hierarchy_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Member hierarchy not found'})
+    except MEMBER.DoesNotExist:
+        logger.error(f"Member {member_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Member not found'})
+    except Exception as e:
+        logger.error(f"Error adding member to hierarchy: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def delete_member_from_hierarchy(request):
+    """
+    Endpoint for deleting a member from a member hierarchy.
+    Handles cascading deletion of child nodes.
+
+    Args:
+        request: HTTP request object with POST data
+
+    Returns:
+        JSON response with status
+    """
+    logger.info("Handling delete member from hierarchy request")
+    if request.method != "POST":
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+    try:
+        data = json.loads(request.body)
+        node_id = data.get('node_id')
+        force_delete = data.get('force_delete', False)
+
+        # Get the hierarchy node
+        node = MEMBER_HIERARCHY_NODE.objects.get(id=node_id)
+
+        # Check if this node has children
+        children = MEMBER_HIERARCHY_NODE.objects.filter(parent_member_id=node.member_id)
+
+        if children.exists() and not force_delete:
+            # Return warning about children
+            child_count = children.count()
+            return JsonResponse({
+                'status': 'warning',
+                'message': f'This member has {child_count} child member(s). Do you want to delete them as well?',
+                'has_children': True,
+                'child_count': child_count
+            })
+
+        # Use atomic transaction for deletion
+        with transaction.atomic():
+            if children.exists():
+                # Recursively delete all children
+                def delete_children(parent_member):
+                    child_nodes = MEMBER_HIERARCHY_NODE.objects.filter(
+                        parent_member_id=parent_member,
+                        member_hierarchy_id=node.member_hierarchy_id
+                    )
+                    for child_node in child_nodes:
+                        delete_children(child_node.member_id)
+                        child_node.delete()
+
+                delete_children(node.member_id)
+
+            # Delete the node itself
+            node.delete()
+
+        logger.info(f"Successfully deleted node {node_id} from hierarchy")
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Member deleted from hierarchy successfully'
+        })
+
+    except MEMBER_HIERARCHY_NODE.DoesNotExist:
+        logger.error(f"Hierarchy node {node_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Hierarchy node not found'})
+    except Exception as e:
+        logger.error(f"Error deleting member from hierarchy: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def edit_hierarchy_node(request):
+    """
+    Endpoint for editing a hierarchy node (member, comparator, operator).
+
+    Args:
+        request: HTTP request object with POST data
+
+    Returns:
+        JSON response with status
+    """
+    logger.info("Handling edit hierarchy node request")
+    if request.method != "POST":
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+    try:
+        data = json.loads(request.body)
+        node_id = data.get('node_id')
+        member_id = data.get('member_id')
+        comparator = data.get('comparator', '')
+        operator = data.get('operator', '')
+        level = data.get('level')
+
+        # Get the hierarchy node
+        node = MEMBER_HIERARCHY_NODE.objects.get(id=node_id)
+
+        # Update member if provided
+        if member_id:
+            member = MEMBER.objects.get(member_id=member_id)
+            node.member_id = member
+
+        # Update other fields
+        if comparator is not None:
+            node.comparator = comparator
+        if operator is not None:
+            node.operator = operator
+        if level is not None:
+            node.level = level
+
+        node.save()
+
+        logger.info(f"Successfully updated hierarchy node {node_id}")
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Hierarchy node updated successfully'
+        })
+
+    except MEMBER_HIERARCHY_NODE.DoesNotExist:
+        logger.error(f"Hierarchy node {node_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Hierarchy node not found'})
+    except MEMBER.DoesNotExist:
+        logger.error(f"Member {member_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Member not found'})
+    except Exception as e:
+        logger.error(f"Error editing hierarchy node: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def get_members_by_domain(request, domain_id):
+    """
+    Get members for a specific domain (for dropdown population).
+
+    Args:
+        request: HTTP request object
+        domain_id: ID of domain to get members for
+
+    Returns:
+        JSON response with members data
+    """
+    logger.info(f"Getting members for domain {domain_id}")
+    try:
+        domain = DOMAIN.objects.get(domain_id=domain_id)
+        members = MEMBER.objects.filter(domain_id=domain).order_by('name')
+
+        member_data = []
+        for member in members:
+            member_data.append({
+                'member_id': member.member_id,
+                'code': member.code,
+                'name': member.name,
+                'description': member.description
+            })
+
+        return JsonResponse({
+            'status': 'success',
+            'members': member_data
+        })
+
+    except DOMAIN.DoesNotExist:
+        logger.error(f"Domain {domain_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Domain not found'})
+    except Exception as e:
+        logger.error(f"Error getting members by domain: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def get_subdomain_enumerations(request, subdomain_id):
+    """
+    Get subdomain enumerations for comparator/operator dropdowns.
+
+    Args:
+        request: HTTP request object
+        subdomain_id: ID of subdomain to get enumerations for
+
+    Returns:
+        JSON response with enumeration data
+    """
+    logger.info(f"Getting subdomain enumerations for subdomain {subdomain_id}")
+    try:
+        subdomain = SUBDOMAIN.objects.get(subdomain_id=subdomain_id)
+        enumerations = SUBDOMAIN_ENUMERATION.objects.filter(subdomain_id=subdomain).order_by('name')
+
+        enum_data = []
+        for enum in enumerations:
+            enum_data.append({
+                'enumeration_id': enum.enumeration_id,
+                'code': enum.code,
+                'name': enum.name,
+                'description': enum.description
+            })
+
+        return JsonResponse({
+            'status': 'success',
+            'enumerations': enum_data
+        })
+
+    except SUBDOMAIN.DoesNotExist:
+        logger.error(f"Subdomain {subdomain_id} not found")
+        return JsonResponse({'status': 'error', 'message': 'Subdomain not found'})
+    except Exception as e:
+        logger.error(f"Error getting subdomain enumerations: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def automode_create_database(request):
+    if request.GET.get('execute') == 'true':
+        try:
+            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+            app_config.run_automode_database_setup()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Database preparation completed successfully!',
+                'instructions': [
+                    'The database configuration files have been generated.',
+                    'To complete the setup:',
+                    '1. Stop the Django server (Ctrl+C in the terminal)',
+                    '2. Run: python manage.py complete_automode_setup',
+                    '3. Restart the server: python manage.py runserver 0.0.0.0:8000',
+                    '4. Your database will be ready to use!'
+                ]
+            })
+        except Exception as e:
+            logger.error(f"Automode database setup failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading_extended(
+        request,
+        "Creating BIRD Database (Automode) - Preparing database configuration files (this won't restart the server)",
+        "Database preparation completed successfully! Please follow the instructions to complete the setup.",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
+def automode_import_bird_metamodel_from_website(request):
+    if request.GET.get('execute') == 'true':
+        from pybirdai.utils import bird_ecb_website_fetcher
+        client = bird_ecb_website_fetcher.BirdEcbWebsiteClient()
+        print(client.request_and_save_all())
+
+    return create_response_with_loading(
+        request,
+        "Importing BIRD Metamodel from Website (Automode)",
+        "BIRD Metamodel import completed successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
+def test_automode_components(request):
+    """Test view to verify automode components work individually."""
+    if request.GET.get('execute') == 'true':
+        try:
+            from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
+            from django.conf import settings
+            import os
+
+            # Test basic setup
+            base_dir = settings.BASE_DIR
+            logger.info(f"Base directory: {base_dir}")
+
+            # Check if required directories exist
+            resources_dir = os.path.join(base_dir, 'resources')
+            results_dir = os.path.join(base_dir, 'results')
+            ldm_dir = os.path.join(resources_dir, 'ldm')
+
+            logger.info(f"Resources directory exists: {os.path.exists(resources_dir)}")
+            logger.info(f"Results directory exists: {os.path.exists(results_dir)}")
+            logger.info(f"LDM directory exists: {os.path.exists(ldm_dir)}")
+
+            if os.path.exists(ldm_dir):
+                ldm_files = os.listdir(ldm_dir)
+                logger.info(f"LDM files: {ldm_files}")
+
+            # Test creating a simple Django model instance
+            app_config = RunCreateDjangoModels('pybirdai', 'birds_nest')
+            logger.info("RunCreateDjangoModels instance created successfully")
+
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Basic components test passed',
+                'base_dir': str(base_dir),
+                'resources_exists': os.path.exists(resources_dir),
+                'results_exists': os.path.exists(results_dir),
+                'ldm_exists': os.path.exists(ldm_dir)
+            })
+
+        except Exception as e:
+            logger.error(f"Test failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading_extended(
+        request,
+        "Testing Automode Components",
+        "Component test completed successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
+
+def run_fetch_curated_resources(request):
+    """Test view to verify automode components work individually."""
+    if request.GET.get('execute') == 'true':
+        try:
+            from pybirdai.utils import github_file_fetcher
+
+            fetcher = github_file_fetcher.GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
+
+
+            logger.info("STEP 1: Fetching specific derivation model file")
+
+            fetcher.fetch_derivation_model_file(
+                "birds_nest/pybirdai",
+                "bird_data_model.py",
+                f"resources{os.sep}derivation_implementation",
+                "bird_data_model_with_derivation.py"
+            )
+
+            logger.info("STEP 2: Fetching database export files")
+            fetcher.fetch_database_export_files()
+
+
+            logger.info("STEP 3: Fetching test fixtures and templates")
+            fetcher.fetch_test_fixtures()
+
+            logger.info("File fetching process completed successfully!")
+            print("File fetching process completed!")
+
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Basic components test passed',
+                'base_dir': str(base_dir),
+                'resources_exists': os.path.exists(resources_dir),
+                'results_exists': os.path.exists(results_dir),
+                'ldm_exists': os.path.exists(ldm_dir)
+            })
+
+        except Exception as e:
+            logger.error(f"Test failed: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return create_response_with_loading_extended(
+        request,
+        "Fetching Test Components and derived fields",
+        "Test components and derived fields fetched successfully!",
+        '/pybirdai/automode',
+        "Back to Automode"
+    )
+
+
+
+def get_hierarchy_json(request, hierarchy_id):
+    """
+    API endpoint to get hierarchy data in JSON format for the visual editor
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    try:
+        integration = get_hierarchy_integration()
+        hierarchy_data = integration.get_hierarchy_by_id(hierarchy_id)
+        return JsonResponse(hierarchy_data)
+    except Exception as e:
+        logger.error(f"Error getting hierarchy JSON for {hierarchy_id}: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def save_hierarchy_json(request):
+    """
+    API endpoint to save hierarchy data from the visual editor
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST method required'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        hierarchy_id = data.get('hierarchy_id')
+        visualization_data = data.get('data')
+
+        integration = get_hierarchy_integration()
+
+        success = integration.save_hierarchy_from_visualization(hierarchy_id, visualization_data)
+
+        return JsonResponse({
+            'success': success,
+            'message': 'Hierarchy saved successfully' if success else 'Failed to save hierarchy'
+        })
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error saving hierarchy: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_domain_members_json(request, domain_id):
+    """
+    API endpoint to get all members for a domain in JSON format
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    try:
+        integration = get_hierarchy_integration()
+        members = integration.get_domain_members(domain_id)
+        return JsonResponse({'members': members})
+    except Exception as e:
+        logger.error(f"Error getting domain members for {domain_id}: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_available_hierarchies_json(request):
+    """
+    API endpoint to get all available hierarchies in JSON format
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    try:
+        integration = get_hierarchy_integration()
+        hierarchies = integration.get_available_hierarchies()
+        return JsonResponse({'hierarchies': hierarchies})
+    except Exception as e:
+        logger.error(f"Error getting available hierarchies: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def create_hierarchy_from_visualization(request):
+    """
+    API endpoint to create a new hierarchy from visualization data
+    """
+    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST method required'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        hierarchy_id = data.get('hierarchy_id')
+        hierarchy_name = data.get('name')
+        domain_id = data.get('domain_id')
+        description = data.get('description', '')
+        visualization_data = data.get('data')
+
+        if not hierarchy_name or not domain_id or not visualization_data:
+            return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+        # Create new hierarchy
+        try:
+            domain = DOMAIN.objects.get(domain_id=domain_id)
+        except DOMAIN.DoesNotExist:
+            return JsonResponse({'error': 'Domain not found'}, status=404)
+
+        hierarchy = MEMBER_HIERARCHY.objects.create(
+            member_hierarchy_id=hierarchy_id,
+            name=hierarchy_name,
+            description=description,
+            domain_id=domain
+        )
+
+        # Save the visualization data
+        integration = get_hierarchy_integration()
+        success = integration.save_hierarchy_from_visualization(hierarchy_id, visualization_data)
+
+        if success:
+            return JsonResponse({
+                'success': True,
+                'hierarchy_id': hierarchy_id,
+                'message': 'Hierarchy created successfully'
+            })
+        else:
+            # Clean up the hierarchy if saving failed
+            hierarchy.delete()
+            return JsonResponse({'error': 'Failed to save hierarchy data'}, status=500)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error creating hierarchy: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+def automode_configure(request):
+    """Handle automode configuration form submission."""
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    try:
+        from .forms import AutomodeConfigurationSessionForm
+        from .services import AutomodeConfigurationService
+    except Exception as e:
+        logger.error(f"Error importing modules in automode_configure: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Server configuration error: {str(e)}'
+        })
+    
+    if request.method == 'POST':
+        try:
+            # Use session-based form that doesn't depend on database model
+            form = AutomodeConfigurationSessionForm(request.POST)
+            
+            if form.is_valid():
+                # Validate GitHub URLs if GitHub is selected
+                service = AutomodeConfigurationService()
+                
+                if form.cleaned_data['technical_export_source'] == 'GITHUB':
+                    url = form.cleaned_data['technical_export_github_url']
+                    # Check environment variable first, then form input
+                    import os
+                    token = os.environ.get('GITHUB_TOKEN', form.cleaned_data.get('github_token'))
+                    if not service.validate_github_repository(url, token):
+                        error_msg = f'Technical export GitHub repository is not accessible: {url}'
+                        if not token:
+                            error_msg += '. For private repositories, please provide a GitHub Personal Access Token.'
+                        else:
+                            error_msg += '. Please check your token has "repo" permissions and is valid.'
+                        return JsonResponse({
+                            'success': False,
+                            'error': error_msg
+                        })
+                
+                if form.cleaned_data['config_files_source'] == 'GITHUB':
+                    url = form.cleaned_data['config_files_github_url']
+                    # Check environment variable first, then form input
+                    token = os.environ.get('GITHUB_TOKEN', form.cleaned_data.get('github_token'))
+                    if not service.validate_github_repository(url, token):
+                        error_msg = f'Configuration files GitHub repository is not accessible: {url}'
+                        if not token:
+                            error_msg += '. For private repositories, please provide a GitHub Personal Access Token.'
+                        else:
+                            error_msg += '. Please check your token has "repo" permissions and is valid.'
+                        return JsonResponse({
+                            'success': False,
+                            'error': error_msg
+                        })
+                
+                # Store configuration in a temporary file instead of database/session
+                config_data = {
+                    'data_model_type': form.cleaned_data['data_model_type'],
+                    'technical_export_source': form.cleaned_data['technical_export_source'],
+                    'technical_export_github_url': form.cleaned_data.get('technical_export_github_url', ''),
+                    'config_files_source': form.cleaned_data['config_files_source'],
+                    'config_files_github_url': form.cleaned_data.get('config_files_github_url', ''),
+                    'when_to_stop': form.cleaned_data['when_to_stop'],
+                }
+                
+                # Store GitHub token (temporarily, for execution)
+                # Prioritize environment variable, then form input
+                import os
+                github_token = os.environ.get('GITHUB_TOKEN', form.cleaned_data.get('github_token', ''))
+                if github_token:
+                    config_data['github_token'] = github_token
+                
+                # Save to temporary file
+                _save_temp_config(config_data)
+                
+                logger.info("Automode configuration saved to temporary file")
+                return JsonResponse({
+                    'success': True, 
+                    'message': 'Configuration saved successfully. Ready for execution.'
+                })
+            else:
+                # Return form errors
+                errors = []
+                for field, field_errors in form.errors.items():
+                    for error in field_errors:
+                        errors.append(f"{field}: {error}")
+                
+                return JsonResponse({
+                    'success': False,
+                    'error': '; '.join(errors)
+                })
+                
+        except Exception as e:
+            logger.error(f"Error saving automode configuration: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': f'Error saving configuration: {str(e)}'
+            })
+    
+    # GET request - return current configuration
+    try:
+        # First try to get configuration from temporary file
+        temp_config = _load_temp_config()
+        
+        if temp_config:
+            # Use temporary file configuration if available
+            config_data = temp_config
+        else:
+            # Fall back to database configuration if temp file is empty
+            try:
+                from .bird_meta_data_model import AutomodeConfiguration
+                config = AutomodeConfiguration.get_active_configuration()
+                config_data = {
+                    'data_model_type': config.data_model_type if config else 'ELDM',
+                    'technical_export_source': config.technical_export_source if config else 'BIRD_WEBSITE',
+                    'technical_export_github_url': config.technical_export_github_url if config else '',
+                    'config_files_source': config.config_files_source if config else 'MANUAL',
+                    'config_files_github_url': config.config_files_github_url if config else '',
+                    'when_to_stop': config.when_to_stop if config else 'RESOURCE_DOWNLOAD'
+                }
+            except Exception:
+                # If database doesn't exist or model isn't available, use defaults
+                config_data = {
+                    'data_model_type': 'ELDM',
+                    'technical_export_source': 'BIRD_WEBSITE',
+                    'technical_export_github_url': '',
+                    'config_files_source': 'MANUAL',
+                    'config_files_github_url': '',
+                    'when_to_stop': 'RESOURCE_DOWNLOAD'
+                }
+        
+        return JsonResponse({
+            'success': True,
+            'config': config_data
+        })
+    except Exception as e:
+        logger.error(f"Error retrieving automode configuration: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Error retrieving configuration: {str(e)}'
+        })
+
+
+def automode_execute(request):
+    """Execute automode setup with current configuration."""
+    from .services import AutomodeConfigurationService
+    from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    if request.method == 'POST':
+        try:
+            # Get configuration from temporary file
+            temp_config_data = _load_temp_config()
+            if not temp_config_data:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'No configuration found. Please configure automode first.'
+                })
+            
+            # Check confirmation
+            confirm_execution = request.POST.get('confirm_execution') == 'on'
+            if not confirm_execution:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Execution must be confirmed.'
+                })
+            
+            force_refresh = request.POST.get('force_refresh') == 'on'
+            # Get GitHub token from environment, temp config, or POST data
+            import os
+            github_token = (os.environ.get('GITHUB_TOKEN') or 
+                          temp_config_data.get('github_token') or 
+                          request.POST.get('github_token', '')).strip() or None
+            
+            # Create a temporary configuration object from temp file data
+            from .bird_meta_data_model import AutomodeConfiguration
+            temp_config = AutomodeConfiguration(
+                data_model_type=temp_config_data['data_model_type'],
+                technical_export_source=temp_config_data['technical_export_source'],
+                technical_export_github_url=temp_config_data.get('technical_export_github_url', ''),
+                config_files_source=temp_config_data['config_files_source'],
+                config_files_github_url=temp_config_data.get('config_files_github_url', ''),
+                when_to_stop=temp_config_data['when_to_stop']
+            )
+            
+            # Execute automode setup with session-based configuration
+            service = AutomodeConfigurationService()
+            results = service.execute_automode_setup_with_database_creation(temp_config, github_token, force_refresh)
+            
+            if results['errors']:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Execution completed with errors: ' + '; '.join(results['errors']),
+                    'results': results
+                })
+            else:
+                # Only clear temporary config file if setup is completely finished
+                # If server restart is required, keep the temp file for continuation
+                if results.get('setup_completed', False) and not results.get('server_restart_required', False):
+                    _clear_temp_config()
+                    
+                # Provide clear messaging about what happened
+                message = 'Automode setup executed successfully'
+                next_steps = []
+                
+                if results.get('server_restart_required', False):
+                    message = 'Initial setup completed - database created successfully!'
+                    next_steps = [
+                        '1. Stop the Django server (Ctrl+C in the terminal)',
+                        '2. Run: python manage.py complete_automode_setup  (this will take a while and will restart the server)',
+                        '3. After the server restarts, press "Continue After Restart" button below'
+                    ]
+                elif results.get('stopped_at') == 'RESOURCE_DOWNLOAD':
+                    message = 'Resource download completed - ready for step-by-step mode'
+                
+                # Add next steps to results if present
+                if next_steps:
+                    results['detailed_next_steps'] = next_steps
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': message,
+                    'results': results
+                })
+                
+        except Exception as e:
+            logger.error(f"Error executing automode setup: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'error': f'Error executing setup: {str(e)}'
+            })
+    
+    # GET request not supported for execution
+    return JsonResponse({
+        'success': False,
+        'error': 'GET method not supported for execution'
+    })
+
+
+def automode_continue_post_restart(request):
+    """Handle continuing automode execution after server restart."""
+    import logging
+    from django.conf import settings
+    logger = logging.getLogger(__name__)
+    
+    if request.method != 'POST':
+        return JsonResponse({
+            'success': False,
+            'error': 'POST method required for continuation'
+        })
+    
+    try:
+        from .services import AutomodeConfigurationService
+        from .forms import AutomodeConfigurationSessionForm
+    except Exception as e:
+        logger.error(f"Error importing modules in automode_continue_post_restart: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Server configuration error: {str(e)}'
+        })
+    
+    try:
+        # Load configuration from temporary file
+        temp_config = _load_temp_config()
+        
+        if not temp_config:
+            # Provide more detailed error information for debugging
+            temp_path = _get_temp_config_path()
+            fallback_path = os.path.join('.', 'automode_config.json')
+            
+            error_details = [
+                f"Expected config at: {temp_path} (exists: {os.path.exists(temp_path)})",
+                f"Fallback config at: {fallback_path} (exists: {os.path.exists(fallback_path)})",
+                f"Current working directory: {os.getcwd()}",
+                f"BASE_DIR: {getattr(settings, 'BASE_DIR', 'Not set')}"
+            ]
+            
+            logger.error("Configuration not found. Debug details:")
+            for detail in error_details:
+                logger.error(f"  {detail}")
+            
+            return JsonResponse({
+                'success': False,
+                'error': 'No configuration found. Please configure and save settings first.',
+                'debug_info': error_details if hasattr(settings, 'DEBUG') and settings.DEBUG else None
+            })
+        
+        # Create a simple config object from the temp data
+        class SimpleConfig:
+            def __init__(self, data):
+                self.data_model_type = data.get('data_model_type', 'ELDM')
+                self.technical_export_source = data.get('technical_export_source', 'BIRD_WEBSITE')
+                self.technical_export_github_url = data.get('technical_export_github_url', '')
+                self.config_files_source = data.get('config_files_source', 'MANUAL')
+                self.config_files_github_url = data.get('config_files_github_url', '')
+                self.when_to_stop = data.get('when_to_stop', 'RESOURCE_DOWNLOAD')
+        
+        config = SimpleConfig(temp_config)
+        
+        # Execute post-restart steps
+        service = AutomodeConfigurationService()
+        results = service.execute_automode_post_restart(config)
+        
+        logger.info(f"Automode post-restart execution completed: {results}")
+        
+        if results['errors']:
+            return JsonResponse({
+                'success': False,
+                'error': 'Post-restart execution completed with errors: ' + '; '.join(results['errors']),
+                'results': results
+            })
+        else:
+            # Clear temporary config file after successful completion
+            if results.get('setup_completed', False):
+                _clear_temp_config()
+                
+            return JsonResponse({
+                'success': True,
+                'message': 'Automode post-restart execution completed successfully',
+                'results': results
+            })
+            
+    except Exception as e:
+        logger.error(f"Error in automode post-restart execution: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Error continuing after restart: {str(e)}'
+        })
+
+
+def _get_temp_config_path():
+    """Get the path for the temporary configuration file."""
+    import tempfile
+    from django.conf import settings
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    # Use a persistent temp file in the project directory
+    base_dir = getattr(settings, 'BASE_DIR', tempfile.gettempdir())
+    
+    # Convert Path object to string if necessary (Django 5.x uses Path objects)
+    if hasattr(base_dir, '__fspath__'):  # Check if it's a path-like object
+        temp_dir = str(base_dir)
+    else:
+        temp_dir = base_dir
+    
+    # Ensure we use absolute path to avoid working directory issues
+    if not os.path.isabs(temp_dir):
+        temp_dir = os.path.abspath(temp_dir)
+    
+    config_path = os.path.join(temp_dir, 'automode_config.json')
+    logger.debug(f"Temp config path resolved to: {config_path}")
+    return config_path
+
+
+def _save_temp_config(config_data):
+    """Save configuration data to a temporary file."""
+    import json
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    temp_path = _get_temp_config_path()
+    
+    try:
+        with open(temp_path, 'w') as f:
+            json.dump(config_data, f, indent=2)
+        logger.info(f"Configuration saved to temporary file: {temp_path}")
+    except Exception as e:
+        logger.error(f"Error saving configuration to temporary file: {e}")
+        raise
+
+
+def _load_temp_config():
+    """Load configuration data from temporary file."""
+    import json
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    temp_path = _get_temp_config_path()
+    
+    try:
+        logger.info(f"Attempting to load configuration from: {temp_path}")
+        if os.path.exists(temp_path):
+            logger.info(f"Configuration file exists at: {temp_path}")
+            with open(temp_path, 'r') as f:
+                config_data = json.load(f)
+            logger.info(f"Configuration loaded successfully from: {temp_path}")
+            logger.debug(f"Loaded config data: {config_data}")
+            return config_data
+        else:
+            logger.warning(f"No temporary configuration file found at: {temp_path}")
+            
+            # Try fallback location for debugging
+            fallback_path = os.path.join('.', 'automode_config.json')
+            logger.info(f"Checking fallback location: {fallback_path}")
+            if os.path.exists(fallback_path):
+                logger.info(f"Found config at fallback location: {fallback_path}")
+                try:
+                    with open(fallback_path, 'r') as f:
+                        config_data = json.load(f)
+                    logger.info(f"Successfully loaded config from fallback: {config_data}")
+                    return config_data
+                except Exception as e:
+                    logger.error(f"Error reading fallback config file: {e}")
+            else:
+                logger.warning(f"No configuration file found at fallback location either: {fallback_path}")
+            
+            return None
+    except Exception as e:
+        logger.error(f"Error loading configuration from temporary file {temp_path}: {e}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return None
+
+
+def _clear_temp_config():
+    """Clear the temporary configuration file."""
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    temp_path = _get_temp_config_path()
+    
+    try:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+            logger.info(f"Temporary configuration file cleared: {temp_path}")
+    except Exception as e:
+        logger.error(f"Error clearing temporary configuration file: {e}")
+
+
+def automode_debug_config(request):
+    """Debug endpoint to check configuration file status."""
+    import logging
+    from django.conf import settings
+    logger = logging.getLogger(__name__)
+    
+    try:
+        temp_path = _get_temp_config_path()
+        fallback_path = os.path.join('.', 'automode_config.json')
+        
+        base_dir_raw = getattr(settings, 'BASE_DIR', 'Not set')
+        base_dir_str = str(base_dir_raw) if hasattr(base_dir_raw, '__fspath__') else base_dir_raw
+        
+        debug_info = {
+            'temp_config_path': temp_path,
+            'temp_config_exists': os.path.exists(temp_path),
+            'fallback_path': fallback_path,
+            'fallback_exists': os.path.exists(fallback_path),
+            'current_working_dir': os.getcwd(),
+            'base_dir_raw': str(base_dir_raw),
+            'base_dir_resolved': base_dir_str,
+            'path_resolution_type': type(base_dir_raw).__name__,
+        }
+        
+        # Try to read config if exists
+        config_data = None
+        if os.path.exists(temp_path):
+            try:
+                with open(temp_path, 'r') as f:
+                    import json
+                    config_data = json.load(f)
+                debug_info['config_data'] = config_data
+                debug_info['config_status'] = 'Successfully loaded from temp path'
+            except Exception as e:
+                debug_info['config_error'] = str(e)
+                debug_info['config_status'] = 'Error loading from temp path'
+        elif os.path.exists(fallback_path):
+            try:
+                with open(fallback_path, 'r') as f:
+                    import json
+                    config_data = json.load(f)
+                debug_info['config_data'] = config_data
+                debug_info['config_status'] = 'Successfully loaded from fallback path'
+            except Exception as e:
+                debug_info['config_error'] = str(e)
+                debug_info['config_status'] = 'Error loading from fallback path'
+        else:
+            debug_info['config_status'] = 'No configuration file found'
+        
+        return JsonResponse({
+            'success': True,
+            'debug_info': debug_info
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+
+def automode_status(request):
+    """Get current automode configuration status and file information."""
+    from .bird_meta_data_model import AutomodeConfiguration
+    import os
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    try:
+        config = AutomodeConfiguration.get_active_configuration()
+        
+        # Check file existence
+        file_status = {
+            'technical_export': {
+                'directory': 'resources/technical_export',
+                'exists': os.path.exists('resources/technical_export'),
+                'file_count': len(os.listdir('resources/technical_export')) if os.path.exists('resources/technical_export') else 0
+            },
+            'joins_configuration': {
+                'directory': 'resources/joins_configuration',
+                'exists': os.path.exists('resources/joins_configuration'),
+                'file_count': len(os.listdir('resources/joins_configuration')) if os.path.exists('resources/joins_configuration') else 0
+            },
+            'extra_variables': {
+                'directory': 'resources/extra_variables',
+                'exists': os.path.exists('resources/extra_variables'),
+                'file_count': len(os.listdir('resources/extra_variables')) if os.path.exists('resources/extra_variables') else 0
+            },
+            'ldm': {
+                'directory': 'resources/ldm',
+                'exists': os.path.exists('resources/ldm'),
+                'file_count': len(os.listdir('resources/ldm')) if os.path.exists('resources/ldm') else 0
+            }
+        }
+        
+        return JsonResponse({
+            'success': True,
+            'configuration': {
+                'exists': config is not None,
+                'data_model_type': config.data_model_type if config else None,
+                'technical_export_source': config.technical_export_source if config else None,
+                'config_files_source': config.config_files_source if config else None,
+                'last_updated': config.updated_at.isoformat() if config else None
+            },
+            'file_status': file_status
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting automode status: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Error getting status: {str(e)}'
+        })
+

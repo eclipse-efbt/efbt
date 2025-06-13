@@ -13,6 +13,7 @@ from django.urls import path
 
 from . import views
 from . import report_views
+from . import workflow_views
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -21,6 +22,10 @@ app_name = 'pybirdai'  # Add this line if using namespaces
 
 urlpatterns = [
     path('', views.home_view, name='home'),  # This should handle the root URL of your app
+    path('automode/', views.automode_view, name='automode'),
+    path('automode/create-database/', views.automode_create_database, name='automode_create_database'),
+    path('automode/test-components/', views.test_automode_components, name='test_automode_components'),
+    path('step-by-step-mode/', views.step_by_step_mode_view, name='step_by_step_mode'),
     path('run_import_input_model_from_sqldev/', views.run_import_input_model_from_sqldev, name='run_import_input_model_from_sqldev'),
     path('edit-variable-mappings/', views.edit_variable_mappings, name='edit_variable_mappings'),
     path('create-variable-mapping/', views.create_variable_mapping, name='create_variable_mapping'),
@@ -71,6 +76,7 @@ urlpatterns = [
     path('run-create-executable-filters/', views.run_create_executable_filters, name='run_create_executable_filters'),
     path('run-create-executable-filters-from-db/', views.run_create_executable_filters_from_db, name='run_create_executable_filters_from_db'),
     path('run-create-python-joins-from-db/', views.run_create_python_joins_from_db, name='run_create_python_joins_from_db'),
+    path('run-create-python-transformations-from-db/', views.run_create_python_transformations_from_db, name='run_create_python_transformations_from_db'),
     path('execute-data-point/<str:data_point_id>/', views.execute_data_point, name='execute_data_point'),
     path('show-report/<str:report_id>/', views.show_report, name='show_report'),
     path('report-templates/', report_views.report_templates, name='report_templates'),
@@ -127,5 +133,44 @@ urlpatterns = [
     # path('return_cubelink_visualisation/?cube_id', views.return_cubelink_visualisation, name='return_cubelink_visualisation'),
     path('return_cubelink_visualisation/?cube_id=<int:cube_id>&join_identifier=<str:join_identifier>&in_md=<str:in_md>', views.return_cubelink_visualisation, name='return_cubelink_visualisation'),
     path('test_report_view/', views.test_report_view, name='test_report_view'),
+    path('bulk-delete-cube-structure-item-links/', views.bulk_delete_cube_structure_item_links, name='bulk_delete_cube_structure_item_links'),
+    path('delete-cube-structure-item-link-dupl/<str:cube_structure_item_link_id>/', views.delete_cube_structure_item_link_dupl, name='delete_cube_structure_item_link_dupl'),
+    path('member_hierarchy_editor/', views.member_hierarchy_editor, name='member_hierarchy_editor'),
+    path('member_hierarchy_editor/<str:hierarchy_id>/', views.member_hierarchy_editor, name='member_hierarchy_editor'),
+    path('add_member_to_hierarchy/', views.add_member_to_hierarchy, name='add_member_to_hierarchy'),
+    path('delete_member_from_hierarchy/', views.delete_member_from_hierarchy, name='delete_member_from_hierarchy'),
+    path('edit_hierarchy_node/', views.edit_hierarchy_node, name='edit_hierarchy_node'),
+    path('get_members_by_domain/<str:domain_id>/', views.get_members_by_domain, name='get_members_by_domain'),
+    path('get_subdomain_enumerations/', views.get_subdomain_enumerations, name='get_subdomain_enumerations'),
+    path('run-full-setup/', views.run_full_setup, name='run_full_setup'),
+    path('automode-import-bird-metamodel-from-website/', views.automode_import_bird_metamodel_from_website, name='automode_import_bird_metamodel_from_website'),
+
+    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources'),
     
+    # New hierarchy editor API endpoints
+    path('api/hierarchy/<str:hierarchy_id>/json/', views.get_hierarchy_json, name='get_hierarchy_json'),
+    path('api/hierarchy/save/', views.save_hierarchy_json, name='save_hierarchy_json'),
+    path('api/domain/<str:domain_id>/members/', views.get_domain_members_json, name='get_domain_members_json'),
+    path('api/hierarchies/', views.get_available_hierarchies_json, name='get_available_hierarchies_json'),
+    path('api/hierarchy/create/', views.create_hierarchy_from_visualization, name='create_hierarchy_from_visualization'),
+
+    path('automode/configure/', views.automode_configure, name='automode_configure'),
+    path('automode/execute/', views.automode_execute, name='automode_execute'),
+    path('automode/continue-post-restart/', views.automode_continue_post_restart, name='automode_continue_post_restart'),
+    path('automode/debug-config/', views.automode_debug_config, name='automode_debug_config'),
+    path('automode/status/', views.automode_status, name='automode_status'),
+    path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources'),
+    
+    # Workflow URLs for 6-task UI
+    path('workflow/', workflow_views.workflow_dashboard, name='workflow_dashboard'),
+    path('workflow/task/<int:task_number>/<str:operation>/', workflow_views.workflow_task_router, name='workflow_task'),
+    path('workflow/automode/', workflow_views.workflow_automode, name='workflow_automode'),
+    path('workflow/database-setup/', workflow_views.workflow_database_setup, name='workflow_database_setup'),
+    path('workflow/run-migrations/', workflow_views.workflow_run_migrations, name='workflow_run_migrations'),
+    path('workflow/migration-status/', workflow_views.workflow_migration_status, name='workflow_migration_status'),
+    path('workflow/database-setup-status/', workflow_views.workflow_database_setup_status, name='workflow_database_setup_status'),
+    path('workflow/automode-status/', workflow_views.workflow_automode_status, name='workflow_automode_status'),
+    path('workflow/save-config/', workflow_views.workflow_save_config, name='workflow_save_config'),
+    path('workflow/task/<int:task_number>/status/', workflow_views.workflow_task_status, name='workflow_task_status'),
+
 ]

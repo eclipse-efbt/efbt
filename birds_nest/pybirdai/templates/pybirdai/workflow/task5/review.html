@@ -1,0 +1,286 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=5 operation='do' %}">Task 5: Python Transformation Rules</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 5: Python Transformation Rules - Review</h1>
+    
+    
+    <div class="form-actions" style="margin-top: 30px;">
+        <a href="{% url 'pybirdai:workflow_task' task_number=5 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
+        <a href="{% url 'pybirdai:workflow_task' task_number=6 operation='do' %}" class="btn btn-primary">Proceed to Task 6</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+.generation-summary {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.summary-total {
+    flex: 0 0 200px;
+    background: #0d6efd;
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.summary-total h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.total-count {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.summary-total p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.summary-breakdown {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.code-category {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.code-category h4 {
+    margin: 0 0 10px 0;
+    color: #495057;
+}
+
+.category-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-label {
+    color: #6c757d;
+}
+
+.quality-metrics {
+    margin-bottom: 30px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.metric-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.metric-card h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #495057;
+}
+
+.metric-display {
+    margin: 15px 0;
+}
+
+.circular-progress {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(#0d6efd 0deg, #0d6efd calc(var(--value) * 3.6deg), #e9ecef calc(var(--value) * 3.6deg));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.circular-progress::before {
+    content: '';
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: white;
+}
+
+.progress-value {
+    position: relative;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.complexity-score {
+    font-size: 36px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.complexity-score.good {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.code-structure {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.code-structure pre {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.performance-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.performance-estimates {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.estimate-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.estimate-label {
+    font-weight: 500;
+}
+
+.estimate-value {
+    color: #0d6efd;
+    font-weight: bold;
+}
+
+.code-actions {
+    margin-top: 30px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.metadata-review-section {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.review-category {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.review-category h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.review-category p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.review-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.review-link:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+    color: #0d6efd;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.link-text {
+    font-weight: 500;
+}
+</style>
+
+<script>
+// Set circular progress values
+document.querySelectorAll('.circular-progress').forEach(el => {
+    const value = el.getAttribute('data-value');
+    el.style.setProperty('--value', value);
+});
+
+function viewGeneratedCode() {
+    window.open('/pybirdai/view-generated-code/', '_blank');
+}
+
+function runLinting() {
+    alert('Running code linting... This feature will be available soon.');
+}
+
+function downloadCode() {
+    window.location.href = '/pybirdai/download-generated-code/';
+}
+</script>
+{% endblock %}

@@ -1,0 +1,392 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=6 operation='do' %}">Task 6: Full Execution with Test Suite</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 6: Full Execution with Test Suite - Review</h1>
+    
+    <div class="execution-overview">
+        <div class="overview-card {% if execution_data.tests_failed == 0 %}success{% else %}warning{% endif %}">
+            <h2>Execution Status</h2>
+            <div class="status-icon">
+                {% if execution_data.tests_failed == 0 %}
+                <span style="font-size: 48px;">✓</span>
+                {% else %}
+                <span style="font-size: 48px;">⚠️</span>
+                {% endif %}
+            </div>
+            <p class="status-text">
+                {% if execution_data.tests_failed == 0 %}
+                All tests passed successfully
+                {% else %}
+                {{ execution_data.tests_failed }} tests failed
+                {% endif %}
+            </p>
+            <div class="execution-time">
+                <span class="time-label">Total Execution Time:</span>
+                <span class="time-value">{{ execution_data.execution_time|default:"0:00:00" }}</span>
+            </div>
+        </div>
+        
+        <div class="test-summary">
+            <h3>Test Results</h3>
+            <div class="test-stats">
+                <div class="test-stat">
+                    <div class="stat-value">{{ execution_data.total_tests|default:0 }}</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                <div class="test-stat passed">
+                    <div class="stat-value">{{ execution_data.tests_passed|default:0 }}</div>
+                    <div class="stat-label">Passed</div>
+                </div>
+                <div class="test-stat failed">
+                    <div class="stat-value">{{ execution_data.tests_failed|default:0 }}</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="test-stat skipped">
+                    <div class="stat-value">{{ execution_data.tests_skipped|default:0 }}</div>
+                    <div class="stat-label">Skipped</div>
+                </div>
+            </div>
+            <div class="test-coverage">
+                <div class="coverage-bar">
+                    <div class="coverage-fill" style="width: {% widthratio execution_data.tests_passed execution_data.total_tests 100 %}%"></div>
+                </div>
+                <p>Pass Rate: {% widthratio execution_data.tests_passed execution_data.total_tests 100 %}%</p>
+            </div>
+        </div>
+    </div>
+    
+    <h2>Stage-by-Stage Results</h2>
+    
+    <div class="stage-results">
+        <div class="stage-result">
+            <h3>1. Data Loading & Validation</h3>
+            <div class="stage-metrics">
+                <span class="metric">Files Loaded: <strong>{{ execution_data.files_loaded|default:0 }}</strong></span>
+                <span class="metric">Records Processed: <strong>{{ execution_data.total_records|default:0|floatformat:0 }}</strong></span>
+                <span class="metric">Status: <strong class="status-success">✓ Complete</strong></span>
+            </div>
+        </div>
+        
+        <div class="stage-result">
+            <h3>2. Filter Execution</h3>
+            <div class="stage-metrics">
+                <span class="metric">Filters Applied: <strong>{{ execution_data.filters_applied|default:0 }}</strong></span>
+                <span class="metric">Records Filtered: <strong>{{ execution_data.records_filtered|default:0|floatformat:0 }}</strong></span>
+                <span class="metric">Status: <strong class="status-success">✓ Complete</strong></span>
+            </div>
+        </div>
+        
+        <div class="stage-result">
+            <h3>3. Join Operations</h3>
+            <div class="stage-metrics">
+                <span class="metric">Joins Executed: <strong>{{ execution_data.joins_executed|default:0 }}</strong></span>
+                <span class="metric">Tables Merged: <strong>{{ execution_data.tables_merged|default:0 }}</strong></span>
+                <span class="metric">Status: <strong class="status-success">✓ Complete</strong></span>
+            </div>
+        </div>
+        
+        <div class="stage-result">
+            <h3>4. Transformation Processing</h3>
+            <div class="stage-metrics">
+                <span class="metric">Transformations: <strong>{{ execution_data.transformations_applied|default:0 }}</strong></span>
+                <span class="metric">Calculations: <strong>{{ execution_data.calculations_performed|default:0 }}</strong></span>
+                <span class="metric">Status: <strong class="status-success">✓ Complete</strong></span>
+            </div>
+        </div>
+        
+        <div class="stage-result">
+            <h3>5. Report Generation</h3>
+            <div class="stage-metrics">
+                <span class="metric">Reports Generated: <strong>{{ execution_data.reports_generated|default:0 }}</strong></span>
+                <span class="metric">Export Files: <strong>{{ execution_data.export_files|default:0 }}</strong></span>
+                <span class="metric">Status: <strong class="status-success">✓ Complete</strong></span>
+            </div>
+        </div>
+    </div>
+    
+    <h2>Generated Reports</h2>
+    
+    <div class="reports-section">
+        <div class="report-grid">
+            <div class="report-card">
+                <h3>FINREP Reports</h3>
+                <p>Financial Reporting templates</p>
+                <a href="#" class="btn btn-sm btn-primary">View Reports</a>
+            </div>
+            
+            <div class="report-card">
+                <h3>Validation Reports</h3>
+                <p>Data quality and validation results</p>
+                <a href="#" class="btn btn-sm btn-primary">View Reports</a>
+            </div>
+            
+            <div class="report-card">
+                <h3>Test Reports</h3>
+                <p>Detailed test execution results</p>
+                <a href="#" class="btn btn-sm btn-primary">View Reports</a>
+            </div>
+            
+            <div class="report-card">
+                <h3>Performance Report</h3>
+                <p>Execution performance analysis</p>
+                <a href="#" class="btn btn-sm btn-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+    
+    {% if execution_data.tests_failed > 0 %}
+    <h2>Failed Tests</h2>
+    
+    <div class="failed-tests">
+        <div class="alert alert-danger">
+            <h4>The following tests failed:</h4>
+            <ul>
+                <li>test_filter_validation.py::test_business_rule_filter_03 - AssertionError</li>
+                <li>test_joins.py::test_complex_join_scenario_12 - ValueError</li>
+                <li>test_transformations.py::test_aggregation_accuracy - Precision Error</li>
+            </ul>
+            <p style="margin-top: 15px;">
+                <a href="#" class="btn btn-sm btn-outline-light">View Detailed Error Logs</a>
+            </p>
+        </div>
+    </div>
+    {% endif %}
+    
+    <h2>Export Options</h2>
+    
+    <div class="export-section">
+        <h3>Download Results</h3>
+        <div class="export-options">
+            <button class="btn btn-outline-primary" onclick="exportResults('excel')">
+                <i class="fas fa-file-excel"></i> Export to Excel
+            </button>
+            <button class="btn btn-outline-primary" onclick="exportResults('pdf')">
+                <i class="fas fa-file-pdf"></i> Export to PDF
+            </button>
+            <button class="btn btn-outline-primary" onclick="exportResults('xml')">
+                <i class="fas fa-file-code"></i> Export to XML (XBRL)
+            </button>
+            <button class="btn btn-outline-primary" onclick="exportResults('json')">
+                <i class="fas fa-file-code"></i> Export to JSON
+            </button>
+        </div>
+    </div>
+    
+    <div class="form-actions" style="margin-top: 30px;">
+        <a href="{% url 'pybirdai:workflow_task' task_number=6 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-success">Complete Workflow</a>
+    </div>
+</div>
+
+<style>
+.execution-overview {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.overview-card {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    border: 2px solid #dee2e6;
+}
+
+.overview-card.success {
+    border-color: #28a745;
+    background: #d4edda;
+}
+
+.overview-card.warning {
+    border-color: #ffc107;
+    background: #fff3cd;
+}
+
+.status-icon {
+    margin: 20px 0;
+}
+
+.status-text {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 10px 0;
+}
+
+.execution-time {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.time-label {
+    color: #6c757d;
+}
+
+.time-value {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    margin-top: 5px;
+}
+
+.test-summary {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.test-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.test-stat {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.test-stat.passed {
+    background: #d1e7dd;
+}
+
+.test-stat.failed {
+    background: #f8d7da;
+}
+
+.test-stat.skipped {
+    background: #e9ecef;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #212529;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.test-coverage {
+    margin-top: 20px;
+}
+
+.coverage-bar {
+    height: 20px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.coverage-fill {
+    height: 100%;
+    background: #28a745;
+    transition: width 0.3s ease;
+}
+
+.stage-results {
+    margin-bottom: 30px;
+}
+
+.stage-result {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #dee2e6;
+}
+
+.stage-result h3 {
+    margin: 0 0 15px 0;
+    color: #495057;
+}
+
+.stage-metrics {
+    display: flex;
+    gap: 30px;
+}
+
+.metric {
+    color: #6c757d;
+}
+
+.metric strong {
+    color: #0d6efd;
+}
+
+.status-success {
+    color: #28a745;
+}
+
+.reports-section {
+    margin-bottom: 30px;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.report-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.report-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.report-card p {
+    color: #6c757d;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.failed-tests {
+    margin-bottom: 30px;
+}
+
+.export-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.export-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+</style>
+
+<script>
+function exportResults(format) {
+    const url = `{% url "pybirdai:workflow_task" task_number=6 operation="review" %}?export=${format}`;
+    window.open(url, '_blank');
+}
+</script>
+{% endblock %}
