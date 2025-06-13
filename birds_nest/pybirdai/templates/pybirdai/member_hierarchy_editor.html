@@ -831,58 +831,6 @@ function endCanvasDrag() {
     workspace.style.cursor = 'default';
 }
 
-
-
-function fitToView() {
-    if (boxes.length === 0) return;
-
-    // Calculate bounding box of all nodes
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-
-    boxes.forEach(box => {
-        const boxHeight = getActualBoxHeight(box);
-        minX = Math.min(minX, box.x);
-        minY = Math.min(minY, box.y);
-        maxX = Math.max(maxX, box.x + box.width);
-        maxY = Math.max(maxY, box.y + boxHeight);
-    });
-
-    if (minX === Infinity) return;
-
-    // Add padding
-    const padding = 50;
-    const contentWidth = maxX - minX + 2 * padding;
-    const contentHeight = maxY - minY + 2 * padding;
-
-    // Calculate zoom to fit content (only zoom out, never zoom in)
-    const workspaceWidth = workspace.clientWidth;
-    const workspaceHeight = workspace.clientHeight;
-    const scaleX = workspaceWidth / contentWidth;
-    const scaleY = workspaceHeight / contentHeight;
-    const newZoom = Math.min(scaleX, scaleY, zoomMax, 1.0); // Never zoom in beyond 1.0
-
-    // Center the content
-    const offsetX = (workspaceWidth / newZoom - contentWidth) / 2 + padding - minX;
-    const offsetY = (workspaceHeight / newZoom - contentHeight) / 2 + padding - minY;
-
-    // Apply positioning offset by translating all boxes
-    boxes.forEach(box => {
-        box.x += offsetX;
-        box.y += offsetY;
-        const boxElement = document.getElementById(box.id);
-        if (boxElement) {
-            boxElement.style.left = box.x + 'px';
-            boxElement.style.top = box.y + 'px';
-        }
-    });
-
-    // Apply zoom
-    // zoomLevel = Math.max(zoomMin, newZoom);
-    applyZoom();
-    drawArrows();
-    updateMinimap();
-}
-
 function handleKeyboard(event) {
     // Check if user is typing in an input field
     const activeElement = document.activeElement;
@@ -1304,39 +1252,6 @@ function drawArrows() {
     ctx.restore();
 }
 
-function navigateToFirstBox() {
-    if (boxes.length === 0) return;
-
-    // Find the first box (could be by creation order, position, etc.)
-    const firstBox = boxes[0];
-    
-    // Calculate the center position for the first box
-    const boxCenterX = firstBox.x + firstBox.width / 2;
-    const boxCenterY = firstBox.y + getActualBoxHeight(firstBox) / 2;
-    
-    // Calculate how much to move to center the first box in viewport
-    const workspaceWidth = workspace.clientWidth;
-    const workspaceHeight = workspace.clientHeight;
-    const targetX = workspaceWidth / 2 / zoomLevel - boxCenterX;
-    const targetY = workspaceHeight / 2 / zoomLevel - boxCenterY;
-    
-    // Move all boxes to center the first box
-    const deltaX = targetX - (boxes[0].x - firstBox.x);
-    const deltaY = targetY - (boxes[0].y - firstBox.y);
-    
-    boxes.forEach(box => {
-        box.x += deltaX;
-        box.y += deltaY;
-        const boxElement = document.getElementById(box.id);
-        if (boxElement) {
-            boxElement.style.left = box.x + 'px';
-            boxElement.style.top = box.y + 'px';
-        }
-    });
-    
-    drawArrows();
-}
-
 function getActualBoxHeight(box) {
     const boxElement = document.getElementById(box.id);
     if (boxElement) {
@@ -1602,6 +1517,8 @@ function importHierarchy(event) {
             drawArrows();
             filterMembers();
 
+
+
         } catch (error) {
             alert('Error importing file: ' + error.message);
         }
@@ -1736,15 +1653,15 @@ function loadHierarchy(hierarchyId) {
 document.addEventListener('wheel', handleZoom, { passive: false });
 window.addEventListener('resize', resizeCanvas);
 
-// Add ResizeObserver for better canvas management
-if (workspace && 'ResizeObserver' in window) {
-    const resizeObserver = new ResizeObserver(entries => {
-        for (let entry of entries) {
-            resizeCanvas();
-        }
-    });
-    resizeObserver.observe(workspace);
-}
+// // Add ResizeObserver for better canvas management
+// if (workspace && 'ResizeObserver' in window) {
+//     const resizeObserver = new ResizeObserver(entries => {
+//         for (let entry of entries) {
+//             resizeCanvas();
+//         }
+//     });
+//     resizeObserver.observe(workspace);
+// }
 
 // Add global mouse event handlers for canvas drag
 document.addEventListener('mousemove', function(event) {
@@ -1847,116 +1764,53 @@ function distanceToLineSegment(px, py, x1, y1, x2, y2) {
     return Math.sqrt((px - projection.x) * (px - projection.x) + (py - projection.y) * (py - projection.y));
 }
 
-// Initialize
-resizeCanvas();
 
-{% if selected_hierarchy and hierarchy_data_json %}
-    // Load initial hierarchy data
-    try {
-        const initialData = {{ hierarchy_data_json|safe }};
-        hierarchy_info = initialData.hierarchy_info;
 
-        if (initialData.boxes) {
-            initialData.boxes.forEach(boxData => {
-                createBoxFromImport(boxData);
-            });
-        }
+// Single initialization handler for all page load behavior
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize
+  resizeCanvas();
 
-        if (initialData.arrows) {
-            arrows = initialData.arrows;
-        }
+  {% if selected_hierarchy and hierarchy_data_json %}
+      // Load initial hierarchy data
+      try {
+          const initialData = {{ hierarchy_data_json|safe }};
+          hierarchy_info = initialData.hierarchy_info;
 
-        if (initialData.nextId) {
-            nextId = initialData.nextId;
-        }
+          if (initialData.boxes) {
+              initialData.boxes.forEach(boxData => {
+                  createBoxFromImport(boxData);
+              });
+          }
 
-        // Small delay to ensure DOM is ready
-        setTimeout(() => {
-            populateSidebar();
-            resizeCanvas();
-            drawArrows();
-            // Navigate to first box and then fit to view
-            if (boxes.length > 0) {
-                setTimeout(() => {
-                    navigateToFirstBox();
-                    setTimeout(() => {
-                        fitToView();
-                    }, 100);
-                }, 200);
-            }
-        }, 150);
+          if (initialData.arrows) {
+              arrows = initialData.arrows;
+          }
 
-    } catch (error) {
-        console.error('Error loading initial hierarchy data:', error);
-        // Still populate sidebar with available members
-        setTimeout(() => {
-            populateSidebar();
-        }, 100);
-    }
-{% endif %}
+          if (initialData.nextId) {
+              nextId = initialData.nextId;
+          }
 
-// Load available members if hierarchy is selected
-{% if selected_hierarchy %}
-    // Small delay to ensure DOM is ready
+
+
+      } catch (error) {
+          console.error('Error loading initial hierarchy data:', error);
+      }
+  {% endif %}
     setTimeout(() => {
+        // Always populate sidebar and resize canvas
         populateSidebar();
         resizeCanvas();
-        // Navigate to first box and auto-fit if there are boxes
-        if (boxes.length > 0) {
-            setTimeout(() => {
-                navigateToFirstBox();
-                setTimeout(() => {
-                    fitToView();
-                }, 100);
-            }, 200);
-        }
-    }, 100);
-{% endif %}
 
-// Ensure canvas is properly sized on load
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(() => {
-        resizeCanvas();
+        // Draw arrows if they exist
         if (arrows.length > 0) {
             drawArrows();
         }
-        // Trigger initial navigation and fit if there are boxes
-        if (boxes.length > 0) {
-            setTimeout(() => {
-                navigateToFirstBox();
-                setTimeout(() => {
-                    fitToView();
-                }, 50);
-            }, 100);
-        }
+
+        // Navigate to upper left open node if boxes exist
+
     }, 200);
 });
-
-// Additional initialization for better reliability
-window.addEventListener('load', function() {
-    setTimeout(() => {
-        resizeCanvas();
-        drawArrows();
-        // Apply navigation and fit to view on final load if boxes exist
-        if (boxes.length > 0) {
-            setTimeout(() => {
-                navigateToFirstBox();
-                setTimeout(() => {
-                    fitToView();
-                }, 50);
-            }, 100);
-        }
-    }, 100);
-});
-
-// Manual trigger function for testing
-window.redrawArrows = function() {
-    resizeCanvas();
-    drawArrows();
-    if (boxes.length > 0) {
-        fitToView();
-    }
-};
 </script>
 
 {% endblock %}
