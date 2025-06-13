@@ -74,10 +74,10 @@ class CreateExecutableFilters:
 
             for combination in combination_list:
                 if combination.combination_id.metric:
-                    filter_html_file.write("<tr><td><a href=\"{% url 'pybirdai:execute_data_point' '" + cube_id + "_" + combination.combination_id.combination_id + "'%}\">" + cube_id + "_" + combination.combination_id.combination_id + "</a></td></tr>\n")
+                    filter_html_file.write("<tr><td><a href=\"{% url 'pybirdai:execute_data_point' '" + combination.combination_id.combination_id + "'%}\">" + cube_id + "_" + combination.combination_id.combination_id + "</a></td></tr>\n")
                     
                     
-                    file.write("class Cell_" +  cube_id + "_" + combination.combination_id.combination_id + ":\n")
+                    file.write("class Cell_" + combination.combination_id.combination_id + ":\n")
                     file.write("\t" + cube_id + "_Table = None\n")
                     file.write("\t" + cube_id + "s = []\n")
                     file.write("\tdef metric_value(self):\n"  )
