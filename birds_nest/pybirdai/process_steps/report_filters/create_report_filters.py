@@ -207,7 +207,8 @@ class CreateReportFilters:
                     dpm_var_id = var_id.variable_id.replace('EBA_', 'DPM_')
                     variable_mapping_items = var_mapping_dict[dpm_var_id]
                     # Use next() with generator expression for early exit
-                    return next((item.variable_id for item in variable_mapping_items
+                    return next((item.variable_id for item in variable_mapping_items 
+
                                if ((item.is_source == 'false') or (item.is_source == 'False'))), None)
                 except KeyError:
                     print(f"Could not find variable mapping for {var_id.variable_id}")
@@ -273,9 +274,10 @@ class CreateReportFilters:
 
             for member_mapping_items in member_mapping_item_row_dict.values():
                 # Group items by is_source for faster processing
-                source_items = [(item.variable_id, item.member_id) for item in member_mapping_items
-                              if ((item.is_source.lower() == 'true') )]
 
+                source_items = [(item.variable_id, item.member_id) for item in member_mapping_items 
+                              if ((item.is_source.lower() == 'true') )]
+                
                 # Check if all source items are in non_ref_tuple_list
                 if all(item in non_ref_set for item in source_items):
                     ref_tuple_list.extend(
