@@ -144,13 +144,15 @@ class CreateReportFilters:
             context: The context object.
         """
 
-        report_cell = COMBINATION(combination_id=table_cell_combination_id)
+        
+        qualified_combination_id = report_rol_cube.cube_id + "_" + table_cell_combination_id
+        report_cell = COMBINATION(combination_id=qualified_combination_id)
         metric = CreateReportFilters.get_metric(sdd_context, tuples, relevant_mappings)
         if metric:
             CreateReportFilters.add_variable_to_rol_cube(self,context, sdd_context, report_rol_cube, metric)
         report_cell.metric = metric
-        if not(table_cell_combination_id in sdd_context.combination_dictionary.keys()):
-            sdd_context.combination_dictionary[table_cell_combination_id] = report_cell
+        if not(qualified_combination_id in sdd_context.combination_dictionary.keys()):
+            sdd_context.combination_dictionary[qualified_combination_id] = report_cell
             if context.save_derived_sdd_items:
                 self.combinations_to_create.append(report_cell)  # Changed from save() to append
 
