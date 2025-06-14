@@ -143,6 +143,7 @@ urlpatterns = [
     path('get_members_by_domain/<str:domain_id>/', views.get_members_by_domain, name='get_members_by_domain'),
     path('get_subdomain_enumerations/', views.get_subdomain_enumerations, name='get_subdomain_enumerations'),
     path('run-full-setup/', views.run_full_setup, name='run_full_setup'),
+    path("import_bird_data_from_csv_export/", views.import_bird_data_from_csv_export, name='import_bird_data_from_csv_export'),
     path('automode-import-bird-metamodel-from-website/', views.automode_import_bird_metamodel_from_website, name='automode_import_bird_metamodel_from_website'),
 
     path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources'),
@@ -160,8 +161,6 @@ urlpatterns = [
     path('automode/debug-config/', views.automode_debug_config, name='automode_debug_config'),
     path('automode/status/', views.automode_status, name='automode_status'),
     path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources'),
-    
-    # Workflow URLs for 6-task UI
     path('workflow/', workflow_views.workflow_dashboard, name='workflow_dashboard'),
     path('workflow/task/<int:task_number>/<str:operation>/', workflow_views.workflow_task_router, name='workflow_task'),
     path('workflow/automode/', workflow_views.workflow_automode, name='workflow_automode'),
