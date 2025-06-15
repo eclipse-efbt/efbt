@@ -171,5 +171,6 @@ urlpatterns = [
     path('workflow/automode-status/', workflow_views.workflow_automode_status, name='workflow_automode_status'),
     path('workflow/save-config/', workflow_views.workflow_save_config, name='workflow_save_config'),
     path('workflow/task/<int:task_number>/status/', workflow_views.workflow_task_status, name='workflow_task_status'),
+    path('workflow/clone-import/', workflow_views.workflow_clone_import, name='workflow_clone_import'),
 
 ]
