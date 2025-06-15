@@ -14,13 +14,22 @@ import traceback
 
 # Set up logger for this module
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
+
+# Add console handler if not already present
+if not logger.handlers:
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
 
 class CSVDataImporter:
     def __init__(self, results_dir="import_results"):
         self.model_map = {}
         self.column_mappings = {}
         self.results_dir = results_dir
+        self.id_mappings = {}  # Track ID mappings for models with auto-generated IDs
         self._build_model_map()
         self._build_column_mappings()
         self._ensure_results_directory()
@@ -80,6 +89,9 @@ class CSVDataImporter:
     def _build_column_mappings(self):
         """Build column index mappings for each model type"""
         col_idx = ColumnIndexes()
+
+        # Note: Some tables may have an ID column at index 0 if they use Django's auto-generated primary key
+        # This is handled dynamically in import_csv_file method
 
         # Maintenance Agency mappings
         self.column_mappings['pybirdai_maintenance_agency'] = {
@@ -362,8 +374,8 @@ class CSVDataImporter:
         # Cube Structure Item mappings
         self.column_mappings['pybirdai_cube_structure_item'] = {
             col_idx.cube_structure_item_cube_structure_id: 'cube_structure_id',
-            col_idx.cube_structure_item_variable_index: 'variable_id',
-            col_idx.cube_structure_item_variable_id: 'variable_id_2',
+            col_idx.cube_structure_item_variable_index: 'cube_variable_code',
+            col_idx.cube_structure_item_variable_id: 'variable_id',
             col_idx.cube_structure_item_role_index: 'role',
             col_idx.cube_structure_item_order: 'order',
             col_idx.cube_structure_item_subdomain_index: 'subdomain_id',
@@ -471,6 +483,8 @@ class CSVDataImporter:
             'pybirdai_combination',         # Depends on maintenance_agency
             'pybirdai_combination_item',    # Depends on combination, variable, subdomain, variable_set, member
             'pybirdai_cube_to_combination', # Depends on cube, combination
+            'pybirdai_cube_link',           # Depends on maintenance_agency, cube
+            'pybirdai_cube_structure_item_link', # Depends on cube_link, cube_structure_item
             'pybirdai_table',               # Depends on maintenance_agency
             'pybirdai_axis',                # Depends on table
             'pybirdai_axis_ordinate',       # Depends on axis
@@ -562,7 +576,12 @@ class CSVDataImporter:
             return []
         logger.info(f"Starting import of CSV file: {csv_filename}")
 
+        # Write detailed debug info to a separate file
+        debug_file = f"debug_import_{csv_filename.replace('.csv', '')}.txt"
+        debug_path = os.path.join(self.results_dir, debug_file)
+        
         table_name = self._get_table_name_from_csv_filename(csv_filename)
+        logger.info(f"Mapped CSV file '{csv_filename}' to table '{table_name}'")
 
         if table_name not in self.model_map:
             error_msg = f"No model found for table: {table_name}"
@@ -579,74 +598,398 @@ class CSVDataImporter:
         model_fields = self._get_model_fields(model_class)
 
         logger.info(f"Using model {model_class.__name__} for table {table_name}")
-
+        
+        # Parse CSV and show first few rows for debugging
         headers, rows = self._parse_csv_content(csv_content)
-
-        imported_objects = []
+        logger.info(f"CSV headers: {headers}")
+        if rows:
+            logger.info(f"First CSV row: {rows[0]}")
+            logger.info(f"Column mapping: {column_mapping}")
+        
+        # Show which fields will be populated
+        mapped_fields = []
+        for col_idx, field_name in column_mapping.items():
+            if col_idx < len(headers):
+                mapped_fields.append(f"{headers[col_idx]} -> {field_name}")
+        logger.info(f"Field mappings: {mapped_fields}")
+        
+        # Write detailed debug info to file
+        try:
+            with open(debug_path, 'w') as f:
+                f.write(f"=== DEBUG: Import of {csv_filename} ===\n")
+                f.write(f"CSV filename: {csv_filename}\n")
+                f.write(f"Table name: {table_name}\n")
+                f.write(f"Model class: {model_class.__name__}\n")
+                f.write(f"CSV headers: {headers}\n")
+                if rows:
+                    f.write(f"First 3 CSV rows:\n")
+                    for i, row in enumerate(rows[:3]):
+                        f.write(f"  Row {i+1}: {row}\n")
+                f.write(f"Column mapping: {column_mapping}\n")
+                f.write(f"Field mappings:\n")
+                for mapping in mapped_fields:
+                    f.write(f"  {mapping}\n")
+                f.write(f"Total rows to import: {len(rows)}\n")
+        except Exception as e:
+            logger.warning(f"Could not write debug file: {e}")
+        
+        # Debug: Show available ID mappings
+        if self.id_mappings:
+            logger.info(f"Available ID mappings: {list(self.id_mappings.keys())}")
+            for table, mappings in self.id_mappings.items():
+                logger.info(f"  {table}: {len(mappings)} mappings")
+                # Show first few mappings as examples
+                sample_mappings = list(mappings.items())[:3]
+                for old_id, obj in sample_mappings:
+                    logger.info(f"    {old_id} -> object id {obj.id}")
+        else:
+            logger.info("No ID mappings available yet")
+        
+        # Check if the model has an explicit primary key
+        pk_fields = [field for field in model_class._meta.fields if field.primary_key and field.name != 'id']
+        has_explicit_pk = len(pk_fields) > 0
+        
+        # Check if ID column is present in CSV (for models using Django's auto ID)
+        has_id_column = headers and headers[0].upper() == 'ID'
+        column_offset = 1 if has_id_column else 0
+        
+        # Debug: Show ID column and PK detection
+        logger.info(f"ID column detection: has_id_column={has_id_column}, has_explicit_pk={has_explicit_pk}")
+        logger.info(f"Primary key fields: {[f.name for f in pk_fields]}")
+        if headers:
+            logger.info(f"First header: '{headers[0]}'")
+        logger.info(f"Original column_offset: {column_offset}")
+        
+        # If we have an ID column and the model uses auto ID, we'll need to handle it specially
+        should_store_id_mappings = has_id_column and not has_explicit_pk
+        id_to_object_map = {} if should_store_id_mappings else None
+        
+        logger.info(f"Will store ID mappings: {should_store_id_mappings}")
+        
+        # Adjust column mapping if ID column is present
+        adjusted_column_mapping = {}
+        logger.info(f"Original column mapping: {column_mapping}")
+        for col_idx, field_name in column_mapping.items():
+            # For models with auto-generated IDs, the CSV has an ID column at index 0
+            # so we need to skip it and map our column indices starting from index 1
+            if has_id_column and not has_explicit_pk:
+                new_idx = col_idx + 1
+                adjusted_column_mapping[new_idx] = field_name
+                logger.info(f"Adjusted mapping: {col_idx} -> {new_idx} for field {field_name}")
+            else:
+                adjusted_column_mapping[col_idx] = field_name
+                logger.info(f"No adjustment: {col_idx} for field {field_name}")
+        logger.info(f"Final adjusted column mapping: {adjusted_column_mapping}")
 
         # Clear existing data in the table first
         existing_count = model_class.objects.count()
+        logger.info(f"Table {table_name} has {existing_count} existing records before import")
         if existing_count > 0:
             model_class.objects.all().delete()
             logger.info(f"Cleared {existing_count} existing records from {table_name}")
+            # Verify clearing worked
+            remaining_count = model_class.objects.count()
+            logger.info(f"After clearing, table {table_name} has {remaining_count} records")
 
-        cached_set = dict()
+        # First pass: collect all foreign key references
+        foreign_key_refs = {}
+        for field_name, field in model_fields.items():
+            if isinstance(field, models.ForeignKey):
+                related_model = field.related_model
+                # Check if the related model has an explicit primary key or uses Django's auto id
+                related_has_explicit_pk = any(f.primary_key for f in related_model._meta.fields if f.name != 'id')
+                related_table = related_model._meta.db_table
+                foreign_key_refs[field_name] = {
+                    'model': related_model,
+                    'table': related_table,
+                    'ids': set(),
+                    'uses_auto_id': not related_has_explicit_pk
+                }
+                logger.debug(f"FK {field_name} -> {related_model.__name__} (table: {related_table}, uses_auto_id: {not related_has_explicit_pk})")
 
+        # Scan rows to collect all foreign key IDs
+        for row_num, row in enumerate(rows, 1):
+            if not any(row):  # Skip empty rows
+                continue
+            
+            for column_index, field_name in adjusted_column_mapping.items():
+                if column_index < len(row) and field_name in foreign_key_refs:
+                    value = row[column_index].strip() if isinstance(row[column_index], str) else row[column_index]
+                    if value and value not in ('', 'None', 'NULL'):
+                        try:
+                            # For models using auto ID, the value should be an integer
+                            if foreign_key_refs[field_name]['uses_auto_id']:
+                                value = int(float(value))  # Handle cases where int comes as float string
+                            foreign_key_refs[field_name]['ids'].add(value)
+                        except (ValueError, TypeError):
+                            logger.warning(f"Invalid foreign key value for {field_name}: {value}")
+
+        # Pre-fetch all foreign key objects and handle missing ones
+        foreign_key_cache = {}
+        
+        for field_name, ref_info in foreign_key_refs.items():
+            logger.info(f"Processing FK {field_name}: {len(ref_info['ids'])} unique values, uses_auto_id={ref_info['uses_auto_id']}")
+            if ref_info['ids']:
+                related_model = ref_info['model']
+                related_table = ref_info['table']
+                
+                if ref_info['uses_auto_id']:
+                    # For models using auto ID, we rely on the global ID mappings
+                    # Don't create missing objects here since we can't set their IDs
+                    logger.info(f"Foreign key {field_name} references model {related_model.__name__} "
+                              f"which uses auto-generated IDs. Will use ID mappings for resolution.")
+                    foreign_key_cache[field_name] = {}
+                else:
+                    # For models with explicit primary keys, we can look them up normally
+                    existing_ids = set(related_model.objects.filter(pk__in=ref_info['ids']).values_list('pk', flat=True))
+                    missing_ids = ref_info['ids'] - existing_ids
+                    
+                    logger.info(f"FK {field_name}: {len(existing_ids)} exist, {len(missing_ids)} missing")
+                    if missing_ids and len(missing_ids) <= 10:
+                        logger.info(f"Missing IDs: {list(missing_ids)}")
+                    
+                    # Create missing foreign key objects
+                    if missing_ids:
+                        missing_objects = [related_model(pk=pk_id) for pk_id in missing_ids]
+                        related_model.objects.bulk_create(missing_objects, batch_size=1000, ignore_conflicts=True)
+                        logger.info(f"Created {len(missing_objects)} missing {related_model.__name__} objects")
+                    
+                    # Cache all foreign key objects
+                    foreign_key_cache[field_name] = {
+                        str(obj.pk): obj for obj in related_model.objects.filter(pk__in=ref_info['ids'])
+                    }
+                    logger.info(f"Cached {len(foreign_key_cache[field_name])} {related_model.__name__} objects for FK {field_name}")
+
+        # Second pass: prepare objects for bulk creation
+        objects_to_create = []
+        errors = []
+        old_id_to_row_data = {}  # Map old IDs to row data for models using auto ID
+        
         for row_num, row in enumerate(rows, 1):
             if not any(row):  # Skip empty rows
                 logger.debug(f"Skipping empty row {row_num}")
                 continue
 
             obj_data = {}
+            old_id = None
+            
+            # Extract the old ID if present
+            if has_id_column and not has_explicit_pk:
+                old_id = row[0].strip() if row[0] else None
+                if old_id:
+                    try:
+                        old_id = int(float(old_id))  # Handle cases where int comes as float string
+                    except (ValueError, TypeError):
+                        logger.warning(f"Row {row_num}: failed to convert ID '{old_id}' to integer")
+                        old_id = None
 
             # Use column index mapping to extract values
-            for column_index, field_name in column_mapping.items():
+            for column_index, field_name in adjusted_column_mapping.items():
                 if column_index < len(row) and field_name in model_fields:
                     value = row[column_index].strip() if isinstance(row[column_index], str) else row[column_index]
                     field = model_fields[field_name]
-                    # Defer foreign key resolution for now, just store the ID
-                    converted_value = self._convert_value(field, value, defer_foreign_keys=True)
-                    if converted_value is not None:
-                        obj_data[field_name] = converted_value
-                    logger.debug(f"Row {row_num}: Column {column_index} -> {field_name} = {converted_value}")
+                    
+                    if isinstance(field, models.ForeignKey) and value and value not in ('', 'None', 'NULL'):
+                        # Handle foreign keys differently based on whether they use auto ID
+                        if field_name in foreign_key_refs and foreign_key_refs[field_name]['uses_auto_id']:
+                            # Check if we have a mapping for this foreign key from a previous import
+                            related_table = foreign_key_refs[field_name]['table']
+                            
+                            try:
+                                fk_old_id = int(float(value))
+                                if (related_table in self.id_mappings and 
+                                    fk_old_id in self.id_mappings[related_table]):
+                                    # We have a mapping from a previous import
+                                    obj_data[field_name] = self.id_mappings[related_table][fk_old_id]
+                                    logger.info(f"Resolved foreign key {field_name} using existing mapping: {fk_old_id} -> {self.id_mappings[related_table][fk_old_id].id}")
+                                else:
+                                    # Store the foreign key reference value for later resolution
+                                    obj_data[f'_fk_{field_name}'] = value
+                                    # Don't set the actual foreign key yet
+                            except (ValueError, TypeError):
+                                logger.warning(f"Invalid foreign key value for {field_name}: {value}")
+                        else:
+                            # Use cached foreign key object for models with explicit PKs
+                            value_str = str(value)
+                            if field_name in foreign_key_cache and value_str in foreign_key_cache[field_name]:
+                                obj_data[field_name] = foreign_key_cache[field_name][value_str]
+                                logger.info(f"Row {row_num}: Set FK {field_name} = {value_str} -> {foreign_key_cache[field_name][value_str]}")
+                            else:
+                                logger.warning(f"Row {row_num}: Foreign key object not found for {field_name} with value '{value_str}'. Available keys: {list(foreign_key_cache.get(field_name, {}).keys())[:5]}")
+                    else:
+                        # Convert non-foreign key values
+                        converted_value = self._convert_value(field, value, defer_foreign_keys=True)
+                        if converted_value is not None:
+                            obj_data[field_name] = converted_value
 
             if obj_data:
                 try:
-                    # For foreign key fields, we need to resolve them properly
-                    resolved_obj_data = {}
-                    for field_name, value in obj_data.items():
-                        field = model_fields[field_name]
-                        if isinstance(field, models.ForeignKey) and value is not None:
-                            related_model = field.related_model
-                            if related_model not in cached_set:
-                                cached_set[related_model] = related_model.objects.all()
-                            if not cached_set[related_model].filter(pk=value).exists():
-                                related_model_obj = related_model.objects.create(pk=value)
-                                related_model_obj.save()
-                            resolved_obj_data[field_name] = related_model.objects.get(pk=value)
-                        else:
-                            resolved_obj_data[field_name] = value
-
-                    if resolved_obj_data is not None:
-                        # Create object using Django ORM
-                        obj = model_class.objects.create(**resolved_obj_data)
-                        try:
-                            obj.save()
-                        except Exception as e:
-                            traceback.print_exc()
-                        imported_objects.append(obj)
-
-                        if row_num % 100 == 0:  # Log progress every 100 rows
-                            logger.debug(f"Processed {row_num} rows, created {len(imported_objects)} objects")
+                    # Remove deferred foreign key fields from obj_data
+                    deferred_fks = {k: v for k, v in obj_data.items() if k.startswith('_fk_')}
+                    clean_obj_data = {k: v for k, v in obj_data.items() if not k.startswith('_fk_')}
+                    
+                    # Create model instance (without saving)
+                    obj = model_class(**clean_obj_data)
+                    objects_to_create.append(obj)
+                    
+                    # Store mapping of old ID to object data for later FK resolution
+                    if old_id and should_store_id_mappings:
+                        old_id_to_row_data[old_id] = {
+                            'obj': obj,
+                            'deferred_fks': deferred_fks,
+                            'row_num': row_num
+                        }
+                    
+                    if row_num % 1000 == 0:  # Log progress every 1000 rows
+                        logger.debug(f"Processed {row_num} rows, prepared {len(objects_to_create)} objects")
                 except Exception as e:
-                    logger.error(f"Failed to create object from row {row_num} of type {model_class}: {e}")
-                    logger.error(f"Row data: {row}")
-                    logger.error(f"Object data: {obj_data}")
-                    # Try to continue with next row instead of failing completely
+                    error_info = {
+                        'row_num': row_num,
+                        'error': str(e),
+                        'row_data': row,
+                        'obj_data': obj_data
+                    }
+                    errors.append(error_info)
                     logger.warning(f"Skipping row {row_num} due to error: {e}")
                     continue
 
-        logger.info(f"Successfully imported {len(imported_objects)} objects to {table_name}")
+        # Bulk create all objects
+        imported_objects = []
+        if objects_to_create:
+            try:
+                logger.info(f"About to bulk create {len(objects_to_create)} objects to {table_name}")
+                logger.info(f"should_store_id_mappings: {should_store_id_mappings}")
+                
+                # Debug: Show first object to be created
+                if objects_to_create:
+                    first_obj = objects_to_create[0]
+                    logger.info(f"First object to create: {first_obj}")
+                    logger.info(f"First object fields: {first_obj.__dict__}")
+                
+                # For models that need ID mappings, don't ignore conflicts so we get proper IDs
+                if should_store_id_mappings:
+                    imported_objects = model_class.objects.bulk_create(
+                        objects_to_create, 
+                        batch_size=1000
+                    )
+                else:
+                    imported_objects = model_class.objects.bulk_create(
+                        objects_to_create, 
+                        batch_size=1000,
+                        ignore_conflicts=False  # Changed to False to see actual errors
+                    )
+                logger.info(f"Successfully bulk created {len(imported_objects)} objects to {table_name}")
+                
+                # Verify final count in database
+                final_count = model_class.objects.count()
+                logger.info(f"Table {table_name} now has {final_count} total records in database")
+                
+                # Debug: Check if count is unexpected
+                expected_new_count = len(imported_objects)
+                if final_count != expected_new_count:
+                    logger.warning(f"UNEXPECTED COUNT: Expected {expected_new_count} but table has {final_count} records!")
+                    logger.warning(f"This suggests data from other CSV files may have been imported to this table!")
+                
+                # Handle ID mappings and deferred foreign keys
+                if old_id_to_row_data and id_to_object_map is not None:
+                    logger.info(f"Building ID mapping for {len(imported_objects)} objects")
+                    
+                    # Build mapping of old IDs to new objects
+                    # Create reverse lookup for faster mapping: object -> old_id
+                    obj_to_old_id = {data['obj']: old_id for old_id, data in old_id_to_row_data.items()}
+                    
+                    # Initialize global ID mappings for this model if needed
+                    if table_name not in self.id_mappings:
+                        self.id_mappings[table_name] = {}
+                    
+                    # Map objects to their old IDs efficiently
+                    for i, obj in enumerate(imported_objects):
+                        if i < len(objects_to_create):
+                            created_obj = objects_to_create[i]
+                            if created_obj in obj_to_old_id:
+                                old_id = obj_to_old_id[created_obj]
+                                id_to_object_map[old_id] = obj
+                                self.id_mappings[table_name][old_id] = obj
+                                # Only log a few examples to avoid log spam
+                                if i < 5 or i % 1000 == 0:
+                                    logger.info(f"Stored ID mapping: {table_name}[{old_id}] -> object with new id {obj.id}")
+                    
+                    # Now update objects with deferred foreign keys
+                    objects_to_update = []
+                    for old_id, data in old_id_to_row_data.items():
+                        if old_id in id_to_object_map:
+                            obj = id_to_object_map[old_id]
+                            needs_update = False
+                            
+                            # Resolve deferred foreign keys
+                            for fk_field, fk_value in data['deferred_fks'].items():
+                                field_name = fk_field[4:]  # Remove '_fk_' prefix
+                                try:
+                                    fk_old_id = int(float(fk_value))
+                                    resolved = False
+                                    
+                                    # First try local mapping from current import
+                                    if fk_old_id in id_to_object_map:
+                                        setattr(obj, field_name, id_to_object_map[fk_old_id])
+                                        needs_update = True
+                                        resolved = True
+                                        logger.debug(f"Resolved FK {field_name} for object {old_id} -> {fk_old_id} (local)")
+                                    else:
+                                        # Try global mappings from previous imports
+                                        if field_name in foreign_key_refs:
+                                            related_table = foreign_key_refs[field_name]['table']
+                                            
+                                            if (related_table in self.id_mappings and 
+                                                fk_old_id in self.id_mappings[related_table]):
+                                                setattr(obj, field_name, self.id_mappings[related_table][fk_old_id])
+                                                needs_update = True
+                                                resolved = True
+                                                logger.info(f"Resolved FK {field_name} for object {old_id} -> {fk_old_id} (global mapping)")
+                                    
+                                    if not resolved:
+                                        logger.warning(f"Could not resolve FK {field_name} with value {fk_value} for object {old_id}")
+                                        
+                                except (ValueError, TypeError):
+                                    logger.warning(f"Invalid FK value {fk_value} for field {field_name}")
+                            
+                            if needs_update:
+                                objects_to_update.append(obj)
+                    
+                    # Bulk update objects with resolved foreign keys
+                    if objects_to_update:
+                        # Get field names from last processed object's deferred FKs
+                        field_names = []
+                        for old_id, data in old_id_to_row_data.items():
+                            if data['deferred_fks']:
+                                field_names = [fk_field[4:] for fk_field in data['deferred_fks'].keys()]
+                                break
+                        
+                        if field_names:
+                            model_class.objects.bulk_update(
+                                objects_to_update, 
+                                fields=field_names,
+                                batch_size=1000
+                            )
+                            logger.info(f"Updated {len(objects_to_update)} objects with resolved foreign keys")
+                
+                elif should_store_id_mappings and not old_id_to_row_data:
+                    logger.warning(f"Expected to store ID mappings but no old_id_to_row_data found!")
+                elif not should_store_id_mappings:
+                    logger.info(f"Not storing ID mappings (should_store_id_mappings={should_store_id_mappings})")
+                
+            except Exception as e:
+                logger.error(f"Bulk create failed for {table_name}: {e}")
+                # If bulk create fails, log the errors
+                for error in errors[:10]:  # Show first 10 errors
+                    logger.error(f"Row {error['row_num']}: {error['error']}")
+                raise
+
+        # Log any errors encountered
+        if errors:
+            logger.warning(f"Encountered {len(errors)} errors during import of {table_name}")
+            for error in errors[:5]:  # Show first 5 errors
+                logger.debug(f"Row {error['row_num']}: {error['error']}")
+
         return imported_objects
 
     def import_from_csv_string(self, csv_string, filename="data.csv"):
@@ -815,6 +1158,78 @@ class CSVDataImporter:
         logger.info(f"Completed CSV strings import. Processed {len(csv_strings_list)} files")
         # Save results
         self._save_results(results, "csv_strings_import")
+        return results
+
+    def import_from_csv_strings_ordered(self, csv_strings_list):
+        """Import CSV data from a list of CSV strings in dependency order"""
+        logger.info(f"Starting ordered import from {len(csv_strings_list)} CSV strings")
+        
+        # Debug: Show all available CSV files
+        logger.info(f"Available CSV files: {list(csv_strings_list.keys())}")
+        
+        # Get the import order
+        import_order = self._get_import_order()
+        results = {}
+        
+        # Debug: Show import order
+        logger.info(f"Import order: {import_order}")
+        
+        # Import files in dependency order
+        for table_name in import_order:
+            # Find CSV file for this table
+            csv_filename = None
+            
+            # Debug: Show matching attempt
+            logger.info(f"Looking for CSV file for table: {table_name}")
+            for filename in csv_strings_list.keys():
+                converted_table_name = self._get_table_name_from_csv_filename(filename)
+                logger.info(f"  File '{filename}' converts to table '{converted_table_name}'")
+                if converted_table_name == table_name:
+                    csv_filename = filename
+                    break
+            
+            if csv_filename and csv_filename in csv_strings_list:
+                logger.info(f"Importing {csv_filename} for table {table_name}")
+                try:
+                    csv_content = csv_strings_list[csv_filename]
+                    imported_objects = self.import_csv_file(csv_filename, csv_content)
+                    results[csv_filename] = {
+                        'success': True,
+                        'imported_count': len(imported_objects),
+                        'objects': imported_objects
+                    }
+                    logger.info(f"Successfully imported {csv_filename}: {len(imported_objects)} objects")
+                except Exception as e:
+                    logger.error(f"Failed to import {csv_filename}: {e}")
+                    results[csv_filename] = {
+                        'success': False,
+                        'error': str(e)
+                    }
+            else:
+                logger.info(f"No CSV file found for table {table_name} (expected filename pattern)")
+        
+        # Import any remaining CSV files that weren't in the ordered list
+        for filename, csv_content in csv_strings_list.items():
+            if filename not in results:
+                logger.info(f"Importing remaining file: {filename}")
+                try:
+                    imported_objects = self.import_csv_file(filename, csv_content)
+                    results[filename] = {
+                        'success': True,
+                        'imported_count': len(imported_objects),
+                        'objects': imported_objects
+                    }
+                    logger.info(f"Successfully imported {filename}: {len(imported_objects)} objects")
+                except Exception as e:
+                    logger.error(f"Failed to import {filename}: {e}")
+                    results[filename] = {
+                        'success': False,
+                        'error': str(e)
+                    }
+        
+        # Save results
+        self._save_results(results, "csv_strings_ordered_import")
+        logger.info(f"Completed ordered CSV strings import. Processed {len(results)} files")
         return results
 
 

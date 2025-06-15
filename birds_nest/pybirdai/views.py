@@ -2055,14 +2055,26 @@ def export_database_to_csv(request):
                     is_meta_data_table = True
                     # Get the model class for this table
                     model_class = model_map[table_name]
+                    
+                    # Check if model has an explicit primary key
+                    has_explicit_pk = any(field.primary_key for field in model_class._meta.fields if field.name != 'id')
 
                     # Get fields in the order they're defined in the model
                     fields = model_class._meta.fields
                     headers = []
                     db_headers = []
+                    
+                    # If model uses Django's auto ID and has no explicit PK, include the ID field
+                    if not has_explicit_pk:
+                        headers.append('ID')
+                        db_headers.append('id')
+                    
                     for field in fields:
-                        # Skip the id field
-                        if field.name == 'id':
+                        # Skip the id field if we already added it or if there's an explicit PK
+                        if field.name == 'id' and has_explicit_pk:
+                            continue
+                        elif field.name == 'id' and not has_explicit_pk:
+                            # We already added it above
                             continue
                         headers.append(field.name.upper())  # Convert header to uppercase
                         # If it's a foreign key, append _id for the actual DB column
@@ -2092,8 +2104,11 @@ def export_database_to_csv(request):
                         if pk_columns:
                             order_by = f"ORDER BY {', '.join(pk_columns)}"
                         else:
-                            # If no primary key, sort by all columns for consistent ordering
-                            order_by = f"ORDER BY {', '.join(escaped_headers)}"
+                            # If no primary key, sort by id if it exists, otherwise by all columns
+                            if 'id' in db_headers:
+                                order_by = "ORDER BY id"
+                            else:
+                                order_by = f"ORDER BY {', '.join(escaped_headers)}"
 
                         cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} {order_by}")
                         rows = cursor.fetchall()
@@ -3730,9 +3745,27 @@ def import_bird_data_from_csv_export(request):
         return render(request, 'pybirdai/import_database.html')
 
     files = json.loads(request.body.decode("utf-8"))
-    import_from_metadata_export.CSVDataImporter().import_from_csv_strings(files["csv_files"])
-
-    return JsonResponse({'message': 'Import successful'})
+    # Use ordered import to maintain ID mappings across files
+    results = import_from_metadata_export.CSVDataImporter().import_from_csv_strings_ordered(files["csv_files"])
+    
+    # Count successful imports
+    successful_imports = sum(1 for result in results.values() if result.get('success', False))
+    total_objects = sum(result.get('imported_count', 0) for result in results.values() if result.get('success', False))
+    
+    # Create JSON-serializable results (remove Django objects)
+    serializable_results = {}
+    for filename, result in results.items():
+        serializable_results[filename] = {
+            'success': result.get('success', False),
+            'imported_count': result.get('imported_count', 0)
+        }
+        if 'error' in result:
+            serializable_results[filename]['error'] = result['error']
+    
+    return JsonResponse({
+        'message': f'Import successful: {successful_imports}/{len(results)} files imported, {total_objects} total objects',
+        'results': serializable_results
+    })
 
 
 def get_hierarchy_json(request, hierarchy_id):

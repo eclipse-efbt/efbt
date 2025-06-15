@@ -1574,3 +1574,117 @@ def workflow_database_setup_status(request):
         'success': True,
         'database_setup_status': status_copy
     })
+
+
+@require_http_methods(["POST"])
+def workflow_clone_import(request):
+    """Import CSV files from the technical_export directory"""
+    import os
+    import glob
+    from django.conf import settings
+    from django.db import connection
+    from django.db.utils import OperationalError, ProgrammingError
+    
+    try:
+        # Check if database is available
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1")
+        except (OperationalError, ProgrammingError):
+            return JsonResponse({
+                'success': False,
+                'message': 'Database not available. Please run database setup first.',
+                'error': 'Database connection failed'
+            }, status=400)
+        
+        # Get the base directory
+        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        technical_export_dir = os.path.join(base_dir, 'resources', 'technical_export')
+        
+        # Check if directory exists
+        if not os.path.exists(technical_export_dir):
+            return JsonResponse({
+                'success': False,
+                'message': 'Technical export directory not found',
+                'error': f'Directory not found: {technical_export_dir}'
+            }, status=400)
+        
+        # Get all CSV files in the directory
+        csv_files = glob.glob(os.path.join(technical_export_dir, '*.csv'))
+        
+        if not csv_files:
+            return JsonResponse({
+                'success': False,
+                'message': 'No CSV files found in technical_export directory',
+                'error': 'No CSV files to import'
+            }, status=400)
+        
+        # Read CSV files and prepare data for import
+        csv_data = {}
+        for csv_file in csv_files:
+            filename = os.path.basename(csv_file)
+            try:
+                with open(csv_file, 'r', encoding='utf-8') as f:
+                    csv_data[filename] = f.read()
+            except Exception as e:
+                logger.error(f"Error reading CSV file {filename}: {e}")
+                # Continue with other files even if one fails
+        
+        if not csv_data:
+            return JsonResponse({
+                'success': False,
+                'message': 'Could not read any CSV files',
+                'error': 'Failed to read CSV files'
+            }, status=500)
+        
+        # Import the CSV data using the existing import functionality
+        try:
+            from pybirdai.utils.clone_mode import import_from_metadata_export
+            
+            # Use ordered import to maintain ID mappings across files
+            importer = import_from_metadata_export.CSVDataImporter()
+            results = importer.import_from_csv_strings_ordered(csv_data)
+            
+            # Count successful imports
+            successful_imports = sum(1 for result in results.values() if result.get('success', False))
+            total_objects = sum(result.get('imported_count', 0) for result in results.values() if result.get('success', False))
+            
+            # Create summary message
+            message = f'Successfully imported {successful_imports}/{len(results)} CSV files'
+            details = f'Total objects imported: {total_objects}'
+            
+            # Check if all imports were successful
+            all_successful = successful_imports == len(results)
+            
+            # Log any errors
+            for filename, result in results.items():
+                if not result.get('success', False):
+                    logger.error(f"Failed to import {filename}: {result.get('error', 'Unknown error')}")
+            
+            return JsonResponse({
+                'success': all_successful,
+                'message': message,
+                'details': details,
+                'results': {
+                    'successful_imports': successful_imports,
+                    'total_files': len(results),
+                    'total_objects': total_objects
+                },
+                'refresh_recommended': True
+            })
+            
+        except Exception as e:
+            logger.error(f"Error during CSV import: {e}")
+            return JsonResponse({
+                'success': False,
+                'message': 'Failed to import CSV files',
+                'error': str(e)
+            }, status=500)
+            
+    except Exception as e:
+        logger.error(f"Unexpected error in workflow_clone_import: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': 'An unexpected error occurred',
+            'error': str(e)
+        }, status=500)
