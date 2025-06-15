@@ -582,16 +582,55 @@ class CSVDataImporter:
 
         headers, rows = self._parse_csv_content(csv_content)
 
-        imported_objects = []
-
         # Clear existing data in the table first
         existing_count = model_class.objects.count()
         if existing_count > 0:
             model_class.objects.all().delete()
             logger.info(f"Cleared {existing_count} existing records from {table_name}")
 
-        cached_set = dict()
+        # First pass: collect all foreign key references
+        foreign_key_refs = {}
+        for field_name, field in model_fields.items():
+            if isinstance(field, models.ForeignKey):
+                foreign_key_refs[field_name] = {
+                    'model': field.related_model,
+                    'ids': set()
+                }
 
+        # Scan rows to collect all foreign key IDs
+        for row_num, row in enumerate(rows, 1):
+            if not any(row):  # Skip empty rows
+                continue
+            
+            for column_index, field_name in column_mapping.items():
+                if column_index < len(row) and field_name in foreign_key_refs:
+                    value = row[column_index].strip() if isinstance(row[column_index], str) else row[column_index]
+                    if value and value not in ('', 'None', 'NULL'):
+                        foreign_key_refs[field_name]['ids'].add(value)
+
+        # Pre-fetch all foreign key objects and create missing ones
+        foreign_key_cache = {}
+        for field_name, ref_info in foreign_key_refs.items():
+            if ref_info['ids']:
+                related_model = ref_info['model']
+                existing_ids = set(related_model.objects.filter(pk__in=ref_info['ids']).values_list('pk', flat=True))
+                missing_ids = ref_info['ids'] - existing_ids
+                
+                # Create missing foreign key objects
+                if missing_ids:
+                    missing_objects = [related_model(pk=pk_id) for pk_id in missing_ids]
+                    related_model.objects.bulk_create(missing_objects, batch_size=1000, ignore_conflicts=True)
+                    logger.info(f"Created {len(missing_objects)} missing {related_model.__name__} objects")
+                
+                # Cache all foreign key objects
+                foreign_key_cache[field_name] = {
+                    obj.pk: obj for obj in related_model.objects.filter(pk__in=ref_info['ids'])
+                }
+
+        # Second pass: prepare objects for bulk creation
+        objects_to_create = []
+        errors = []
+        
         for row_num, row in enumerate(rows, 1):
             if not any(row):  # Skip empty rows
                 logger.debug(f"Skipping empty row {row_num}")
@@ -604,49 +643,61 @@ class CSVDataImporter:
                 if column_index < len(row) and field_name in model_fields:
                     value = row[column_index].strip() if isinstance(row[column_index], str) else row[column_index]
                     field = model_fields[field_name]
-                    # Defer foreign key resolution for now, just store the ID
-                    converted_value = self._convert_value(field, value, defer_foreign_keys=True)
-                    if converted_value is not None:
-                        obj_data[field_name] = converted_value
-                    logger.debug(f"Row {row_num}: Column {column_index} -> {field_name} = {converted_value}")
+                    
+                    if isinstance(field, models.ForeignKey) and value and value not in ('', 'None', 'NULL'):
+                        # Use cached foreign key object
+                        if field_name in foreign_key_cache and value in foreign_key_cache[field_name]:
+                            obj_data[field_name] = foreign_key_cache[field_name][value]
+                        else:
+                            logger.warning(f"Foreign key object not found for {field_name} with value {value}")
+                    else:
+                        # Convert non-foreign key values
+                        converted_value = self._convert_value(field, value, defer_foreign_keys=True)
+                        if converted_value is not None:
+                            obj_data[field_name] = converted_value
 
             if obj_data:
                 try:
-                    # For foreign key fields, we need to resolve them properly
-                    resolved_obj_data = {}
-                    for field_name, value in obj_data.items():
-                        field = model_fields[field_name]
-                        if isinstance(field, models.ForeignKey) and value is not None:
-                            related_model = field.related_model
-                            if related_model not in cached_set:
-                                cached_set[related_model] = related_model.objects.all()
-                            if not cached_set[related_model].filter(pk=value).exists():
-                                related_model_obj = related_model.objects.create(pk=value)
-                                related_model_obj.save()
-                            resolved_obj_data[field_name] = related_model.objects.get(pk=value)
-                        else:
-                            resolved_obj_data[field_name] = value
-
-                    if resolved_obj_data is not None:
-                        # Create object using Django ORM
-                        obj = model_class.objects.create(**resolved_obj_data)
-                        try:
-                            obj.save()
-                        except Exception as e:
-                            traceback.print_exc()
-                        imported_objects.append(obj)
-
-                        if row_num % 100 == 0:  # Log progress every 100 rows
-                            logger.debug(f"Processed {row_num} rows, created {len(imported_objects)} objects")
+                    # Create model instance (without saving)
+                    obj = model_class(**obj_data)
+                    objects_to_create.append(obj)
+                    
+                    if row_num % 1000 == 0:  # Log progress every 1000 rows
+                        logger.debug(f"Processed {row_num} rows, prepared {len(objects_to_create)} objects")
                 except Exception as e:
-                    logger.error(f"Failed to create object from row {row_num} of type {model_class}: {e}")
-                    logger.error(f"Row data: {row}")
-                    logger.error(f"Object data: {obj_data}")
-                    # Try to continue with next row instead of failing completely
+                    error_info = {
+                        'row_num': row_num,
+                        'error': str(e),
+                        'row_data': row,
+                        'obj_data': obj_data
+                    }
+                    errors.append(error_info)
                     logger.warning(f"Skipping row {row_num} due to error: {e}")
                     continue
 
-        logger.info(f"Successfully imported {len(imported_objects)} objects to {table_name}")
+        # Bulk create all objects
+        imported_objects = []
+        if objects_to_create:
+            try:
+                imported_objects = model_class.objects.bulk_create(
+                    objects_to_create, 
+                    batch_size=1000,
+                    ignore_conflicts=True
+                )
+                logger.info(f"Successfully bulk created {len(imported_objects)} objects to {table_name}")
+            except Exception as e:
+                logger.error(f"Bulk create failed for {table_name}: {e}")
+                # If bulk create fails, log the errors
+                for error in errors[:10]:  # Show first 10 errors
+                    logger.error(f"Row {error['row_num']}: {error['error']}")
+                raise
+
+        # Log any errors encountered
+        if errors:
+            logger.warning(f"Encountered {len(errors)} errors during import of {table_name}")
+            for error in errors[:5]:  # Show first 5 errors
+                logger.debug(f"Row {error['row_num']}: {error['error']}")
+
         return imported_objects
 
     def import_from_csv_string(self, csv_string, filename="data.csv"):
