@@ -23,7 +23,7 @@ from typing import List, Any, Tuple
 from pybirdai.process_steps.joins_meta_data.member_hierarchy_service import MemberHierarchyService
 import itertools
 import traceback
-
+from pybirdai.utils.derived_fields_extractor import extract_classes_with_lineage_properties, save_derived_fields_as_cube_structure_items
 from pybirdai.process_steps.joins_meta_data.ldm_search import ELDMSearch
 
 # Configure logging
@@ -51,6 +51,9 @@ class JoinsMetaDataCreator:
         self.add_reports(context, sdd_context, framework)
 
     def do_stuff_and_prepare_context(self, context: Any, sdd_context: Any):
+
+        lineage_classes = extract_classes_with_lineage_properties("pybirdai"+os.sep+"bird_data_model.py")
+        _ = save_derived_fields_as_cube_structure_items(lineage_classes, "")
 
         context.combination_item_dictionary = {}
         for combination_item in COMBINATION_ITEM.objects.all():
@@ -406,7 +409,7 @@ class JoinsMetaDataCreator:
             List[Any]: A list of matching variables.
         """
         related_variables = []
-        
+
         target_domain = output_item.variable_id.domain_id if output_item.variable_id else None
         output_members = context.variable_members_in_combinations.get(output_item.variable_id,set())
         hierarchies = sdd_context.domain_to_hierarchy_dictionary.get(output_item.variable_id.domain_id,[])
@@ -424,11 +427,11 @@ class JoinsMetaDataCreator:
             # Early exit if no output members to compare
             if not all_output_members:
                 return related_variables
-            
+
             # Initialize subdomain enumeration cache if not exists
             if not hasattr(sdd_context, 'subdomain_enumeration_cache'):
                 sdd_context.subdomain_enumeration_cache = {}
-            
+
             # Collect all unique subdomains from field_list to batch load
             subdomains_to_load = set()
             for csi in field_list:
@@ -436,32 +439,32 @@ class JoinsMetaDataCreator:
                     subdomain_id = csi.subdomain_id.subdomain_id
                     if subdomain_id not in sdd_context.subdomain_enumeration_cache:
                         subdomains_to_load.add(subdomain_id)
-            
+
             # Batch load subdomain enumerations for all subdomains at once
             if subdomains_to_load:
                 from django.db.models import Prefetch
                 subdomain_enums = SUBDOMAIN_ENUMERATION.objects.filter(
                     subdomain_id__subdomain_id__in=subdomains_to_load
                 ).select_related('member_id', 'subdomain_id')
-                
+
                 # Group by subdomain_id for caching
                 for enum in subdomain_enums:
                     subdomain_id = enum.subdomain_id.subdomain_id
                     if subdomain_id not in sdd_context.subdomain_enumeration_cache:
                         sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
                     sdd_context.subdomain_enumeration_cache[subdomain_id].add(enum.member_id)
-                
+
                 # Mark empty subdomains to avoid future queries
                 for subdomain_id in subdomains_to_load:
                     if subdomain_id not in sdd_context.subdomain_enumeration_cache:
                         sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
-            
+
             # Now process field_list using cached data
             for csi in field_list:
                 bool_1 = csi.variable_id and csi.variable_id.domain_id
                 if not bool_1:
                     continue
-                    
+
                 subdomain = csi.subdomain_id
                 bool_2 = False
                 if subdomain:
@@ -472,7 +475,7 @@ class JoinsMetaDataCreator:
                 else:
                     #print(f"no subdomain for {csi}:{csi.variable_id}:{csi.cube_structure_id.cube_structure_id}")
                     bool_2 = False
-                    
+
                 if bool_1 and bool_2:
                     # if output_item.variable_id.variable_id == 'TYP_INSTRMNT':
                     #    import pdb;pdb.set_trace()
