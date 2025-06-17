@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apt-get install mdbtools
 cd birds_nest
 pip install --upgrade pip --quiet
 python -m pip install django==5.1.3 --quiet
