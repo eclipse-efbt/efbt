@@ -14,7 +14,18 @@
 import os
 import ast
 import argparse
-from logger_factory import return_logger, Path
+import logging
+from pathlib import Path
+
+def return_logger(__file_name__:str):
+    return logging.getLogger(__file_name__)
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger()
 
 
 class TestCodeGenerator:
@@ -193,7 +204,7 @@ class TestCodeGenerator:
                     ],
                     decorator_list=[]
                 )
-                
+
             ],
             type_ignores=[]
         )
@@ -363,7 +374,7 @@ class TestCodeGenerator:
             f.write(import_code)
             f.write('\n\n')
             f.write(test_code)
-            
+
         logger.debug(f"Saved generated code to {output_file}")
 
     @classmethod

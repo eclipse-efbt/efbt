@@ -504,6 +504,96 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
 
         return files_downloaded
 
+    def fetch_filter_code(
+            self,
+            remote_dir="birds_nest/pybirdai/process_steps/filter_code",
+            local_target_dir=f"pybirdai{os.sep}process_steps{os.sep}filter_code"):
+        """
+        Fetches the derivation model file from the specified remote directory.
+
+        Args:
+            remote_dir (str): Remote directory path to fetch files from
+            local_target_dir (str): Local directory path to save files to
+
+        Returns:
+            int: Number of files successfully downloaded
+        """
+        logger.info(f"Fetching filter code files from {remote_dir} to {local_target_dir}")
+
+        files_downloaded = 0
+        files_in_dir = self.fetch_files(remote_dir)
+
+        if not files_in_dir:
+            logger.warning(f"No files found in remote directory: {remote_dir}")
+            return 0
+
+        # Ensure the local directory exists
+        self._ensure_directory_exists(local_target_dir)
+
+        for file_info in files_in_dir:
+            if file_info.get('type') == 'file':
+                remote_file_name = file_info.get('name')
+                local_file_path = os.path.join(local_target_dir, remote_file_name)
+
+                logger.info(f"Attempting to download {remote_file_name} to {local_file_path}")
+
+                # Download the file
+                download_success = self.download_file(file_info, local_file_path)
+                if download_success:
+                    files_downloaded += 1
+                    logger.info(f"Successfully downloaded {remote_file_name} to {local_file_path}")
+
+        if files_downloaded == 0:
+            logger.warning("No filter code files downloaded")
+        else:
+            logger.info(f"Successfully downloaded {files_downloaded} filter code files")
+
+        return files_downloaded
+
+    def fetch_test_fixtures(self, base_url: str = ""):
+        """
+        Fetch test fixtures and templates from the repository.
+
+        Args:
+            base_url (str): Base URL (currently unused but kept for compatibility)
+
+        Returns:
+            int: Number of test fixture files successfully downloaded
+        """
+        logger.info("Fetching test fixtures and templates from repository")
+
+        files_downloaded = 0
+
+        try:
+            # Get commit information for the test fixtures directory
+            self.get_commit_info("tests/fixtures/templates/")
+            logger.info("Retrieved commit info for test fixtures")
+
+            # Ensure the local directory exists
+            local_target_dir = f"pybirdai{os.sep}tests{os.sep}fixtures{os.sep}templates{os.sep}"
+            self._ensure_directory_exists(local_target_dir)
+
+            # Process all cached file information
+            path_downloaded = set()
+            initial_count = len(path_downloaded)
+
+            for folder_data in self.files.values():
+                self.fetch_test_fixture(folder_data, path_downloaded)
+
+            # Calculate files downloaded by checking the difference in path_downloaded set
+            files_downloaded = len(path_downloaded) - initial_count
+
+        except Exception as e:
+            logger.error(f"Error fetching test fixtures: {e}")
+            return 0
+
+        if files_downloaded == 0:
+            logger.warning("No test fixture files downloaded")
+        else:
+            logger.info(f"Successfully downloaded {files_downloaded} test fixture files")
+
+        return files_downloaded
+
 
 class AutomodeConfigurationService:
     """Service class for handling automode configuration and execution."""
@@ -597,6 +687,8 @@ class AutomodeConfigurationService:
             'technical_export': 0,
             'config_files': 0,
             'generated_python': 0,
+            'filter_code': 0,
+            'test_fixtures': 0,
             'errors': []
         }
 
@@ -629,9 +721,10 @@ class AutomodeConfigurationService:
             results['errors'].append(error_msg)
 
         # Fetch generated Python files if using GitHub sources
+        github_url_for_python = None
         try:
             # Determine which GitHub URL to use for Python files
-            github_url_for_python = None
+
             if config.technical_export_source == 'GITHUB':
                 github_url_for_python = config.technical_export_github_url
             elif config.config_files_source == 'GITHUB':
@@ -645,6 +738,30 @@ class AutomodeConfigurationService:
                 logger.info("No GitHub source configured - skipping generated Python files download")
         except Exception as e:
             error_msg = f"Error fetching generated Python files: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
+
+        # Fetch filter code files if using GitHub sources
+        try:
+            if github_url_for_python:
+                results['filter_code'] = self._fetch_filter_code_from_github(
+                    github_url_for_python, github_token, force_refresh
+                )
+        except Exception as e:
+            error_msg = f"Error fetching filter code files: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
+
+        # Fetch test fixtures if using GitHub sources
+        try:
+            if github_url_for_python:
+                results['test_fixtures'] = self._fetch_test_fixtures_from_github(
+                    github_url_for_python, github_token, force_refresh
+                )
+            else:
+                logger.info("No GitHub source configured - skipping test fixtures download")
+        except Exception as e:
+            error_msg = f"Error fetching test fixtures: {str(e)}"
             logger.error(error_msg)
             results['errors'].append(error_msg)
 
@@ -720,6 +837,22 @@ class AutomodeConfigurationService:
         target_dir = "resources/generated_python"
 
         return fetcher.fetch_generated_python_files(target_dir, force_refresh)
+
+    def _fetch_filter_code_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
+        """Fetch filter code files from GitHub repository."""
+        logger.info(f"Fetching filter code files from GitHub: {github_url}")
+
+        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
+
+        return fetcher.fetch_filter_code()
+
+    def _fetch_test_fixtures_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
+        """Fetch test fixtures from GitHub repository."""
+        logger.info(f"Fetching test fixtures from GitHub: {github_url}")
+
+        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
+
+        return fetcher.fetch_test_fixtures()
 
     def _check_manual_technical_export_files(self) -> int:
         """
@@ -1043,7 +1176,7 @@ class AutomodeConfigurationService:
 
         try:
             # Import the test runner
-            from .utils.run_tests import RegulatoryTemplateTestRunner
+            from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
             # Create test runner instance
             test_runner = RegulatoryTemplateTestRunner()
