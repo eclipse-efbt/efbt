@@ -473,7 +473,7 @@ INPUT_TABLES = [
     'OperationScopeComposition', 'Release', 'ReportingFramework', 'OperatorArgument',
     'ContextComposition', 'DataType', 'VariableOfExpression', 'SubCategory', 'TableGroup',
     'ModuleParameter', 'ContextOfDataPoint', 'Aux_CellMapping', 'ConceptualModuleTemplate',
-    'Aux_CellStatu', 'Axi', 'DataPointVersionTransitionLink', 'TableAssociation',
+    'Aux_CellStatus', 'Axis', 'DataPointVersionTransitionLink', 'TableAssociation',
     'SubCategoryItem', 'OpenAxisValueRestriction', 'ChangeLog', 'HierarchyScope',
     'VariableGeneration', 'OpenMemberRestriction', 'SubCategoryVersion', 'TaxonomyHistory',
     'ConceptualModule', 'Framework', 'TaxonomyTableVersion', 'UserRole', 'HierarchyValidationRule',
