@@ -18,12 +18,25 @@ import argparse
 import sqlite3
 import typing
 from datetime import datetime
-from logger_factory import return_logger, Path
-from constants import *
+from .constants import *
 import glob
 
-# Configure logger for this module
-logger = return_logger(str(Path(__file__).resolve()).rsplit("/",1)[-1])
+import logging
+from pathlib import Path
+
+def return_logger(__file_name__:str):
+    return logging.getLogger(__file_name__)
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger()
+
+class FakeArgs(object):
+    def __init__(self):
+        pass
 
 class RegulatoryTemplateTestRunner:
     """
@@ -36,24 +49,26 @@ class RegulatoryTemplateTestRunner:
     4. Handle different test scenarios
     """
 
-    def __init__(self):
+    def __init__(self, parser_: bool = True):
         """Initialize the test runner with command line arguments."""
         # Set up command line argument parsing
-        self.parser = argparse.ArgumentParser(description='Generate and run test code for regulatory templates')
-        self.parser.add_argument('--uv', type=str, default=DEFAULT_UV,
-                       help=f'run with astral/uv as backend (default: {DEFAULT_UV})')
-        self.parser.add_argument('--dp-value', type=int, default=DEFAULT_DP_VALUE,
-                       help=f'Datapoint value to test (default: {DEFAULT_DP_VALUE})')
-        self.parser.add_argument('--reg-tid', type=str, default=DEFAULT_REG_TID,
-                       help=f'Regulatory template ID (default: {DEFAULT_REG_TID})')
-        self.parser.add_argument('--dp-suffix', type=str, default=DEFAULT_DP_SUFFIX,
-                       help=f'Suffix for datapoint and cell IDs (default: {DEFAULT_DP_SUFFIX})')
-        self.parser.add_argument('--config-file', type=str,
-                       help='JSON configuration file for multiple tests')
-        self.parser.add_argument('--scenario', type=str,
-                       help='Specific scenario to run (if not all scenarios)')
+        self.args = FakeArgs()
+        if parser_:
+            self.parser = argparse.ArgumentParser(description='Generate and run test code for regulatory templates')
+            self.parser.add_argument('--uv', type=str, default=DEFAULT_UV,
+                        help=f'run with astral/uv as backend (default: {DEFAULT_UV})')
+            self.parser.add_argument('--dp-value', type=int, default=DEFAULT_DP_VALUE,
+                        help=f'Datapoint value to test (default: {DEFAULT_DP_VALUE})')
+            self.parser.add_argument('--reg-tid', type=str, default=DEFAULT_REG_TID,
+                        help=f'Regulatory template ID (default: {DEFAULT_REG_TID})')
+            self.parser.add_argument('--dp-suffix', type=str, default=DEFAULT_DP_SUFFIX,
+                        help=f'Suffix for datapoint and cell IDs (default: {DEFAULT_DP_SUFFIX})')
+            self.parser.add_argument('--config-file', type=str,
+                        help='JSON configuration file for multiple tests')
+            self.parser.add_argument('--scenario', type=str,
+                        help='Specific scenario to run (if not all scenarios)')
 
-        self.args = self.parser.parse_args()
+            self.args = self.parser.parse_args()
 
     def get_file_paths(self, reg_tid: str, dp_suffix: str) -> tuple:
         """
@@ -213,8 +228,8 @@ class RegulatoryTemplateTestRunner:
             use_uv: Whether to use UV as backend
         """
         # Set up paths
-        test_data_scenario_path = f"tests/fixtures/templates/{reg_tid}/{dp_suffix}"
-        test_data_sql_path = f"{test_data_scenario_path}/{scenario_path}/"
+        test_data_scenario_path = f"tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}"
+        test_data_sql_path = f"{test_data_scenario_path}{os.sep}{scenario_path}{os.sep}"
         txt_path_stub, json_path_stub = self.get_file_paths(reg_tid, dp_suffix)
 
         logger.debug(f"Starting scenario: {scenario_path} from {reg_tid} at datapoint {dp_suffix}")
@@ -319,7 +334,7 @@ class RegulatoryTemplateTestRunner:
                 self.process_scenario(connection, cursor, scenario, reg_tid, dp_suffix, str(dp_value), use_uv)
             else:
                 # Run all scenarios for this template/datapoint
-                test_data_scenario_path = f"tests/fixtures/templates/{reg_tid}/{dp_suffix}/"
+                test_data_scenario_path = f"tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}{os.sep}"
                 try:
                     for scenario_path in os.listdir(test_data_scenario_path):
                         if ".py" in scenario_path:
@@ -345,7 +360,7 @@ class RegulatoryTemplateTestRunner:
         connection = sqlite3.connect("db.sqlite3")
         cursor = connection.cursor()
 
-        test_data_scenario_path = f"tests/fixtures/templates/{reg_tid}/{dp_suffix}/"
+        test_data_scenario_path = f"tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}{os.sep}"
 
         if specific_scenario:
             self.process_scenario(
@@ -385,10 +400,10 @@ class RegulatoryTemplateTestRunner:
 
         for file_path in old_txt_files + old_json_files:
             try:
-                os.remove(file_path)                
+                os.remove(file_path)
             except Exception as e:
                 logger.error(f"Failed to delete file {file_path}: {str(e)}")
-    
+
         # Check if running from config file
         if self.args.config_file:
             self.run_tests_from_config(self.args.config_file, eval(self.args.uv))
@@ -401,9 +416,3 @@ class RegulatoryTemplateTestRunner:
                 eval(self.args.uv),
                 self.args.scenario
             )
-
-
-if __name__ == "__main__":
-    # Create and run the test runner
-    runner = RegulatoryTemplateTestRunner()
-    runner.main()

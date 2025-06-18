@@ -16,7 +16,7 @@ import os
 # Base directories
 TESTS_DIR = "tests"
 PYBIRDAI_DIR = "pybirdai"
-UTILS_DIR = "utils"
+UTILS_DIR = f"utils{os.sep}datapoint_test_run"
 TEST_RESULTS_DIR = os.path.join(TESTS_DIR, "test_results")
 
 # Test results folders
