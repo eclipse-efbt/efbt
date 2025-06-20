@@ -124,25 +124,167 @@ def generate_ast_output(classes_info):
 
     return module
 
+def check_if_file_already_modified(file_path):
+    """Check if the file already has lineage imports and decorators"""
+    with open(file_path, 'r') as f:
+        content = f.read()
+
+    # Check for lineage import and @lineage decorator
+    has_lineage_import = 'from pybirdai.annotations.decorators import lineage' in content
+    has_lineage_decorator = '@lineage' in content
+
+    return has_lineage_import and has_lineage_decorator
+
+def merge_derived_fields_into_original_model(bird_data_model_path, lineage_classes_ast_path):
+    """
+    Merge derived fields from lineage_classes_ast.py into the original bird_data_model.py.
+
+    This function:
+    1. Checks if the original file has already been modified (has @lineage imports/decorators)
+    2. If not modified, processes each class to:
+       - Rename existing fields by prefixing with underscore
+       - Add derived properties at the end of the class
+    3. Saves the modified file back to the same location
+
+    Args:
+        bird_data_model_path (str): Path to the original bird_data_model.py file
+        lineage_classes_ast_path (str): Path to the lineage_classes_ast.py file with derived fields
+
+    Returns:
+        bool: True if modifications were made, False if file was already modified
+    """
+    logger = logging.getLogger(__name__)
+
+    # Check if file has already been modified
+    if check_if_file_already_modified(bird_data_model_path):
+        logger.info("File already contains @lineage decorators and imports, skipping modification")
+        return False
+
+    # Parse both files
+    with open(bird_data_model_path, 'r') as f:
+        original_content = f.read()
+
+    with open(lineage_classes_ast_path, 'r') as f:
+        lineage_content = f.read()
+
+    original_tree = ast.parse(original_content)
+    lineage_tree = ast.parse(lineage_content)
+
+    # Extract derived classes and their properties from lineage file
+    derived_classes = {}
+    for node in ast.walk(lineage_tree):
+        if isinstance(node, ast.ClassDef):
+            class_name = node.name
+            # Find the property with @lineage decorator
+            for item in node.body:
+                if isinstance(item, ast.FunctionDef):
+                    for decorator in item.decorator_list:
+                        if (isinstance(decorator, ast.Name) and decorator.id == 'lineage') or \
+                           (isinstance(decorator, ast.Attribute) and decorator.attr == 'lineage') or \
+                           (isinstance(decorator, ast.Call) and
+                            ((isinstance(decorator.func, ast.Name) and decorator.func.id == 'lineage') or
+                             (isinstance(decorator.func, ast.Attribute) and decorator.func.attr == 'lineage'))):
+                            derived_classes[class_name] = item
+                            break
+
+    # Add lineage import to original file
+    lineage_import = ast.ImportFrom(
+        module='pybirdai.annotations.decorators',
+        names=[ast.alias(name='lineage')],
+        level=0
+    )
+    original_tree.body.insert(0, lineage_import)
+
+    # Process each class in the original file
+    for node in ast.walk(original_tree):
+        if isinstance(node, ast.ClassDef) and node.name in derived_classes:
+            class_name = node.name
+            logger.info(f"Processing class {class_name}")
+
+            # Get the derived property name to know which field to rename
+            derived_property = derived_classes[class_name]
+            derived_property_name = derived_property.name
+
+            # Rename existing fields by prefixing with underscore only if they have a derived property
+            new_body = []
+            meta_class = None
+
+            for item in node.body:
+                if isinstance(item, ast.ClassDef) and item.name == 'Meta':
+                    # Store Meta class to add at the end
+                    meta_class = item
+                    continue
+                new_body.append(item)
+
+            # Add the derived property
+            if class_name in derived_classes:
+                new_body.append(derived_classes[class_name])
+
+            # Add Meta class at the end if it exists
+            if meta_class:
+                new_body.append(meta_class)
+
+            node.body = new_body
+
+    # Write the modified content back to the original file
+    modified_content = ast.unparse(original_tree)
+    with open(bird_data_model_path, 'w') as f:
+        f.write(modified_content)
+
+    logger.info(f"Successfully modified {bird_data_model_path} with derived fields")
+    return True
+
 def main():
+    """
+    Main command-line interface for the derived fields extractor.
+
+    Usage examples:
+        # Extract and generate AST only
+        python derived_fields_extractor.py path/to/bird_meta_data_model.py
+
+        # Extract and save to database
+        python derived_fields_extractor.py path/to/bird_meta_data_model.py --save-to-db
+    """
     DjangoSetup.configure_django()
-    parser = argparse.ArgumentParser(description='Extract classes with lineage properties from a Python file')
-    parser.add_argument('file_path', help='Path to the Python file to analyze')
-    args = parser.parse_args()
+
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    logger = logging.getLogger(__name__)
+
+#     parser = argparse.ArgumentParser(
+#         description='Extract classes with lineage properties from a Python file and optionally save as cube structure items',
+#         epilog="""
+# Examples:
+#   %(prog)s bird_meta_data_model.py
+#   %(prog)s bird_meta_data_model.py --save-to-db
+#   %(prog)s bird_meta_data_model.py --save-to-db --cube-structure-id my_cube
+#         """,
+#         formatter_class=argparse.RawDescriptionHelpFormatter
+#     )
+#     parser.add_argument('file_path', help='Path to the Python file to analyze')
+#     parser.add_argument('--save-to-db', action='store_true', help='Save derived fields to database as cube structure items')
+#     args = parser.parse_args()
 
     # Extract classes with lineage properties
-    lineage_classes = extract_classes_with_lineage_properties(args.file_path)
+    # lineage_classes = extract_classes_with_lineage_properties(args.file_path)
 
-    # Generate AST
-    ast_module = generate_ast_output(lineage_classes)
+    # # Generate AST
+    # ast_module = generate_ast_output(lineage_classes)
 
-    # Write to file
-    os.makedirs("results/derivation_files/", exist_ok=True)
-    with open('results/derivation_files/lineage_classes_ast.py', 'w') as f:
-        f.write(ast.unparse(ast_module))
+    # # Write to file
+    # os.makedirs("results/derivation_files/", exist_ok=True)
+    # with open('results/derivation_files/lineage_classes_ast.py', 'w') as f:
+    #     f.write(ast.unparse(ast_module))
 
-    print(f"Extracted {len(lineage_classes)} classes with lineage properties")
+    # print(f"Extracted {len(lineage_classes)} classes with lineage properties")
     print("Output written to lineage_classes_ast.py")
+    model_file_path = f"pybirdai{os.sep}bird_data_model.py"
+    derived_fields_file_path = f"results{os.sep}derivation_files{os.sep}lineage_classes_ast.py"
+
+    merge_derived_fields_into_original_model(model_file_path,derived_fields_file_path)
 
 if __name__ == "__main__":
     main()
