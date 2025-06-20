@@ -25,6 +25,9 @@ from pybirdai.process_steps.sqldeveloper_import.import_sqldev_il_to_regdna impor
 from pybirdai.process_steps.sqldeveloper_import.import_sqldev_ldm_to_django import (
     RegDNAToDJango,
 )
+from pybirdai.process_steps.sqldeveloper_import.convert_regdna_to_xcore import (
+    convert_context_packages_to_xcore,
+)
 
 class RunCreateDjangoModels(AppConfig):
     """AppConfig for creating Django models from SQL Developer Logical Data Model."""
@@ -47,6 +50,9 @@ class RunCreateDjangoModels(AppConfig):
             SQLDevLDMImport.do_import(self, context)
         else:
             SQLDeveloperILImport.do_import(self, context)
+
+        output_directory = "results" + os.sep + "xcore_output"
+        convert_context_packages_to_xcore(context, output_directory)
         RegDNAToDJango.convert(self, context)
 
 if __name__ == '__main__':
