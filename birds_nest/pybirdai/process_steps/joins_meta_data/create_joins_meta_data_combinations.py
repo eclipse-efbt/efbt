@@ -88,6 +88,12 @@ class JoinsMetaDataCreator:
             for domain in DOMAIN.objects.all()
         }
 
+        context.facetted_items = {
+            output_item
+            for output_item in CUBE_STRUCTURE_ITEM.objects.all()
+            if output_item.variable_id.domain_id in ["String", "Date", "Integer", "Boolean", "Float"]
+        }
+
         return context,sdd_context
 
 
@@ -312,8 +318,8 @@ class JoinsMetaDataCreator:
         for output_item in sdd_context.bird_cube_structure_item_dictionary[
                 output_entity.cube_id + '_cube_structure']:
             operation_exists = self.operation_exists_in_cell_for_report_with_category(context, sdd_context, output_item, category, report_template)
-            if operation_exists:
-                input_columns = self.find_variables_with_same_members(context,
+            if operation_exists or (output_item in context.facetted_items):
+                input_columns = self.find_variables_with_same_members_then_same_name(context,
                     sdd_context, output_item, input_entity)
                 if input_columns:
                     for input_column in input_columns:
@@ -393,7 +399,7 @@ class JoinsMetaDataCreator:
             return True
         return False
 
-    def find_variables_with_same_members(self,context:Any, sdd_context: Any, output_item: Any, input_entity: Any) -> List[Any]:
+    def find_variables_with_same_members_then_same_name(self,context:Any, sdd_context: Any, output_item: Any, input_entity: Any) -> List[Any]:
         """
         Find variables with the same domain and then name as the output item.
 
@@ -405,9 +411,13 @@ class JoinsMetaDataCreator:
         Returns:
             List[Any]: A list of matching variables.
         """
+
         related_variables = []
-        
+
         target_domain = output_item.variable_id.domain_id if output_item.variable_id else None
+
+        # Same members / combination comparison
+
         output_members = context.variable_members_in_combinations.get(output_item.variable_id,set())
         hierarchies = sdd_context.domain_to_hierarchy_dictionary.get(output_item.variable_id.domain_id,[])
         all_output_members = output_members.copy()
@@ -424,11 +434,11 @@ class JoinsMetaDataCreator:
             # Early exit if no output members to compare
             if not all_output_members:
                 return related_variables
-            
+
             # Initialize subdomain enumeration cache if not exists
             if not hasattr(sdd_context, 'subdomain_enumeration_cache'):
                 sdd_context.subdomain_enumeration_cache = {}
-            
+
             # Collect all unique subdomains from field_list to batch load
             subdomains_to_load = set()
             for csi in field_list:
@@ -436,32 +446,32 @@ class JoinsMetaDataCreator:
                     subdomain_id = csi.subdomain_id.subdomain_id
                     if subdomain_id not in sdd_context.subdomain_enumeration_cache:
                         subdomains_to_load.add(subdomain_id)
-            
+
             # Batch load subdomain enumerations for all subdomains at once
             if subdomains_to_load:
                 from django.db.models import Prefetch
                 subdomain_enums = SUBDOMAIN_ENUMERATION.objects.filter(
                     subdomain_id__subdomain_id__in=subdomains_to_load
                 ).select_related('member_id', 'subdomain_id')
-                
+
                 # Group by subdomain_id for caching
                 for enum in subdomain_enums:
                     subdomain_id = enum.subdomain_id.subdomain_id
                     if subdomain_id not in sdd_context.subdomain_enumeration_cache:
                         sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
                     sdd_context.subdomain_enumeration_cache[subdomain_id].add(enum.member_id)
-                
+
                 # Mark empty subdomains to avoid future queries
                 for subdomain_id in subdomains_to_load:
                     if subdomain_id not in sdd_context.subdomain_enumeration_cache:
                         sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
-            
+
             # Now process field_list using cached data
             for csi in field_list:
                 bool_1 = csi.variable_id and csi.variable_id.domain_id
                 if not bool_1:
                     continue
-                    
+
                 subdomain = csi.subdomain_id
                 bool_2 = False
                 if subdomain:
@@ -472,12 +482,14 @@ class JoinsMetaDataCreator:
                 else:
                     #print(f"no subdomain for {csi}:{csi.variable_id}:{csi.cube_structure_id.cube_structure_id}")
                     bool_2 = False
-                    
+
                 if bool_1 and bool_2:
                     # if output_item.variable_id.variable_id == 'TYP_INSTRMNT':
                     #    import pdb;pdb.set_trace()
                     related_variables.append(csi)
             return related_variables
+
+        # Same name comparison
 
         logging.warning(f"CHECKING OUTPUT VARIABLE NAME FOR {output_item}")
         output_variable_name = output_item.variable_id.variable_id if output_item.variable_id else None
