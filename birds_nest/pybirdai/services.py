@@ -176,6 +176,20 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         explore_directory()
         return structure
 
+    def fetch_derivation_files(self, target_directory: str= f"birds_nest{os.sep}resources{os.sep}derivation_files{os.sep}"):
+        logger.info("Fetching derivation files from export/database_export_ldm to bird/ and admin/ subdirectories")
+        self._ensure_directory_exists(target_directory)
+        export_path = "birds_nest/resources/derivation_files/"
+        try:
+            logger.info(f"Fetching derivation files from {export_path}")
+            print(f"DEBUG: Fetching files from {export_path}")
+            files = self.fetch_files(export_path)
+            logger.info(f"Found {len(files)} items in {export_path}")
+            print(f"DEBUG: Raw files response: {len(files)} items")
+        except Exception as e:
+            logger.error(f"Error fetching derivation files from {export_path}: {e}")
+            files = []
+
     def fetch_technical_exports(self, target_directory: str, force_refresh: bool = False):
         """
         Fetch technical export files from the export/database_export_ldm directory.
@@ -752,6 +766,16 @@ class AutomodeConfigurationService:
             logger.error(error_msg)
             results['errors'].append(error_msg)
 
+        try:
+            if github_url_for_python:
+                results['derivation_files'] = self._fetch_derivation_files_from_github(
+                    github_url_for_python, github_token, force_refresh
+                )
+        except Exception as e:
+            error_msg = f"Error derivation files: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
+
         # Fetch test fixtures if using GitHub sources
         try:
             if github_url_for_python:
@@ -853,6 +877,14 @@ class AutomodeConfigurationService:
         fetcher = ConfigurableGitHubFileFetcher(github_url, token)
 
         return fetcher.fetch_test_fixtures()
+
+    def _fetch_derivation_files_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
+        """Fetch derivation files from GitHub repository."""
+        logger.info(f"Fetching derivation files from GitHub: {github_url}")
+
+        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
+
+        return fetcher.fetch_derivation_files()
 
     def _check_manual_technical_export_files(self) -> int:
         """

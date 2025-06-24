@@ -304,6 +304,8 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 + "derived_field_configuration.py",
             )
 
+            os.makedirs(os.path.dirname(derived_fields_file_path), exist_ok=True)
+
             merge_derived_fields_into_original_model(
                 pybirdai_models_path, derived_fields_file_path
             )
