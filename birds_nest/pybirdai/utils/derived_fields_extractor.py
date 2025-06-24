@@ -41,8 +41,7 @@ def extract_classes_with_lineage_properties(path: str):
     for node in ast.walk(tree):
         if isinstance(node, ast.ClassDef):
             class_name = node.name
-            has_lineage = False
-            lineage_property = None
+            lineage_properties = []
 
             # Check each method/property in the class
             for item in node.body:
@@ -73,17 +72,13 @@ def extract_classes_with_lineage_properties(path: str):
                                 )
                             )
                         ):
-                            has_lineage = True
-                            lineage_property = item.name
+                            lineage_properties.append(item.name)
                             break
 
-                    if has_lineage:
-                        break
-
-            if has_lineage:
+            if lineage_properties:
                 class_info = {
                     "class_name": class_name,
-                    "property_name": lineage_property,
+                    "property_names": lineage_properties,
                     "class_node": node,
                 }
                 classes_with_lineage.append(class_info)
@@ -176,8 +171,8 @@ def merge_derived_fields_into_original_model(
     This function:
     1. Checks if the original file has already been modified (has @lineage imports/decorators)
     2. If not modified, processes each class to:
-       - Rename existing fields by prefixing with underscore
-       - Add derived properties at the end of the class
+       - Remove existing fields that are overwritten by derived properties
+       - Add derived properties before the Meta class and after all other fields
     3. Saves the modified file back to the same location
 
     Args:
@@ -211,7 +206,8 @@ def merge_derived_fields_into_original_model(
     for node in ast.walk(lineage_tree):
         if isinstance(node, ast.ClassDef):
             class_name = node.name
-            # Find the property with @lineage decorator
+            derived_properties = []
+            # Find all properties with @lineage decorator
             for item in node.body:
                 if isinstance(item, ast.FunctionDef):
                     for decorator in item.decorator_list:
@@ -238,10 +234,10 @@ def merge_derived_fields_into_original_model(
                                 )
                             )
                         ):
-                            derived_classes[class_name] = (
-                                item  # maybe list if multiple derived fields
-                            )
+                            derived_properties.append(item)
                             break
+            if derived_properties:
+                derived_classes[class_name] = derived_properties
 
     # Add lineage import to original file
     lineage_import = ast.ImportFrom(
@@ -257,12 +253,11 @@ def merge_derived_fields_into_original_model(
             class_name = node.name
             logger.info(f"Processing class {class_name}")
 
-            # Get the derived property name to know which field to rename
-            derived_property = derived_classes[class_name]
-            derived_property_name = derived_property.name
-            # remove field which is overwritten by derived property
+            # Get the derived properties to know which fields to remove
+            derived_properties = derived_classes[class_name]
+            derived_property_names = [prop.name for prop in derived_properties]
 
-            # Rename existing fields by prefixing with underscore only if they have a derived property
+            # Remove existing fields that are overwritten by derived properties
             new_body = []
             meta_class = None
 
@@ -271,11 +266,19 @@ def merge_derived_fields_into_original_model(
                     # Store Meta class to add at the end
                     meta_class = item
                     continue
+                elif isinstance(item, ast.Assign):
+                    # Check if this is a field assignment that should be removed
+                    if len(item.targets) == 1 and isinstance(item.targets[0], ast.Name):
+                        field_name = item.targets[0].id
+                        if field_name in derived_property_names:
+                            # Skip this field as it will be replaced by a derived property
+                            continue
                 new_body.append(item)
 
-            # Add the derived property
+            # Add the derived properties before the Meta class
             if class_name in derived_classes:
-                new_body.append(derived_classes[class_name])
+                for derived_property in derived_classes[class_name]:
+                    new_body.append(derived_property)
 
             # Add Meta class at the end if it exists
             if meta_class:
@@ -341,7 +344,7 @@ def main():
     print("Output written to derived_field_configuration.py")
     model_file_path = f"pybirdai{os.sep}bird_data_model.py"
     derived_fields_file_path = (
-        f"resouces{os.sep}derivation_files{os.sep}derived_field_configuration.py"
+        f"resources{os.sep}derivation_files{os.sep}derived_field_configuration.py"
     )
 
     merge_derived_fields_into_original_model(model_file_path, derived_fields_file_path)
