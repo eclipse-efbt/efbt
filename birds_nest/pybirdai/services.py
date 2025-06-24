@@ -176,7 +176,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         explore_directory()
         return structure
 
-    def fetch_derivation_files(self, target_directory: str= f"birds_nest{os.sep}resources{os.sep}derivation_files{os.sep}"):
+    def fetch_derivation_files(self, target_directory: str= f"resources{os.sep}derivation_files{os.sep}"):
         logger.info("Fetching derivation files from export/database_export_ldm to bird/ and admin/ subdirectories")
         self._ensure_directory_exists(target_directory)
         export_path = "birds_nest/resources/derivation_files/"
@@ -184,6 +184,10 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
             logger.info(f"Fetching derivation files from {export_path}")
             print(f"DEBUG: Fetching files from {export_path}")
             files = self.fetch_files(export_path)
+            for file_info in files:
+                file_name = file_info.get('name')
+                local_path = os.path.join(target_directory, file_name)
+                result = self.download_file(file_info, local_path)
             logger.info(f"Found {len(files)} items in {export_path}")
             print(f"DEBUG: Raw files response: {len(files)} items")
         except Exception as e:
