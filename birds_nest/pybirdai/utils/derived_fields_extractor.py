@@ -17,19 +17,22 @@ class DjangoSetup:
         """Configure Django settings without starting the application"""
         if not settings.configured:
             # Set up Django settings module for birds_nest in parent directory
-            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+            project_root = os.path.abspath(
+                os.path.join(os.path.dirname(__file__), "../..")
+            )
             sys.path.insert(0, project_root)
-            os.environ['DJANGO_SETTINGS_MODULE'] = 'birds_nest.settings'
+            os.environ["DJANGO_SETTINGS_MODULE"] = "birds_nest.settings"
             django.setup()
 
-def extract_classes_with_lineage_properties(path:str):
+
+def extract_classes_with_lineage_properties(path: str):
     """Extract classes that have properties with 'lineage' decorator"""
     DjangoSetup.configure_django()
 
     classes_with_lineage = []
 
     # Parse the bird_data_model.py file using AST
-    with open(path, 'r') as f:
+    with open(path, "r") as f:
         source_code = f.read()
 
     tree = ast.parse(source_code)
@@ -47,11 +50,29 @@ def extract_classes_with_lineage_properties(path:str):
                     # Check if it has decorators
                     for decorator in item.decorator_list:
                         # Check for lineage decorator
-                        if (isinstance(decorator, ast.Name) and decorator.id == 'lineage') or \
-                           (isinstance(decorator, ast.Attribute) and decorator.attr == 'lineage') or \
-                           (isinstance(decorator, ast.Call) and
-                            ((isinstance(decorator.func, ast.Name) and decorator.func.id == 'lineage') or
-                             (isinstance(decorator.func, ast.Attribute) and decorator.func.attr == 'lineage'))):
+                        if (
+                            (
+                                isinstance(decorator, ast.Name)
+                                and decorator.id == "lineage"
+                            )
+                            or (
+                                isinstance(decorator, ast.Attribute)
+                                and decorator.attr == "lineage"
+                            )
+                            or (
+                                isinstance(decorator, ast.Call)
+                                and (
+                                    (
+                                        isinstance(decorator.func, ast.Name)
+                                        and decorator.func.id == "lineage"
+                                    )
+                                    or (
+                                        isinstance(decorator.func, ast.Attribute)
+                                        and decorator.func.attr == "lineage"
+                                    )
+                                )
+                            )
+                        ):
                             has_lineage = True
                             lineage_property = item.name
                             break
@@ -61,13 +82,14 @@ def extract_classes_with_lineage_properties(path:str):
 
             if has_lineage:
                 class_info = {
-                    'class_name': class_name,
-                    'property_name': lineage_property,
-                    'class_node': node
+                    "class_name": class_name,
+                    "property_name": lineage_property,
+                    "class_node": node,
                 }
                 classes_with_lineage.append(class_info)
 
     return classes_with_lineage
+
 
 def generate_ast_output(classes_info):
     """Generate AST representation of the extracted classes"""
@@ -75,15 +97,21 @@ def generate_ast_output(classes_info):
 
     # Create module node
     module = ast.Module(body=[], type_ignores=[])
-    import_sttmt_1 = ast.ImportFrom(module='django.db',names=[ast.alias(name='models')],level=0)
-    import_sttmt_2 = ast.ImportFrom(module='pybirdai.annotations.decorators',names=[ast.alias(name='lineage')],level=0)
+    import_sttmt_1 = ast.ImportFrom(
+        module="django.db", names=[ast.alias(name="models")], level=0
+    )
+    import_sttmt_2 = ast.ImportFrom(
+        module="pybirdai.annotations.decorators",
+        names=[ast.alias(name="lineage")],
+        level=0,
+    )
 
     module.body.append(import_sttmt_1)
     module.body.append(import_sttmt_2)
 
     for class_info in classes_info:
-        class_node = class_info['class_node']
-        class_name = class_info['class_name']
+        class_node = class_info["class_node"]
+        class_name = class_info["class_name"]
 
         # Create class definition
         class_def = ast.ClassDef(
@@ -91,7 +119,7 @@ def generate_ast_output(classes_info):
             bases=class_node.bases,
             keywords=class_node.keywords,
             decorator_list=class_node.decorator_list,
-            body=[]
+            body=[],
         )
 
         # Add class body items
@@ -103,17 +131,17 @@ def generate_ast_output(classes_info):
                     args=item.args,
                     body=item.body,
                     decorator_list=item.decorator_list,
-                    returns=item.returns
+                    returns=item.returns,
                 )
                 class_def.body.append(item)
-            elif isinstance(item, ast.ClassDef) and item.name == 'Meta':
+            elif isinstance(item, ast.ClassDef) and item.name == "Meta":
                 # Add Meta class
                 meta_class = ast.ClassDef(
-                    name='Meta',
+                    name="Meta",
                     bases=item.bases,
                     keywords=item.keywords,
                     decorator_list=item.decorator_list,
-                    body=[ast.Pass()]
+                    body=[ast.Pass()],
                 )
                 class_def.body.append(meta_class)
 
@@ -124,20 +152,26 @@ def generate_ast_output(classes_info):
 
     return module
 
+
 def check_if_file_already_modified(file_path):
     """Check if the file already has lineage imports and decorators"""
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         content = f.read()
 
     # Check for lineage import and @lineage decorator
-    has_lineage_import = 'from pybirdai.annotations.decorators import lineage' in content
-    has_lineage_decorator = '@lineage' in content
+    has_lineage_import = (
+        "from pybirdai.annotations.decorators import lineage" in content
+    )
+    has_lineage_decorator = "@lineage" in content
 
     return has_lineage_import and has_lineage_decorator
 
-def merge_derived_fields_into_original_model(bird_data_model_path, lineage_classes_ast_path):
+
+def merge_derived_fields_into_original_model(
+    bird_data_model_path, lineage_classes_ast_path
+):
     """
-    Merge derived fields from lineage_classes_ast.py into the original bird_data_model.py.
+    Merge derived fields from derived_field_configuration.py into the original bird_data_model.py.
 
     This function:
     1. Checks if the original file has already been modified (has @lineage imports/decorators)
@@ -148,7 +182,7 @@ def merge_derived_fields_into_original_model(bird_data_model_path, lineage_class
 
     Args:
         bird_data_model_path (str): Path to the original bird_data_model.py file
-        lineage_classes_ast_path (str): Path to the lineage_classes_ast.py file with derived fields
+        lineage_classes_ast_path (str): Path to the derived_field_configuration.py file with derived fields
 
     Returns:
         bool: True if modifications were made, False if file was already modified
@@ -157,14 +191,16 @@ def merge_derived_fields_into_original_model(bird_data_model_path, lineage_class
 
     # Check if file has already been modified
     if check_if_file_already_modified(bird_data_model_path):
-        logger.info("File already contains @lineage decorators and imports, skipping modification")
+        logger.info(
+            "File already contains @lineage decorators and imports, skipping modification"
+        )
         return False
 
     # Parse both files
-    with open(bird_data_model_path, 'r') as f:
+    with open(bird_data_model_path, "r") as f:
         original_content = f.read()
 
-    with open(lineage_classes_ast_path, 'r') as f:
+    with open(lineage_classes_ast_path, "r") as f:
         lineage_content = f.read()
 
     original_tree = ast.parse(original_content)
@@ -179,19 +215,39 @@ def merge_derived_fields_into_original_model(bird_data_model_path, lineage_class
             for item in node.body:
                 if isinstance(item, ast.FunctionDef):
                     for decorator in item.decorator_list:
-                        if (isinstance(decorator, ast.Name) and decorator.id == 'lineage') or \
-                           (isinstance(decorator, ast.Attribute) and decorator.attr == 'lineage') or \
-                           (isinstance(decorator, ast.Call) and
-                            ((isinstance(decorator.func, ast.Name) and decorator.func.id == 'lineage') or
-                             (isinstance(decorator.func, ast.Attribute) and decorator.func.attr == 'lineage'))):
-                            derived_classes[class_name] = item
+                        if (
+                            (
+                                isinstance(decorator, ast.Name)
+                                and decorator.id == "lineage"
+                            )
+                            or (
+                                isinstance(decorator, ast.Attribute)
+                                and decorator.attr == "lineage"
+                            )
+                            or (
+                                isinstance(decorator, ast.Call)
+                                and (
+                                    (
+                                        isinstance(decorator.func, ast.Name)
+                                        and decorator.func.id == "lineage"
+                                    )
+                                    or (
+                                        isinstance(decorator.func, ast.Attribute)
+                                        and decorator.func.attr == "lineage"
+                                    )
+                                )
+                            )
+                        ):
+                            derived_classes[class_name] = (
+                                item  # maybe list if multiple derived fields
+                            )
                             break
 
     # Add lineage import to original file
     lineage_import = ast.ImportFrom(
-        module='pybirdai.annotations.decorators',
-        names=[ast.alias(name='lineage')],
-        level=0
+        module="pybirdai.annotations.decorators",
+        names=[ast.alias(name="lineage")],
+        level=0,
     )
     original_tree.body.insert(0, lineage_import)
 
@@ -204,13 +260,14 @@ def merge_derived_fields_into_original_model(bird_data_model_path, lineage_class
             # Get the derived property name to know which field to rename
             derived_property = derived_classes[class_name]
             derived_property_name = derived_property.name
+            # remove field which is overwritten by derived property
 
             # Rename existing fields by prefixing with underscore only if they have a derived property
             new_body = []
             meta_class = None
 
             for item in node.body:
-                if isinstance(item, ast.ClassDef) and item.name == 'Meta':
+                if isinstance(item, ast.ClassDef) and item.name == "Meta":
                     # Store Meta class to add at the end
                     meta_class = item
                     continue
@@ -228,11 +285,12 @@ def merge_derived_fields_into_original_model(bird_data_model_path, lineage_class
 
     # Write the modified content back to the original file
     modified_content = ast.unparse(original_tree)
-    with open(bird_data_model_path, 'w') as f:
+    with open(bird_data_model_path, "w") as f:
         f.write(modified_content)
 
     logger.info(f"Successfully modified {bird_data_model_path} with derived fields")
     return True
+
 
 def main():
     """
@@ -250,23 +308,23 @@ def main():
     # Configure logging
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
     logger = logging.getLogger(__name__)
 
-#     parser = argparse.ArgumentParser(
-#         description='Extract classes with lineage properties from a Python file and optionally save as cube structure items',
-#         epilog="""
-# Examples:
-#   %(prog)s bird_meta_data_model.py
-#   %(prog)s bird_meta_data_model.py --save-to-db
-#   %(prog)s bird_meta_data_model.py --save-to-db --cube-structure-id my_cube
-#         """,
-#         formatter_class=argparse.RawDescriptionHelpFormatter
-#     )
-#     parser.add_argument('file_path', help='Path to the Python file to analyze')
-#     parser.add_argument('--save-to-db', action='store_true', help='Save derived fields to database as cube structure items')
-#     args = parser.parse_args()
+    #     parser = argparse.ArgumentParser(
+    #         description='Extract classes with lineage properties from a Python file and optionally save as cube structure items',
+    #         epilog="""
+    # Examples:
+    #   %(prog)s bird_meta_data_model.py
+    #   %(prog)s bird_meta_data_model.py --save-to-db
+    #   %(prog)s bird_meta_data_model.py --save-to-db --cube-structure-id my_cube
+    #         """,
+    #         formatter_class=argparse.RawDescriptionHelpFormatter
+    #     )
+    #     parser.add_argument('file_path', help='Path to the Python file to analyze')
+    #     parser.add_argument('--save-to-db', action='store_true', help='Save derived fields to database as cube structure items')
+    #     args = parser.parse_args()
 
     # Extract classes with lineage properties
     # lineage_classes = extract_classes_with_lineage_properties(args.file_path)
@@ -276,15 +334,18 @@ def main():
 
     # # Write to file
     # os.makedirs("results/derivation_files/", exist_ok=True)
-    # with open('results/derivation_files/lineage_classes_ast.py', 'w') as f:
+    # with open('results/derivation_files/derived_field_configuration.py', 'w') as f:
     #     f.write(ast.unparse(ast_module))
 
     # print(f"Extracted {len(lineage_classes)} classes with lineage properties")
-    print("Output written to lineage_classes_ast.py")
+    print("Output written to derived_field_configuration.py")
     model_file_path = f"pybirdai{os.sep}bird_data_model.py"
-    derived_fields_file_path = f"results{os.sep}derivation_files{os.sep}lineage_classes_ast.py"
+    derived_fields_file_path = (
+        f"resouces{os.sep}derivation_files{os.sep}derived_field_configuration.py"
+    )
 
-    merge_derived_fields_into_original_model(model_file_path,derived_fields_file_path)
+    merge_derived_fields_into_original_model(model_file_path, derived_fields_file_path)
+
 
 if __name__ == "__main__":
     main()
