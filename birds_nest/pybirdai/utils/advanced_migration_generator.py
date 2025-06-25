@@ -192,7 +192,7 @@ class ModelParser(ast.NodeVisitor):
         # Parse arguments
         for i, arg in enumerate(node.args):
             if i == 0 and isinstance(arg, ast.Constant):
-                # For ForeignKey/OneToOneField, first positional arg is 'to'
+                # For ForeignKey{os.sep}OneToOneField, first positional arg is 'to'
                 if field_info.field_type in ['ForeignKey', 'OneToOneField']:
                     field_info.foreign_key_to = str(arg.value)
                 else:
@@ -542,7 +542,7 @@ class AdvancedMigrationGenerator:
 
         # For ForeignKey fields, ensure required parameters are present
         if field.field_type in ['ForeignKey', 'OneToOneField']:
-            # Add on_delete parameter (required for ForeignKey/OneToOneField)
+            # Add on_delete parameter (required for ForeignKey{os.sep}OneToOneField)
             if field.on_delete:
                 on_delete_node = self._create_on_delete_ast(field.on_delete)
                 keywords.append(ast.keyword(arg='on_delete', value=on_delete_node))
@@ -565,7 +565,7 @@ class AdvancedMigrationGenerator:
                     attr=default_behavior, ctx=ast.Load())
                 keywords.append(ast.keyword(arg='on_delete', value=default_on_delete))
 
-            # Add to parameter (required for ForeignKey/OneToOneField)
+            # Add to parameter (required for ForeignKey{os.sep}OneToOneField)
             if field.foreign_key_to:
                 keywords.append(ast.keyword(arg='to', value=ast.Constant(value="pybirdai."+field.foreign_key_to.lower())))
             else:
@@ -671,7 +671,7 @@ class AdvancedMigrationGenerator:
 
         # For ForeignKey fields, ensure required parameters are present
         if field.field_type in ['ForeignKey', 'OneToOneField']:
-            # Add on_delete parameter (required for ForeignKey/OneToOneField)
+            # Add on_delete parameter (required for ForeignKey{os.sep}OneToOneField)
             if field.on_delete:
                 on_delete_node = self._create_on_delete_ast(field.on_delete)
                 keywords.append(ast.keyword(arg='on_delete', value=on_delete_node))
@@ -694,7 +694,7 @@ class AdvancedMigrationGenerator:
                     attr=default_behavior, ctx=ast.Load())
                 keywords.append(ast.keyword(arg='on_delete', value=default_on_delete))
 
-            # Add to parameter (required for ForeignKey/OneToOneField)
+            # Add to parameter (required for ForeignKey{os.sep}OneToOneField)
             if field.foreign_key_to:
                 keywords.append(ast.keyword(arg='to', value=ast.Constant(value="pybirdai."+field.foreign_key_to.lower())))
             else:
@@ -916,8 +916,8 @@ if __name__ == '__main__':
         print("Example: python advanced_migration_generator.py models.py 0001_initial.py")
     generator = AdvancedMigrationGenerator()
 
-    models = generator.parse_files(["pybirdai/bird_data_model.py", "pybirdai/bird_meta_data_model.py"])
+    models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
 
     # Generate migration code
     migration_code = generator.generate_migration_code(models)
-    generator.save_migration_file(models, "pybirdai/migrations/0001_initial.py")
+    generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
