@@ -55,14 +55,14 @@ REPO_MAPPING = {
     },
     # Filter code files
     f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code": {
-        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: file.endswith(".py")),  # Only Python files
+        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),  # Only Python files
     },
     # Generated Python files (alternative locations)
     f"birds_nest{os.sep}results{os.sep}generated_python_filters": {
-        f"results{os.sep}generated_python_filters": (lambda file: file.endswith(".py")),
+        f"results{os.sep}generated_python_filters": (lambda file: True),
     },
     f"birds_nest{os.sep}results{os.sep}generated_python_joins": {
-        f"results{os.sep}generated_python_joins": (lambda file: file.endswith(".py")),
+        f"results{os.sep}generated_python_joins": (lambda file: True),
     }
 }
 
@@ -89,6 +89,9 @@ class CloneRepoService:
                     logger.info(f"Removing existing target directory: {target_folder}")
                     shutil.rmtree(target_folder)
 
+        # Create all target directories beforehand
+        self._create_all_target_directories()
+
     def _get_authenticated_headers(self):
         """Get headers with authentication if token is provided."""
         headers = {}
@@ -100,6 +103,14 @@ class CloneRepoService:
         """Ensure a directory exists, creating it if necessary."""
         os.makedirs(path, exist_ok=True)
         logger.debug(f"Ensured directory exists: {path}")
+
+    def _create_all_target_directories(self):
+        """Create all target directories from REPO_MAPPING beforehand."""
+        logger.info("Creating all target directories beforehand")
+        for source_folder, target_mappings in REPO_MAPPING.items():
+            for target_folder, filter_func in target_mappings.items():
+                self._ensure_directory_exists(target_folder)
+                logger.info(f"Created target directory: {target_folder}")
 
     def _clear_directory(self, path):
         """Clear all files from a directory if it exists."""
@@ -202,11 +213,6 @@ class CloneRepoService:
 
             # Special handling for database export files that need filtering
             if f"export{os.sep}database_export_ldm" == source_folder:
-                # Create all target directories first
-                for target_folder, filter_func in target_mappings.items():
-                    logger.debug(f"Creating target folder: {target_folder}")
-                    self._ensure_directory_exists(target_folder)
-
                 # Process each file in the source directory
                 for file_name in os.listdir(source_path):
                     # Check which target folder this file should go to based on filter functions
@@ -230,9 +236,6 @@ class CloneRepoService:
                 continue  # Move to next source folder
 
             # Standard handling for other folders (copy entire directory with filtering)
-            for target_folder, filter_func in target_mappings.items():
-                self._ensure_directory_exists(target_folder)
-
             target_folder = list(REPO_MAPPING[source_folder].keys())[0]
             if os.path.exists(target_folder):
                 shutil.rmtree(target_folder)
