@@ -48,7 +48,7 @@ class ImportInputModel(object):
         if variables_loaded > 0:
             print(f"Loaded {variables_loaded} extra variables from CSV file.")
         else:
-            print.info("No extra variables loaded (file not found or empty).")
+            print("No extra variables loaded (file not found or empty).")
 
 
     def _create_maintenance_agency(sdd_context):
