@@ -564,9 +564,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
             try:
                 from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
                 generator = AdvancedMigrationGenerator()
-                models = generator.parse_files(["pybirdai/bird_data_model.py", "pybirdai/bird_meta_data_model.py"])
+                models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
                 _ = generator.generate_migration_code(models)
-                generator.save_migration_file(models, "pybirdai/migrations/0001_initial.py")
+                generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
                 call_command("makemigrations", "pybirdai", verbosity=2)
                 logger.info("Makemigrations command completed successfully2.")
             except CommandError as e:
