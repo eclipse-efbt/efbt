@@ -562,6 +562,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Run makemigrations using Django's call_command
             logger.info("Running makemigrations command...")
             try:
+                from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
+                generator = AdvancedMigrationGenerator()
+                models = generator.parse_files(["pybirdai/bird_data_model.py", "pybirdai/bird_meta_data_model.py"])
+                _ = generator.generate_migration_code(models)
+                generator.save_migration_file(models, "pybirdai/migrations/0001_initial.py")
                 call_command("makemigrations", "pybirdai", verbosity=2)
                 logger.info("Makemigrations command completed successfully2.")
             except CommandError as e:
@@ -601,6 +606,12 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Change to project directory for subprocess
             original_dir = os.getcwd()
             os.chdir(base_dir)
+
+            from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
+            generator = AdvancedMigrationGenerator()
+            models = generator.parse_files(["pybirdai/bird_data_model.py", "pybirdai/bird_meta_data_model.py"])
+            _ = generator.generate_migration_code(models)
+            generator.save_migration_file(models, "pybirdai/migrations/0001_initial.py")
 
             logger.info("Running makemigrations in subprocess...")
             makemig_start = time.time()
