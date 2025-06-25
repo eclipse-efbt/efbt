@@ -3904,7 +3904,7 @@ def automode_configure(request):
     
     try:
         from .forms import AutomodeConfigurationSessionForm
-        from .services import AutomodeConfigurationService
+        from .updated_services import AutomodeConfigurationService
     except Exception as e:
         logger.error(f"Error importing modules in automode_configure: {str(e)}")
         return JsonResponse({
@@ -4042,7 +4042,7 @@ def automode_configure(request):
 
 def automode_execute(request):
     """Execute automode setup with current configuration."""
-    from .services import AutomodeConfigurationService
+    from .updated_services import AutomodeConfigurationService
     from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
     import logging
     
@@ -4151,7 +4151,7 @@ def automode_continue_post_restart(request):
         })
     
     try:
-        from .services import AutomodeConfigurationService
+        from .updated_services import AutomodeConfigurationService
         from .forms import AutomodeConfigurationSessionForm
     except Exception as e:
         logger.error(f"Error importing modules in automode_continue_post_restart: {str(e)}")
