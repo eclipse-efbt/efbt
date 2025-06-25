@@ -27,7 +27,7 @@ import json
 import glob
 
 from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
-from .services import AutomodeConfigurationService
+from .updated_services import AutomodeConfigurationService
 from .forms import AutomodeConfigurationSessionForm
 from .entry_points import (
     automode_database_setup,
@@ -246,7 +246,7 @@ def _run_database_setup_async():
         import os
         from django.conf import settings
         from .bird_meta_data_model import AutomodeConfiguration
-        from .services import AutomodeConfigurationService
+        from .updated_services import AutomodeConfigurationService
 
         # Task 1: Resource Download
         _database_setup_status['message'] = 'Running Task 1: Resource Download...'

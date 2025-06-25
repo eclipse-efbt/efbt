@@ -20,49 +20,68 @@ logger = logging.getLogger(__name__)
 # Base directory path for the birds_nest project
 BASE = f"birds_nest{os.sep}"
 
-# Mapping configuration that defines how source folders from the repository
+# Enhanced mapping configuration that defines how source folders from the repository
 # should be copied to target folders, with optional file filtering functions
 REPO_MAPPING = {
     # Database export files with specific filtering rules
-    f"export{os.sep}database_export_ldm":{
-        f"resources{os.sep}admin" : (lambda file: file.startswith("auth_")),  # Only auth-related files
-        f"resources{os.sep}bird" : (lambda file: file.startswith("bird_")),   # Only bird-related files
-        f"resources{os.sep}technical_export" : (lambda file: True)            # All files
+    f"export{os.sep}database_export_ldm": {
+        f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),  # Only auth-related files
+        f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),   # Only bird-related files
+        f"resources{os.sep}technical_export": (lambda file: True)            # All files
     },
     # Join configuration files
-    "joins_configuration":{
-        f"resources{os.sep}joins_configuration" : (lambda file: True),        # All files
+    "joins_configuration": {
+        f"resources{os.sep}joins_configuration": (lambda file: True),        # All files
     },
     # Initial correction files
-    "initial_correction":{
-        f"resources{os.sep}extra_variables" : (lambda file: True),            # All files
+    "initial_correction": {
+        f"resources{os.sep}extra_variables": (lambda file: True),            # All files
     },
     # Derivation files from birds_nest resources
-    f"birds_nest{os.sep}resources{os.sep}derivation_files":{
-        f"resources{os.sep}derivation_files" : (lambda file: True),           # All files
+    f"birds_nest{os.sep}resources{os.sep}derivation_files": {
+        f"resources{os.sep}derivation_files": (lambda file: True),           # All files
     },
     # LDM (Logical Data Model) files from birds_nest resources
-    f"birds_nest{os.sep}resources{os.sep}ldm":{
-        f"resources{os.sep}ldm" : (lambda file: True),                        # All files
+    f"birds_nest{os.sep}resources{os.sep}ldm": {
+        f"resources{os.sep}ldm": (lambda file: True),                        # All files
     },
     # Test files from birds_nest
-    f"birds_nest{os.sep}tests":{
-        "tests" : (lambda file: True),                                        # All files
+    f"birds_nest{os.sep}tests": {
+        "tests": (lambda file: True),                                        # All files
+    },
+    # Additional mapping for IL files
+    f"birds_nest{os.sep}resources{os.sep}il": {
+        f"resources{os.sep}il": (lambda file: True),                         # All files
+    },
+    # Filter code files
+    f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code": {
+        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: file.endswith(".py")),  # Only Python files
+    },
+    # Generated Python files (alternative locations)
+    f"birds_nest{os.sep}results{os.sep}generated_python_filters": {
+        f"results{os.sep}generated_python_filters": (lambda file: file.endswith(".py")),
+    },
+    f"birds_nest{os.sep}results{os.sep}generated_python_joins": {
+        f"results{os.sep}generated_python_joins": (lambda file: file.endswith(".py")),
     }
 }
 
 class CloneRepoService:
     """
-    Service class for cloning a repository and setting up files according to the mapping configuration.
-    Handles downloading, extracting, organizing files, and cleanup operations.
+    Enhanced service class for cloning a repository and setting up files according to the mapping configuration.
+    Handles downloading, extracting, organizing files, cleanup operations, and supports authentication.
     """
-    pass
 
-    def __init__(self):
+    def __init__(self, token: str = None):
         """
-        Initialize the service by cleaning up existing target directories.
-        This ensures a fresh setup by removing any previously copied files.
+        Initialize the service by cleaning up existing target directories and setting up authentication.
+
+        Args:
+            token (str): Optional GitHub token for private repository access
         """
+        self.token = token
+        self.headers = self._get_authenticated_headers()
+
         # Delete all target directories from REPO_MAPPING to enable clean setup
         for source_folder, target_mappings in REPO_MAPPING.items():
             for target_folder, filter_func in target_mappings.items():
@@ -70,23 +89,54 @@ class CloneRepoService:
                     logger.info(f"Removing existing target directory: {target_folder}")
                     shutil.rmtree(target_folder)
 
-    def clone_repo(self, base_url = "https://github.com/regcommunity/FreeBIRD/", destination_path: str = "FreeBIRD"):
+    def _get_authenticated_headers(self):
+        """Get headers with authentication if token is provided."""
+        headers = {}
+        if self.token:
+            headers['Authorization'] = f'Bearer {self.token}'
+        return headers
+
+    def _ensure_directory_exists(self, path):
+        """Ensure a directory exists, creating it if necessary."""
+        os.makedirs(path, exist_ok=True)
+        logger.debug(f"Ensured directory exists: {path}")
+
+    def _clear_directory(self, path):
+        """Clear all files from a directory if it exists."""
+        if os.path.exists(path):
+            for filename in os.listdir(path):
+                file_path = os.path.join(path, filename)
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)
+                        logger.debug(f"Deleted file: {file_path}")
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                        logger.debug(f"Deleted directory: {file_path}")
+                except Exception as e:
+                    logger.error(f"Failed to delete {file_path}: {e}")
+            logger.info(f"Cleared directory: {path}")
+        else:
+            logger.debug(f"Directory does not exist, skipping clear: {path}")
+
+    def clone_repo(self, base_url:str="https://github.com/regcommunity/FreeBIRD", destination_path: str = "FreeBIRD", branch: str = "main"):
         """
         Download and extract a repository from GitHub as a ZIP file.
 
         Args:
             base_url (str): The base URL of the GitHub repository
             destination_path (str): Local directory to extract the repository to
+            branch (str): The branch to clone
         """
         start_time = time.time()
         logger.info(f"Starting repository clone from {base_url} to {destination_path}")
 
         # Construct the ZIP download URL for the main branch
-        repo_url = f"{base_url}archive/refs/heads/main.zip"
+        repo_url = f"{base_url}/archive/refs/heads/{branch}.zip"
         logger.info(f"Downloading repository from {repo_url}")
 
-        # Download the repository ZIP file
-        response = requests.get(repo_url)
+        # Download the repository ZIP file with authentication if available
+        response = requests.get(repo_url, headers=self.headers)
         os.makedirs(destination_path, exist_ok=True)
 
         if response.status_code == 200:
@@ -105,6 +155,10 @@ class CloneRepoService:
         else:
             # Handle download failure
             logger.error(f"Failed to clone repository: {response.status_code}")
+            if response.status_code == 401:
+                logger.error("Authentication failed - check your GitHub token")
+            elif response.status_code == 404:
+                logger.error("Repository not found - check the URL")
             print(f"Failed to clone repository: {response.status_code}")
 
         end_time = time.time()
@@ -151,8 +205,7 @@ class CloneRepoService:
                 # Create all target directories first
                 for target_folder, filter_func in target_mappings.items():
                     logger.debug(f"Creating target folder: {target_folder}")
-                    os.makedirs(target_folder, exist_ok=True)
-                    # Copy files that match the filter
+                    self._ensure_directory_exists(target_folder)
 
                 # Process each file in the source directory
                 for file_name in os.listdir(source_path):
@@ -176,8 +229,13 @@ class CloneRepoService:
                             break  # File matched a filter, move to next file
                 continue  # Move to next source folder
 
-            # Standard handling for other folders (copy entire directory)
+            # Standard handling for other folders (copy entire directory with filtering)
+            for target_folder, filter_func in target_mappings.items():
+                self._ensure_directory_exists(target_folder)
+
             target_folder = list(REPO_MAPPING[source_folder].keys())[0]
+            if os.path.exists(target_folder):
+                shutil.rmtree(target_folder)
             source_folder = f"{destination_path}{os.sep}{destination_path}-main{os.sep}{source_folder}"
             shutil.copytree(source_folder, target_folder)
 
