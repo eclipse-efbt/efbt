@@ -319,12 +319,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 pybirdai_admin_path, pybirdai_meta_data_model_path, results_admin_path
             )
 
-            from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
-            generator = AdvancedMigrationGenerator()
-            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
-            _ = generator.generate_migration_code(models)
-            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
-
             # Create a marker file to indicate we're ready for step 2
             self._create_migration_ready_marker(base_dir)
 
@@ -353,6 +347,13 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info(
                 "IMPORTANT: This step should ONLY run Django migrations - no file downloads or deletions"
             )
+            
+            from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
+            generator = AdvancedMigrationGenerator()
+            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
+            _ = generator.generate_migration_code(models)
+            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
+
 
             base_dir = settings.BASE_DIR
 
