@@ -319,6 +319,12 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 pybirdai_admin_path, pybirdai_meta_data_model_path, results_admin_path
             )
 
+            from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
+            generator = AdvancedMigrationGenerator()
+            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
+            _ = generator.generate_migration_code(models)
+            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
+
             # Create a marker file to indicate we're ready for step 2
             self._create_migration_ready_marker(base_dir)
 
@@ -562,11 +568,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Run makemigrations using Django's call_command
             logger.info("Running makemigrations command...")
             try:
-                from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
-                generator = AdvancedMigrationGenerator()
-                models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
-                _ = generator.generate_migration_code(models)
-                generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
                 call_command("makemigrations", "pybirdai", verbosity=2)
                 logger.info("Makemigrations command completed successfully2.")
             except CommandError as e:
@@ -606,12 +607,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Change to project directory for subprocess
             original_dir = os.getcwd()
             os.chdir(base_dir)
-
-            from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
-            generator = AdvancedMigrationGenerator()
-            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
-            _ = generator.generate_migration_code(models)
-            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
 
             logger.info("Running makemigrations in subprocess...")
             makemig_start = time.time()
