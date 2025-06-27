@@ -38,6 +38,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
     def __init__(self, app_name, app_module, *args, **kwargs):
         self.app_name = app_name
         self.app_module = app_module
+        self.token = ""
         for k,v in kwargs.items():
             if k == "token":
                 self.token = v
@@ -637,6 +638,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
             try:
                 fetcher = PreconfiguredDatabaseFetcher(self.token)
                 db_content = fetcher.fetch()
+                db_file = "db.sqlite3"
+                if os.path.exists(db_file):
+                    os.chmod(db_file, 0o666)
 
                 if db_content:
                     logger.info("Database content fetched, extracting...")
