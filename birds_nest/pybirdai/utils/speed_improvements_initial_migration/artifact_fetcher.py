@@ -7,6 +7,7 @@ import hashlib
 import zipfile
 import io
 from collections import defaultdict
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -136,14 +137,14 @@ class PreconfiguredDatabaseFetcher(ArtifactFetcher):
                 file_list = zip_file.namelist()
                 logger.info(f"Extracting {len(file_list)} files: {file_list}")
                 zip_file.extractall(file_path)
-                logger.info("Zip extraction completed successfully")
+                logger.info(f"Zip extraction completed successfully to: {file_path} ({os.getcwd()})")
                 return True
         except Exception as e:
             logger.error(f"Error extracting zip: {e}")
             return False
 
-    def fetch(self, bird_data_model_path: str = "bird_data_model.py",
-              bird_meta_data_model_path: str = "bird_meta_data_model.py") -> Optional[bytes]:
+    def fetch(self, bird_data_model_path: str = f"pybirdai{os.sep}bird_data_model.py",
+              bird_meta_data_model_path: str = f"pybirdai{os.sep}bird_meta_data_model.py") -> Optional[bytes]:
         """
         Fetch the db.sqlite3 artifact if the specified model files match those in the workflow run.
         """

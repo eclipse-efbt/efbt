@@ -1067,7 +1067,7 @@ class AutomodeConfigurationService:
 
             # Run the automode database setup
             logger.info("Executing automode database setup...")
-            database_setup = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+            database_setup = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest', token=self.token)
             database_setup.run_automode_database_setup()
 
             results['django_models_created'] = True

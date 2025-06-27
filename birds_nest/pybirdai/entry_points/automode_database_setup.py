@@ -23,7 +23,6 @@ from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
 from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extractor import (
     merge_derived_fields_into_original_model,
 )
-from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
 from pybirdai.utils.speed_improvements_initial_migration.artifact_fetcher import PreconfiguredDatabaseFetcher
 
 # Create a logger
@@ -40,7 +39,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
         self.app_name = app_name
         self.app_module = app_module
         for k,v in kwargs.items():
-            setattr(self, k, v)
+            if k == "token":
+                self.token = v
+                break
 
     def run_automode_database_setup(self):
         """
@@ -352,12 +353,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 "IMPORTANT: This step should ONLY run Django migrations - no file downloads or deletions"
             )
 
-            from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
-            generator = AdvancedMigrationGenerator()
-            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
-            _ = generator.generate_migration_code(models)
-            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
-
 
             base_dir = settings.BASE_DIR
 
@@ -397,7 +392,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
         # Remove initial migration file
         if os.path.exists(initial_migration_file):
             try:
-                os.remove(initial_migration_file)
+                # os.remove(initial_migration_file)
                 logger.info(f"Successfully removed {initial_migration_file}")
             except OSError as e:
                 logger.error(f"Error removing file {initial_migration_file}: {e}")
@@ -520,11 +515,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info(
                 f"{pybirdai_admin_path} updated successfully with {len(registered_models)} unique models."
             )
-
-            generator = AdvancedMigrationGenerator()
-            models = generator.parse_files(["pybirdai/bird_data_model.py", "pybirdai/bird_meta_data_model.py"])
-            _ = generator.generate_migration_code(models)
-            generator.save_migration_file(models, "pybirdai/migrations/0001_initial.py")
 
             # Clean up the results admin.py file after successful use to prevent accumulation
             self._cleanup_results_admin_file(results_admin_path)
@@ -655,8 +645,10 @@ class RunAutomodeDatabaseSetup(AppConfig):
                         logger.info("Process completed successfully")
                     else:
                         logger.error("Failed to extract database content")
+                        raise RuntimeError("Failed to extract database content")
                 else:
                     logger.error("Failed to fetch database content")
+                    raise RuntimeError("Failed to fetch database content")
 
                 os.listdir(f"pybirdai{os.sep}migrations")
                 for file in os.listdir(f"pybirdai{os.sep}migrations"):
