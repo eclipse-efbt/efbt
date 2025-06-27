@@ -20,9 +20,11 @@ import time
 from django.conf import settings
 from django.apps import AppConfig
 from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
-from pybirdai.utils.derived_fields_extractor import (
+from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extractor import (
     merge_derived_fields_into_original_model,
 )
+from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
+from pybirdai.utils.speed_improvements_initial_migration.artifact_fetcher import PreconfiguredDatabaseFetcher
 
 # Create a logger
 logger = logging.getLogger(__name__)
@@ -34,9 +36,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
     steps to create and configure the BIRD database automatically.
     """
 
-    def __init__(self, app_name, app_module):
+    def __init__(self, app_name, app_module, *args, **kwargs):
         self.app_name = app_name
         self.app_module = app_module
+        for k,v in kwargs.items():
+            setattr(self, k, v)
 
     def run_automode_database_setup(self):
         """
@@ -347,7 +351,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info(
                 "IMPORTANT: This step should ONLY run Django migrations - no file downloads or deletions"
             )
-            
+
             from pybirdai.utils.advanced_migration_generator import AdvancedMigrationGenerator
             generator = AdvancedMigrationGenerator()
             models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
@@ -517,6 +521,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 f"{pybirdai_admin_path} updated successfully with {len(registered_models)} unique models."
             )
 
+            generator = AdvancedMigrationGenerator()
+            models = generator.parse_files(["pybirdai/bird_data_model.py", "pybirdai/bird_meta_data_model.py"])
+            _ = generator.generate_migration_code(models)
+            generator.save_migration_file(models, "pybirdai/migrations/0001_initial.py")
+
             # Clean up the results admin.py file after successful use to prevent accumulation
             self._cleanup_results_admin_file(results_admin_path)
 
@@ -633,34 +642,66 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info(f"Makemigrations completed in {makemig_time:.2f}s")
             logger.info(f"Makemigrations output: {makemig_result.stdout.strip()}")
 
-            logger.info("Running migrate in subprocess...")
             migrate_start = time.time()
 
-            # Run migrate
-            migrate_result = subprocess.run(
-                [python_executable, "manage.py", "migrate"],
-                capture_output=True,
-                text=True,
-                timeout=600,
-            )  # 10 minute timeout
+            try:
+                fetcher = PreconfiguredDatabaseFetcher(self.token)
+                db_content = fetcher.fetch()
 
-            migrate_time = time.time() - migrate_start
+                if db_content:
+                    logger.info("Database content fetched, extracting...")
+                    success = fetcher.extract_zip_and_save(db_content)
+                    if success:
+                        logger.info("Process completed successfully")
+                    else:
+                        logger.error("Failed to extract database content")
+                else:
+                    logger.error("Failed to fetch database content")
 
-            if migrate_result.returncode != 0:
-                logger.error(
-                    f"Migrate failed with return code {migrate_result.returncode}"
+                os.listdir(f"pybirdai{os.sep}migrations")
+                for file in os.listdir(f"pybirdai{os.sep}migrations"):
+                    if file.endswith(".py") and file != "__init__.py":
+                        logger.info(f"Found migration file: {file}")
+                        migrate_result = subprocess.run(
+                            [python_executable, "manage.py", "migrate", "--fake", "pybirdai", file.replace(".py", "")],
+                            capture_output=True,
+                            text=True,
+                            timeout=600,
+                        )
+
+
+            except Exception as e:
+                logger.error(f"Error occurred during database setup: {e}")
+
+                logger.info("PreconfiguredDatabaseFetcher failed, running manual process")
+                logger.info("Running migrate in subprocess...")
+
+
+                # Run migrate
+                migrate_result = subprocess.run(
+                    [python_executable, "manage.py", "migrate"],
+                    capture_output=True,
+                    text=True,
+                    timeout=600,
+                )  # 10 minute timeout
+
+                if migrate_result.returncode != 0:
+                    logger.error(
+                        f"Migrate failed with return code {migrate_result.returncode}"
+                    )
+                    logger.error(f"Stdout: {migrate_result.stdout}")
+                    logger.error(f"Stderr: {migrate_result.stderr}")
+                    raise RuntimeError(f"Migrate failed: {migrate_result.stderr}")
+
+            finally:
+                migrate_time = time.time() - migrate_start
+                logger.info(f"Migrate completed in {migrate_time:.2f}s")
+                logger.info(f"Migrate output: {migrate_result.stdout.strip()}")
+
+                total_time = time.time() - start_time
+                logger.info(
+                    f"All Django migrations completed in {total_time:.2f}s total via subprocess"
                 )
-                logger.error(f"Stdout: {migrate_result.stdout}")
-                logger.error(f"Stderr: {migrate_result.stderr}")
-                raise RuntimeError(f"Migrate failed: {migrate_result.stderr}")
-
-            logger.info(f"Migrate completed in {migrate_time:.2f}s")
-            logger.info(f"Migrate output: {migrate_result.stdout.strip()}")
-
-            total_time = time.time() - start_time
-            logger.info(
-                f"All Django migrations completed in {total_time:.2f}s total via subprocess"
-            )
 
         except subprocess.TimeoutExpired as e:
             logger.error(f"Migration subprocess timed out: {e}")
