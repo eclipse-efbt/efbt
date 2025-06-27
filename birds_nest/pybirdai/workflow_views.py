@@ -329,7 +329,7 @@ def _run_database_setup_async():
 
             # Wait time to ensure frontend gets the status before restart
             # Server restart takes ~5 seconds, so we wait 4 seconds before triggering it
-            restart_delay = 4
+            restart_delay = 10
             for i in range(restart_delay):
                 time.sleep(1)
                 logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")

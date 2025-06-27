@@ -1,5 +1,6 @@
 #!/bin/bash
-chmod -R u+w birds_nest/
+sudo chmod -R u+w birds_nest/
+sudo chown www-data:www-data birds_nest/
 cd birds_nest
 pip install --upgrade pip --quiet
 python -m pip install django==5.1.3 --quiet
