@@ -37,6 +37,7 @@ from .entry_points import (
 )
 # Import the test runner
 from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -149,8 +150,10 @@ def _run_migrations_async():
         })
 
         # Run the actual migration - this should ONLY run Django migrations, no file operations
+
+
         from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest', token=_in_memory_github_token)
 
         logger.info("About to call run_migrations_after_restart() - this should NOT download or delete any files")
         migration_results = app_config.run_migrations_after_restart()
@@ -341,6 +344,12 @@ def _run_database_setup_async():
             logger.info("Now triggering post-setup operations that will cause Django restart...")
             try:
                 from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+
+                generator = AdvancedMigrationGenerator()
+                models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
+                _ = generator.generate_migration_code(models)
+                generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
+
                 app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
                 app_config.run_post_setup_operations()
                 logger.info("Post-setup operations completed - Django should restart now.")
@@ -1490,6 +1499,7 @@ def workflow_save_config(request):
 
         # Delete the migration ready marker file since configuration has changed
         # User will need to run database setup again with the new configuration
+        """
         marker_path = os.path.join(base_dir, '.migration_ready_marker')
         marker_removed = False
         try:
@@ -1504,11 +1514,13 @@ def workflow_save_config(request):
                 _reset_migration_status()
                 logger.info("Reset workflow status due to configuration change")
 
+
         except (OSError, PermissionError) as e:
             logger.warning(f"Could not remove migration ready marker: {e}")
             # Don't fail the config save for this
-
+            """
         # Provide appropriate success message
+        marker_removed = None
         message = 'Configuration saved successfully'
         if marker_removed:
             message += '. Previous database setup status reset - you may need to run database setup again.'
