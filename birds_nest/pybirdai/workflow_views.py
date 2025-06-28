@@ -38,7 +38,7 @@ from .entry_points import (
 # Import the test runner
 from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
-
+import traceback
 logger = logging.getLogger(__name__)
 
 
@@ -344,14 +344,13 @@ def _run_database_setup_async():
             logger.info("Now triggering post-setup operations that will cause Django restart...")
             try:
                 from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+                app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+                app_config.run_post_setup_operations()
 
                 generator = AdvancedMigrationGenerator()
                 models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
                 _ = generator.generate_migration_code(models)
                 generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
-
-                app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
-                app_config.run_post_setup_operations()
                 logger.info("Post-setup operations completed - Django should restart now.")
             except Exception as e:
                 logger.error(f"Post-setup operations failed: {e}")
@@ -527,6 +526,19 @@ def workflow_dashboard(request):
     from django.db import connection
     from django.db.utils import OperationalError, ProgrammingError
 
+    if not os.path.exists("automode_config.json"):
+        messages.error(request, "Automode configuration file not found")
+        with open("automode_config.json", "w") as f:
+            f.write("""{
+              "data_model_type": "ELDM",
+              "clone_mode": "false",
+              "technical_export_source": "GITHUB",
+              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
+              "config_files_source": "GITHUB",
+              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD",
+              "when_to_stop": "RESOURCE_DOWNLOAD"
+            }""")
+
     # Check if database tables exist
     database_ready = False
     workflow_session = None
@@ -627,6 +639,7 @@ def workflow_dashboard(request):
 
 def workflow_task_router(request, task_number, operation):
     """Route to appropriate task handler based on task number and operation"""
+
     if task_number < 1 or task_number > 6:
         messages.error(request, "Invalid task number")
         return redirect('pybirdai:workflow_dashboard')
@@ -930,6 +943,7 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                 # For automode, just return None (no redirect needed)
 
             except Exception as e:
+                traceback.print_exc()
                 logger.error(f"SMCubes core creation failed: {e}")
                 task_execution.status = 'failed'
                 task_execution.error_message = str(e)
