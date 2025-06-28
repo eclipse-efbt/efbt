@@ -34,7 +34,7 @@ REPO_MAPPING = {
         f"resources{os.sep}joins_configuration": (lambda file: True),        # All files
     },
     # Initial correction files
-    "initial_correction": {
+    f"birds_nest{os.sep}resources{os.sep}extra_variables": {
         f"resources{os.sep}extra_variables": (lambda file: True),            # All files
     },
     # Derivation files from birds_nest resources
