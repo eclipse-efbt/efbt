@@ -293,7 +293,8 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             # Cleanup existing files
             logger.info("Cleaning up existing files...")
-            self._cleanup_files(initial_migration_file, db_file)
+            # self._cleanup_files(initial_migration_file, db_file)
+
 
             # Update models file (this is safe, won't trigger restart)
             logger.info("Updating bird_data_model.py...")
@@ -327,6 +328,8 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             # Create a marker file to indicate we're ready for step 2
             self._create_migration_ready_marker(base_dir)
+
+
 
             logger.info("STEP 1 completed successfully!")
             logger.info(
@@ -542,22 +545,16 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.warning(f"Results models file not found: {results_models_path}")
             return
 
-        try:
-            # Read content from results file
-            with open(results_models_path, "r") as f_read_results:
-                results_models_str = f_read_results.read()
+        # Read content from results file
+        with open(results_models_path, "r") as f_read_results:
+            results_models_str = f_read_results.read()
 
-            # Write content to bird_data_model.py
-            with open(pybirdai_models_path, "w") as f_write:
-                f_write.write("\n")
-                f_write.write(results_models_str)
-                f_write.flush()
+        # Write content to bird_data_model.py
+        with open(pybirdai_models_path, "w") as f_write:
+            f_write.write("\n")
+            f_write.write(results_models_str)
 
-            f_write.close()
-            logger.info(f"{pybirdai_models_path} updated successfully.")
-        except IOError as e:
-            logger.error(f"Error updating {pybirdai_models_path}: {e}")
-            raise RuntimeError(f"Failed to update {pybirdai_models_path}") from e
+        logger.info(f"{pybirdai_models_path} updated successfully.")
 
     def _run_django_commands(self, base_dir):
         """Run Django makemigrations and migrate commands."""
