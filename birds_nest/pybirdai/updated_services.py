@@ -710,90 +710,12 @@ class AutomodeConfigurationService:
             'errors': []
         }
 
-        # Fetch technical export files
-        try:
-            if config.technical_export_source == 'BIRD_WEBSITE':
-                results['technical_export'] = self._fetch_from_bird_website(force_refresh)
-            elif config.technical_export_source == 'GITHUB':
-                results['technical_export'] = self._fetch_technical_export_from_github(
-                    config.technical_export_github_url, github_token, force_refresh
-                )
-            elif config.technical_export_source == 'MANUAL_UPLOAD':
-                # Manual upload - no automatic fetching, user uploads files manually
-                results['technical_export'] = self._check_manual_technical_export_files()
-        except Exception as e:
-            error_msg = f"Error fetching technical export files: {str(e)}"
-            logger.error(error_msg)
-            results['errors'].append(error_msg)
+        if config.config_files_source == 'GITHUB':
+            results['config_files'] = self._fetch_from_github(config.config_files_github_url, github_token, force_refresh)
 
-        # Fetch configuration files
-        try:
-            if config.config_files_source == 'GITHUB':
-                results['config_files'] = self._fetch_config_files_from_github(
-                    config.config_files_github_url, github_token, force_refresh
-                )
-            # MANUAL source doesn't need automatic fetching
-        except Exception as e:
-            error_msg = f"Error fetching configuration files: {str(e)}"
-            logger.error(error_msg)
-            results['errors'].append(error_msg)
+        if config.technical_export_source == 'BIRD_WEBSITE':
+            results['technical_export'] = self._fetch_from_bird_website(force_refresh)
 
-        # Fetch generated Python files if using GitHub sources
-        github_url_for_python = None
-        try:
-            # Determine which GitHub URL to use for Python files
-
-            if config.technical_export_source == 'GITHUB':
-                github_url_for_python = config.technical_export_github_url
-            elif config.config_files_source == 'GITHUB':
-                github_url_for_python = config.config_files_github_url
-
-            if github_url_for_python:
-                results['generated_python'] = self._fetch_generated_python_from_github(
-                    github_url_for_python, github_token, force_refresh
-                )
-            else:
-                logger.info("No GitHub source configured - skipping generated Python files download")
-        except Exception as e:
-            error_msg = f"Error fetching generated Python files: {str(e)}"
-            logger.error(error_msg)
-            results['errors'].append(error_msg)
-
-        # Fetch filter code files if using GitHub sources
-        try:
-            if github_url_for_python:
-                results['filter_code'] = self._fetch_filter_code_from_github(
-                    github_url_for_python, github_token, force_refresh
-                )
-        except Exception as e:
-            error_msg = f"Error fetching filter code files: {str(e)}"
-            logger.error(error_msg)
-            results['errors'].append(error_msg)
-
-        try:
-            if github_url_for_python:
-                results['derivation_files'] = self._fetch_derivation_files_from_github(
-                    github_url_for_python, github_token, force_refresh
-                )
-        except Exception as e:
-            error_msg = f"Error derivation files: {str(e)}"
-            logger.error(error_msg)
-            results['errors'].append(error_msg)
-
-        # Fetch test fixtures if using GitHub sources
-        try:
-            if github_url_for_python:
-                results['test_fixtures'] = self._fetch_test_fixtures_from_github(
-                    github_url_for_python, github_token, force_refresh
-                )
-            else:
-                logger.info("No GitHub source configured - skipping test fixtures download")
-        except Exception as e:
-            error_msg = f"Error fetching test fixtures: {str(e)}"
-            logger.error(error_msg)
-            results['errors'].append(error_msg)
-
-        logger.info(f"File fetching completed: {results}")
         return results
 
     def _fetch_from_bird_website(self, force_refresh: bool = False) -> int:
@@ -839,56 +761,23 @@ class AutomodeConfigurationService:
             logger.error(f"Error fetching from BIRD website: {e}")
             raise
 
-    def _fetch_technical_export_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
+    def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD", token: str = None, force_refresh: bool = False) -> int:
+        from .utils.clone_repo_service import CloneRepoService
         """Fetch technical export files from GitHub repository."""
         logger.info(f"Fetching technical export files from GitHub: {github_url}")
 
-        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
-        target_dir = "resources/technical_export"
+        try:
+            repo_name = github_url.split("/")[-1]
+            fetcher = CloneRepoService(token)
+            fetcher.clone_repo(github_url,repo_name)        # Download and extract repository
+            fetcher.setup_files(repo_name)       # Organize files according to mapping
+            fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
 
-        return fetcher.fetch_technical_exports(target_dir, force_refresh)
+            return 1
 
-    def _fetch_config_files_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
-        """Fetch configuration files from GitHub repository."""
-        logger.info(f"Fetching configuration files from GitHub: {github_url}")
-
-        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
-        base_dir = "resources"
-
-        return fetcher.fetch_configuration_files(base_dir, force_refresh)
-
-    def _fetch_generated_python_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
-        """Fetch generated Python files from GitHub repository."""
-        logger.info(f"Fetching generated Python files from GitHub: {github_url}")
-
-        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
-        target_dir = "resources/generated_python"
-
-        return fetcher.fetch_generated_python_files(target_dir, force_refresh)
-
-    def _fetch_filter_code_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
-        """Fetch filter code files from GitHub repository."""
-        logger.info(f"Fetching filter code files from GitHub: {github_url}")
-
-        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
-
-        return fetcher.fetch_filter_code()
-
-    def _fetch_test_fixtures_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
-        """Fetch test fixtures from GitHub repository."""
-        logger.info(f"Fetching test fixtures from GitHub: {github_url}")
-
-        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
-
-        return fetcher.fetch_test_fixtures()
-
-    def _fetch_derivation_files_from_github(self, github_url: str, token: str = None, force_refresh: bool = False) -> int:
-        """Fetch derivation files from GitHub repository."""
-        logger.info(f"Fetching derivation files from GitHub: {github_url}")
-
-        fetcher = ConfigurableGitHubFileFetcher(github_url, token)
-
-        return fetcher.fetch_derivation_files()
+        except Exception as e:
+            logger.error(f"Error fetching from GitHub repository: {e}")
+            raise
 
     def _check_manual_technical_export_files(self) -> int:
         """
@@ -1178,7 +1067,7 @@ class AutomodeConfigurationService:
 
             # Run the automode database setup
             logger.info("Executing automode database setup...")
-            database_setup = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+            database_setup = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest', token=self.token)
             database_setup.run_automode_database_setup()
 
             results['django_models_created'] = True
