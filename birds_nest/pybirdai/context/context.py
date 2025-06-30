@@ -116,6 +116,10 @@ class Context(object):
 
     save_derived_sdd_items = True
 
+    input_layer_name = "Input Layer 6.5"
+
+    generate_etl = True
+
     def _get_configured_data_model_type(self):
         """Get the configured data model type from temporary file or AutomodeConfiguration."""
         # First try to read from temporary configuration file
