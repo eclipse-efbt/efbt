@@ -117,6 +117,37 @@
     </div><!-- End of config-content -->
 </div>
 
+<!-- Modal for Configuration Feedback -->
+<div id="config-feedback-modal" class="modal fade" tabindex="-1" aria-labelledby="configFeedbackModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+                <h5 class="modal-title" id="configFeedbackModalLabel">Configuration Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeConfigModal()"></button>
+            </div>
+            <div class="modal-body text-center" style="padding: 30px;">
+                <div id="config-modal-content">
+                    <!-- Content will be dynamically updated -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Overlay (for browsers without Bootstrap) -->
+<div id="config-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;" onclick="closeConfigModal()">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; width: 90%;" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h5 style="margin: 0;">Configuration Status</h5>
+            <button onclick="closeConfigModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        <div id="config-modal-content-fallback" style="text-align: center;">
+            <!-- Fallback content for browsers without Bootstrap -->
+        </div>
+    </div>
+</div>
+</div>
+
 <script>
 // Toggle configuration section visibility
 function toggleConfigSection() {
@@ -193,6 +224,9 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Saving...';
         
+        // Show loading modal
+        showConfigModal('loading', 'Saving Configuration', 'Please wait while we save your configuration settings...');
+        
         fetch(this.action, {
             method: 'POST',
             body: formData,
@@ -216,15 +250,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusDiv.style.color = '#155724';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Configuration saved successfully! Refreshing page...';
                 
+                // Show success modal
+                showConfigModal('success', 'Configuration Saved!', 'Your configuration has been saved successfully. The page will refresh in a moment to apply the changes.');
+                
                 // Refresh page after successful save to update UI elements that depend on marker file
                 setTimeout(() => {
                     console.log('Refreshing page after configuration save');
                     location.reload();
-                }, 2000); // 2 second delay to show success message
+                }, 3000); // 3 second delay to show success message
             } else {
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + (data.error || 'Failed to save configuration');
+                
+                // Show error modal
+                showConfigModal('error', 'Configuration Error', data.error || 'Failed to save configuration. Please try again or check your settings.');
                 
                 // Hide error status after 5 seconds
                 setTimeout(() => {
@@ -238,6 +278,9 @@ document.addEventListener('DOMContentLoaded', function() {
             statusDiv.style.background = '#f8d7da';
             statusDiv.style.color = '#721c24';
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
+            
+            // Show error modal
+            showConfigModal('error', 'Connection Error', 'Unable to save configuration due to a connection error. Please check your internet connection and try again.');
         })
         .finally(() => {
             // Re-enable submit button
@@ -245,5 +288,83 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = originalText;
         });
     });
+
+    // Modal functions
+    function showConfigModal(type, title, message) {
+        const modal = document.getElementById('config-feedback-modal');
+        const overlay = document.getElementById('config-modal-overlay');
+        const modalContent = document.getElementById('config-modal-content');
+        const modalContentFallback = document.getElementById('config-modal-content-fallback');
+        const modalTitle = document.getElementById('configFeedbackModalLabel');
+    
+        // Update title
+        if (modalTitle) modalTitle.textContent = title;
+    
+        let icon, color, bgColor;
+        switch(type) {
+            case 'loading':
+                icon = '⏳';
+                color = '#1976d2';
+                bgColor = '#e3f2fd';
+                break;
+            case 'success':
+                icon = '✅';
+                color = '#2e7d32';
+                bgColor = '#e8f5e9';
+                break;
+            case 'error':
+                icon = '❌';
+                color = '#c62828';
+                bgColor = '#ffebee';
+                break;
+            default:
+                icon = 'ℹ️';
+                color = '#1976d2';
+                bgColor = '#e3f2fd';
+        }
+    
+        const content = `
+            <div style="background: ${bgColor}; color: ${color}; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                <div style="font-size: 48px; margin-bottom: 15px;">${icon}</div>
+                <div style="font-size: 16px; font-weight: 500;">${message}</div>
+            </div>
+        `;
+    
+        // Update content for both modal versions
+        if (modalContent) modalContent.innerHTML = content;
+        if (modalContentFallback) modalContentFallback.innerHTML = content;
+    
+        // Show modal - try Bootstrap first, fallback to custom overlay
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        } else {
+            // Fallback for environments without Bootstrap
+            overlay.style.display = 'block';
+        }
+    
+        // Auto-close success and error modals after 4 seconds (but not loading)
+        if (type !== 'loading') {
+            setTimeout(() => {
+                closeConfigModal();
+            }, 4000);
+        }
+    }
+
+    function closeConfigModal() {
+        const modal = document.getElementById('config-feedback-modal');
+        const overlay = document.getElementById('config-modal-overlay');
+    
+        // Hide Bootstrap modal if available
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const bootstrapModal = bootstrap.Modal.getInstance(modal);
+            if (bootstrapModal) {
+                bootstrapModal.hide();
+            }
+        }
+    
+        // Hide fallback overlay
+        overlay.style.display = 'none';
+    }
 });
 </script>

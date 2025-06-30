@@ -27,7 +27,7 @@ import json
 import glob
 
 from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
-from .updated_services import AutomodeConfigurationService
+from .workflow_services import AutomodeConfigurationService
 from .forms import AutomodeConfigurationSessionForm
 from .entry_points import (
     automode_database_setup,
@@ -249,7 +249,7 @@ def _run_database_setup_async():
         import os
         from django.conf import settings
         from .bird_meta_data_model import AutomodeConfiguration
-        from .updated_services import AutomodeConfigurationService
+        from .workflow_services import AutomodeConfigurationService
 
         # Task 1: Resource Download
         _database_setup_status['message'] = 'Running Task 1: Resource Download...'
@@ -258,6 +258,11 @@ def _run_database_setup_async():
         config_data = {}
         base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         config_path = os.path.join(base_dir, 'automode_config.json')
+
+        base_dir_str = str(base_dir)
+        marker_path = os.path.join(base_dir_str, ".setup_ready_marker")
+        if os.path.exists(marker_path):
+            os.remove(marker_path)
 
         if os.path.exists(config_path):
             with open(config_path, 'r') as f:
@@ -329,10 +334,10 @@ def _run_database_setup_async():
 
             # Wait time to ensure frontend gets the status before restart
             # Server restart takes ~5 seconds, so we wait 4 seconds before triggering it
-            restart_delay = 10
-            for i in range(restart_delay):
-                time.sleep(1)
-                logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")
+            # restart_delay = 10
+            # for i in range(restart_delay):
+            #     time.sleep(1)
+            #     logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")
 
             # Create marker file FIRST (before restart) so it exists when page refreshes
             marker_path = os.path.join(base_dir, '.migration_ready_marker')
@@ -597,6 +602,9 @@ def workflow_dashboard(request):
         marker_path = os.path.join(base_dir, '.migration_ready_marker')
         migration_ready = os.path.exists(marker_path)
 
+        setup_marker_path = os.path.join(base_dir, '.setup_ready_marker')
+        setup_ready = os.path.exists(setup_marker_path)
+
     except Exception as e:
         logger.error(f"Error loading configuration: {e}")
         # Use defaults if config cannot be loaded
@@ -616,6 +624,7 @@ def workflow_dashboard(request):
         'github_token': github_token,
         'database_ready': database_ready,
         'migration_ready': migration_ready,
+        'setup_ready': setup_ready,
     }
 
     if database_ready and workflow_session:
