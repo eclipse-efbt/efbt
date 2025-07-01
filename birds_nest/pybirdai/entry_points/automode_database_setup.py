@@ -297,11 +297,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
         try:
             logger.info("Starting post-setup operations - STEP 1: Admin file update...")
 
-            # call into RunCreateDjangoModels to create the models.py and admin.py files
-            ###### TODO()!
-            # app_config = RunCreateDjangoModels(self.app_name, self.app_module)
-            # app_config.ready()
-
             base_dir = settings.BASE_DIR
             initial_migration_file = os.path.join(
                 base_dir,
