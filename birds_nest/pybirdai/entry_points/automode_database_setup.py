@@ -321,8 +321,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
         After restart, user will need to run migrations separately.
         """
         try:
-            DjangoSetup.configure_django()
-            os.system("pkill -f runserver")
             logger.info("Starting post-setup operations - STEP 1: Admin file update...")
 
             # call into RunCreateDjangoModels to create the models.py and admin.py files
@@ -406,19 +404,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             logger.info("STEP 1 completed successfully!")
 
-            python_executable = sys.executable
-
-            # Get the virtual environment path if we're in one
-            venv_path = os.environ.get("VIRTUAL_ENV")
-            if venv_path:
-                python_executable = os.path.join(venv_path, "bin", "python")
-
-            # Change to project directory for subprocess
-            original_dir = os.getcwd()
-            os.chdir(base_dir)
-
-            subprocess.run([python_executable, "manage.py", "runserver"])
-
             logger.info(
                 "Django will restart now. After restart, user needs to run migrations."
             )
@@ -467,6 +452,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             logger.info("STEP 2 completed successfully!")
             logger.info("Database setup is now complete!")
+            
             return {
                 "success": True,
                 "step": 2,
@@ -682,6 +668,20 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
         return 0, migrate_result
 
+    def _get_python_exc(self):
+        # Get the python executable from the current environment
+        python_executable = sys.executable
+
+        # Get the virtual environment path if we're in one
+        venv_path = os.environ.get("VIRTUAL_ENV")
+        if venv_path:
+            python_executable = os.path.join(venv_path, "bin", "python")
+
+        # Change to project directory for subprocess
+        original_dir = os.getcwd()
+        os.chdir(settings.BASE_DIR)
+        return venv_path, original_dir, python_executable
+
     def _run_migrations_in_subprocess(self, base_dir):
         """Run Django migrations in a subprocess to avoid auto-restart race condition."""
         import subprocess
@@ -691,17 +691,8 @@ class RunAutomodeDatabaseSetup(AppConfig):
         start_time = time.time()
 
         try:
-            # Get the python executable from the current environment
-            python_executable = sys.executable
-
-            # Get the virtual environment path if we're in one
-            venv_path = os.environ.get("VIRTUAL_ENV")
-            if venv_path:
-                python_executable = os.path.join(venv_path, "bin", "python")
-
-            # Change to project directory for subprocess
-            original_dir = os.getcwd()
-            os.chdir(base_dir)
+            
+            venv_path, original_dir, python_executable = self._get_python_exc()
 
             logger.info("Running makemigrations in subprocess...")
             makemig_start = time.time()
