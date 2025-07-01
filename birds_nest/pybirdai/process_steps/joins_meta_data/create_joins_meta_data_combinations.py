@@ -657,7 +657,7 @@ class JoinsMetaDataCreator:
 
         # Same name comparison
 
-        logging.warning(f"CHECKING OUTPUT VARIABLE NAME FOR {output_item}")
+        # logging.warning(f"CHECKING OUTPUT VARIABLE NAME FOR {output_item}")
         output_variable_name = (
             output_item.variable_id.variable_id if output_item.variable_id else None
         )
