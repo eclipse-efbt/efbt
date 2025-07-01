@@ -37,7 +37,6 @@ from .entry_points import (
 )
 # Import the test runner
 from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
-from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
 import traceback
 logger = logging.getLogger(__name__)
 
@@ -351,11 +350,6 @@ def _run_database_setup_async():
                 from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
                 app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
                 app_config.run_post_setup_operations()
-
-                generator = AdvancedMigrationGenerator()
-                models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
-                _ = generator.generate_migration_code(models)
-                generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
                 logger.info("Post-setup operations completed - Django should restart now.")
             except Exception as e:
                 logger.error(f"Post-setup operations failed: {e}")
