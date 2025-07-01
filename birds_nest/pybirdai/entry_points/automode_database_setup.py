@@ -24,9 +24,38 @@ from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extracto
     merge_derived_fields_into_original_model,
 )
 from pybirdai.utils.speed_improvements_initial_migration.artifact_fetcher import PreconfiguredDatabaseFetcher
+from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
+from django.conf import settings
+import django
+from importlib import metadata
 
 # Create a logger
 logger = logging.getLogger(__name__)
+
+class DjangoSetup:
+    _initialized = False
+
+    @classmethod
+    def configure_django(cls):
+        """Configure Django settings without starting the application"""
+        if cls._initialized:
+            return
+
+        try:
+            # Set up Django settings module for birds_nest in parent directory
+            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+            sys.path.insert(0, project_root)
+            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'birds_nest.settings')
+
+            # This allows us to use Django models without running the server
+            django.setup()
+
+            logger.info("Django configured successfully with settings module: %s",
+                       os.environ['DJANGO_SETTINGS_MODULE'])
+            cls._initialized = True
+        except Exception as e:
+            logger.error(f"Django configuration failed: {str(e)}")
+            raise
 
 
 class RunAutomodeDatabaseSetup(AppConfig):
@@ -292,6 +321,8 @@ class RunAutomodeDatabaseSetup(AppConfig):
         After restart, user will need to run migrations separately.
         """
         try:
+            DjangoSetup.configure_django()
+            os.system("pkill -f runserver")
             logger.info("Starting post-setup operations - STEP 1: Admin file update...")
 
             # call into RunCreateDjangoModels to create the models.py and admin.py files
@@ -368,9 +399,26 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Create a marker file to indicate we're ready for step 2
             self._create_migration_ready_marker(base_dir)
 
-
+            generator = AdvancedMigrationGenerator()
+            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
+            _ = generator.generate_migration_code(models)
+            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
 
             logger.info("STEP 1 completed successfully!")
+
+            python_executable = sys.executable
+
+            # Get the virtual environment path if we're in one
+            venv_path = os.environ.get("VIRTUAL_ENV")
+            if venv_path:
+                python_executable = os.path.join(venv_path, "bin", "python")
+
+            # Change to project directory for subprocess
+            original_dir = os.getcwd()
+            os.chdir(base_dir)
+
+            subprocess.run([python_executable, "manage.py", "runserver"])
+
             logger.info(
                 "Django will restart now. After restart, user needs to run migrations."
             )
@@ -594,35 +642,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
             f_write.write(results_models_str)
 
         logger.info(f"{pybirdai_models_path} updated successfully.")
-
-    # def _run_django_commands(self, base_dir):
-    #     """Run Django makemigrations and migrate commands."""
-    #     try:
-    #         # Import Django management commands
-    #         from django.core.management import call_command
-    #         from django.core.management.base import CommandError
-
-    #         # Run makemigrations using Django's call_command
-    #         logger.info("Running makemigrations command...")
-    #         try:
-    #             call_command("makemigrations", "pybirdai", verbosity=2)
-    #             logger.info("Makemigrations command completed successfully2.")
-    #         except CommandError as e:
-    #             logger.error(f"Makemigrations failed: {e}")
-    #             raise RuntimeError(f"Makemigrations failed: {e}") from e
-
-    #         # Run migrate using Django's call_command
-    #         logger.info("Running migrate command...")
-    #         try:
-    #             call_command("migrate", verbosity=2)
-    #             logger.info("Migrate command completed successfully.")
-    #         except CommandError as e:
-    #             logger.error(f"Migrate failed: {e}")
-    #             raise RuntimeError(f"Migrate failed: {e}") from e
-
-    #     except Exception as e:
-    #         logger.error(f"Django command execution failed: {e}")
-    #         raise RuntimeError(f"Django command execution failed: {e}") from e
 
     def _fetch_preconfigured_database(self,python_executable):
         fetcher = PreconfiguredDatabaseFetcher(self.token)
