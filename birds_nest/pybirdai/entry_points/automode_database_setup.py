@@ -26,37 +26,11 @@ from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extracto
 from pybirdai.utils.speed_improvements_initial_migration.artifact_fetcher import PreconfiguredDatabaseFetcher
 from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
 from django.conf import settings
-import django
+
 from importlib import metadata
 
 # Create a logger
 logger = logging.getLogger(__name__)
-
-class DjangoSetup:
-    _initialized = False
-
-    @classmethod
-    def configure_django(cls):
-        """Configure Django settings without starting the application"""
-        if cls._initialized:
-            return
-
-        try:
-            # Set up Django settings module for birds_nest in parent directory
-            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-            sys.path.insert(0, project_root)
-            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'birds_nest.settings')
-
-            # This allows us to use Django models without running the server
-            django.setup()
-
-            logger.info("Django configured successfully with settings module: %s",
-                       os.environ['DJANGO_SETTINGS_MODULE'])
-            cls._initialized = True
-        except Exception as e:
-            logger.error(f"Django configuration failed: {str(e)}")
-            raise
-
 
 class RunAutomodeDatabaseSetup(AppConfig):
     """
@@ -324,8 +298,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info("Starting post-setup operations - STEP 1: Admin file update...")
 
             # call into RunCreateDjangoModels to create the models.py and admin.py files
-            app_config = RunCreateDjangoModels(self.app_name, self.app_module)
-            app_config.ready()
+            ###### TODO()!
+            # app_config = RunCreateDjangoModels(self.app_name, self.app_module)
+            # app_config.ready()
 
             base_dir = settings.BASE_DIR
             initial_migration_file = os.path.join(
@@ -385,22 +360,12 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 pybirdai_models_path, derived_fields_file_path
             )
 
-            # Update admin.py FIRST - this will trigger Django restart
-            logger.info("Updating admin.py with new model registrations...")
-            logger.info(
-                "This will trigger Django restart - user will need to run migrations after restart"
-            )
             self._update_admin_file(
-                pybirdai_admin_path, pybirdai_meta_data_model_path, results_admin_path
+                pybirdai_admin_path, pybirdai_meta_data_model_path, pybirdai_models_path
             )
 
             # Create a marker file to indicate we're ready for step 2
             self._create_migration_ready_marker(base_dir)
-
-            generator = AdvancedMigrationGenerator()
-            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
-            _ = generator.generate_migration_code(models)
-            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
 
             logger.info("STEP 1 completed successfully!")
 
@@ -523,7 +488,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
                         # Continue anyway - let Django handle it
 
     def _update_admin_file(
-        self, pybirdai_admin_path, pybirdai_meta_data_model_path, results_admin_path
+        self, pybirdai_admin_path, pybirdai_meta_data_model_path, pybirdai_data_model_path
     ):
         """Update the admin.py file with model registrations, avoiding duplicates."""
         registered_models = set()
@@ -545,60 +510,21 @@ class RunAutomodeDatabaseSetup(AppConfig):
                                 f"from .bird_meta_data_model import {node.name}\n"
                             )
                             f_write.write(f"admin.site.register({node.name})\n")
-                            registered_models.add(node.name)
 
-        # Check if results admin file exists and append its content (without duplicates)
-        if not os.path.exists(results_admin_path):
-            logger.warning(f"Results admin file not found: {results_admin_path}")
-            return
 
-        try:
-            # Read content from results file and parse it for additional models
-            with open(results_admin_path, "r") as f_read_results:
-                results_admin_str = f_read_results.read()
-
-            # Parse results admin.py content to extract model names and avoid duplicates
-            additional_content = []
-            lines = results_admin_str.split("\n")
-
-            for line in lines:
-                line = line.strip()
-                if line.startswith("from .bird_data_model import "):
-                    # Extract model name from import statement
-                    model_name = line.split("import ")[-1].strip()
-                    if model_name and model_name not in registered_models:
-                        additional_content.append(
-                            f"from .bird_data_model import {model_name}"
-                        )
-                        additional_content.append(f"admin.site.register({model_name})")
-                        registered_models.add(model_name)
-                elif line.startswith("from django.contrib import admin"):
-                    # Skip duplicate admin import
-                    continue
-                elif line.startswith("admin.site.register("):
-                    # Skip individual register lines as they're handled with imports
-                    continue
-                elif line and not line.startswith("#"):
-                    # Include any other non-comment lines
-                    additional_content.append(line)
-
-            # Append additional content if any
-            if additional_content:
-                with open(pybirdai_admin_path, "a") as f_append:
-                    f_append.write("\n")
-                    f_append.write("\n".join(additional_content))
-                    f_append.write("\n")
-
-            logger.info(
-                f"{pybirdai_admin_path} updated successfully with {len(registered_models)} unique models."
-            )
-
-            # Clean up the results admin.py file after successful use to prevent accumulation
-            self._cleanup_results_admin_file(results_admin_path)
-
-        except IOError as e:
-            logger.error(f"Error updating {pybirdai_admin_path}: {e}")
-            raise RuntimeError(f"Failed to update {pybirdai_admin_path}") from e
+            # Parse the bird data model file to find class definitions        
+            with open(pybirdai_data_model_path, "r") as f_read:
+                tree = ast.parse(f_read.read())
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef) and node.name not in [
+                        "Meta",
+                        "Admin",
+                    ]:
+                        if node.name not in registered_models:
+                            f_write.write(
+                                f"from .bird_data_model import {node.name}\n"
+                            )
+                            f_write.write(f"admin.site.register({node.name})\n")
 
     def _cleanup_results_admin_file(self, results_admin_path):
         """Clean up the results admin.py file after successful use to prevent duplicate content."""
@@ -641,11 +567,10 @@ class RunAutomodeDatabaseSetup(AppConfig):
             success = fetcher.extract_zip_and_save(db_content)
             if success:
                 logger.info("Process completed successfully")
-        logger.error("Failed to fetch database content")
 
-        if not db_content or not db_content:
+        if not db_content or not success:
+            logger.error("Failed to fetch database content")
             return 1, None
-
 
         os.listdir(f"pybirdai{os.sep}migrations")
 
@@ -694,6 +619,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
             
             venv_path, original_dir, python_executable = self._get_python_exc()
 
+            generator = AdvancedMigrationGenerator()
+            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
+            _ = generator.generate_migration_code(models)
+            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
+
             logger.info("Running makemigrations in subprocess...")
             makemig_start = time.time()
 
@@ -725,7 +655,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
             if return_code_preconfigured_migration:
                 logger.info("PreconfiguredDatabaseFetcher failed, running manual process")
                 logger.info("Running migrate in subprocess...")
-
 
                 # Run migrate
                 migrate_result = subprocess.run(
