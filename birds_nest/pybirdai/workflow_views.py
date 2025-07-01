@@ -25,6 +25,7 @@ import time
 import datetime
 import json
 import glob
+import subprocess
 
 from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
 from .workflow_services import AutomodeConfigurationService
@@ -169,6 +170,8 @@ def _run_migrations_async():
         })
 
         logger.info("Background migration process completed successfully")
+
+        os.system("pkill -f runserver")
 
     except Exception as e:
         logger.error(f"Background migration process failed: {e}")
@@ -357,6 +360,8 @@ def _run_database_setup_async():
 
             # Add final log message that frontend can detect
             logger.warning("The restart process has been initiated. Please wait for the server to come back online.")
+            venv_path, original_dir, python_executable = app_config._get_python_exc()
+            os.system("pkill -f runserver")
         else:
             # No restart required, setup is complete
             _database_setup_status.update({
