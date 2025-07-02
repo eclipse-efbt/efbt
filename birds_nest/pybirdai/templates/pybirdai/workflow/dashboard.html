@@ -775,7 +775,16 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                 btn.disabled = false;
                 btn.textContent = 'Run Automode (from Task 1)';
             }
-        })
+        }).catch(error => {
+          console.error('Database setup status polling error:', error);
+
+          // Refresh page on error to reset state
+          setTimeout(() => {
+              console.log('Refreshing page due to database setup polling error');
+              location.reload();
+          }, 2000);
+        }
+        );
     }
 
     // Start polling
