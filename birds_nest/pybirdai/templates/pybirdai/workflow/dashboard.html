@@ -726,16 +726,7 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                 btn.disabled = false;
                 btn.textContent = 'Run Automode (from Task 3)';
             }
-        })
-        .catch(error => {
-            console.error('Automode status polling error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking automode status: ' + error.message;
-
-            btn.disabled = false;
-            btn.textContent = 'Run Automode (from Task 3)';
-        });
+        }
     }
 
     // Start polling
