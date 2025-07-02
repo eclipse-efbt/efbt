@@ -24,10 +24,13 @@ from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extracto
     merge_derived_fields_into_original_model,
 )
 from pybirdai.utils.speed_improvements_initial_migration.artifact_fetcher import PreconfiguredDatabaseFetcher
+from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
+from django.conf import settings
+
+from importlib import metadata
 
 # Create a logger
 logger = logging.getLogger(__name__)
-
 
 class RunAutomodeDatabaseSetup(AppConfig):
     """
@@ -52,6 +55,45 @@ class RunAutomodeDatabaseSetup(AppConfig):
         try:
             logger.info("Starting automode database setup...")
 
+            base_dir = settings.BASE_DIR
+            migration_file_path = os.path.join(
+                base_dir,
+                "pybirdai",
+                "migrations"
+            )
+            for file in os.listdir(migration_file_path):
+                if file.endswith(".py") and not file.startswith("__"):
+                    logger.info(f"Processing file: {file}")
+                    os.remove(os.path.join(migration_file_path, file))
+
+            admin_file_path = os.path.join(
+                base_dir,
+                "pybirdai",
+                "admin.py"
+            )
+
+            bird_data_model_path = os.path.join(
+                base_dir,
+                "pybirdai",
+                "bird_data_model.py"
+            )
+
+            if os.path.exists(admin_file_path):
+                with open(admin_file_path) as rf:
+                    with open(admin_file_path,"w") as wf:
+                        wf.write(rf.read().split("\n\n")[0])
+
+            if os.path.exists(bird_data_model_path):
+                with open(bird_data_model_path,"w") as wf:
+                    wf.write("")
+
+            db_file = "db.sqlite3"
+            if os.path.exists(db_file):
+                os.chmod(db_file, 0o666)
+                os.remove(db_file)
+
+
+
             # Step 1: Create Django models (this generates files but doesn't modify existing ones)
             logger.info("Step 1: Creating Django models...")
             try:
@@ -63,7 +105,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 raise RuntimeError(f"Django model creation failed: {str(e)}") from e
 
             # Step 2: Check if generated files exist
-            base_dir = settings.BASE_DIR
+
 
             results_admin_path = os.path.join(
                 base_dir,
@@ -255,10 +297,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
         try:
             logger.info("Starting post-setup operations - STEP 1: Admin file update...")
 
-            # call into RunCreateDjangoModels to create the models.py and admin.py files
-            app_config = RunCreateDjangoModels(self.app_name, self.app_module)
-            app_config.ready()
-
             base_dir = settings.BASE_DIR
             initial_migration_file = os.path.join(
                 base_dir,
@@ -317,21 +355,15 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 pybirdai_models_path, derived_fields_file_path
             )
 
-            # Update admin.py FIRST - this will trigger Django restart
-            logger.info("Updating admin.py with new model registrations...")
-            logger.info(
-                "This will trigger Django restart - user will need to run migrations after restart"
-            )
             self._update_admin_file(
-                pybirdai_admin_path, pybirdai_meta_data_model_path, results_admin_path
+                pybirdai_admin_path, pybirdai_meta_data_model_path, pybirdai_models_path
             )
 
             # Create a marker file to indicate we're ready for step 2
             self._create_migration_ready_marker(base_dir)
 
-
-
             logger.info("STEP 1 completed successfully!")
+
             logger.info(
                 "Django will restart now. After restart, user needs to run migrations."
             )
@@ -380,6 +412,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             logger.info("STEP 2 completed successfully!")
             logger.info("Database setup is now complete!")
+            
             return {
                 "success": True,
                 "step": 2,
@@ -450,7 +483,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
                         # Continue anyway - let Django handle it
 
     def _update_admin_file(
-        self, pybirdai_admin_path, pybirdai_meta_data_model_path, results_admin_path
+        self, pybirdai_admin_path, pybirdai_meta_data_model_path, pybirdai_data_model_path
     ):
         """Update the admin.py file with model registrations, avoiding duplicates."""
         registered_models = set()
@@ -472,60 +505,21 @@ class RunAutomodeDatabaseSetup(AppConfig):
                                 f"from .bird_meta_data_model import {node.name}\n"
                             )
                             f_write.write(f"admin.site.register({node.name})\n")
-                            registered_models.add(node.name)
 
-        # Check if results admin file exists and append its content (without duplicates)
-        if not os.path.exists(results_admin_path):
-            logger.warning(f"Results admin file not found: {results_admin_path}")
-            return
 
-        try:
-            # Read content from results file and parse it for additional models
-            with open(results_admin_path, "r") as f_read_results:
-                results_admin_str = f_read_results.read()
-
-            # Parse results admin.py content to extract model names and avoid duplicates
-            additional_content = []
-            lines = results_admin_str.split("\n")
-
-            for line in lines:
-                line = line.strip()
-                if line.startswith("from .bird_data_model import "):
-                    # Extract model name from import statement
-                    model_name = line.split("import ")[-1].strip()
-                    if model_name and model_name not in registered_models:
-                        additional_content.append(
-                            f"from .bird_data_model import {model_name}"
-                        )
-                        additional_content.append(f"admin.site.register({model_name})")
-                        registered_models.add(model_name)
-                elif line.startswith("from django.contrib import admin"):
-                    # Skip duplicate admin import
-                    continue
-                elif line.startswith("admin.site.register("):
-                    # Skip individual register lines as they're handled with imports
-                    continue
-                elif line and not line.startswith("#"):
-                    # Include any other non-comment lines
-                    additional_content.append(line)
-
-            # Append additional content if any
-            if additional_content:
-                with open(pybirdai_admin_path, "a") as f_append:
-                    f_append.write("\n")
-                    f_append.write("\n".join(additional_content))
-                    f_append.write("\n")
-
-            logger.info(
-                f"{pybirdai_admin_path} updated successfully with {len(registered_models)} unique models."
-            )
-
-            # Clean up the results admin.py file after successful use to prevent accumulation
-            self._cleanup_results_admin_file(results_admin_path)
-
-        except IOError as e:
-            logger.error(f"Error updating {pybirdai_admin_path}: {e}")
-            raise RuntimeError(f"Failed to update {pybirdai_admin_path}") from e
+            # Parse the bird data model file to find class definitions        
+            with open(pybirdai_data_model_path, "r") as f_read:
+                tree = ast.parse(f_read.read())
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef) and node.name not in [
+                        "Meta",
+                        "Admin",
+                    ]:
+                        if node.name not in registered_models:
+                            f_write.write(
+                                f"from .bird_data_model import {node.name}\n"
+                            )
+                            f_write.write(f"admin.site.register({node.name})\n")
 
     def _cleanup_results_admin_file(self, results_admin_path):
         """Clean up the results admin.py file after successful use to prevent duplicate content."""
@@ -556,34 +550,57 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
         logger.info(f"{pybirdai_models_path} updated successfully.")
 
-    def _run_django_commands(self, base_dir):
-        """Run Django makemigrations and migrate commands."""
-        try:
-            # Import Django management commands
-            from django.core.management import call_command
-            from django.core.management.base import CommandError
+    def _fetch_preconfigured_database(self,python_executable):
+        fetcher = PreconfiguredDatabaseFetcher(self.token)
+        db_content = fetcher.fetch()
+        db_file = "db.sqlite3"
+        if os.path.exists(db_file):
+            os.chmod(db_file, 0o666)
 
-            # Run makemigrations using Django's call_command
-            logger.info("Running makemigrations command...")
-            try:
-                call_command("makemigrations", "pybirdai", verbosity=2)
-                logger.info("Makemigrations command completed successfully2.")
-            except CommandError as e:
-                logger.error(f"Makemigrations failed: {e}")
-                raise RuntimeError(f"Makemigrations failed: {e}") from e
+        if db_content:
+            logger.info("Database content fetched, extracting...")
+            success = fetcher.extract_zip_and_save(db_content)
+            if success:
+                logger.info("Process completed successfully")
 
-            # Run migrate using Django's call_command
-            logger.info("Running migrate command...")
-            try:
-                call_command("migrate", verbosity=2)
-                logger.info("Migrate command completed successfully.")
-            except CommandError as e:
-                logger.error(f"Migrate failed: {e}")
-                raise RuntimeError(f"Migrate failed: {e}") from e
+        if not db_content or not success:
+            logger.error("Failed to fetch database content")
+            return 1, None
 
-        except Exception as e:
-            logger.error(f"Django command execution failed: {e}")
-            raise RuntimeError(f"Django command execution failed: {e}") from e
+        os.listdir(f"pybirdai{os.sep}migrations")
+
+        found_migration_files = []
+        for file in os.listdir(f"pybirdai{os.sep}migrations"):
+            if file.endswith(".py") and file != "__init__.py":
+                logger.info(f"Found migration file: {file}")
+                found_migration_files.append(file)
+
+        found_migration_files = sorted(found_migration_files,
+            key=lambda x: int(x.split("_")[0]))
+
+        for file in found_migration_files:
+            migrate_result = subprocess.run(
+                [python_executable, "manage.py", "migrate", "--fake", "pybirdai", file.replace(".py", "")],
+                capture_output=True,
+                text=True,
+                timeout=600,
+            )
+
+        return 0, migrate_result
+
+    def _get_python_exc(self):
+        # Get the python executable from the current environment
+        python_executable = sys.executable
+
+        # Get the virtual environment path if we're in one
+        venv_path = os.environ.get("VIRTUAL_ENV")
+        if venv_path:
+            python_executable = os.path.join(venv_path, "bin", "python")
+
+        # Change to project directory for subprocess
+        original_dir = os.getcwd()
+        os.chdir(settings.BASE_DIR)
+        return venv_path, original_dir, python_executable
 
     def _run_migrations_in_subprocess(self, base_dir):
         """Run Django migrations in a subprocess to avoid auto-restart race condition."""
@@ -594,17 +611,13 @@ class RunAutomodeDatabaseSetup(AppConfig):
         start_time = time.time()
 
         try:
-            # Get the python executable from the current environment
-            python_executable = sys.executable
+            
+            venv_path, original_dir, python_executable = self._get_python_exc()
 
-            # Get the virtual environment path if we're in one
-            venv_path = os.environ.get("VIRTUAL_ENV")
-            if venv_path:
-                python_executable = os.path.join(venv_path, "bin", "python")
-
-            # Change to project directory for subprocess
-            original_dir = os.getcwd()
-            os.chdir(base_dir)
+            generator = AdvancedMigrationGenerator()
+            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
+            _ = generator.generate_migration_code(models)
+            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
 
             logger.info("Running makemigrations in subprocess...")
             makemig_start = time.time()
@@ -632,43 +645,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             migrate_start = time.time()
 
-            try:
-                fetcher = PreconfiguredDatabaseFetcher(self.token)
-                db_content = fetcher.fetch()
-                db_file = "db.sqlite3"
-                if os.path.exists(db_file):
-                    os.chmod(db_file, 0o666)
+            return_code_preconfigured_migration, migrate_result = self._fetch_preconfigured_database(python_executable)
 
-                if db_content:
-                    logger.info("Database content fetched, extracting...")
-                    success = fetcher.extract_zip_and_save(db_content)
-                    if success:
-                        logger.info("Process completed successfully")
-                    else:
-                        logger.error("Failed to extract database content")
-                        raise RuntimeError("Failed to extract database content")
-                else:
-                    logger.error("Failed to fetch database content")
-                    raise RuntimeError("Failed to fetch database content")
-
-                os.listdir(f"pybirdai{os.sep}migrations")
-                for file in os.listdir(f"pybirdai{os.sep}migrations"):
-                    if file.endswith(".py") and file != "__init__.py":
-                        logger.info(f"Found migration file: {file}")
-                        migrate_result = subprocess.run(
-                            [python_executable, "manage.py", "migrate", "--fake", "pybirdai", file.replace(".py", "")],
-                            capture_output=True,
-                            text=True,
-                            timeout=600,
-                        )
-
-
-            except Exception as e:
-                logger.error(f"Error occurred during database setup: {e}")
-
+            if return_code_preconfigured_migration:
                 logger.info("PreconfiguredDatabaseFetcher failed, running manual process")
                 logger.info("Running migrate in subprocess...")
-
 
                 # Run migrate
                 migrate_result = subprocess.run(
@@ -686,15 +667,16 @@ class RunAutomodeDatabaseSetup(AppConfig):
                     logger.error(f"Stderr: {migrate_result.stderr}")
                     raise RuntimeError(f"Migrate failed: {migrate_result.stderr}")
 
-            finally:
-                migrate_time = time.time() - migrate_start
-                logger.info(f"Migrate completed in {migrate_time:.2f}s")
-                logger.info(f"Migrate output: {migrate_result.stdout.strip()}")
+            migrate_time = time.time() - migrate_start
+            logger.info(f"Migrate completed in {migrate_time:.2f}s")
+            logger.info(f"Migrate output: {migrate_result.stdout.strip()}")
 
-                total_time = time.time() - start_time
-                logger.info(
-                    f"All Django migrations completed in {total_time:.2f}s total via subprocess"
-                )
+            total_time = time.time() - start_time
+            logger.info(
+                f"All Django migrations completed in {total_time:.2f}s total via subprocess"
+            )
+
+            self._create_setup_ready_marker(base_dir)
 
         except subprocess.TimeoutExpired as e:
             logger.error(f"Migration subprocess timed out: {e}")
@@ -707,6 +689,27 @@ class RunAutomodeDatabaseSetup(AppConfig):
         finally:
             # Restore original directory
             os.chdir(original_dir)
+
+    def _create_setup_ready_marker(self, base_dir):
+        """Create a marker file to indicate we're ready for step 2 migrations."""
+        import json
+
+        # Ensure base_dir is a string (handle Path objects)
+        base_dir_str = str(base_dir)
+        marker_path = os.path.join(base_dir_str, ".setup_ready_marker")
+        marker_data = {
+            "step": 2,
+            "timestamp": time.time(),
+            "status": "setup completed - please use the application",
+        }
+
+        try:
+            with open(marker_path, "w") as f:
+                json.dump(marker_data, f, indent=2)
+            logger.info(f"Created setup ready marker: {marker_path}")
+        except Exception as e:
+            logger.error(f"Failed to create setup ready marker: {e}")
+            # Don't fail the whole process for this
 
     def _create_migration_ready_marker(self, base_dir):
         """Create a marker file to indicate we're ready for step 2 migrations."""
@@ -736,6 +739,15 @@ class RunAutomodeDatabaseSetup(AppConfig):
         marker_path = os.path.join(base_dir_str, ".migration_ready_marker")
         exists = os.path.exists(marker_path)
         logger.info(f"Migration ready marker exists: {exists} at {marker_path}")
+        return exists
+
+    def _check_setup_ready_marker(self, base_dir):
+        """Check if the setup ready marker exists."""
+        # Ensure base_dir is a string (handle Path objects)
+        base_dir_str = str(base_dir)
+        marker_path = os.path.join(base_dir_str, ".setup_ready_marker")
+        exists = os.path.exists(marker_path)
+        logger.info(f"Setup ready marker exists: {exists} at {marker_path}")
         return exists
 
     def _remove_migration_ready_marker(self, base_dir):

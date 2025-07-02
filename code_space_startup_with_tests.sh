@@ -10,4 +10,4 @@ python -m pip install pytest-xdist==3.6.1 --quiet
 python -m pip install ruff==0.9.7 --quiet
 python -m pip install unidecode==1.3.8 --quiet
 # python pybirdai/utils/datapoint_test_run/run_tests.py --uv "False" --config-file "tests/configuration_file_tests.json"
-python manage.py runserver
+while true; do python manage.py runserver --noreload; done

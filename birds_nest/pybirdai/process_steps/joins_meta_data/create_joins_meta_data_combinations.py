@@ -108,9 +108,9 @@ class JoinsMetaDataCreator:
         }
 
         context.facetted_items = {
-            output_item
+            output_item.variable_id
             for output_item in CUBE_STRUCTURE_ITEM.objects.all()
-            if output_item.variable_id.domain_id
+            if output_item.variable_id.domain_id.domain_id
             in ["String", "Date", "Integer", "Boolean", "Float"]
         }
 
@@ -408,7 +408,8 @@ class JoinsMetaDataCreator:
             operation_exists = self.operation_exists_in_cell_for_report_with_category(
                 context, sdd_context, output_item, category, report_template
             )
-            in_facetted_items = output_item in context.facetted_items
+            in_facetted_items = output_item.variable_id in context.facetted_items
+
             if operation_exists or in_facetted_items:
                 input_columns = self.find_variables_with_same_members_then_same_name(
                     context, sdd_context, output_item, input_entity, in_facetted_items
@@ -551,6 +552,10 @@ class JoinsMetaDataCreator:
             output_item.variable_id.domain_id if output_item.variable_id else None
         )
 
+        field_list = sdd_context.bird_cube_structure_item_dictionary.get(
+            input_entity.cube_structure_id, []
+        )
+
         if not in_facetted_items:
             # Same members / combination comparison
 
@@ -571,10 +576,6 @@ class JoinsMetaDataCreator:
                         )
                     )
             IGNORED_DOMAINS = ["String", "Date", "Integer", "Boolean", "Float"]
-
-            field_list = sdd_context.bird_cube_structure_item_dictionary.get(
-                input_entity.cube_structure_id, []
-            )
 
             if (
                 target_domain
@@ -656,7 +657,7 @@ class JoinsMetaDataCreator:
 
         # Same name comparison
 
-        logging.warning(f"CHECKING OUTPUT VARIABLE NAME FOR {output_item}")
+        # logging.warning(f"CHECKING OUTPUT VARIABLE NAME FOR {output_item}")
         output_variable_name = (
             output_item.variable_id.variable_id if output_item.variable_id else None
         )
