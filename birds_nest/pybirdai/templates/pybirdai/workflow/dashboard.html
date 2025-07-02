@@ -550,7 +550,16 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                 btn.disabled = false;
                 btn.textContent = 'Setup Database (Tasks 1-2)';
             }
-        });
+        }).catch(error => {
+          console.error('Database setup status polling error:', error);
+
+          // Refresh page on error to reset state
+          setTimeout(() => {
+              console.log('Refreshing page due to database setup polling error');
+              location.reload();
+          }, 2000);
+        }
+        );
     }
 
     // Start polling
@@ -626,14 +635,15 @@ function pollMigrationStatus(statusDiv, btn) {
             }
         })
         .catch(error => {
-            console.error('Migration status polling error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking migration status: ' + error.message;
+          console.error('Migration status status polling error:', error);
 
-            btn.disabled = false;
-            btn.textContent = 'Run Migrations (Step 2)';
-        });
+          // Refresh page on error to reset state
+          setTimeout(() => {
+              console.log('Refreshing page due to database setup polling error');
+              location.reload();
+          }, 2000);
+        }
+        );
     }
 
     // Start polling
@@ -726,16 +736,16 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                 btn.disabled = false;
                 btn.textContent = 'Run Automode (from Task 3)';
             }
-        })
-        .catch(error => {
-            console.error('Automode status polling error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking automode status: ' + error.message;
+        }).catch(error => {
+          console.error('Database setup status polling error:', error);
 
-            btn.disabled = false;
-            btn.textContent = 'Run Automode (from Task 3)';
-        });
+          // Refresh page on error to reset state
+          setTimeout(() => {
+              console.log('Refreshing page due to database setup polling error');
+              location.reload();
+          }, 2000);
+        }
+        );
     }
 
     // Start polling
