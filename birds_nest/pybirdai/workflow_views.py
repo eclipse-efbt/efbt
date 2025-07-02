@@ -171,7 +171,7 @@ def _run_migrations_async():
 
         logger.info("Background migration process completed successfully")
 
-        time.sleep(10)
+        time.sleep(6)
 
         os.system("pkill -f runserver")
 
