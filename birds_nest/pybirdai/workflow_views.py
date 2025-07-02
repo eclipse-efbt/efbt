@@ -227,13 +227,6 @@ def _run_migrations_async():
         time.sleep(6)
 
 
-        match platform.system():
-            case "Windows":
-                os._exit(0)
-            case _:
-                os.system("pkill -f runserver")
-
-
     except Exception as e:
         logger.error(f"Background migration process failed: {e}")
         _migration_status.update(
