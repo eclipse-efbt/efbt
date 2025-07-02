@@ -13,8 +13,18 @@
 
 import json
 import sys
-from logger_factory import return_logger, Path
-logger = return_logger(str(Path(__file__).resolve()).rsplit("/",1)[-1])
+import logging
+from pathlib import Path
+
+def return_logger(__file_name__:str):
+    return logging.getLogger(__file_name__)
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger()
 from datetime import datetime
 
 FAILURE_STRING = "=================================== FAILURES ==================================="
