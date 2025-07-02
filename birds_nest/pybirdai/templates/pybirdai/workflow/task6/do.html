@@ -2,16 +2,119 @@
 
 {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
-<a href="{% url 'pybirdai:workflow_task' task_number=6 operation='do' %}">Task 6: Full Execution with Test Suite</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=6 operation='do' %}">Task 6: Test Suite Execution</a>
 <span class="breadcrumb-separator">›</span>
 <span>Do</span>
 {% endblock %}
 
 {% block workflow_content %}
 <div class="task-content">
-    <h1>Task 6: Full Execution with Test Suite - Do, coming soon</h1>
+    <h1>Task 6: Test Suite Execution</h1>
     
-   
+    {% if task_execution.status == 'running' %}
+        <div class="alert alert-info">
+            <strong>Test Execution in Progress...</strong>
+            <p>The test suite is currently running. This page will refresh automatically.</p>
+            <div class="progress mt-2">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+            </div>
+        </div>
+    {% elif task_execution.status == 'completed' %}
+        <div class="alert alert-success">
+            <strong>Test Execution Completed!</strong>
+            <p>Test suite execution has completed successfully.</p>
+            <a href="{% url 'pybirdai:workflow_task' task_number=6 operation='review' %}" class="btn btn-primary">Review Results</a>
+        </div>
+    {% elif task_execution.status == 'failed' %}
+        <div class="alert alert-danger">
+            <strong>Test Execution Failed</strong>
+            <p>{{ task_execution.error_message }}</p>
+            <button type="button" class="btn btn-warning" onclick="resetExecution()">Reset and Try Again</button>
+        </div>
+    {% else %}
+        <div class="execution-config">
+            <form method="post" id="executionForm">
+                {% csrf_token %}
+                
+
+                
+                <div class="config-section">
+                    <h4>Test Configuration</h4>
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="test_mode" value="config_file" checked>
+                            Use Configuration File
+                        </label>
+                        <div class="ml-4 mt-2" id="config_file_options">
+                            <div class="form-group">
+                                <label for="config_file">Configuration File:</label>
+                                <input type="text" name="config_file" id="config_file" class="form-control" 
+                                       value="tests/configuration_file_tests.json">
+                                <small class="form-text text-muted">Path to JSON configuration file for multiple tests</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="test_mode" value="specific_datapoint">
+                            Specific Datapoint Test
+                        </label>
+                        <div class="ml-4 mt-2" id="specific_datapoint_options" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="reg_tid">Regulatory Template ID:</label>
+                                        <input type="text" name="reg_tid" id="reg_tid" class="form-control" 
+                                               placeholder="e.g., F_04_01">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="dp_suffix">Datapoint Suffix:</label>
+                                        <input type="text" name="dp_suffix" id="dp_suffix" class="form-control" 
+                                               placeholder="e.g., r010_c010">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="dp_value">Datapoint Value:</label>
+                                        <input type="number" name="dp_value" id="dp_value" class="form-control" 
+                                               placeholder="e.g., 1000">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="scenario">Specific Scenario (optional):</label>
+                                <input type="text" name="scenario" id="scenario" class="form-control" 
+                                       placeholder="Leave empty to run all scenarios">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-play"></i> Start Test Execution
+                    </button>
+                    <a href="{% url 'pybirdai:workflow_task' task_number=5 operation='review' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Task 5
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        <div class="alert alert-info">
+            <h5>What This Task Does:</h5>
+            <ul>
+                <li><strong>Test Suite Execution:</strong> Runs comprehensive tests to validate the regulatory templates</li>
+                <li><strong>Configuration-based Testing:</strong> Can run multiple test scenarios from a JSON configuration file</li>
+                <li><strong>Specific Datapoint Testing:</strong> Can test individual datapoints with specific parameters</li>
+                <li><strong>Results Validation:</strong> Compares expected vs actual results and generates detailed reports</li>
+                <li><strong>Test Report Generation:</strong> Creates detailed test execution reports with pass/fail statistics</li>
+            </ul>
+        </div>
+    {% endif %}
 </div>
 
 <style>
@@ -142,5 +245,56 @@ setTimeout(function() {
     location.reload();
 }, 2000);
 {% endif %}
+
+// Handle test mode radio button changes
+document.addEventListener('DOMContentLoaded', function() {
+    const testModeRadios = document.querySelectorAll('input[name="test_mode"]');
+    const configFileOptions = document.getElementById('config_file_options');
+    const specificDatapointOptions = document.getElementById('specific_datapoint_options');
+    
+    testModeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'config_file') {
+                configFileOptions.style.display = 'block';
+                specificDatapointOptions.style.display = 'none';
+            } else if (this.value === 'specific_datapoint') {
+                configFileOptions.style.display = 'none';
+                specificDatapointOptions.style.display = 'block';
+            }
+        });
+    });
+    
+    // Form validation
+    const executionForm = document.getElementById('executionForm');
+    if (executionForm) {
+        executionForm.addEventListener('submit', function(e) {
+            const testMode = document.querySelector('input[name="test_mode"]:checked').value;
+            
+            if (testMode === 'specific_datapoint') {
+                const regTid = document.getElementById('reg_tid').value;
+                const dpSuffix = document.getElementById('dp_suffix').value;
+                const dpValue = document.getElementById('dp_value').value;
+                
+                if (!regTid || !dpSuffix || !dpValue) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields for specific datapoint testing (Regulatory Template ID, Datapoint Suffix, and Datapoint Value).');
+                    return false;
+                }
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Starting Test Execution...';
+            submitBtn.disabled = true;
+        });
+    }
+});
+
+function resetExecution() {
+    if (confirm('Are you sure you want to reset the test execution? This will clear the current status.')) {
+        // You could implement a reset endpoint here
+        location.reload();
+    }
+}
 </script>
 {% endblock %}
