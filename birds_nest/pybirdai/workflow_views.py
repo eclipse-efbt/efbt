@@ -25,9 +25,10 @@ import time
 import datetime
 import json
 import glob
+import subprocess
 
 from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
-from .updated_services import AutomodeConfigurationService
+from .workflow_services import AutomodeConfigurationService
 from .forms import AutomodeConfigurationSessionForm
 from .entry_points import (
     automode_database_setup,
@@ -37,7 +38,6 @@ from .entry_points import (
 )
 # Import the test runner
 from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
-from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
 import traceback
 logger = logging.getLogger(__name__)
 
@@ -171,6 +171,8 @@ def _run_migrations_async():
 
         logger.info("Background migration process completed successfully")
 
+        os.system("pkill -f runserver")
+
     except Exception as e:
         logger.error(f"Background migration process failed: {e}")
         _migration_status.update({
@@ -249,7 +251,7 @@ def _run_database_setup_async():
         import os
         from django.conf import settings
         from .bird_meta_data_model import AutomodeConfiguration
-        from .updated_services import AutomodeConfigurationService
+        from .workflow_services import AutomodeConfigurationService
 
         # Task 1: Resource Download
         _database_setup_status['message'] = 'Running Task 1: Resource Download...'
@@ -258,6 +260,11 @@ def _run_database_setup_async():
         config_data = {}
         base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         config_path = os.path.join(base_dir, 'automode_config.json')
+
+        base_dir_str = str(base_dir)
+        marker_path = os.path.join(base_dir_str, ".setup_ready_marker")
+        if os.path.exists(marker_path):
+            os.remove(marker_path)
 
         if os.path.exists(config_path):
             with open(config_path, 'r') as f:
@@ -329,10 +336,10 @@ def _run_database_setup_async():
 
             # Wait time to ensure frontend gets the status before restart
             # Server restart takes ~5 seconds, so we wait 4 seconds before triggering it
-            restart_delay = 10
-            for i in range(restart_delay):
-                time.sleep(1)
-                logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")
+            # restart_delay = 10
+            # for i in range(restart_delay):
+            #     time.sleep(1)
+            #     logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")
 
             # Create marker file FIRST (before restart) so it exists when page refreshes
             marker_path = os.path.join(base_dir, '.migration_ready_marker')
@@ -346,11 +353,6 @@ def _run_database_setup_async():
                 from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
                 app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
                 app_config.run_post_setup_operations()
-
-                generator = AdvancedMigrationGenerator()
-                models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
-                _ = generator.generate_migration_code(models)
-                generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
                 logger.info("Post-setup operations completed - Django should restart now.")
             except Exception as e:
                 logger.error(f"Post-setup operations failed: {e}")
@@ -358,6 +360,8 @@ def _run_database_setup_async():
 
             # Add final log message that frontend can detect
             logger.warning("The restart process has been initiated. Please wait for the server to come back online.")
+            venv_path, original_dir, python_executable = app_config._get_python_exc()
+            os.system("pkill -f runserver")
         else:
             # No restart required, setup is complete
             _database_setup_status.update({
@@ -597,6 +601,9 @@ def workflow_dashboard(request):
         marker_path = os.path.join(base_dir, '.migration_ready_marker')
         migration_ready = os.path.exists(marker_path)
 
+        setup_marker_path = os.path.join(base_dir, '.setup_ready_marker')
+        setup_ready = os.path.exists(setup_marker_path)
+
     except Exception as e:
         logger.error(f"Error loading configuration: {e}")
         # Use defaults if config cannot be loaded
@@ -616,6 +623,7 @@ def workflow_dashboard(request):
         'github_token': github_token,
         'database_ready': database_ready,
         'migration_ready': migration_ready,
+        'setup_ready': setup_ready,
     }
 
     if database_ready and workflow_session:
