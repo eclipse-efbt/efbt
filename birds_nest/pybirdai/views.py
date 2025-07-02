@@ -2055,7 +2055,7 @@ def export_database_to_csv(request):
                     is_meta_data_table = True
                     # Get the model class for this table
                     model_class = model_map[table_name]
-                    
+
                     # Check if model has an explicit primary key
                     has_explicit_pk = any(field.primary_key for field in model_class._meta.fields if field.name != 'id')
 
@@ -2063,12 +2063,12 @@ def export_database_to_csv(request):
                     fields = model_class._meta.fields
                     headers = []
                     db_headers = []
-                    
+
                     # If model uses Django's auto ID and has no explicit PK, include the ID field
                     if not has_explicit_pk:
                         headers.append('ID')
                         db_headers.append('id')
-                    
+
                     for field in fields:
                         # Skip the id field if we already added it or if there's an explicit PK
                         if field.name == 'id' and has_explicit_pk:
@@ -3049,11 +3049,11 @@ def update_mapping_row(request):
             )
             logger.debug(f"Deleting {existing_items.count()} existing items from row {row_index}")
 
-            try:                
+            try:
                 # delete existing items if they are in this list
                 for mm_item in existing_items:
                     member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                    mm_item.member_mapping_id.member_mapping_id]  
+                    mm_item.member_mapping_id.member_mapping_id]
                     for item in member_mapping_list:
                         if item.member_mapping_row == row_index:
                             member_mapping_list.remove(item)
@@ -3747,11 +3747,11 @@ def import_bird_data_from_csv_export(request):
     files = json.loads(request.body.decode("utf-8"))
     # Use ordered import to maintain ID mappings across files
     results = import_from_metadata_export.CSVDataImporter().import_from_csv_strings_ordered(files["csv_files"])
-    
+
     # Count successful imports
     successful_imports = sum(1 for result in results.values() if result.get('success', False))
     total_objects = sum(result.get('imported_count', 0) for result in results.values() if result.get('success', False))
-    
+
     # Create JSON-serializable results (remove Django objects)
     serializable_results = {}
     for filename, result in results.items():
@@ -3761,7 +3761,7 @@ def import_bird_data_from_csv_export(request):
         }
         if 'error' in result:
             serializable_results[filename]['error'] = result['error']
-    
+
     return JsonResponse({
         'message': f'Import successful: {successful_imports}/{len(results)} files imported, {total_objects} total objects',
         'results': serializable_results
@@ -3901,26 +3901,26 @@ def automode_configure(request):
     """Handle automode configuration form submission."""
     import logging
     logger = logging.getLogger(__name__)
-    
+
     try:
         from .forms import AutomodeConfigurationSessionForm
-        from .updated_services import AutomodeConfigurationService
+        from .workflow_services import AutomodeConfigurationService
     except Exception as e:
         logger.error(f"Error importing modules in automode_configure: {str(e)}")
         return JsonResponse({
             'success': False,
             'error': f'Server configuration error: {str(e)}'
         })
-    
+
     if request.method == 'POST':
         try:
             # Use session-based form that doesn't depend on database model
             form = AutomodeConfigurationSessionForm(request.POST)
-            
+
             if form.is_valid():
                 # Validate GitHub URLs if GitHub is selected
                 service = AutomodeConfigurationService()
-                
+
                 if form.cleaned_data['technical_export_source'] == 'GITHUB':
                     url = form.cleaned_data['technical_export_github_url']
                     # Check environment variable first, then form input
@@ -3936,7 +3936,7 @@ def automode_configure(request):
                             'success': False,
                             'error': error_msg
                         })
-                
+
                 if form.cleaned_data['config_files_source'] == 'GITHUB':
                     url = form.cleaned_data['config_files_github_url']
                     # Check environment variable first, then form input
@@ -3951,7 +3951,7 @@ def automode_configure(request):
                             'success': False,
                             'error': error_msg
                         })
-                
+
                 # Store configuration in a temporary file instead of database/session
                 config_data = {
                     'data_model_type': form.cleaned_data['data_model_type'],
@@ -3961,20 +3961,20 @@ def automode_configure(request):
                     'config_files_github_url': form.cleaned_data.get('config_files_github_url', ''),
                     'when_to_stop': form.cleaned_data['when_to_stop'],
                 }
-                
+
                 # Store GitHub token (temporarily, for execution)
                 # Prioritize environment variable, then form input
                 import os
                 github_token = os.environ.get('GITHUB_TOKEN', form.cleaned_data.get('github_token', ''))
                 if github_token:
                     config_data['github_token'] = github_token
-                
+
                 # Save to temporary file
                 _save_temp_config(config_data)
-                
+
                 logger.info("Automode configuration saved to temporary file")
                 return JsonResponse({
-                    'success': True, 
+                    'success': True,
                     'message': 'Configuration saved successfully. Ready for execution.'
                 })
             else:
@@ -3983,24 +3983,24 @@ def automode_configure(request):
                 for field, field_errors in form.errors.items():
                     for error in field_errors:
                         errors.append(f"{field}: {error}")
-                
+
                 return JsonResponse({
                     'success': False,
                     'error': '; '.join(errors)
                 })
-                
+
         except Exception as e:
             logger.error(f"Error saving automode configuration: {str(e)}")
             return JsonResponse({
                 'success': False,
                 'error': f'Error saving configuration: {str(e)}'
             })
-    
+
     # GET request - return current configuration
     try:
         # First try to get configuration from temporary file
         temp_config = _load_temp_config()
-        
+
         if temp_config:
             # Use temporary file configuration if available
             config_data = temp_config
@@ -4027,7 +4027,7 @@ def automode_configure(request):
                     'config_files_github_url': '',
                     'when_to_stop': 'RESOURCE_DOWNLOAD'
                 }
-        
+
         return JsonResponse({
             'success': True,
             'config': config_data
@@ -4042,12 +4042,12 @@ def automode_configure(request):
 
 def automode_execute(request):
     """Execute automode setup with current configuration."""
-    from .updated_services import AutomodeConfigurationService
+    from .workflow_services import AutomodeConfigurationService
     from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
     import logging
-    
+
     logger = logging.getLogger(__name__)
-    
+
     if request.method == 'POST':
         try:
             # Get configuration from temporary file
@@ -4057,7 +4057,7 @@ def automode_execute(request):
                     'success': False,
                     'error': 'No configuration found. Please configure automode first.'
                 })
-            
+
             # Check confirmation
             confirm_execution = request.POST.get('confirm_execution') == 'on'
             if not confirm_execution:
@@ -4065,14 +4065,14 @@ def automode_execute(request):
                     'success': False,
                     'error': 'Execution must be confirmed.'
                 })
-            
+
             force_refresh = request.POST.get('force_refresh') == 'on'
             # Get GitHub token from environment, temp config, or POST data
             import os
-            github_token = (os.environ.get('GITHUB_TOKEN') or 
-                          temp_config_data.get('github_token') or 
+            github_token = (os.environ.get('GITHUB_TOKEN') or
+                          temp_config_data.get('github_token') or
                           request.POST.get('github_token', '')).strip() or None
-            
+
             # Create a temporary configuration object from temp file data
             from .bird_meta_data_model import AutomodeConfiguration
             temp_config = AutomodeConfiguration(
@@ -4083,11 +4083,11 @@ def automode_execute(request):
                 config_files_github_url=temp_config_data.get('config_files_github_url', ''),
                 when_to_stop=temp_config_data['when_to_stop']
             )
-            
+
             # Execute automode setup with session-based configuration
             service = AutomodeConfigurationService()
             results = service.execute_automode_setup_with_database_creation(temp_config, github_token, force_refresh)
-            
+
             if results['errors']:
                 return JsonResponse({
                     'success': False,
@@ -4099,11 +4099,11 @@ def automode_execute(request):
                 # If server restart is required, keep the temp file for continuation
                 if results.get('setup_completed', False) and not results.get('server_restart_required', False):
                     _clear_temp_config()
-                    
+
                 # Provide clear messaging about what happened
                 message = 'Automode setup executed successfully'
                 next_steps = []
-                
+
                 if results.get('server_restart_required', False):
                     message = 'Initial setup completed - database created successfully!'
                     next_steps = [
@@ -4113,24 +4113,24 @@ def automode_execute(request):
                     ]
                 elif results.get('stopped_at') == 'RESOURCE_DOWNLOAD':
                     message = 'Resource download completed - ready for step-by-step mode'
-                
+
                 # Add next steps to results if present
                 if next_steps:
                     results['detailed_next_steps'] = next_steps
-                
+
                 return JsonResponse({
                     'success': True,
                     'message': message,
                     'results': results
                 })
-                
+
         except Exception as e:
             logger.error(f"Error executing automode setup: {str(e)}")
             return JsonResponse({
                 'success': False,
                 'error': f'Error executing setup: {str(e)}'
             })
-    
+
     # GET request not supported for execution
     return JsonResponse({
         'success': False,
@@ -4143,15 +4143,15 @@ def automode_continue_post_restart(request):
     import logging
     from django.conf import settings
     logger = logging.getLogger(__name__)
-    
+
     if request.method != 'POST':
         return JsonResponse({
             'success': False,
             'error': 'POST method required for continuation'
         })
-    
+
     try:
-        from .updated_services import AutomodeConfigurationService
+        from .workflow_services import AutomodeConfigurationService
         from .forms import AutomodeConfigurationSessionForm
     except Exception as e:
         logger.error(f"Error importing modules in automode_continue_post_restart: {str(e)}")
@@ -4159,33 +4159,33 @@ def automode_continue_post_restart(request):
             'success': False,
             'error': f'Server configuration error: {str(e)}'
         })
-    
+
     try:
         # Load configuration from temporary file
         temp_config = _load_temp_config()
-        
+
         if not temp_config:
             # Provide more detailed error information for debugging
             temp_path = _get_temp_config_path()
             fallback_path = os.path.join('.', 'automode_config.json')
-            
+
             error_details = [
                 f"Expected config at: {temp_path} (exists: {os.path.exists(temp_path)})",
                 f"Fallback config at: {fallback_path} (exists: {os.path.exists(fallback_path)})",
                 f"Current working directory: {os.getcwd()}",
                 f"BASE_DIR: {getattr(settings, 'BASE_DIR', 'Not set')}"
             ]
-            
+
             logger.error("Configuration not found. Debug details:")
             for detail in error_details:
                 logger.error(f"  {detail}")
-            
+
             return JsonResponse({
                 'success': False,
                 'error': 'No configuration found. Please configure and save settings first.',
                 'debug_info': error_details if hasattr(settings, 'DEBUG') and settings.DEBUG else None
             })
-        
+
         # Create a simple config object from the temp data
         class SimpleConfig:
             def __init__(self, data):
@@ -4195,15 +4195,15 @@ def automode_continue_post_restart(request):
                 self.config_files_source = data.get('config_files_source', 'MANUAL')
                 self.config_files_github_url = data.get('config_files_github_url', '')
                 self.when_to_stop = data.get('when_to_stop', 'RESOURCE_DOWNLOAD')
-        
+
         config = SimpleConfig(temp_config)
-        
+
         # Execute post-restart steps
         service = AutomodeConfigurationService()
         results = service.execute_automode_post_restart(config)
-        
+
         logger.info(f"Automode post-restart execution completed: {results}")
-        
+
         if results['errors']:
             return JsonResponse({
                 'success': False,
@@ -4214,13 +4214,13 @@ def automode_continue_post_restart(request):
             # Clear temporary config file after successful completion
             if results.get('setup_completed', False):
                 _clear_temp_config()
-                
+
             return JsonResponse({
                 'success': True,
                 'message': 'Automode post-restart execution completed successfully',
                 'results': results
             })
-            
+
     except Exception as e:
         logger.error(f"Error in automode post-restart execution: {str(e)}")
         return JsonResponse({
@@ -4235,20 +4235,20 @@ def _get_temp_config_path():
     from django.conf import settings
     import logging
     logger = logging.getLogger(__name__)
-    
+
     # Use a persistent temp file in the project directory
     base_dir = getattr(settings, 'BASE_DIR', tempfile.gettempdir())
-    
+
     # Convert Path object to string if necessary (Django 5.x uses Path objects)
     if hasattr(base_dir, '__fspath__'):  # Check if it's a path-like object
         temp_dir = str(base_dir)
     else:
         temp_dir = base_dir
-    
+
     # Ensure we use absolute path to avoid working directory issues
     if not os.path.isabs(temp_dir):
         temp_dir = os.path.abspath(temp_dir)
-    
+
     config_path = os.path.join(temp_dir, 'automode_config.json')
     logger.debug(f"Temp config path resolved to: {config_path}")
     return config_path
@@ -4259,9 +4259,9 @@ def _save_temp_config(config_data):
     import json
     import logging
     logger = logging.getLogger(__name__)
-    
+
     temp_path = _get_temp_config_path()
-    
+
     try:
         with open(temp_path, 'w') as f:
             json.dump(config_data, f, indent=2)
@@ -4276,9 +4276,9 @@ def _load_temp_config():
     import json
     import logging
     logger = logging.getLogger(__name__)
-    
+
     temp_path = _get_temp_config_path()
-    
+
     try:
         logger.info(f"Attempting to load configuration from: {temp_path}")
         if os.path.exists(temp_path):
@@ -4290,7 +4290,7 @@ def _load_temp_config():
             return config_data
         else:
             logger.warning(f"No temporary configuration file found at: {temp_path}")
-            
+
             # Try fallback location for debugging
             fallback_path = os.path.join('.', 'automode_config.json')
             logger.info(f"Checking fallback location: {fallback_path}")
@@ -4305,7 +4305,7 @@ def _load_temp_config():
                     logger.error(f"Error reading fallback config file: {e}")
             else:
                 logger.warning(f"No configuration file found at fallback location either: {fallback_path}")
-            
+
             return None
     except Exception as e:
         logger.error(f"Error loading configuration from temporary file {temp_path}: {e}")
@@ -4318,9 +4318,9 @@ def _clear_temp_config():
     """Clear the temporary configuration file."""
     import logging
     logger = logging.getLogger(__name__)
-    
+
     temp_path = _get_temp_config_path()
-    
+
     try:
         if os.path.exists(temp_path):
             os.remove(temp_path)
@@ -4334,14 +4334,14 @@ def automode_debug_config(request):
     import logging
     from django.conf import settings
     logger = logging.getLogger(__name__)
-    
+
     try:
         temp_path = _get_temp_config_path()
         fallback_path = os.path.join('.', 'automode_config.json')
-        
+
         base_dir_raw = getattr(settings, 'BASE_DIR', 'Not set')
         base_dir_str = str(base_dir_raw) if hasattr(base_dir_raw, '__fspath__') else base_dir_raw
-        
+
         debug_info = {
             'temp_config_path': temp_path,
             'temp_config_exists': os.path.exists(temp_path),
@@ -4352,7 +4352,7 @@ def automode_debug_config(request):
             'base_dir_resolved': base_dir_str,
             'path_resolution_type': type(base_dir_raw).__name__,
         }
-        
+
         # Try to read config if exists
         config_data = None
         if os.path.exists(temp_path):
@@ -4377,7 +4377,7 @@ def automode_debug_config(request):
                 debug_info['config_status'] = 'Error loading from fallback path'
         else:
             debug_info['config_status'] = 'No configuration file found'
-        
+
         return JsonResponse({
             'success': True,
             'debug_info': debug_info
@@ -4394,12 +4394,12 @@ def automode_status(request):
     from .bird_meta_data_model import AutomodeConfiguration
     import os
     import logging
-    
+
     logger = logging.getLogger(__name__)
-    
+
     try:
         config = AutomodeConfiguration.get_active_configuration()
-        
+
         # Check file existence
         file_status = {
             'technical_export': {
@@ -4423,7 +4423,7 @@ def automode_status(request):
                 'file_count': len(os.listdir('resources/ldm')) if os.path.exists('resources/ldm') else 0
             }
         }
-        
+
         return JsonResponse({
             'success': True,
             'configuration': {
@@ -4435,11 +4435,10 @@ def automode_status(request):
             },
             'file_status': file_status
         })
-        
+
     except Exception as e:
         logger.error(f"Error getting automode status: {str(e)}")
         return JsonResponse({
             'success': False,
             'error': f'Error getting status: {str(e)}'
         })
-

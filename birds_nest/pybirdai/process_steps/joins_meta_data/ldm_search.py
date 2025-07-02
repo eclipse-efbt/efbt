@@ -123,7 +123,7 @@ class ELDMSearch:
         #            context, super_entity, entities, link_count, link_limit
         #        )
 
-    
+
     def _get_parents_from_disjoint_subtyping(entity):
         """
         Retrieve parents from disjoint subtyping relationships.
@@ -143,7 +143,7 @@ class ELDMSearch:
                 for feature in model._meta.get_fields():
                     if (
                         isinstance(feature, ForeignKey)
-                        and feature.name.endswith("_delegate")                        
+                        and feature.name.endswith("_delegate")
                     ):
                         if feature.name[0:len(feature.name)-9] == entity.__name__:
                             parents_from_disjoint_subtyping.append(model)
