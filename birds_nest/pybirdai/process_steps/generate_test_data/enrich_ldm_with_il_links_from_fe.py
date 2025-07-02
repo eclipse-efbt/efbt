@@ -39,6 +39,7 @@ class InputLayerLinkEnricher(object):
         InputLayerLinkEnricher.create_attribute_to_column_links(self, context)
         
     def create_attribute_to_column_links(self, context):
+        
         file_location = context.file_directory + os.sep + "ldm" + os.sep + "DM_Mappings.csv"
         header_skipped = False
 
@@ -53,52 +54,50 @@ class InputLayerLinkEnricher(object):
                     relational_object_Name = row[11]
                     entity_name = row[12]
                     table_name = row[13]
-                    print(relational_model_name)
-                    print(context.input_layer_name) 
-                    print(entity_name)
-                    print(table_name)
+                    
                     if (relational_model_name == context.input_layer_name) and (table_name is not None) and (entity_name is not None) and not (table_name.strip() == "") and not (entity_name.strip() == ""):
-                        print(table_name)
+
+                        
                         # annotate entites
                         if logical_object_name == entity_name:
                             ldm_entity = InputLayerLinkEnricher.get_ldm_entity(
                                 self, 
                                 context,
                                 Utils.make_valid_id(entity_name))
-                            print(table_name)
+
                             the_entity_annotation = Utils.get_annotation_with_source(ldm_entity, "il_mapping")
-                            print(table_name)
+
                             if the_entity_annotation is None: 
                                 the_entity_annotation = ELAnnotation()
                                 the_entity_annotation_directive = Utils.get_annotation_directive(ldm_entity.eContainer(), "il_mapping")
                                 the_entity_annotation.source = the_entity_annotation_directive
                                 ldm_entity.eAnnotations.append(the_entity_annotation)
-                            print(table_name)
+
                             details = the_entity_annotation.details
-                            print(table_name)
+
                             il_tables_count = 0
                             
                             for detail in details:
                                 if detail.key.startswith("il_table"):
                                     il_tables_count = il_tables_count + 1
-                            print(table_name)    
+
                             detail1 = ELStringToStringMapEntry()
                             if il_tables_count ==0:
                                 detail1.key = "il_table"
                             else:
                                 detail1.key = "il_table" + str(il_tables_count)
-                            print(table_name)    
+
                             detail1.value = table_name
                             details.append(detail1)
                         else:
-                            print('2')
+
                             # annotate attributes
                             ldm_attribute = InputLayerLinkEnricher.get_ldm_attribute(
                                 self, 
                                 context,
                                 Utils.make_valid_id(entity_name),
                                 Utils.make_valid_id(logical_object_name))
-                            print('2')
+
                             # logical_attribute_to_relational_name[ldm_attribute] =  table_name + "." + relational_object_Name
                             if not(ldm_attribute is None):
                                 if isinstance(ldm_attribute,ELAttribute):

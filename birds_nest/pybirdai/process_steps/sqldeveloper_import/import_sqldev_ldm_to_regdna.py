@@ -19,7 +19,9 @@ from pybirdai.regdna import ELEnumLiteral, ELReference
 from pybirdai.regdna import ELAnnotation, ELStringToStringMapEntry
 from pybirdai.process_steps.generate_test_data.enrich_ldm_with_il_links_from_fe import InputLayerLinkEnricher
 from pybirdai.process_steps.generate_test_data.traverser import SubtypeExploder
-from efbt.birds_nest.pybirdai.process_steps.generate_etl.generate_etl import GenerateETL
+from pybirdai.process_steps.generate_etl.generate_etl import GenerateETL
+from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
+from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 
 class SQLDevLDMImport(object):
     '''
@@ -29,7 +31,10 @@ class SQLDevLDMImport(object):
     def do_import(self, context):
         '''
         import the items from the BIRD LDM csv files
-        '''
+       
+        
+    '''
+
         SQLDevLDMImport.import_classification_types(self, context)
         SQLDevLDMImport.add_ldm_classes_to_package(self, context)
         SQLDevLDMImport.import_disjoint_subtyping_information(self, context)

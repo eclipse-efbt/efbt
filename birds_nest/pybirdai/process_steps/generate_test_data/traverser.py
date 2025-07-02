@@ -178,37 +178,7 @@ class SubtypeExploder(object):
         il_table_names = SubtypeExploder.get_tables_from_column_name(self, input_layer_column_headers)
             
             
-        for table_name in []:
-            
-            if full_or_summary == '_full':
-                f = open(context.output_directory + os.sep + 'csv' +
-                        os.sep + table_name + '.sql',
-                        "a",  encoding='utf-8')
-                counter = 0
-                
-                                
-                for the_row  in rows:
-                    map = SubtypeExploder.post_process_row(self, context,column_headers,
-                                            input_layer_column_headers, the_row) 
-                    counter = 0
-                    written_columns = []
-                    f.write('INSERT INTO ' + context.table_prefix + table_name.lower() + '(\"' + table_name + '_id\"')
-                    for column in input_layer_column_headers:
-                        if not (column == 'UNKNOWN'):
-                            if not (column in written_columns):
-                                if SubtypeExploder.get_table_from_column_name(self, column) == table_name:
-                                    f.write(',\"' + SubtypeExploder.get_column_from_column_name(self, column)+'\"')
-                                    written_columns.append(column)
-                    f.write(') VALUES (')
-                    f.write('\'' + map['IDENTIFIER'].replace(':','_') + '\'')
-                    for column in written_columns:
-                        if not (column == 'UNKNOWN'):
-                            try:
-                                f.write(',\'' + SubtypeExploder.strip_special_characters(self,map[column]) + '\'')
-                            except KeyError:
-                                f.write(',NULL')
-                    f.write(');')            
-                    f.write("\n")    
+        
             
           
     def strip_special_characters(self, text):
