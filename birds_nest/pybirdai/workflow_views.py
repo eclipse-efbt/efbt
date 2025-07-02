@@ -343,7 +343,7 @@ def _run_database_setup_async():
             #     time.sleep(1)
             #     logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")
 
-            time.sleep(10)
+
 
             # Create marker file FIRST (before restart) so it exists when page refreshes
             marker_path = os.path.join(base_dir, '.migration_ready_marker')
@@ -364,7 +364,9 @@ def _run_database_setup_async():
 
             # Add final log message that frontend can detect
             logger.warning("The restart process has been initiated. Please wait for the server to come back online.")
-            venv_path, original_dir, python_executable = app_config._get_python_exc()
+
+            time.sleep(10)
+
             os.system("pkill -f runserver")
         else:
             # No restart required, setup is complete
