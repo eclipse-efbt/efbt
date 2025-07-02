@@ -171,6 +171,8 @@ def _run_migrations_async():
 
         logger.info("Background migration process completed successfully")
 
+        time.sleep(10)
+
         os.system("pkill -f runserver")
 
     except Exception as e:
@@ -340,6 +342,8 @@ def _run_database_setup_async():
             # for i in range(restart_delay):
             #     time.sleep(1)
             #     logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")
+
+            time.sleep(10)
 
             # Create marker file FIRST (before restart) so it exists when page refreshes
             marker_path = os.path.join(base_dir, '.migration_ready_marker')
