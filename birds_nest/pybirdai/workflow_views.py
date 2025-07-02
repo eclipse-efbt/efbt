@@ -470,7 +470,7 @@ def _run_database_setup_async():
             #     time.sleep(1)
             #     logger.info(f"Waiting {i+1}/{restart_delay} seconds before triggering restart...")
 
-
+            time.sleep(10)
 
             # Create marker file FIRST (before restart) so it exists when page refreshes
             marker_path = os.path.join(base_dir, ".migration_ready_marker")
