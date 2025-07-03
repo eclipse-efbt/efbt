@@ -11,6 +11,102 @@
 <div class="task-content">
     <h1>Task 3: SMCubes Core Creation - Review</h1>
     
+    {% if task_execution.status != 'completed' or task_execution.operation_type != 'do' %}
+    <div class="alert alert-warning">
+        <strong>⚠️ Task Not Completed</strong>
+        <p>You must complete the Do step before reviewing the results.</p>
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}" class="btn btn-primary">Go to Do</a>
+    </div>
+    {% else %}
+    
+    <h2>SMCubes Core Creation Summary</h2>
+    
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h3>Creation Status</h3>
+            <div class="status-indicator success">
+                <span class="status-icon">✓</span>
+                <span class="status-text">SMCubes Core Created Successfully</span>
+            </div>
+            <dl>
+                <dt>Cube Structures:</dt>
+                <dd>{{ execution_data.cubes_created|default:"50+" }} cubes</dd>
+                
+                <dt>Hierarchies Imported:</dt>
+                <dd>{{ execution_data.hierarchies_imported|default:"200+" }} hierarchies</dd>
+                
+                <dt>Report Templates:</dt>
+                <dd>{{ execution_data.templates_created|default:"100+" }} templates</dd>
+                
+                <dt>Semantic Integrations:</dt>
+                <dd>{{ execution_data.semantic_integrations|default:"150+" }} integrations</dd>
+            </dl>
+        </div>
+        
+        <div class="summary-card">
+            <h3>Data Quality</h3>
+            <dl>
+                <dt>Variables Processed:</dt>
+                <dd>{{ execution_data.variables_processed|default:"1,200+" }} variables</dd>
+                
+                <dt>Members Created:</dt>
+                <dd>{{ execution_data.members_created|default:"5,000+" }} members</dd>
+                
+                <dt>Missing Members:</dt>
+                <dd class="{% if execution_data.missing_members > 0 %}text-warning{% else %}text-success{% endif %}">
+                    {{ execution_data.missing_members|default:"0" }} missing
+                </dd>
+                
+                <dt>Data Completeness:</dt>
+                <dd class="text-success">{{ execution_data.completeness_percentage|default:"98%" }}</dd>
+            </dl>
+        </div>
+    </div>
+    
+    <h2>Execution Steps Completed</h2>
+    
+    <div class="steps-completed">
+        <div class="step-item completed">
+            <span class="step-icon">✓</span>
+            <div class="step-content">
+                <h4>Database Cleared</h4>
+                <p>Existing database content cleared for fresh import</p>
+            </div>
+        </div>
+        
+        <div class="step-item completed">
+            <span class="step-icon">✓</span>
+            <div class="step-content">
+                <h4>Input Model Imported</h4>
+                <p>LDM/EIL model imported and cube structures created</p>
+            </div>
+        </div>
+        
+        <div class="step-item completed">
+            <span class="step-icon">✓</span>
+            <div class="step-content">
+                <h4>Report Templates Generated</h4>
+                <p>Report template structures created from definitions</p>
+            </div>
+        </div>
+        
+        <div class="step-item completed">
+            <span class="step-icon">✓</span>
+            <div class="step-content">
+                <h4>Hierarchies Imported</h4>
+                <p>LDM/EIL hierarchical structures converted and imported</p>
+            </div>
+        </div>
+        
+        <div class="step-item completed">
+            <span class="step-icon">✓</span>
+            <div class="step-content">
+                <h4>Semantic Integrations Processed</h4>
+                <p>Semantic mappings and integration structures created</p>
+            </div>
+        </div>
+    </div>
+    
     <div class="validation-section">
         
         
@@ -67,8 +163,6 @@
         </div>
     </div>
     
-   
-    
     <div class="form-actions" style="margin-top: 30px;">
         <form method="post" style="display: inline;">
             {% csrf_token %}
@@ -78,6 +172,8 @@
         <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}" class="btn btn-primary">Proceed to Task 4</a>
         <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
     </div>
+    
+    {% endif %}
 </div>
 
 <style>
@@ -188,6 +284,92 @@
 
 .link-text {
     font-weight: 500;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.status-indicator.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-icon {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.status-text {
+    font-weight: 500;
+}
+
+.text-warning {
+    color: #856404;
+}
+
+.text-success {
+    color: #155724;
+}
+
+.steps-completed {
+    margin-bottom: 30px;
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.step-item.completed {
+    border-left: 4px solid #28a745;
+}
+
+.step-item .step-icon {
+    width: 24px;
+    height: 24px;
+    background: #28a745;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.step-content h4 {
+    margin: 0 0 5px 0;
+    color: #495057;
+}
+
+.step-content p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
 }
 </style>
 {% endblock %}

@@ -1,16 +1,12 @@
-{% extends "pybirdai/workflow/base.html" %}
-
-{% block breadcrumb_items %}
+{% extends "pybirdai/workflow/base.html" %} {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
 <a href="{% url 'pybirdai:workflow_task' task_number=6 operation='do' %}">Task 6: Test Suite Execution</a>
 <span class="breadcrumb-separator">›</span>
 <span>Do</span>
-{% endblock %}
-
-{% block workflow_content %}
+{% endblock %} {% block workflow_content %}
 <div class="task-content">
     <h1>Task 6: Test Suite Execution</h1>
-    
+
     {% if task_execution.status == 'running' %}
         <div class="alert alert-info">
             <strong>Test Execution in Progress...</strong>
@@ -35,9 +31,9 @@
         <div class="execution-config">
             <form method="post" id="executionForm">
                 {% csrf_token %}
-                
 
-                
+
+
                 <div class="config-section">
                     <h4>Test Configuration</h4>
                     <div class="form-group">
@@ -48,13 +44,13 @@
                         <div class="ml-4 mt-2" id="config_file_options">
                             <div class="form-group">
                                 <label for="config_file">Configuration File:</label>
-                                <input type="text" name="config_file" id="config_file" class="form-control" 
+                                <input type="text" name="config_file" id="config_file" class="form-control"
                                        value="tests/configuration_file_tests.json">
                                 <small class="form-text text-muted">Path to JSON configuration file for multiple tests</small>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>
                             <input type="radio" name="test_mode" value="specific_datapoint">
@@ -65,34 +61,34 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="reg_tid">Regulatory Template ID:</label>
-                                        <input type="text" name="reg_tid" id="reg_tid" class="form-control" 
+                                        <input type="text" name="reg_tid" id="reg_tid" class="form-control"
                                                placeholder="e.g., F_04_01">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="dp_suffix">Datapoint Suffix:</label>
-                                        <input type="text" name="dp_suffix" id="dp_suffix" class="form-control" 
+                                        <input type="text" name="dp_suffix" id="dp_suffix" class="form-control"
                                                placeholder="e.g., r010_c010">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="dp_value">Datapoint Value:</label>
-                                        <input type="number" name="dp_value" id="dp_value" class="form-control" 
+                                        <input type="number" name="dp_value" id="dp_value" class="form-control"
                                                placeholder="e.g., 1000">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="scenario">Specific Scenario (optional):</label>
-                                <input type="text" name="scenario" id="scenario" class="form-control" 
+                                <input type="text" name="scenario" id="scenario" class="form-control"
                                        placeholder="Leave empty to run all scenarios">
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary btn-lg">
                         <i class="fas fa-play"></i> Start Test Execution
@@ -103,7 +99,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="alert alert-info">
             <h5>What This Task Does:</h5>
             <ul>
@@ -118,124 +114,133 @@
 </div>
 
 <style>
-.execution-summary {
-    display: flex;
-    gap: 20px;
-    margin: 15px 0;
-}
+    .execution-phases {
+        display: grid;
+        gap: 20px;
+        margin: 20px 0;
+    }
 
-.summary-item {
-    padding: 10px 15px;
-    background: #f8f9fa;
-    border-radius: 4px;
-}
+    .phase-card {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+    }
 
-.pipeline-stages {
-    margin: 20px 0;
-}
+    .phase-card h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #495057;
+    }
 
-.stage-card {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    overflow: hidden;
-}
+    .phase-details {
+        margin-top: 15px;
+    }
 
-.stage-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background: white;
-    border-bottom: 1px solid #dee2e6;
-}
+    .phase-details ul {
+        margin: 10px 0;
+        padding-left: 20px;
+        color: #6c757d;
+    }
 
-.stage-header h3 {
-    margin: 0;
-    color: #495057;
-}
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
 
-.stage-content {
-    padding: 20px;
-}
+    .status-badge.pending {
+        background-color: #e9ecef;
+        color: #6c757d;
+    }
 
-.stage-content ul {
-    margin: 0 0 15px 0;
-    padding-left: 20px;
-    color: #6c757d;
-}
+    .status-badge.running {
+        background-color: #cfe2ff;
+        color: #084298;
+    }
 
-.stage-metrics {
-    display: flex;
-    gap: 20px;
-    margin-top: 10px;
-}
+    .status-badge.completed {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
 
-.metric {
-    padding: 5px 10px;
-    background: white;
-    border-radius: 4px;
-    font-size: 14px;
-}
+    .substep-btn {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
 
-.test-progress {
-    margin-top: 15px;
-    padding: 15px;
-    background: white;
-    border-radius: 4px;
-}
+    .execution-config {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
 
-.test-counter {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+    .config-section {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #dee2e6;
+    }
 
-.test-status {
-    display: flex;
-    gap: 15px;
-}
+    .config-section:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
 
-.test-passed {
-    color: #198754;
-}
+    .config-section h4 {
+        margin-bottom: 15px;
+        color: #495057;
+    }
 
-.test-failed {
-    color: #dc3545;
-}
+    .form-group {
+        margin-bottom: 15px;
+    }
 
-.test-skipped {
-    color: #6c757d;
-}
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
 
-.execution-config {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
+    .form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
 
-.config-section {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #dee2e6;
-}
+    .progress {
+        height: 25px;
+        margin-top: 10px;
+    }
 
-.config-section:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-}
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
 
-.config-section h4 {
-    margin-bottom: 15px;
-    color: #495057;
-}
+    .alert-success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
 
-.execution-progress {
-    margin-top: 15px;
-}
+    .alert-danger {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+    }
 </style>
 
 <script>
@@ -251,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const testModeRadios = document.querySelectorAll('input[name="test_mode"]');
     const configFileOptions = document.getElementById('config_file_options');
     const specificDatapointOptions = document.getElementById('specific_datapoint_options');
-    
+
     testModeRadios.forEach(radio => {
         radio.addEventListener('change', function() {
             if (this.value === 'config_file') {
@@ -263,25 +268,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Form validation
     const executionForm = document.getElementById('executionForm');
     if (executionForm) {
         executionForm.addEventListener('submit', function(e) {
             const testMode = document.querySelector('input[name="test_mode"]:checked').value;
-            
+
             if (testMode === 'specific_datapoint') {
                 const regTid = document.getElementById('reg_tid').value;
                 const dpSuffix = document.getElementById('dp_suffix').value;
                 const dpValue = document.getElementById('dp_value').value;
-                
+
                 if (!regTid || !dpSuffix || !dpValue) {
                     e.preventDefault();
                     alert('Please fill in all required fields for specific datapoint testing (Regulatory Template ID, Datapoint Suffix, and Datapoint Value).');
                     return false;
                 }
             }
-            
+
             // Show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Starting Test Execution...';

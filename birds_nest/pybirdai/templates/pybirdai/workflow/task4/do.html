@@ -1,21 +1,23 @@
-{% extends "pybirdai/workflow/base.html" %}
-
-{% block breadcrumb_items %}
+{% extends "pybirdai/workflow/base.html" %} {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
-<a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}">Task 4: SMCubes Transformation Rules</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}"
+    >Task 4: SMCubes Transformation Rules</a
+>
 <span class="breadcrumb-separator">›</span>
 <span>Do</span>
-{% endblock %}
-
-{% block workflow_content %}
+{% endblock %} {% block workflow_content %}
 <div class="task-content">
     <h1>Task 4: SMCubes Transformation Rules Creation - Do</h1>
-    
+
     {% if task_execution.status == 'completed' %}
     <div class="alert alert-success">
         <strong>✓ Task Completed</strong>
         <p>SMCubes transformation rules have been created successfully.</p>
-        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='review' %}" class="btn btn-primary">Go to Review</a>
+        <a
+            href="{% url 'pybirdai:workflow_task' task_number=4 operation='review' %}"
+            class="btn btn-primary"
+            >Go to Review</a
+        >
     </div>
     {% elif task_execution.status == 'failed' %}
     <div class="alert alert-danger">
@@ -28,13 +30,16 @@
         <strong>🔄 Task Running</strong>
         <p>Transformation rules creation is in progress...</p>
         <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ task_execution.execution_data.progress|default:0 }}%"></div>
+            <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                style="width: {{ task_execution.execution_data.progress|default:0 }}%"
+            ></div>
         </div>
     </div>
     {% endif %}
-    
+
     <h2>Transformation Rules Creation Process</h2>
-    
+
     <div class="process-overview">
         <div class="process-step">
             <div class="step-icon">1</div>
@@ -47,15 +52,27 @@
                     <li>Validate filter logic</li>
                 </ul>
                 {% if task_execution.execution_data.filters_created %}
-                <span class="status-badge completed">✓ Completed ({{ task_execution.execution_data.filter_count|default:0 }} filters)</span>
-                {% elif task_execution.status == 'running' and task_execution.execution_data.current_step == 'filters' %}
+                <span class="status-badge completed"
+                    >✓ Completed ({{
+                    task_execution.execution_data.filter_count|default:0 }}
+                    filters)</span
+                >
+                {% elif task_execution.status == 'running' and
+                task_execution.execution_data.current_step == 'filters' %}
                 <span class="status-badge running">🔄 In Progress</span>
                 {% else %}
                 <span class="status-badge pending">⏳ Pending</span>
+                <button
+                    type="button"
+                    class="btn btn-sm btn-primary substep-btn"
+                    data-substep="generate_all_filters"
+                >
+                    Run Generate Filters
+                </button>
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="process-step">
             <div class="step-icon">2</div>
             <div class="step-content">
@@ -67,214 +84,332 @@
                     <li>Generate executable joins</li>
                 </ul>
                 {% if task_execution.execution_data.joins_metadata_created %}
-                <span class="status-badge completed">✓ Completed ({{ task_execution.execution_data.join_count|default:0 }} joins)</span>
-                {% elif task_execution.status == 'running' and task_execution.execution_data.current_step == 'joins' %}
+                <span class="status-badge completed"
+                    >✓ Completed ({{
+                    task_execution.execution_data.join_count|default:0 }}
+                    joins)</span
+                >
+                {% elif task_execution.status == 'running' and
+                task_execution.execution_data.current_step == 'joins' %}
                 <span class="status-badge running">🔄 In Progress</span>
                 {% else %}
                 <span class="status-badge pending">⏳ Pending</span>
+                <button
+                    type="button"
+                    class="btn btn-sm btn-primary substep-btn"
+                    data-substep="create_joins_metadata"
+                >
+                    Run Create Joins Metadata
+                </button>
                 {% endif %}
             </div>
         </div>
-        
-       
     </div>
-    
+
     {% if task_execution.status == 'pending' %}
-    <div id="task4-status" style="display: none;"></div>
-    <form id="task4-form" method="post" style="margin-top: 30px;">
+    <div id="task4-status" style="display: none"></div>
+    <form id="task4-form" method="post" style="margin-top: 30px">
         {% csrf_token %}
-        
+
         <div class="configuration-section">
             <h3>Configuration Options</h3>
-            
+
             <div class="config-group">
                 <h4>Filter Generation</h4>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="generate_all_filters" id="generate_all_filters" checked>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="generate_all_filters"
+                        id="generate_all_filters"
+                        checked
+                    />
                     <label class="form-check-label" for="generate_all_filters">
                         Generate all available filters
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="validate_filters" id="validate_filters" checked>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="validate_filters"
+                        id="validate_filters"
+                        checked
+                    />
                     <label class="form-check-label" for="validate_filters">
                         Validate filter logic
                     </label>
                 </div>
             </div>
-            
+
             <div class="config-group">
                 <h4>Join Configuration</h4>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="auto_detect_joins" id="auto_detect_joins" checked>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="auto_detect_joins"
+                        id="auto_detect_joins"
+                        checked
+                    />
                     <label class="form-check-label" for="auto_detect_joins">
                         Auto-detect join relationships
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="optimize_joins" id="optimize_joins" checked>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="optimize_joins"
+                        id="optimize_joins"
+                        checked
+                    />
                     <label class="form-check-label" for="optimize_joins">
                         Optimize join execution order
                     </label>
                 </div>
             </div>
-            
+
             <div class="config-group">
                 <h4>Performance Options</h4>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="parallel_processing" id="parallel_processing" checked>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="parallel_processing"
+                        id="parallel_processing"
+                        checked
+                    />
                     <label class="form-check-label" for="parallel_processing">
                         Enable parallel processing
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="generate_indexes" id="generate_indexes" checked>
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="generate_indexes"
+                        id="generate_indexes"
+                        checked
+                    />
                     <label class="form-check-label" for="generate_indexes">
                         Generate performance indexes
                     </label>
                 </div>
             </div>
         </div>
-        
-        <button type="submit" class="btn btn-primary">Start Transformation Rules Creation</button>
-        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Cancel</a>
+
+        <button type="submit" class="btn btn-primary">
+            Start Transformation Rules Creation
+        </button>
+        <a
+            href="{% url 'pybirdai:workflow_dashboard' %}"
+            class="btn btn-secondary"
+            >Cancel</a
+        >
     </form>
     {% endif %}
 </div>
 
 <style>
-.process-overview {
-    margin: 20px 0;
-}
+    .process-overview {
+        margin: 20px 0;
+    }
 
-.process-step {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 25px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-}
+    .process-step {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 25px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
 
-.step-icon {
-    width: 40px;
-    height: 40px;
-    background: #0d6efd;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
-    margin-right: 20px;
-    flex-shrink: 0;
-}
+    .step-icon {
+        width: 40px;
+        height: 40px;
+        background: #0d6efd;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-right: 20px;
+        flex-shrink: 0;
+    }
 
-.step-content {
-    flex: 1;
-}
+    .step-content {
+        flex: 1;
+    }
 
-.step-content h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: #495057;
-}
+    .step-content h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #495057;
+    }
 
-.step-content ul {
-    margin: 10px 0;
-    padding-left: 20px;
-    color: #6c757d;
-}
+    .step-content ul {
+        margin: 10px 0;
+        padding-left: 20px;
+        color: #6c757d;
+    }
 
-.configuration-section {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
+    .configuration-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
 
-.config-group {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #dee2e6;
-}
+    .config-group {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #dee2e6;
+    }
 
-.config-group:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-}
+    .config-group:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
 
-.config-group h4 {
-    margin-bottom: 10px;
-    color: #495057;
-}
+    .config-group h4 {
+        margin-bottom: 10px;
+        color: #495057;
+    }
 
-.progress {
-    height: 25px;
-    margin-top: 10px;
-}
+    .progress {
+        height: 25px;
+        margin-top: 10px;
+    }
+
+    .substep-btn {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
 </style>
 
 <script>
-// Auto-refresh if task is running
-{% if task_execution.status == 'running' %}
-setTimeout(function() {
-    location.reload();
-}, 3000);
-{% endif %}
+    // Auto-refresh if task is running
+    {% if task_execution.status == 'running' %}
+    setTimeout(function() {
+        location.reload();
+    }, 3000);
+    {% endif %}
 
-// Handle form submission with AJAX
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('task4-form');
-    const statusDiv = document.getElementById('task4-status');
-    
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show processing message
-            statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Starting SMCubes rules creation. This may take a few minutes...</div>';
-            statusDiv.style.display = 'block';
-            
-            // Disable submit button
-            const submitBtn = form.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...';
-            
-            // Submit form via AJAX
-            fetch(form.action || window.location.href, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'SMCubes rules creation completed successfully.') + '</div>';
-                    // Refresh page after 2 seconds to show completed status
-                    setTimeout(function() {
-                        location.reload();
-                    }, 2000);
-                } else {
-                    statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'SMCubes rules creation failed.') + '</div>';
+    // Handle form submission with AJAX
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('task4-form');
+        const statusDiv = document.getElementById('task4-status');
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Show processing message
+                statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Starting SMCubes rules creation. This may take a few minutes...</div>';
+                statusDiv.style.display = 'block';
+
+                // Disable submit button
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...';
+
+                // Submit form via AJAX
+                fetch(form.action || window.location.href, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'SMCubes rules creation completed successfully.') + '</div>';
+                        // Refresh page after 2 seconds to show completed status
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'SMCubes rules creation failed.') + '</div>';
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Start SMCubes Rules Creation';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred. Please try again.</div>';
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = 'Start SMCubes Rules Creation';
+                });
+            });
+        }
+
+        // Handle individual substep buttons
+        const substepButtons = document.querySelectorAll('.substep-btn');
+        substepButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const substepName = this.getAttribute('data-substep');
+                const taskNumber = 4;
+
+                // Show processing message
+                if (!statusDiv) {
+                    alert('Running substep: ' + substepName);
+                } else {
+                    statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Running substep: ' + substepName + '...</div>';
+                    statusDiv.style.display = 'block';
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred. Please try again.</div>';
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Start SMCubes Rules Creation';
+
+                // Disable button
+                this.disabled = true;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Running...';
+
+                // Get CSRF token
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                // Submit substep via AJAX
+                fetch(`/pybirdai/workflow/task/${taskNumber}/substep/${substepName}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'csrfmiddlewaretoken=' + encodeURIComponent(csrfToken)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (statusDiv) {
+                            statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'Substep completed successfully.') + '</div>';
+                        }
+                        // Refresh page after 2 seconds to show updated status
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        if (statusDiv) {
+                            statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'Substep failed.') + '</div>';
+                        }
+                        this.disabled = false;
+                        this.innerHTML = 'Run ' + substepName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (statusDiv) {
+                        statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred running the substep.</div>';
+                    }
+                    this.disabled = false;
+                    this.innerHTML = 'Run ' + substepName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                });
             });
         });
-    }
-});
+    });
 </script>
 {% endblock %}

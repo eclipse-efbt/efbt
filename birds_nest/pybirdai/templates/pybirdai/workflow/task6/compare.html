@@ -2,17 +2,183 @@
 
 {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
-<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}">Task 3: SMCubes Core Creation</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=6 operation='do' %}">Task 6: Full Execution with Test Suite</a>
 <span class="breadcrumb-separator">›</span>
 <span>Compare</span>
 {% endblock %}
 
 {% block workflow_content %}
 <div class="task-content">
-    <h1>Task 6:  - Compare</h1>
+    <h1>Task 6: Full Execution with Test Suite - Compare</h1>
     
-    <h2>Comparison with Previous Version - Coming Soon</h2>
-    <h2>Replace with Previous Version - Coming Soon</h2>
+    <!-- Comparison Controls -->
+    <div class="comparison-controls">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="baseline-version" class="form-label">Select Baseline Version:</label>
+                <select class="form-select" id="baseline-version" onchange="refreshComparison()">
+                    <option value="">Select a previous execution...</option>
+                    {% for execution in previous_executions %}
+                    <option value="{{ execution.id }}">{{ execution.created_at|date:"Y-m-d H:i" }} - {{ execution.status }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" onclick="exportComparisonReport('csv')">Export as CSV</button>
+                    <button class="btn btn-secondary" onclick="exportComparisonReport('pdf')">Export as PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Previous Versions Message -->
+    {% if not previous_executions %}
+    <div class="alert alert-info">
+        <h4>No Previous Versions Available</h4>
+        <p>This is the first execution of Task 6: Full Execution with Test Suite. There are no previous versions to compare against.</p>
+        <p>Once you execute this task again, you'll be able to compare versions and track changes.</p>
+    </div>
+    {% else %}
+    
+    <!-- Comparison Content (Initially Hidden) -->
+    <div id="comparison-content" class="comparison-grid" style="display: none;">
+        
+        <!-- Change Summary -->
+        <div class="comparison-section">
+            <h3>Execution Results Summary</h3>
+            <div class="change-summary">
+                <div class="change-item added">
+                    <div class="change-icon">✓</div>
+                    <div class="change-details">
+                        <strong id="passed-tests">0</strong>
+                        <p>Tests Passed</p>
+                    </div>
+                </div>
+                <div class="change-item modified">
+                    <div class="change-icon">⚠</div>
+                    <div class="change-details">
+                        <strong id="failed-tests">0</strong>
+                        <p>Tests Failed</p>
+                    </div>
+                </div>
+                <div class="change-item removed">
+                    <div class="change-icon">✗</div>
+                    <div class="change-details">
+                        <strong id="error-tests">0</strong>
+                        <p>Tests with Errors</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side-by-Side Comparison -->
+        <div class="comparison-section">
+            <h3>Test Results Comparison</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Current Version</h5>
+                    <div id="current-results" class="results-list">
+                        <!-- Current test results will be loaded here -->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Baseline Version</h5>
+                    <div id="baseline-results" class="results-list">
+                        <!-- Baseline test results will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Comparison -->
+        <div class="comparison-section">
+            <h3>Performance Metrics</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Current Execution</h5>
+                    <div id="current-performance" class="performance-metrics">
+                        <!-- Current performance metrics will be loaded here -->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Baseline Execution</h5>
+                    <div id="baseline-performance" class="performance-metrics">
+                        <!-- Baseline performance metrics will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Case Details -->
+        <div class="comparison-section">
+            <h3>Test Case Changes</h3>
+            <div class="accordion" id="test-changes-accordion">
+                <!-- Test case change details will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Detailed Changes -->
+        <div class="comparison-section">
+            <h3>Detailed Changes</h3>
+            <div class="change-details-list">
+                <div id="detailed-changes" class="change-list">
+                    <!-- Detailed changes will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Impact Analysis -->
+        <div class="comparison-section impact-analysis">
+            <h3>Impact Analysis</h3>
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <h4>Execution Statistics</h4>
+                    <ul id="execution-stats">
+                        <li>Total execution time: <span id="total-execution-time">0s</span></li>
+                        <li>Memory usage: <span id="memory-usage">0 MB</span></li>
+                        <li>Data processed: <span id="data-processed">0 rows</span></li>
+                    </ul>
+                </div>
+                <div class="impact-card">
+                    <h4>Test Coverage</h4>
+                    <ul id="test-coverage">
+                        <li>Test coverage: <span id="coverage-percentage">0%</span></li>
+                        <li>Functions tested: <span id="functions-tested">0</span></li>
+                        <li>Assertions made: <span id="assertions-made">0</span></li>
+                    </ul>
+                </div>
+                <div class="impact-card">
+                    <h4>Quality Metrics</h4>
+                    <ul id="quality-metrics">
+                        <li>Success rate: <span id="success-rate">0%</span></li>
+                        <li>Error rate: <span id="error-rate">0%</span></li>
+                        <li>Performance change: <span id="performance-change">0%</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rollback Options -->
+        <div class="comparison-section">
+            <h3>Rollback Options</h3>
+            <div class="alert alert-warning">
+                <strong>Replace with Previous Version</strong>
+                <p>You can revert to the selected baseline execution state if the current results are unsatisfactory.</p>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-danger" onclick="replaceWithPrevious()" id="rollback-btn" disabled>
+                        Revert to Selected Version
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="downloadTestResults()" id="download-results-btn" disabled>
+                        Download Test Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
     
 
 <style>
@@ -171,7 +337,7 @@
     border: 1px solid #dee2e6;
 }
 
-.impact-card h3 {
+.impact-card h4 {
     margin-top: 0;
     margin-bottom: 15px;
     color: #495057;
@@ -181,19 +347,330 @@
     margin: 0;
     padding-left: 20px;
 }
+
+.results-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.test-result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.test-result:last-child {
+    border-bottom: none;
+}
+
+.test-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.test-info {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.test-status {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.test-status.passed {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.test-status.failed {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.test-status.error {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.test-duration {
+    background: #e9ecef;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.performance-metrics {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.metric-item:last-child {
+    border-bottom: none;
+}
+
+.metric-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.metric-value {
+    color: #6c757d;
+    font-family: monospace;
+}
+
+.metric-change {
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.metric-change.positive {
+    color: #198754;
+}
+
+.metric-change.negative {
+    color: #dc3545;
+}
+
+.metric-change.neutral {
+    color: #6c757d;
+}
+
+.loading-spinner {
+    display: none;
+    text-align: center;
+    padding: 20px;
+}
+
+.accordion-item {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+}
+
+.test-diff {
+    font-family: monospace;
+    font-size: 12px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.test-diff .passed {
+    color: #198754;
+}
+
+.test-diff .failed {
+    color: #dc3545;
+}
+
+.test-diff .error {
+    color: #ffc107;
+}
 </style>
 
 <script>
 function refreshComparison() {
-    // Implementation for refreshing comparison based on selected baseline
     const baseline = document.getElementById('baseline-version').value;
-    // Make AJAX call to refresh comparison data
-    console.log('Refreshing comparison with baseline:', baseline);
+    const comparisonContent = document.getElementById('comparison-content');
+    
+    if (!baseline) {
+        comparisonContent.style.display = 'none';
+        return;
+    }
+    
+    // Show loading
+    comparisonContent.innerHTML = '<div class="loading-spinner"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div><p>Loading comparison data...</p></div>';
+    comparisonContent.style.display = 'block';
+    
+    // Make AJAX call to get comparison data
+    fetch(`{% url "pybirdai:workflow_task_compare" task_number=6 %}?baseline=${baseline}`)
+        .then(response => response.json())
+        .then(data => {
+            updateComparisonView(data);
+            document.getElementById('rollback-btn').disabled = false;
+            document.getElementById('download-results-btn').disabled = false;
+        })
+        .catch(error => {
+            console.error('Error loading comparison:', error);
+            comparisonContent.innerHTML = '<div class="alert alert-danger">Error loading comparison data. Please try again.</div>';
+        });
 }
 
-function exportComparisonReport() {
-    // Implementation for exporting comparison report
-    window.open('{% url "pybirdai:workflow_task" task_number=3 operation="compare" %}?export=true', '_blank');
+function updateComparisonView(data) {
+    // Update test results summary
+    document.getElementById('passed-tests').textContent = data.passed_tests || 0;
+    document.getElementById('failed-tests').textContent = data.failed_tests || 0;
+    document.getElementById('error-tests').textContent = data.error_tests || 0;
+    
+    // Update test results lists
+    updateTestResultsList('current-results', data.current_results || []);
+    updateTestResultsList('baseline-results', data.baseline_results || []);
+    
+    // Update performance metrics
+    updatePerformanceMetrics('current-performance', data.current_performance || {});
+    updatePerformanceMetrics('baseline-performance', data.baseline_performance || {});
+    
+    // Update test changes accordion
+    updateTestChangesAccordion(data.test_changes || []);
+    
+    // Update detailed changes
+    updateDetailedChanges(data.changes || []);
+    
+    // Update impact analysis
+    updateImpactAnalysis(data.impact || {});
+    
+    // Show comparison content
+    document.getElementById('comparison-content').style.display = 'block';
+    document.getElementById('comparison-content').innerHTML = document.getElementById('comparison-content').innerHTML;
+}
+
+function updateTestResultsList(containerId, results) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = results.map(result => `
+        <div class="test-result">
+            <div>
+                <div class="test-name">${result.name}</div>
+                <div class="test-info">${result.description || 'No description'}</div>
+            </div>
+            <div>
+                <span class="test-status ${result.status}">${result.status.toUpperCase()}</span>
+                <span class="test-duration">${result.duration || '0ms'}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updatePerformanceMetrics(containerId, metrics) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = Object.entries(metrics).map(([key, value]) => `
+        <div class="metric-item">
+            <span class="metric-label">${key.replace('_', ' ').toUpperCase()}</span>
+            <span class="metric-value">${value}</span>
+        </div>
+    `).join('');
+}
+
+function updateTestChangesAccordion(changes) {
+    const accordion = document.getElementById('test-changes-accordion');
+    accordion.innerHTML = changes.map((change, index) => `
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
+                    <span class="change-type ${change.type}">${change.type.toUpperCase()}</span>
+                    ${change.test_name}
+                </button>
+            </h2>
+            <div id="collapse${index}" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="test-diff">
+                        ${change.status_changes.map(status => `
+                            <div class="${status.new_status}">${status.description}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateDetailedChanges(changes) {
+    const container = document.getElementById('detailed-changes');
+    container.innerHTML = changes.map(change => `
+        <div class="change-entry">
+            <span class="change-type ${change.type}">${change.type.toUpperCase()}</span>
+            <span class="change-name">${change.name}</span>
+            <span class="change-description">${change.description}</span>
+        </div>
+    `).join('');
+}
+
+function updateImpactAnalysis(impact) {
+    document.getElementById('total-execution-time').textContent = impact.total_execution_time || '0s';
+    document.getElementById('memory-usage').textContent = impact.memory_usage || '0 MB';
+    document.getElementById('data-processed').textContent = impact.data_processed || '0 rows';
+    document.getElementById('coverage-percentage').textContent = impact.coverage_percentage || '0%';
+    document.getElementById('functions-tested').textContent = impact.functions_tested || 0;
+    document.getElementById('assertions-made').textContent = impact.assertions_made || 0;
+    document.getElementById('success-rate').textContent = impact.success_rate || '0%';
+    document.getElementById('error-rate').textContent = impact.error_rate || '0%';
+    document.getElementById('performance-change').textContent = impact.performance_change || '0%';
+}
+
+function exportComparisonReport(format) {
+    const baseline = document.getElementById('baseline-version').value;
+    if (!baseline) {
+        alert('Please select a baseline version first.');
+        return;
+    }
+    
+    const url = `{% url "pybirdai:workflow_task_compare" task_number=6 %}?baseline=${baseline}&export=${format}`;
+    window.open(url, '_blank');
+}
+
+function replaceWithPrevious() {
+    const baseline = document.getElementById('baseline-version').value;
+    if (!baseline) {
+        alert('Please select a baseline version first.');
+        return;
+    }
+    
+    if (confirm('Are you sure you want to revert to the selected baseline execution state? This action cannot be undone.')) {
+        fetch(`{% url "pybirdai:workflow_task_rollback" task_number=6 %}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                baseline_id: baseline,
+                action: 'replace'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Successfully reverted to the baseline execution state.');
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error during rollback:', error);
+            alert('An error occurred during rollback. Please try again.');
+        });
+    }
+}
+
+function downloadTestResults() {
+    const baseline = document.getElementById('baseline-version').value;
+    if (!baseline) {
+        alert('Please select a baseline version first.');
+        return;
+    }
+    
+    const url = `{% url "pybirdai:workflow_task_rollback" task_number=6 %}?baseline=${baseline}&action=download_results`;
+    window.open(url, '_blank');
 }
 </script>
 {% endblock %}
