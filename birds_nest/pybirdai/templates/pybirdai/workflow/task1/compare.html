@@ -2,14 +2,14 @@
 
 {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
-<a href="{% url 'pybirdai:workflow_task' task_number=5 operation='do' %}">Task 5: Python Transformation Rules</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=1 operation='do' %}">Task 1: Resource Download</a>
 <span class="breadcrumb-separator">›</span>
 <span>Compare</span>
 {% endblock %}
 
 {% block workflow_content %}
 <div class="task-content">
-    <h1>Task 5: Python Transformation Rules - Compare</h1>
+    <h1>Task 1: Resource Download - Compare</h1>
     
     <!-- Comparison Controls -->
     <div class="comparison-controls">
@@ -37,7 +37,7 @@
     {% if not previous_executions %}
     <div class="alert alert-info">
         <h4>No Previous Versions Available</h4>
-        <p>This is the first execution of Task 5: Python Transformation Rules. There are no previous versions to compare against.</p>
+        <p>This is the first execution of Task 1: Resource Download. There are no previous versions to compare against.</p>
         <p>Once you execute this task again, you'll be able to compare versions and track changes.</p>
     </div>
     {% else %}
@@ -53,21 +53,21 @@
                     <div class="change-icon">+</div>
                     <div class="change-details">
                         <strong id="added-count">0</strong>
-                        <p>Python Files Added</p>
+                        <p>Resources Added</p>
                     </div>
                 </div>
                 <div class="change-item modified">
                     <div class="change-icon">~</div>
                     <div class="change-details">
                         <strong id="modified-count">0</strong>
-                        <p>Python Files Modified</p>
+                        <p>Resources Modified</p>
                     </div>
                 </div>
                 <div class="change-item removed">
                     <div class="change-icon">-</div>
                     <div class="change-details">
                         <strong id="removed-count">0</strong>
-                        <p>Python Files Removed</p>
+                        <p>Resources Removed</p>
                     </div>
                 </div>
             </div>
@@ -75,33 +75,20 @@
 
         <!-- Side-by-Side Comparison -->
         <div class="comparison-section">
-            <h3>Python Code Comparison</h3>
+            <h3>Resource Files Comparison</h3>
             <div class="row">
                 <div class="col-md-6">
                     <h5>Current Version</h5>
-                    <div id="current-python" class="python-list">
-                        <!-- Current Python files will be loaded here -->
+                    <div id="current-resources" class="resource-list">
+                        <!-- Current resources will be loaded here -->
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h5>Baseline Version</h5>
-                    <div id="baseline-python" class="python-list">
-                        <!-- Baseline Python files will be loaded here -->
+                    <div id="baseline-resources" class="resource-list">
+                        <!-- Baseline resources will be loaded here -->
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Code Diff Viewer -->
-        <div class="comparison-section">
-            <h3>Code Changes</h3>
-            <div class="code-diff-controls">
-                <select id="file-selector" class="form-select" onchange="loadFileDiff()">
-                    <option value="">Select a file to view changes...</option>
-                </select>
-            </div>
-            <div id="code-diff-viewer" class="code-diff">
-                <!-- Code diff will be loaded here -->
             </div>
         </div>
 
@@ -120,27 +107,19 @@
             <h3>Impact Analysis</h3>
             <div class="impact-grid">
                 <div class="impact-card">
-                    <h4>Code Statistics</h4>
-                    <ul id="code-stats">
+                    <h4>Download Statistics</h4>
+                    <ul id="download-stats">
                         <li>Total files: <span id="total-files">0</span></li>
-                        <li>Lines of code: <span id="total-loc">0</span></li>
-                        <li>Functions: <span id="total-functions">0</span></li>
+                        <li>Total size: <span id="total-size">0 MB</span></li>
+                        <li>Download time: <span id="download-time">0s</span></li>
                     </ul>
                 </div>
                 <div class="impact-card">
-                    <h4>File Types</h4>
-                    <ul id="file-types">
-                        <li>Transformation files: <span id="transformation-files">0</span></li>
-                        <li>Utility files: <span id="utility-files">0</span></li>
-                        <li>Test files: <span id="test-files">0</span></li>
-                    </ul>
-                </div>
-                <div class="impact-card">
-                    <h4>Generation Status</h4>
-                    <ul id="generation-status">
-                        <li>Generation time: <span id="generation-time">0s</span></li>
-                        <li>Syntax errors: <span id="syntax-errors">0</span></li>
-                        <li>Warnings: <span id="warnings">0</span></li>
+                    <h4>Resource Types</h4>
+                    <ul id="resource-types">
+                        <li>LDM files: <span id="ldm-count">0</span></li>
+                        <li>EIL files: <span id="eil-count">0</span></li>
+                        <li>Technical exports: <span id="tech-count">0</span></li>
                     </ul>
                 </div>
             </div>
@@ -151,13 +130,13 @@
             <h3>Rollback Options</h3>
             <div class="alert alert-warning">
                 <strong>Replace with Previous Version</strong>
-                <p>You can replace the current Python transformation code with the selected baseline version.</p>
+                <p>You can replace the current resource downloads with the selected baseline version.</p>
                 <div class="d-flex gap-2">
                     <button class="btn btn-danger" onclick="replaceWithPrevious()" id="rollback-btn" disabled>
                         Replace with Selected Version
                     </button>
-                    <button class="btn btn-outline-secondary" onclick="downloadPythonCode()" id="download-code-btn" disabled>
-                        Download Python Code
+                    <button class="btn btn-outline-secondary" onclick="downloadPreviousVersion()" id="download-btn" disabled>
+                        Download Previous Version
                     </button>
                 </div>
             </div>
@@ -165,7 +144,6 @@
     </div>
     {% endif %}
 </div>
-    
 
 <style>
 .comparison-controls {
@@ -251,6 +229,36 @@
     color: #6c757d;
 }
 
+.resource-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.resource-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.resource-item:last-child {
+    border-bottom: none;
+}
+
+.resource-name {
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.resource-size {
+    color: #6c757d;
+    font-size: 12px;
+    margin-left: auto;
+}
+
 .change-details-list {
     margin-top: 20px;
     border-top: 1px solid #dee2e6;
@@ -334,99 +342,6 @@
     padding-left: 20px;
 }
 
-.python-list {
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    padding: 10px;
-}
-
-.python-file {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.python-file:last-child {
-    border-bottom: none;
-}
-
-.file-name {
-    font-weight: 500;
-    color: #495057;
-    font-family: monospace;
-}
-
-.file-info {
-    color: #6c757d;
-    font-size: 12px;
-}
-
-.file-size {
-    background: #e9ecef;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 500;
-    margin-right: 5px;
-}
-
-.file-loc {
-    background: #d1ecf1;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 500;
-}
-
-.code-diff-controls {
-    margin-bottom: 15px;
-}
-
-.code-diff {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    min-height: 200px;
-    padding: 15px;
-    font-family: monospace;
-    font-size: 12px;
-    overflow-x: auto;
-}
-
-.code-diff .diff-line {
-    padding: 2px 5px;
-    margin: 1px 0;
-    border-radius: 2px;
-}
-
-.code-diff .diff-line.added {
-    background: #d1e7dd;
-    color: #0f5132;
-}
-
-.code-diff .diff-line.removed {
-    background: #f8d7da;
-    color: #842029;
-}
-
-.code-diff .diff-line.context {
-    background: transparent;
-    color: #495057;
-}
-
-.code-diff .line-number {
-    display: inline-block;
-    width: 40px;
-    text-align: right;
-    color: #6c757d;
-    margin-right: 10px;
-    user-select: none;
-}
-
 .loading-spinner {
     display: none;
     text-align: center;
@@ -449,12 +364,12 @@ function refreshComparison() {
     comparisonContent.style.display = 'block';
     
     // Make AJAX call to get comparison data
-    fetch(`{% url "pybirdai:workflow_task_compare" task_number=5 %}?baseline=${baseline}`)
+    fetch(`{% url "pybirdai:workflow_task_compare" task_number=1 %}?baseline=${baseline}`)
         .then(response => response.json())
         .then(data => {
             updateComparisonView(data);
             document.getElementById('rollback-btn').disabled = false;
-            document.getElementById('download-code-btn').disabled = false;
+            document.getElementById('download-btn').disabled = false;
         })
         .catch(error => {
             console.error('Error loading comparison:', error);
@@ -468,12 +383,9 @@ function updateComparisonView(data) {
     document.getElementById('modified-count').textContent = data.modified || 0;
     document.getElementById('removed-count').textContent = data.removed || 0;
     
-    // Update Python files lists
-    updatePythonFilesList('current-python', data.current_files || []);
-    updatePythonFilesList('baseline-python', data.baseline_files || []);
-    
-    // Update file selector
-    updateFileSelector(data.modified_files || []);
+    // Update resource lists
+    updateResourceList('current-resources', data.current_resources || []);
+    updateResourceList('baseline-resources', data.baseline_resources || []);
     
     // Update detailed changes
     updateDetailedChanges(data.changes || []);
@@ -486,64 +398,14 @@ function updateComparisonView(data) {
     document.getElementById('comparison-content').innerHTML = document.getElementById('comparison-content').innerHTML;
 }
 
-function updatePythonFilesList(containerId, files) {
+function updateResourceList(containerId, resources) {
     const container = document.getElementById(containerId);
-    container.innerHTML = files.map(file => `
-        <div class="python-file">
-            <div>
-                <div class="file-name">${file.name}</div>
-                <div class="file-info">${file.path || 'No path'}</div>
-            </div>
-            <div>
-                <span class="file-size">${file.size || '0 KB'}</span>
-                <span class="file-loc">${file.lines || 0} lines</span>
-            </div>
+    container.innerHTML = resources.map(resource => `
+        <div class="resource-item">
+            <span class="resource-name">${resource.name}</span>
+            <span class="resource-size">${resource.size}</span>
         </div>
     `).join('');
-}
-
-function updateFileSelector(modifiedFiles) {
-    const selector = document.getElementById('file-selector');
-    selector.innerHTML = '<option value="">Select a file to view changes...</option>' + 
-        modifiedFiles.map(file => `<option value="${file.id}">${file.name}</option>`).join('');
-}
-
-function loadFileDiff() {
-    const fileId = document.getElementById('file-selector').value;
-    const baseline = document.getElementById('baseline-version').value;
-    
-    if (!fileId || !baseline) {
-        return;
-    }
-    
-    const viewer = document.getElementById('code-diff-viewer');
-    viewer.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm" role="status"></div> Loading diff...</div>';
-    
-    fetch(`{% url "pybirdai:workflow_task_compare" task_number=5 %}?baseline=${baseline}&file=${fileId}`)
-        .then(response => response.json())
-        .then(data => {
-            displayCodeDiff(data.diff || []);
-        })
-        .catch(error => {
-            console.error('Error loading file diff:', error);
-            viewer.innerHTML = '<div class="alert alert-danger">Error loading file diff.</div>';
-        });
-}
-
-function displayCodeDiff(diffLines) {
-    const viewer = document.getElementById('code-diff-viewer');
-    viewer.innerHTML = diffLines.map(line => `
-        <div class="diff-line ${line.type}">
-            <span class="line-number">${line.line_number || ''}</span>
-            <span class="diff-content">${escapeHtml(line.content)}</span>
-        </div>
-    `).join('');
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
 }
 
 function updateDetailedChanges(changes) {
@@ -559,14 +421,11 @@ function updateDetailedChanges(changes) {
 
 function updateImpactAnalysis(impact) {
     document.getElementById('total-files').textContent = impact.total_files || 0;
-    document.getElementById('total-loc').textContent = impact.total_loc || 0;
-    document.getElementById('total-functions').textContent = impact.total_functions || 0;
-    document.getElementById('transformation-files').textContent = impact.transformation_files || 0;
-    document.getElementById('utility-files').textContent = impact.utility_files || 0;
-    document.getElementById('test-files').textContent = impact.test_files || 0;
-    document.getElementById('generation-time').textContent = impact.generation_time || '0s';
-    document.getElementById('syntax-errors').textContent = impact.syntax_errors || 0;
-    document.getElementById('warnings').textContent = impact.warnings || 0;
+    document.getElementById('total-size').textContent = impact.total_size || '0 MB';
+    document.getElementById('download-time').textContent = impact.download_time || '0s';
+    document.getElementById('ldm-count').textContent = impact.ldm_count || 0;
+    document.getElementById('eil-count').textContent = impact.eil_count || 0;
+    document.getElementById('tech-count').textContent = impact.tech_count || 0;
 }
 
 function exportComparisonReport(format) {
@@ -576,7 +435,7 @@ function exportComparisonReport(format) {
         return;
     }
     
-    const url = `{% url "pybirdai:workflow_task_compare" task_number=5 %}?baseline=${baseline}&export=${format}`;
+    const url = `{% url "pybirdai:workflow_task_compare" task_number=1 %}?baseline=${baseline}&export=${format}`;
     window.open(url, '_blank');
 }
 
@@ -587,8 +446,8 @@ function replaceWithPrevious() {
         return;
     }
     
-    if (confirm('Are you sure you want to replace the current Python transformation code with the selected baseline version? This action cannot be undone.')) {
-        fetch(`{% url "pybirdai:workflow_task_rollback" task_number=5 %}`, {
+    if (confirm('Are you sure you want to replace the current resources with the selected baseline version? This action cannot be undone.')) {
+        fetch(`{% url "pybirdai:workflow_task_rollback" task_number=1 %}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -602,7 +461,7 @@ function replaceWithPrevious() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Python transformation code has been successfully replaced with the baseline version.');
+                alert('Resources have been successfully replaced with the baseline version.');
                 location.reload();
             } else {
                 alert('Error: ' + data.error);
@@ -615,14 +474,14 @@ function replaceWithPrevious() {
     }
 }
 
-function downloadPythonCode() {
+function downloadPreviousVersion() {
     const baseline = document.getElementById('baseline-version').value;
     if (!baseline) {
         alert('Please select a baseline version first.');
         return;
     }
     
-    const url = `{% url "pybirdai:workflow_task_rollback" task_number=5 %}?baseline=${baseline}&action=download_code`;
+    const url = `{% url "pybirdai:workflow_task_rollback" task_number=1 %}?baseline=${baseline}&action=download`;
     window.open(url, '_blank');
 }
 </script>
