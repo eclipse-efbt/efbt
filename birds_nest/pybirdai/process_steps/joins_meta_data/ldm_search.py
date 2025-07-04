@@ -62,7 +62,7 @@ class ELDMSearch:
                 related_model = feature.related_model
                 if related_model not in entities:
                     entities.append(related_model)
-                
+
                 ELDMSearch._get_superclasses_and_associated_entities(
                     context, related_model, entities, link_count + 1, link_limit
                 )
@@ -93,9 +93,9 @@ class ELDMSearch:
                 ELDMSearch._get_superclasses_and_associated_entities(
                     context, parent, entities, link_count, link_limit
                 )
-                
+
         parent_list = entity._meta.get_parent_list()
-        
+
         if parent_list:
             super_entity = parent_list[0]
             if super_entity not in entities:
@@ -122,7 +122,8 @@ class ELDMSearch:
         #       ELDMSearch._get_superclasses_and_associated_entities(
         #            context, super_entity, entities, link_count, link_limit
         #        )
-    
+
+
     def _get_parents_from_disjoint_subtyping(entity):
         """
         Retrieve parents from disjoint subtyping relationships.
@@ -142,15 +143,8 @@ class ELDMSearch:
                 for feature in model._meta.get_fields():
                     if (
                         isinstance(feature, ForeignKey)
-                        and feature.name.endswith("_delegate")                        
+                        and feature.name.endswith("_delegate")
                     ):
                         if feature.name[0:len(feature.name)-9] == entity.__name__:
                             parents_from_disjoint_subtyping.append(model)
         return parents_from_disjoint_subtyping
-
-                
-    
-    
-
-
-
