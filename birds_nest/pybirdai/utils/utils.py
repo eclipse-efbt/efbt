@@ -227,8 +227,12 @@ class Utils(object):
         '''
         return_annotation = None
         for annotation in element.eAnnotations:
-            if annotation.source.name == source:
-                return_annotation = annotation
+            if annotation.source is not None:
+                if annotation.source.name == source:
+                    return_annotation = annotation
+            else:
+                print("no source for annotation2" + element.name) 
+
         return return_annotation
     
     @classmethod

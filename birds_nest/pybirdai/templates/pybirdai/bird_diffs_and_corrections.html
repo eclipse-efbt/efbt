@@ -23,6 +23,10 @@
         <img src="{% static 'images/export_db.webp' %}" alt="Export DB to CSV">
         <span>Export Database to CSV Files</span>
     </a>
+    <a href="{% url 'pybirdai:import_bird_data_from_csv_export' %}" class="task-item">
+        <img src="{% static 'images/export_db.webp' %}" alt="Import DB from CSVs">
+        <span>Import Database from CSV Files</span>
+    </a>
     <a href="{% url 'pybirdai:import_members_from_csv' %}" class="task-item">
         <img src="{% static 'images/import_members.webp' %}" alt="Import Members">
         <span>Import Members from CSV File</span>
@@ -39,7 +43,7 @@
         <img src="{% static 'images/review_checkpoint.webp' %}" alt="View Results">
         <span>View LDM to SDD Hierarchy Conversion Results</span>
     </a>
-    <a href="{% url 'pybirdai:home' %}" class="task-item">
+    <a href="{% url 'pybirdai:step_by_step_mode' %}" class="task-item">
         <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
         <span>Back to the FreeBIRD Application Home Page</span>
     </a>

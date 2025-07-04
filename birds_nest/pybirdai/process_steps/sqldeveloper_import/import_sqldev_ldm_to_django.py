@@ -23,16 +23,24 @@ class RegDNAToDJango(object):
         '''
         Documentation for the method.
         '''
-
-        #delete the existing files
+        #ensure the existing files are properly removed and recreated
+        models_path = context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'models.py'
+        admin_path = context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'admin.py'
+        
+        # Force deletion and recreation to avoid append-related duplicates
         try:    
-            os.remove(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'models.py')
-            os.remove(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'admin.py')
-        except FileNotFoundError:
+            os.remove(models_path)
+        except (FileNotFoundError, PermissionError):
+            pass
+            
+        try:    
+            os.remove(admin_path)
+        except (FileNotFoundError, PermissionError):
             pass
 
-        models_file = open(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'models.py', "a",  encoding='utf-8') 
-        admin_file = open(context.output_directory + os.sep + 'database_configuration_files' + os.sep + 'admin.py', "a",  encoding='utf-8') 
+        # Use write mode instead of append to ensure clean files
+        models_file = open(models_path, "w",  encoding='utf-8') 
+        admin_file = open(admin_path, "w",  encoding='utf-8') 
         if context.ldm_or_il == 'ldm':
             RegDNAToDJango.createDjangoForPackage(self,context.ldm_entities_package,models_file,context)
             RegDNAToDJango.createDjangoAdminForPackage(self,context.ldm_entities_package,admin_file,context)
@@ -67,12 +75,16 @@ class RegDNAToDJango(object):
         output_file.close()
 		
     def write_class_and_superclasses_in_correct_order(self, elclass, output_file, classes_written):
-        
+        print(elclass.name)
         if elclass.name in classes_written:
             return
         else:
             if len(elclass.eSuperTypes) > 0:
-                if elclass.eSuperTypes[0].name not in classes_written:
+                try:
+                    print(elclass.eSuperTypes[0].name)
+                except:
+                    print("no superclass name")
+                if elclass.eSuperTypes[0].name not in classes_written:                 
                     RegDNAToDJango.write_class_and_superclasses_in_correct_order(self, elclass.eSuperTypes[0], output_file, classes_written)
                 output_file.write('class ' + elclass.name + '(' + elclass.eSuperTypes[0].name + '):\r\n')
             else:
@@ -108,11 +120,15 @@ class RegDNAToDJango(object):
             
             long_name_exists = False        
             for annotion in elclass.eAnnotations:
-                if annotion.source.name == "long_name":
-                    output_file.write('\t' + 'class Meta:\r\n')
-                    output_file.write('\t\t' + 'verbose_name = \'' + annotion.details[0].value + '\'\r\n')
-                    output_file.write('\t\t' + 'verbose_name_plural = \'' + annotion.details[0].value + 's\'\r\n')
-                    long_name_exists = True
+                if annotion.source is not None:
+                    if annotion.source.name == "long_name":
+                        output_file.write('\t' + 'class Meta:\r\n')
+                        output_file.write('\t\t' + 'verbose_name = \'' + annotion.details[0].value + '\'\r\n')
+                        output_file.write('\t\t' + 'verbose_name_plural = \'' + annotion.details[0].value + 's\'\r\n')
+                        long_name_exists = True
+                else:
+                    print("no source for annotation" + elclass.name) 
+                    
 
             if not long_name_exists:
                 output_file.write('\t' + 'class Meta:\r\n')
