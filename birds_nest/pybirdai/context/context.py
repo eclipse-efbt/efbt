@@ -116,6 +116,11 @@ class Context(object):
 
     save_derived_sdd_items = True
 
+    input_layer_name = "Input Layer 6.5"
+
+    generate_etl = True
+
+
     def _get_configured_data_model_type(self):
         """Get the configured data model type from temporary file or AutomodeConfiguration."""
         # First try to read from temporary configuration file
@@ -165,6 +170,7 @@ class Context(object):
         ldm_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
         code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
         long_name_directive_ldm_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        ldm_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
 
         il_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         il_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
@@ -172,6 +178,7 @@ class Context(object):
         il_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
         il_code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
         long_name_directive_il_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        il_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
 
        
         self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
@@ -179,6 +186,7 @@ class Context(object):
         self.ldm_entities_package.annotationDirectives.append(ldm_entity_hierarchy_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(ldm_relationship_type_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(long_name_directive_ldm_entities)
+        self.ldm_entities_package.annotationDirectives.append(ldm_mapping_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(code_annotation_directive)
 
         self.il_tables_package.annotationDirectives.append(il_key_annotation_directive)
@@ -186,6 +194,7 @@ class Context(object):
         self.il_tables_package.annotationDirectives.append(il_entity_hierarchy_annotation_directive)
         self.il_tables_package.annotationDirectives.append(il_relationship_type_annotation_directive)
         self.il_tables_package.annotationDirectives.append(long_name_directive_il_entities)
+        self.il_tables_package.annotationDirectives.append(il_mapping_annotation_directive)
         self.il_tables_package.annotationDirectives.append(il_code_annotation_directive)
 
         types = EcoreLiteTypes()
