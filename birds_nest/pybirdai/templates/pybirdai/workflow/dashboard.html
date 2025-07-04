@@ -42,15 +42,15 @@
     <div class="task-card">
         <h3>Compare</h3>
     </div>
-    
+
     {% if database_ready and task_grid %}
         {% for task in task_grid %}
         <div class="task-card {% if workflow_session and forloop.counter == workflow_session.current_task %}active{% endif %}">
             <h3>{{ forloop.counter }}. {{ task.task_name }}</h3>
         </div>
-        
+
         <div class="task-card">
-            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}" 
+            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
                class="operation-btn {{ task.operations.do.status }}">
                 Do
                 {% if task.operations.do.status == 'completed' %}✓{% endif %}
@@ -59,17 +59,17 @@
                 {% if task.operations.do.status == 'paused' %}⏸️{% endif %}
             </a>
         </div>
-        
+
         <div class="task-card">
-            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}" 
+            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
                class="operation-btn {{ task.operations.review.status }}">
                 Review
                 {% if task.operations.review.status == 'completed' %}✓{% endif %}
             </a>
         </div>
-        
+
         <div class="task-card">
-            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='compare' %}" 
+            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='compare' %}"
                class="operation-btn {{ task.operations.compare.status }}">
                 Compare
                 {% if task.operations.compare.status == 'completed' %}✓{% endif %}
@@ -80,7 +80,7 @@
         <!-- Default task grid when database is not available -->
         {% for i in "123456" %}
         <div class="task-card">
-            <h3>{{ forloop.counter }}. 
+            <h3>{{ forloop.counter }}.
                 {% if forloop.counter == 1 %}Resource Download
                 {% elif forloop.counter == 2 %}Database Creation
                 {% elif forloop.counter == 3 %}SMCubes Core Creation
@@ -90,15 +90,15 @@
                 {% endif %}
             </h3>
         </div>
-        
+
         <div class="task-card">
             <span class="operation-btn pending">Do ⏳</span>
         </div>
-        
+
         <div class="task-card">
             <span class="operation-btn pending">Review ⏳</span>
         </div>
-        
+
         <div class="task-card">
             <span class="operation-btn pending">Compare ⏳</span>
         </div>
@@ -109,32 +109,33 @@
 <!-- Quick Actions -->
 <div class="task-content">
     <h2>Quick Actions</h2>
-    
+
     <div style="display: flex; gap: 20px; margin-top: 20px;">
         <div style="flex: 1;">
             <h3>Database Setup</h3>
+            <p><strong>Step {% if migration_ready %}2{% else %}1{% endif %}:</strong> {% if migration_ready %}Ready to run database migrations{% else %}Download resources and prepare database{% endif %}</p>
+
+            <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
+                {% csrf_token %}
+                <button type="submit" id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;">
+                    Setup Database (Step 1)
+                </button>
+            </form>
+            <div id="database-setup-status" style="display: none; margin-top: 10px; margin-bottom: 10px; padding: 10px; border-radius: 5px;"></div>
+
+            <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
+                {% csrf_token %}
+                <button type="button" id="migration-btn" class="btn operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
+                    Run Migrations (Step 2)
+                </button>
+            </form>
+            <div id="migration-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
+
             {% if migration_ready %}
-                <p><strong>Step 2:</strong> Ready to run database migrations</p>
-                <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
-                    {% csrf_token %}
-                    <button type="button" id="migration-btn" class="btn btn-warning" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;">
-                        Run Migrations (Step 2)
-                    </button>
-                </form>
-                <div id="migration-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
                 <p><small>Admin files were updated and server restarted. Click above to complete database setup.</small></p>
-            {% else %}
-                <p><strong>Step 1:</strong> Download resources and prepare database</p>
-                <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
-                    {% csrf_token %}
-                    <button type="submit" id="database-setup-btn" class="btn btn-success" style="width: 100%; margin-bottom: 10px;">
-                        Setup Database (Tasks 1-2)
-                    </button>
-                </form>
-                <div id="database-setup-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
             {% endif %}
         </div>
-        
+
         <div style="flex: 1;">
             <h3>Automode Execution</h3>
             <p>Run tasks automatically from Task 3 up to selected point</p>
@@ -146,11 +147,15 @@
                     <option value="5">Task 5: Python Transformation Rules</option>
                     <option value="6" selected>Task 6: Full Execution</option>
                 </select>
-                <button type="submit" id="automode-btn" class="btn btn-primary">Run Automode (from Task 3)</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" id="automode-btn" class="btn btn-primary" style="flex: 1;">Run Automode (from Task 3)</button>
+                    <button type="button" id="clone-btn" class="btn btn-info" style="flex: 1;" onclick="startCloneImport(); return false;">Clone</button>
+                </div>
             </form>
             <div id="automode-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
+            <div id="clone-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
         </div>
-        
+
         <div style="flex: 1;">
             <h3>System Status</h3>
             <ul>
@@ -187,11 +192,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const databaseSetupForm = document.getElementById('database-setup-form');
     const databaseSetupBtn = document.getElementById('database-setup-btn');
     const databaseSetupStatus = document.getElementById('database-setup-status');
-    
+
     if (databaseSetupForm && databaseSetupBtn && databaseSetupStatus) {
         databaseSetupForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             // Disable button and show loading
             databaseSetupBtn.disabled = true;
             databaseSetupBtn.textContent = 'Setting up database...';
@@ -199,10 +204,10 @@ document.addEventListener('DOMContentLoaded', function() {
             databaseSetupStatus.style.background = '#e3f2fd';
             databaseSetupStatus.style.color = '#1976d2';
             databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Running database setup (Tasks 1-2)...';
-            
+
             // Get form data
             const formData = new FormData(databaseSetupForm);
-            
+
             // Make AJAX request
             fetch('/pybirdai/workflow/database-setup/', {
                 method: 'POST',
@@ -217,14 +222,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     databaseSetupStatus.style.background = '#e3f2fd';
                     databaseSetupStatus.style.color = '#1976d2';
                     databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Database setup started in background. Polling for status...';
-                    
+
                     // Start polling for status
                     pollDatabaseSetupStatus(databaseSetupStatus, databaseSetupBtn);
                 } else {
                     databaseSetupStatus.style.background = '#f8d7da';
                     databaseSetupStatus.style.color = '#721c24';
                     databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Setup failed: ' + (data.message || 'Unknown error');
-                    
+
                     databaseSetupBtn.disabled = false;
                     databaseSetupBtn.textContent = 'Setup Database (Tasks 1-2)';
                 }
@@ -234,24 +239,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 databaseSetupStatus.style.background = '#f8d7da';
                 databaseSetupStatus.style.color = '#721c24';
                 databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
-                
+
                 databaseSetupBtn.disabled = false;
                 databaseSetupBtn.textContent = 'Setup Database (Tasks 1-2)';
             });
         });
     }
-    
+
     // Automode form AJAX handler
     const automodeForm = document.getElementById('automode-form');
     const automodeBtn = document.getElementById('automode-btn');
     const automodeStatus = document.getElementById('automode-status');
-    
+
     if (automodeForm && automodeBtn && automodeStatus) {
         automodeForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const targetTask = automodeForm.querySelector('[name="target_task"]').value;
-            
+
             // Disable button and show loading
             automodeBtn.disabled = true;
             automodeBtn.textContent = `Running automode to Task ${targetTask}...`;
@@ -259,10 +264,10 @@ document.addEventListener('DOMContentLoaded', function() {
             automodeStatus.style.background = '#e3f2fd';
             automodeStatus.style.color = '#1976d2';
             automodeStatus.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Running automode from Task 3 to Task ${targetTask}...`;
-            
+
             // Get form data
             const formData = new FormData(automodeForm);
-            
+
             // Make AJAX request
             fetch('/pybirdai/workflow/automode/', {
                 method: 'POST',
@@ -277,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     automodeStatus.style.background = '#e3f2fd';
                     automodeStatus.style.color = '#1976d2';
                     automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Automode started in background. Polling for status...';
-                    
+
                     // Start polling for status
                     pollAutomodeStatus(automodeStatus, automodeBtn, targetTask);
                 } else {
@@ -290,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         errorMsg += ': ' + data.errors.map(e => `Task ${e.task}: ${e.error}`).join(', ');
                     }
                     automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>' + errorMsg;
-                    
+
                     automodeBtn.disabled = false;
                     automodeBtn.textContent = 'Run Automode (from Task 3)';
                 }
@@ -300,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 automodeStatus.style.background = '#f8d7da';
                 automodeStatus.style.color = '#721c24';
                 automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
-                
+
                 automodeBtn.disabled = false;
                 automodeBtn.textContent = 'Run Automode (from Task 3)';
             });
@@ -311,30 +316,30 @@ document.addEventListener('DOMContentLoaded', function() {
 // Simple migration starter function (available immediately)
 function startMigration() {
     console.log('startMigration() called directly!');
- 
-    
+
+
     const btn = document.getElementById('migration-btn');
     const statusDiv = document.getElementById('migration-status');
-    
+
     if (!btn) {
         console.error('Migration button not found!');
         alert('Error: Migration button not found!');
         return;
     }
-    
+
     if (!statusDiv) {
         console.error('Migration status div not found!');
         alert('Error: Migration status div not found!');
         return;
     }
-    
+
     console.log('Button found:', btn);
     console.log('Status div found:', statusDiv);
-    
+
     // Get CSRF token
     const migrationForm = document.getElementById('migration-form');
     let csrfToken = '';
-    
+
     if (migrationForm) {
         const csrfInput = migrationForm.querySelector('[name=csrfmiddlewaretoken]');
         if (csrfInput) {
@@ -346,19 +351,19 @@ function startMigration() {
     } else {
         console.error('Migration form not found!');
     }
-    
+
     if (!csrfToken) {
         alert('Error: CSRF token not found! Please refresh the page.');
         return;
     }
-    
+
     // Start the actual migration
     doMigration(btn, statusDiv, csrfToken);
 }
 
 function doMigration(btn, statusDiv, csrfToken) {
     console.log('Starting actual migration...');
-    
+
     // Update UI
     btn.disabled = true;
     btn.textContent = 'Running Migrations...';
@@ -366,13 +371,13 @@ function doMigration(btn, statusDiv, csrfToken) {
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
     statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting database migrations...';
-    
+
     // Create form data
     const formData = new FormData();
     formData.append('csrfmiddlewaretoken', csrfToken);
-    
+
     console.log('Sending AJAX request to /pybirdai/workflow/run-migrations/');
-    
+
     // Make AJAX request
     fetch('/pybirdai/workflow/run-migrations/', {
         method: 'POST',
@@ -416,7 +421,7 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
     const pollInterval = 2000; // Poll every 2 seconds
     let pollCount = 0;
     const maxPolls = 300; // Maximum 10 minutes (300 * 2 seconds)
-    
+
     function checkStatus() {
         fetch('/pybirdai/workflow/database-setup-status/', {
             method: 'GET',
@@ -427,10 +432,10 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
         .then(response => response.json())
         .then(data => {
             console.log('Database setup status:', data); // Debug log
-            
+
             if (data.success && data.database_setup_status) {
                 const status = data.database_setup_status;
-                
+
                 if (status.running) {
                     // Still running - update status message
                     const elapsedTime = Math.round(status.elapsed_time || 0);
@@ -439,7 +444,7 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                         message += ` - Currently on Task ${status.current_task}`;
                     }
                     statusDiv.innerHTML = message;
-                    
+
                     // Continue polling
                     pollCount++;
                     if (pollCount < maxPolls) {
@@ -455,25 +460,25 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                 } else if (status.completed) {
                     // Setup completed
                     console.log('Database setup completed! Status object:', status);
-                    
+
                     if (status.success) {
                         statusDiv.style.background = '#d4edda';
                         statusDiv.style.color = '#155724';
                         const elapsedTime = Math.round(status.elapsed_time || 0);
                         let message = `<span style="display: inline-block; margin-right: 8px;">✅</span>${status.message || 'Database setup completed successfully'} (${elapsedTime}s)`;
-                        
+
                         if (status.completed_tasks && status.completed_tasks.length > 0) {
                             message += `<br>Completed: ${status.completed_tasks.join(', ')}`;
                         }
-                        
+
                         // Check for server restart requirement with comprehensive logic
                         const serverRestartRequired = status.server_restart_required === true;
                         const messageIndicatesRestart = status.message && (
-                            status.message.includes('restart required') || 
+                            status.message.includes('restart required') ||
                             status.message.includes('Server restart required') ||
                             status.message.includes('server restart')
                         );
-                        
+
                         console.log('Restart check:', {
                             serverRestartRequired,
                             messageIndicatesRestart,
@@ -481,7 +486,7 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                             hasRestartInfo: !!status.restart_info,
                             hasEstimatedTime: !!status.estimated_restart_time
                         });
-                        
+
                         if (serverRestartRequired || messageIndicatesRestart) {
                             console.log('🔄 Database setup completed - server restart required detected!');
                             message += '<br><strong>🔄 Server restart in progress...</strong>';
@@ -491,13 +496,13 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                                 message += `<br><small>${status.estimated_restart_time}</small>`;
                             }
                             statusDiv.innerHTML = message;
-                            
+
                             // Handle server restart scenario
                             handleServerRestart(statusDiv, btn);
                         } else {
                             console.log('✅ Database setup completed - no server restart required');
                             statusDiv.innerHTML = message;
-                            
+
                             // Regular refresh for non-restart scenarios
                             setTimeout(() => {
                                 console.log('Refreshing page after successful setup (no restart)');
@@ -508,7 +513,7 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                         statusDiv.style.background = '#f8d7da';
                         statusDiv.style.color = '#721c24';
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Database setup failed: ' + (status.error || status.message || 'Unknown error');
-                        
+
                         btn.disabled = false;
                         btn.textContent = 'Setup Database (Tasks 1-2)';
                     }
@@ -518,14 +523,14 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking database setup status';
-                
+
                 btn.disabled = false;
                 btn.textContent = 'Setup Database (Tasks 1-2)';
             }
         })
         .catch(error => {
             console.error('Database setup status polling error:', error);
-            
+
             // Check if this might be a server restart scenario (connection lost during polling)
             if (error.name === 'TypeError' || error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.name === 'TimeoutError') {
                 console.log('🔄 Connection lost during database setup polling - likely server restart!');
@@ -533,7 +538,7 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                 statusDiv.style.background = '#e3f2fd';
                 statusDiv.style.color = '#1976d2';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Connection lost - server is restarting...';
-                
+
                 // Switch to restart detection mode
                 handleServerRestart(statusDiv, btn);
             } else {
@@ -541,13 +546,22 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking database setup status: ' + error.message;
-                
+
                 btn.disabled = false;
                 btn.textContent = 'Setup Database (Tasks 1-2)';
             }
-        });
+        }).catch(error => {
+          console.error('Database setup status polling error:', error);
+
+          // Refresh page on error to reset state
+          setTimeout(() => {
+              console.log('Refreshing page due to database setup polling error');
+              location.reload();
+          }, 2000);
+        }
+        );
     }
-    
+
     // Start polling
     setTimeout(checkStatus, pollInterval);
 }
@@ -557,7 +571,7 @@ function pollMigrationStatus(statusDiv, btn) {
     const pollInterval = 2000; // Poll every 2 seconds
     let pollCount = 0;
     const maxPolls = 450; // Maximum 15 minutes (300 * 2 seconds)
-    
+
     function checkStatus() {
         fetch('/pybirdai/workflow/migration-status/', {
             method: 'GET',
@@ -568,15 +582,15 @@ function pollMigrationStatus(statusDiv, btn) {
         .then(response => response.json())
         .then(data => {
             console.log('Migration status:', data); // Debug log
-            
+
             if (data.success && data.migration_status) {
                 const status = data.migration_status;
-                
+
                 if (status.running) {
                     // Still running - update status message
                     const elapsedTime = Math.round(status.elapsed_time || 0);
                     statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Database migrations running in background... (${elapsedTime}s elapsed)`;
-                    
+
                     // Continue polling
                     pollCount++;
                     if (pollCount < maxPolls) {
@@ -596,7 +610,7 @@ function pollMigrationStatus(statusDiv, btn) {
                         statusDiv.style.color = '#155724';
                         const elapsedTime = Math.round(status.elapsed_time || 0);
                         statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">✅</span>Database migrations completed successfully in ${elapsedTime}s!<br>The database is now ready for use.`;
-                        
+
                         // Refresh page after success to show updated database status
                         setTimeout(() => {
                             location.reload();
@@ -605,7 +619,7 @@ function pollMigrationStatus(statusDiv, btn) {
                         statusDiv.style.background = '#f8d7da';
                         statusDiv.style.color = '#721c24';
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Migration failed: ' + (status.error || status.message || 'Unknown error');
-                        
+
                         btn.disabled = false;
                         btn.textContent = 'Run Migrations (Step 2)';
                     }
@@ -615,22 +629,23 @@ function pollMigrationStatus(statusDiv, btn) {
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking migration status';
-                
+
                 btn.disabled = false;
                 btn.textContent = 'Run Migrations (Step 2)';
             }
         })
         .catch(error => {
-            console.error('Migration status polling error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking migration status: ' + error.message;
-            
-            btn.disabled = false;
-            btn.textContent = 'Run Migrations (Step 2)';
-        });
+          console.error('Migration status status polling error:', error);
+
+          // Refresh page on error to reset state
+          setTimeout(() => {
+              console.log('Refreshing page due to database setup polling error');
+              location.reload();
+          }, 2000);
+        }
+        );
     }
-    
+
     // Start polling
     setTimeout(checkStatus, pollInterval);
 }
@@ -640,7 +655,7 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
     const pollInterval = 2000; // Poll every 2 seconds
     let pollCount = 0;
     const maxPolls = 600; // Maximum 20 minutes (600 * 2 seconds) for automode
-    
+
     function checkStatus() {
         fetch('/pybirdai/workflow/automode-status/', {
             method: 'GET',
@@ -651,28 +666,28 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
         .then(response => response.json())
         .then(data => {
             console.log('Automode status:', data); // Debug log
-            
+
             if (data.success && data.automode_status) {
                 const status = data.automode_status;
-                
+
                 if (status.running) {
                     // Still running - update status message
                     const elapsedTime = Math.round(status.elapsed_time || 0);
                     let message = `<span style="display: inline-block; margin-right: 8px;">⏳</span>${status.message || 'Automode running...'} (${elapsedTime}s elapsed)`;
-                    
+
                     if (status.current_task) {
                         message += ` - Currently on Task ${status.current_task}`;
                         if (status.target_task) {
                             message += ` of ${status.target_task}`;
                         }
                     }
-                    
+
                     if (status.completed_tasks && status.completed_tasks.length > 0) {
                         message += `<br>Completed: ${status.completed_tasks.join(', ')}`;
                     }
-                    
+
                     statusDiv.innerHTML = message;
-                    
+
                     // Continue polling
                     pollCount++;
                     if (pollCount < maxPolls) {
@@ -692,7 +707,7 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                         statusDiv.style.color = '#155724';
                         const elapsedTime = Math.round(status.elapsed_time || 0);
                         statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">✅</span>${status.message || 'Automode completed successfully'} (${elapsedTime}s)`;
-                        
+
                         // Refresh page after success to show updated task status
                         setTimeout(() => {
                             location.reload();
@@ -701,13 +716,13 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                         statusDiv.style.background = '#f8d7da';
                         statusDiv.style.color = '#721c24';
                         let errorMsg = status.message || 'Automode failed';
-                        
+
                         if (status.task_errors && status.task_errors.length > 0) {
                             errorMsg += '<br>Errors: ' + status.task_errors.map(e => `Task ${e.task}: ${e.error}`).join('<br>');
                         }
-                        
+
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>' + errorMsg;
-                        
+
                         btn.disabled = false;
                         btn.textContent = 'Run Automode (from Task 3)';
                     }
@@ -717,22 +732,22 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking automode status';
-                
+
                 btn.disabled = false;
                 btn.textContent = 'Run Automode (from Task 3)';
             }
-        })
-        .catch(error => {
-            console.error('Automode status polling error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking automode status: ' + error.message;
-            
-            btn.disabled = false;
-            btn.textContent = 'Run Automode (from Task 3)';
-        });
+        }).catch(error => {
+          console.error('Database setup status polling error:', error);
+
+          // Refresh page on error to reset state
+          setTimeout(() => {
+              console.log('Refreshing page due to database setup polling error');
+              location.reload();
+          }, 2000);
+        }
+        );
     }
-    
+
     // Start polling
     setTimeout(checkStatus, pollInterval);
 }
@@ -740,40 +755,40 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
 // Function to handle server restart detection and UI refresh
 function handleServerRestart(statusDiv, btn) {
     console.log('handleServerRestart() called - starting server restart detection');
-    
+
     // Update UI immediately to show restart is happening
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
     statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Server is restarting due to file changes...';
-    
+
     // Disable button immediately to prevent double-clicks during restart
     btn.disabled = true;
     btn.textContent = 'Server Restarting...';
-    
+
     const restartPollInterval = 500; // Poll every 0.5 seconds for very fast response
     let restartPollCount = 0;
     const maxRestartPolls = 120; // Maximum 1 minute (120 * 0.5 seconds)
     let serverWentDown = false;
-    
+
     function updateRestartMessage(seconds) {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         const timeStr = minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${seconds}s`;
-        
+
         if (!serverWentDown) {
             statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Waiting for server restart... (${timeStr})<br><small>After restart, button will change to "Run Migrations (Step 2)"</small>`;
         } else {
             statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>Server is restarting... (${timeStr})<br><small>Page will refresh to show "Run Migrations" button</small>`;
         }
     }
-    
+
     function checkServerStatus() {
         restartPollCount++;
         const elapsedSeconds = Math.floor(restartPollCount * 0.5); // Updated for 0.5s polling interval
-        
+
         // Update message with elapsed time
         updateRestartMessage(elapsedSeconds);
-        
+
         // Try to ping the server
         fetch('/pybirdai/workflow/', {
             method: 'GET',
@@ -790,11 +805,11 @@ function handleServerRestart(statusDiv, btn) {
                 statusDiv.style.background = '#d4edda';
                 statusDiv.style.color = '#155724';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Server restart completed! Refreshing page to show "Run Migrations" button...';
-                
+
                 // Disable the database setup button immediately to prevent double-clicks
                 btn.disabled = true;
                 btn.textContent = 'Refreshing...';
-                
+
                 // Refresh page after delay to ensure server is fully ready and marker file is detected
                 setTimeout(() => {
                     console.log('Refreshing page after server restart to show migration button');
@@ -820,7 +835,7 @@ function handleServerRestart(statusDiv, btn) {
                 serverWentDown = true;
                 console.log('Server restart detected - connection lost:', error.name);
             }
-            
+
             if (restartPollCount < maxRestartPolls) {
                 setTimeout(checkServerStatus, restartPollInterval);
             } else {
@@ -833,11 +848,11 @@ function handleServerRestart(statusDiv, btn) {
             }
         });
     }
-    
+
     // Start checking server status immediately (no delay)
     console.log('Starting server restart detection polling...');
     setTimeout(checkServerStatus, 100); // Check after just 100ms
-    
+
     // Fallback: force page refresh after 45 seconds if restart detection fails
     setTimeout(() => {
         if (btn.disabled && btn.textContent.includes('Restarting')) {
@@ -846,6 +861,104 @@ function handleServerRestart(statusDiv, btn) {
             location.reload();
         }
     }, 45000); // 45 seconds fallback
+}
+
+// Clone import function
+function startCloneImport() {
+    console.log('startCloneImport() called');
+
+    const btn = document.getElementById('clone-btn');
+    const statusDiv = document.getElementById('clone-status');
+
+    if (!btn || !statusDiv) {
+        console.error('Clone button or status div not found!');
+        alert('Error: UI elements not found!');
+        return;
+    }
+
+    // Get CSRF token
+    const automodeForm = document.getElementById('automode-form');
+    let csrfToken = '';
+
+    if (automodeForm) {
+        const csrfInput = automodeForm.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfInput) {
+            csrfToken = csrfInput.value;
+        }
+    }
+
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+
+    // Update UI
+    btn.disabled = true;
+    btn.textContent = 'Importing CSVs...';
+    statusDiv.style.display = 'block';
+    statusDiv.style.background = '#e3f2fd';
+    statusDiv.style.color = '#1976d2';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting CSV import from technical_export directory...';
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Make AJAX request to clone endpoint
+    fetch('/pybirdai/workflow/clone-import/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log('Clone import response received:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Clone import response data:', data);
+        if (data.success) {
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.color = '#155724';
+            let message = `<span style="display: inline-block; margin-right: 8px;">✅</span>${data.message}`;
+            if (data.details) {
+                message += `<br><small>${data.details}</small>`;
+            }
+            statusDiv.innerHTML = message;
+
+            // Re-enable button after success
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = 'Clone';
+                // Optionally refresh to show updated data
+                if (data.refresh_recommended) {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }
+            }, 3000);
+        } else {
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Clone import failed: ' + (data.error || data.message || 'Unknown error');
+
+            btn.disabled = false;
+            btn.textContent = 'Clone';
+        }
+    })
+    .catch(error => {
+        console.error('Clone import error:', error);
+        statusDiv.style.background = '#f8d7da';
+        statusDiv.style.color = '#721c24';
+        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
+
+        btn.disabled = false;
+        btn.textContent = 'Clone';
+    });
 }
 </script>
 

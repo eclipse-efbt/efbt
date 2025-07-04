@@ -1,5 +1,5 @@
 # coding=UTF-8#
-# Copyright (c) 2024 Bird Software Solutions Ltd
+# Copyright (c) 2020 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
 # which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ Created on 22 Jan 2022
 '''
 
 import unidecode
+from pyecore.resources import ResourceSet, URI
 
 from pybirdai.regdna import ELReference
 
@@ -83,11 +84,68 @@ class Utils(object):
         return new_adapted_name
 
     @classmethod
+    def get_members_of_the_domain(cls,  the_domain, member_id_to_domain_map):
+        '''
+        return a list of members that belong to the domain
+        '''
+        return_list = []
+        for key, value in member_id_to_domain_map.items():
+            if value == the_domain:
+                return_list.append(key)
+        return return_list
+
+    @classmethod
+    def superclass_contains_feature(cls, the_superclass, attribute):
+        '''
+        Checks if a superclass contains the attribute
+        '''
+        attributes = the_superclass.eStructuralFeatures
+        contains = False
+        for attribute2 in attributes:
+            if attribute2.name == attribute.name:
+                contains = True
+
+        return contains
+
+    @classmethod
+    def has_member_called(cls, the_class, member_name):
+        '''
+        Checks if the class has a member with the name memberName
+        '''
+
+        members = the_class.members
+        contains = False
+        for member in members:
+            if member.name == member_name:
+                contains = True
+
+        return contains
+
+    @classmethod
+    def number_of_relationships_to_this_class(cls, source_class, target_class):
+        '''
+        Checks how many relationships there are between 2 classes
+        It is possible that one class might have 2 different relationships 
+        to the same class.
+        '''
+        features = source_class.eStructuralFeatures
+        counter = 0
+        # do this for relationship attributes only.
+        for feature in features:
+            if isinstance(feature, ELReference):
+                feature_type = feature.eType
+                if feature_type == target_class:
+                    counter = counter+1
+
+        return counter
+
+    @classmethod
     def make_valid_id_for_literal(cls, input_string):
         ''' 
         Tranlate text to be a valid id, without special characters, and following
         the rules for valid id's in regdna
         '''
+
         amended_input_string = input_string.replace('  ', ' ').replace(' ', '_').replace(')', '_').replace('(', '_') \
             .replace(',', '_').replace('\'', '_').replace('\n', '_').replace('\r', '_').replace('\'t', '_').replace('new', 'New') \
             .replace('\\', '_').replace('/', '_').replace(':', '_') \
@@ -162,10 +220,6 @@ class Utils(object):
 
         if return_string == "op":
             return_string = "_op"
-
-        return_string = return_string.replace('__', '_').replace('__', '_').replace('__', '_').replace('__', '_').replace('__', '_').replace('__', '_')
-        if return_string.endswith('_'):
-            return_string = return_string[0:len(return_string)-1]
         return return_string
 
     @classmethod
@@ -176,6 +230,20 @@ class Utils(object):
         '''
         return unidecode.unidecode(the_input_string)
 
+    @classmethod
+    def in_enum_excluded_list(cls, adapted_enum_name):
+        '''
+        TODO not sure if we still need this, it was introduces to deal with
+        problematic domains in the past.
+        '''
+        if ((adapted_enum_name == "All_last_days_of_months___YYYY_MM") or
+            (adapted_enum_name == "All_last_days_of_quarters___YYYY_MM") or
+                (adapted_enum_name == "All_possible_dates_YYYY_MM_DD")):
+
+            print(" field in excludedlist: " + adapted_enum_name)
+            return True
+        else:
+            return False
 
     @classmethod
     def contains_literal(cls, members, adapted_value):
@@ -219,7 +287,32 @@ class Utils(object):
         '''
         return context.e_string
 
-   
+    @classmethod
+    def find_enum(cls, enum_name, enum_map):        
+        '''
+        returns the enum for a reference output layer
+        '''
+
+        return_val = None
+        for key, value in enum_map.items():
+            if value.name.lower() == enum_name.lower():
+                return_val = value
+
+        return return_val
+
+    @classmethod
+    def special_cases(cls, new_adapted_value, counter):
+        '''
+        Deals with special cases where we need to adapt the name of the enum
+        '''
+
+        return_val = new_adapted_value
+        if new_adapted_value == "A_S":
+            return_val = "A_S_dup"
+        if new_adapted_value == "s_p_":
+            return_val = "s_p_dup" + str(counter)
+        return return_val
+    
     @classmethod
     def get_annotation_with_source(cls,element, source):       
         '''
@@ -230,8 +323,6 @@ class Utils(object):
             if annotation.source is not None:
                 if annotation.source.name == source:
                     return_annotation = annotation
-            else:
-                print("no source for annotation2" + element.name) 
 
         return return_annotation
     
@@ -244,25 +335,7 @@ class Utils(object):
         for annotation_directive in package.annotationDirectives:
             if annotation_directive.name == name:
                 return_annotation_directive = annotation_directive
-        return return_annotation_directive   
-
-    @classmethod
-    def number_of_relationships_to_this_class(cls, source_class, target_class):
-        '''
-        Checks how many relationships there are between 2 classes
-        It is possible that one class might have 2 different relationships 
-        to the same class.
-        '''
-        features = source_class.eStructuralFeatures
-        counter = 0
-        # do this for relationship attributes only.
-        for feature in features:
-            if isinstance(feature, ELReference):
-                feature_type = feature.eType
-                if feature_type == target_class:
-                    counter = counter+1
-
-        return counter     
+        return return_annotation_directive        
        
 
         

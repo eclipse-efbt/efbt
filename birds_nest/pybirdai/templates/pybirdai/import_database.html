@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Import Database from CSV{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Import Database from CSV Files</h1>
+    <a href="{% url 'pybirdai:bird_diffs_and_corrections'%}" >Back to BIRD Export Diffs and Corrections</a> <br><br>
+
+    <p>Select a folder containing CSV files to import into the database. Each CSV file should correspond to a database table.</p>
+
+    <form method="post" action="{% url 'pybirdai:import_bird_data_from_csv_export' %}" id="importForm">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="folderPath" class="form-label">Select Folder:</label>
+            <input type="file" class="form-control" id="folderPath" name="folderPath" webkitdirectory directory required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="importButton">Import Database</button>
+    </form>
+
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <p>Importing CSV files to database tables... Please wait.</p>
+    </div>
+
+    <div id="successMessage" style="display: none;" class="alert alert-success">
+        <p>Import completed successfully!</p>
+    </div>
+
+    <div class="mt-4">
+        <h3>Notes:</h3>
+        <ul>
+            <li>Each CSV file will be imported to its corresponding table</li>
+            <li>The CSV files should be named after their corresponding tables</li>
+            <li>Headers in the CSV files should match the database column names</li>
+            <li>Select a folder that contains all the CSV files you want to import</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .mt-4 {
+        margin-top: 2rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        margin-bottom: 1rem;
+    }
+
+    ul {
+        list-style-type: disc;
+        margin-left: 1.5rem;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .alert {
+        padding: 15px;
+        margin: 20px 0;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    #loadingIndicator {
+        text-align: center;
+        margin: 20px 0;
+    }
+</style>
+
+<script>
+document.getElementById('importForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Show loading indicator and disable button
+    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('importButton').disabled = true;
+    document.getElementById('successMessage').style.display = 'none';
+
+    try {
+        // Get the selected files
+        const fileInput = document.getElementById('folderPath');
+        const files = fileInput.files;
+
+        // Read all CSV files into memory
+        const csvFiles = {};
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (file.name.endsWith('.csv')) {
+                const content = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.onerror = e => reject(e);
+                    reader.readAsText(file);
+                });
+                csvFiles[file.name] = content;
+            }
+        }
+
+        // Submit the CSV files as JSON
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: JSON.stringify({
+                csv_files: csvFiles
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        });
+
+        if (!response.ok) throw new Error('Import failed');
+        const data = await response.json();
+
+        // Show success message
+        document.getElementById('successMessage').style.display = 'block';
+    }
+    catch (error) {
+        alert('Error during import: ' + error.message);
+    }
+    finally {
+        // Hide loading indicator and enable button
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('importButton').disabled = false;
+    }
+});
+</script>
+{% endblock %}

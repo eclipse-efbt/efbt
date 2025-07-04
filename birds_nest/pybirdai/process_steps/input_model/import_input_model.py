@@ -13,6 +13,7 @@
 
 from pybirdai.bird_meta_data_model import *
 from django.apps import apps
+from django.db import models
 import os
 import csv
 from pybirdai.context.csv_column_index_context import ColumnIndexes
@@ -20,6 +21,11 @@ from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatFi
 from django.db import transaction
 from uuid import uuid4
 from pybirdai.views import load_variables_from_csv_file
+import logging
+from django.conf import settings
+import copy
+
+logging.basicConfig(level=logging.INFO)
 
 class ImportInputModel(object):
     """
@@ -36,6 +42,9 @@ class ImportInputModel(object):
             context: The context object containing configuration settings.
         """
         sdd_context.csi_counter = dict()
+        context.fields = dict()
+        context.derived_properties = dict()
+        ImportInputModel._fetch_derived_fields_from_model(context)
         ImportInputModel._create_maintenance_agency(sdd_context)
         ImportInputModel._create_primitive_domains(sdd_context)
         ImportInputModel._create_subdomain_to_domain_map(sdd_context,alternative_folder=context.alternative_folder_for_subdomains)
@@ -48,7 +57,7 @@ class ImportInputModel(object):
         if variables_loaded > 0:
             print(f"Loaded {variables_loaded} extra variables from CSV file.")
         else:
-            print.info("No extra variables loaded (file not found or empty).")
+            print("No extra variables loaded (file not found or empty).")
 
 
     def _create_maintenance_agency(sdd_context):
@@ -134,11 +143,12 @@ class ImportInputModel(object):
             sdd_context: The SDD context object to store created elements.
             context: The context object containing configuration settings.
         """
-        for model in apps.get_models():
-            if model._meta.app_label == 'pybirdai':
-                print(f"{model._meta.app_label}  -> {model.__name__}")
-                ImportInputModel._create_cube_and_structure(model, sdd_context, context)
-                ImportInputModel._process_fields(model, sdd_context, context)
+        logging.info(f"Creating models for pybirdai")
+        for model in set([_ for _ in apps.get_models() if _._meta.app_label == 'pybirdai']):
+            logging.info(f"Creating cube and structure for {model.__name__}")
+            ImportInputModel._create_cube_and_structure(model, sdd_context, context)
+            ImportInputModel._process_fields(model, sdd_context, context)
+            continue
 
     def _create_cube_and_structure(model, sdd_context, context):
         """
@@ -165,6 +175,59 @@ class ImportInputModel(object):
             bird_cube_cube_structure.save()
             bird_cube.save()
 
+    def _fetch_derived_fields_from_model(context):
+        import ast
+
+        # Read bird_data_model.py and find functions with lineage decorator
+        bird_data_model_path = os.path.join(settings.BASE_DIR, 'pybirdai/bird_data_model.py')
+
+
+        with open(bird_data_model_path, 'r', encoding='utf-8') as file:
+            tree = ast.parse(file.read())
+
+
+            for node in [_node for _node in tree.body if isinstance(_node, ast.ClassDef)]:
+                property_nodes = []
+
+                for function_node in [function_node for function_node in node.body if isinstance(function_node, ast.FunctionDef)]:
+                    for decorator in function_node.decorator_list:
+                        if isinstance(decorator, ast.Call) and isinstance(decorator.func, ast.Name) and decorator.func.id == 'lineage':
+                            property_nodes.append(function_node.name)
+
+                if not property_nodes:
+                    continue
+
+                for meta_node in [meta_node for meta_node in node.body if isinstance(meta_node, ast.ClassDef) and meta_node.name == 'Meta']:
+                    for field in meta_node.body:
+                        if isinstance(field, ast.Assign) and field.targets[0].id == "verbose_name":
+                            verbose_name = field.value.s
+                            break
+
+                if verbose_name not in context.derived_properties:
+                    context.derived_properties[verbose_name] = []
+
+                context.derived_properties[verbose_name] = property_nodes
+                logging.info(f"Processed derived properties for {verbose_name} : {property_nodes}")
+                property_nodes = []
+
+    def _provide_fields(context,verbose_name,model_name ):
+        """
+        Provide type information for a list of variable IDs.
+
+        Args:
+            list_of_variable_ids: A list of variable IDs to provide type information for.
+        """
+
+        fields = []
+        for variable_id in context.derived_properties[verbose_name]:
+            # Implementation details here
+            if variable_id in context.fields:
+                field = copy.copy(context.fields[variable_id])
+                field.model.__name__ = model_name
+                fields.append(field)
+                continue
+            fields.append(models.CharField(variable_id,max_length=1000))
+        return fields
 
     def _process_fields(model, sdd_context, context):
         """
@@ -176,10 +239,17 @@ class ImportInputModel(object):
             context: The context object containing configuration settings.
         """
         relevant_field_types = (CharField, DateTimeField, BigIntegerField, BooleanField, FloatField)
+
         fields = [
             field for field in model._meta.get_fields()
             if isinstance(field, relevant_field_types)
         ]
+
+        context.fields.update({field.name: field for field in fields})
+
+        if model._meta.verbose_name in context.derived_properties:
+            fields += ImportInputModel._provide_fields(context,model._meta.verbose_name,model.__name__)
+            # logging.info(f"Processing derived properties for model {model._meta.verbose_name} :: fields : {fields}")
 
         variables_to_create = []
         cube_structure_items_to_create = []
@@ -203,31 +273,35 @@ class ImportInputModel(object):
             # Create cube structure item
 
             if context.save_derived_sdd_items:
-                csid = sdd_context.bird_cube_structure_dictionary[field.model.__name__]
-                variable_id_ = sdd_context.variable_dictionary[variable_id]
+                csid = sdd_context.bird_cube_structure_dictionary[model.__name__]
                 if (csid,variable_id) not in sdd_context.csi_counter:
                     sdd_context.csi_counter[(csid,variable_id)] = 0
+
+                variable_id_ = sdd_context.variable_dictionary[variable_id]
+
                 csi = CUBE_STRUCTURE_ITEM(
                     cube_structure_id=csid,
                     variable_id=variable_id_,
                     subdomain_id=subdomain,
                     cube_variable_code = "__".join([csid.cube_structure_id,variable_id_.variable_id,str(sdd_context.csi_counter[(csid,variable_id)])])
                 )
-                sdd_context.csi_counter[(csid,variable_id)] += 1
+
                 cube_structure_items_to_create.append(csi)
                 #key = f"{csi.cube_structure_id.cube_structure_id}:{csi.variable_id.variable_id}"
                 if csi.cube_structure_id.cube_structure_id not in sdd_context.bird_cube_structure_item_dictionary.keys():
                     sdd_context.bird_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id] = []
                 sdd_context.bird_cube_structure_item_dictionary[csi.cube_structure_id.cube_structure_id].append(csi)
+                sdd_context.csi_counter[(csid,variable_id)] += 1
 
         # Bulk create all objects
         if variables_to_create and sdd_context.save_sdd_to_db:
             VARIABLE.objects.bulk_create(variables_to_create, ignore_conflicts=True)
 
         if cube_structure_items_to_create and context.save_derived_sdd_items:
+            if model._meta.verbose_name == "Party_role":
+                logging.info("Party_role cube structure items to be created :: %s", len(cube_structure_items_to_create))
             for item in cube_structure_items_to_create:
                 item.save()
-            #CUBE_STRUCTURE_ITEM.objects.bulk_create(cube_structure_items_to_create)
 
     @staticmethod
     def _get_default_domain(field, sdd_context):
