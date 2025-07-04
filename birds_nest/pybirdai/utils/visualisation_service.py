@@ -341,7 +341,7 @@ class NetworkGraphGenerationService:
             <script type="module">
               import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
               """+"""mermaid.initialize({
-                maxTextSize: 90000
+                maxTextSize: 140000
               });
             </script>
           </body>
