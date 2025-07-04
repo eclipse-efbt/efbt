@@ -22,4 +22,4 @@ birds_nest/pybirdai/admin.py
 db.sqlite3
 birds_nest/pybirdai/migrations/*
 birds_nest/resources/variable_typ_instrmnt.csv
-
+birds_nest/startup.sh

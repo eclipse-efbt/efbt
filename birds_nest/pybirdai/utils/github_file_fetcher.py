@@ -421,6 +421,27 @@ class GitHubFileFetcher:
             logger.warning(f"File {remote_file_name} not found in {remote_dir}")
             print(f"File {remote_file_name} not found in {remote_dir}")
 
+    def fetch_filter_code(
+            self,
+            remote_dir = "birds_nest/pybirdai",
+            local_target_dir = f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code"):
+        """Fetches the derivation model file from the specified remote directory"""
+
+        files_in_dir = self.fetch_files(remote_dir)
+        for remote_file_name in files_in_dir:
+            local_file_path = os.path.join(local_target_dir, remote_file_name)
+            # Ensure the local directory exists
+            self._ensure_directory_exists(local_target_dir)
+            logger.info(f"Attempting to download {remote_file_name} to {local_file_path}")
+            # Download the file
+            download_success = self.download_file(remote_file_name, local_file_path)
+            if download_success:
+                logger.info(f"Successfully downloaded {remote_file_name} to {local_file_path}")
+            else:
+                logger.error(f"Failed to download {remote_file_name}")
+
+        return 0
+
 def main():
     """Main function to orchestrate the file fetching process"""
     logger.info("Starting GitHub file fetching process")
@@ -442,8 +463,12 @@ def main():
     logger.info("STEP 2: Fetching database export files")
     fetcher.fetch_database_export_files()
 
+
     logger.info("STEP 3: Fetching test fixtures and templates")
     fetcher.fetch_test_fixtures()
+
+    logger.info("STEP 4: Fetching test templates")
+    fetcher.fetch_filter_code()
 
     logger.info("File fetching process completed successfully!")
     print("File fetching process completed!")

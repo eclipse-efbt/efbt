@@ -123,6 +123,7 @@ class ELDMSearch:
         #            context, super_entity, entities, link_count, link_limit
         #        )
 
+
     def _get_parents_from_disjoint_subtyping(entity):
         """
         Retrieve parents from disjoint subtyping relationships.
@@ -133,7 +134,7 @@ class ELDMSearch:
         Returns:
             list: A list of parents from disjoint subtyping.
         """
-        # print(f"Getting parents from disjoint subtyping for {entity.__name__}")
+        print(f"Getting parents from disjoint subtyping for {entity.__name__}")
         parents_from_disjoint_subtyping = []
         # get a link tot the full django model, then loop trhought all tables inthe model
         for model in apps.get_models():
