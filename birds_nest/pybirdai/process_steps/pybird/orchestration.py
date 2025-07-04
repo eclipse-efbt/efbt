@@ -350,6 +350,33 @@ class OrchestrationWithLineage:
 		except Exception:
 			return False
 	
+	def _track_table_columns(self, table_obj, aorta_table):
+		"""Track columns/fields in a table"""
+		try:
+			# Get all non-method attributes that could be columns
+			attributes = [attr for attr in dir(table_obj) 
+						if not attr.startswith('_') 
+						and not callable(getattr(table_obj, attr, None))]
+			
+			# Common column patterns in generated code
+			column_patterns = ['CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'OBSRVD_AGNT', 
+							'INSTRMNT_ID', 'PRTY_ID', 'RPRTNG_AGNT_ID', 'OBSRVTN_DT']
+			
+			# Track columns based on patterns and actual object structure
+			for attr in attributes:
+				if (any(pattern in attr for pattern in column_patterns) or 
+					attr.upper() == attr):  # Uppercase attributes are likely columns
+					
+					# Create DatabaseField for this column
+					db_field = DatabaseField.objects.create(
+						name=attr,
+						table=aorta_table
+					)
+					
+					print(f"Tracked column: {aorta_table.name}.{attr}")
+		except Exception as e:
+			print(f"Error tracking columns for {aorta_table.name}: {e}")
+	
 	def init(self,theObject):
 		# Check if this object has already been initialized
 		object_id = id(theObject)
@@ -956,10 +983,14 @@ class OrchestrationWithLineage:
 			self.current_rows['source'] = db_row.id
 			self.current_rows['table'] = table_name
 			
+<<<<<<< HEAD
 			# Clear evaluated functions cache when switching to a new row
 			self.evaluated_functions_cache.clear()
 			
 			# print(f"Tracked row processing: {table_name} row {row_identifier}")
+=======
+			print(f"Tracked row processing: {table_name} row {row_identifier}")
+>>>>>>> bd7910ef (Re-include all the CoCaLiMo and Aorta standards #1536)
 			return db_row
 			
 		except Exception as e:
@@ -1001,6 +1032,7 @@ class OrchestrationWithLineage:
 				row=db_row
 			)
 			
+<<<<<<< HEAD
 			# print(f"Tracked column value: {table.name}.{column_name} = {value}")
 		except Exception as e:
 			print(f"Error tracking column value {column_name}: {e}")
@@ -1045,6 +1077,12 @@ class OrchestrationWithLineage:
 			print(f"Error comparing row data: {e}")
 			return False
 	
+=======
+			print(f"Tracked column value: {table.name}.{column_name} = {value}")
+		except Exception as e:
+			print(f"Error tracking column value {column_name}: {e}")
+	
+>>>>>>> bd7910ef (Re-include all the CoCaLiMo and Aorta standards #1536)
 	def track_derived_row_processing(self, table_name, derived_row_data, source_row_ids=None):
 		"""Track derived/computed row processing"""
 		if not self.lineage_enabled or not self.trail:
