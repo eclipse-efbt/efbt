@@ -11,6 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 
 
+from django.apps import apps
 from pybirdai.process_steps.pybird.csv_converter import CSVConverter
 from pybirdai.models import (
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
@@ -58,6 +59,16 @@ class Orchestration:
 		# Perform standard initialization
 		return self.init(theObject)
 	
+	def _is_django_model(self, table_name):
+		"""Check if a table name corresponds to a Django model"""
+		try:
+			# Try to get the model from Django's app registry
+			apps.get_model('pybirdai', table_name)
+			return True
+		except LookupError:
+			# Not a Django model
+			return False
+	
 	def _track_object_initialization(self, obj):
 		"""Track object in AORTA metadata trail"""
 		if not obj:
@@ -74,27 +85,43 @@ class Orchestration:
 			if table_name == 'Dummy':
 				return
 			
-			# Create DatabaseTable in AORTA
-			aorta_table = DatabaseTable.objects.create(name=table_name)
+			# Determine if this is a Django model or a derived table
+			is_django_model = self._is_django_model(table_name)
+			
+			if is_django_model:
+				# Create DatabaseTable for Django model classes
+				aorta_table = DatabaseTable.objects.create(name=table_name)
+			else:
+				# Create DerivedTable for non-Django model classes
+				aorta_table = DerivedTable.objects.create(name=table_name)
 			
 			# Add to metadata trail
 			if self.metadata_trail:
+				table_type = 'DatabaseTable' if is_django_model else 'DerivedTable'
 				AortaTableReference.objects.create(
 					metadata_trail=self.metadata_trail,
-					table_content_type='DatabaseTable',
+					table_content_type=table_type,
 					table_id=aorta_table.id
 				)
 			else:
 				print(f"Warning: No metadata_trail available for table {table_name}")
 			
-			# Create PopulatedDataBaseTable
+			# Create appropriate populated/evaluated table
 			if self.trail:
-				populated_table = PopulatedDataBaseTable.objects.create(
-					trail=self.trail,
-					table=aorta_table
-				)
+				if is_django_model:
+					# Create PopulatedDataBaseTable for Django model tables
+					populated_table = PopulatedDataBaseTable.objects.create(
+						trail=self.trail,
+						table=aorta_table
+					)
+				else:
+					# Create EvaluatedDerivedTable for derived tables
+					populated_table = EvaluatedDerivedTable.objects.create(
+						trail=self.trail,
+						table=aorta_table
+					)
 			else:
-				print(f"Warning: No trail available for PopulatedDataBaseTable {table_name}")
+				print(f"Warning: No trail available for populated table {table_name}")
 				return
 			
 			self.current_populated_tables[table_name] = populated_table
@@ -116,18 +143,21 @@ class Orchestration:
 			column_patterns = ['CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'OBSRVD_AGNT', 
 							'INSTRMNT_ID', 'PRTY_ID', 'RPRTNG_AGNT_ID', 'OBSRVTN_DT']
 			
-			# Track columns based on patterns and actual object structure
-			for attr in attributes:
-				if (any(pattern in attr for pattern in column_patterns) or 
-					attr.upper() == attr):  # Uppercase attributes are likely columns
-					
-					# Create DatabaseField for this column
-					db_field = DatabaseField.objects.create(
-						name=attr,
-						table=aorta_table
-					)
-					
-					print(f"Tracked column: {aorta_table.name}.{attr}")
+			# Only track fields for DatabaseTable instances
+			# For DerivedTable instances, columns are tracked as Functions
+			if isinstance(aorta_table, DatabaseTable):
+				# Track columns based on patterns and actual object structure
+				for attr in attributes:
+					if (any(pattern in attr for pattern in column_patterns) or 
+						attr.upper() == attr):  # Uppercase attributes are likely columns
+						
+						# Create DatabaseField for this column
+						db_field = DatabaseField.objects.create(
+							name=attr,
+							table=aorta_table
+						)
+						
+						print(f"Tracked column: {aorta_table.name}.{attr}")
 		except Exception as e:
 			print(f"Error tracking columns for {aorta_table.name}: {e}")
 	
@@ -376,26 +406,41 @@ class Orchestration:
 				print(f"No populated table found for {table_name}")
 				return
 			
+			# Determine if this is a derived table or database table
+			is_derived_table = isinstance(populated_table, EvaluatedDerivedTable)
+			
 			# Create row identifier if not provided
 			if not row_identifier:
-				row_identifier = f"row_{len(populated_table.databaserow_set.all()) + 1}"
+				if is_derived_table:
+					row_identifier = f"row_{len(populated_table.derivedtablerow_set.all()) + 1}"
+				else:
+					row_identifier = f"row_{len(populated_table.databaserow_set.all()) + 1}"
 			
-			# Create DatabaseRow
-			db_row = DatabaseRow.objects.create(
-				populated_table=populated_table,
-				row_identifier=row_identifier
-			)
+			# Create appropriate row type
+			if is_derived_table:
+				# Create DerivedTableRow for derived tables
+				db_row = DerivedTableRow.objects.create(
+					populated_table=populated_table,
+					row_identifier=row_identifier
+				)
+			else:
+				# Create DatabaseRow for database tables
+				db_row = DatabaseRow.objects.create(
+					populated_table=populated_table,
+					row_identifier=row_identifier
+				)
 			
-			# Track individual column values
-			if isinstance(row_data, dict):
-				for column_name, value in row_data.items():
-					self._track_column_value(db_row, column_name, value)
-			elif hasattr(row_data, '__dict__'):
-				# Handle object with attributes
-				for attr_name in dir(row_data):
-					if not attr_name.startswith('_') and not callable(getattr(row_data, attr_name)):
-						value = getattr(row_data, attr_name)
-						self._track_column_value(db_row, attr_name, value)
+			# Track individual column values (only for DatabaseRow)
+			if not is_derived_table:
+				if isinstance(row_data, dict):
+					for column_name, value in row_data.items():
+						self._track_column_value(db_row, column_name, value)
+				elif hasattr(row_data, '__dict__'):
+					# Handle object with attributes
+					for attr_name in dir(row_data):
+						if not attr_name.startswith('_') and not callable(getattr(row_data, attr_name)):
+							value = getattr(row_data, attr_name)
+							self._track_column_value(db_row, attr_name, value)
 			
 			# Store current row context for value tracking
 			self.current_rows['source'] = db_row.id
@@ -426,8 +471,19 @@ class Orchestration:
 				field = fields.first()
 			
 			# Create DatabaseColumnValue
+			# Try to convert to float, otherwise use string_value
+			numeric_value = None
+			string_value = None
+			
+			if value is not None:
+				try:
+					numeric_value = float(value)
+				except (ValueError, TypeError):
+					string_value = str(value)
+			
 			DatabaseColumnValue.objects.create(
-				value=str(value) if value is not None else None,
+				value=numeric_value,
+				string_value=string_value,
 				column=field,
 				row=db_row
 			)
@@ -564,21 +620,37 @@ class Orchestration:
 		try:
 			# Ensure we have a populated table for this table name
 			if table_name not in self.current_populated_tables:
-				# Create a temporary table if it doesn't exist
-				temp_table = DatabaseTable.objects.create(name=table_name)
+				# Determine if this is a Django model or a derived table
+				is_django_model = self._is_django_model(table_name)
+				
+				# Create appropriate table type
+				if is_django_model:
+					temp_table = DatabaseTable.objects.create(name=table_name)
+					table_type = 'DatabaseTable'
+				else:
+					temp_table = DerivedTable.objects.create(name=table_name)
+					table_type = 'DerivedTable'
+				
 				if self.metadata_trail:
 					AortaTableReference.objects.create(
 						metadata_trail=self.metadata_trail,
-						table_content_type='DatabaseTable',
+						table_content_type=table_type,
 						table_id=temp_table.id
 					)
 				else:
 					print(f"Warning: No metadata_trail available for tracking table {table_name}")
+				
 				if self.trail:
-					populated_table = PopulatedDataBaseTable.objects.create(
-						trail=self.trail,
-						table=temp_table
-					)
+					if is_django_model:
+						populated_table = PopulatedDataBaseTable.objects.create(
+							trail=self.trail,
+							table=temp_table
+						)
+					else:
+						populated_table = EvaluatedDerivedTable.objects.create(
+							trail=self.trail,
+							table=temp_table
+						)
 				else:
 					print(f"Warning: No trail available for PopulatedDataBaseTable {table_name}")
 					return
@@ -589,7 +661,10 @@ class Orchestration:
 				row_id = f"{table_name}_row_{i}"
 				
 				# Extract data from the item
-				if hasattr(item, '__dict__'):
+				if isinstance(item, dict):
+					# Item is already a dictionary
+					row_data = item
+				elif hasattr(item, '__dict__'):
 					row_data = {}
 					for attr in dir(item):
 						if not attr.startswith('_') and not callable(getattr(item, attr)):
