@@ -303,9 +303,10 @@ class CSVConverter:
 					if row_data:
 						data_items.append(row_data)
 				
-				# Track the data processing
+				# Track the data processing - use the original table name, not "_data" suffix
+				# This ensures Django model data is associated with PopulatedDataBaseTable, not EvaluatedDerivedTable
 				if data_items:
-					orchestration.track_data_processing(f"{table_name}_data", data_items)
+					orchestration.track_data_processing(table_name, data_items)
 			
 			print(f"Tracked Django model access: {table_name} ({queryset.count()} rows)")
 			

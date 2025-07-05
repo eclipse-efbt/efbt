@@ -96,9 +96,39 @@ def lineage(dependencies: Dict[str, Any] = None):
                                 except Exception as e:
                                     print(f"Error extracting source value for {dep}: {e}")
                         
-                        # Only track if we have a derived row context or if this is a computation
-                        if (hasattr(orchestration, 'current_rows') and 
-                            orchestration.current_rows.get('derived')) or func_name == 'metric_value':
+                        # Track value computation in these cases:
+                        # 1. We have a derived row context
+                        # 2. This is the metric_value function
+                        # 3. This is a @lineage decorated method on a derived table object
+                        
+                        # Debug logging
+                        has_derived_context = (hasattr(orchestration, 'current_rows') and 
+                                             orchestration.current_rows.get('derived'))
+                        is_metric_value = func_name == 'metric_value'
+                        is_derived_method = (args and hasattr(args[0], '__class__') and 
+                                           any(pattern in args[0].__class__.__name__ 
+                                               for pattern in ['F_01_01_REF_FINREP', 'F_05_01_REF_FINREP']))
+                        
+                        should_track = has_derived_context or is_metric_value or is_derived_method
+                        
+                        # Debug output
+                        if func_name in ['CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'TYP_INSTRMNT'] or is_metric_value:
+                            print(f"DEBUG @lineage: {full_func_name}")
+                            print(f"  - has_derived_context: {has_derived_context}")
+                            print(f"  - is_metric_value: {is_metric_value}")
+                            print(f"  - is_derived_method: {is_derived_method}")
+                            if args and hasattr(args[0], '__class__'):
+                                print(f"  - class_name: {args[0].__class__.__name__}")
+                            print(f"  - should_track: {should_track}")
+                            print(f"  - source_values: {source_values}")
+                        
+                        if should_track:
+                            # If this is a derived method but no derived context exists, create one
+                            if is_derived_method and not has_derived_context:
+                                derived_row_id = orchestration._ensure_derived_row_context(args[0], full_func_name)
+                                if derived_row_id:
+                                    orchestration.current_rows['derived'] = derived_row_id
+                            
                             orchestration.track_value_computation(
                                 full_func_name,
                                 source_values,
