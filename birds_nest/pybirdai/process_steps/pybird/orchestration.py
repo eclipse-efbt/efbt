@@ -362,18 +362,21 @@ class OrchestrationWithLineage:
 			column_patterns = ['CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'OBSRVD_AGNT', 
 							'INSTRMNT_ID', 'PRTY_ID', 'RPRTNG_AGNT_ID', 'OBSRVTN_DT']
 			
-			# Track columns based on patterns and actual object structure
-			for attr in attributes:
-				if (any(pattern in attr for pattern in column_patterns) or 
-					attr.upper() == attr):  # Uppercase attributes are likely columns
-					
-					# Create DatabaseField for this column
-					db_field = DatabaseField.objects.create(
-						name=attr,
-						table=aorta_table
-					)
-					
-					print(f"Tracked column: {aorta_table.name}.{attr}")
+			# Only track fields for DatabaseTable instances
+			# For DerivedTable instances, columns are tracked as Functions
+			if isinstance(aorta_table, DatabaseTable):
+				# Track columns based on patterns and actual object structure
+				for attr in attributes:
+					if (any(pattern in attr for pattern in column_patterns) or 
+						attr.upper() == attr):  # Uppercase attributes are likely columns
+						
+						# Create DatabaseField for this column
+						db_field = DatabaseField.objects.create(
+							name=attr,
+							table=aorta_table
+						)
+						
+						print(f"Tracked column: {aorta_table.name}.{attr}")
 		except Exception as e:
 			print(f"Error tracking columns for {aorta_table.name}: {e}")
 	
@@ -931,6 +934,7 @@ class OrchestrationWithLineage:
 			
 			# Determine if this is a derived table or database table
 			is_derived_table = isinstance(populated_table, EvaluatedDerivedTable)
+<<<<<<< HEAD
 			
 			# Check for existing row with same data to prevent duplicates
 			existing_row = None
@@ -969,6 +973,32 @@ class OrchestrationWithLineage:
 			
 			# Track individual column values (only for DatabaseRow and only if this is a new row)
 			if not is_derived_table and not existing_row:
+=======
+			
+			# Create row identifier if not provided
+			if not row_identifier:
+				if is_derived_table:
+					row_identifier = f"row_{len(populated_table.derivedtablerow_set.all()) + 1}"
+				else:
+					row_identifier = f"row_{len(populated_table.databaserow_set.all()) + 1}"
+			
+			# Create appropriate row type
+			if is_derived_table:
+				# Create DerivedTableRow for derived tables
+				db_row = DerivedTableRow.objects.create(
+					populated_table=populated_table,
+					row_identifier=row_identifier
+				)
+			else:
+				# Create DatabaseRow for database tables
+				db_row = DatabaseRow.objects.create(
+					populated_table=populated_table,
+					row_identifier=row_identifier
+				)
+			
+			# Track individual column values (only for DatabaseRow)
+			if not is_derived_table:
+>>>>>>> c349d6b2 (Re-include all the CoCaLiMo and Aorta standards #1536)
 				if isinstance(row_data, dict):
 					for column_name, value in row_data.items():
 						self._track_column_value(db_row, column_name, value)
@@ -1373,6 +1403,7 @@ class OrchestrationWithLineage:
 				# Determine if this is a Django model or a derived table
 				is_django_model = self._is_django_model(table_name)
 				
+<<<<<<< HEAD
 				# Check for existing PopulatedDataBaseTable/EvaluatedDerivedTable first
 				populated_table = None
 				temp_table = None
@@ -1389,6 +1420,36 @@ class OrchestrationWithLineage:
 						populated_table = existing_populated
 						table_exists = True
 						print(f"Found existing DatabaseTable for: {table_name}")
+=======
+				# Create appropriate table type
+				if is_django_model:
+					temp_table = DatabaseTable.objects.create(name=table_name)
+					table_type = 'DatabaseTable'
+				else:
+					temp_table = DerivedTable.objects.create(name=table_name)
+					table_type = 'DerivedTable'
+				
+				if self.metadata_trail:
+					AortaTableReference.objects.create(
+						metadata_trail=self.metadata_trail,
+						table_content_type=table_type,
+						table_id=temp_table.id
+					)
+				else:
+					print(f"Warning: No metadata_trail available for tracking table {table_name}")
+				
+				if self.trail:
+					if is_django_model:
+						populated_table = PopulatedDataBaseTable.objects.create(
+							trail=self.trail,
+							table=temp_table
+						)
+					else:
+						populated_table = EvaluatedDerivedTable.objects.create(
+							trail=self.trail,
+							table=temp_table
+						)
+>>>>>>> c349d6b2 (Re-include all the CoCaLiMo and Aorta standards #1536)
 				else:
 					# Look for existing DerivedTable with same name in this trail
 					existing_evaluated = EvaluatedDerivedTable.objects.filter(
