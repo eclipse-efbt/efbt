@@ -82,7 +82,7 @@ class DerivedTableRow(AortaRow):
 # Value Models
 class DatabaseColumnValue(AortaActualValue):
     """Stores actual data values"""
-    value = models.FloatField()
+    value = models.FloatField(null=True, blank=True)
     string_value = models.TextField(null=True, blank=True)  # For non-numeric values
     column = models.ForeignKey('DatabaseField', on_delete=models.CASCADE)
     row = models.ForeignKey('DatabaseRow', related_name='column_values', on_delete=models.CASCADE)
@@ -92,7 +92,7 @@ class DatabaseColumnValue(AortaActualValue):
 
 class EvaluatedFunction(AortaActualValue):
     """Stores computed values with lineage"""
-    value = models.FloatField()
+    value = models.FloatField(null=True, blank=True)
     string_value = models.TextField(null=True, blank=True)  # For non-numeric values
     function = models.ForeignKey('Function', on_delete=models.CASCADE)
     row = models.ForeignKey('DerivedTableRow', related_name='evaluated_functions', on_delete=models.CASCADE)
