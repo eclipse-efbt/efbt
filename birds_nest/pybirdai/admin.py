@@ -67,3 +67,51 @@ from .bird_meta_data_model import VARIABLE_SET_ENUMERATION
 admin.site.register(VARIABLE_SET_ENUMERATION)
 from .bird_meta_data_model import MEMBER_LINK
 admin.site.register(MEMBER_LINK)
+from .workflow_model import AutomodeConfiguration
+admin.site.register(AutomodeConfiguration)
+from .workflow_model import WorkflowTaskExecution
+admin.site.register(WorkflowTaskExecution)
+from .workflow_model import WorkflowTaskDependency
+admin.site.register(WorkflowTaskDependency)
+from .workflow_model import WorkflowSession
+admin.site.register(WorkflowSession)
+
+# AORTA Lineage Tracking Models
+from .aorta_model import DatabaseTable
+admin.site.register(DatabaseTable)
+from .aorta_model import DerivedTable
+admin.site.register(DerivedTable)
+from .aorta_model import DatabaseField
+admin.site.register(DatabaseField)
+from .aorta_model import Function
+admin.site.register(Function)
+from .aorta_model import DatabaseRow
+admin.site.register(DatabaseRow)
+from .aorta_model import DerivedTableRow
+admin.site.register(DerivedTableRow)
+from .aorta_model import DatabaseColumnValue
+admin.site.register(DatabaseColumnValue)
+from .aorta_model import EvaluatedFunction
+admin.site.register(EvaluatedFunction)
+from .aorta_model import Trail
+admin.site.register(Trail)
+from .aorta_model import MetaDataTrail
+admin.site.register(MetaDataTrail)
+from .aorta_model import PopulatedDataBaseTable
+admin.site.register(PopulatedDataBaseTable)
+from .aorta_model import EvaluatedDerivedTable
+admin.site.register(EvaluatedDerivedTable)
+from .aorta_model import FunctionText
+admin.site.register(FunctionText)
+from .aorta_model import TableCreationFunction
+admin.site.register(TableCreationFunction)
+from .aorta_model import AortaTableReference
+admin.site.register(AortaTableReference)
+from .aorta_model import FunctionColumnReference
+admin.site.register(FunctionColumnReference)
+from .aorta_model import DerivedRowSourceReference
+admin.site.register(DerivedRowSourceReference)
+from .aorta_model import EvaluatedFunctionSourceValue
+admin.site.register(EvaluatedFunctionSourceValue)
+from .aorta_model import TableCreationSourceTable
+admin.site.register(TableCreationSourceTable)
