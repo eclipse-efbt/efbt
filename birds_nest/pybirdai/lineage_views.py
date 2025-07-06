@@ -288,10 +288,28 @@ def get_trail_lineage_data(request, trail_id):
                             # Connect to function definition if shown
                             if detail_level in ['column', 'row', 'value']:
                                 func_node_id = get_node_id('function', eval_func.function.id)
+                                
+                                # Ensure the Function node exists (in case it wasn't added in the table loop)
+                                function_exists = any(node['id'] == func_node_id for node in nodes)
+                                if not function_exists:
+                                    function = eval_func.function
+                                    nodes.append({
+                                        'id': func_node_id,
+                                        'label': function.name,
+                                        'type': 'function',
+                                        'details': {
+                                            'name': function.name,
+                                            'table': function.table.name,
+                                            'function_id': function.id,
+                                            'function_text': function.function_text.text[:100] + '...' if function.function_text else None
+                                        }
+                                    })
+                                
                                 edges.append({
-                                    'source': eval_func_node_id,
-                                    'target': func_node_id,
-                                    'type': 'instance_of_function'
+                                    'source': func_node_id,
+                                    'target': eval_func_node_id,
+                                    'type': 'instance_of_function',
+                                    'label': 'instantiated as'
                                 })
         
         # 3. Add lineage connections at the value level
@@ -313,18 +331,84 @@ def get_trail_lineage_data(request, trail_id):
                 try:
                     eval_func_node_id = get_node_id('evaluated_function', source_ref.evaluated_function.id)
                     
+                    # Create node for EvaluatedFunctionSourceValue
+                    source_ref_node_id = get_node_id('eval_func_source_value', source_ref.id)
+                    nodes.append({
+                        'id': source_ref_node_id,
+                        'label': f"SourceRef {source_ref.id}",
+                        'type': 'eval_func_source_value',
+                        'details': {
+                            'id': source_ref.id,
+                            'evaluated_function_id': source_ref.evaluated_function.id,
+                            'source_type': source_ref.content_type.model,
+                            'source_id': source_ref.object_id
+                        }
+                    })
+                    
+                    # Edge from EvaluatedFunction to EvaluatedFunctionSourceValue
+                    edges.append({
+                        'source': eval_func_node_id,
+                        'target': source_ref_node_id,
+                        'type': 'has_source_reference',
+                        'label': 'references'
+                    })
+                    
+                    # Edge from EvaluatedFunctionSourceValue to actual source value
                     if source_ref.content_type.model == 'databasecolumnvalue':
                         source_node_id = get_node_id('database_column_value', source_ref.object_id)
+                        
+                        # Ensure the DatabaseColumnValue node exists
+                        source_exists = any(node['id'] == source_node_id for node in nodes)
+                        if not source_exists:
+                            try:
+                                from pybirdai.models import DatabaseColumnValue
+                                col_value = DatabaseColumnValue.objects.get(id=source_ref.object_id)
+                                value_display = str(col_value.value or col_value.string_value or 'NULL')[:20]
+                                nodes.append({
+                                    'id': source_node_id,
+                                    'label': f"{col_value.column.name}: {value_display}",
+                                    'type': 'database_column_value',
+                                    'details': {
+                                        'value': col_value.value or col_value.string_value,
+                                        'column': col_value.column.name,
+                                        'row_id': col_value.row.id,
+                                        'value_id': col_value.id
+                                    }
+                                })
+                            except DatabaseColumnValue.DoesNotExist:
+                                continue
+                                
                     elif source_ref.content_type.model == 'evaluatedfunction':
                         source_node_id = get_node_id('evaluated_function', source_ref.object_id)
+                        
+                        # Ensure the EvaluatedFunction node exists
+                        source_exists = any(node['id'] == source_node_id for node in nodes)
+                        if not source_exists:
+                            try:
+                                from pybirdai.models import EvaluatedFunction
+                                eval_func = EvaluatedFunction.objects.get(id=source_ref.object_id)
+                                value_display = str(eval_func.value or eval_func.string_value or 'NULL')[:20]
+                                nodes.append({
+                                    'id': source_node_id,
+                                    'label': f"{eval_func.function.name}: {value_display}",
+                                    'type': 'evaluated_function',
+                                    'details': {
+                                        'value': eval_func.value or eval_func.string_value,
+                                        'function': eval_func.function.name,
+                                        'row_id': eval_func.row.id,
+                                        'eval_func_id': eval_func.id
+                                    }
+                                })
+                            except EvaluatedFunction.DoesNotExist:
+                                continue
                     else:
                         continue
                     
                     edges.append({
-                        'source': eval_func_node_id,
+                        'source': source_ref_node_id,
                         'target': source_node_id,
-                        'type': 'derived_from_value',
-                        'label': 'computed from'
+                        'type': 'points_to_source',
+                        'label': 'points to'
                     })
                 except Exception:
                     continue  # Skip if source not found
@@ -351,10 +435,10 @@ def get_trail_lineage_data(request, trail_id):
                         continue
                     
                     edges.append({
-                        'source': derived_row_node_id,
-                        'target': source_node_id,
+                        'source': source_node_id,
+                        'target': derived_row_node_id,
                         'type': 'derived_from_row',
-                        'label': 'computed from'
+                        'label': 'feeds into'
                     })
                 except Exception:
                     continue  # Skip if source not found
