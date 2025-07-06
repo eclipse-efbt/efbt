@@ -4,6 +4,7 @@ from . import report_views
 from . import workflow_views
 from . import aorta_views
 from . import lineage_views
+from . import lineage_api
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -670,5 +671,15 @@ urlpatterns = [
         "api/trail/<int:trail_id>/node/<str:node_type>/<int:node_id>/",
         lineage_views.get_node_details,
         name="get_node_details",
+    ),
+    path(
+        "api/trail/<int:trail_id>/complete-lineage/",
+        lineage_api.get_trail_complete_lineage,
+        name="get_trail_complete_lineage",
+    ),
+    path(
+        "api/trail/<int:trail_id>/summary/",
+        lineage_api.get_trail_lineage_summary,
+        name="get_trail_lineage_summary",
     ),
 ]
