@@ -1126,14 +1126,10 @@ class OrchestrationWithLineage:
 			self.current_rows['source'] = db_row.id
 			self.current_rows['table'] = table_name
 			
-<<<<<<< HEAD
 			# Clear evaluated functions cache when switching to a new row
 			self.evaluated_functions_cache.clear()
 			
 			# print(f"Tracked row processing: {table_name} row {row_identifier}")
-=======
-			print(f"Tracked row processing: {table_name} row {row_identifier}")
->>>>>>> bd7910ef (Re-include all the CoCaLiMo and Aorta standards #1536)
 			return db_row
 			
 		except Exception as e:
@@ -1175,7 +1171,6 @@ class OrchestrationWithLineage:
 				row=db_row
 			)
 			
-<<<<<<< HEAD
 			# print(f"Tracked column value: {table.name}.{column_name} = {value}")
 		except Exception as e:
 			print(f"Error tracking column value {column_name}: {e}")
@@ -1220,12 +1215,6 @@ class OrchestrationWithLineage:
 			print(f"Error comparing row data: {e}")
 			return False
 	
-=======
-			print(f"Tracked column value: {table.name}.{column_name} = {value}")
-		except Exception as e:
-			print(f"Error tracking column value {column_name}: {e}")
-	
->>>>>>> bd7910ef (Re-include all the CoCaLiMo and Aorta standards #1536)
 	def track_derived_row_processing(self, table_name, derived_row_data, source_row_ids=None):
 		"""Track derived/computed row processing"""
 		if not self.lineage_enabled or not self.trail:
