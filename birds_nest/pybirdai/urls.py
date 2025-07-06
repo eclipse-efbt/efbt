@@ -16,6 +16,9 @@ from . import report_views
 
 from . import aorta_views
 
+from . import workflow_views
+from . import lineage_views
+
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -316,4 +319,10 @@ urlpatterns = [
     path('api/aorta/values/<int:value_id>/lineage/', aorta_views.AortaValueLineageView.as_view(), name='aorta-value-lineage'),
     path('api/aorta/tables/<int:table_id>/dependencies/', aorta_views.AortaTableDependenciesView.as_view(), name='aorta-table-dependencies'),
     path('api/aorta/trails/<int:trail_id>/graph/', aorta_views.AortaLineageGraphView.as_view(), name='aorta-lineage-graph'),
+
+    # Trail Lineage Visualization
+    path('trails/', lineage_views.trail_list, name='trail_list'),
+    path('trails/<int:trail_id>/lineage/', lineage_views.trail_lineage_viewer, name='trail_lineage_viewer'),
+    path('api/trail/<int:trail_id>/lineage/', lineage_views.get_trail_lineage_data, name='get_trail_lineage_data'),
+    path('api/trail/<int:trail_id>/node/<str:node_type>/<int:node_id>/', lineage_views.get_node_details, name='get_node_details'),
 ]
