@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Trail Lineage Viewer - {{ trail.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    #lineage-container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    #main-content {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+    }
+    
+    #graph-container {
+        flex: 2;
+        background: #f8f9fa;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+    
+    #side-panel {
+        flex: 1;
+        max-width: 400px;
+        background: white;
+        border-left: 1px solid #dee2e6;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    #control-bar {
+        background: white;
+        border-bottom: 1px solid #dee2e6;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    #summary-panel, #detail-panel {
+        padding: 20px;
+        overflow-y: auto;
+    }
+    
+    #detail-panel {
+        flex: 1;
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .node-legend {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #333;
+    }
+    
+    .controls-group {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    #loading-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .graph-stats {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+    
+    .detail-section {
+        margin-bottom: 20px;
+    }
+    
+    .detail-section h5 {
+        color: #495057;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .sample-data-table {
+        font-size: 0.85rem;
+    }
+    
+    .dependency-item {
+        padding: 5px 10px;
+        background: #f8f9fa;
+        margin-bottom: 5px;
+        border-radius: 3px;
+    }
+    
+    .no-selection {
+        text-align: center;
+        color: #6c757d;
+        padding: 40px 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="lineage-container">
+    <div id="control-bar">
+        <h4>Trail: {{ trail.name }}</h4>
+        <div class="controls-group">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm btn-outline-primary" id="zoom-in">
+                    <i class="fas fa-search-plus"></i> Zoom In
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="zoom-out">
+                    <i class="fas fa-search-minus"></i> Zoom Out
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="fit-graph">
+                    <i class="fas fa-compress"></i> Fit
+                </button>
+            </div>
+            
+            <div class="form-group">
+                <label for="detail-level">Detail Level:</label>
+                <select class="form-control form-control-sm" id="detail-level" style="width: auto;">
+                    <option value="table">Tables Only</option>
+                    <option value="column">Tables + Columns</option>
+                    <option value="row">Tables + Columns + Rows</option>
+                    <option value="value">Full Lineage (Values)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="max-rows">Max Rows per Table:</label>
+                <input type="number" class="form-control form-control-sm" id="max-rows" value="5" min="1" max="20" style="width: 80px;">
+            </div>
+            
+            <div class="form-group">
+                <label for="max-values">Max Values per Row:</label>
+                <input type="number" class="form-control form-control-sm" id="max-values" value="3" min="1" max="10" style="width: 80px;">
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="hide-empty-tables" checked>
+                <label class="form-check-label" for="hide-empty-tables">
+                    Hide Empty Tables
+                </label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="show-labels" checked>
+                <label class="form-check-label" for="show-labels">
+                    Show Labels
+                </label>
+            </div>
+            
+            <select class="form-control form-control-sm" id="layout-select" style="width: auto;">
+                <option value="breadthfirst">Hierarchical</option>
+                <option value="cose">Force-Directed</option>
+                <option value="circle">Circular</option>
+                <option value="grid">Grid</option>
+            </select>
+        </div>
+        
+        <div class="node-legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #4A90E2;"></div>
+                <span>Database Table</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #50C878;"></div>
+                <span>Derived Table</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #FFB84D;"></div>
+                <span>Field/Column</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #FF6B6B;"></div>
+                <span>Function</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #A0A0A0;"></div>
+                <span>Row</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9370DB;"></div>
+                <span>Column Value</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #20B2AA;"></div>
+                <span>Evaluated Function</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #8B4513;"></div>
+                <span>Table Creation Function</span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="main-content">
+        <div id="graph-container">
+            <div id="loading-indicator">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <p class="mt-2">Loading lineage data...</p>
+            </div>
+            <div id="cy"></div>
+        </div>
+        
+        <div id="side-panel">
+            <div id="summary-panel">
+                <h5>Trail Summary</h5>
+                <div class="graph-stats">
+                    <p><strong>Created:</strong> {{ trail.created_at|date:"Y-m-d H:i:s" }}</p>
+                    <p><strong>Database Tables:</strong> <span id="db-table-count">-</span></p>
+                    <p><strong>Derived Tables:</strong> <span id="derived-table-count">-</span></p>
+                    <p><strong>Total Nodes:</strong> <span id="total-nodes">-</span></p>
+                    <p><strong>Total Edges:</strong> <span id="total-edges">-</span></p>
+                </div>
+                
+                {% if trail.execution_context %}
+                <div class="mt-3">
+                    <h6>Execution Context</h6>
+                    <pre class="bg-light p-2 rounded" style="max-height: 150px; overflow-y: auto;">{{ trail.execution_context|default_if_none:"{}" }}</pre>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div id="detail-panel">
+                <h5>Node Details</h5>
+                <div id="node-details">
+                    <div class="no-selection">
+                        <i class="fas fa-mouse-pointer fa-2x mb-3"></i>
+                        <p>Click on a node to view details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden data -->
+<div id="trail-data" data-trail-id="{{ trail_id }}" style="display: none;"></div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Cytoscape.js for graph visualization -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+
+<!-- Our lineage visualization script -->
+<script src="{% static 'pybirdai/js/lineage-viewer.js' %}"></script>
+{% endblock %}
