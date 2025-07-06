@@ -379,7 +379,7 @@ class OrchestrationWithLineage:
 						name=field_name,
 						table=aorta_table
 					)
-					print(f"Tracked column: {aorta_table.name}.{field_name}")
+					# print(f"Tracked column: {aorta_table.name}.{field_name}")
 		except Exception as e:
 			print(f"Error tracking columns for {aorta_table.name}: {e}")
 	
@@ -1354,7 +1354,6 @@ class OrchestrationWithLineage:
 			return None
 			
 		try:
-<<<<<<< HEAD
 			# Check if we already have a context for this specific object
 			obj_id = id(derived_obj)
 			if obj_id in self.object_contexts:
@@ -1385,19 +1384,6 @@ class OrchestrationWithLineage:
 				if self.metadata_trail:
 					# Check if reference already exists
 					existing_refs = AortaTableReference.objects.filter(
-=======
-			# Get the class name to determine table name
-			class_name = derived_obj.__class__.__name__
-			table_name = class_name
-			
-			# Ensure we have an EvaluatedDerivedTable for this derived object
-			if table_name not in self.current_populated_tables:
-				# Create a DerivedTable
-				derived_table = DerivedTable.objects.create(name=table_name)
-				
-				if self.metadata_trail:
-					AortaTableReference.objects.create(
->>>>>>> 0e3a0c54 (Re-include all the CoCaLiMo and Aorta standards #1536)
 						metadata_trail=self.metadata_trail,
 						table_content_type='DerivedTable',
 						table_id=derived_table.id
@@ -1811,7 +1797,11 @@ def create_orchestration():
 	"""
 	from pybirdai.context.context import Context
 	
+<<<<<<< HEAD
 	if hasattr(Context, 'enable_lineage_tracking') and Context.enable_lineage_tracking:
+=======
+	if hasattr(Context, 'use_lineage_enhanced_orchestrator') and Context.use_lineage_enhanced_orchestrator:
+>>>>>>> c7f830e9 (Re-include all the CoCaLiMo and Aorta standards #1536)
 		print("Using lineage-enhanced orchestrator")
 		return OrchestrationWithLineage()
 	else:
