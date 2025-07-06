@@ -261,6 +261,59 @@
                     <p><strong>Total Edges:</strong> <span id="total-edges">-</span></p>
                 </div>
                 
+                <div class="mt-3">
+                    <h6>JSON API Exports</h6>
+                    <div class="btn-group-vertical w-100" role="group">
+                        <div class="btn-group w-100 mb-2" role="group">
+                            <a href="{% url 'pybirdai:get_trail_lineage_summary' trail_id=trail.id %}" 
+                               class="btn btn-sm btn-outline-info" 
+                               target="_blank"
+                               title="Lightweight summary with counts and basic statistics">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-info"
+                                    onclick="downloadJSON('{% url 'pybirdai:get_trail_lineage_summary' trail_id=trail.id %}', 'trail_{{ trail.id }}_summary.json')"
+                                    title="Download summary JSON file">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-info"
+                                    onclick="copyJSONToClipboard('{% url 'pybirdai:get_trail_lineage_summary' trail_id=trail.id %}', this)"
+                                    title="Copy summary JSON to clipboard">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #666; margin-bottom: 8px;">Summary JSON</div>
+                        
+                        <div class="btn-group w-100 mb-2" role="group">
+                            <a href="{% url 'pybirdai:get_trail_complete_lineage' trail_id=trail.id %}" 
+                               class="btn btn-sm btn-outline-primary" 
+                               target="_blank"
+                               title="Complete lineage data including all tables, rows, values, and relationships">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary"
+                                    onclick="downloadJSON('{% url 'pybirdai:get_trail_complete_lineage' trail_id=trail.id %}', 'trail_{{ trail.id }}_complete_lineage.json')"
+                                    title="Download complete lineage JSON file">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary"
+                                    onclick="copyJSONToClipboard('{% url 'pybirdai:get_trail_complete_lineage' trail_id=trail.id %}', this)"
+                                    title="Copy complete lineage JSON to clipboard">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #666; margin-bottom: 8px;">Complete Lineage JSON</div>
+                    </div>
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i> 
+                        Export lineage data for analysis, integration, or external tools.
+                    </small>
+                </div>
+                
                 {% if trail.execution_context %}
                 <div class="mt-3">
                     <h6>Execution Context</h6>
@@ -291,6 +344,102 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+
+<!-- JSON Export Functions -->
+<script>
+function downloadJSON(url, filename) {
+    // Show loading indicator
+    const event = window.event;
+    const button = event.target.closest('button');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    button.disabled = true;
+    
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Create blob and download
+            const blob = new Blob([JSON.stringify(data, null, 2)], {
+                type: 'application/json'
+            });
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(downloadUrl);
+            
+            // Show success
+            button.innerHTML = '<i class="fas fa-check"></i> Downloaded';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 2000);
+        })
+        .catch(error => {
+            console.error('Download error:', error);
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 2000);
+        });
+}
+
+function copyJSONToClipboard(url, button) {
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    button.disabled = true;
+    
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const jsonString = JSON.stringify(data, null, 2);
+            navigator.clipboard.writeText(jsonString).then(() => {
+                button.innerHTML = '<i class="fas fa-check"></i> Copied';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+            }).catch(err => {
+                console.error('Clipboard error:', err);
+                // Fallback: create a text area and select it
+                const textArea = document.createElement('textarea');
+                textArea.value = jsonString;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                button.innerHTML = '<i class="fas fa-check"></i> Copied';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+            });
+        })
+        .catch(error => {
+            console.error('Copy error:', error);
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 2000);
+        });
+}
+</script>
 
 <!-- Our lineage visualization script -->
 <script src="{% static 'pybirdai/js/lineage-viewer.js' %}"></script>
