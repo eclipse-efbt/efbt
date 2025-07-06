@@ -73,3 +73,43 @@ from .bird_meta_data_model import WorkflowTaskDependency
 admin.site.register(WorkflowTaskDependency)
 from .bird_meta_data_model import WorkflowSession
 admin.site.register(WorkflowSession)
+
+# AORTA Lineage Tracking Models
+from .models import DatabaseTable
+admin.site.register(DatabaseTable)
+from .models import DerivedTable
+admin.site.register(DerivedTable)
+from .models import DatabaseField
+admin.site.register(DatabaseField)
+from .models import Function
+admin.site.register(Function)
+from .models import DatabaseRow
+admin.site.register(DatabaseRow)
+from .models import DerivedTableRow
+admin.site.register(DerivedTableRow)
+from .models import DatabaseColumnValue
+admin.site.register(DatabaseColumnValue)
+from .models import EvaluatedFunction
+admin.site.register(EvaluatedFunction)
+from .models import Trail
+admin.site.register(Trail)
+from .models import MetaDataTrail
+admin.site.register(MetaDataTrail)
+from .models import PopulatedDataBaseTable
+admin.site.register(PopulatedDataBaseTable)
+from .models import EvaluatedDerivedTable
+admin.site.register(EvaluatedDerivedTable)
+from .models import FunctionText
+admin.site.register(FunctionText)
+from .models import TableCreationFunction
+admin.site.register(TableCreationFunction)
+from .models import AortaTableReference
+admin.site.register(AortaTableReference)
+from .models import FunctionColumnReference
+admin.site.register(FunctionColumnReference)
+from .models import DerivedRowSourceReference
+admin.site.register(DerivedRowSourceReference)
+from .models import EvaluatedFunctionSourceValue
+admin.site.register(EvaluatedFunctionSourceValue)
+from .models import TableCreationSourceTable
+admin.site.register(TableCreationSourceTable)
