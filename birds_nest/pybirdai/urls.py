@@ -18,6 +18,7 @@ from . import aorta_views
 
 from . import workflow_views
 from . import lineage_views
+from . import lineage_api
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -325,4 +326,8 @@ urlpatterns = [
     path('trails/<int:trail_id>/lineage/', lineage_views.trail_lineage_viewer, name='trail_lineage_viewer'),
     path('api/trail/<int:trail_id>/lineage/', lineage_views.get_trail_lineage_data, name='get_trail_lineage_data'),
     path('api/trail/<int:trail_id>/node/<str:node_type>/<int:node_id>/', lineage_views.get_node_details, name='get_node_details'),
+    
+    # Comprehensive Lineage API
+    path('api/trail/<int:trail_id>/complete-lineage/', lineage_api.get_trail_complete_lineage, name='get_trail_complete_lineage'),
+    path('api/trail/<int:trail_id>/summary/', lineage_api.get_trail_lineage_summary, name='get_trail_lineage_summary'),
 ]
