@@ -33,13 +33,13 @@
             'height': '40px'
         },
         'database_row': {
-            'background-color': '#A0A0A0',
+            'background-color': '#708090',
             'shape': 'round-rectangle',
             'width': '60px',
             'height': '30px'
         },
         'derived_row': {
-            'background-color': '#A0A0A0',
+            'background-color': '#CD853F',
             'shape': 'round-rectangle',
             'width': '60px',
             'height': '30px'
@@ -61,6 +61,12 @@
             'shape': 'octagon',
             'width': '100px',
             'height': '50px'
+        },
+        'eval_func_source_value': {
+            'background-color': '#32CD32',
+            'shape': 'triangle',
+            'width': '40px',
+            'height': '40px'
         }
     };
     
@@ -143,6 +149,18 @@
             'target-arrow-color': '#D2691E',
             'width': 2,
             'line-style': 'dashed'
+        },
+        'has_source_reference': {
+            'line-color': '#32CD32',
+            'target-arrow-color': '#32CD32',
+            'width': 2,
+            'line-style': 'solid'
+        },
+        'points_to_source': {
+            'line-color': '#228B22',
+            'target-arrow-color': '#228B22',
+            'width': 2,
+            'line-style': 'dotted'
         }
     };
     

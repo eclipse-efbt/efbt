@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Trail Lineage List{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Trail Lineage Viewer</h2>
+    <p class="text-muted">Select a trail to visualize its data lineage</p>
+    
+    {% if trails %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Trail Name</th>
+                    <th>Created</th>
+                    <th>Execution Context</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trail in trails %}
+                <tr>
+                    <td>{{ trail.name }}</td>
+                    <td>{{ trail.created_at|date:"Y-m-d H:i:s" }}</td>
+                    <td>
+                        {% if trail.execution_context %}
+                        <code style="font-size: 0.85rem;">{{ trail.execution_context|truncatechars:50 }}</code>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'pybirdai:trail_lineage_viewer' trail.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-project-diagram"></i> View Lineage
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        <i class="fas fa-info-circle"></i> No trails found. Execute a datapoint with lineage tracking enabled to create trails.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
