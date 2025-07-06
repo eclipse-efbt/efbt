@@ -221,3 +221,17 @@ class TableCreationSourceTable(models.Model):
     
     def __str__(self):
         return f"TableCreationSourceTable: {self.table_creation_function.name} <- {self.source_table}"
+
+class TableCreationFunctionColumn(models.Model):
+    """Track which columns a table creation function references in its lineage"""
+    table_creation_function = models.ForeignKey('TableCreationFunction', related_name='column_references', on_delete=models.CASCADE)
+    # Generic relation to handle both DatabaseField and Function (both inherit from AortaColumn)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    column = GenericForeignKey('content_type', 'object_id')
+    
+    # Additional context about how this column is referenced
+    reference_text = models.TextField(blank=True, help_text="The specific lineage text that references this column")
+    
+    def __str__(self):
+        return f"TableCreationFunctionColumn: {self.table_creation_function.name} -> {self.column}"

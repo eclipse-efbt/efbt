@@ -85,29 +85,71 @@ class Orchestration:
 			if table_name == 'Dummy':
 				return
 			
+			# Check if we already have a populated table for this name in the current trail
+			if table_name in self.current_populated_tables:
+				print(f"Reusing existing table for: {table_name}")
+				return
+			
 			# Determine if this is a Django model or a derived table
 			is_django_model = self._is_django_model(table_name)
 			
-			if is_django_model:
-				# Create DatabaseTable for Django model classes
-				aorta_table = DatabaseTable.objects.create(name=table_name)
-			else:
-				# Create DerivedTable for non-Django model classes
-				aorta_table = DerivedTable.objects.create(name=table_name)
+			# Check for existing table with same name in this trail
+			aorta_table = None
+			populated_table = None
+			table_exists = False
 			
-			# Add to metadata trail
+			if self.trail:
+				if is_django_model:
+					# Look for existing DatabaseTable with same name in this trail
+					existing_populated = PopulatedDataBaseTable.objects.filter(
+						trail=self.trail,
+						table__name=table_name
+					).select_related('table').first()
+					if existing_populated:
+						aorta_table = existing_populated.table
+						populated_table = existing_populated
+						table_exists = True
+						print(f"Found existing DatabaseTable for: {table_name}")
+				else:
+					# Look for existing DerivedTable with same name in this trail
+					existing_evaluated = EvaluatedDerivedTable.objects.filter(
+						trail=self.trail,
+						table__name=table_name
+					).select_related('table').first()
+					if existing_evaluated:
+						aorta_table = existing_evaluated.table
+						populated_table = existing_evaluated
+						table_exists = True
+						print(f"Found existing DerivedTable for: {table_name}")
+			
+			# Create new table if not found
+			if not aorta_table:
+				if is_django_model:
+					# Create DatabaseTable for Django model classes
+					aorta_table = DatabaseTable.objects.create(name=table_name)
+				else:
+					# Create DerivedTable for non-Django model classes
+					aorta_table = DerivedTable.objects.create(name=table_name)
+				print(f"Created new table for: {table_name}")
+			
+			# Add to metadata trail if not already added
 			if self.metadata_trail:
 				table_type = 'DatabaseTable' if is_django_model else 'DerivedTable'
-				AortaTableReference.objects.create(
+				existing_ref = AortaTableReference.objects.filter(
 					metadata_trail=self.metadata_trail,
 					table_content_type=table_type,
 					table_id=aorta_table.id
-				)
-			else:
-				print(f"Warning: No metadata_trail available for table {table_name}")
+				).exists()
+				
+				if not existing_ref:
+					AortaTableReference.objects.create(
+						metadata_trail=self.metadata_trail,
+						table_content_type=table_type,
+						table_id=aorta_table.id
+					)
 			
-			# Create appropriate populated/evaluated table
-			if self.trail:
+			# Create populated/evaluated table only if we didn't find an existing one
+			if self.trail and not populated_table:
 				if is_django_model:
 					# Create PopulatedDataBaseTable for Django model tables
 					populated_table = PopulatedDataBaseTable.objects.create(
@@ -120,17 +162,19 @@ class Orchestration:
 						trail=self.trail,
 						table=aorta_table
 					)
-			else:
+			elif not self.trail:
 				print(f"Warning: No trail available for populated table {table_name}")
 				return
 			
+			# Store the populated table in our tracking dictionary
 			self.current_populated_tables[table_name] = populated_table
 			
-			# Track table columns/fields
-			self._track_table_columns(obj, aorta_table)
-			
-			# Analyze table creation functions (calc_ methods)
-			self._analyze_table_creation_functions(obj, aorta_table)
+			# Track table columns/fields only if this is a new table
+			if not table_exists:
+				self._track_table_columns(obj, aorta_table)
+				
+				# Analyze table creation functions (calc_ methods)
+				self._analyze_table_creation_functions(obj, aorta_table)
 			
 			print(f"Tracked table initialization: {table_name}")
 	
@@ -552,11 +596,14 @@ class Orchestration:
 				except:
 					source_code = f"def {calc_method_name}(self): # Source code not available"
 				
-				# Check if this calc_ method has a @lineage decorator
+				# Check if this calc_ method has a @lineage decorator and extract dependencies
 				lineage_dependencies = self._extract_lineage_dependencies(calc_method)
+				lineage_column_references = []
 				if lineage_dependencies:
 					# Use lineage dependencies for more detailed function text
 					source_code += f"\n# Lineage dependencies: {lineage_dependencies}"
+					# Extract column references from the lineage dependencies
+					lineage_column_references = self._parse_lineage_dependencies(lineage_dependencies)
 				
 				# Create FunctionText
 				function_text = FunctionText.objects.create(
@@ -583,7 +630,22 @@ class Orchestration:
 						)
 						print(f"Tracked table creation source: {full_function_name} -> {source_table_name}")
 				
-				print(f"Created TableCreationFunction for {full_function_name} with {len(source_table_names)} source tables")
+				# Create TableCreationFunctionColumn entries for lineage dependencies
+				for column_ref in lineage_column_references:
+					column_obj = column_ref['column']
+					reference_text = column_ref['reference_text']
+					
+					content_type = ContentType.objects.get_for_model(column_obj.__class__)
+					from pybirdai.models import TableCreationFunctionColumn
+					TableCreationFunctionColumn.objects.create(
+						table_creation_function=table_creation_function,
+						content_type=content_type,
+						object_id=column_obj.id,
+						reference_text=reference_text
+					)
+					print(f"Tracked column reference: {full_function_name} -> {column_obj}")
+				
+				print(f"Created TableCreationFunction for {full_function_name} with {len(source_table_names)} source tables and {len(lineage_column_references)} column references")
 		
 		except Exception as e:
 			print(f"Error analyzing table creation functions for {table_obj.__class__.__name__}: {e}")
@@ -604,14 +666,106 @@ class Orchestration:
 	def _extract_lineage_dependencies(self, method):
 		"""Extract dependencies from @lineage decorator if present"""
 		try:
-			# Check if the method has lineage decorator information
-			if hasattr(method, '__wrapped__'):
-				# This suggests a decorator was applied
-				# We can't easily extract the original decorator args here,
-				# but we can indicate that lineage was applied
-				return "Method has @lineage decorator"
+			import inspect
+			import re
+			
+			# Get the source code of the method
+			source_code = inspect.getsource(method)
+			
+			# Look for @lineage decorator with dependencies parameter
+			# Pattern matches: @lineage(dependencies={"base.COLUMN", "table.COLUMN"}) including multiline
+			lineage_pattern = r'@lineage\s*\(\s*dependencies\s*=\s*\{([^}]+)\}\s*\)'
+			matches = re.search(lineage_pattern, source_code, re.DOTALL)
+			
+			if matches:
+				# Extract the dependencies content
+				dependencies_content = matches.group(1)
+				
+				# Extract individual dependency strings (remove quotes and whitespace)
+				dependency_pattern = r'\"([^\"]+)\"'
+				dependency_matches = re.findall(dependency_pattern, dependencies_content)
+				
+				if dependency_matches:
+					dependencies_text = ', '.join(dependency_matches)
+					print(f"Extracted lineage dependencies: {dependencies_text}")
+					return dependencies_text
+			
 			return None
-		except:
+			
+		except Exception as e:
+			print(f"Error extracting lineage dependencies: {e}")
+			return None
+	
+	def _parse_lineage_dependencies(self, lineage_dependencies_text):
+		"""Parse lineage dependencies text to extract column references"""
+		column_references = []
+		
+		if not lineage_dependencies_text:
+			return column_references
+		
+		try:
+			# Extract column references from the lineage dependencies text
+			# Look for patterns like "base.COLUMN_NAME", "table.COLUMN_NAME"
+			import re
+			
+			# Find all patterns that look like column references
+			# This regex looks for word.WORD patterns (table.column references)
+			pattern = r'\b(\w+)\.([A-Za-z_][A-Za-z0-9_]*)\b'
+			matches = re.findall(pattern, lineage_dependencies_text)
+			
+			for table_ref, column_name in matches:
+				# Try to find the actual column object
+				column_obj = self._find_column_by_name(column_name, table_ref)
+				if column_obj:
+					column_references.append({
+						'column': column_obj,
+						'reference_text': f"{table_ref}.{column_name}"
+					})
+				else:
+					# If we can't find the specific column, try a broader search
+					column_obj = self._find_column_by_name(column_name)
+					if column_obj:
+						column_references.append({
+							'column': column_obj,
+							'reference_text': f"{table_ref}.{column_name}"
+						})
+			
+			print(f"Parsed {len(column_references)} column references from lineage dependencies")
+			return column_references
+			
+		except Exception as e:
+			print(f"Error parsing lineage dependencies: {e}")
+			return column_references
+	
+	def _find_column_by_name(self, column_name, table_hint=None):
+		"""Find a column (DatabaseField or Function) by name, optionally with table hint"""
+		try:
+			# First try to find in DatabaseField
+			database_fields = DatabaseField.objects.filter(name=column_name)
+			if table_hint:
+				# Filter by table name if hint provided
+				database_fields = database_fields.filter(table__name__icontains=table_hint)
+			
+			if database_fields.exists():
+				return database_fields.first()
+			
+			# Then try to find in Function
+			functions = Function.objects.filter(name=column_name)
+			if table_hint:
+				# Filter by table name if hint provided
+				functions = functions.filter(table__name__icontains=table_hint)
+			
+			if functions.exists():
+				return functions.first()
+			
+			# Fallback: try without table hint if we had one
+			if table_hint:
+				return self._find_column_by_name(column_name, None)
+			
+			return None
+			
+		except Exception as e:
+			print(f"Error finding column {column_name}: {e}")
 			return None
 	
 	def _find_table_by_name(self, table_name):
