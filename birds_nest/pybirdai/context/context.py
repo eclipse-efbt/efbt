@@ -24,6 +24,7 @@ class Context(object):
     ldm_or_il = 'ldm'
 
     enable_lineage = True
+    use_lineage_enhanced_orchestrator = True  # Set to False to use original orchestrator
 
     enrich_ldm_relationships = False
     use_codes = True

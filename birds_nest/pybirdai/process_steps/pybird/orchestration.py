@@ -25,7 +25,7 @@ from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 
 import importlib
-class Orchestration:
+class OrchestrationWithLineage:
 	# Class variable to track initialized objects
 	_initialized_objects = set()
 	
@@ -176,7 +176,7 @@ class Orchestration:
 				# Analyze table creation functions (calc_ methods)
 				self._analyze_table_creation_functions(obj, aorta_table)
 			
-			print(f"Tracked table initialization: {table_name}")
+			# print(f"Tracked table initialization: {table_name}")
 	
 	def _track_table_columns(self, table_obj, aorta_table):
 		"""Track columns/fields in a table"""
@@ -207,7 +207,7 @@ class Orchestration:
 						name=field_name,
 						table=aorta_table
 					)
-					print(f"Tracked column: {aorta_table.name}.{field_name}")
+					# print(f"Tracked column: {aorta_table.name}.{field_name}")
 		except Exception as e:
 			print(f"Error tracking columns for {aorta_table.name}: {e}")
 	
@@ -351,14 +351,14 @@ class Orchestration:
 	def init(self,theObject):
 		# Check if this object has already been initialized
 		object_id = id(theObject)
-		if object_id in Orchestration._initialized_objects:
+		if object_id in self.__class__._initialized_objects:
 			print(f"Object of type {theObject.__class__.__name__} already initialized, skipping.")
 			# Even if we're skipping full initialization, we still need to ensure references are set
 			self._ensure_references_set(theObject)
 			return
 		
 		# Mark this object as initialized
-		Orchestration._initialized_objects.add(object_id)
+		self.__class__._initialized_objects.add(object_id)
 		
 		# Check if we have lineage tracking enabled globally and this looks like a table
 		from pybirdai.annotations.decorators import _lineage_context
@@ -412,7 +412,7 @@ class Orchestration:
 							CSVConverter.persist_object_as_csv(newObject,True);						
 						
 					else:
-						newObject = Orchestration.createObjectFromReferenceType(eReference);
+						newObject = OrchestrationWithLineage.createObjectFromReferenceType(eReference);
 						
 						operations = [method for method in dir(newObject.__class__) if callable(
 							getattr(newObject.__class__, method)) and not method.startswith('__')]
@@ -479,6 +479,7 @@ class Orchestration:
 		"""
 		return id(obj) in cls._initialized_objects
 
+	@staticmethod
 	def createObjectFromReferenceType(eReference):
 		try:
 			cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
@@ -548,7 +549,7 @@ class Orchestration:
 						content_type=content_type,
 						object_id=resolved_field.id
 					)
-					print(f"Tracked column reference: {function_name} -> {col_ref}")
+					# print(f"Tracked column reference: {function_name} -> {col_ref}")
 			except Exception as e:
 				print(f"Could not resolve column reference {col_ref}: {e}")
 		
@@ -628,7 +629,7 @@ class Orchestration:
 							content_type=content_type,
 							object_id=source_table.id
 						)
-						print(f"Tracked table creation source: {full_function_name} -> {source_table_name}")
+						# print(f"Tracked table creation source: {full_function_name} -> {source_table_name}")
 				
 				# Create TableCreationFunctionColumn entries for lineage dependencies
 				for column_ref in lineage_column_references:
@@ -643,7 +644,7 @@ class Orchestration:
 						object_id=column_obj.id,
 						reference_text=reference_text
 					)
-					print(f"Tracked column reference: {full_function_name} -> {column_obj}")
+					# print(f"Tracked column reference: {full_function_name} -> {column_obj}")
 				
 				print(f"Created TableCreationFunction for {full_function_name} with {len(source_table_names)} source tables and {len(lineage_column_references)} column references")
 		
@@ -868,7 +869,7 @@ class Orchestration:
 			self.current_rows['source'] = db_row.id
 			self.current_rows['table'] = table_name
 			
-			print(f"Tracked row processing: {table_name} row {row_identifier}")
+			# print(f"Tracked row processing: {table_name} row {row_identifier}")
 			return db_row
 			
 		except Exception as e:
@@ -910,7 +911,7 @@ class Orchestration:
 				row=db_row
 			)
 			
-			print(f"Tracked column value: {table.name}.{column_name} = {value}")
+			# print(f"Tracked column value: {table.name}.{column_name} = {value}")
 		except Exception as e:
 			print(f"Error tracking column value {column_name}: {e}")
 	
@@ -947,7 +948,7 @@ class Orchestration:
 			# Store current derived row context
 			self.current_rows['derived'] = derived_row.id
 			
-			print(f"Tracked derived row processing: {table_name}")
+			# print(f"Tracked derived row processing: {table_name}")
 			return derived_row
 			
 		except Exception as e:
@@ -1003,7 +1004,7 @@ class Orchestration:
 							object_id=source_value_obj.id
 						)
 			
-			print(f"Tracked value computation: {function_name} with {len(source_values)} source values = {computed_value}")
+			# print(f"Tracked value computation: {function_name} with {len(source_values)} source values = {computed_value}")
 			return evaluated_function
 			
 		except Exception as e:
@@ -1158,7 +1159,7 @@ class Orchestration:
 				# Track the row
 				self.track_row_processing(table_name, row_data, row_id)
 			
-			print(f"Tracked data processing for {table_name}: {len(data_items)} items")
+			# print(f"Tracked data processing for {table_name}: {len(data_items)} items")
 			
 		except Exception as e:
 			print(f"Error tracking data processing: {e}")
@@ -1208,6 +1209,125 @@ class Orchestration:
 		# TODO: Add edges based on function references and data flow
 		
 		return graph
+
+
+# Original Orchestration class from develop branch
+class OrchestrationOriginal:
+	# Class variable to track initialized objects
+	_initialized_objects = set()
+	
+	def init(self,theObject):
+		# Check if this object has already been initialized
+		object_id = id(theObject)
+		if object_id in OrchestrationOriginal._initialized_objects:
+			print(f"Object of type {theObject.__class__.__name__} already initialized, skipping.")
+			# Even if we're skipping full initialization, we still need to ensure references are set
+			self._ensure_references_set(theObject)
+			return
+		
+		# Mark this object as initialized
+		OrchestrationOriginal._initialized_objects.add(object_id)
+		
+		# Set up references for the object
+		self._ensure_references_set(theObject)
+
+	def _ensure_references_set(self, theObject):
+		"""
+		Ensure that all table references are properly set for the object.
+		This is called both during full initialization and when initialization is skipped.
+		"""
+		references = [method for method in dir(theObject.__class__) if not callable(
+		getattr(theObject.__class__, method)) and not method.startswith('__')]
+		for eReference in references:
+			if eReference.endswith("Table"):
+				# Only set the reference if it's currently None
+				if getattr(theObject, eReference) is None:
+					from django.apps import apps
+					table_name = eReference.split('_Table')[0]
+					relevant_model = None
+					try:
+						relevant_model = apps.get_model('pybirdai',table_name)
+					except LookupError:
+						print("LookupError: " + table_name)
+
+					if relevant_model:
+						print("relevant_model: " + str(relevant_model))
+						newObject = relevant_model.objects.all()
+						print("newObject: " + str(newObject))
+						if newObject:
+							setattr(theObject,eReference,newObject)
+							CSVConverter.persist_object_as_csv(newObject,True);						
+						
+					else:
+						newObject = OrchestrationOriginal.createObjectFromReferenceType(eReference);
+						
+						operations = [method for method in dir(newObject.__class__) if callable(
+							getattr(newObject.__class__, method)) and not method.startswith('__')]
+						
+						for operation in operations:
+							if operation == "init":
+								try:
+									getattr(newObject, operation)()
+								except:
+									print (" could not call function called " + operation)
+
+						setattr(theObject,eReference,newObject)
+
+	@classmethod
+	def reset_initialization(cls):
+		"""
+		Reset the initialization tracking.
+		This can be useful for testing or when re-initialization is required.
+		"""
+		cls._initialized_objects.clear()
+		print("Initialization tracking has been reset.")
+		
+	@classmethod
+	def is_initialized(cls, obj):
+		"""
+		Check if an object has been initialized.
+		
+		Args:
+			obj: The object to check
+			
+		Returns:
+			bool: True if the object has been initialized, False otherwise
+		"""
+		return id(obj) in cls._initialized_objects
+
+	@staticmethod
+	def createObjectFromReferenceType(eReference):
+		try:
+			cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
+			new_object = cls()		
+			return new_object;	
+		except:
+			print("Error: " + eReference)
+
+
+# Factory function to create the appropriate Orchestration instance
+def create_orchestration():
+	"""
+	Factory function that returns the appropriate Orchestration instance
+	based on the context configuration.
+	"""
+	from pybirdai.context.context import Context
+	
+	if hasattr(Context, 'use_lineage_enhanced_orchestrator') and Context.use_lineage_enhanced_orchestrator:
+		print("Using lineage-enhanced orchestrator")
+		return OrchestrationWithLineage()
+	else:
+		print("Using original orchestrator")
+		return OrchestrationOriginal()
+
+
+# For backwards compatibility - Orchestration points to the factory function result
+def Orchestration():
+	"""
+	Factory function that returns the appropriate Orchestration instance.
+	This maintains backwards compatibility while allowing version selection.
+	"""
+	return create_orchestration()
 		
 		
 
