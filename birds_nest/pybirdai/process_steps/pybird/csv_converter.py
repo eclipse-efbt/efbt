@@ -283,30 +283,35 @@ class CSVConverter:
 			# Create the wrapper and track it
 			wrapper = DjangoModelTableWrapper(table_name)
 			
-			# Initialize through orchestration to create PopulatedDataBaseTable
-			orchestration.init_with_lineage(wrapper, f"Django Model Access: {table_name}")
-			
-			# Track the data if there are rows
-			if queryset.exists():
-				# Convert QuerySet to list of dictionaries for tracking
-				data_items = []
-				for obj in queryset:
-					row_data = {}
-					# Get model fields to extract data
-					for field in obj._meta.fields:
-						try:
-							value = getattr(obj, field.name)
-							if value is not None:
-								row_data[field.name] = value
-						except:
-							pass
-					if row_data:
-						data_items.append(row_data)
+			# Check if orchestration supports lineage tracking
+			if hasattr(orchestration, 'init_with_lineage'):
+				# Initialize through orchestration to create PopulatedDataBaseTable
+				orchestration.init_with_lineage(wrapper, f"Django Model Access: {table_name}")
 				
-				# Track the data processing - use the original table name, not "_data" suffix
-				# This ensures Django model data is associated with PopulatedDataBaseTable, not EvaluatedDerivedTable
-				if data_items:
-					orchestration.track_data_processing(table_name, data_items)
+				# Track the data if there are rows
+				if queryset.exists():
+					# Convert QuerySet to list of dictionaries for tracking
+					data_items = []
+					for obj in queryset:
+						row_data = {}
+						# Get model fields to extract data
+						for field in obj._meta.fields:
+							try:
+								value = getattr(obj, field.name)
+								if value is not None:
+									row_data[field.name] = value
+							except:
+								pass
+						if row_data:
+							data_items.append(row_data)
+					
+					# Track the data processing - use the original table name, not "_data" suffix
+					# This ensures Django model data is associated with PopulatedDataBaseTable, not EvaluatedDerivedTable
+					if data_items:
+						orchestration.track_data_processing(table_name, data_items)
+			else:
+				# Original orchestrator - no lineage tracking
+				pass
 			
 			print(f"Tracked Django model access: {table_name} ({queryset.count()} rows)")
 			
