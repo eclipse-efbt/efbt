@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from pybirdai.utils.utils import Utils
+from pybirdai.entry_points.utils_processor import get_utils_processor as Utils
 from pybirdai.bird_meta_data_model import *
 import os
 import csv

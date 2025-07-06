@@ -67,9 +67,9 @@ from .bird_meta_data_model import MEMBER_LINK
 admin.site.register(MEMBER_LINK)
 from .bird_meta_data_model import AutomodeConfiguration
 admin.site.register(AutomodeConfiguration)
-from .bird_meta_data_model import WorkflowTaskExecution
+from .workflow_model import WorkflowTaskExecution
 admin.site.register(WorkflowTaskExecution)
-from .bird_meta_data_model import WorkflowTaskDependency
+from .workflow_model import WorkflowTaskDependency
 admin.site.register(WorkflowTaskDependency)
-from .bird_meta_data_model import WorkflowSession
+from .workflow_model import WorkflowSession
 admin.site.register(WorkflowSession)

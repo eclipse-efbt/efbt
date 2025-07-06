@@ -20,11 +20,11 @@ import time
 from django.conf import settings
 from django.apps import AppConfig
 from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
-from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extractor import (
-    merge_derived_fields_into_original_model,
+from pybirdai.entry_points.migration_processor import (
+    merge_derived_fields_into_model,
+    get_preconfigured_database_fetcher,
+    generate_advanced_migration
 )
-from pybirdai.utils.speed_improvements_initial_migration.artifact_fetcher import PreconfiguredDatabaseFetcher
-from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
 from django.conf import settings
 
 from importlib import metadata
@@ -351,7 +351,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             os.makedirs(os.path.dirname(derived_fields_file_path), exist_ok=True)
 
-            merge_derived_fields_into_original_model(
+            merge_derived_fields_into_model(
                 pybirdai_models_path, derived_fields_file_path
             )
 
@@ -551,7 +551,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
         logger.info(f"{pybirdai_models_path} updated successfully.")
 
     def _fetch_preconfigured_database(self,python_executable):
-        fetcher = PreconfiguredDatabaseFetcher(self.token)
+        fetcher = get_preconfigured_database_fetcher(self.token)
         db_content = fetcher.fetch()
         db_file = "db.sqlite3"
         if os.path.exists(db_file):
@@ -614,10 +614,17 @@ class RunAutomodeDatabaseSetup(AppConfig):
             
             venv_path, original_dir, python_executable = self._get_python_exc()
 
-            generator = AdvancedMigrationGenerator()
-            models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
-            _ = generator.generate_migration_code(models)
-            generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
+            files_to_parse = [f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"]
+            migration_file_path = f"pybirdai{os.sep}migrations{os.sep}0001_initial.py"
+            
+            result = generate_advanced_migration(
+                files_to_parse=files_to_parse,
+                migration_file_path=migration_file_path
+            )
+            
+            if not result.get('success'):
+                logger.error(f"Migration generation failed: {result.get('error')}")
+                return
 
             logger.info("Running makemigrations in subprocess...")
             makemig_start = time.time()
@@ -648,7 +655,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
             return_code_preconfigured_migration, migrate_result = self._fetch_preconfigured_database(python_executable)
 
             if return_code_preconfigured_migration:
-                logger.info("PreconfiguredDatabaseFetcher failed, running manual process")
+                logger.info("Preconfigured database fetcher failed, running manual process")
                 logger.info("Running migrate in subprocess...")
 
                 # Run migrate

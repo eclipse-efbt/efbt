@@ -116,6 +116,7 @@ urlpatterns = [
     path('add_member_mapping_item/', views.add_member_mapping_item, name='add_member_mapping_item'),
     path('view_member_mapping_items_by_row/', views.view_member_mapping_items_by_row, name='view_member_mapping_items_by_row'),
     path('export-database-to-csv/', views.export_database_to_csv, name='export_database_to_csv'),
+    path('export-database-to-github/', views.export_database_to_github, name='export_database_to_github'),
     path('bird_diffs_and_corrections/', views.bird_diffs_and_corrections, name='bird_diffs_and_corrections'),
     path('convert_ldm_to_sdd_hierarchies/', views.convert_ldm_to_sdd_hierarchies, name='convert_ldm_to_sdd_hierarchies'),
     path('view_ldm_to_sdd_results/', views.view_ldm_to_sdd_results, name='view_ldm_to_sdd_results'),

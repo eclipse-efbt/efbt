@@ -27,7 +27,7 @@ import json
 import glob
 import subprocess
 
-from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
+from .workflow_model import WorkflowTaskExecution, WorkflowSession
 from .workflow_services import AutomodeConfigurationService
 from .forms import AutomodeConfigurationSessionForm
 from .entry_points import (
@@ -37,7 +37,7 @@ from .entry_points import (
     execute_datapoint,
 )
 # Import the test runner
-from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+from .entry_points.regulatory_test_runner import get_regulatory_test_runner as RegulatoryTemplateTestRunner
 import traceback
 logger = logging.getLogger(__name__)
 
@@ -1768,11 +1768,11 @@ def workflow_clone_import(request):
 
         # Import the CSV data using the existing import functionality
         try:
-            from pybirdai.utils.clone_mode import import_from_metadata_export
+            from .entry_points.clone_mode_processor import get_csv_data_importer
 
             # Use ordered import to maintain ID mappings across files
-            importer = import_from_metadata_export.CSVDataImporter()
-            results = importer.import_from_csv_strings_ordered(csv_data)
+            importer = get_csv_data_importer()
+            results = import_csv_data(csv_data)
 
             # Count successful imports
             successful_imports = sum(1 for result in results.values() if result.get('success', False))

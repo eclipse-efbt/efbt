@@ -66,7 +66,7 @@ from .context.csv_column_index_context import ColumnIndexes
 from django.apps import apps
 from django.db import models
 import inspect
-from .utils.mapping_library import (
+from .entry_points.mapping_processor import (
     build_mapping_results,
     add_variable_to_mapping,
     create_or_update_member,
@@ -79,7 +79,7 @@ from .utils.mapping_library import (
     cascade_member_mapping_changes,
     process_mapping_chain
 )
-from .utils.utils_views import ensure_results_directory,process_test_results_files
+from .entry_points.utils_view_processor import create_success_response, create_error_response, validate_request_data, handle_file_upload, paginate_queryset, format_model_data_for_display, create_context_data, handle_ajax_request, run_utils_view_operations
 import time
 from datetime import datetime
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -511,14 +511,16 @@ def create_variable_mapping_item(request):
             # Get form data
             variable_mapping = get_object_or_404(VARIABLE_MAPPING, variable_mapping_id=request.POST.get('variable_mapping_id'))
             variable = get_object_or_404(VARIABLE, variable_id=request.POST.get('variable_id'))
+            valid_from = request.POST.get('valid_from') or None
+            valid_to = request.POST.get('valid_to') or None
 
             # Create new item
             item = VARIABLE_MAPPING_ITEM(
                 variable_mapping_id=variable_mapping,
                 is_source=request.POST.get('is_source'),
                 variable_id=variable,
-                valid_from=request.POST.get('valid_from') or None,
-                valid_to=request.POST.get('valid_to') or None
+                valid_from=valid_from if valid_from else "1999-01-01 00:00:00",
+                valid_to=valid_to if valid_to else "9999-12-31 00:00:00",
             )
             item.save()
 
@@ -1926,8 +1928,8 @@ def add_member_mapping_item(request):
                 member_mapping_row=member_mapping_row,
                 member_mapping_id=member_mapping,
                 member_hierarchy=member_hierarchy,
-                valid_from=valid_from,
-                valid_to=valid_to
+                valid_from=valid_from if valid_from else "1999-01-01 00:00:00",
+                valid_to=valid_to if valid_to else "9999-12-31 00:00:00"
             )
 
             messages.success(request, 'Member Mapping Item created successfully.')
@@ -1943,8 +1945,8 @@ def create_mapping_to_cube(request):
             # Get form data
             mapping_id = request.POST.get('mapping_id')
             cube_mapping = request.POST.get('cube_mapping_id')
-            valid_from = request.POST.get('valid_from')
-            valid_to = request.POST.get('valid_to')
+            valid_from = request.POST.get('valid_from',"")
+            valid_to = request.POST.get('valid_to',"")
 
             # Get the mapping definition object
             mapping = get_object_or_404(MAPPING_DEFINITION, mapping_id=mapping_id)
@@ -1953,8 +1955,8 @@ def create_mapping_to_cube(request):
             mapping_to_cube = MAPPING_TO_CUBE(
                 mapping_id=mapping,
                 cube_mapping_id=cube_mapping,
-                valid_from=valid_from if valid_from else None,
-                valid_to=valid_to if valid_to else None
+                valid_from=valid_from if valid_from else "1999-01-01 00:00:00",
+                valid_to=valid_to if valid_to else "9999-12-31 00:00:00",
             )
             mapping_to_cube.save()
             try:
@@ -2020,163 +2022,233 @@ def view_member_mapping_items_by_row(request):
 
     return render(request, 'pybirdai/view_member_mapping_items_by_row.html', context)
 
-def export_database_to_csv(request):
-    if request.method == 'GET':
-        return render(request, 'pybirdai/export_database.html')
-    elif request.method == 'POST':
-        import re
-        def clean_whitespace(text):
-            return re.sub(r'\s+', ' ', str(text).replace('\r', '').replace('\n', ' ')) if text else text
-        # Create a zip file path in results directory
-        results_dir = os.path.join(settings.BASE_DIR, 'results')
-        os.makedirs(results_dir, exist_ok=True)
-        zip_file_path = os.path.join(results_dir, 'database_export.zip')
+def _export_database_to_csv_logic():
+    """
+    Standalone function to export database to CSV files.
+    Returns tuple of (zip_file_path, extract_dir) for further processing.
+    """
+    import re
+    def clean_whitespace(text):
+        return re.sub(r'\s+', ' ', str(text).replace('\r', '').replace('\n', ' ')) if text else text
+    
+    # Create a zip file path in results directory
+    results_dir = os.path.join(settings.BASE_DIR, 'results')
+    os.makedirs(results_dir, exist_ok=True)
+    zip_file_path = os.path.join(results_dir, 'database_export.zip')
 
-        # Get all model classes from bird_meta_data_model
-        valid_table_names = set()
-        model_map = {}  # Store model classes for reference
-        for name, obj in inspect.getmembers(bird_meta_data_model):
-            if inspect.isclass(obj) and issubclass(obj, models.Model) and obj != models.Model:
-                valid_table_names.add(obj._meta.db_table)
-                model_map[obj._meta.db_table] = obj
+    # Get all model classes from bird_meta_data_model
+    valid_table_names = set()
+    model_map = {}  # Store model classes for reference
+    for name, obj in inspect.getmembers(bird_meta_data_model):
+        if inspect.isclass(obj) and issubclass(obj, models.Model) and obj != models.Model:
+            valid_table_names.add(obj._meta.db_table)
+            model_map[obj._meta.db_table] = obj
 
-        with zipfile.ZipFile(zip_file_path, 'w') as zip_file:
-            # Get all table names from SQLite and sort them
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'django_%' ORDER BY name")
-                tables = cursor.fetchall()
+    with zipfile.ZipFile(zip_file_path, 'w') as zip_file:
+        # Get all table names from SQLite and sort them
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'django_%' ORDER BY name")
+            tables = cursor.fetchall()
 
-            # Export each table to a CSV file
-            for table in tables:
-                is_meta_data_table = False
-                table_name = table[0]
+        # Export each table to a CSV file
+        for table in tables:
+            is_meta_data_table = False
+            table_name = table[0]
 
-                if table_name in valid_table_names:
-                    is_meta_data_table = True
-                    # Get the model class for this table
-                    model_class = model_map[table_name]
+            if table_name in valid_table_names:
+                is_meta_data_table = True
+                # Get the model class for this table
+                model_class = model_map[table_name]
 
-                    # Check if model has an explicit primary key
-                    has_explicit_pk = any(field.primary_key for field in model_class._meta.fields if field.name != 'id')
+                # Check if model has an explicit primary key
+                has_explicit_pk = any(field.primary_key for field in model_class._meta.fields if field.name != 'id')
 
-                    # Get fields in the order they're defined in the model
-                    fields = model_class._meta.fields
-                    headers = []
-                    db_headers = []
+                # Get fields in the order they're defined in the model
+                fields = model_class._meta.fields
+                headers = []
+                db_headers = []
 
-                    # If model uses Django's auto ID and has no explicit PK, include the ID field
-                    if not has_explicit_pk:
-                        headers.append('ID')
-                        db_headers.append('id')
+                # If model uses Django's auto ID and has no explicit PK, include the ID field
+                if not has_explicit_pk:
+                    headers.append('ID')
+                    db_headers.append('id')
 
-                    for field in fields:
-                        # Skip the id field if we already added it or if there's an explicit PK
-                        if field.name == 'id' and has_explicit_pk:
-                            continue
-                        elif field.name == 'id' and not has_explicit_pk:
-                            # We already added it above
-                            continue
-                        headers.append(field.name.upper())  # Convert header to uppercase
-                        # If it's a foreign key, append _id for the actual DB column
-                        if isinstance(field, models.ForeignKey):
-                            db_headers.append(f"{field.name}_id")
+                for field in fields:
+                    # Skip the id field if we already added it or if there's an explicit PK
+                    if field.name == 'id' and has_explicit_pk:
+                        continue
+                    elif field.name == 'id' and not has_explicit_pk:
+                        # We already added it above
+                        continue
+                    headers.append(field.name.upper())  # Convert header to uppercase
+                    # If it's a foreign key, append _id for the actual DB column
+                    if isinstance(field, models.ForeignKey):
+                        db_headers.append(f"{field.name}_id")
+                    else:
+                        db_headers.append(field.name)
+
+                # Create CSV in memory
+                csv_content = []
+                csv_content.append(','.join(headers))
+
+                # Get data with escaped column names and ordered by primary key
+                with connection.cursor() as cursor:
+                    escaped_headers = [f'"{h}"' if h == 'order' else h for h in db_headers]
+                    # Get primary key column name
+                    cursor.execute(f"PRAGMA table_info({table_name})")
+                    table_info = cursor.fetchall()
+                    pk_columns = []
+
+                    # Collect all primary key columns for composite keys
+                    for col in table_info:
+                        if col[5] == 1:  # 5 is the index for pk flag in table_info
+                            pk_columns.append(col[1])  # 1 is the index for column name
+
+                    # Build ORDER BY clause - handle composite keys and sort by all columns for consistency
+                    if pk_columns:
+                        order_by = f"ORDER BY {', '.join(pk_columns)}"
+                    else:
+                        # If no primary key, sort by id if it exists, otherwise by all columns
+                        if 'id' in db_headers:
+                            order_by = "ORDER BY id"
                         else:
-                            db_headers.append(field.name)
+                            order_by = f"ORDER BY {', '.join(escaped_headers)}"
+
+                    cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} {order_by}")
+                    rows = cursor.fetchall()
+
+                    for row in rows:
+                        # Convert all values to strings and handle None values
+                        csv_row = [str(clean_whitespace(val)) if val is not None else '' for val in row]
+                        # Escape commas and quotes in values
+                        processed_row = []
+                        for val in csv_row:
+                            if ',' in val or '"' in val:
+                                escaped_val = val.replace('"', '""')
+                                processed_row.append(f'"{escaped_val}"')
+                            else:
+                                processed_row.append(val)
+                        csv_content.append(','.join(processed_row))
+            else:
+                # Fallback for tables without models
+                with connection.cursor() as cursor:
+                    # Get column names
+                    cursor.execute(f"SELECT * FROM {table_name} LIMIT 0")
+                    headers = []
+                    column_names = []
+                    for desc in cursor.description:
+                        # Skip the id column
+                        if desc[0].lower() != 'id':
+                            headers.append(desc[0].upper())
+                            column_names.append(desc[0])
+
+                    # Get data with escaped column names and ordered by all columns for consistency
+                    escaped_headers = [f'"{h.lower()}"' if h.lower() == 'order' else h.lower() for h in column_names]
+                    cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} ORDER BY {', '.join(escaped_headers)}")
+                    rows = cursor.fetchall()
 
                     # Create CSV in memory
                     csv_content = []
                     csv_content.append(','.join(headers))
-
-                    # Get data with escaped column names and ordered by primary key
-                    with connection.cursor() as cursor:
-                        escaped_headers = [f'"{h}"' if h == 'order' else h for h in db_headers]
-                        # Get primary key column name
-                        cursor.execute(f"PRAGMA table_info({table_name})")
-                        table_info = cursor.fetchall()
-                        pk_columns = []
-
-                        # Collect all primary key columns for composite keys
-                        for col in table_info:
-                            if col[5] == 1:  # 5 is the index for pk flag in table_info
-                                pk_columns.append(col[1])  # 1 is the index for column name
-
-                        # Build ORDER BY clause - handle composite keys and sort by all columns for consistency
-                        if pk_columns:
-                            order_by = f"ORDER BY {', '.join(pk_columns)}"
-                        else:
-                            # If no primary key, sort by id if it exists, otherwise by all columns
-                            if 'id' in db_headers:
-                                order_by = "ORDER BY id"
+                    for row in rows:
+                        # Convert all values to strings and handle None values
+                        csv_row = [str(clean_whitespace(val)) if val is not None else '' for val in row]
+                        # Escape commas and quotes in values
+                        processed_row = []
+                        for val in csv_row:
+                            if ',' in val or '"' in val:
+                                escaped_val = val.replace('"', '""').replace("'", '""')
+                                processed_row.append(f'"{escaped_val}"')
                             else:
-                                order_by = f"ORDER BY {', '.join(escaped_headers)}"
+                                processed_row.append(val)
+                        csv_content.append(','.join(processed_row))
 
-                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} {order_by}")
-                        rows = cursor.fetchall()
+            # Add CSV to zip file
+            if is_meta_data_table:
+                zip_file.writestr(f"{table_name.replace('pybirdai_', '')}.csv", '\n'.join(csv_content))
+            else:
+                zip_file.writestr(f"{table_name.replace('pybirdai_', 'bird_')}.csv", '\n'.join(csv_content))
 
-                        for row in rows:
-                            # Convert all values to strings and handle None values
-                            csv_row = [str(clean_whitespace(val)) if val is not None else '' for val in row]
-                            # Escape commas and quotes in values
-                            processed_row = []
-                            for val in csv_row:
-                                if ',' in val or '"' in val:
-                                    escaped_val = val.replace('"', '""')
-                                    processed_row.append(f'"{escaped_val}"')
-                                else:
-                                    processed_row.append(val)
-                            csv_content.append(','.join(processed_row))
-                else:
-                    # Fallback for tables without models
-                    with connection.cursor() as cursor:
-                        # Get column names
-                        cursor.execute(f"SELECT * FROM {table_name} LIMIT 0")
-                        headers = []
-                        column_names = []
-                        for desc in cursor.description:
-                            # Skip the id column
-                            if desc[0].lower() != 'id':
-                                headers.append(desc[0].upper())
-                                column_names.append(desc[0])
+    # Unzip the file in the database_export folder
+    extract_dir = os.path.join(results_dir, 'database_export')
+    os.makedirs(extract_dir, exist_ok=True)
 
-                        # Get data with escaped column names and ordered by all columns for consistency
-                        escaped_headers = [f'"{h.lower()}"' if h.lower() == 'order' else h.lower() for h in column_names]
-                        cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} ORDER BY {', '.join(escaped_headers)}")
-                        rows = cursor.fetchall()
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_file:
+        zip_file.extractall(extract_dir)
 
-                        # Create CSV in memory
-                        csv_content = []
-                        csv_content.append(','.join(headers))
-                        for row in rows:
-                            # Convert all values to strings and handle None values
-                            csv_row = [str(clean_whitespace(val)) if val is not None else '' for val in row]
-                            # Escape commas and quotes in values
-                            processed_row = []
-                            for val in csv_row:
-                                if ',' in val or '"' in val:
-                                    escaped_val = val.replace('"', '""').replace("'", '""')
-                                    processed_row.append(f'"{escaped_val}"')
-                                else:
-                                    processed_row.append(val)
-                            csv_content.append(','.join(processed_row))
+    return zip_file_path, extract_dir
 
-                # Add CSV to zip file
-                if is_meta_data_table:
-                    zip_file.writestr(f"{table_name.replace('pybirdai_', '')}.csv", '\n'.join(csv_content))
-                else:
-                    zip_file.writestr(f"{table_name.replace('pybirdai_', 'bird_')}.csv", '\n'.join(csv_content))
 
-        # Unzip the file in the database_export folder
-        extract_dir = os.path.join(results_dir, 'database_export')
-        os.makedirs(extract_dir, exist_ok=True)
-
-        with zipfile.ZipFile(zip_file_path, 'r') as zip_file:
-            zip_file.extractall(extract_dir)
-
+def export_database_to_csv(request):
+    if request.method == 'GET':
+        return render(request, 'pybirdai/export_database.html')
+    elif request.method == 'POST':
+        # Use the refactored logic
+        zip_file_path, extract_dir = _export_database_to_csv_logic()
+        
         # Create response to download the saved file
         with open(zip_file_path, 'rb') as f:
             response = HttpResponse(f.read(), content_type='application/zip')
             response['Content-Disposition'] = 'attachment; filename="database_export.zip"'
             return response
+
+
+def export_database_to_github(request):
+    """
+    Export database to GitHub repository with automatic branch creation and pull request.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Only POST method allowed'})
+    
+    try:
+        # Get form data
+        github_token = request.POST.get('github_token', '').strip()
+        repository_url = request.POST.get('repository_url', '').strip()
+        
+        if not github_token:
+            return JsonResponse({'success': False, 'error': 'GitHub token is required'})
+        
+        # Import the GitHub integration service
+        from .workflow_services import GitHubIntegrationService
+        
+        # Create service instance
+        github_service = GitHubIntegrationService(github_token)
+        
+        # Set custom repository URL if provided
+        if repository_url:
+            # Validate repository URL format
+            if not repository_url.startswith('https://github.com/'):
+                return JsonResponse({'success': False, 'error': 'Repository URL must be a valid GitHub URL (https://github.com/...)'})
+            github_service.repository_url = repository_url
+        
+        # Execute the export and push to GitHub
+        result = github_service.export_and_push_to_github()
+        
+        if result['success']:
+            return JsonResponse({
+                'success': True,
+                'branch_name': result.get('branch_name'),
+                'pull_request_url': result.get('pull_request_url'),
+                'repository_url': result.get('repository_url'),
+                'message': 'Database exported to GitHub successfully'
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'error': result.get('error', 'Unknown error occurred during GitHub export')
+            })
+            
+    except ImportError as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'GitHub integration service not available: {str(e)}'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error during GitHub export: {str(e)}'
+        })
+
 
 def bird_diffs_and_corrections(request):
     """
@@ -2846,7 +2918,7 @@ def get_mapping_details(request, mapping_id):
         })
 
 def return_cubelink_visualisation(request):
-    from pybirdai.utils import visualisation_service
+    from .entry_points.visualization_service_processor import process_cube_visualization
     """
     View function for displaying cube link visualizations.
 
@@ -2868,7 +2940,11 @@ def return_cubelink_visualisation(request):
 
         if cube_id:
             logger.info(f"Generating visualization for cube_id: {cube_id}")
-            html_content = visualisation_service.process_cube_visualization(cube_id, join_identifier, in_md)
+            result = process_cube_visualization(cube_id, join_identifier, "html")
+            if result.get('success'):
+                html_content = result.get('content', '')
+            else:
+                html_content = f"<html><body><h1>Error</h1><p>{result.get('error', 'Unknown error')}</p></body></html>"
             return HttpResponse(html_content)
         else:
             logger.warning("Missing required parameter: cube_link_id")
@@ -3297,7 +3373,7 @@ def member_hierarchy_editor(request, hierarchy_id=None):
     Returns:
         Rendered template response with hierarchy data
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from .entry_points.hierarchy_processor import get_hierarchy_integration_service
 
     logger.info(f"Rendering member hierarchy editor page for hierarchy_id: {hierarchy_id}")
 
@@ -3315,7 +3391,7 @@ def member_hierarchy_editor(request, hierarchy_id=None):
             hierarchy = MEMBER_HIERARCHY.objects.get(member_hierarchy_id=hierarchy_id)
 
             # Get hierarchy data using the integration
-            integration = get_hierarchy_integration()
+            integration = get_hierarchy_integration_service()
             hierarchy_data = integration.get_hierarchy_by_id(hierarchy_id)
             context.update({
                 'selected_hierarchy': hierarchy,
@@ -3622,9 +3698,9 @@ def automode_create_database(request):
 
 def automode_import_bird_metamodel_from_website(request):
     if request.GET.get('execute') == 'true':
-        from pybirdai.utils import bird_ecb_website_fetcher
-        client = bird_ecb_website_fetcher.BirdEcbWebsiteClient()
-        print(client.request_and_save_all())
+        from .entry_points.external_data_processor import fetch_bird_data_from_ecb_website
+        result = fetch_bird_data_from_ecb_website()
+        print(result)
 
     return create_response_with_loading(
         request,
@@ -3689,26 +3765,18 @@ def run_fetch_curated_resources(request):
     """Test view to verify automode components work individually."""
     if request.GET.get('execute') == 'true':
         try:
-            from pybirdai.utils import github_file_fetcher
+            from .entry_points.github_integration_service import fetch_files_from_github
 
-            fetcher = github_file_fetcher.GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
-
-
-            logger.info("STEP 1: Fetching specific derivation model file")
-
-            fetcher.fetch_derivation_model_file(
-                "birds_nest/pybirdai",
-                "bird_data_model.py",
-                f"resources{os.sep}derivation_implementation",
-                "bird_data_model_with_derivation.py"
+            logger.info("Fetching files from GitHub repository")
+            result = fetch_files_from_github(
+                repository_url="https://github.com/regcommunity/FreeBIRD",
+                target_directory="resources"
             )
-
-            logger.info("STEP 2: Fetching database export files")
-            fetcher.fetch_database_export_files()
-
-
-            logger.info("STEP 3: Fetching test fixtures and templates")
-            fetcher.fetch_test_fixtures()
+            
+            if result.get('success'):
+                logger.info("Successfully fetched files from GitHub")
+            else:
+                logger.error(f"Failed to fetch files: {result.get('error')}")
 
             logger.info("File fetching process completed successfully!")
             print("File fetching process completed!")
@@ -3739,14 +3807,14 @@ def import_bird_data_from_csv_export(request):
     """
     Django endpoint for importing metadata from CSV files.
     """
-    from .utils.clone_mode import import_from_metadata_export
+    from .entry_points.clone_mode_processor import import_csv_data, get_csv_data_importer
 
     if request.method == 'GET':
         return render(request, 'pybirdai/import_database.html')
 
     files = json.loads(request.body.decode("utf-8"))
     # Use ordered import to maintain ID mappings across files
-    results = import_from_metadata_export.CSVDataImporter().import_from_csv_strings_ordered(files["csv_files"])
+    results = import_csv_data(files["csv_files"])
 
     # Count successful imports
     successful_imports = sum(1 for result in results.values() if result.get('success', False))
@@ -3772,10 +3840,10 @@ def get_hierarchy_json(request, hierarchy_id):
     """
     API endpoint to get hierarchy data in JSON format for the visual editor
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from .entry_points.hierarchy_processor import get_hierarchy_integration_service
 
     try:
-        integration = get_hierarchy_integration()
+        integration = get_hierarchy_integration_service()
         hierarchy_data = integration.get_hierarchy_by_id(hierarchy_id)
         return JsonResponse(hierarchy_data)
     except Exception as e:
@@ -3787,7 +3855,7 @@ def save_hierarchy_json(request):
     """
     API endpoint to save hierarchy data from the visual editor
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from .entry_points.hierarchy_processor import get_hierarchy_integration_service
 
     if request.method != 'POST':
         return JsonResponse({'error': 'POST method required'}, status=405)
@@ -3797,7 +3865,7 @@ def save_hierarchy_json(request):
         hierarchy_id = data.get('hierarchy_id')
         visualization_data = data.get('data')
 
-        integration = get_hierarchy_integration()
+        integration = get_hierarchy_integration_service()
 
         success = integration.save_hierarchy_from_visualization(hierarchy_id, visualization_data)
 
@@ -3816,10 +3884,10 @@ def get_domain_members_json(request, domain_id):
     """
     API endpoint to get all members for a domain in JSON format
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from .entry_points.hierarchy_processor import get_hierarchy_integration_service
 
     try:
-        integration = get_hierarchy_integration()
+        integration = get_hierarchy_integration_service()
         members = integration.get_domain_members(domain_id)
         return JsonResponse({'members': members})
     except Exception as e:
@@ -3831,10 +3899,10 @@ def get_available_hierarchies_json(request):
     """
     API endpoint to get all available hierarchies in JSON format
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from .entry_points.hierarchy_processor import get_hierarchy_integration_service
 
     try:
-        integration = get_hierarchy_integration()
+        integration = get_hierarchy_integration_service()
         hierarchies = integration.get_available_hierarchies()
         return JsonResponse({'hierarchies': hierarchies})
     except Exception as e:
@@ -3846,7 +3914,7 @@ def create_hierarchy_from_visualization(request):
     """
     API endpoint to create a new hierarchy from visualization data
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from .entry_points.hierarchy_processor import get_hierarchy_integration_service
 
     if request.method != 'POST':
         return JsonResponse({'error': 'POST method required'}, status=405)
@@ -3876,7 +3944,7 @@ def create_hierarchy_from_visualization(request):
         )
 
         # Save the visualization data
-        integration = get_hierarchy_integration()
+        integration = get_hierarchy_integration_service()
         success = integration.save_hierarchy_from_visualization(hierarchy_id, visualization_data)
 
         if success:

@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
-from pybirdai.utils.utils import Utils
+from pybirdai.entry_points.utils_processor import get_utils_processor as Utils
 from django.conf import settings
 
 import os

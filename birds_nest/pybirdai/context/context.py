@@ -20,7 +20,7 @@ class Context(object):
     Documentation for Context
     '''
     # variables to configure the behaviour
-    
+
     enrich_ldm_relationships = False
     use_codes = True
 
@@ -41,22 +41,22 @@ class Context(object):
         name='ldm_domains',
         nsURI='http://www.eclipse.org/bird/ldm_domains',
         nsPrefix='ldm_domains')
-   
+
     ldm_entities_package = ELPackage(
         name='ldm_entities',
         nsURI='http://www.eclipse.org/bird/ldm_entities',
         nsPrefix='ldm_entities')
-    
+
     il_domains_package = ELPackage(
         name='il_domains',
         nsURI='http://www.eclipse.org/bird/il_domains',
         nsPrefix='ldm_domains')
-   
+
     il_tables_package = ELPackage(
         name='il_entities',
         nsURI='http://www.eclipse.org/bird/il_entities',
         nsPrefix='il_entities')
-    
+
 
     skip_reference_data_in_ldm = True
     reports_dictionary = {}
@@ -85,7 +85,7 @@ class Context(object):
 
     join_for_products_to_main_category_map_finrep = {}
     join_for_products_to_main_category_map_ae = {}
-    
+
     tables_for_main_category_map_finrep = {}
     tables_for_main_category_map_ae = {}
 
@@ -101,10 +101,10 @@ class Context(object):
     ldm_entity_to_linked_tables_map = {}
     report_to_main_category_map = {}
     enum_map = {}
-    
+
     arc_to_source_map = {}
     arc_name_to_arc_class_map = {}
-    
+
     arc_target_to_arc_map = {}
 
     enums_used = []
@@ -132,11 +132,11 @@ class Context(object):
         except Exception:
             # If temp file fails, try database
             pass
-        
+
         # Fallback to database configuration
         try:
             # Import here to avoid circular imports
-            from ..bird_meta_data_model import AutomodeConfiguration
+            from pybirdai.bird_meta_data_model import AutomodeConfiguration
             config = AutomodeConfiguration.get_active_configuration()
             if config:
                 return 'ldm' if config.data_model_type == 'ELDM' else 'il'
@@ -144,12 +144,12 @@ class Context(object):
             # If no configuration exists or there's an error, default to 'ldm'
             pass
         return 'ldm'
-    
+
     @property
     def ldm_or_il(self):
         """Get the current data model type (ldm or il)."""
         return self._ldm_or_il
-    
+
     @ldm_or_il.setter
     def ldm_or_il(self, value):
         """Set the data model type (ldm or il)."""
@@ -173,7 +173,7 @@ class Context(object):
         il_code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
         long_name_directive_il_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
 
-       
+
         self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(ldm_dependency_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(ldm_entity_hierarchy_annotation_directive)
@@ -195,13 +195,3 @@ class Context(object):
         self.module_list.modules.append(self.types_package)
         self.module_list.modules.append(self.ldm_domains_package)
         self.module_list.modules.append(self.ldm_entities_package)
-
-        
-
-
-
-
-        
- 
-        
-

@@ -14,8 +14,15 @@ import os
 import logging
 import requests
 from django.core.exceptions import ValidationError
-from .utils.github_file_fetcher import GitHubFileFetcher
-from .utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+try:
+    from .process_steps.utils_integration.github_integration.github_file_fetcher import GitHubFileFetcher
+except ImportError:
+    # Fallback for backward compatibility
+    class GitHubFileFetcher:
+        def __init__(self, repository_url):
+            self.repository_url = repository_url
+            logger.warning("GitHubFileFetcher not available, using placeholder")
+from .entry_points.bird_ecb_data_fetcher import get_bird_ecb_website_client as BirdEcbWebsiteClient
 from .context.context import Context
 
 logger = logging.getLogger(__name__)
@@ -762,16 +769,17 @@ class AutomodeConfigurationService:
             raise
 
     def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD", token: str = None, force_refresh: bool = False) -> int:
-        from .utils.clone_repo_service import CloneRepoService
+        from .entry_points.github_integration_service import clone_repository
         """Fetch technical export files from GitHub repository."""
         logger.info(f"Fetching technical export files from GitHub: {github_url}")
 
         try:
-            repo_name = github_url.split("/")[-1]
-            fetcher = CloneRepoService(token)
-            fetcher.clone_repo(github_url,repo_name)        # Download and extract repository
-            fetcher.setup_files(repo_name)       # Organize files according to mapping
-            fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
+            # Clone repository using entry point
+            result = clone_repository(repository_url=github_url, token=token)
+            if not result.get('success'):
+                logger.error(f"Failed to clone repository: {result.get('error')}")
+                return 0
+            logger.info("Repository cloned successfully")
 
             return 1
 
@@ -1101,31 +1109,355 @@ class AutomodeConfigurationService:
 
         try:
             # Import the test runner
-            from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+            from .entry_points.test_processor import run_regulatory_tests
 
-            # Create test runner instance
-            test_runner = RegulatoryTemplateTestRunner()
-
-            # Override the arguments to match our desired configuration
-            test_runner.args.uv = "False"
-            test_runner.args.config_file = "tests/configuration_file_tests.json"
-            test_runner.args.dp_value = None
-            test_runner.args.reg_tid = None
-            test_runner.args.dp_suffix = None
-            test_runner.args.scenario = None
-
-            # Execute the test runner
-            logger.info("Executing test runner with config file: tests/configuration_file_tests.json")
-            test_runner.main()
-
-            results['tests_executed'] = True
-            results['test_results'] = {'status': 'completed', 'config_file': 'tests/configuration_file_tests.json'}
-
-            logger.info("Test suite execution completed successfully")
+            # Run regulatory tests using entry point
+            test_config = {
+                'uv': 'False',
+                'config_file': 'tests/configuration_file_tests.json',
+                'dp_value': None
+            }
+            
+            result = run_regulatory_tests(test_config)
+            
+            if result.get('success'):
+                results['tests_executed'] = True
+                results['test_results'] = result
+                logger.info("Test suite execution completed successfully")
+            else:
+                error_msg = f"Test execution failed: {result.get('error')}"
+                logger.error(error_msg)
+                results['errors'].append(error_msg)
 
         except Exception as e:
             error_msg = f"Error during test suite execution: {str(e)}"
             logger.error(error_msg)
             results['errors'].append(error_msg)
 
+        return results
+
+
+class GitHubIntegrationService:
+    """Service class for GitHub integration operations including pushing CSV files and creating pull requests."""
+
+    def __init__(self, github_token: str = None):
+        """
+        Initialize the GitHub integration service.
+        
+        Args:
+            github_token (str, optional): GitHub personal access token
+        """
+        self.github_token = github_token or os.getenv('GITHUB_TOKEN')
+        if not self.github_token:
+            raise ValueError("GitHub token is required. Set GITHUB_TOKEN environment variable or provide token parameter.")
+
+    def _get_headers(self):
+        """Get headers for GitHub API requests."""
+        return {
+            'Authorization': f'token {self.github_token}',
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+        }
+
+    def _parse_github_url(self, repository_url: str):
+        """
+        Parse GitHub repository URL to extract owner and repo.
+        
+        Args:
+            repository_url (str): GitHub repository URL
+            
+        Returns:
+            tuple: (owner, repo) or (None, None) if parsing fails
+        """
+        try:
+            normalized_url = repository_url.rstrip('/')
+            if normalized_url.endswith('.git'):
+                normalized_url = normalized_url[:-4]
+            
+            parts = normalized_url.replace('https://github.com/', '').split('/')
+            if len(parts) >= 2:
+                return parts[0], parts[1]
+            return None, None
+        except Exception as e:
+            logger.error(f"Error parsing GitHub URL {repository_url}: {e}")
+            return None, None
+
+    def get_automode_config(self):
+        """
+        Get the active automode configuration from the database.
+        
+        Returns:
+            AutomodeConfiguration: Active configuration or None if not found
+        """
+        try:
+            from .bird_meta_data_model import AutomodeConfiguration
+            return AutomodeConfiguration.objects.filter(is_active=True).first()
+        except Exception as e:
+            logger.error(f"Error getting automode configuration: {e}")
+            return None
+
+    def create_branch(self, owner: str, repo: str, branch_name: str, base_branch: str = 'main'):
+        """
+        Create a new branch in the repository.
+        
+        Args:
+            owner (str): Repository owner
+            repo (str): Repository name
+            branch_name (str): Name of the new branch
+            base_branch (str): Base branch to create from (default: 'main')
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            # Get the SHA of the base branch
+            base_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{base_branch}"
+            response = requests.get(base_url, headers=self._get_headers())
+            
+            if response.status_code != 200:
+                logger.error(f"Failed to get base branch {base_branch}: {response.status_code}")
+                return False
+            
+            base_sha = response.json()['object']['sha']
+            
+            # Create the new branch
+            create_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs"
+            data = {
+                'ref': f'refs/heads/{branch_name}',
+                'sha': base_sha
+            }
+            
+            response = requests.post(create_url, headers=self._get_headers(), json=data)
+            
+            if response.status_code == 201:
+                logger.info(f"Successfully created branch {branch_name}")
+                return True
+            else:
+                logger.error(f"Failed to create branch {branch_name}: {response.status_code} - {response.text}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error creating branch {branch_name}: {e}")
+            return False
+
+    def push_csv_files(self, owner: str, repo: str, branch_name: str, csv_directory: str):
+        """
+        Push CSV files to a GitHub repository branch.
+        
+        Args:
+            owner (str): Repository owner
+            repo (str): Repository name
+            branch_name (str): Branch to push to
+            csv_directory (str): Local directory containing CSV files
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            import base64
+            import glob
+            
+            csv_files = glob.glob(os.path.join(csv_directory, '*.csv'))
+            
+            if not csv_files:
+                logger.warning(f"No CSV files found in directory: {csv_directory}")
+                return False
+            
+            logger.info(f"Found {len(csv_files)} CSV files to push")
+            
+            # Push each CSV file
+            for csv_file in csv_files:
+                file_name = os.path.basename(csv_file)
+                remote_path = f"export/database_export_ldm/{file_name}"
+                
+                # Read and encode file content
+                with open(csv_file, 'rb') as f:
+                    content = base64.b64encode(f.read()).decode('utf-8')
+                
+                # Check if file exists to determine if we need to create or update
+                get_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{remote_path}"
+                params = {'ref': branch_name}
+                response = requests.get(get_url, headers=self._get_headers(), params=params)
+                
+                # Prepare data for file creation/update
+                data = {
+                    'message': f'Update {file_name} via PyBIRD AI CSV export',
+                    'content': content,
+                    'branch': branch_name
+                }
+                
+                # If file exists, include its SHA for update
+                if response.status_code == 200:
+                    data['sha'] = response.json()['sha']
+                
+                # Create or update file
+                put_response = requests.put(get_url, headers=self._get_headers(), json=data)
+                
+                if put_response.status_code in [200, 201]:
+                    logger.info(f"Successfully pushed {file_name}")
+                else:
+                    logger.error(f"Failed to push {file_name}: {put_response.status_code} - {put_response.text}")
+                    return False
+            
+            logger.info(f"Successfully pushed {len(csv_files)} CSV files")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error pushing CSV files: {e}")
+            return False
+
+    def create_pull_request(self, owner: str, repo: str, branch_name: str, base_branch: str = 'main', 
+                          title: str = None, body: str = None):
+        """
+        Create a pull request for the branch.
+        
+        Args:
+            owner (str): Repository owner
+            repo (str): Repository name
+            branch_name (str): Source branch for the pull request
+            base_branch (str): Target branch for the pull request (default: 'main')
+            title (str): Pull request title
+            body (str): Pull request body
+            
+        Returns:
+            tuple: (success: bool, pr_url: str or None)
+        """
+        try:
+            from datetime import datetime
+            
+            if not title:
+                title = f"PyBIRD AI CSV Export - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            
+            if not body:
+                body = f"""## Database Export from PyBIRD AI
+
+This pull request contains CSV files exported from the PyBIRD AI database.
+
+### Files Updated:
+- Database export CSV files in `export/database_export_ldm/`
+
+### Export Details:
+- Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- Source: PyBIRD AI automated export
+- Branch: {branch_name}
+
+### Testing:
+- [ ] Verify CSV file integrity
+- [ ] Check data completeness
+- [ ] Validate against expected schema
+
+This export was generated automatically by PyBIRD AI's database export functionality."""
+            
+            # Create pull request
+            pr_url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
+            data = {
+                'title': title,
+                'body': body,
+                'head': branch_name,
+                'base': base_branch
+            }
+            
+            response = requests.post(pr_url, headers=self._get_headers(), json=data)
+            
+            if response.status_code == 201:
+                pr_data = response.json()
+                pr_html_url = pr_data['html_url']
+                logger.info(f"Successfully created pull request: {pr_html_url}")
+                return True, pr_html_url
+            else:
+                logger.error(f"Failed to create pull request: {response.status_code} - {response.text}")
+                return False, None
+                
+        except Exception as e:
+            logger.error(f"Error creating pull request: {e}")
+            return False, None
+
+    def export_and_push_to_github(self, branch_name: str = None, repository_url: str = None):
+        """
+        Complete workflow: export database to CSV and push to GitHub with PR.
+        
+        Args:
+            branch_name (str, optional): Custom branch name. If None, generates timestamp-based name.
+            repository_url (str, optional): GitHub repository URL. If None, uses automode config.
+            
+        Returns:
+            dict: Results of the operation
+        """
+        from datetime import datetime
+        from .views import _export_database_to_csv_logic
+        
+        results = {
+            'success': False,
+            'csv_exported': False,
+            'branch_created': False,
+            'files_pushed': False,
+            'pr_created': False,
+            'pr_url': None,
+            'error': None
+        }
+        
+        try:
+            # Get repository URL from automode config if not provided
+            if not repository_url:
+                config = self.get_automode_config()
+                if config and config.technical_export_github_url:
+                    repository_url = config.technical_export_github_url
+                else:
+                    repository_url = 'https://github.com/regcommunity/FreeBIRD'
+            
+            # Parse GitHub URL
+            owner, repo = self._parse_github_url(repository_url)
+            if not owner or not repo:
+                results['error'] = f"Invalid GitHub repository URL: {repository_url}"
+                return results
+            
+            # Generate branch name if not provided
+            if not branch_name:
+                timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+                branch_name = f"csv-export-{timestamp}"
+            
+            logger.info(f"Starting export and push to {owner}/{repo} on branch {branch_name}")
+            
+            # Step 1: Export database to CSV
+            logger.info("Exporting database to CSV...")
+            zip_file_path, extract_dir = _export_database_to_csv_logic()
+            results['csv_exported'] = True
+            logger.info(f"CSV export completed: {extract_dir}")
+            
+            # Step 2: Create branch
+            logger.info(f"Creating branch {branch_name}...")
+            if self.create_branch(owner, repo, branch_name):
+                results['branch_created'] = True
+                logger.info(f"Branch {branch_name} created successfully")
+            else:
+                results['error'] = f"Failed to create branch {branch_name}"
+                return results
+            
+            # Step 3: Push CSV files
+            logger.info("Pushing CSV files to GitHub...")
+            if self.push_csv_files(owner, repo, branch_name, extract_dir):
+                results['files_pushed'] = True
+                logger.info("CSV files pushed successfully")
+            else:
+                results['error'] = "Failed to push CSV files"
+                return results
+            
+            # Step 4: Create pull request
+            logger.info("Creating pull request...")
+            pr_success, pr_url = self.create_pull_request(owner, repo, branch_name)
+            if pr_success:
+                results['pr_created'] = True
+                results['pr_url'] = pr_url
+                logger.info(f"Pull request created: {pr_url}")
+            else:
+                results['error'] = "Failed to create pull request"
+                return results
+            
+            results['success'] = True
+            logger.info("Export and push to GitHub completed successfully")
+            
+        except Exception as e:
+            results['error'] = f"Unexpected error: {str(e)}"
+            logger.error(f"Error in export_and_push_to_github: {e}")
+        
         return results

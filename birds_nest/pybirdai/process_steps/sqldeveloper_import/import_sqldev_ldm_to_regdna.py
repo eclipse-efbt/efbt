@@ -12,7 +12,7 @@
 #
 import os
 import csv
-from pybirdai.utils.utils import Utils
+from pybirdai.entry_points.utils_processor import get_utils_processor as Utils
 
 from pybirdai.regdna import ELAttribute, ELClass, ELEnum
 from pybirdai.regdna import ELEnumLiteral, ELReference
