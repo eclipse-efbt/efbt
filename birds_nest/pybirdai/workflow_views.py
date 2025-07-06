@@ -40,6 +40,8 @@ from .entry_points.import_semantic_integrations_from_website import RunImportSem
 
 from .workflow_services import AutomodeConfigurationService
 from .forms import AutomodeConfigurationSessionForm
+from .workflow_model import WorkflowTaskExecution, WorkflowSession
+
 from .forms import (
     SMCubesCoreForm,
 )

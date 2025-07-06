@@ -23,7 +23,6 @@ class Context(object):
 
     # enable_lineage_tracking will be set dynamically from configuration
     enable_lineage_tracking = True
-
     enrich_ldm_relationships = False
     use_codes = True
 
@@ -140,7 +139,7 @@ class Context(object):
             # If temp file fails, default to True
             pass
         return True
-    
+
     def _get_configured_data_model_type(self):
         """Get the configured data model type from temporary file or AutomodeConfiguration."""
         # First try to read from temporary configuration file
