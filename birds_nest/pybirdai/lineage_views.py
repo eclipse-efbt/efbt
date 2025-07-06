@@ -405,10 +405,17 @@ def get_trail_lineage_data(request, trail_id):
                         continue
                     
                     edges.append({
+<<<<<<< HEAD
                         'source': source_ref_node_id,
                         'target': source_node_id,
                         'type': 'points_to_source',
                         'label': 'points to'
+=======
+                        'source': eval_func_node_id,
+                        'target': source_node_id,
+                        'type': 'derived_from_value',
+                        'label': 'computed from'
+>>>>>>> 2fb609da (Re-include all the CoCaLiMo and Aorta standards #1536)
                     })
                 except Exception:
                     continue  # Skip if source not found
