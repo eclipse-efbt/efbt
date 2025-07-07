@@ -61,10 +61,10 @@
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
-            <button
-                type="button"
-                class="btn btn-sm btn-warning substep-btn"
-                data-substep="delete_database"
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='delete_database' %}"
+                class="operation-btn btn-sm btn-warning"
             >
                 Run Delete Database
             </button>
@@ -91,10 +91,10 @@
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
-            <button
-                type="button"
-                class="btn btn-sm btn-primary substep-btn"
-                data-substep="import_input_model"
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='import_input_model' %}"
+                class="operation-btn btn-sm btn-primary"
             >
                 Run Import Input Model
             </button>
@@ -147,10 +147,6 @@
         color: #6c757d;
     }
 
-    .status-badge.running {
-        background-color: #cfe2ff;
-        color: #084298;
-    }
 
     .status-badge.completed {
         background-color: #d1e7dd;
