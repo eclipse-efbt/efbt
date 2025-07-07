@@ -33,6 +33,12 @@ python -m pip install unidecode==1.3.8
 python manage.py runserver
 ```
 
+**Alternative: Run with startup script (auto-restart on failure):**
+```bash
+cd birds_nest
+bash startup.sh
+```
+
 **Database operations:**
 ```bash
 python manage.py makemigrations

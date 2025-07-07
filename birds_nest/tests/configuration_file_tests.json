@@ -1,3 +1,28 @@
 {
-  "tests": []
+  "tests": [
+    {
+      "reg_tid": "F_05_01_REF_FINREP_3_0",
+      "dp_suffix": "152589_REF",
+      "dp_value": 83491250,
+      "scenario": "loan_and_guarantee_scenario_1"
+    },
+    {
+      "reg_tid": "F_05_01_REF_FINREP_3_0",
+      "dp_suffix": "152589_REF",
+      "dp_value": 83491250,
+      "scenario": "loan_and_guarantee_scenario_2"
+    },
+    {
+      "reg_tid": "F_05_01_REF_FINREP_3_0",
+      "dp_suffix": "152457_REF",
+      "dp_value": 83491250,
+      "scenario": "loan_and_guarantee_scenario_1"
+    },
+    {
+      "reg_tid": "F_05_01_REF_FINREP_3_0",
+      "dp_suffix": "152457_REF",
+      "dp_value": 83491250,
+      "scenario": "loan_and_guarantee_scenario_2"
+    }
+  ]
 }
