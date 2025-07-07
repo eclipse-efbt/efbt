@@ -1416,7 +1416,6 @@ class OrchestrationWithLineage:
 			# Check if we already have a DerivedTableRow for this object
 			existing_rows = evaluated_table.derivedtablerow_set.filter(row_identifier=row_identifier)
 			if existing_rows.exists():
-<<<<<<< HEAD
 				derived_row_id = existing_rows.first().id
 			else:
 				# Create a new DerivedTableRow
@@ -1430,24 +1429,11 @@ class OrchestrationWithLineage:
 			# Store the context for this specific object
 			self.object_contexts[obj_id] = derived_row_id
 			return derived_row_id
-=======
-				return existing_rows.first().id
-			
-			# Create a new DerivedTableRow
-			derived_row = DerivedTableRow.objects.create(
-				populated_table=evaluated_table,
-				row_identifier=row_identifier
-			)
-			
-			print(f"Created DerivedTableRow {derived_row.id} for {function_name}")
-			return derived_row.id
->>>>>>> 0e3a0c54 (Re-include all the CoCaLiMo and Aorta standards #1536)
 			
 		except Exception as e:
 			print(f"Error ensuring derived row context: {e}")
 			return None
 	
-<<<<<<< HEAD
 	def _get_parent_table_name(self, class_name):
 		"""Determine the parent table name for an individual object"""
 		# Handle special cases first
@@ -1487,8 +1473,6 @@ class OrchestrationWithLineage:
 			return self.object_contexts[obj_id]
 		return None
 	
-=======
->>>>>>> 0e3a0c54 (Re-include all the CoCaLiMo and Aorta standards #1536)
 	def _find_source_value_object(self, source_value):
 		"""Find the DatabaseColumnValue object for a given source value"""
 		try:
@@ -1524,7 +1508,6 @@ class OrchestrationWithLineage:
 				# Determine if this is a Django model or a derived table
 				is_django_model = self._is_django_model(table_name)
 				
-<<<<<<< HEAD
 				# Check for existing PopulatedDataBaseTable/EvaluatedDerivedTable first
 				populated_table = None
 				temp_table = None
@@ -1541,36 +1524,6 @@ class OrchestrationWithLineage:
 						populated_table = existing_populated
 						table_exists = True
 						print(f"Found existing DatabaseTable for: {table_name}")
-=======
-				# Create appropriate table type
-				if is_django_model:
-					temp_table = DatabaseTable.objects.create(name=table_name)
-					table_type = 'DatabaseTable'
-				else:
-					temp_table = DerivedTable.objects.create(name=table_name)
-					table_type = 'DerivedTable'
-				
-				if self.metadata_trail:
-					AortaTableReference.objects.create(
-						metadata_trail=self.metadata_trail,
-						table_content_type=table_type,
-						table_id=temp_table.id
-					)
-				else:
-					print(f"Warning: No metadata_trail available for tracking table {table_name}")
-				
-				if self.trail:
-					if is_django_model:
-						populated_table = PopulatedDataBaseTable.objects.create(
-							trail=self.trail,
-							table=temp_table
-						)
-					else:
-						populated_table = EvaluatedDerivedTable.objects.create(
-							trail=self.trail,
-							table=temp_table
-						)
->>>>>>> c349d6b2 (Re-include all the CoCaLiMo and Aorta standards #1536)
 				else:
 					# Look for existing DerivedTable with same name in this trail
 					existing_evaluated = EvaluatedDerivedTable.objects.filter(
@@ -1797,11 +1750,7 @@ def create_orchestration():
 	"""
 	from pybirdai.context.context import Context
 	
-<<<<<<< HEAD
 	if hasattr(Context, 'enable_lineage_tracking') and Context.enable_lineage_tracking:
-=======
-	if hasattr(Context, 'use_lineage_enhanced_orchestrator') and Context.use_lineage_enhanced_orchestrator:
->>>>>>> c7f830e9 (Re-include all the CoCaLiMo and Aorta standards #1536)
 		print("Using lineage-enhanced orchestrator")
 		return OrchestrationWithLineage()
 	else:
