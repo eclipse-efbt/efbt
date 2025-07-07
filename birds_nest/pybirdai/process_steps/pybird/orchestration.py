@@ -36,6 +36,7 @@ class OrchestrationWithLineage:
 		self.current_populated_tables = {}  # Map table names to PopulatedTable instances
 		self.current_rows = {}  # Track current row being processed
 		self.lineage_enabled = True  # Can be disabled for performance
+		self.evaluated_functions_cache = {}  # Cache to track evaluated functions per row
 		
 		# Note: Do not automatically register this instance globally
 		# Global registration should be done explicitly when setting up lineage tracking
@@ -869,6 +870,9 @@ class OrchestrationWithLineage:
 			self.current_rows['source'] = db_row.id
 			self.current_rows['table'] = table_name
 			
+			# Clear evaluated functions cache when switching to a new row
+			self.evaluated_functions_cache.clear()
+			
 			# print(f"Tracked row processing: {table_name} row {row_identifier}")
 			return db_row
 			
@@ -948,6 +952,9 @@ class OrchestrationWithLineage:
 			# Store current derived row context
 			self.current_rows['derived'] = derived_row.id
 			
+			# Clear evaluated functions cache when switching to a new derived row
+			self.evaluated_functions_cache.clear()
+			
 			# print(f"Tracked derived row processing: {table_name}")
 			return derived_row
 			
@@ -968,6 +975,12 @@ class OrchestrationWithLineage:
 				print(f"DEBUG: Current rows context: {self.current_rows}")
 				return
 			
+			# Check cache first
+			cache_key = f"{derived_row_id}:{function_name}"
+			if cache_key in self.evaluated_functions_cache:
+				# Return cached evaluated function
+				return self.evaluated_functions_cache[cache_key]
+			
 			# Get the derived row
 			derived_row = DerivedTableRow.objects.get(id=derived_row_id)
 			
@@ -985,9 +998,34 @@ class OrchestrationWithLineage:
 			
 			function = functions.first()
 			
-			# Create EvaluatedFunction
+			# Check if we already have an EvaluatedFunction for this function and row
+			existing_evaluated = EvaluatedFunction.objects.filter(
+				function=function,
+				row=derived_row
+			).first()
+			
+			if existing_evaluated:
+				# We already have this function evaluated for this row
+				# Since functions are immutable, the result should be the same
+				# Cache it and return
+				self.evaluated_functions_cache[cache_key] = existing_evaluated
+				# print(f"Reusing existing EvaluatedFunction for {function_name} on row {derived_row_id}")
+				return existing_evaluated
+			
+			# Create EvaluatedFunction only if it doesn't exist
+			# Try to store as numeric value if possible
+			numeric_value = None
+			string_value = None
+			
+			if computed_value is not None:
+				try:
+					numeric_value = float(computed_value)
+				except (ValueError, TypeError):
+					string_value = str(computed_value)
+			
 			evaluated_function = EvaluatedFunction.objects.create(
-				value=str(computed_value) if computed_value is not None else None,
+				value=numeric_value,
+				string_value=string_value,
 				function=function,
 				row=derived_row
 			)
@@ -1003,6 +1041,9 @@ class OrchestrationWithLineage:
 							content_type=ContentType.objects.get_for_model(source_value_obj.__class__),
 							object_id=source_value_obj.id
 						)
+			
+			# Cache the evaluated function
+			self.evaluated_functions_cache[cache_key] = evaluated_function
 			
 			# print(f"Tracked value computation: {function_name} with {len(source_values)} source values = {computed_value}")
 			return evaluated_function
