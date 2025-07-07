@@ -15,7 +15,7 @@
         <p>Python transformation code has been generated successfully.</p>
         <a
             href="{% url 'pybirdai:workflow_task' task_number=5 operation='review' %}"
-            class="btn btn-primary"
+            class="operation-btn btn-primary"
             >Go to Review</a
         >
     </div>
@@ -45,301 +45,132 @@
 
     <h2>Python Code Generation Process</h2>
 
-    <div class="generation-phases">
-        <div class="phase-card">
-            <h3>1. Filter Code Generation</h3>
+    <div class="subtask-list">
+        <h3>Subtasks to be executed:</h3>
+
+        <div class="subtask-item">
+            <h4>1. Filter Code Generation</h4>
             <p>Convert SMCubes filters to executable Python code</p>
-            <div class="phase-details">
-                <ul>
-                    <li>Generate filter functions</li>
-                    <li>Create filter classes</li>
-                    <li>Build filter orchestration</li>
-                    <li>Add performance optimizations</li>
-                </ul>
-                {% if task_execution.execution_data.filter_code_generated %}
-
-                <span class="status-badge completed">✓ Completed</span>
-                {% elif task_execution.status == 'running' and
-                task_execution.execution_data.current_phase == 'filters' %}
-                <span class="status-badge running">🔄 In Progress</span>
-                {% else %}
-                <span class="status-badge pending">⏳ Pending</span>
-                <button
-                    type="button"
-                    class="btn btn-sm btn-primary substep-btn"
-                    data-substep="generate_filter_code"
-                >
-                    Run Generate Filter Code
-                </button>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="phase-card">
-            <h3>2. Join Code Generation</h3>
-            <p>Create executable join operations</p>
-            <div class="phase-details">
-                <ul>
-                    <li>Generate join methods</li>
-                    <li>Create data merging logic</li>
-                    <li>Build relationship handlers</li>
-                    <li>Implement join optimization</li>
-                </ul>
-                {% if task_execution.execution_data.join_code_generated %}
-
-                <span class="status-badge completed">✓ Completed</span>
-                {% elif task_execution.status == 'running' and
-                task_execution.execution_data.current_phase == 'joins' %}
-                <span class="status-badge running">🔄 In Progress</span>
-                {% else %}
-                <span class="status-badge pending">⏳ Pending</span>
-                <button
-                    type="button"
-                    class="btn btn-sm btn-primary substep-btn"
-                    data-substep="generate_join_code"
-                >
-                    Run Generate Join Code
-                </button>
-                {% endif %}
-            </div>
-        </div>
-
-        {% if task_execution.status == 'pending' %}
-        <div id="task5-status" style="display: none"></div>
-        <form id="task5-form" method="post" style="margin-top: 30px">
-            {% csrf_token %}
-
-            <div class="generation-options">
-                <h3>Code Generation Options</h3>
-
-                <div class="option-group">
-                    <h4>Code Style</h4>
-                    <div class="form-group">
-                        <label for="code_style">Python Code Style:</label>
-                        <select
-                            name="code_style"
-                            id="code_style"
-                            class="form-control"
-                        >
-                            <option value="pep8" selected>
-                                PEP 8 Standard
-                            </option>
-                            <option value="black">Black Formatter</option>
-                            <option value="google">Google Style</option>
-                        </select>
-                    </div>
-
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="add_type_hints"
-                            id="add_type_hints"
-                            checked
-                        />
-                        <label class="form-check-label" for="add_type_hints">
-                            Add type hints (Python 3.6+)
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="add_docstrings"
-                            id="add_docstrings"
-                            checked
-                        />
-                        <label class="form-check-label" for="add_docstrings">
-                            Generate comprehensive docstrings
-                        </label>
-                    </div>
-                </div>
-
-                <div class="option-group">
-                    <h4>Performance Options</h4>
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="use_pandas"
-                            id="use_pandas"
-                            checked
-                        />
-                        <label class="form-check-label" for="use_pandas">
-                            Use pandas for data operations
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="enable_caching"
-                            id="enable_caching"
-                            checked
-                        />
-                        <label class="form-check-label" for="enable_caching">
-                            Enable result caching
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="parallel_execution"
-                            id="parallel_execution"
-                        />
-                        <label
-                            class="form-check-label"
-                            for="parallel_execution"
-                        >
-                            Generate parallel execution support
-                        </label>
-                    </div>
-                </div>
-
-                <div class="option-group">
-                    <h4>Testing Options</h4>
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="generate_tests"
-                            id="generate_tests"
-                            checked
-                        />
-                        <label class="form-check-label" for="generate_tests">
-                            Generate unit tests
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="generate_fixtures"
-                            id="generate_fixtures"
-                            checked
-                        />
-                        <label class="form-check-label" for="generate_fixtures">
-                            Generate test fixtures
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-                Start Python Code Generation
-            </button>
+            <ul>
+                <li>Generate filter functions</li>
+                <li>Create filter classes</li>
+                <li>Build filter orchestration</li>
+                <li>Add performance optimizations</li>
+            </ul>
+            {% if task_execution.execution_data.filter_code_generated %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
             <a
-                href="{% url 'pybirdai:workflow_dashboard' %}"
-                class="btn btn-secondary"
-                >Cancel</a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=5 substep_name='generate_filter_code' %}"
+                class="operation-btn btn-sm btn-primary"
             >
-        </form>
-        {% endif %}
+                Run Generate Filter Code
+            </a>
+
+        </div>
+
+        <div class="subtask-item">
+            <h4>2. Join Code Generation</h4>
+            <p>Create executable join operations</p>
+            <ul>
+                <li>Generate join methods</li>
+                <li>Create data merging logic</li>
+                <li>Build relationship handlers</li>
+                <li>Implement join optimization</li>
+            </ul>
+            {% if task_execution.execution_data.join_code_generated %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=5 substep_name='generate_join_code' %}"
+                class="operation-btn btn-sm btn-primary"
+            >
+                Run Generate Join Code
+            </a>
+        </div>
     </div>
+</div>
 
-    <style>
-        .generation-phases {
-            display: grid;
-            gap: 20px;
-            margin: 20px 0;
-        }
+<style>
+    .subtask-list {
+        margin: 20px 0;
+    }
 
-        .phase-card {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-        }
+    .subtask-item {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
 
-        .phase-card h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: #495057;
-        }
+    .subtask-item h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #495057;
+    }
 
-        .phase-details {
-            margin-top: 15px;
-        }
+    .subtask-item ul {
+        margin: 10px 0;
+        padding-left: 20px;
+    }
 
-        .phase-details ul {
-            margin: 10px 0;
-            padding-left: 20px;
-            color: #6c757d;
-        }
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
 
-        .phase-stats {
-            display: flex;
-            gap: 20px;
-            margin: 15px 0;
-            padding: 10px;
-            background: white;
-            border-radius: 4px;
-        }
+    .status-badge.pending {
+        background-color: #e9ecef;
+        color: #6c757d;
+    }
 
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
+    .status-badge.running {
+        background-color: #cfe2ff;
+        color: #084298;
+    }
 
-        .stat-item strong {
-            font-size: 24px;
-            color: #0d6efd;
-        }
+    .status-badge.completed {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
 
-        .generation-options {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
+    .execution-options {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
 
-        .option-group {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #dee2e6;
-        }
+    .execution-options h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
 
-        .option-group:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
+    .form-check {
+        margin-bottom: 10px;
+    }
 
-        .option-group h4 {
-            margin-bottom: 15px;
-            color: #495057;
-        }
+    .progress {
+        height: 20px;
+        margin-top: 10px;
+    }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+    .progress-bar {
+        background-color: #0d6efd;
+    }
+</style>
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .substep-btn {
-            margin-top: 10px;
-            margin-left: 10px;
-        }
-    </style>
-
-    <script>
-        // Auto-refresh if task is running
-        {% if task_execution.status == 'running' %}
-        setTimeout(function() {
-            location.reload();
-        }, 3000);
-        {% endif %}
+<script>
+    // Note: Auto-refresh removed since we now use loading pattern for individual substeps
 
         // Handle form submission with AJAX
         document.addEventListener('DOMContentLoaded', function() {
@@ -391,66 +222,6 @@
                 });
             }
 
-            // Handle individual substep buttons
-            const substepButtons = document.querySelectorAll('.substep-btn');
-            substepButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const substepName = this.getAttribute('data-substep');
-                    const taskNumber = 5;
-
-                    // Show processing message
-                    if (!statusDiv) {
-                        alert('Running substep: ' + substepName);
-                    } else {
-                        statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Running substep: ' + substepName + '...</div>';
-                        statusDiv.style.display = 'block';
-                    }
-
-                    // Disable button
-                    this.disabled = true;
-                    this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Running...';
-
-                    // Get CSRF token
-                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-                    // Submit substep via AJAX
-                    fetch(`/pybirdai/workflow/task/${taskNumber}/substep/${substepName}/`, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRFToken': csrfToken,
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'csrfmiddlewaretoken=' + encodeURIComponent(csrfToken)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            if (statusDiv) {
-                                statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'Substep completed successfully.') + '</div>';
-                            }
-                            // Refresh page after 2 seconds to show updated status
-                            setTimeout(function() {
-                                location.reload();
-                            }, 2000);
-                        } else {
-                            if (statusDiv) {
-                                statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'Substep failed.') + '</div>';
-                            }
-                            this.disabled = false;
-                            this.innerHTML = 'Run ' + substepName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        if (statusDiv) {
-                            statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred running the substep.</div>';
-                        }
-                        this.disabled = false;
-                        this.innerHTML = 'Run ' + substepName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    });
-                });
-            });
         });
     </script>
     {% endblock %}
