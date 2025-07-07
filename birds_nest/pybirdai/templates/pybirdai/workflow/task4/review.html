@@ -10,17 +10,17 @@
 {% block workflow_content %}
 <div class="task-content">
     <h1>Task 4: SMCubes Transformation Rules - Review</h1>
-    
-    {% if task_execution.status != 'completed' or task_execution.operation_type != 'do' %}
+
+    {% if task_execution.status != 'completed' %}
     <div class="alert alert-warning">
         <strong>⚠️ Task Not Completed</strong>
         <p>You must complete the Do step before reviewing the results.</p>
-        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}" class="btn btn-primary">Go to Do</a>
+        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}" class="operation-btn btn-primary">Go to Do</a>
     </div>
     {% else %}
-    
+
     <h2>Transformation Rules Creation Summary</h2>
-    
+
     <div class="summary-grid">
         <div class="summary-card">
             <h3>Filter Generation</h3>
@@ -31,18 +31,18 @@
             <dl>
                 <dt>Total Filters:</dt>
                 <dd>{{ execution_data.filters_created|default:"125" }} filters</dd>
-                
+
                 <dt>Business Rule Filters:</dt>
                 <dd>{{ execution_data.business_rule_filters|default:"85" }} filters</dd>
-                
+
                 <dt>Data Quality Filters:</dt>
                 <dd>{{ execution_data.data_quality_filters|default:"40" }} filters</dd>
-                
+
                 <dt>Validation Status:</dt>
                 <dd class="text-success">All filters validated</dd>
             </dl>
         </div>
-        
+
         <div class="summary-card">
             <h3>Join Metadata</h3>
             <div class="status-indicator success">
@@ -52,21 +52,21 @@
             <dl>
                 <dt>Join Specifications:</dt>
                 <dd>{{ execution_data.joins_created|default:"75" }} joins</dd>
-                
+
                 <dt>Cube Links:</dt>
                 <dd>{{ execution_data.cube_links|default:"150" }} links</dd>
-                
+
                 <dt>Relationship Mappings:</dt>
                 <dd>{{ execution_data.relationship_mappings|default:"200" }} mappings</dd>
-                
+
                 <dt>Performance Optimized:</dt>
                 <dd class="text-success">{{ execution_data.optimized_joins|default:"75" }} joins</dd>
             </dl>
         </div>
     </div>
-    
+
     <h2>Transformation Rules Creation Process</h2>
-    
+
     <div class="process-steps">
         <div class="step-item completed">
             <span class="step-icon">1</span>
@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="step-item completed">
             <span class="step-icon">2</span>
             <div class="step-content">
@@ -94,9 +94,9 @@
             </div>
         </div>
     </div>
-    
+
     <h2>Performance Analysis</h2>
-    
+
     <div class="performance-section">
         <div class="performance-metric">
             <h4>Filter Complexity</h4>
@@ -113,7 +113,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="performance-metric">
             <h4>Join Optimization</h4>
             <div class="optimization-stats">
@@ -132,9 +132,9 @@
             </div>
         </div>
     </div>
-    
+
     <h2>Filter and Join Metadata Review</h2>
-    
+
     <div class="metadata-review-section">
         <div class="review-category">
             <h3>Filter Review</h3>
@@ -158,7 +158,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="review-category">
             <h3>Join Metadata Review</h3>
             <p>Review and validate the join metadata structures:</p>
@@ -196,7 +196,7 @@
         <a href="{% url 'pybirdai:workflow_task' task_number=5 operation='do' %}" class="btn btn-primary">Proceed to Task 5</a>
         <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
     </div>
-    
+
     {% endif %}
 </div>
 
