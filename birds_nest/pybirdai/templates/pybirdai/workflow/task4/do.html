@@ -15,7 +15,7 @@
         <p>SMCubes transformation rules have been created successfully.</p>
         <a
             href="{% url 'pybirdai:workflow_task' task_number=4 operation='review' %}"
-            class="btn btn-primary"
+            class="operation-btn btn-primary"
             >Go to Review</a
         >
     </div>
@@ -40,162 +40,110 @@
 
     <h2>Transformation Rules Creation Process</h2>
 
-    <div class="process-overview">
-        <div class="process-step">
-            <div class="step-icon">1</div>
-            <div class="step-content">
-                <h3>Filter Creation</h3>
-                <p>Generate SMCubes filters from business rules</p>
-                <ul>
-                    <li>Parse filter definitions</li>
-                    <li>Create filter metadata</li>
-                    <li>Validate filter logic</li>
-                </ul>
-                {% if task_execution.execution_data.filters_created %}
-                <span class="status-badge completed"
-                    >✓ Completed ({{
-                    task_execution.execution_data.filter_count|default:0 }}
-                    filters)</span
-                >
-                {% elif task_execution.status == 'running' and
-                task_execution.execution_data.current_step == 'filters' %}
-                <span class="status-badge running">🔄 In Progress</span>
-                {% else %}
-                <span class="status-badge pending">⏳ Pending</span>
-                <button
-                    type="button"
-                    class="btn btn-sm btn-primary substep-btn"
-                    data-substep="generate_all_filters"
-                >
-                    Run Generate Filters
-                </button>
-                {% endif %}
-            </div>
+    <div class="subtask-list">
+        <h3>Subtasks to be executed:</h3>
+
+        <div class="subtask-item">
+            <h4>1. Filter Creation</h4>
+            <p>Generate SMCubes filters from business rules</p>
+            <ul>
+                <li>Parse filter definitions</li>
+                <li>Create filter metadata</li>
+                <li>Validate filter logic</li>
+            </ul>
+            {% if task_execution.execution_data.filters_created %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=4 substep_name='generate_all_filters' %}"
+                class="operation-btn btn-sm btn-primary"
+            >
+                Run Generate Filters
+            </a>
         </div>
 
-        <div class="process-step">
-            <div class="step-icon">2</div>
-            <div class="step-content">
-                <h3>Join Rules Creation</h3>
-                <p>Generate join metadata for data relationships</p>
-                <ul>
-                    <li>Analyze data relationships</li>
-                    <li>Create join specifications</li>
-                    <li>Generate executable joins</li>
-                </ul>
-                {% if task_execution.execution_data.joins_metadata_created %}
-                <span class="status-badge completed"
-                    >✓ Completed ({{
-                    task_execution.execution_data.join_count|default:0 }}
-                    joins)</span
-                >
-                {% elif task_execution.status == 'running' and
-                task_execution.execution_data.current_step == 'joins' %}
-                <span class="status-badge running">🔄 In Progress</span>
-                {% else %}
-                <span class="status-badge pending">⏳ Pending</span>
-                <button
-                    type="button"
-                    class="btn btn-sm btn-primary substep-btn"
-                    data-substep="create_joins_metadata"
-                >
-                    Run Create Joins Metadata
-                </button>
-                {% endif %}
-            </div>
+        <div class="subtask-item">
+            <h4>2. Join Rules Creation</h4>
+            <p>Generate join metadata for data relationships</p>
+            <ul>
+                <li>Analyze data relationships</li>
+                <li>Create join specifications</li>
+                <li>Generate executable joins</li>
+            </ul>
+            {% if task_execution.execution_data.joins_metadata_created %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=4 substep_name='create_joins_metadata' %}"
+                class="operation-btn btn-sm btn-primary"
+            >
+                Run Create Joins Metadata
+            </a>
         </div>
     </div>
 
-    {% if task_execution.status == 'pending' %}
+    <!-- {% if task_execution.status == 'pending' %}
     <div id="task4-status" style="display: none"></div>
     <form id="task4-form" method="post" style="margin-top: 30px">
         {% csrf_token %}
 
-        <div class="configuration-section">
-            <h3>Configuration Options</h3>
+        <div class="execution-options">
+            <h3>Execution Options</h3>
 
-            <div class="config-group">
-                <h4>Filter Generation</h4>
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="generate_all_filters"
-                        id="generate_all_filters"
-                        checked
-                    />
-                    <label class="form-check-label" for="generate_all_filters">
-                        Generate all available filters
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="validate_filters"
-                        id="validate_filters"
-                        checked
-                    />
-                    <label class="form-check-label" for="validate_filters">
-                        Validate filter logic
-                    </label>
-                </div>
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="generate_all_filters"
+                    id="generate_all_filters"
+                    checked
+                />
+                <label class="form-check-label" for="generate_all_filters">
+                    Generate All Available Filters
+                </label>
             </div>
 
-            <div class="config-group">
-                <h4>Join Configuration</h4>
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="auto_detect_joins"
-                        id="auto_detect_joins"
-                        checked
-                    />
-                    <label class="form-check-label" for="auto_detect_joins">
-                        Auto-detect join relationships
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="optimize_joins"
-                        id="optimize_joins"
-                        checked
-                    />
-                    <label class="form-check-label" for="optimize_joins">
-                        Optimize join execution order
-                    </label>
-                </div>
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="create_joins_metadata"
+                    id="create_joins_metadata"
+                    checked
+                />
+                <label class="form-check-label" for="create_joins_metadata">
+                    Create Join Metadata
+                </label>
             </div>
 
-            <div class="config-group">
-                <h4>Performance Options</h4>
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="parallel_processing"
-                        id="parallel_processing"
-                        checked
-                    />
-                    <label class="form-check-label" for="parallel_processing">
-                        Enable parallel processing
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="generate_indexes"
-                        id="generate_indexes"
-                        checked
-                    />
-                    <label class="form-check-label" for="generate_indexes">
-                        Generate performance indexes
-                    </label>
-                </div>
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="validate_filters"
+                    id="validate_filters"
+                    checked
+                />
+                <label class="form-check-label" for="validate_filters">
+                    Validate Filter Logic
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="optimize_joins"
+                    id="optimize_joins"
+                    checked
+                />
+                <label class="form-check-label" for="optimize_joins">
+                    Optimize Join Execution Order
+                </label>
             </div>
         </div>
 
@@ -208,97 +156,85 @@
             >Cancel</a
         >
     </form>
-    {% endif %}
+    {% endif %} -->
 </div>
 
 <style>
-    .process-overview {
+    .subtask-list {
         margin: 20px 0;
     }
 
-    .process-step {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 25px;
-        padding: 20px;
+    .subtask-item {
         background: #f8f9fa;
-        border-radius: 8px;
         border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
     }
 
-    .step-icon {
-        width: 40px;
-        height: 40px;
-        background: #0d6efd;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: bold;
-        margin-right: 20px;
-        flex-shrink: 0;
-    }
-
-    .step-content {
-        flex: 1;
-    }
-
-    .step-content h3 {
+    .subtask-item h4 {
         margin-top: 0;
         margin-bottom: 10px;
         color: #495057;
     }
 
-    .step-content ul {
+    .subtask-item ul {
         margin: 10px 0;
         padding-left: 20px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .status-badge.pending {
+        background-color: #e9ecef;
         color: #6c757d;
     }
 
-    .configuration-section {
+    .status-badge.running {
+        background-color: #cfe2ff;
+        color: #084298;
+    }
+
+    .status-badge.completed {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .execution-options {
         background: #f8f9fa;
         padding: 20px;
         border-radius: 8px;
         margin-bottom: 20px;
     }
 
-    .config-group {
-        margin-bottom: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #dee2e6;
+    .execution-options h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
     }
 
-    .config-group:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-
-    .config-group h4 {
+    .form-check {
         margin-bottom: 10px;
-        color: #495057;
     }
 
     .progress {
-        height: 25px;
+        height: 20px;
         margin-top: 10px;
     }
 
-    .substep-btn {
-        margin-top: 10px;
-        margin-left: 10px;
+    .progress-bar {
+        background-color: #0d6efd;
     }
 </style>
 
 <script>
     // Auto-refresh if task is running
-    {% if task_execution.status == 'running' %}
-    setTimeout(function() {
-        location.reload();
-    }, 3000);
-    {% endif %}
 
     // Handle form submission with AJAX
     document.addEventListener('DOMContentLoaded', function() {
@@ -350,66 +286,6 @@
             });
         }
 
-        // Handle individual substep buttons
-        const substepButtons = document.querySelectorAll('.substep-btn');
-        substepButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const substepName = this.getAttribute('data-substep');
-                const taskNumber = 4;
-
-                // Show processing message
-                if (!statusDiv) {
-                    alert('Running substep: ' + substepName);
-                } else {
-                    statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Running substep: ' + substepName + '...</div>';
-                    statusDiv.style.display = 'block';
-                }
-
-                // Disable button
-                this.disabled = true;
-                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Running...';
-
-                // Get CSRF token
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-                // Submit substep via AJAX
-                fetch(`/pybirdai/workflow/task/${taskNumber}/substep/${substepName}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRFToken': csrfToken,
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'csrfmiddlewaretoken=' + encodeURIComponent(csrfToken)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (statusDiv) {
-                            statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'Substep completed successfully.') + '</div>';
-                        }
-                        // Refresh page after 2 seconds to show updated status
-                        setTimeout(function() {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        if (statusDiv) {
-                            statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'Substep failed.') + '</div>';
-                        }
-                        this.disabled = false;
-                        this.innerHTML = 'Run ' + substepName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    if (statusDiv) {
-                        statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred running the substep.</div>';
-                    }
-                    this.disabled = false;
-                    this.innerHTML = 'Run ' + substepName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                });
-            });
-        });
     });
 </script>
 {% endblock %}

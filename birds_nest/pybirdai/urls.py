@@ -643,4 +643,14 @@ urlpatterns = [
         workflow_views.workflow_task_substep,
         name="workflow_task_substep",
     ),
+    path(
+        "workflow/session-check/",
+        workflow_views.workflow_session_check,
+        name="workflow_session_check",
+    ),
+    path(
+        "workflow/task/<int:task_number>/substep-loading/<str:substep_name>/",
+        workflow_views.workflow_task_substep_with_loading,
+        name="workflow_task_substep_with_loading",
+    ),
 ]
