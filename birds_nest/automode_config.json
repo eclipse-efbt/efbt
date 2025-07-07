@@ -1,0 +1,9 @@
+{
+  "data_model_type": "ELDM",
+  "clone_mode": "false",
+  "technical_export_source": "GITHUB",
+  "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
+  "config_files_source": "GITHUB",
+  "config_files_github_url": "https://github.com/regcommunity/FreeBIRD",
+  "when_to_stop": "RESOURCE_DOWNLOAD"
+}
