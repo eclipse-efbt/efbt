@@ -31,6 +31,404 @@ class DjangoSetup:
             os.environ['DJANGO_SETTINGS_MODULE'] = 'birds_nest.settings'
             django.setup()
 
+class CSVExporter:
+    """
+    CSVExporter class that exports mapped DPM data to CSV files for debugging
+    and validation purposes without importing to the database.
+    """
+
+    def __init__(self, csv_directory="target", export_directory="export_debug", batch_size=1000):
+        """
+        Initialize the CSVExporter with ModelMapper integration.
+
+        Args:
+            csv_directory (str): Directory containing source CSV files
+            export_directory (str): Directory for exported mapped data
+            batch_size (int): Number of records to process in each batch
+        """
+        os.makedirs(csv_directory, exist_ok=True)
+        os.makedirs(export_directory, exist_ok=True)
+        os.makedirs(os.path.join(export_directory, "mapped"), exist_ok=True)
+        os.makedirs(os.path.join(export_directory, "reports"), exist_ok=True)
+
+        self.csv_directory = csv_directory
+        self.export_directory = export_directory
+        self.batch_size = batch_size
+        self.model_mapper = ModelMapper()
+        self.export_stats = {
+            'total_files': 0,
+            'successful_exports': 0,
+            'failed_exports': 0,
+            'total_records_processed': 0,
+            'total_records_exported': 0,
+            'errors': [],
+            'warnings': []
+        }
+        # Add caching for performance
+        self._transformation_cache = {}
+
+    def export_mapped_data(self):
+        """
+        Export all mapped data to CSV files for debugging and validation.
+
+        Returns:
+            dict: Export statistics and results
+        """
+        logger.debug("Starting export of mapped DPM data...")
+
+        # Clear existing export files to avoid conflicts
+        mapped_dir = os.path.join(self.export_directory, "mapped")
+        if os.path.exists(mapped_dir):
+            import shutil
+            shutil.rmtree(mapped_dir)
+        os.makedirs(mapped_dir, exist_ok=True)
+
+        # Initialize lookup tables for accurate ID mapping
+        logger.debug("Populating lookup tables for ID resolution...")
+        from constants import auto_populate_lookup_tables
+        lookup_summary = auto_populate_lookup_tables(self.csv_directory)
+        logger.debug(f"Loaded {lookup_summary['loaded']} lookup records")
+        if lookup_summary['errors']:
+            logger.warning(f"Lookup table errors: {lookup_summary['errors'][:5]}")
+
+        # Validate function definitions before export
+        validation_errors = self._validate_function_definitions()
+        if validation_errors:
+            logger.error("Missing function definitions found:")
+            for error in validation_errors:
+                logger.error(f"  - {error}")
+            self.export_stats['errors'].extend(validation_errors)
+
+        # Get list of CSV files
+        csv_files = [f for f in os.listdir(self.csv_directory) if f.endswith('.csv')]
+        self.export_stats['total_files'] = len(csv_files)
+
+        # Process each CSV file
+        for csv_file in csv_files:
+            try:
+                file_stats = self.export_csv_file(csv_file)
+                if file_stats.get('success', False):
+                    self.export_stats['successful_exports'] += 1
+                    self.export_stats['total_records_processed'] += file_stats.get('records_processed', 0)
+                    self.export_stats['total_records_exported'] += file_stats.get('records_exported', 0)
+                else:
+                    self.export_stats['failed_exports'] += 1
+                    if 'errors' in file_stats:
+                        self.export_stats['errors'].extend(file_stats['errors'])
+
+            except Exception as e:
+                self.export_stats['failed_exports'] += 1
+                error_msg = f"Failed to export {csv_file}: {str(e)}"
+                self.export_stats['errors'].append(error_msg)
+                logger.error(error_msg)
+
+        # Generate summary report
+        self._generate_export_summary()
+
+        logger.debug(f"Export completed: {self.export_stats['successful_exports']} successful, "
+                   f"{self.export_stats['failed_exports']} failed")
+
+        return self.export_stats
+
+    def export_csv_file(self, csv_filename):
+        """
+        Export a single CSV file's mapped data.
+
+        Args:
+            csv_filename (str): Name of the CSV file
+
+        Returns:
+            dict: Export statistics for this file
+        """
+        source_table = csv_filename.replace('.csv', '')
+        csv_path = os.path.join(self.csv_directory, csv_filename)
+
+        if not os.path.exists(csv_path):
+            return {'success': False, 'error': f"File not found: {csv_path}"}
+
+        # Check if we have mapping for this table
+        mapping = self.model_mapper.get_mapping(source_table)
+        if not mapping:
+            logger.debug(f"No mapping defined for table: {source_table}, skipping...")
+            return {'success': True, 'skipped': True, 'reason': 'No mapping defined'}
+
+        file_stats = {
+            'filename': csv_filename,
+            'source_table': source_table,
+            'target_table': mapping['target_table'],
+            'records_processed': 0,
+            'records_exported': 0,
+            'transformation_issues': [],
+            'validation_warnings': [],
+            'success': True
+        }
+
+        logger.debug(f"Starting export of {csv_filename} -> {mapping['target_table']}")
+
+        # Prepare export files - use descriptive naming for debug purposes
+        # Format: target_table_from_source_table.csv
+        export_filename = f"{mapping['target_table']}_from_{source_table}.csv"
+        export_path = os.path.join(self.export_directory, "mapped", export_filename)
+        file_exists = os.path.exists(export_path)
+        validation_report_path = os.path.join(self.export_directory, "reports", f"{source_table}_validation.txt")
+
+        exported_data = []
+        validation_issues = []
+
+        try:
+            with open(csv_path, 'r', encoding='utf-8') as csvfile:
+                reader = csv.DictReader(csvfile)
+                headers_written = False
+
+                # Open file in write mode (each source table gets its own file)
+                with open(export_path, 'w', newline='', encoding='utf-8') as export_file:
+                    writer = None
+
+                    for row_num, row in enumerate(reader, 1):
+                        file_stats['records_processed'] += 1
+
+                        # Transform the row data
+                        transformed_result = self._transform_row_for_export(source_table, row, row_num)
+
+                        if transformed_result and 'data' in transformed_result:
+                            # Initialize CSV writer with headers
+                            if not headers_written:
+                                fieldnames = list(transformed_result['data'].keys())
+                                writer = csv.DictWriter(export_file, fieldnames=fieldnames)
+                                writer.writeheader()
+                                headers_written = True
+
+                            # Write transformed data
+                            if writer:
+                                writer.writerow(transformed_result['data'])
+                                file_stats['records_exported'] += 1
+
+                            # Collect validation issues
+                            if 'issues' in transformed_result:
+                                validation_issues.extend(transformed_result['issues'])
+
+                        # Process in batches for memory efficiency
+                        if row_num % self.batch_size == 0:
+                            logger.debug(f"Exported {row_num} records from {csv_filename}")
+
+        except Exception as e:
+            error_msg = f"Error processing CSV file {csv_filename}: {str(e)}"
+            logger.error(error_msg)
+            file_stats['success'] = False
+            file_stats['transformation_issues'].append(error_msg)
+
+        # Write validation report
+        self._write_validation_report(validation_report_path, source_table, mapping, validation_issues, file_stats)
+
+        logger.debug(f"Export completed for {csv_filename}: {file_stats['records_exported']} records exported")
+        return file_stats
+
+    def _transform_row_for_export(self, source_table, row_data, row_num):
+        """
+        Transform a single row for export, capturing validation issues.
+
+        Args:
+            source_table (str): Source table name
+            row_data (dict): Raw row data
+            row_num (int): Row number for error reporting
+
+        Returns:
+            dict: Transformed data with validation issues
+        """
+        mapping = self.model_mapper.get_mapping(source_table)
+        if not mapping:
+            return None
+
+        target_table = mapping['target_table']
+        column_mappings = mapping['column_mappings']
+        additional_columns = mapping.get('additional_columns', {})
+
+        transformed_data = {}
+        issues = []
+
+        # Apply column mappings
+        for source_col, target_col in column_mappings.items():
+            try:
+                value = row_data.get(source_col, "")
+                # Apply basic transformations (you can enhance this)
+                transformed_value = self._clean_value_for_export(value, target_col)
+                transformed_data[target_col] = transformed_value
+
+                # Validate transformation - special handling for boolean fields
+                is_boolean_field = 'is_' in target_col.lower() or target_col.lower() in ['abstract', 'header']
+
+                if value and not transformed_value and not (is_boolean_field and transformed_value == "0"):
+                    issues.append(f"Row {row_num}: Lost data in transformation {source_col}->'{target_col}': '{value}' became empty")
+
+            except Exception as e:
+                issues.append(f"Row {row_num}: Error transforming {source_col}: {str(e)}")
+                transformed_data[target_col] = None
+
+        # Apply additional columns
+        for target_col, expression in additional_columns.items():
+            try:
+                if callable(expression):
+                    value = expression(row_data)
+                else:
+                    value = expression
+
+                transformed_data[target_col] = self._clean_value_for_export(value, target_col)
+
+            except Exception as e:
+                issues.append(f"Row {row_num}: Error in additional column {target_col}: {str(e)}")
+                transformed_data[target_col] = None
+
+        return {
+            'data': transformed_data,
+            'issues': issues
+        }
+
+    def _clean_value_for_export(self, value, field_name):
+        """
+        Clean value for export (simplified version of database cleaning).
+        Uses caching for improved performance.
+
+        Args:
+            value: Input value
+            field_name (str): Target field name
+
+        Returns:
+            Cleaned value suitable for CSV export
+        """
+        if value is None:
+            return ""
+
+        # Create cache key
+        cache_key = (str(value), field_name)
+        if cache_key in self._transformation_cache:
+            return self._transformation_cache[cache_key]
+
+        # Convert to string and clean
+        str_value = str(value).strip()
+        result = str_value
+
+        # Handle boolean-like fields
+        if 'is_' in field_name.lower() or field_name.lower() in ['abstract', 'header']:
+            from constants import transform_boolean
+            boolean_result = transform_boolean(str_value)
+            result = str(boolean_result) if boolean_result is not None else ""
+
+        # Handle date-like fields
+        elif 'date' in field_name.lower() or 'valid' in field_name.lower():
+            from constants import transform_date
+            result = transform_date(str_value,field_name) or str_value
+
+        # Cache the result
+        self._transformation_cache[cache_key] = result
+        return result
+
+    def _write_validation_report(self, report_path, source_table, mapping, validation_issues, file_stats):
+        """
+        Write validation report for debugging.
+
+        Args:
+            report_path (str): Path to validation report file
+            source_table (str): Source table name
+            mapping (dict): Mapping configuration
+            validation_issues (list): List of validation issues
+            file_stats (dict): File processing statistics
+        """
+        with open(report_path, 'w', encoding='utf-8') as report_file:
+            report_file.write(f"Validation Report for {source_table}\n")
+            report_file.write(f"{'='*50}\n\n")
+            report_file.write(f"Source Table: {source_table}\n")
+            report_file.write(f"Target Table: {mapping['target_table']}\n")
+            report_file.write(f"Records Processed: {file_stats['records_processed']}\n")
+            report_file.write(f"Records Exported: {file_stats['records_exported']}\n\n")
+
+            report_file.write("Column Mappings:\n")
+            for source_col, target_col in mapping['column_mappings'].items():
+                report_file.write(f"  {source_col} -> {target_col}\n")
+
+            if mapping.get('additional_columns'):
+                report_file.write("\nAdditional Columns:\n")
+                for target_col, expression in mapping['additional_columns'].items():
+                    if callable(expression):
+                        report_file.write(f"  {target_col} -> <function>\n")
+                    else:
+                        report_file.write(f"  {target_col} -> {expression}\n")
+
+            if validation_issues:
+                report_file.write(f"\nValidation Issues ({len(validation_issues)}):\n")
+                for issue in validation_issues:
+                    report_file.write(f"  - {issue}\n")
+            else:
+                report_file.write("\nNo validation issues found.\n")
+
+    def _generate_export_summary(self):
+        """
+        Generate overall export summary report.
+        """
+        summary_path = os.path.join(self.export_directory, "export_summary.txt")
+
+        with open(summary_path, 'w', encoding='utf-8') as summary_file:
+            summary_file.write("DPM Export Summary Report\n")
+            summary_file.write(f"{'='*30}\n\n")
+            summary_file.write(f"Total Files: {self.export_stats['total_files']}\n")
+            summary_file.write(f"Successful Exports: {self.export_stats['successful_exports']}\n")
+            summary_file.write(f"Failed Exports: {self.export_stats['failed_exports']}\n")
+            summary_file.write(f"Total Records Processed: {self.export_stats['total_records_processed']}\n")
+            summary_file.write(f"Total Records Exported: {self.export_stats['total_records_exported']}\n\n")
+
+            if self.export_stats['errors']:
+                summary_file.write("Errors:\n")
+                for error in self.export_stats['errors']:
+                    summary_file.write(f"  - {error}\n")
+
+            if self.export_stats['warnings']:
+                summary_file.write("\nWarnings:\n")
+                for warning in self.export_stats['warnings']:
+                    summary_file.write(f"  - {warning}\n")
+
+        logger.debug(f"Export summary written to: {summary_path}")
+
+    def clear_cache(self):
+        """Clear transformation cache to free memory."""
+        self._transformation_cache.clear()
+
+    def _validate_function_definitions(self):
+        """
+        Validate that all function references in mappings are properly defined.
+
+        Returns:
+            list: List of validation errors for missing functions
+        """
+        errors = []
+        import constants
+
+        # Get all mappings
+        all_mappings = self.model_mapper.get_all_mappings()
+
+        # Track referenced functions
+        referenced_functions = set()
+
+        for source_table, mapping in all_mappings.items():
+            additional_columns = mapping.get('additional_columns', {})
+
+            for target_col, expression in additional_columns.items():
+                if callable(expression):
+                    # Extract function name from lambda expression
+                    func_str = str(expression)
+                    if 'resolve_maintenance_agency' in func_str:
+                        referenced_functions.add('resolve_maintenance_agency')
+                    if 'transform_boolean' in func_str:
+                        referenced_functions.add('transform_boolean')
+                    if 'transform_date' in func_str:
+                        referenced_functions.add('transform_date')
+
+        # Check if functions exist in constants module
+        for func_name in referenced_functions:
+            if not hasattr(constants, func_name):
+                errors.append(f"Function '{func_name}' referenced in mappings but not defined in constants module")
+
+        return errors
+
+
 class CSVImporter:
     """
     CSVImporter class that uses ModelMapper to import DPM CSV files
@@ -38,6 +436,7 @@ class CSVImporter:
     """
 
     def __init__(self, csv_directory="target", batch_size=1000):
+        os.makedirs(csv_directory, exist_ok=True)
         DjangoSetup.configure_django()
         """
         Initialize the CSVImporter with ModelMapper integration.
@@ -59,6 +458,9 @@ class CSVImporter:
             'errors': []
         }
         self.cache = dict()
+        # Enhanced caching for frequent lookups
+        self._value_transformation_cache = {}
+        self._model_field_cache = {}
 
         # Get Django models mapping for target tables
         self.django_models = self._get_django_models()
@@ -84,7 +486,7 @@ class CSVImporter:
                 continue
 
             models_dict[table_name] = model_class
-            logger.info(f"Found Django model for table: {table_name}")
+            logger.debug(f"Found Django model for table: {table_name}")
 
 
         return models_dict
@@ -130,6 +532,7 @@ class CSVImporter:
     def _clean_value(self, value, field_type='CharField'):
         """
         Clean and convert value based on field type.
+        Uses memoization for performance improvement.
 
         Args:
             value: Raw value from CSV
@@ -143,23 +546,33 @@ class CSVImporter:
 
         value_str = str(value).strip()
 
+        # Create cache key
+        cache_key = (value_str, field_type)
+        if cache_key in self._value_transformation_cache:
+            return self._value_transformation_cache[cache_key]
+
+        result = None
         if field_type in ['BooleanField']:
-            return value_str.lower() in ['true', '1', 'yes', 'y', 't']
+            result = value_str.lower() in ['true', '1', 'yes', 'y', 't']
         elif field_type in ['BigIntegerField', 'IntegerField']:
             try:
-                return int(float(value_str))  # Handle decimal strings
+                result = int(float(value_str))  # Handle decimal strings
             except (ValueError, TypeError):
-                return None
+                result = None
         elif field_type in ['FloatField', 'DecimalField']:
             try:
-                return float(value_str)
+                result = float(value_str)
             except (ValueError, TypeError):
-                return None
+                result = None
         elif field_type in ['DateTimeField']:
-            return self._parse_datetime(value_str)
+            result = self._parse_datetime(value_str)
         else:
             # CharField, TextField, etc.
-            return value_str[:1000] if len(value_str) > 1000 else value_str
+            result = value_str[:1000] if len(value_str) > 1000 else value_str
+
+        # Cache the result
+        self._value_transformation_cache[cache_key] = result
+        return result
 
     def _get_foreign_key_object(self, model_class, field_name, value):
         """
@@ -218,19 +631,26 @@ class CSVImporter:
         for source_col, target_col in column_mappings.items():
             value = row_data.get(source_col,"")
             if value:
-                # Get field information
+                # Get field information with caching
                 try:
-                    field = model_class._meta.get_field(target_col.lower())
-                    field_type = field.__class__.__name__
+                    field_cache_key = (model_class, target_col.lower())
+                    if field_cache_key in self._model_field_cache:
+                        field, field_type = self._model_field_cache[field_cache_key]
+                    else:
+                        field = model_class._meta.get_field(target_col.lower())
+                        field_type = field.__class__.__name__
+                        self._model_field_cache[field_cache_key] = (field, field_type)
+
                     clean_value = self._clean_value(value, field_type)
                     fk=None
                     try:
                         fk = self._get_foreign_key_object(model_class, target_col.lower(), value)
-                    except:
+                    except Exception as fk_error:
+                        logger.debug(f"No foreign key relationship for {target_col}: {fk_error}")
                         pass
                     transformed_data[target_col.lower()] = fk if fk else clean_value
-                except:
-                    logger.error(f"Error processing column {source_col} for table {source_table} -> {target_table}: {value}")
+                except Exception as e:
+                    logger.error(f"Error processing column {source_col} -> {target_col} for table {source_table} -> {target_table}: {value}. Error: {type(e).__name__}: {str(e)}")
                     transformed_data[target_col.lower()] = None
 
 
@@ -239,18 +659,28 @@ class CSVImporter:
             try:
                 value = expression(row_data) if callable(expression) else expression
 
-                # Get field information
-                field = model_class._meta.get_field(target_col.lower())
-                field_type = field.__class__.__name__
+                # Get field information with caching
+                field_cache_key = (model_class, target_col.lower())
+                if field_cache_key in self._model_field_cache:
+                    field, field_type = self._model_field_cache[field_cache_key]
+                else:
+                    field = model_class._meta.get_field(target_col.lower())
+                    field_type = field.__class__.__name__
+                    self._model_field_cache[field_cache_key] = (field, field_type)
+
                 clean_value = self._clean_value(value, field_type)
                 fk=None
                 try:
                     fk = self._get_foreign_key_object(model_class, target_col.lower(), value)
-                except:
+                except Exception as fk_error:
+                    logger.debug(f"No foreign key relationship for additional column {target_col}: {fk_error}")
                     pass
                 transformed_data[target_col.lower()] = fk if fk else clean_value
-            except:
-                logger.error(f"Error processing column {target_col} for table {source_table} -> {target_table}: {value}")
+            except Exception as e:
+                logger.error(f"Error processing additional column {target_col} for table {source_table} -> {target_table}: {value}. Error: {type(e).__name__}: {str(e)}")
+                logger.error(f"Expression type: {type(expression)}, Callable: {callable(expression)}")
+                if callable(expression):
+                    logger.error(f"Function source: {expression}")
                 transformed_data[target_col.lower()] = None
 
         return {
@@ -280,7 +710,7 @@ class CSVImporter:
         # Check if we have mapping for this table
         mapping = self.model_mapper.get_mapping(source_table)
         if not mapping:
-            logger.info(f"No mapping defined for table: {source_table}, skipping...")
+            logger.debug(f"No mapping defined for table: {source_table}, skipping...")
             return {'success': True, 'skipped': True, 'reason': 'No mapping defined'}
 
         file_stats = {
@@ -294,7 +724,7 @@ class CSVImporter:
             'success': True
         }
 
-        logger.info(f"Starting import of {csv_filename} -> {mapping['target_table']}")
+        logger.debug(f"Starting import of {csv_filename} -> {mapping['target_table']}")
 
         try:
             with open(csv_path, 'r', encoding='utf-8') as csvfile:
@@ -355,7 +785,7 @@ class CSVImporter:
 
         # Log results
         if file_stats['success']:
-            logger.info(f"Successfully imported {csv_filename}: "
+            logger.debug(f"Successfully imported {csv_filename}: "
                        f"{file_stats['records_processed']} processed, "
                        f"{file_stats['records_created']} created, "
                        f"{file_stats['records_updated']} updated, "
@@ -441,7 +871,7 @@ class CSVImporter:
         # Sort files to process in a logical order (dependencies first)
         csv_files = self._sort_files_by_dependencies(csv_files)
 
-        logger.info(f"Found {len(csv_files)} CSV files to process")
+        logger.debug(f"Found {len(csv_files)} CSV files to process")
 
         # Initialize overall stats
         self.import_stats = {
@@ -460,7 +890,7 @@ class CSVImporter:
 
         # Process each file
         for csv_file in csv_files:
-            logger.info(f"Processing file: {csv_file}")
+            logger.debug(f"Processing file: {csv_file}")
             file_result = self.import_csv_file(csv_file)
 
             # Update overall stats
@@ -615,44 +1045,50 @@ class CSVImporter:
 
         return validation_results
 
+    def clear_cache(self):
+        """Clear all caches to free memory."""
+        self.cache.clear()
+        self._value_transformation_cache.clear()
+        self._model_field_cache.clear()
+
 
 def main():
     """
     Main function to run the DPM CSV import process.
     """
-    logger.info("Starting DPM CSV Import Process")
+    logger.debug("Starting DPM CSV Import Process")
 
     # Initialize importer
     importer = CSVImporter()
 
     # Validate mappings first
-    logger.info("Validating mappings...")
+    logger.debug("Validating mappings...")
     validation_results = importer.validate_mappings()
 
     if validation_results['missing_models']:
         logger.warning(f"Missing Django models: {validation_results['missing_models']}")
 
     if validation_results['unused_mappings']:
-        logger.info(f"Unused mappings (no CSV files): {validation_results['unused_mappings']}")
+        logger.debug(f"Unused mappings (no CSV files): {validation_results['unused_mappings']}")
 
     # List available files
-    logger.info("Checking available CSV files...")
+    logger.debug("Checking available CSV files...")
     file_info = importer.list_available_csv_files()
 
     if 'error' in file_info:
         logger.error(file_info['error'])
         return
 
-    logger.info(f"Found {file_info['total_files']} CSV files, "
+    logger.debug(f"Found {file_info['total_files']} CSV files, "
                f"{file_info['files_with_mapping']} have mappings, "
                f"{file_info['files_with_django_model']} have Django models")
 
     # Start import process
-    logger.info("Starting CSV import process...")
+    logger.debug("Starting CSV import process...")
     results = importer.import_all_csv_files()
 
     if results.get('success', True):
-        logger.info("DPM CSV import completed successfully")
+        logger.debug("DPM CSV import completed successfully")
     else:
         logger.error("DPM CSV import failed")
         if 'error' in results:
