@@ -10,17 +10,119 @@
 {% block workflow_content %}
 <div class="task-content">
     <h1>Task 3: SMCubes Core Creation - Review</h1>
-    
-    {% if task_execution.status != 'completed' or task_execution.operation_type != 'do' %}
+
+    {% if not execution_data.database_deleted and not execution_data.input_model_imported and not execution_data.report_templates_created and not execution_data.hierarchy_analysis_imported and not execution_data.semantic_integrations_processed %}
     <div class="alert alert-warning">
         <strong>⚠️ Task Not Completed</strong>
-        <p>You must complete the Do step before reviewing the results.</p>
-        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}" class="btn btn-primary">Go to Do</a>
+        <p>You must complete at least one substep before reviewing the results.</p>
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}" class="operation-btn btn-primary">Go to Do</a>
     </div>
     {% else %}
-    
+
+    <h2>SMCubes Core Creation Process</h2>
+
+    <div class="process-overview">
+        <div class="process-step">
+            <div class="step-icon">1</div>
+            <div class="step-content">
+                <h3>Database Preparation</h3>
+                <p>Clear existing database content for fresh import</p>
+                <ul>
+                    <li>Remove existing data structures</li>
+                    <li>Reset database state</li>
+                    <li>Prepare for new imports</li>
+                </ul>
+                {% if execution_data.database_deleted %}
+                <span class="status-badge completed">✓ Completed</span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-icon">2</div>
+            <div class="step-content">
+                <h3>Input Model Import</h3>
+                <p>Import LDM/EIL model and create cube structures</p>
+                <ul>
+                    <li>Parse LDM/EIL model files</li>
+                    <li>Create cube structures</li>
+                    <li>Generate variable mappings</li>
+                </ul>
+                {% if execution_data.input_model_imported %}
+                <span class="status-badge completed">
+                    ✓ Completed ({{ execution_data.cubes_created|default:"50+" }} cubes)
+                </span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-icon">3</div>
+            <div class="step-content">
+                <h3>Report Templates Creation</h3>
+                <p>Generate report template structures from definitions</p>
+                <ul>
+                    <li>Parse template definitions</li>
+                    <li>Create template structures</li>
+                    <li>Link templates to cubes</li>
+                </ul>
+                {% if execution_data.report_templates_created %}
+                <span class="status-badge completed">
+                    ✓ Completed ({{ execution_data.templates_created|default:"100+" }} templates)
+                </span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-icon">4</div>
+            <div class="step-content">
+                <h3>Hierarchy Import</h3>
+                <p>Convert and import LDM/EIL hierarchical structures</p>
+                <ul>
+                    <li>Parse hierarchy definitions</li>
+                    <li>Convert to SDD format</li>
+                    <li>Import hierarchy data</li>
+                </ul>
+                {% if execution_data.hierarchy_analysis_imported %}
+                <span class="status-badge completed">
+                    ✓ Completed ({{ execution_data.hierarchies_imported|default:"200+" }} hierarchies)
+                </span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-icon">5</div>
+            <div class="step-content">
+                <h3>Semantic Integration Processing</h3>
+                <p>Create semantic mappings and integration structures</p>
+                <ul>
+                    <li>Process semantic mappings</li>
+                    <li>Create integration points</li>
+                    <li>Validate mappings</li>
+                </ul>
+                {% if execution_data.semantic_integrations_processed %}
+                <span class="status-badge completed">
+                    ✓ Completed ({{ execution_data.semantic_integrations|default:"150+" }} integrations)
+                </span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
     <h2>SMCubes Core Creation Summary</h2>
-    
+
     <div class="summary-grid">
         <div class="summary-card">
             <h3>Creation Status</h3>
@@ -31,87 +133,49 @@
             <dl>
                 <dt>Cube Structures:</dt>
                 <dd>{{ execution_data.cubes_created|default:"50+" }} cubes</dd>
-                
+
                 <dt>Hierarchies Imported:</dt>
                 <dd>{{ execution_data.hierarchies_imported|default:"200+" }} hierarchies</dd>
-                
+
                 <dt>Report Templates:</dt>
                 <dd>{{ execution_data.templates_created|default:"100+" }} templates</dd>
-                
+
                 <dt>Semantic Integrations:</dt>
                 <dd>{{ execution_data.semantic_integrations|default:"150+" }} integrations</dd>
             </dl>
         </div>
-        
+
         <div class="summary-card">
             <h3>Data Quality</h3>
+            <div class="status-indicator success">
+                <span class="status-icon">📊</span>
+                <span class="status-text">Data Quality Metrics</span>
+            </div>
             <dl>
                 <dt>Variables Processed:</dt>
                 <dd>{{ execution_data.variables_processed|default:"1,200+" }} variables</dd>
-                
+
                 <dt>Members Created:</dt>
                 <dd>{{ execution_data.members_created|default:"5,000+" }} members</dd>
-                
+
                 <dt>Missing Members:</dt>
                 <dd class="{% if execution_data.missing_members > 0 %}text-warning{% else %}text-success{% endif %}">
                     {{ execution_data.missing_members|default:"0" }} missing
                 </dd>
-                
+
                 <dt>Data Completeness:</dt>
                 <dd class="text-success">{{ execution_data.completeness_percentage|default:"98%" }}</dd>
             </dl>
         </div>
     </div>
-    
-    <h2>Execution Steps Completed</h2>
-    
-    <div class="steps-completed">
-        <div class="step-item completed">
-            <span class="step-icon">✓</span>
-            <div class="step-content">
-                <h4>Database Cleared</h4>
-                <p>Existing database content cleared for fresh import</p>
-            </div>
-        </div>
-        
-        <div class="step-item completed">
-            <span class="step-icon">✓</span>
-            <div class="step-content">
-                <h4>Input Model Imported</h4>
-                <p>LDM/EIL model imported and cube structures created</p>
-            </div>
-        </div>
-        
-        <div class="step-item completed">
-            <span class="step-icon">✓</span>
-            <div class="step-content">
-                <h4>Report Templates Generated</h4>
-                <p>Report template structures created from definitions</p>
-            </div>
-        </div>
-        
-        <div class="step-item completed">
-            <span class="step-icon">✓</span>
-            <div class="step-content">
-                <h4>Hierarchies Imported</h4>
-                <p>LDM/EIL hierarchical structures converted and imported</p>
-            </div>
-        </div>
-        
-        <div class="step-item completed">
-            <span class="step-icon">✓</span>
-            <div class="step-content">
-                <h4>Semantic Integrations Processed</h4>
-                <p>Semantic mappings and integration structures created</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="validation-section">
-        
-        
-        <div class="validation-details">
-            <h4>Hierarchy Review Actions</h4>
+
+
+    <h2>SMCubes Core Review Actions</h2>
+
+    <div class="metadata-review-section">
+        <div class="review-category">
+            <h3>Hierarchy Review</h3>
+            <p>Review and validate the hierarchy structures created during import:</p>
             <div class="review-links">
                 <a href="{% url 'pybirdai:missing_children' %}" target="_blank" class="review-link">
                     <span class="link-icon">📊</span>
@@ -127,13 +191,10 @@
                 </a>
             </div>
         </div>
-    </div>
-    
-    <div class="validation-section">
-        
-        
-        <div class="validation-details">
-            <h4>Semantic Integration Review Actions</h4>
+
+        <div class="review-category">
+            <h3>Semantic Integration Review</h3>
+            <p>Review and validate the semantic mappings and integrations:</p>
             <div class="review-links">
                 <a href="{% url 'pybirdai:mappings_missing_members' %}" target="_blank" class="review-link">
                     <span class="link-icon">❌</span>
@@ -162,7 +223,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-actions" style="margin-top: 30px;">
         <form method="post" style="display: inline;">
             {% csrf_token %}
@@ -172,11 +233,78 @@
         <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}" class="btn btn-primary">Proceed to Task 4</a>
         <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
     </div>
-    
+
     {% endif %}
 </div>
 
 <style>
+.process-overview {
+    margin: 20px 0;
+}
+
+.process-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    background: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.step-content ul {
+    margin: 10px 0;
+    padding-left: 20px;
+    color: #6c757d;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.status-badge.completed {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #a3cfbb;
+}
+
+.status-badge.pending {
+    background-color: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+}
+
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -211,49 +339,37 @@
     margin-bottom: 10px;
 }
 
-.validation-section {
+.metadata-review-section {
     margin-bottom: 30px;
-    padding: 20px;
-    background: #fff;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.review-category {
+    background: white;
     border: 1px solid #dee2e6;
     border-radius: 8px;
+    padding: 20px;
 }
 
-.validation-section h3 {
+.review-category h3 {
     margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.review-category p {
     margin-bottom: 15px;
-}
-
-.validation-details {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #dee2e6;
-}
-
-.validation-details h4 {
-    font-size: 14px;
-    margin-bottom: 5px;
     color: #6c757d;
 }
 
-.validation-details p {
-    margin-bottom: 10px;
-}
-
-.validation-details a {
-    color: #0d6efd;
-    text-decoration: none;
-}
-
-.validation-details a:hover {
-    text-decoration: underline;
-}
-
 .review-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .review-link {
@@ -316,49 +432,6 @@
     color: #155724;
 }
 
-.steps-completed {
-    margin-bottom: 30px;
-}
-
-.step-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #dee2e6;
-}
-
-.step-item.completed {
-    border-left: 4px solid #28a745;
-}
-
-.step-item .step-icon {
-    width: 24px;
-    height: 24px;
-    background: #28a745;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    margin-right: 15px;
-    flex-shrink: 0;
-}
-
-.step-content h4 {
-    margin: 0 0 5px 0;
-    color: #495057;
-}
-
-.step-content p {
-    margin: 0;
-    color: #6c757d;
-    font-size: 14px;
-}
 
 .alert {
     padding: 15px;
@@ -370,6 +443,16 @@
     background-color: #fff3cd;
     border: 1px solid #ffeaa7;
     color: #856404;
+}
+
+.progress {
+    height: 25px;
+    margin-top: 10px;
+}
+
+.substep-btn {
+    margin-top: 10px;
+    margin-left: 10px;
 }
 </style>
 {% endblock %}

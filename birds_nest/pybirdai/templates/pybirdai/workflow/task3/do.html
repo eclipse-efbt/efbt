@@ -17,7 +17,7 @@
         <p>SMCubes core structures have been created successfully.</p>
         <a
             href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}"
-            class="btn btn-primary"
+            class="operation-btn btn-primary"
             >Go to Review</a
         >
     </div>
@@ -31,8 +31,7 @@
     <div class="alert alert-info">
         <strong>🔄 Task Running</strong>
         <p>
-            SMCubes core creation is in progress. This page will refresh
-            automatically.
+            SMCubes core creation is in progress. Use the individual substep buttons below to execute specific operations.
         </p>
         <div class="progress">
             <div
@@ -58,14 +57,13 @@
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
-            <button
-                type="button"
-                class="btn btn-sm btn-warning substep-btn"
-                data-substep="delete_database"
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='delete_database' %}"
+                class="operation-btn btn-sm btn-warning"
             >
                 Run Delete Database
-            </button>
-            {% endif %}
+            </a>
         </div>
         <div class="subtask-item">
             <h4>1. Create Cube Structures</h4>
@@ -77,14 +75,13 @@
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
-            <button
-                type="button"
-                class="btn btn-sm btn-primary substep-btn"
-                data-substep="import_input_model"
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='import_input_model' %}"
+                class="operation-btn btn-sm btn-primary"
             >
                 Run Import Input Model
-            </button>
-            {% endif %}
+            </a>
         </div>
 
         <div class="subtask-item">
@@ -97,14 +94,14 @@
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
-            <button
-                type="button"
-                class="btn btn-sm btn-primary substep-btn"
-                data-substep="generate_templates"
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='generate_templates' %}"
+                class="operation-btn btn-sm btn-primary"
             >
                 Run Generate Templates
-            </button>
-            {% endif %}
+            </a>
+
         </div>
         <div class="subtask-item">
             <h4>3. Import LDM/EIL Hierarchies</h4>
@@ -114,18 +111,15 @@
             </ul>
             {% if task_execution.execution_data.hierarchy_analysis_imported %}
             <span class="status-badge completed">✓ Completed</span>
-            {% elif task_execution.status == 'running' %}
-            <span class="status-badge running">🔄 Running</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
-            <button
-                type="button"
-                class="btn btn-sm btn-primary substep-btn"
-                data-substep="import_hierarchy_analysis"
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='import_hierarchy_analysis' %}"
+                class="operation-btn btn-sm btn-primary"
             >
                 Run Import Hierarchies
-            </button>
-            {% endif %}
+            </a>
         </div>
 
         <div class="subtask-item">
@@ -140,17 +134,16 @@
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
-            <button
-                type="button"
-                class="btn btn-sm btn-primary substep-btn"
-                data-substep="process_semantic"
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='process_semantic' %}"
+                class="operation-btn btn-sm btn-primary"
             >
                 Run Process Semantic
-            </button>
-            {% endif %}
+            </a>
         </div>
     </div>
-
+<!--
     {% if task_execution.status == 'pending' %}
     <div id="task3-status" style="display: none"></div>
     <form id="task3-form" method="post" style="margin-top: 30px">
@@ -233,7 +226,7 @@
             >Cancel</a
         >
     </form>
-    {% endif %}
+    {% endif %} -->
 </div>
 
 <style>
@@ -274,10 +267,6 @@
         color: #6c757d;
     }
 
-    .status-badge.running {
-        background-color: #cfe2ff;
-        color: #084298;
-    }
 
     .status-badge.completed {
         background-color: #d1e7dd;
@@ -316,12 +305,7 @@
 </style>
 
 <script>
-    // Auto-refresh if task is running
-    {% if task_execution.status == 'running' %}
-    setTimeout(function() {
-        location.reload();
-    }, 3000);
-    {% endif %}
+    // Note: Auto-refresh removed since we now use loading pattern for individual substeps
 
     // Handle form submission with AJAX
     document.addEventListener('DOMContentLoaded', function() {
@@ -372,67 +356,6 @@
                 });
             });
         }
-
-        // Handle individual substep buttons
-        const substepButtons = document.querySelectorAll('.substep-btn');
-        substepButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const substepName = this.getAttribute('data-substep');
-                const taskNumber = 3;
-
-                // Show processing message
-                if (!statusDiv) {
-                    alert('Running substep: ' + substepName);
-                } else {
-                    statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Running substep: ' + substepName + '...</div>';
-                    statusDiv.style.display = 'block';
-                }
-
-                // Disable button
-                this.disabled = true;
-                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Running...';
-
-                // Get CSRF token
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-                // Submit substep via AJAX
-                fetch(`/pybirdai/workflow/task/${taskNumber}/substep/${substepName}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRFToken': csrfToken,
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'csrfmiddlewaretoken=' + encodeURIComponent(csrfToken)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (statusDiv) {
-                            statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'Substep completed successfully.') + '</div>';
-                        }
-                        // Refresh page after 2 seconds to show updated status
-                        setTimeout(function() {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        if (statusDiv) {
-                            statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'Substep failed.') + '</div>';
-                        }
-                        this.disabled = false;
-                        this.innerHTML = 'Run ' + substepName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    if (statusDiv) {
-                        statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred running the substep.</div>';
-                    }
-                    this.disabled = false;
-                    this.innerHTML = 'Run ' + substepName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-                });
-            });
-        });
     });
 </script>
 {% endblock %}
