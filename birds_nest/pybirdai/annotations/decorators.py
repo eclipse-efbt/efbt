@@ -41,7 +41,16 @@ def lineage(dependencies: Dict[str, Any] = None):
                     # Extract source information
                     func_name = func.__name__
                     if args and hasattr(args[0], '__class__'):
-                        class_name = args[0].__class__.__name__
+                        # Check if this is a wrapper object with a base attribute
+                        if hasattr(args[0], 'base') and args[0].base is not None:
+                            # Use the base object's class name for proper context
+                            class_name = args[0].base.__class__.__name__
+                        elif hasattr(args[0], 'unionOfLayers') and args[0].unionOfLayers is not None:
+                            # Handle F_05_01_REF_FINREP_3_0 -> UnionItem case
+                            # Keep the original class name for these top-level objects
+                            class_name = args[0].__class__.__name__
+                        else:
+                            class_name = args[0].__class__.__name__
                         full_func_name = f"{class_name}.{func_name}"
                     else:
                         full_func_name = func_name
@@ -65,6 +74,10 @@ def lineage(dependencies: Dict[str, Any] = None):
                                 source_code=source_code
                             )
                             _lineage_context['function_cache'][full_func_name] = function_obj
+                    else:
+                        # Function already cached - no need to track again
+                        # print(f"Using cached function: {full_func_name}")
+                        pass
                     
                     # Track value computation if we have source values
                     if hasattr(orchestration, 'track_value_computation'):
@@ -105,35 +118,86 @@ def lineage(dependencies: Dict[str, Any] = None):
                         has_derived_context = (hasattr(orchestration, 'current_rows') and 
                                              orchestration.current_rows.get('derived'))
                         is_metric_value = func_name == 'metric_value'
-                        is_derived_method = (args and hasattr(args[0], '__class__') and 
-                                           any(pattern in args[0].__class__.__name__ 
-                                               for pattern in ['F_01_01_REF_FINREP', 'F_05_01_REF_FINREP']))
+                        
+                        # Check if this is a derived method - check both wrapper and base object
+                        is_derived_method = False
+                        if args and hasattr(args[0], '__class__'):
+                            class_to_check = args[0].__class__.__name__
+                            # For UnionItem objects, check the base object class
+                            if (hasattr(args[0], 'base') and args[0].base is not None 
+                                and not hasattr(args[0], 'unionOfLayers')):
+                                class_to_check = args[0].base.__class__.__name__
+                            is_derived_method = any(pattern in class_to_check 
+                                                  for pattern in ['F_01_01_REF_FINREP', 'F_05_01_REF_FINREP', 'Other_loans', 'Trade_receivables', 'Finance_leases'])
                         
                         should_track = has_derived_context or is_metric_value or is_derived_method
                         
-                        # Debug output
-                        if func_name in ['CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'TYP_INSTRMNT'] or is_metric_value:
-                            print(f"DEBUG @lineage: {full_func_name}")
-                            print(f"  - has_derived_context: {has_derived_context}")
-                            print(f"  - is_metric_value: {is_metric_value}")
-                            print(f"  - is_derived_method: {is_derived_method}")
-                            if args and hasattr(args[0], '__class__'):
-                                print(f"  - class_name: {args[0].__class__.__name__}")
-                            print(f"  - should_track: {should_track}")
-                            print(f"  - source_values: {source_values}")
+                        # Debug output (uncomment for debugging)
+                        # if func_name in ['GRSS_CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'TYP_INSTRMNT'] or is_metric_value:
+                        #     print(f"DEBUG @lineage: {full_func_name}")
+                        #     print(f"  - has_derived_context: {has_derived_context}")
+                        #     print(f"  - is_metric_value: {is_metric_value}")
+                        #     print(f"  - is_derived_method: {is_derived_method}")
+                        #     if args and hasattr(args[0], '__class__'):
+                        #         print(f"  - wrapper_class: {args[0].__class__.__name__}")
+                        #         if hasattr(args[0], 'base') and args[0].base is not None:
+                        #             print(f"  - base_class: {args[0].base.__class__.__name__}")
+                        #         if hasattr(args[0], 'unionOfLayers'):
+                        #             print(f"  - has_unionOfLayers: True")
+                        #     print(f"  - should_track: {should_track}")
+                        #     print(f"  - source_values: {source_values}")
                         
                         if should_track:
+                            # Get the actual object for context (use base if it's a UnionItem wrapper)
+                            actual_obj = args[0] if args else None
+                            if (actual_obj and hasattr(actual_obj, 'base') and actual_obj.base is not None
+                                and not hasattr(actual_obj, 'unionOfLayers')):
+                                # Only use base for UnionItem objects, not for top-level report objects
+                                actual_obj = actual_obj.base
+                            
                             # If this is a derived method but no derived context exists, create one
-                            if is_derived_method and not has_derived_context:
-                                derived_row_id = orchestration._ensure_derived_row_context(args[0], full_func_name)
+                            if is_derived_method and not has_derived_context and actual_obj:
+                                derived_row_id = orchestration._ensure_derived_row_context(actual_obj, full_func_name)
                                 if derived_row_id:
+                                    # Set the global context for backward compatibility
                                     orchestration.current_rows['derived'] = derived_row_id
                             
-                            orchestration.track_value_computation(
-                                full_func_name,
-                                source_values,
-                                value
-                            )
+                            # Use object-specific context for tracking
+                            if is_derived_method and actual_obj:
+                                # Ensure each object gets its own context, even if there's already a global context
+                                # This is important for top-level objects that should have separate contexts
+                                obj_derived_row_id = orchestration.get_derived_context_for_object(actual_obj)
+                                if not obj_derived_row_id:
+                                    # Create context if it doesn't exist
+                                    obj_derived_row_id = orchestration._ensure_derived_row_context(actual_obj, full_func_name)
+                                
+                                if obj_derived_row_id:
+                                    original_derived_context = orchestration.current_rows.get('derived')
+                                    orchestration.current_rows['derived'] = obj_derived_row_id
+                                    try:
+                                        orchestration.track_value_computation(
+                                            full_func_name,
+                                            source_values,
+                                            value
+                                        )
+                                    finally:
+                                        # Restore original context
+                                        if original_derived_context:
+                                            orchestration.current_rows['derived'] = original_derived_context
+                                        else:
+                                            orchestration.current_rows.pop('derived', None)
+                                else:
+                                    orchestration.track_value_computation(
+                                        full_func_name,
+                                        source_values,
+                                        value
+                                    )
+                            else:
+                                orchestration.track_value_computation(
+                                    full_func_name,
+                                    source_values,
+                                    value
+                                )
                 
                 except Exception as e:
                     # Don't let lineage tracking errors break the actual computation
