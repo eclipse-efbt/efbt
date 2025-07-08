@@ -1120,6 +1120,127 @@ function doResetSession(type) {
         btn.textContent = isPartial ? 'Reset Tasks 1-4' : 'Reset Everything';
     });
 }
+
+// Reset session functions
+function resetSessionPartial() {
+    if (!confirm('Are you sure you want to reset tasks 3-6? This will clear all progress from Task 3 onwards while keeping the database setup (Tasks 1-2) intact.')) {
+        return;
+    }
+
+    doResetSession('partial');
+}
+
+function resetSessionFull() {
+    if (!confirm('Are you sure you want to reset the entire workflow session? This will clear ALL progress including database setup and return to the beginning.')) {
+        return;
+    }
+
+    doResetSession('full');
+}
+
+function doResetSession(type) {
+    const isPartial = type === 'partial';
+    const btnId = isPartial ? 'reset-session-partial-btn' : 'reset-session-full-btn';
+    const url = isPartial ? '/pybirdai/workflow/reset-session-partial/' : '/pybirdai/workflow/reset-session-full/';
+
+    const btn = document.getElementById(btnId);
+    const statusDiv = document.getElementById('reset-session-status');
+
+    if (!btn || !statusDiv) {
+        console.error('Reset session button or status div not found!');
+        alert('Error: UI elements not found!');
+        return;
+    }
+
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+
+    // Update UI
+    btn.disabled = true;
+    btn.textContent = `Resetting ${isPartial ? 'Tasks 3-6' : 'All Tasks'}...`;
+    statusDiv.style.display = 'block';
+    statusDiv.style.background = '#e3f2fd';
+    statusDiv.style.color = '#1976d2';
+    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Resetting ${isPartial ? 'tasks 3-6' : 'entire workflow session'}...`;
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Make AJAX request
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log('Reset session response received:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Reset session response data:', data);
+        if (data.success) {
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.color = '#155724';
+            let message = `<span style="display: inline-block; margin-right: 8px;">✅</span>${data.message}`;
+
+            if (data.details) {
+                const details = data.details;
+                let detailsText = '';
+                if (details.removed_markers && details.removed_markers.length > 0) {
+                    detailsText += `<br><small>Removed markers: ${details.removed_markers.join(', ')}</small>`;
+                }
+                if (details.removed_directories && details.removed_directories.length > 0) {
+                    detailsText += `<br><small>Cleaned directories: ${details.removed_directories.length} items</small>`;
+                }
+                if (details.deleted_executions) {
+                    detailsText += `<br><small>Deleted executions: ${details.deleted_executions}</small>`;
+                }
+                message += detailsText;
+            }
+
+            statusDiv.innerHTML = message;
+
+            // Re-enable button and refresh page after delay
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+                statusDiv.innerHTML += '<br><small>Refreshing page to reflect changes...</small>';
+
+                // Refresh page to show updated state
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }, 3000);
+        } else {
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Reset failed: ${data.message || data.error || 'Unknown error'}`;
+
+            btn.disabled = false;
+            btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+        }
+    })
+    .catch(error => {
+        console.error('Reset session error:', error);
+        statusDiv.style.background = '#f8d7da';
+        statusDiv.style.color = '#721c24';
+        statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
+
+        btn.disabled = false;
+        btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+    });
+}
 </script>
 
 {% endblock %}
