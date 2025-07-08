@@ -13,6 +13,7 @@ import traceback
 
 from import_classes import CSVExporter
 from id_resolver import EBAIDResolver
+from logging_config import get_logger, log_process_start, log_process_end, log_data_summary, log_warning_with_context, log_error_with_context
 import csv
 import json
 
@@ -363,37 +364,9 @@ def process_files_parallel(key_files, csv_directory, template_info, resolver):
         if os.path.exists(csv_path):
             file_tasks.append((csv_path, csv_file))
 
-    if not file_tasks:
-        print("No files to process in parallel")
-        return
+    for csv_path, csv_file in file_tasks:
+        process_template_file_isolated(csv_path, csv_file, resolver)
 
-    print(f"Processing {len(file_tasks)} files in parallel with up to 4 workers...")
-
-    # Use ThreadPoolExecutor for I/O bound CSV processing
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        # Submit all file processing tasks
-        future_to_file = {}
-        for csv_path, csv_file in file_tasks:
-            future = executor.submit(process_template_file_isolated, csv_path, csv_file, resolver)
-            future_to_file[future] = csv_file
-
-        # Collect results as they complete
-        completed_count = 0
-        for future in as_completed(future_to_file):
-            csv_file = future_to_file[future]
-            try:
-                file_data = future.result()
-                if file_data:
-                    merge_file_data(template_info, file_data, csv_file)
-                    completed_count += 1
-                    print(f"  Completed {csv_file} ({completed_count}/{len(file_tasks)})")
-                else:
-                    print(f"  Warning: No data returned for {csv_file}")
-            except Exception as e:
-                print(f"  Error processing {csv_file}: {str(e)}")
-                template_info['metadata'][f'error_{csv_file}'] = str(e)
-
-    print(f"Parallel processing completed: {completed_count}/{len(file_tasks)} files successful")
 
 def process_template_file_isolated(csv_path, filename, resolver):
     """
@@ -447,17 +420,29 @@ def merge_file_data(template_info, file_data, csv_file):
         csv_file (str): Name of the source CSV file for error tracking
     """
     try:
-        # Merge main data categories
+        # Merge main data categories with defensive checks
         for category in ['templates', 'tables', 'table_versions', 'axes', 'ordinates',
                         'cells', 'cell_positions', 'dimensions', 'variables', 'members', 'domains']:
             if category in file_data and file_data[category]:
-                template_info[category].update(file_data[category])
+                # Ensure template_info has the category initialized
+                if category not in template_info:
+                    template_info[category] = {}
+
+                # Safely update with error handling for each item
+                for key, value in file_data[category].items():
+                    try:
+                        template_info[category][key] = value
+                    except Exception as item_error:
+                        print(f"Warning: Failed to merge {category} item '{key}' from {csv_file}: {str(item_error)}")
 
         # Update lookup indices for fast access
         update_lookup_indices(template_info, file_data, csv_file)
 
     except Exception as e:
         print(f"Error merging data from {csv_file}: {str(e)}")
+        # Ensure metadata dict exists before adding error
+        if 'metadata' not in template_info:
+            template_info['metadata'] = {}
         template_info['metadata'][f'merge_error_{csv_file}'] = str(e)
 
 def update_lookup_indices(template_info, file_data, csv_file):
@@ -469,35 +454,63 @@ def update_lookup_indices(template_info, file_data, csv_file):
         file_data (dict): Data from processed file
         csv_file (str): Source CSV file name
     """
+    # Ensure lookup_indices exists
+    if 'lookup_indices' not in template_info:
+        template_info['lookup_indices'] = {
+            'template_id_to_eba': {},
+            'framework_templates': defaultdict(set),
+            'table_id_to_eba': {},
+            'template_to_tables': defaultdict(set),
+            'domain_members': defaultdict(set)
+        }
+
     indices = template_info['lookup_indices']
 
     # Update template indices
     if 'templates' in file_data:
         for eba_id, template_data in file_data['templates'].items():
-            original_id = template_data.get('original_id')
-            framework = template_data.get('framework')
-            if original_id:
-                indices['template_id_to_eba'][original_id] = eba_id
-            if framework:
-                indices['framework_templates'][framework].add(eba_id)
+            try:
+                original_id = template_data.get('original_id')
+                framework = template_data.get('framework')
+                if original_id:
+                    indices['template_id_to_eba'][original_id] = eba_id
+                if framework:
+                    # Ensure framework_templates is initialized
+                    if 'framework_templates' not in indices:
+                        indices['framework_templates'] = defaultdict(set)
+                    indices['framework_templates'][framework].add(eba_id)
+            except Exception as e:
+                print(f"Warning: Failed to update template index for {eba_id}: {str(e)}")
 
     # Update table indices
     if 'tables' in file_data:
         for eba_id, table_data in file_data['tables'].items():
-            original_id = table_data.get('original_id')
-            template_id = table_data.get('template_id')
-            if original_id:
-                indices['table_id_to_eba'][original_id] = eba_id
-            if template_id and template_id in indices['template_id_to_eba']:
-                template_eba_id = indices['template_id_to_eba'][template_id]
-                indices['template_to_tables'][template_eba_id].add(eba_id)
+            try:
+                original_id = table_data.get('original_id')
+                template_id = table_data.get('template_id')
+                if original_id:
+                    indices['table_id_to_eba'][original_id] = eba_id
+                if template_id and template_id in indices['template_id_to_eba']:
+                    template_eba_id = indices['template_id_to_eba'][template_id]
+                    # Ensure template_to_tables is initialized
+                    if 'template_to_tables' not in indices:
+                        indices['template_to_tables'] = defaultdict(set)
+                    indices['template_to_tables'][template_eba_id].add(eba_id)
+            except Exception as e:
+                print(f"Warning: Failed to update table index for {eba_id}: {str(e)}")
 
     # Update member-domain indices
     if 'members' in file_data:
         for eba_id, member_data in file_data['members'].items():
-            domain_code = member_data.get('domain_code')
-            if domain_code:
-                indices['domain_members'][domain_code].add(eba_id)
+            try:
+                domain_code = member_data.get('domain_code')
+                if domain_code:
+                    # Ensure domain_members is initialized
+                    if 'domain_members' not in indices:
+                        indices['domain_members'] = defaultdict(set)
+                    indices['domain_members'][domain_code].add(eba_id)
+            except Exception as e:
+                print(f"Warning: Failed to update member-domain index for {eba_id}: {str(e)}")
 
 def process_csv_in_batches(csv_path, batch_size=2000):
     """
@@ -734,6 +747,9 @@ def process_template_file_batch(batch, filename, template_info, resolver):
                 }
 
     elif filename == 'AxisOrdinate.csv':
+        missing_axis_count = 0
+        processed_ordinate_count = 0
+
         for row in batch:
             ordinate_id = row.get('OrdinateID', '')
             axis_id = row.get('AxisID', '')
@@ -748,27 +764,56 @@ def process_template_file_batch(batch, filename, template_info, resolver):
                     break
 
             if axis_info:
-                # Resolve ordinate ID using axis context
-                ordinate_resolved = resolver.resolve_axis_ordinate_id(ordinate_id, axis_info, ordinate_code)
-                eba_id = ordinate_resolved['eba_id']
+                try:
+                    # Resolve ordinate ID using axis context
+                    ordinate_resolved = resolver.resolve_axis_ordinate_id(ordinate_id, axis_info, ordinate_code)
+                    eba_id = ordinate_resolved['eba_id']
 
-                template_info['ordinates'][eba_id] = {
-                        **ordinate_resolved,
-                        'label': ordinate_label,
-                        'level': row.get('Level', ''),
-                        'order': row.get('Order', ''),
-                        'path': row.get('Path', ''),
-                        'is_abstract': row.get('IsAbstractHeader', ''),
-                        'raw_data': row
-                    }
+                    template_info['ordinates'][eba_id] = {
+                            **ordinate_resolved,
+                            'label': ordinate_label,
+                            'level': row.get('Level', ''),
+                            'order': row.get('Order', ''),
+                            'path': row.get('Path', ''),
+                            'is_abstract': row.get('IsAbstractHeader', ''),
+                            'raw_data': row
+                        }
 
-                # Link ordinate to axis
-                axis_eba_id = axis_info.get('eba_id')
-                if axis_eba_id in template_info['axes']:
-                    template_info['axes'][axis_eba_id]['ordinates'].append(eba_id)
+                    # Link ordinate to axis
+                    axis_eba_id = axis_info.get('eba_id')
+                    if axis_eba_id in template_info['axes']:
+                        template_info['axes'][axis_eba_id]['ordinates'].append(eba_id)
+
+                    processed_ordinate_count += 1
+
+                except Exception as e:
+                    print(f"    Warning: Failed to process ordinate {ordinate_id}: {str(e)}")
             else:
-                # Handle case where axis info is not found
-                print(f"    Warning: No axis found for ordinate {ordinate_id} with axis_id {axis_id}, skipping ordinate processing")
+                # Handle case where axis info is not found - store for analysis
+                missing_axis_count += 1
+
+                # Store missing axis information for later analysis
+                if 'missing_axes' not in template_info['metadata']:
+                    template_info['metadata']['missing_axes'] = {}
+
+                if axis_id not in template_info['metadata']['missing_axes']:
+                    template_info['metadata']['missing_axes'][axis_id] = []
+
+                template_info['metadata']['missing_axes'][axis_id].append({
+                    'ordinate_id': ordinate_id,
+                    'ordinate_code': ordinate_code,
+                    'ordinate_label': ordinate_label
+                })
+
+                # Only print warning for first few instances to avoid spam
+                if missing_axis_count <= 5:
+                    print(f"    Warning: No axis found for ordinate {ordinate_id} with axis_id {axis_id}, skipping ordinate processing")
+                elif missing_axis_count == 6:
+                    print(f"    Warning: {missing_axis_count} missing axes found, suppressing further warnings...")
+
+        # Print summary at end of batch
+        if missing_axis_count > 0:
+            print(f"    Completed AxisOrdinate.csv batch: {processed_ordinate_count} processed, {missing_axis_count} skipped (missing axes)")
 
     elif filename == 'TableCell.csv':
         for row in batch:
@@ -1033,21 +1078,28 @@ Examples:
 
     args = parser.parse_args()
 
+    # Initialize logging
+    logger = get_logger("main", log_level="INFO")
+    log_process_start(logger, "DPM Import Tool",
+                     mode=args.mode,
+                     csv_directory=args.csv_directory,
+                     export_directory=args.export_directory)
+
     print(f"DPM Import Tool - Mode: {args.mode}")
     print(f"CSV Directory: {args.csv_directory}")
     print(f"Export Directory: {args.export_directory}")
     print("-" * 50)
 
-    # Step 1: Fetch database (unless skipped or not needed)
-    if not args.skip_fetch and args.mode in ['full']:
-        for file in os.listdir(DIRECTORY_TO_EXTRACT_TO):
-            os.remove(os.path.join(DIRECTORY_TO_EXTRACT_TO, file))
-        os.makedirs(DIRECTORY_TO_EXTRACT_TO, exist_ok=True)
-        fetch_dpm_database(args.url)
+    # # Step 1: Fetch database (unless skipped or not needed)
+    # if not args.skip_fetch and args.mode in ['full']:
+    #     for file in os.listdir(DIRECTORY_TO_EXTRACT_TO):
+    #         os.remove(os.path.join(DIRECTORY_TO_EXTRACT_TO, file))
+    #     os.makedirs(DIRECTORY_TO_EXTRACT_TO, exist_ok=True)
+    #     fetch_dpm_database(args.url)
 
-    # Step 2: Process database to CSV (unless skipped or not needed)
-    if not args.skip_process and args.mode in ['full']:
-        process_database(args.database_path)
+    # # Step 2: Process database to CSV (unless skipped or not needed)
+    # if not args.skip_process and args.mode in ['full']:
+    #     process_database(args.database_path)
 
     # Step 3: Export mapped data (if requested)
     if args.mode in ['export', 'both', 'full']:
