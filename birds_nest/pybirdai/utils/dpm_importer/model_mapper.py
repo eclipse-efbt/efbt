@@ -71,41 +71,6 @@ class ModelMapper:
                 source_tables.append(source_table)
         return source_tables
 
-    def generate_sql_transform(self, source_table, alias_prefix='src'):
-        """
-        Generate SQL transformation query for a source table.
-
-        Args:
-            source_table (str): Name of the source table
-            alias_prefix (str): Prefix for table alias
-
-        Returns:
-            str: SQL SELECT statement for transformation
-        """
-        mapping = self.get_mapping(source_table)
-        if not mapping:
-            return None
-
-        target_table = mapping['target_table']
-        column_mappings = mapping['column_mappings']
-        additional_columns = mapping.get('additional_columns', {})
-
-        # Build SELECT clause
-        select_columns = []
-
-        # Add mapped columns
-        for source_col, target_col in column_mappings.items():
-            select_columns.append(f"{alias_prefix}.{source_col} AS {target_col}")
-
-        # Add additional columns
-        for target_col, expression in additional_columns.items():
-            select_columns.append(f"{expression} AS {target_col}")
-
-        sql = f"SELECT\n    " + ",\n    ".join(select_columns)
-        sql += f"\nFROM {source_table} {alias_prefix}"
-
-        return sql
-
     def get_unmapped_input_tables(self, input_tables):
         """
         Get list of input tables that don't have mappings defined.

@@ -17,7 +17,7 @@ def safe_call(func, fallback_value=None):
     try:
         return func()
     except Exception as e:
-        print(f"Warning: Function call failed: {e}", file=sys.stderr)
+        # print(f"Warning: Function call failed: {e}", file=sys.stderr)
         return fallback_value
 
 @lru_cache(maxsize=2000)
@@ -165,7 +165,7 @@ def log_transformation_warning(message, row_data=None):
         if row_info:
             warning_msg += f" [Row: {', '.join(row_info)}]"
 
-    print(warning_msg, file=sys.stderr)
+    # # print(warning_msg, file=sys.stderr)
 
 @lru_cache(maxsize=3000)
 def resolve_maintenance_agency_cached(owner_id, framework_id, template_id, taxonomy_id, module_id, context_type="unknown"):
@@ -184,52 +184,7 @@ def resolve_maintenance_agency_cached(owner_id, framework_id, template_id, taxon
     """
     # Priority 1: Explicit owner data
 
-    if owner_id and owner_id in LOOKUP_TABLES['owners']:
-        owner_prefix = LOOKUP_TABLES['owners'][owner_id].get('OwnerPrefix')
-        if owner_prefix and owner_prefix.strip():
-            return owner_prefix.upper()
-
-    # Priority 2: Framework-based resolution
-
-    if framework_id and framework_id in LOOKUP_TABLES['frameworks']:
-        framework_code = LOOKUP_TABLES['frameworks'][framework_id].get('FrameworkCode', '')
-        # Return EBA for regulatory frameworks
-        if framework_code in ['FINREP', 'COREP', 'AE', 'FP', 'SBP', 'REM', 'RES', 'PAY', 'IF', 'GSII', 'MREL', 'ESG', 'IPU', 'PILLAR3', 'IRRBB', 'DORA', 'FC', 'MICA']:
-            return 'EBA'
-
-    # Priority 3: Template code analysis
-
-    if template_id and template_id in LOOKUP_TABLES['templates']:
-        template_code = LOOKUP_TABLES['templates'][template_id].get('TemplateCode', '')
-        # Extract framework from template code pattern (F=FINREP, C=COREP, A=AE, etc.)
-        if template_code:
-            template_prefix = template_code.strip().upper()
-            if template_prefix.startswith('F '):
-                return 'EBA'  # FINREP
-            elif template_prefix.startswith('C '):
-                return 'EBA'  # COREP
-            elif template_prefix.startswith('A '):
-                return 'EBA'  # AE (Asset Encumbrance)
-        return 'EBA'
-
-    # Priority 4: Taxonomy-based resolution
-
-    if taxonomy_id and taxonomy_id in LOOKUP_TABLES['taxonomies']:
-        taxonomy_info = LOOKUP_TABLES['taxonomies'][taxonomy_id]
-        framework_id = taxonomy_info.get('FrameworkID')
-        if framework_id and framework_id in LOOKUP_TABLES['frameworks']:
-            framework_code = LOOKUP_TABLES['frameworks'][framework_id].get('FrameworkCode', '')
-            # Return EBA for regulatory frameworks
-            if framework_code in ['FINREP', 'COREP', 'AE', 'FP', 'SBP', 'REM', 'RES', 'PAY', 'IF', 'GSII', 'MREL', 'ESG', 'IPU', 'PILLAR3', 'IRRBB', 'DORA', 'FC', 'MICA']:
-                return 'EBA'
-
-    # Priority 7: Default based on context type
-    if context_type in ['framework', 'template', 'table', 'cube']:
-        # These are typically regulatory entities - use EBA for regulatory data
-        return 'EBA'
-
-    # Final fallback
-    return 'NODE'
+    return "EBA"
 
 def resolve_maintenance_agency(row, context_type="unknown"):
     """
@@ -942,291 +897,194 @@ def build_framework_id_from_module(row):
 def build_axis_id(row):
     """
     Build AXIS_ID following EBA technical export pattern.
-    Enhanced to use Template.csv information for accurate framework/table code resolution.
-    Examples: EBA_AE_EBA_A_00.01_AE_3.2_1, EBA_FINREP_EBA_F_32.01_FINREP_2.9_2
+    Simplified pattern based on generated Table ID + axis number.
+    Examples: EBA_AE_EBA_A_00.01_AE_3.2_1, EBA_FINREP_EBA_F_32.01_FINREP_2_2
 
-    Pattern: EBA_{framework}_EBA_{table_code}_{framework}_{version}_{axis_number}
+    Pattern: {TABLE_ID}_{axis_number}
     """
     try:
-        # Get basic axis information
-        axis_id = row.get('AxisID', '')
-        table_vid = row.get('TableVID', '')
-        axis_order = row.get('AxisOrder', row.get('ORDER', ''))
+        # Get axis information
         axis_orientation = row.get('AxisOrientation', row.get('ORIENTATION', ''))
+        axis_order = row.get('AxisOrder', row.get('ORDER', ''))
+        table_vid = row.get('TableVID', '')
+        axis_id_original = row.get('AxisID', '')
 
-        # Debug: ensure we have the axis ID
-        if not axis_id:
-            return "EBA_AXIS_UNK"
+        # Debug logging
+        # print(f"DEBUG build_axis_id: axis_orientation={axis_orientation}, axis_order={axis_order}, table_vid={table_vid}, axis_id_original={axis_id_original}")
+        # print(f"DEBUG build_axis_id: available_row_keys={list(row.keys())}")
 
-        # Step 1: Resolve framework and version using enhanced lookup functions
-        framework = lookup_framework_from_template(row)
-        if framework == 'UNK':
-            framework = 'FINREP'  # Default fallback
+        # Step 1: Generate or get the table ID that this axis belongs to
+        table_id = build_table_id_from_table_vid(row)
+        # print(f"DEBUG build_axis_id: generated table_id={table_id}")
 
-        # Step 2: Resolve table code and version from template information
-        table_code = 'UNK'
-        version = '2.9'  # Default version
+        if not table_id or table_id == 'EBA_UNK':
+            # Fallback: try to build from available information
+            if axis_id_original:
+                result = f"EBA_AXIS_{axis_id_original}"
+                # print(f"DEBUG build_axis_id: fallback result={result}")
+                return result
+            result = "EBA_AXIS_UNK"
+            # print(f"DEBUG build_axis_id: unknown result={result}")
+            return result
 
-        # Try to get table code from TableVersion lookup
-        if table_vid and table_vid in LOOKUP_TABLES['table_versions']:
-            table_version_info = LOOKUP_TABLES['table_versions'][table_vid]
-            template_code = table_version_info.get('TableVersionCode', '')
-            if template_code:
-                table_code = extract_table_code_from_template(template_code)
-                # Extract version from the TableVersion if available
-                from_date = table_version_info.get('FromDate', '')
-                if from_date and '/' in from_date:
-                    # Derive version from date - this is an approximation
-                    year = from_date.split('/')[-1].split(' ')[0]
-                    if len(year) == 2:
-                        year = '20' + year if int(year) < 50 else '19' + year
-                    year_int = int(year)
-                    if year_int >= 2023:
-                        version = '3.2'
-                    elif year_int >= 2021:
-                        version = '3.0'
-                    elif year_int >= 2018:
-                        version = '2.9'
-                    else:
-                        version = '2.8'
-
-        # Fallback to template lookup from row
-        if table_code == 'UNK':
-            template_id = row.get('TemplateID')
-            if template_id and template_id in LOOKUP_TABLES['templates']:
-                template_info = LOOKUP_TABLES['templates'][template_id]
-                template_code = template_info.get('TemplateCode', '')
-                if template_code:
-                    table_code = extract_table_code_from_template(template_code)
-
-        # Final fallback
-        if table_code == 'UNK':
-            table_code = f"TABLE_{table_vid}" if table_vid else f"AXIS_{axis_id}"
-
-        # Step 3: Extract framework-specific version if available
-        if framework == 'AE':
-            # Asset Encumbrance specific versions
-            if 'AE_3.2' in str(row):
-                version = '3.2'
-            elif 'AE_3.0' in str(row):
-                version = '3.0'
-            elif 'AE_2.8' in str(row):
-                version = '2.8'
-        elif framework == 'FINREP':
-            # FINREP versions based on context
-            if table_vid and int(table_vid) > 2000:
-                version = '2.9'
-            else:
-                version = ''  # Older FINREP may not have version in ID
-
-        # Step 4: Determine axis number based on orientation
+        # Step 2: Determine axis number from orientation
+        axis_number = '1'  # Default
         if axis_orientation:
-            orientation_upper = str(axis_orientation).upper()
-            if orientation_upper == 'X':
+            orientation_str = str(axis_orientation).upper()
+            if orientation_str == 'X':
                 axis_number = '1'
-            elif orientation_upper == 'Y':
+            elif orientation_str == 'Y':
                 axis_number = '2'
-            elif orientation_upper == 'Z':
+            elif orientation_str == 'Z':
                 axis_number = '3'
             else:
-                axis_number = str(axis_order) if axis_order else '1'
-        else:
-            axis_number = str(axis_order) if axis_order else '1'
+                pass
+                # print(f"DEBUG build_axis_id: unknown orientation={orientation_str}, using default=1")
+        elif axis_order:
+            # Use axis order as fallback
+            axis_number = str(axis_order)
+            # print(f"DEBUG build_axis_id: using axis_order as axis_number={axis_number}")
 
-        # Step 5: Build EBA axis ID following the pattern
-        if version:
-            axis_id_final = f"EBA_{framework}_EBA_{table_code}_{framework}_{version}_{axis_number}"
-        else:
-            # For older frameworks without version
-            axis_id_final = f"EBA_{framework}_EBA_{table_code}_{framework}_{axis_number}"
-
-        # Sanitize final ID
-        axis_id_final = sanitize_id_component(axis_id_final, 255)
-
-        return axis_id_final
+        # Step 3: Build final axis ID by appending axis number to table ID
+        result = f"{table_id}_{axis_number}"
+        # print(f"DEBUG build_axis_id: final result={result}")
+        return result
 
     except Exception as e:
         log_transformation_warning(f"Error building AXIS_ID: {e}", row)
         axis_id = row.get('AxisID', 'UNK')
-        return f"EBA_AXIS_{axis_id}"
+        result = f"EBA_AXIS_{axis_id}"
+        # print(f"DEBUG build_axis_id: error result={result}")
+        return result
 
 def build_axis_ordinate_id(row):
     """
     Build AXIS_ORDINATE_ID following EBA technical export pattern.
-    Enhanced to use Template.csv information for accurate framework/table code resolution.
+    Simplified pattern based on generated Axis ID + ordinate code.
     Examples: EBA_AE_EBA_F_35.00.a_AE_3.2_3_, EBA_FINREP_EBA_F_40.02_FINREP_2_090
 
-    Pattern: EBA_{framework}_EBA_{table_code}_{framework}_{version}_{axis_number}_{ordinate_code}
+    Pattern: {AXIS_ID}_{ordinate_code}
     """
     try:
-        # Get basic ordinate information
-        ordinate_id = row.get('OrdinateID', '')
-        axis_id = row.get('AxisID', '')
+        # Get ordinate information
         ordinate_code = row.get('OrdinateCode', row.get('CODE', ''))
-        table_vid = row.get('TableVID', '')
+        axis_id = row.get('AxisID', '')
+        ordinate_id = row.get('OrdinateID', '')
+        is_abstract = row.get('IsAbstractHeader', False)
 
-        # Step 1: Resolve framework and version using enhanced lookup functions
-        framework = lookup_framework_from_template(row)
-        if framework == 'UNK':
-            framework = 'FINREP'  # Default fallback
+        # Debug logging
+        # print(f"DEBUG build_axis_ordinate_id: ordinate_code={ordinate_code}, axis_id={axis_id}, ordinate_id={ordinate_id}, is_abstract={is_abstract}")
 
-        # Step 2: Resolve table code and version from template information
-        table_code = 'UNK'
-        version = '2.9'  # Default version
+        # Step 1: Generate or get the axis ID that this ordinate belongs to
+        generated_axis_id = build_axis_id(row)
+        # print(f"DEBUG build_axis_ordinate_id: generated_axis_id={generated_axis_id}")
 
-        # Try to get table code from TableVersion lookup
-        if table_vid and table_vid in LOOKUP_TABLES['table_versions']:
-            table_version_info = LOOKUP_TABLES['table_versions'][table_vid]
-            template_code = table_version_info.get('TableVersionCode', '')
-            if template_code:
-                table_code = extract_table_code_from_template(template_code)
-                # Extract version from the TableVersion if available
-                from_date = table_version_info.get('FromDate', '')
-                if from_date and '/' in from_date:
-                    # Derive version from date - this is an approximation
-                    year = from_date.split('/')[-1].split(' ')[0]
-                    if len(year) == 2:
-                        year = '20' + year if int(year) < 50 else '19' + year
-                    year_int = int(year)
-                    if year_int >= 2023:
-                        version = '3.2'
-                    elif year_int >= 2021:
-                        version = '3.0'
-                    elif year_int >= 2018:
-                        version = '2.9'
-                    else:
-                        version = '2.8'
-
-        # Fallback to template lookup from row
-        if table_code == 'UNK':
-            template_id = row.get('TemplateID')
-            if template_id and template_id in LOOKUP_TABLES['templates']:
-                template_info = LOOKUP_TABLES['templates'][template_id]
-                template_code = template_info.get('TemplateCode', '')
-                if template_code:
-                    table_code = extract_table_code_from_template(template_code)
-
-        # Final fallback
-        if table_code == 'UNK':
-            table_code = f"TABLE_{axis_id}" if axis_id else f"ORD_{ordinate_id}"
-
-        # Step 3: Extract framework-specific version if available
-        if framework == 'AE':
-            # Asset Encumbrance specific versions
-            if 'AE_3.2' in str(row):
-                version = '3.2'
-            elif 'AE_3.0' in str(row):
-                version = '3.0'
-            elif 'AE_2.8' in str(row):
-                version = '2.8'
-        elif framework == 'FINREP':
-            # FINREP versions based on context
-            if table_vid and int(table_vid) > 2000:
-                version = '2.9'
+        if not generated_axis_id or generated_axis_id.startswith('EBA_AXIS_UNK'):
+            # Fallback: use the raw axis_id if available
+            if axis_id:
+                generated_axis_id = f"EBA_AXIS_{axis_id}"
+                # print(f"DEBUG build_axis_ordinate_id: fallback generated_axis_id={generated_axis_id}")
             else:
-                version = ''  # Older FINREP may not have version in ID
+                result = f"EBA_ORDINATE_{ordinate_id}"
+                # print(f"DEBUG build_axis_ordinate_id: fallback result={result}")
+                return result
 
-        # Step 4: Determine axis number from axis lookup or row data
-        axis_number = '1'  # Default
-        axis_orientation = row.get('AxisOrientation', '')
-
-        # Try to get axis info from lookup tables if available
-        try:
-            if axis_id and 'axes' in LOOKUP_TABLES and axis_id in LOOKUP_TABLES['axes']:
-                axis_info = LOOKUP_TABLES['axes'][axis_id]
-                axis_orientation = axis_info.get('AxisOrientation', axis_orientation)
-        except KeyError:
-            # LOOKUP_TABLES may not be fully initialized yet
-            pass
-
-        if axis_orientation:
-            orientation_upper = str(axis_orientation).upper()
-            if orientation_upper == 'X':
-                axis_number = '1'
-            elif orientation_upper == 'Y':
-                axis_number = '2'
-            elif orientation_upper == 'Z':
-                axis_number = '3'
-            else:
-                # Try to extract from axis order
-                axis_order = row.get('AxisOrder', '')
-                if axis_order:
-                    axis_number = str(axis_order)
-
-        # Step 5: Handle ordinate code (can be empty for open axes or abstract headers)
-        ordinate_suffix = f"_{ordinate_code}" if ordinate_code and ordinate_code.strip() else "_"
-
-        # Step 6: Build EBA axis ordinate ID following the pattern
-        if version:
-            axis_ordinate_id_final = f"EBA_{framework}_EBA_{table_code}_{framework}_{version}_{axis_number}{ordinate_suffix}"
+        # Step 2: Handle ordinate code suffix
+        if ordinate_code and str(ordinate_code).strip():
+            # Use the ordinate code directly
+            ordinate_suffix = f"_{ordinate_code}"
+            # print(f"DEBUG build_axis_ordinate_id: using ordinate_code suffix={ordinate_suffix}")
         else:
-            # For older frameworks without version
-            axis_ordinate_id_final = f"EBA_{framework}_EBA_{table_code}_{framework}_{axis_number}{ordinate_suffix}"
+            # For abstract headers or open axes, use empty suffix or underscore
+            ordinate_suffix = "_"
+            # print(f"DEBUG build_axis_ordinate_id: using default suffix={ordinate_suffix}")
 
-        # Sanitize final ID
-        axis_ordinate_id_final = sanitize_id_component(axis_ordinate_id_final, 255)
-
-        return axis_ordinate_id_final
+        # Step 3: Build final axis ordinate ID
+        result = f"{generated_axis_id}{ordinate_suffix}"
+        # print(f"DEBUG build_axis_ordinate_id: final result={result}")
+        return result
 
     except Exception as e:
         log_transformation_warning(f"Error building AXIS_ORDINATE_ID: {e}", row)
         ordinate_id = row.get('OrdinateID', 'UNK')
-        return f"EBA_ORDINATE_{ordinate_id}"
+        result = f"EBA_ORDINATE_{ordinate_id}"
+        # print(f"DEBUG build_axis_ordinate_id: error result={result}")
+        return result
+
+# Global counter for sequential cell ID generation
+_cell_id_counter = 60000  # Start from 60000 to avoid conflicts with existing IDs
 
 def build_cell_id(row):
     """
     Build CELL_ID following EBA technical export pattern.
-    Simplified to match the ground truth pattern from technical exports.
+    Uses sequential numbering for consistency and traceability.
     Examples: EBA_73938, EBA_71113, EBA_65779
 
     Pattern: EBA_{cell_number}
     """
+    global _cell_id_counter
+
     try:
         cell_id = row.get('CellID', '')
+        data_point_vid = row.get('DataPointVID', '')
+        table_cell_id = row.get('TableCellID', '')
+        table_vid = row.get('TableVID', '')
+
+        # Debug logging
+        # print(f"DEBUG build_cell_id: cell_id={cell_id}, data_point_vid={data_point_vid}, table_cell_id={table_cell_id}, table_vid={table_vid}")
 
         if cell_id and str(cell_id).strip():
             # Use the cell ID directly with EBA prefix - this is the primary pattern
-            return f"EBA_{cell_id}"
-        else:
-            # Generate a sequential cell ID if none provided
-            # This should be based on available identifiers or context
-            data_point_vid = row.get('DataPointVID', '')
-            table_cell_id = row.get('TableCellID', '')
+            clean_cell_id = str(cell_id).strip()
 
-            if data_point_vid:
-                # Use DataPointVID as cell identifier
-                return f"EBA_{data_point_vid}"
-            elif table_cell_id:
-                # Use TableCellID as cell identifier
-                return f"EBA_{table_cell_id}"
+            # Remove EBA_ prefix if already present to avoid duplication
+            if clean_cell_id.startswith('EBA_'):
+                result = clean_cell_id
+                # print(f"DEBUG build_cell_id: using existing EBA cell_id={result}")
+                return result
             else:
-                # Generate from available context - this is a fallback
-                table_vid = row.get('TableVID', '')
-                ordinate_id = row.get('OrdinateID', '')
+                result = f"EBA_{clean_cell_id}"
+                # print(f"DEBUG build_cell_id: adding EBA prefix to cell_id={result}")
+                return result
+        else:
+            # Generate sequential cell ID for consistency
+            # Priority order: DataPointVID > TableCellID > Generated sequence
 
-                if table_vid and ordinate_id:
-                    # Combine table and ordinate for unique cell ID
-                    combined_id = f"{table_vid}{ordinate_id}"
-                    # Use hash to create consistent numeric ID
-                    import hashlib
-                    hash_obj = hashlib.md5(combined_id.encode())
-                    numeric_id = int(hash_obj.hexdigest()[:6], 16)  # Use first 6 hex chars as number
-                    return f"EBA_{numeric_id}"
-                elif table_vid:
-                    # Use table VID with padding
-                    return f"EBA_{int(table_vid) * 1000 if table_vid.isdigit() else 999999}"
+            if data_point_vid and str(data_point_vid).strip():
+                # Use DataPointVID as cell identifier
+                result = f"EBA_{data_point_vid}"
+                # print(f"DEBUG build_cell_id: using data_point_vid={result}")
+                return result
+            elif table_cell_id and str(table_cell_id).strip():
+                # Use TableCellID as cell identifier
+                result = f"EBA_{table_cell_id}"
+                # print(f"DEBUG build_cell_id: using table_cell_id={result}")
+                return result
+            else:
+                # Generate sequential ID for consistency across imports
+                _cell_id_counter += 1
+
+                # Add some context to make the ID more meaningful
+                if table_vid and str(table_vid).isdigit():
+                    # Incorporate table ID for better traceability
+                    table_component = int(table_vid) % 1000  # Keep it manageable
+                    sequential_id = _cell_id_counter + (table_component * 1000000)
+                    # print(f"DEBUG build_cell_id: using table_vid context, sequential_id={sequential_id}")
                 else:
-                    # Final fallback - generate a random-ish ID
-                    import random
-                    fallback_id = random.randint(100000, 999999)
-                    return f"EBA_{fallback_id}"
+                    sequential_id = _cell_id_counter
+                    # print(f"DEBUG build_cell_id: using basic sequential_id={sequential_id}")
+
+                result = f"EBA_{sequential_id}"
+                # print(f"DEBUG build_cell_id: final sequential result={result}")
+                return result
 
     except Exception as e:
         log_transformation_warning(f"Error building CELL_ID: {e}", row)
-        # Even in error case, provide a valid EBA cell ID
-        import random
-        error_id = random.randint(100000, 999999)
-        return f"EBA_{error_id}"
+        # Even in error case, provide a valid sequential EBA cell ID
+        _cell_id_counter += 1
+        result = f"EBA_{_cell_id_counter}"
+        # print(f"DEBUG build_cell_id: error result={result}")
+        return result
 
 def build_template_cube_id(row):
     """
@@ -1383,15 +1241,162 @@ def build_cube_id_from_module(row):
 
 def build_table_id_from_table_vid(row):
     """
-    Build TABLE_ID from TableVID.
-    Looks up the table version to get proper table ID.
+    Build TABLE_ID from TableVID using proper EBA format.
+    First tries lookup, then uses direct data from row to build EBA format ID.
+    Pattern: EBA_{framework}_EBA_{table_code}_{framework}_{version}
+    Examples: EBA_FINREP_EBA_F_08.01_FINREP_2.9, EBA_AE_EBA_A_32.01_AE_3.2
     """
-    table_vid = row.get('TableVID', '')
-    # Use table VID to look up proper table ID
-    if table_vid and table_vid in LOOKUP_TABLES.get('table_versions', {}):
-        table_info = LOOKUP_TABLES['table_versions'][table_vid]
-        return table_info.get('TableID', f"EBA_TABLE_{table_vid}")
-    return f"EBA_TABLE_{table_vid}"
+    try:
+        table_vid = row.get('TableVID', '')
+        # print(f"DEBUG build_table_id_from_table_vid: table_vid={table_vid}")
+        # print(f"DEBUG build_table_id_from_table_vid: available_row_keys={list(row.keys())}")
+        # print(f"DEBUG build_table_id_from_table_vid: lookup_tables_available={list(LOOKUP_TABLES.keys())}")
+        if 'table_versions' in LOOKUP_TABLES:
+            # print(f"DEBUG build_table_id_from_table_vid: table_versions_count={len(LOOKUP_TABLES['table_versions'])}")
+            if len(LOOKUP_TABLES['table_versions']) > 0:
+                sample_key = list(LOOKUP_TABLES['table_versions'].keys())[0]
+                # print(f"DEBUG build_table_id_from_table_vid: sample_table_version={LOOKUP_TABLES['table_versions'][sample_key]}")
+
+        # Look up table version information first - try both string and int keys
+        table_info = None
+        if table_vid:
+            table_versions = LOOKUP_TABLES.get('table_versions', {})
+            # Try string key first
+            if table_vid in table_versions:
+                table_info = table_versions[table_vid]
+                # print(f"DEBUG build_table_id_from_table_vid: found table_info with string key={table_info}")
+            # Try integer key
+            elif table_vid.isdigit() and int(table_vid) in table_versions:
+                table_info = table_versions[int(table_vid)]
+                # print(f"DEBUG build_table_id_from_table_vid: found table_info with int key={table_info}")
+            else:
+                pass
+                # print(f"DEBUG build_table_id_from_table_vid: table_vid {table_vid} not found in lookup, trying sample keys: {list(table_versions.keys())[:5]}")
+
+        if table_info:
+
+            # Check if we already have a proper EBA format TABLE_ID
+            existing_table_id = table_info.get('TableID', '')
+            if existing_table_id and existing_table_id.startswith('EBA_') and len(existing_table_id.split('_')) >= 5:
+                # print(f"DEBUG build_table_id_from_table_vid: using existing table_id={existing_table_id}")
+                return existing_table_id
+
+            # Extract information to build proper EBA format
+            table_code = table_info.get('Code', table_info.get('OriginalTableCode', ''))
+            version_num = table_info.get('VersionNumber', '')
+
+            # print(f"DEBUG build_table_id_from_table_vid: table_code={table_code}, version_num={version_num}")
+
+            # Extract all possible fields from the lookup
+            table_code = table_info.get('TableVersionCode', table_info.get('Code', table_info.get('OriginalTableCode', '')))
+            framework = table_info.get('Framework', '')
+            version_num = table_info.get('Version', '')
+            xbrl_table_code = table_info.get('XbrlTableCode', '')
+
+            # print(f"DEBUG build_table_id_from_table_vid: extracted - table_code={table_code}, framework={framework}, version_num={version_num}, xbrl_table_code={xbrl_table_code}")
+
+            # If we have good data from lookup, use it
+            if framework and table_code:
+                # Use XBRL table code if available (already has underscores)
+                if xbrl_table_code:
+                    cleaned_table_code = xbrl_table_code
+                else:
+                    # Clean table code for EBA format
+                    cleaned_table_code = table_code.replace(' ', '_')
+
+                ver = version_num if version_num else '1.0'
+
+                result = f"EBA_{framework}_EBA_{cleaned_table_code}_{framework}_{ver}"
+                # print(f"DEBUG build_table_id_from_table_vid: lookup-based result={result}")
+                return result
+            elif table_code and any(table_code.startswith(prefix) for prefix in ['F ', 'C ', 'A ']):
+                # Fallback: determine framework from table code prefix
+                if table_code.startswith('F '):
+                    framework = 'FINREP'
+                elif table_code.startswith('C '):
+                    framework = 'COREP'
+                elif table_code.startswith('A '):
+                    framework = 'AE'
+
+                # Use XBRL table code if available
+                if xbrl_table_code:
+                    cleaned_table_code = xbrl_table_code
+                else:
+                    cleaned_table_code = table_code.replace(' ', '_')
+
+                ver = version_num if version_num else '1.0'
+
+                result = f"EBA_{framework}_EBA_{cleaned_table_code}_{framework}_{ver}"
+                # print(f"DEBUG build_table_id_from_table_vid: prefix-based result={result}")
+                return result
+
+        # Try using ModuleID if available
+        module_id = row.get('ModuleID', '')
+        if module_id and module_id in LOOKUP_TABLES.get('modules', {}):
+            module_info = LOOKUP_TABLES['modules'][module_id]
+            # print(f"DEBUG build_table_id_from_table_vid: found module_info={module_info}")
+
+            # Try to extract useful information from module
+            module_code = module_info.get('ModuleCode', '')
+            if module_code and any(module_code.startswith(prefix) for prefix in ['F ', 'C ', 'A ']):
+                if module_code.startswith('F '):
+                    framework = 'FINREP'
+                elif module_code.startswith('C '):
+                    framework = 'COREP'
+                elif module_code.startswith('A '):
+                    framework = 'AE'
+
+                cleaned_module_code = module_code.replace(' ', '_')
+                result = f"EBA_{framework}_EBA_{cleaned_module_code}_{framework}_1.0"
+                # print(f"DEBUG build_table_id_from_table_vid: module-based result={result}")
+                return result
+
+        # Fallback: Try to build from direct row data if available
+        table_code = row.get('Code', row.get('OriginalTableCode', row.get('TableCode', '')))
+        template_id = row.get('TemplateID', '')
+        framework = None
+
+        # print(f"DEBUG build_table_id_from_table_vid: fallback - table_code={table_code}, template_id={template_id}")
+        # print(f"DEBUG build_table_id_from_table_vid: row_data_sample={dict(list(row.items())[:5])}")
+
+        # Try to determine framework from available data
+        if table_code:
+            if table_code.startswith('F '):
+                framework = 'FINREP'
+            elif table_code.startswith('C '):
+                framework = 'COREP'
+            elif table_code.startswith('A '):
+                framework = 'AE'
+
+        # If still no framework, try template lookup
+        if not framework and template_id and template_id in LOOKUP_TABLES.get('templates', {}):
+            template_info = LOOKUP_TABLES['templates'][template_id]
+            template_code = template_info.get('TemplateCode', '')
+            if template_code.startswith('F '):
+                framework = 'FINREP'
+            elif template_code.startswith('C '):
+                framework = 'COREP'
+            elif template_code.startswith('A '):
+                framework = 'AE'
+
+        # If we found framework and table code, build proper EBA format
+        if framework and table_code:
+            cleaned_table_code = table_code.replace(' ', '_')
+            version = row.get('VersionNumber', '1.0')
+            result = f"EBA_{framework}_EBA_{cleaned_table_code}_{framework}_{version}"
+            # print(f"DEBUG build_table_id_from_table_vid: row-based result={result}")
+            return result
+
+        # Final fallback
+        result = f"EBA_TABLE_{table_vid}"
+        # print(f"DEBUG build_table_id_from_table_vid: final fallback result={result}")
+        # print(f"DEBUG build_table_id_from_table_vid: full_row_data={row}")
+        return result
+
+    except Exception as e:
+        # print(f"DEBUG build_table_id_from_table_vid: error={e}")
+        log_transformation_warning(f"Error building TABLE_ID from TableVID: {e}", row)
+        return f"EBA_TABLE_{row.get('TableVID', 'UNK')}"
 
 def build_template_id(row, owner_prefix=None, framework_code=None, template_code=None):
     """
@@ -1572,9 +1577,193 @@ def build_module_code(row):
         return normalize_template_code(module_code)
     return f"MOD_{module_id}" if module_id else 'MOD_UNK'
 
+def build_domain_id(row):
+    """
+    Build DOMAIN_ID following EBA technical export pattern.
+    Pattern: EBA_{DomainCode}
+    Examples: EBA_NC, EBA_AP, EBA_SY, EBA_MC, EBA_BT, EBA_PU, EBA_GA
+
+    Args:
+        row (dict): Data row containing domain information
+
+    Returns:
+        str: Generated domain ID
+    """
+    try:
+        # Get domain code from multiple possible fields
+        domain_code = (
+            row.get('DomainCode') or
+            row.get('Code') or
+            row.get('DomainID', '')
+        )
+
+        if domain_code and str(domain_code).strip():
+            # Clean and format the domain code
+            clean_code = str(domain_code).strip().upper()
+
+            # Remove any existing EBA_ prefix to avoid duplication
+            if clean_code.startswith('EBA_'):
+                clean_code = clean_code[4:]
+
+            # Ensure code contains only valid characters
+            import re
+            clean_code = re.sub(r'[^A-Z0-9_]', '', clean_code)
+
+            if clean_code:
+                return f"EBA_{clean_code}"
+
+        # Fallback: try to derive from domain label or name
+        domain_label = row.get('DomainLabel') or row.get('Name', '')
+        if domain_label:
+            # Create code from label (take first letters of words)
+            import re
+            words = re.findall(r'\b[A-Za-z]+', str(domain_label))
+            if words:
+                code_from_label = ''.join(word[0].upper() for word in words[:3])
+                if len(code_from_label) >= 2:
+                    return f"EBA_{code_from_label}"
+
+        # Final fallback: use domain ID if available
+        domain_id = row.get('DomainID', '')
+        if domain_id:
+            clean_id = re.sub(r'[^A-Z0-9_]', '', str(domain_id).upper())
+            if clean_id:
+                return f"EBA_{clean_id}"
+
+        # Last resort: generate unknown domain ID
+        return "EBA_UNK_DOMAIN"
+
+    except Exception as e:
+        log_transformation_warning(f"Error building DOMAIN_ID: {e}", row)
+        return "EBA_UNK_DOMAIN"
+
 def lookup_owner_from_template(row):
     """Lookup owner from template (default to NODE for now)"""
     return 'NODE'
+
+def validate_generated_id(generated_id, expected_pattern=None, context="unknown"):
+    """
+    Validate that a generated ID follows the expected patterns.
+
+    Args:
+        generated_id (str): The generated ID to validate
+        expected_pattern (str): Expected pattern (e.g., "EBA_*", "EBA_*_*_*")
+        context (str): Context for error reporting
+
+    Returns:
+        tuple: (is_valid, error_message)
+    """
+    if not generated_id or not isinstance(generated_id, str):
+        return False, f"{context}: ID is empty or not a string"
+
+    # Basic validation - must start with EBA_
+    if not generated_id.startswith('EBA_'):
+        return False, f"{context}: ID must start with 'EBA_', got: {generated_id}"
+
+    # Check for invalid characters
+    import re
+    if not re.match(r'^[A-Z0-9_\.\-]+$', generated_id):
+        return False, f"{context}: ID contains invalid characters: {generated_id}"
+
+    # Check length is reasonable
+    if len(generated_id) > 255:
+        return False, f"{context}: ID too long ({len(generated_id)} chars): {generated_id[:50]}..."
+
+    # Pattern-specific validation
+    if expected_pattern:
+        if expected_pattern == "DOMAIN" and not re.match(r'^EBA_[A-Z0-9_]+$', generated_id):
+            return False, f"{context}: Domain ID should follow EBA_CODE pattern: {generated_id}"
+        elif expected_pattern == "AXIS" and not '_' in generated_id[4:]:  # After EBA_
+            return False, f"{context}: Axis ID should follow EBA_FRAMEWORK_..._NUMBER pattern: {generated_id}"
+        elif expected_pattern == "CELL" and not re.match(r'^EBA_\d+$', generated_id):
+            return False, f"{context}: Cell ID should follow EBA_NUMBER pattern: {generated_id}"
+
+    return True, ""
+
+def test_id_generation():
+    """
+    Test function to validate ID generation with sample data.
+    Returns dictionary with test results.
+    """
+    test_results = {
+        'domain_tests': [],
+        'axis_tests': [],
+        'axis_ordinate_tests': [],
+        'cell_tests': [],
+        'summary': {'passed': 0, 'failed': 0}
+    }
+
+    # Test Domain ID generation
+    domain_test_cases = [
+        {'DomainCode': 'NC', 'expected': 'EBA_NC'},
+        {'DomainCode': 'AP', 'expected': 'EBA_AP'},
+        {'DomainLabel': 'NACE code', 'expected': 'EBA_NC'},
+        {'DomainID': '123', 'expected': 'EBA_123'}
+    ]
+
+    for case in domain_test_cases:
+        result = build_domain_id(case)
+        is_valid, error = validate_generated_id(result, "DOMAIN", "Domain test")
+        test_results['domain_tests'].append({
+            'input': case,
+            'output': result,
+            'expected': case.get('expected'),
+            'valid': is_valid,
+            'error': error,
+            'passed': is_valid and (result == case.get('expected', result))
+        })
+
+    # Test Axis ID generation
+    axis_test_cases = [
+        {'TableVID': '1234', 'AxisOrientation': 'X', 'expected_contains': 'EBA_'},
+        {'TableVID': '5678', 'AxisOrientation': 'Y', 'expected_contains': '_2'}
+    ]
+
+    for case in axis_test_cases:
+        result = build_axis_id(case)
+        is_valid, error = validate_generated_id(result, "AXIS", "Axis test")
+        test_results['axis_tests'].append({
+            'input': case,
+            'output': result,
+            'valid': is_valid,
+            'error': error,
+            'passed': is_valid and case.get('expected_contains', '') in result
+        })
+
+    # Test Cell ID generation
+    cell_test_cases = [
+        {'CellID': '73938', 'expected': 'EBA_73938'},
+        {'DataPointVID': '12345', 'expected': 'EBA_12345'},
+        {'TableVID': '9999', 'expected_pattern': r'^EBA_\d+$'}
+    ]
+
+    for case in cell_test_cases:
+        result = build_cell_id(case)
+        is_valid, error = validate_generated_id(result, "CELL", "Cell test")
+        passed = is_valid
+        if 'expected' in case:
+            passed = passed and (result == case['expected'])
+        elif 'expected_pattern' in case:
+            import re
+            passed = passed and re.match(case['expected_pattern'], result)
+
+        test_results['cell_tests'].append({
+            'input': case,
+            'output': result,
+            'valid': is_valid,
+            'error': error,
+            'passed': passed
+        })
+
+    # Calculate summary
+    all_tests = (test_results['domain_tests'] +
+                test_results['axis_tests'] +
+                test_results['cell_tests'])
+
+    test_results['summary']['passed'] = sum(1 for test in all_tests if test['passed'])
+    test_results['summary']['failed'] = len(all_tests) - test_results['summary']['passed']
+
+    return test_results
 
 def lookup_framework_from_template(row):
     """

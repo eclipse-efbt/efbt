@@ -28,7 +28,7 @@ MAPPING = {
         },
         'additional_columns': {
             'AXIS_ORDINATE_ID': lambda row: build_axis_ordinate_id(row),
-            'AXIS_ID': lambda row: row.get("AxisID"),
+            'AXIS_ID': lambda row: build_axis_id(row),
             'PARENT_AXIS_ORDINATE_ID': lambda row: build_axis_ordinate_id({'OrdinateID': row.get('ParentOrdinateID'), 'AxisID': row.get('AxisID'), 'OrdinateCode': ''}) if row.get('ParentOrdinateID') else None,
             'DESCRIPTION': lambda row: row.get('Description') if row.get('Description') is not None else row.get('OrdinateLabel')
         }
@@ -40,13 +40,13 @@ MAPPING = {
             'AxisLabel': 'NAME',
             'AxisOrientation': 'ORIENTATION',
             'AxisOrder': 'ORDER',
-            'IsOpenAxis': 'IS_OPEN_AXIS',
-            'TableVID': 'TABLE_ID'
+            'IsOpenAxis': 'IS_OPEN_AXIS'
         },
         'additional_columns': {
-            'AXIS_ID': lambda row: row.get("AxisID"),
-            'CODE': lambda row: f"AXIS_{row.get('AxisID', '')}" if row.get('AxisID') else f"AXIS_{row.get('AxisOrder', '1')}",
-            'DESCRIPTION': lambda row: row.get('Description', row.get('AxisLabel'))
+            'AXIS_ID': lambda row: build_table_id_from_table_vid(row),
+            'TABLE_ID': lambda row: build_table_id_from_table_vid(row),
+            'CODE': lambda row: row.get('AxisID', 'X'),
+            'DESCRIPTION': lambda row: row.get('Description', row.get('AxisLabel', ''))
         }
     },
 
@@ -116,7 +116,6 @@ MAPPING = {
     'Domain': {
         'target_table': 'domain',
         'column_mappings': {
-            'DomainID': 'DOMAIN_ID',
             'DomainCode': 'CODE',
             'DomainLabel': 'NAME',
             'IsTypedDomain': 'IS_ENUMERATED',
@@ -124,10 +123,10 @@ MAPPING = {
             # DataTypeID': 'DATA_TYPE'
         },
         'additional_columns': {
+            'DOMAIN_ID': lambda row: build_domain_id(row),
             'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'DOMAIN_ID': lambda row: "_".join(["EBA",row.get('DomainID',"")]),
             'FACET_ID': lambda row: None,
-            'DESCRIPTION': lambda row: row.get('DomainDescription').replace("\n"," "),
+            'DESCRIPTION': lambda row: row.get('DomainDescription', '').replace("\n"," ") if row.get('DomainDescription') else row.get('DomainLabel', ''),
             'IS_REFERENCE': lambda row: 1 if row.get('IsExternalRefData') == 1 else 0
         }
     },
@@ -140,7 +139,7 @@ MAPPING = {
         },
         'additional_columns': {
             'VARIABLE_ID': lambda row: "EBA"+"_"+row.get('VariableID'),
-            'MAINTENANCE_AGENCY_ID': lambda row: resolve_maintenance_agency(row, "variable"),
+            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
             'CODE': lambda row: f"VAR_{row.get('VariableID')}",
             'NAME': lambda row: f"Variable {row.get('VariableID')}",
             'DOMAIN_ID': lambda row: row.get('PropertyID') or row.get('DomainID'),
@@ -159,7 +158,7 @@ MAPPING = {
             'PropertyID': 'DOMAIN_ID'
         },
         'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: resolve_maintenance_agency(row, "variable"),
+            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
             'DESCRIPTION': lambda row: derive_description(row, ['Description', 'Name'], "Variable "),
             'PRIMARY_CONCEPT': lambda row: derive_primary_concept(row),
             'IS_DECOMPOSED': lambda row: 1 if row.get('IsMultiValued') == 1 else 0
@@ -258,11 +257,11 @@ MAPPING = {
     'Cell': {
         'target_table': 'table_cell',
         'column_mappings': {
-            'TableID': 'TABLE_ID'
+            'IsShaded': 'IS_SHADED'
         },
         'additional_columns': {
             'CELL_ID': lambda row: build_cell_id(row),
-            'IS_SHADED': lambda row: 0,
+            'TABLE_ID': lambda row: build_table_id_from_table_vid(row),
             'TABLE_CELL_COMBINATION_ID': lambda row: None,
             'SYSTEM_DATA_CODE': lambda row: f"CELL_{row.get('CellID')}",
             'NAME': lambda row: f"Cell {row.get('CellID')}"
@@ -272,56 +271,56 @@ MAPPING = {
     'TableCell': {
         'target_table': 'table_cell',
         'column_mappings': {
-            'TableVID': 'TABLE_ID',
             'IsShaded': 'IS_SHADED',
             'CellCode': 'SYSTEM_DATA_CODE'
         },
         'additional_columns': {
             'CELL_ID': lambda row: build_cell_id(row),
+            'TABLE_ID': lambda row: build_table_id_from_table_vid(row),
             'TABLE_CELL_COMBINATION_ID': lambda row: row.get('DataPointVID'),
             'NAME': lambda row: row.get('Name') if row.get('Name') is not None else row.get('CellCode')
         }
     },
 
-    'CellPosition': {
-        'target_table': 'cell_position',
-        'column_mappings': {
-        },
-        'additional_columns': {
-            'CELL_ID': lambda row: build_cell_id(row),
-            'AXIS_ORDINATE_ID': lambda row: build_axis_ordinate_id({'OrdinateID': row.get('OrdinateID'), 'AxisID': row.get('AxisID', ''), 'OrdinateCode': row.get('OrdinateCode', '')})
-        }
-    },
+    # 'CellPosition': {
+    #     'target_table': 'cell_position',
+    #     'column_mappings': {
+    #     },
+    #     'additional_columns': {
+    #         'CELL_ID': lambda row: build_cell_id(row),
+    #         'AXIS_ORDINATE_ID': lambda row: build_axis_ordinate_id({'OrdinateID': row.get('OrdinateID'), 'AxisID': row.get('AxisID', ''), 'OrdinateCode': row.get('OrdinateCode', '')})
+    #     }
+    # },
 
     # ==================== COMBINATION MAPPINGS ====================
-    'DataPointVersion': {
-        'target_table': 'combination',
-        'column_mappings': {
-            'DataPointVID': 'COMBINATION_ID',
-            'MetricID': 'METRIC'
-        },
-        'additional_columns': {
-            'CODE': lambda row: f"DP_{row.get('DataPointVID')}",
-            'NAME': lambda row: f"DataPoint {row.get('DataPointVID')}",
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'VERSION': lambda row: "1.0",
-            'VALID_FROM': lambda row: row.get('FromDate'),
-            'VALID_TO': lambda row: row.get('ToDate')
-        }
-    },
+    # 'DataPointVersion': {
+    #     'target_table': 'combination',
+    #     'column_mappings': {
+    #         'DataPointVID': 'COMBINATION_ID',
+    #         'MetricID': 'METRIC'
+    #     },
+    #     'additional_columns': {
+    #         'CODE': lambda row: f"DP_{row.get('DataPointVID')}",
+    #         'NAME': lambda row: f"DataPoint {row.get('DataPointVID')}",
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'VERSION': lambda row: "1.0",
+    #         'VALID_FROM': lambda row: row.get('FromDate'),
+    #         'VALID_TO': lambda row: row.get('ToDate')
+    #     }
+    # },
 
-    'ContextOfDataPoints': {
-        'target_table': 'combination_item',
-        'column_mappings': {
-            'ContextID': 'COMBINATION_ID'
-        },
-        'additional_columns': {
-            'VARIABLE_ID': lambda row: extract_variable_from_context(row) or 'EBA_UNK',
-            'SUBDOMAIN_ID': lambda row: None,
-            'VARIABLE_SET_ID': lambda row: None,
-            'MEMBER_ID': lambda row: extract_member_from_context(row) or 'EBA_UNK_EBA_x0'
-        }
-    },
+    # 'ContextOfDataPoints': {
+    #     'target_table': 'combination_item',
+    #     'column_mappings': {
+    #         'ContextID': 'COMBINATION_ID'
+    #     },
+    #     'additional_columns': {
+    #         'VARIABLE_ID': lambda row: extract_variable_from_context(row),
+    #         'SUBDOMAIN_ID': lambda row: None,
+    #         'VARIABLE_SET_ID': lambda row: None,
+    #         'MEMBER_ID': lambda row: extract_member_from_context(row)
+    #     }
+    # },
 
     # ==================== MAPPING DEFINITIONS ====================
     'ValidationRule': {
@@ -425,7 +424,7 @@ MAPPING = {
             'DataTypeLabel': 'NAME'
         },
         'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: resolve_maintenance_agency(row, "domain"),
+            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
             'IS_ENUMERATED': lambda row: 0,
             'DESCRIPTION': lambda row: derive_description(row, ['DataTypeLabel', 'Description'], "Data type "),
             'DATA_TYPE': lambda row: row.get('DataTypeCode'),
@@ -510,32 +509,32 @@ MAPPING = {
     # Skip subdomain for now - SubCategory.csv doesn't exist
 
     # ==================== CUBE TO TABLE MAPPINGS ====================
-    'ModuleTableVersion': {
-        'target_table': 'cube_to_table',
-        'column_mappings': {
-            'ModuleID': 'CUBE_ID',
-            'TableVID': 'TABLE_ID'
-        },
-        'additional_columns': {
-            'CUBE_ID': lambda row: build_cube_id_from_module(row),
-            'TABLE_ID': lambda row: build_table_id_from_table_vid(row)
-        }
-    },
+    # 'ModuleTableVersion': {
+    #     'target_table': 'cube_to_table',
+    #     'column_mappings': {
+    #         'ModuleID': 'CUBE_ID',
+    #         'TableVID': 'TABLE_ID'
+    #     },
+    #     'additional_columns': {
+    #         'CUBE_ID': lambda row: build_cube_id_from_module(row),
+    #         'TABLE_ID': lambda row: build_table_id_from_table_vid(row)
+    #     }
+    # },
 
     # ==================== VARIABLE MAPPING ITEMS ====================
-    'VariableOfExpression': {
-        'target_table': 'variable_mapping_item',
-        'column_mappings': {
-            'VariableID': 'VARIABLE_ID',
-            'ExpressionID': 'VARIABLE_MAPPING_ID'
-        },
-        'additional_columns': {
-            'VARIABLE_SET_ID': lambda row: None,
-            'MEMBER_ID': lambda row: None,
-            'MEMBER_HIERARCHY_ID': lambda row: None,
-            'SUBDOMAIN_ID': lambda row: None
-        }
-    },
+    # 'VariableOfExpression': {
+    #     'target_table': 'variable_mapping_item',
+    #     'column_mappings': {
+    #         'VariableID': 'VARIABLE_ID',
+    #         'ExpressionID': 'VARIABLE_MAPPING_ID'
+    #     },
+    #     'additional_columns': {
+    #         'VARIABLE_SET_ID': lambda row: None,
+    #         'MEMBER_ID': lambda row: None,
+    #         'MEMBER_HIERARCHY_ID': lambda row: None,
+    #         'SUBDOMAIN_ID': lambda row: None
+    #     }
+    # },
 
     # ==================== OWNER/AGENCY MAPPINGS ====================
     'Owner': {
@@ -817,113 +816,113 @@ MAPPING = {
     # ==================== EXPRESSION AND VALIDATION MAPPINGS ====================
 
     # Expression mappings
-    'Expression': {
-        'target_table': 'mapping_definition',
-        'column_mappings': {
-            'ExpressionID': 'MAPPING_ID',
-            'ExpressionType': 'MAPPING_TYPE'
-        },
-        'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'CODE': lambda row: transform_id(row.get('ExpressionID'), 'EXPR_'),
-            'NAME': lambda row: f"Expression {row.get('ExpressionID')}",
-            'ALGORITHM': lambda row: transform_expression(row.get('TableBasedFormula')),
-            'MEMBER_MAPPING_ID': lambda row: None,
-            'VARIABLE_MAPPING_ID': lambda row: None
-        }
-    },
+    # 'Expression': {
+    #     'target_table': 'mapping_definition',
+    #     'column_mappings': {
+    #         'ExpressionID': 'MAPPING_ID',
+    #         'ExpressionType': 'MAPPING_TYPE'
+    #     },
+    #     'additional_columns': {
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'CODE': lambda row: transform_id(row.get('ExpressionID'), 'EXPR_'),
+    #         'NAME': lambda row: f"Expression {row.get('ExpressionID')}",
+    #         'ALGORITHM': lambda row: transform_expression(row.get('TableBasedFormula')),
+    #         'MEMBER_MAPPING_ID': lambda row: None,
+    #         'VARIABLE_MAPPING_ID': lambda row: None
+    #     }
+    # },
 
     # ExpressionScope mappings
-    'ExpressionScope': {
-        'target_table': 'mapping_to_cube',
-        'column_mappings': {
-            'ExpressionID': 'MAPPING_ID',
-            'ModuleID': 'CUBE_ID'
-        },
-        'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'VALID_FROM': lambda row: '1900-01-01',
-            'VALID_TO': lambda row: '9999-12-31'
-        }
-    },
+    # 'ExpressionScope': {
+    #     'target_table': 'mapping_to_cube',
+    #     'column_mappings': {
+    #         'ExpressionID': 'MAPPING_ID',
+    #         'ModuleID': 'CUBE_ID'
+    #     },
+    #     'additional_columns': {
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'VALID_FROM': lambda row: '1900-01-01',
+    #         'VALID_TO': lambda row: '9999-12-31'
+    #     }
+    # },
 
     # ValidationRuleSet mappings
-    'ValidationRuleSet': {
-        'target_table': 'mapping_to_cube',
-        'column_mappings': {
-            'ValidationRuleId': 'MAPPING_ID',
-            'ModuleID': 'CUBE_ID'
-        },
-        'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'VALID_FROM': lambda row: '1900-01-01',
-            'VALID_TO': lambda row: '9999-12-31'
-        }
-    },
+    # 'ValidationRuleSet': {
+    #     'target_table': 'mapping_to_cube',
+    #     'column_mappings': {
+    #         'ValidationRuleId': 'MAPPING_ID',
+    #         'ModuleID': 'CUBE_ID'
+    #     },
+    #     'additional_columns': {
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'VALID_FROM': lambda row: '1900-01-01',
+    #         'VALID_TO': lambda row: '9999-12-31'
+    #     }
+    # },
 
     # HierarchyValidationRule mappings
-    'HierarchyValidationRule': {
-        'target_table': 'member_mapping',
-        'column_mappings': {
-            'HierarchyID': 'MEMBER_HIERARCHY_ID',
-            'ValidationRuleId': 'MAPPING_ID'
-        },
-        'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'CODE': lambda row: f"HVR_{row.get('HierarchyID')}_{row.get('ValidationRuleId')}",
-            'NAME': lambda row: f"Hierarchy Validation Rule {row.get('ValidationRuleId')}",
-            'MAPPING_TYPE': lambda row: "HIERARCHY_VALIDATION",
-            'MEMBER_MAPPING_ID': lambda row: None,
-            'VARIABLE_MAPPING_ID': lambda row: None
-        }
-    },
+    # 'HierarchyValidationRule': {
+    #     'target_table': 'member_mapping',
+    #     'column_mappings': {
+    #         'HierarchyID': 'MEMBER_HIERARCHY_ID',
+    #         'ValidationRuleId': 'MAPPING_ID'
+    #     },
+    #     'additional_columns': {
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'CODE': lambda row: f"HVR_{row.get('HierarchyID')}_{row.get('ValidationRuleId')}",
+    #         'NAME': lambda row: f"Hierarchy Validation Rule {row.get('ValidationRuleId')}",
+    #         'MAPPING_TYPE': lambda row: "HIERARCHY_VALIDATION",
+    #         'MEMBER_MAPPING_ID': lambda row: None,
+    #         'VARIABLE_MAPPING_ID': lambda row: None
+    #     }
+    # },
 
     # ==================== VARIABLE RELATIONSHIP MAPPINGS ====================
 
     # MetricVariable mappings
-    'MetricVariable': {
-        'target_table': 'variable_mapping_item',
-        'column_mappings': {
-            'ExpressionID': 'VARIABLE_MAPPING_ID',
-            'MetricID': 'VARIABLE_ID'
-        },
-        'additional_columns': {
-            'VARIABLE_SET_ID': lambda row: None,
-            'MEMBER_ID': lambda row: None,
-            'MEMBER_HIERARCHY_ID': lambda row: None,
-            'SUBDOMAIN_ID': lambda row: None
-        }
-    },
+    # 'MetricVariable': {
+    #     'target_table': 'variable_mapping_item',
+    #     'column_mappings': {
+    #         'ExpressionID': 'VARIABLE_MAPPING_ID',
+    #         'MetricID': 'VARIABLE_ID'
+    #     },
+    #     'additional_columns': {
+    #         'VARIABLE_SET_ID': lambda row: None,
+    #         'MEMBER_ID': lambda row: None,
+    #         'MEMBER_HIERARCHY_ID': lambda row: None,
+    #         'SUBDOMAIN_ID': lambda row: None
+    #     }
+    # },
 
     # OrdinateVariable mappings
-    'OrdinateVariable': {
-        'target_table': 'variable_mapping_item',
-        'column_mappings': {
-            'ExpressionID': 'VARIABLE_MAPPING_ID',
-            'OrdinateID': 'VARIABLE_ID'
-        },
-        'additional_columns': {
-            'VARIABLE_SET_ID': lambda row: None,
-            'MEMBER_ID': lambda row: None,
-            'MEMBER_HIERARCHY_ID': lambda row: None,
-            'SUBDOMAIN_ID': lambda row: None
-        }
-    },
+    # 'OrdinateVariable': {
+    #     'target_table': 'variable_mapping_item',
+    #     'column_mappings': {
+    #         'ExpressionID': 'VARIABLE_MAPPING_ID',
+    #         'OrdinateID': 'VARIABLE_ID'
+    #     },
+    #     'additional_columns': {
+    #         'VARIABLE_SET_ID': lambda row: None,
+    #         'MEMBER_ID': lambda row: None,
+    #         'MEMBER_HIERARCHY_ID': lambda row: None,
+    #         'SUBDOMAIN_ID': lambda row: None
+    #     }
+    # },
 
     # SpecificCellVariable mappings
-    'SpecificCellVariable': {
-        'target_table': 'variable_mapping_item',
-        'column_mappings': {
-            'CellID': 'VARIABLE_ID',
-            'VariableID': 'VARIABLE_MAPPING_ID'
-        },
-        'additional_columns': {
-            'VARIABLE_SET_ID': lambda row: None,
-            'MEMBER_ID': lambda row: None,
-            'MEMBER_HIERARCHY_ID': lambda row: None,
-            'SUBDOMAIN_ID': lambda row: None
-        }
-    },
+    # 'SpecificCellVariable': {
+    #     'target_table': 'variable_mapping_item',
+    #     'column_mappings': {
+    #         'CellID': 'VARIABLE_ID',
+    #         'VariableID': 'VARIABLE_MAPPING_ID'
+    #     },
+    #     'additional_columns': {
+    #         'VARIABLE_SET_ID': lambda row: None,
+    #         'MEMBER_ID': lambda row: None,
+    #         'MEMBER_HIERARCHY_ID': lambda row: None,
+    #         'SUBDOMAIN_ID': lambda row: None
+    #     }
+    # },
 
     # ==================== CONTEXT AND REFERENCE MAPPINGS ====================
 
@@ -944,35 +943,35 @@ MAPPING = {
         }
     },
 
-    # ReferenceSources mappings
-    'ReferenceSources': {
-        'target_table': 'maintenance_agency',
-        'column_mappings': {
-            'ReferenceSourceID': 'MAINTENANCE_AGENCY_ID',
-            'ReferenceSourceCode': 'CODE',
-            'ReferenceSourceName': 'NAME'
-        },
-        'additional_columns': {
-            'DESCRIPTION': lambda row: row.get('ReferenceSourceDescription', row.get('ReferenceSourceName'))
-        }
-    },
+    # # ReferenceSources mappings
+    # 'ReferenceSources': {
+    #     'target_table': 'maintenance_agency',
+    #     'column_mappings': {
+    #         'ReferenceSourceID': 'MAINTENANCE_AGENCY_ID',
+    #         'ReferenceSourceCode': 'CODE',
+    #         'ReferenceSourceName': 'NAME'
+    #     },
+    #     'additional_columns': {
+    #         'DESCRIPTION': lambda row: row.get('ReferenceSourceDescription', row.get('ReferenceSourceName'))
+    #     }
+    # },
 
-    # References mappings
-    'References': {
-        'target_table': 'member_mapping',
-        'column_mappings': {
-            'ReferenceID': 'MAPPING_ID',
-            'ReferenceCode': 'CODE',
-            'ReferenceLabel': 'NAME'
-        },
-        'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'MAPPING_TYPE': lambda row: "REFERENCE",
-            'MEMBER_HIERARCHY_ID': lambda row: None,
-            'MEMBER_MAPPING_ID': lambda row: None,
-            'VARIABLE_MAPPING_ID': lambda row: None
-        }
-    },
+    # # References mappings
+    # 'References': {
+    #     'target_table': 'member_mapping',
+    #     'column_mappings': {
+    #         'ReferenceID': 'MAPPING_ID',
+    #         'ReferenceCode': 'CODE',
+    #         'ReferenceLabel': 'NAME'
+    #     },
+    #     'additional_columns': {
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'MAPPING_TYPE': lambda row: "REFERENCE",
+    #         'MEMBER_HIERARCHY_ID': lambda row: None,
+    #         'MEMBER_MAPPING_ID': lambda row: None,
+    #         'VARIABLE_MAPPING_ID': lambda row: None
+    #     }
+    # },
 
     # ==================== SPECIALIZED ENTITY MAPPINGS ====================
 
@@ -1006,54 +1005,54 @@ MAPPING = {
     },
 
     # ModuleDataPointRestriction mappings
-    'ModuleDataPointRestriction': {
-        'target_table': 'cube_mapping',
-        'column_mappings': {
-            'ModuleID': 'CUBE_ID',
-            'DataPointID': 'COMBINATION_ID'
-        },
-        'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'CUBE_MAPPING_ID': lambda row: transform_id(f"{row.get('ModuleID')}_{row.get('DataPointID')}", 'MDPR_'),
-            'MAPPING_TYPE': lambda row: "RESTRICTION",
-            'VALID_FROM': lambda row: '1900-01-01',
-            'VALID_TO': lambda row: '9999-12-31'
-        }
-    },
+    # 'ModuleDataPointRestriction': {
+    #     'target_table': 'cube_mapping',
+    #     'column_mappings': {
+    #         'ModuleID': 'CUBE_ID',
+    #         'DataPointID': 'COMBINATION_ID'
+    #     },
+    #     'additional_columns': {
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'CUBE_MAPPING_ID': lambda row: transform_id(f"{row.get('ModuleID')}_{row.get('DataPointID')}", 'MDPR_'),
+    #         'MAPPING_TYPE': lambda row: "RESTRICTION",
+    #         'VALID_FROM': lambda row: '1900-01-01',
+    #         'VALID_TO': lambda row: '9999-12-31'
+    #     }
+    # },
 
     # OpenAxisValueRestriction mappings
-    'OpenAxisValueRestriction': {
-        'target_table': 'cube_structure_mapping',
-        'column_mappings': {
-            'AxisID': 'CUBE_STRUCTURE_ID',
-            'MemberID': 'MEMBER_ID'
-        },
-        'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'CUBE_STRUCTURE_MAPPING_ID': lambda row: transform_id(f"{row.get('AxisID')}_{row.get('MemberID')}", 'OAVR_'),
-            'MAPPING_TYPE': lambda row: "AXIS_RESTRICTION",
-            'VALID_FROM': lambda row: '1900-01-01',
-            'VALID_TO': lambda row: '9999-12-31'
-        }
-    },
+    # 'OpenAxisValueRestriction': {
+    #     'target_table': 'cube_structure_mapping',
+    #     'column_mappings': {
+    #         'AxisID': 'CUBE_STRUCTURE_ID',
+    #         'MemberID': 'MEMBER_ID'
+    #     },
+    #     'additional_columns': {
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'CUBE_STRUCTURE_MAPPING_ID': lambda row: transform_id(f"{row.get('AxisID')}_{row.get('MemberID')}", 'OAVR_'),
+    #         'MAPPING_TYPE': lambda row: "AXIS_RESTRICTION",
+    #         'VALID_FROM': lambda row: '1900-01-01',
+    #         'VALID_TO': lambda row: '9999-12-31'
+    #     }
+    # },
 
     # OpenMemberRestriction mappings
-    'OpenMemberRestriction': {
-        'target_table': 'member_mapping',
-        'column_mappings': {
-            'DomainID': 'MEMBER_HIERARCHY_ID',
-            'MemberID': 'MEMBER_ID'
-        },
-        'additional_columns': {
-            'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
-            'MAPPING_ID': lambda row: transform_id(f"{row.get('DomainID')}_{row.get('MemberID')}", 'OMR_'),
-            'CODE': lambda row: f"OMR_{row.get('DomainID')}_{row.get('MemberID')}",
-            'NAME': lambda row: f"Open Member Restriction {row.get('MemberID')}",
-            'MAPPING_TYPE': lambda row: "MEMBER_RESTRICTION",
-            'MEMBER_MAPPING_ID': lambda row: None,
-            'VARIABLE_MAPPING_ID': lambda row: None
-        }
-    }
+    # 'OpenMemberRestriction': {
+    #     'target_table': 'member_mapping',
+    #     'column_mappings': {
+    #         'DomainID': 'MEMBER_HIERARCHY_ID',
+    #         'MemberID': 'MEMBER_ID'
+    #     },
+    #     'additional_columns': {
+    #         'MAINTENANCE_AGENCY_ID': lambda row: "EBA",
+    #         'MAPPING_ID': lambda row: transform_id(f"{row.get('DomainID')}_{row.get('MemberID')}", 'OMR_'),
+    #         'CODE': lambda row: f"OMR_{row.get('DomainID')}_{row.get('MemberID')}",
+    #         'NAME': lambda row: f"Open Member Restriction {row.get('MemberID')}",
+    #         'MAPPING_TYPE': lambda row: "MEMBER_RESTRICTION",
+    #         'MEMBER_MAPPING_ID': lambda row: None,
+    #         'VARIABLE_MAPPING_ID': lambda row: None
+    #     }
+    # }
 }
 
 PRIORITY_ORDER = [
