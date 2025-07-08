@@ -308,7 +308,7 @@ class EBAIDResolver:
             framework = None
             try:
                 framework = self._resolve_template_framework_via_relationship(template_id)
-                logger.debug(f"Successfully resolved framework via relationship chain for template {template_id}: {framework}")
+                # logger.debug(f"Successfully resolved framework via relationship chain for template {template_id}: {framework}")
             except ValueError as e:
                 logger.warning(f"Relationship chain lookup failed for template {template_id}: {str(e)}")
 
@@ -316,13 +316,15 @@ class EBAIDResolver:
             if not framework:
                 framework = self._get_framework_from_template_id(template_id)
                 if framework:
-                    logger.debug(f"Resolved framework via template ID lookup for template {template_id}: {framework}")
+                    # logger.debug(f"Resolved framework via template ID lookup for template {template_id}: {framework}")
+                    pass
 
             # Tertiary: Fall back to pattern-based detection
             if not framework:
                 framework = self._determine_framework_from_code(template_code)
                 if framework:
-                    logger.debug(f"Resolved framework via pattern matching for template {template_id}: {framework}")
+                    # logger.debug(f"Resolved framework via pattern matching for template {template_id}: {framework}")
+                    pass
 
             # Failure: Throw error instead of defaulting to UNKNOWN
             if not framework:
@@ -385,7 +387,7 @@ class EBAIDResolver:
             framework = None
             try:
                 framework = self._resolve_table_framework_via_relationship(table_id)
-                logger.debug(f"Successfully resolved framework via relationship chain for table {table_id}: {framework}")
+                # logger.debug(f"Successfully resolved framework via relationship chain for table {table_id}: {framework}")
             except ValueError as e:
                 logger.warning(f"Relationship chain lookup failed for table {table_id}: {str(e)}")
 
@@ -393,13 +395,15 @@ class EBAIDResolver:
             if not framework:
                 framework = self._get_framework_from_template_id(template_id)
                 if framework:
-                    logger.debug(f"Resolved framework via template ID lookup for table {table_id}: {framework}")
+                    # logger.debug(f"Resolved framework via template ID lookup for table {table_id}: {framework}")
+                    pass
 
             # Tertiary: Fall back to code-based framework detection
             if not framework:
                 framework = self._determine_framework_from_code(original_code or template_code or "")
                 if framework:
-                    logger.debug(f"Resolved framework via pattern matching for table {table_id}: {framework}")
+                    # logger.debug(f"Resolved framework via pattern matching for table {table_id}: {framework}")
+                    pass
 
             # Failure: Throw error instead of defaulting to UNKNOWN
             if not framework:
@@ -411,13 +415,15 @@ class EBAIDResolver:
             # Primary: Get version directly from table ID using TableVersion data
             version = self._get_version_from_table_id(table_id)
             if version:
-                logger.debug(f"Resolved version via direct table lookup for table {table_id}: {version}")
+                # logger.debug(f"Resolved version via direct table lookup for table {table_id}: {version}")
+                pass
 
             # Secondary: Fall back to getting version from template ID if direct lookup fails
             if not version:
                 version = self._get_version_from_template_id(template_id)
                 if version:
-                    logger.debug(f"Resolved version via template ID lookup for table {table_id}: {version}")
+                    # logger.debug(f"Resolved version via template ID lookup for table {table_id}: {version}")
+                    pass
 
             # Failure: Throw error if both methods fail
             if not version:
@@ -694,7 +700,7 @@ class EBAIDResolver:
         if not framework_code:
             raise ValueError(f"No framework code found for framework ID {framework_id} (template {template_id})")
 
-        logger.debug(f"Resolved template {template_id} → group {template_group_id} → framework {framework_id} ({framework_code})")
+        # logger.debug(f"Resolved template {template_id} → group {template_group_id} → framework {framework_id} ({framework_code})")
         return framework_code
 
     def _resolve_table_framework_via_relationship(self, table_id):
@@ -721,7 +727,7 @@ class EBAIDResolver:
         # Step 2: Template → Framework (reuse existing method)
         try:
             framework_code = self._resolve_template_framework_via_relationship(template_id)
-            logger.debug(f"Resolved table {table_id} → template {template_id} → framework {framework_code}")
+            # logger.debug(f"Resolved table {table_id} → template {template_id} → framework {framework_code}")
             return framework_code
         except ValueError as e:
             raise ValueError(f"Failed to resolve framework for table {table_id} via template {template_id}: {str(e)}")
