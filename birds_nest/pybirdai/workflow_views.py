@@ -2805,3 +2805,203 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
         return_url,
         return_text
     )
+
+
+@require_http_methods(["POST"])
+def workflow_reset_session_full(request):
+    """
+    Reset the entire workflow session (full reset).
+    Removes all marker files and resets all tasks (1-6).
+    """
+    logger.info("Full workflow session reset requested")
+    
+    try:
+        # Reset all internal status
+        _reset_database_setup_status()
+        _reset_migration_status()
+        _reset_automode_status()
+        
+        # Get current session
+        session_id = request.session.get('workflow_session_id')
+        if session_id:
+            try:
+                workflow_session = WorkflowSession.objects.get(session_id=session_id)
+                workflow_session.current_task = 1
+                workflow_session.updated_at = timezone.now()
+                workflow_session.save()
+                logger.info(f"Reset workflow session {session_id} current_task to 1")
+            except WorkflowSession.DoesNotExist:
+                logger.warning(f"Workflow session {session_id} not found during reset")
+        
+        # Delete all task executions
+        deleted_count = WorkflowTaskExecution.objects.all().delete()[0]
+        logger.info(f"Deleted {deleted_count} task executions")
+        
+        # Remove all marker files
+        base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
+        marker_files = [
+            '.setup_ready_marker',
+            '.migration_ready_marker',
+            '.task1_completed_marker',
+            '.task2_completed_marker',
+            '.task3_completed_marker',
+            '.task4_completed_marker',
+            '.task5_completed_marker',
+            '.task6_completed_marker'
+        ]
+        
+        removed_markers = []
+        for marker_file in marker_files:
+            marker_path = os.path.join(base_dir, marker_file)
+            if os.path.exists(marker_path):
+                try:
+                    os.remove(marker_path)
+                    removed_markers.append(marker_file)
+                    logger.info(f"Removed marker file: {marker_file}")
+                except Exception as e:
+                    logger.warning(f"Failed to remove marker file {marker_file}: {e}")
+        
+        # Remove temporary directories if they exist
+        temp_dirs = [
+            os.path.join(base_dir, 'results', 'generated_hierarchy_warnings', 'tmp'),
+            os.path.join(base_dir, 'results', 'generated_html', 'tmp'),
+            os.path.join(base_dir, 'results', 'generated_mapping_warnings', 'tmp'),
+            os.path.join(base_dir, 'results', 'lineage', 'tmp'),
+            os.path.join(base_dir, 'tests', 'test_results', 'json'),
+            os.path.join(base_dir, 'tests', 'test_results', 'txt')
+        ]
+        
+        removed_dirs = []
+        for temp_dir in temp_dirs:
+            if os.path.exists(temp_dir):
+                try:
+                    import shutil
+                    shutil.rmtree(temp_dir)
+                    removed_dirs.append(temp_dir)
+                    logger.info(f"Removed temporary directory: {temp_dir}")
+                except Exception as e:
+                    logger.warning(f"Failed to remove temporary directory {temp_dir}: {e}")
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': 'Full workflow session reset completed successfully',
+                'details': {
+                    'removed_markers': removed_markers,
+                    'removed_directories': removed_dirs,
+                    'deleted_executions': deleted_count
+                }
+            })
+        else:
+            messages.success(request, 'Full workflow session reset completed successfully')
+            return redirect('pybirdai:workflow_dashboard')
+    
+    except Exception as e:
+        logger.error(f"Error during full workflow session reset: {e}")
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'message': 'Failed to reset full workflow session',
+                'error': str(e)
+            }, status=500)
+        else:
+            messages.error(request, f'Failed to reset full workflow session: {str(e)}')
+            return redirect('pybirdai:workflow_dashboard')
+
+
+@require_http_methods(["POST"])
+def workflow_reset_session_partial(request):
+    """
+    Reset workflow session from task 3 onwards (partial reset).
+    Keeps tasks 1-2 completed and only resets tasks 3-6.
+    """
+    logger.info("Partial workflow session reset requested (tasks 3-6)")
+    
+    try:
+        # Reset only automode status (tasks 3-6)
+        _reset_automode_status()
+        
+        # Get current session
+        session_id = request.session.get('workflow_session_id')
+        if session_id:
+            try:
+                workflow_session = WorkflowSession.objects.get(session_id=session_id)
+                workflow_session.current_task = 3
+                workflow_session.updated_at = timezone.now()
+                workflow_session.save()
+                logger.info(f"Reset workflow session {session_id} current_task to 3")
+            except WorkflowSession.DoesNotExist:
+                logger.warning(f"Workflow session {session_id} not found during reset")
+        
+        # Delete only task executions for tasks 3-6
+        deleted_count = WorkflowTaskExecution.objects.filter(
+            task_number__in=[3, 4, 5, 6]
+        ).delete()[0]
+        logger.info(f"Deleted {deleted_count} task executions for tasks 3-6")
+        
+        # Remove only marker files for tasks 3-6
+        base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
+        marker_files = [
+            '.task3_completed_marker',
+            '.task4_completed_marker',
+            '.task5_completed_marker',
+            '.task6_completed_marker'
+        ]
+        
+        removed_markers = []
+        for marker_file in marker_files:
+            marker_path = os.path.join(base_dir, marker_file)
+            if os.path.exists(marker_path):
+                try:
+                    os.remove(marker_path)
+                    removed_markers.append(marker_file)
+                    logger.info(f"Removed marker file: {marker_file}")
+                except Exception as e:
+                    logger.warning(f"Failed to remove marker file {marker_file}: {e}")
+        
+        # Remove temporary directories if they exist
+        temp_dirs = [
+            os.path.join(base_dir, 'results', 'generated_hierarchy_warnings', 'tmp'),
+            os.path.join(base_dir, 'results', 'generated_html', 'tmp'),
+            os.path.join(base_dir, 'results', 'generated_mapping_warnings', 'tmp'),
+            os.path.join(base_dir, 'results', 'lineage', 'tmp'),
+            os.path.join(base_dir, 'tests', 'test_results', 'json'),
+            os.path.join(base_dir, 'tests', 'test_results', 'txt')
+        ]
+        
+        removed_dirs = []
+        for temp_dir in temp_dirs:
+            if os.path.exists(temp_dir):
+                try:
+                    import shutil
+                    shutil.rmtree(temp_dir)
+                    removed_dirs.append(temp_dir)
+                    logger.info(f"Removed temporary directory: {temp_dir}")
+                except Exception as e:
+                    logger.warning(f"Failed to remove temporary directory {temp_dir}: {e}")
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': 'Partial workflow session reset completed successfully (tasks 3-6)',
+                'details': {
+                    'removed_markers': removed_markers,
+                    'removed_directories': removed_dirs,
+                    'deleted_executions': deleted_count
+                }
+            })
+        else:
+            messages.success(request, 'Partial workflow session reset completed successfully (tasks 3-6)')
+            return redirect('pybirdai:workflow_dashboard')
+    
+    except Exception as e:
+        logger.error(f"Error during partial workflow session reset: {e}")
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'message': 'Failed to reset partial workflow session',
+                'error': str(e)
+            }, status=500)
+        else:
+            messages.error(request, f'Failed to reset partial workflow session: {str(e)}')
+            return redirect('pybirdai:workflow_dashboard')
