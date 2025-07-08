@@ -1389,14 +1389,20 @@ class OrchestrationWithLineage:
 						table_id=derived_table.id
 					)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0dda9d9f (Re-include all the CoCaLiMo and Aorta standards #1536)
 					if not existing_refs.exists():
 						AortaTableReference.objects.create(
 							metadata_trail=self.metadata_trail,
 							table_content_type='DerivedTable',
 							table_id=derived_table.id
 						)
+<<<<<<< HEAD
 =======
 >>>>>>> 0e3a0c54 (Re-include all the CoCaLiMo and Aorta standards #1536)
+=======
+>>>>>>> 0dda9d9f (Re-include all the CoCaLiMo and Aorta standards #1536)
 				
 				# Create EvaluatedDerivedTable
 				evaluated_table = EvaluatedDerivedTable.objects.create(
