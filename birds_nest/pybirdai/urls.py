@@ -640,4 +640,14 @@ urlpatterns = [
         workflow_views.workflow_task_substep_with_loading,
         name="workflow_task_substep_with_loading",
     ),
+    path(
+        "workflow/reset-session-full/",
+        workflow_views.workflow_reset_session_full,
+        name="workflow_reset_session_full",
+    ),
+    path(
+        "workflow/reset-session-partial/",
+        workflow_views.workflow_reset_session_partial,
+        name="workflow_reset_session_partial",
+    ),
 ]
