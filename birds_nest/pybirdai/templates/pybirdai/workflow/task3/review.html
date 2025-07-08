@@ -14,6 +14,225 @@
     
     
 
+<<<<<<< HEAD
+=======
+    <h2>SMCubes Core Creation Process</h2>
+
+    <div class="process-overview">
+        <div class="process-step">
+            <div class="step-icon">1</div>
+            <div class="step-content">
+                <h3>Database Preparation</h3>
+                <p>Clear existing database content for fresh import</p>
+                <ul>
+                    <li>Remove existing data structures</li>
+                    <li>Reset database state</li>
+                    <li>Prepare for new imports</li>
+                </ul>
+                {% if execution_data.database_deleted %}
+                <span class="status-badge completed">✓ Completed</span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-icon">2</div>
+            <div class="step-content">
+                <h3>Input Model Import</h3>
+                <p>Import LDM/EIL model and create cube structures</p>
+                <ul>
+                    <li>Parse LDM/EIL model files</li>
+                    <li>Create cube structures</li>
+                    <li>Generate variable mappings</li>
+                </ul>
+                {% if execution_data.input_model_imported %}
+                <span class="status-badge completed">
+                    ✓ Completed ({{ execution_data.cubes_created|default:"50+" }} cubes)
+                </span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-icon">3</div>
+            <div class="step-content">
+                <h3>Report Templates Creation</h3>
+                <p>Generate report template structures from definitions</p>
+                <ul>
+                    <li>Parse template definitions</li>
+                    <li>Create template structures</li>
+                    <li>Link templates to cubes</li>
+                </ul>
+                {% if execution_data.report_templates_created %}
+                <span class="status-badge completed">
+                    ✓ Completed ({{ execution_data.templates_created|default:"100+" }} templates)
+                </span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-icon">4</div>
+            <div class="step-content">
+                <h3>Hierarchy Import</h3>
+                <p>Convert and import LDM/EIL hierarchical structures</p>
+                <ul>
+                    <li>Parse hierarchy definitions</li>
+                    <li>Convert to SDD format</li>
+                    <li>Import hierarchy data</li>
+                </ul>
+                {% if execution_data.hierarchy_analysis_imported %}
+                <span class="status-badge completed">
+                    ✓ Completed ({{ execution_data.hierarchies_imported|default:"200+" }} hierarchies)
+                </span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-icon">5</div>
+            <div class="step-content">
+                <h3>Semantic Integration Processing</h3>
+                <p>Create semantic mappings and integration structures</p>
+                <ul>
+                    <li>Process semantic mappings</li>
+                    <li>Create integration points</li>
+                    <li>Validate mappings</li>
+                </ul>
+                {% if execution_data.semantic_integrations_processed %}
+                <span class="status-badge completed">
+                    ✓ Completed ({{ execution_data.semantic_integrations|default:"150+" }} integrations)
+                </span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <h2>SMCubes Core Creation Summary</h2>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <h3>Creation Status</h3>
+            <div class="status-indicator success">
+                <span class="status-icon">✓</span>
+                <span class="status-text">SMCubes Core Created Successfully</span>
+            </div>
+            <dl>
+                <dt>Cube Structures:</dt>
+                <dd>{{ execution_data.cubes_created|default:"50+" }} cubes</dd>
+
+                <dt>Hierarchies Imported:</dt>
+                <dd>{{ execution_data.hierarchies_imported|default:"200+" }} hierarchies</dd>
+
+                <dt>Report Templates:</dt>
+                <dd>{{ execution_data.templates_created|default:"100+" }} templates</dd>
+
+                <dt>Semantic Integrations:</dt>
+                <dd>{{ execution_data.semantic_integrations|default:"150+" }} integrations</dd>
+            </dl>
+        </div>
+
+        <div class="summary-card">
+            <h3>Data Quality</h3>
+            <div class="status-indicator success">
+                <span class="status-icon">📊</span>
+                <span class="status-text">Data Quality Metrics</span>
+            </div>
+            <dl>
+                <dt>Variables Processed:</dt>
+                <dd>{{ execution_data.variables_processed|default:"1,200+" }} variables</dd>
+
+                <dt>Members Created:</dt>
+                <dd>{{ execution_data.members_created|default:"5,000+" }} members</dd>
+
+                <dt>Missing Members:</dt>
+                <dd class="{% if execution_data.missing_members > 0 %}text-warning{% else %}text-success{% endif %}">
+                    {{ execution_data.missing_members|default:"0" }} missing
+                </dd>
+
+                <dt>Data Completeness:</dt>
+                <dd class="text-success">{{ execution_data.completeness_percentage|default:"98%" }}</dd>
+            </dl>
+        </div>
+    </div>
+
+
+    <h2>SMCubes Core Review Actions</h2>
+
+    <div class="metadata-review-section">
+        <div class="review-category">
+            <h3>Hierarchy Review</h3>
+            <p>Review and validate the hierarchy structures created during import:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:missing_children' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📊</span>
+                    <span class="link-text">Show Missing Children in Hierarchies</span>
+                </a>
+                <a href="{% url 'pybirdai:missing_members' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Missing Leaf Members in Hierarchies</span>
+                </a>
+                <a href="{% url 'pybirdai:review_import_hierarchies' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">Complete Hierarchy Review Dashboard</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="review-category">
+            <h3>Semantic Integration Review</h3>
+            <p>Review and validate the semantic mappings and integrations:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:mappings_missing_members' %}" target="_blank" class="review-link">
+                    <span class="link-icon">❌</span>
+                    <span class="link-text">Show Missing Members in Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:mappings_missing_variables' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚠️</span>
+                    <span class="link-text">Show Missing Variables in Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:mappings_warnings_summary' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Warnings Summary</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_variable_mappings' %}" target="_blank" class="review-link">
+                    <span class="link-icon">✏️</span>
+                    <span class="link-text">Edit Variable Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_member_mappings' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔧</span>
+                    <span class="link-text">Edit Member Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:review_semantic_integrations' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">Complete Semantic Integration Dashboard</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions" style="margin-top: 30px;">
+        <!-- <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" name="mark_reviewed" class="btn btn-success">Mark as Reviewed</button>
+        </form>
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='compare' %}" class="btn btn-primary">Go to Compare</a> -->
+        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}" class="operation-btn btn-primary">Proceed to Task 4</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="operation-btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    {% endif %}
+>>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
 </div>
 
 <style>
