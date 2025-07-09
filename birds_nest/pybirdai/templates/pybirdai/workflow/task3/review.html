@@ -197,7 +197,7 @@
             <p>Review and validate the semantic mappings and integrations:</p>
             <div class="review-links">
                 <a href="{% url 'pybirdai:mappings_missing_members' %}" target="_blank" class="review-link">
-                    <span class="link-icon">❌</span>
+                    <span class="link-icon">️️️⚠️</span>
                     <span class="link-text">Show Missing Members in Mappings</span>
                 </a>
                 <a href="{% url 'pybirdai:mappings_missing_variables' %}" target="_blank" class="review-link">
@@ -212,13 +212,38 @@
                     <span class="link-icon">✏️</span>
                     <span class="link-text">Edit Variable Mappings</span>
                 </a>
+                <a href="{% url 'pybirdai:edit_variable_mapping_items' %}" target="_blank" class="review-link">
+                    <span class="link-icon">✏️</span>
+                    <span class="link-text">Edit Variable Mapping Items</span>
+                </a>
                 <a href="{% url 'pybirdai:edit_member_mappings' %}" target="_blank" class="review-link">
-                    <span class="link-icon">🔧</span>
+                    <span class="link-icon">✏️</span>
                     <span class="link-text">Edit Member Mappings</span>
                 </a>
-                <a href="{% url 'pybirdai:review_semantic_integrations' %}" target="_blank" class="review-link">
+                <a href="{% url 'pybirdai:edit_member_mapping_items' %}" target="_blank" class="review-link">
+                    <span class="link-icon">✏️</span>
+                    <span class="link-text">Edit Member Mapping Items</span>
+                    
+                </a>
+                <a href="{% url 'pybirdai:edit_mapping_to_cubes' %}" target="_blank" class="review-link">
+                    <span class="link-icon">✏️</span>
+                    <span class="link-text">Edit Mapping to Cubes</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_mapping_definitions' %}" target="_blank" class="review-link">
+                    <span class="link-icon">✏️</span>
+                    <span class="link-text">Edit Mapping Definitions</span>
+                </a>
+                <a href="{% url 'pybirdai:return_semantic_integration_menu' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚙️</span>
+                    <span class="link-text">Mappings Editor</span>
+                </a>
+                <a href="{% url 'pybirdai:view_member_mapping_items_by_row' %}" target="_blank" class="review-link">
                     <span class="link-icon">🔍</span>
-                    <span class="link-text">Complete Semantic Integration Dashboard</span>
+                    <span class="link-text">View Member Mapping Items By Row</span>
+                </a>
+                <a href="{% url 'pybirdai:run_delete_mappings' %}" target="_blank" class="review-link">
+                    <span class="link-icon">❌</span>
+                    <span class="link-text">Delete Semantic Integrations</span>
                 </a>
             </div>
         </div>
