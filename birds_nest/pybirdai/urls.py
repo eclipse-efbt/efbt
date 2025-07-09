@@ -13,7 +13,10 @@ from django.urls import path
 
 from . import views
 from . import report_views
+from . import aorta_views
 from . import workflow_views
+from . import lineage_views
+from . import lineage_api
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -537,6 +540,32 @@ urlpatterns = [
         name="run_fetch_curated_resources",
     ),
     # New hierarchy editor API endpoints
+   
+    path(
+        "workflow/task/<int:task_number>/substep/<str:substep_name>/",
+        workflow_views.workflow_task_substep,
+        name="workflow_task_substep",
+    ),
+    path(
+        "workflow/session-check/",
+        workflow_views.workflow_session_check,
+        name="workflow_session_check",
+    ),
+    path(
+        "workflow/task/<int:task_number>/substep-loading/<str:substep_name>/",
+        workflow_views.workflow_task_substep_with_loading,
+        name="workflow_task_substep_with_loading",
+    ),
+    path(
+        "workflow/reset-session-full/",
+        workflow_views.workflow_reset_session_full,
+        name="workflow_reset_session_full",
+    ),
+    path(
+        "workflow/reset-session-partial/",
+        workflow_views.workflow_reset_session_partial,
+        name="workflow_reset_session_partial",
+    ),
     path(
         "api/hierarchy/<str:hierarchy_id>/json/",
         views.get_hierarchy_json,
@@ -583,11 +612,6 @@ urlpatterns = [
         name="workflow_task",
     ),
     path(
-        "workflow/task/<int:task_number>/substep/<str:substep_name>/",
-        workflow_views.workflow_task_substep,
-        name="workflow_task_substep",
-    ),
-    path(
         "workflow/automode/", workflow_views.workflow_automode, name="workflow_automode"
     ),
     path(
@@ -630,24 +654,59 @@ urlpatterns = [
         workflow_views.workflow_clone_import,
         name="workflow_clone_import",
     ),
+    # AORTA Lineage Tracking API endpoints
     path(
-        "workflow/session-check/",
-        workflow_views.workflow_session_check,
-        name="workflow_session_check",
+        "api/aorta/trails/",
+        aorta_views.AortaTrailListView.as_view(),
+        name="aorta-trail-list",
     ),
     path(
-        "workflow/task/<int:task_number>/substep-loading/<str:substep_name>/",
-        workflow_views.workflow_task_substep_with_loading,
-        name="workflow_task_substep_with_loading",
+        "api/aorta/trails/<int:trail_id>/",
+        aorta_views.AortaTrailDetailView.as_view(),
+        name="aorta-trail-detail",
     ),
     path(
-        "workflow/reset-session-full/",
-        workflow_views.workflow_reset_session_full,
-        name="workflow_reset_session_full",
+        "api/aorta/values/<int:value_id>/lineage/",
+        aorta_views.AortaValueLineageView.as_view(),
+        name="aorta-value-lineage",
     ),
     path(
-        "workflow/reset-session-partial/",
-        workflow_views.workflow_reset_session_partial,
-        name="workflow_reset_session_partial",
+        "api/aorta/tables/<int:table_id>/dependencies/",
+        aorta_views.AortaTableDependenciesView.as_view(),
+        name="aorta-table-dependencies",
     ),
+    path(
+        "api/aorta/trails/<int:trail_id>/graph/",
+        aorta_views.AortaLineageGraphView.as_view(),
+        name="aorta-lineage-graph",
+    ),
+    # Trail Lineage Visualization
+    path("trails/", lineage_views.trail_list, name="trail_list"),
+    path(
+        "trails/<int:trail_id>/lineage/",
+        lineage_views.trail_lineage_viewer,
+        name="trail_lineage_viewer",
+    ),
+    path(
+        "api/trail/<int:trail_id>/lineage/",
+        lineage_views.get_trail_lineage_data,
+        name="get_trail_lineage_data",
+    ),
+    path(
+        "api/trail/<int:trail_id>/node/<str:node_type>/<int:node_id>/",
+        lineage_views.get_node_details,
+        name="get_node_details",
+    ),
+    # Comprehensive Lineage API
+    path(
+        "api/trail/<int:trail_id>/complete-lineage/",
+        lineage_api.get_trail_complete_lineage,
+        name="get_trail_complete_lineage",
+    ),
+    path(
+        "api/trail/<int:trail_id>/summary/",
+        lineage_api.get_trail_lineage_summary,
+        name="get_trail_lineage_summary",
+    )
+
 ]
