@@ -75,14 +75,14 @@
             {% if forloop.counter == 1 %}
             <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
                 {% csrf_token %}
-                <a id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
+                <a id="database-setup-btn" class="operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
                     Do
                 </a>
             </form>
             {% elif forloop.counter == 2 %}
             <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
                 {% csrf_token %}
-                <a id="migration-btn" class="btn operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
+                <a id="migration-btn" class="operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
                     Do
                 </a>
             </form>
