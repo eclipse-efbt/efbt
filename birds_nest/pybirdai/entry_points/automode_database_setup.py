@@ -520,20 +520,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
                                 f"from .bird_data_model import {node.name}\n"
                             )
                             f_write.write(f"admin.site.register({node.name})\n")
-            
-            # Parse the models file to find class definitions      
-            with open(pybirdai_data_model_path.replace("bird_data_model.py","models.py"), "r") as f_read:
-                tree = ast.parse(f_read.read())
-                for node in ast.walk(tree):
-                    if isinstance(node, ast.ClassDef) and node.name not in [
-                        "Meta",
-                        "Admin",
-                    ]:
-                        if node.name not in registered_models:
-                            f_write.write(
-                                f"from .models import {node.name}\n"
-                            )
-                            f_write.write(f"admin.site.register({node.name})\n")
+
 
 
 
