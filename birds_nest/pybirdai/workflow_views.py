@@ -2129,6 +2129,8 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
         execution_data = task_execution.execution_data or {
             'steps_completed': []
         }
+        if 'steps_completed' not in execution_data:
+            execution_data['steps_completed'] = []
 
         success_message = ''
 
@@ -2177,6 +2179,7 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
             }, status=400)
 
         # Check if all subtasks are completed before marking main task as completed
+        #
         all_subtasks_completed = (
             execution_data.get('database_deleted', False) and
             execution_data.get('input_model_imported', False) and
@@ -2185,8 +2188,19 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
             execution_data.get('semantic_integrations_processed', False)
         )
 
+        any_subtasks_completed = (
+            execution_data.get('database_deleted', False) or
+            execution_data.get('input_model_imported', False) or
+            execution_data.get('report_templates_created', False) or
+            execution_data.get('hierarchy_analysis_imported', False) or
+            execution_data.get('semantic_integrations_processed', False)
+        )
+
         # Update task execution
         task_execution.execution_data = execution_data
+        if any_subtasks_completed:
+            task_execution.status = "running"
+            task_execution.completed_at = timezone.now()
         if all_subtasks_completed:
             task_execution.status = "completed"
             task_execution.completed_at = timezone.now()
@@ -2218,6 +2232,8 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
         execution_data = task_execution.execution_data or {
             'steps_completed': []
         }
+        if 'steps_completed' not in execution_data:
+            execution_data['steps_completed'] = []
 
         success_message = ''
 
@@ -2247,8 +2263,16 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
             execution_data.get('joins_metadata_created', False)
         )
 
+        any_subtasks_completed = (
+            execution_data.get('filters_created', False) or
+            execution_data.get('joins_metadata_created', False)
+        )
+
         # Update task execution
         task_execution.execution_data = execution_data
+        if any_subtasks_completed:
+            task_execution.status = "running"
+            task_execution.completed_at = timezone.now()
         if all_subtasks_completed:
             task_execution.status = "completed"
             task_execution.completed_at = timezone.now()
@@ -2280,6 +2304,8 @@ def _execute_task5_substep(request, substep_name, task_execution, workflow_sessi
         execution_data = task_execution.execution_data or {
             'steps_completed': []
         }
+        if 'steps_completed' not in execution_data:
+            execution_data['steps_completed'] = []
 
         success_message = ''
 
@@ -2309,8 +2335,16 @@ def _execute_task5_substep(request, substep_name, task_execution, workflow_sessi
             execution_data.get('join_code_generated', False)
         )
 
+        any_subtasks_completed = (
+            execution_data.get('filter_code_generated', False) or
+            execution_data.get('join_code_generated', False)
+        )
+
         # Update task execution
         task_execution.execution_data = execution_data
+        if any_subtasks_completed:
+            task_execution.status = "running"
+            task_execution.completed_at = timezone.now()
         if all_subtasks_completed:
             task_execution.status = "completed"
             task_execution.completed_at = timezone.now()
@@ -2341,6 +2375,8 @@ def _execute_task6_substep(request, substep_name, task_execution, workflow_sessi
         execution_data = task_execution.execution_data or {
             'steps_completed': []
         }
+        if 'steps_completed' not in execution_data:
+            execution_data['steps_completed'] = []
 
         if substep_name == 'run_tests':
             logger.info("Executing run tests substep...")
@@ -3027,7 +3063,6 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
         'generate_templates': 'Report Templates Generation',
         'import_hierarchy_analysis': 'Hierarchy Analysis Import',
         'process_semantic': 'Semantic Integrations Processing',
-<<<<<<< HEAD
         # Task 2 substeps
         'generate_all_filters': 'Filter Generation',
         'create_joins_metadata': 'Join Metadata Creation',
@@ -3035,32 +3070,14 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
         'generate_filter_code': 'Filter Code Generation',
         'generate_join_code': 'Join Code Generation',
         # Task 4 substeps
-=======
-        # Task 4 substeps
-        'generate_all_filters': 'Filter Generation',
-        'create_joins_metadata': 'Join Metadata Creation',
-        # Task 5 substeps
-        'generate_filter_code': 'Filter Code Generation',
-        'generate_join_code': 'Join Code Generation',
-        # Task 6 substeps
->>>>>>> 98ef87df (>feat: finish most of the pages. last need would be to create a new)
         'run_tests': 'Test Suite Execution'
     }
 
     task_display_names = {
-<<<<<<< HEAD
         1: 'SMCubes Core Creation',
         2: 'SMCubes Transformation Rules Creation',
         3: 'Python Transformation Rules Creation',
         4: 'Full Execution with Test Suite'
-=======
-        1: 'Resource Download',
-        2: 'Database Creation',
-        3: 'SMCubes Core Creation',
-        4: 'SMCubes Transformation Rules Creation',
-        5: 'Python Transformation Rules Creation',
-        6: 'Full Execution with Test Suite'
->>>>>>> 98ef87df (>feat: finish most of the pages. last need would be to create a new)
     }
 
     substep_display = substep_display_names.get(substep_name, substep_name.replace('_', ' ').title())
@@ -3087,11 +3104,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
         if upcoming_completed_count >= 5:
             return_url = f'/pybirdai/workflow/task/{task_number}/review/'
             return_text = f"Review {task_display}"
-<<<<<<< HEAD
             success_message = f"{substep_display} completed successfully. Task  is now complete!"
-=======
-            success_message = f"{substep_display} completed successfully. Task 3 is now complete!"
->>>>>>> 98ef87df (>feat: finish most of the pages. last need would be to create a new)
         else:
             return_url = f'/pybirdai/workflow/task/{task_number}/do/'
             return_text = f"Back to {task_display}"
@@ -3110,37 +3123,23 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
         return_url,
         return_text
     )
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
+
 
 
 @require_http_methods(["POST"])
 def workflow_reset_session_full(request):
     """
     Reset the entire workflow session (full reset).
-<<<<<<< HEAD
     Removes all marker files and resets all tasks (1-4).
     """
     logger.info("Full workflow session reset requested")
 
-=======
-    Removes all marker files and resets all tasks (1-6).
-    """
-    logger.info("Full workflow session reset requested")
-    
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
     try:
         # Reset all internal status
         _reset_database_setup_status()
         _reset_migration_status()
         _reset_automode_status()
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         # Get current session
         session_id = request.session.get('workflow_session_id')
         if session_id:
@@ -3152,19 +3151,11 @@ def workflow_reset_session_full(request):
                 logger.info(f"Reset workflow session {session_id} current_task to 1")
             except WorkflowSession.DoesNotExist:
                 logger.warning(f"Workflow session {session_id} not found during reset")
-<<<<<<< HEAD
 
         # Delete all task executions
         deleted_count = WorkflowTaskExecution.objects.all().delete()[0]
         logger.info(f"Deleted {deleted_count} task executions")
 
-=======
-        
-        # Delete all task executions
-        deleted_count = WorkflowTaskExecution.objects.all().delete()[0]
-        logger.info(f"Deleted {deleted_count} task executions")
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         # Remove all marker files
         base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
         marker_files = [
@@ -3173,17 +3164,9 @@ def workflow_reset_session_full(request):
             '.task1_completed_marker',
             '.task2_completed_marker',
             '.task3_completed_marker',
-<<<<<<< HEAD
             '.task4_completed_marker'
         ]
 
-=======
-            '.task4_completed_marker',
-            '.task5_completed_marker',
-            '.task6_completed_marker'
-        ]
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         removed_markers = []
         for marker_file in marker_files:
             marker_path = os.path.join(base_dir, marker_file)
@@ -3194,11 +3177,7 @@ def workflow_reset_session_full(request):
                     logger.info(f"Removed marker file: {marker_file}")
                 except Exception as e:
                     logger.warning(f"Failed to remove marker file {marker_file}: {e}")
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         # Remove temporary directories if they exist
         temp_dirs = [
             os.path.join(base_dir, 'results', 'generated_hierarchy_warnings', 'tmp'),
@@ -3208,11 +3187,7 @@ def workflow_reset_session_full(request):
             os.path.join(base_dir, 'tests', 'test_results', 'json'),
             os.path.join(base_dir, 'tests', 'test_results', 'txt')
         ]
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         removed_dirs = []
         for temp_dir in temp_dirs:
             if os.path.exists(temp_dir):
@@ -3223,11 +3198,7 @@ def workflow_reset_session_full(request):
                     logger.info(f"Removed temporary directory: {temp_dir}")
                 except Exception as e:
                     logger.warning(f"Failed to remove temporary directory {temp_dir}: {e}")
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'success': True,
@@ -3241,11 +3212,7 @@ def workflow_reset_session_full(request):
         else:
             messages.success(request, 'Full workflow session reset completed successfully')
             return redirect('pybirdai:workflow_dashboard')
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
     except Exception as e:
         logger.error(f"Error during full workflow session reset: {e}")
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -3262,7 +3229,6 @@ def workflow_reset_session_full(request):
 @require_http_methods(["POST"])
 def workflow_reset_session_partial(request):
     """
-<<<<<<< HEAD
     Reset workflow session from task 1 onwards (partial reset).
 
     """
@@ -3272,23 +3238,11 @@ def workflow_reset_session_partial(request):
         # Reset only automode status (tasks 1-4)
         _reset_automode_status()
 
-=======
-    Reset workflow session from task 3 onwards (partial reset).
-    Keeps tasks 1-2 completed and only resets tasks 3-6.
-    """
-    logger.info("Partial workflow session reset requested (tasks 3-6)")
-    
-    try:
-        # Reset only automode status (tasks 3-6)
-        _reset_automode_status()
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         # Get current session
         session_id = request.session.get('workflow_session_id')
         if session_id:
             try:
                 workflow_session = WorkflowSession.objects.get(session_id=session_id)
-<<<<<<< HEAD
                 workflow_session.current_task = 1
                 workflow_session.updated_at = timezone.now()
                 workflow_session.save()
@@ -3311,30 +3265,6 @@ def workflow_reset_session_partial(request):
             '.task4_completed_marker'
         ]
 
-=======
-                workflow_session.current_task = 3
-                workflow_session.updated_at = timezone.now()
-                workflow_session.save()
-                logger.info(f"Reset workflow session {session_id} current_task to 3")
-            except WorkflowSession.DoesNotExist:
-                logger.warning(f"Workflow session {session_id} not found during reset")
-        
-        # Delete only task executions for tasks 3-6
-        deleted_count = WorkflowTaskExecution.objects.filter(
-            task_number__in=[3, 4, 5, 6]
-        ).delete()[0]
-        logger.info(f"Deleted {deleted_count} task executions for tasks 3-6")
-        
-        # Remove only marker files for tasks 3-6
-        base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
-        marker_files = [
-            '.task3_completed_marker',
-            '.task4_completed_marker',
-            '.task5_completed_marker',
-            '.task6_completed_marker'
-        ]
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         removed_markers = []
         for marker_file in marker_files:
             marker_path = os.path.join(base_dir, marker_file)
@@ -3345,11 +3275,7 @@ def workflow_reset_session_partial(request):
                     logger.info(f"Removed marker file: {marker_file}")
                 except Exception as e:
                     logger.warning(f"Failed to remove marker file {marker_file}: {e}")
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         # Remove temporary directories if they exist
         temp_dirs = [
             os.path.join(base_dir, 'results', 'generated_hierarchy_warnings', 'tmp'),
@@ -3359,11 +3285,7 @@ def workflow_reset_session_partial(request):
             os.path.join(base_dir, 'tests', 'test_results', 'json'),
             os.path.join(base_dir, 'tests', 'test_results', 'txt')
         ]
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
         removed_dirs = []
         for temp_dir in temp_dirs:
             if os.path.exists(temp_dir):
@@ -3374,14 +3296,12 @@ def workflow_reset_session_partial(request):
                     logger.info(f"Removed temporary directory: {temp_dir}")
                 except Exception as e:
                     logger.warning(f"Failed to remove temporary directory {temp_dir}: {e}")
-<<<<<<< HEAD
+
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'success': True,
                 'message': 'Partial workflow session reset completed successfully (tasks 1-4)',
-=======
-        
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'success': True,
@@ -3394,15 +3314,9 @@ def workflow_reset_session_partial(request):
                 }
             })
         else:
-<<<<<<< HEAD
             messages.success(request, 'Partial workflow session reset completed successfully (tasks 1-4)')
             return redirect('pybirdai:workflow_dashboard')
 
-=======
-            messages.success(request, 'Partial workflow session reset completed successfully (tasks 3-6)')
-            return redirect('pybirdai:workflow_dashboard')
-    
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
     except Exception as e:
         logger.error(f"Error during partial workflow session reset: {e}")
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -3414,8 +3328,5 @@ def workflow_reset_session_partial(request):
         else:
             messages.error(request, f'Failed to reset partial workflow session: {str(e)}')
             return redirect('pybirdai:workflow_dashboard')
-<<<<<<< HEAD
-=======
->>>>>>> 98ef87df (>feat: finish most of the pages. last need would be to create a new)
 =======
 >>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
