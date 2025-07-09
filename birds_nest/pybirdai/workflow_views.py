@@ -494,7 +494,11 @@ def _run_database_setup_async():
 
             time.sleep(10)
 
-            os.system("pkill -f runserver")
+            match platform.system():
+                case "Windows":
+                    os.system("taskkill /F /IM runserver")
+                case _:
+                    os.system("pkill -f runserver")
         else:
             # No restart required, setup is complete
             _database_setup_status.update({
@@ -2195,6 +2199,7 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
         })
 
     except Exception as e:
+        traceback.print_exc()
         logger.error(f"Task 3 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
@@ -2256,6 +2261,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
         })
 
     except Exception as e:
+        traceback.print_exc()
         logger.error(f"Task 4 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
@@ -2317,6 +2323,7 @@ def _execute_task5_substep(request, substep_name, task_execution, workflow_sessi
         })
 
     except Exception as e:
+        traceback.print_exc()
         logger.error(f"Task 5 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
@@ -2380,6 +2387,7 @@ def _execute_task6_substep(request, substep_name, task_execution, workflow_sessi
         })
 
     except Exception as e:
+        traceback.print_exc()
         logger.error(f"Task 6 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
