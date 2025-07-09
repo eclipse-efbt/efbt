@@ -178,8 +178,8 @@ def run_create_python_joins(request):
         request,
         "Creating Python Joins (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Created Executable Joins in Python",
-        '/pybirdai/create-transformation-rules-in-python',
-        "Create Transformations Rules in Python"
+        '/pybirdai/workflow/task/4/do/',
+        "Do"
     )
 
 
@@ -194,8 +194,8 @@ def run_delete_joins_meta_data(request):
         request,
         "Deleting Joins Metadata",
         "Deleted Transformation Metadata successfully",
-        '/pybirdai/create-transformation-rules-in-smcubes',
-        "Create Transformations Rules MetaData"
+        '/pybirdai/workflow/task/4/review/',
+        "Review"
     )
 
 def run_delete_mappings(request):
@@ -208,8 +208,8 @@ def run_delete_mappings(request):
         request,
         "Deleting Mappings Metadata",
         "Deleted Mappings Metadata successfully",
-        '/pybirdai/create-transformation-rules-in-smcubes',
-        "Create Transformations Rules MetaData"
+        '/pybirdai/workflow/task/3/review/',
+        "Review"
     )
 
 def run_delete_output_concepts(request):
@@ -222,8 +222,8 @@ def run_delete_output_concepts(request):
         request,
         "Deleting Output Concepts Metadata",
         "Deleted Output Concepts  successfully",
-        '/pybirdai/create-transformation-rules-in-smcubes',
-        "Create Transformations Rules MetaData"
+        '/pybirdai/workflow/task/3/review/',
+        "Review"
     )
 
 def delete_existing_contents_of_bird_metadata_database(request):
@@ -236,8 +236,8 @@ def delete_existing_contents_of_bird_metadata_database(request):
         request,
         "Deleting Bird Metadata Database",
         "Deleted Bird Metadata Database",
-        '/pybirdai/populate-bird-metadata-database',
-        "Populate BIRD Metadata Database"
+        '/pybirdai/workflow/task/3/do/',
+        "Do"
     )
 
 def run_import_semantic_integrations_from_website(request):
@@ -250,8 +250,8 @@ def run_import_semantic_integrations_from_website(request):
         request,
         "Importing Semantic Integrations (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Semantic Integrations completed successfully.",
-        '/pybirdai/create-transformation-rules-configuration',
-        "Create Transformations Rules Configuration"
+        '/pybirdai/workflow/task/3/do/',
+        "Do"
     )
 
 def run_import_input_model_from_sqldev(request):
@@ -264,8 +264,8 @@ def run_import_input_model_from_sqldev(request):
         request,
         "Importing Input Model from SQLDev (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Input Model from SQLDev process completed successfully",
-        '/pybirdai/populate-bird-metadata-database',
-        "Populate BIRD Metadata Database"
+        '/pybirdai/workflow/task/3/do/',
+        "Do"
     )
 
 
@@ -281,8 +281,8 @@ def run_import_hierarchies(request):
         request,
         "Importing Hierarchies (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import hierarchies completed successfully.",
-        '/pybirdai/create-transformation-rules-configuration',
-        "Create Transformations Rules Configuration"
+        '/pybirdai/workflow/task/3/do/',
+        "Do"
     )
 
 
@@ -296,8 +296,8 @@ def import_report_templates(request):
         request,
         "Importing Report Templates (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Import Report templates from website completed successfully.",
-        '/pybirdai/populate-bird-metadata-database',
-        "Populate BIRD Metadata Database"
+        '/pybirdai/workflow/task/3/do/',
+        "Do"
     )
 
 def run_create_filters(request):
@@ -311,8 +311,8 @@ def run_create_filters(request):
         request,
         "Creating Filters (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Filters created successfully.",
-        '/pybirdai/create-transformation-rules-in-smcubes',
-        "Create Transformations Rules MetaData"
+        '/pybirdai/workflow/task/4/do/',
+        "Do"
     )
 
 
@@ -326,8 +326,8 @@ def run_create_executable_filters(request):
         request,
         "Creating Executable Filters (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Create executable filters process completed successfully",
-        '/pybirdai/create-transformation-rules-in-python',
-        "Create Transformations Rules in Python"
+        '/pybirdai/workflow/task/4/do/',
+        "Do"
     )
 
 def upload_sqldev_eil_files(request):
@@ -2269,8 +2269,8 @@ def convert_ldm_to_sdd_hierarchies(request):
         request,
         'Converting LDM Hierarchies to SDD Hierarchies',
         'Successfully converted LDM hierarchies to SDD hierarchies.',
-        reverse('pybirdai:bird_diffs_and_corrections'),
-        'BIRD Export Diffs and Corrections'
+        '/pybirdai/workflow/task/3/do/',
+        "Do"
     )
 
 def view_ldm_to_sdd_results(request):
@@ -2407,8 +2407,8 @@ def run_create_executable_filters_from_db(request):
         request,
         "Creating Executable Filters from Database (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Create executable filters from database process completed successfully",
-        '/pybirdai/create-transformation-rules-in-python',
-        "Create Transformations Rules in Python"
+        '/pybirdai/workflow/task/4/do/',
+        "Do"
     )
 
 def run_create_python_joins_from_db(request):
@@ -2421,8 +2421,8 @@ def run_create_python_joins_from_db(request):
         request,
         "Creating Python Joins from Database (approx 1 minute on a fast desktop, dont press the back button on this web page)",
         "Created Executable Joins from Database in Python",
-        '/pybirdai/create-transformation-rules-in-python',
-        "Create Transformations Rules in Python"
+        '/pybirdai/workflow/task/4/do/',
+        "Do"
     )
 
 

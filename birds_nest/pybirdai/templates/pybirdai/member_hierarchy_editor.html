@@ -567,6 +567,8 @@
             {% if selected_hierarchy %}
                 <div class="hierarchy-subtitle">{{ selected_hierarchy.name }}</div>
             {% endif %}
+            <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}">Back to Review</a>
+
         </div>
         <div class="toolbar">
             <button id="arrowTool" class="tool-btn" onclick="toggleTool('arrow')" title="Connect nodes (A)">
@@ -1640,13 +1642,18 @@ function setupBoxEventListeners(boxElement, box) {
 function loadHierarchy(hierarchyId) {
     if (!hierarchyId) {
         // Clear current hierarchy and reload without hierarchy ID
-        window.location.href = window.location.pathname.split('/').slice(0, -2).join('/') + '/';
+        window.location.href = window.location.pathname;
         return;
     }
 
     // Navigate to selected hierarchy
     const basePath = window.location.pathname.split('/').slice(0, -2).join('/');
-    window.location.href = `${basePath}/${hierarchyId}/`;
+    console.log(`Loading hierarchy with ID: ${hierarchyId}`);
+    if (basePath.includes("/member_hierarchy_editor")) {
+        window.location.href = `${basePath}/${hierarchyId}/`;
+    } else {
+      window.location.href = `${basePath}/member_hierarchy_editor/${hierarchyId}/`;
+    }
 }
 
 // Event listeners
