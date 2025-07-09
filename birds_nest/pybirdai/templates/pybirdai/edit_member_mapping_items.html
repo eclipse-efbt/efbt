@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Member Mapping Items</h1>
-<a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}">Back to Review</a>
 
 {% if messages %}
 <ul class="messages">
@@ -159,7 +159,7 @@
             <tbody>
                 {% for form in formset %}
                 <!-- Debug info -->
-                <!-- Member Mapping Item values: 
+                <!-- Member Mapping Item values:
                      member_mapping_id: {{ form.instance.member_mapping_id }}
                      member_id: {{ form.instance.member_id }}
                      variable_id: {{ form.instance.variable_id }}
@@ -217,10 +217,10 @@ function confirmDelete(memberMappingId, memberId, variableId, isSource, memberMa
     if (confirm('Are you sure you want to delete this member mapping item?')) {
         var form = document.createElement('form');
         form.method = 'POST';
-        form.action = "{% url 'pybirdai:delete_member_mapping_item' 0 %}?member_mapping_id=" + encodeURIComponent(memberMappingId) + 
-                     "&member_id=" + encodeURIComponent(memberId) + 
-                     "&variable_id=" + encodeURIComponent(variableId) + 
-                     "&is_source=" + encodeURIComponent(isSource) + 
+        form.action = "{% url 'pybirdai:delete_member_mapping_item' 0 %}?member_mapping_id=" + encodeURIComponent(memberMappingId) +
+                     "&member_id=" + encodeURIComponent(memberId) +
+                     "&variable_id=" + encodeURIComponent(variableId) +
+                     "&is_source=" + encodeURIComponent(isSource) +
                      "&member_mapping_row=" + encodeURIComponent(memberMappingRow);
         var csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
@@ -271,27 +271,27 @@ function hideAddForm() {
         background-color: #f8f9fa;
         border-radius: 5px;
     }
-    
+
     .filters form {
         display: flex;
         flex-wrap: wrap;
         gap: 15px;
         align-items: flex-end;
     }
-    
+
     .filters label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
     }
-    
+
     .filters select {
         padding: 6px 12px;
         border: 1px solid #ced4da;
         border-radius: 4px;
         min-width: 200px;
     }
-    
+
     .filter-button, .clear-button {
         padding: 8px 16px;
         border: none;
@@ -300,21 +300,21 @@ function hideAddForm() {
         text-decoration: none;
         display: inline-block;
     }
-    
+
     .filter-button {
         background-color: #007bff;
         color: white;
     }
-    
+
     .clear-button {
         background-color: #6c757d;
         color: white;
     }
-    
+
     .filter-button:hover {
         background-color: #0056b3;
     }
-    
+
     .clear-button:hover {
         background-color: #5a6268;
     }

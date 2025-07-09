@@ -17,7 +17,7 @@
 </head>
 <body>
     <h1>Mappings Missing Members CSV Contents</h1>
-    <a href="{% url 'pybirdai:review_semantic_integrations' %}">Back to Review Semantic Integrations</a>
+    <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}">Back to Review</a>
     <table border="1">
         {% for row in csv_contents %}
             <tr>

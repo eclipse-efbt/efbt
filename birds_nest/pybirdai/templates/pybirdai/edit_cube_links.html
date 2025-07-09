@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Cube Links</h1>
-<a href="{% url 'pybirdai:review_join_meta_data' %}">Back to Review  Transformations Rules MetaData</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=4 operation='review' %}">Back to Review</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}

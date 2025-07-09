@@ -11,14 +11,6 @@
 <div class="task-content">
     <h1>Task 3: SMCubes Core Creation - Review</h1>
 
-    {% if not execution_data.database_deleted and not execution_data.input_model_imported and not execution_data.report_templates_created and not execution_data.hierarchy_analysis_imported and not execution_data.semantic_integrations_processed %}
-    <div class="alert alert-warning">
-        <strong>⚠️ Task Not Completed</strong>
-        <p>You must complete at least one substep before reviewing the results.</p>
-        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}" class="operation-btn btn-primary">Go to Do</a>
-    </div>
-    {% else %}
-
     <h2>SMCubes Core Creation Process</h2>
 
     <div class="process-overview">
@@ -185,9 +177,9 @@
                     <span class="link-icon">📋</span>
                     <span class="link-text">Show Missing Leaf Members in Hierarchies</span>
                 </a>
-                <a href="{% url 'pybirdai:review_import_hierarchies' %}" target="_blank" class="review-link">
-                    <span class="link-icon">🔍</span>
-                    <span class="link-text">Complete Hierarchy Review Dashboard</span>
+                <a href="{% url 'pybirdai:member_hierarchy_editor' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚙️</span>
+                    <span class="link-text">Edit and visualize Member Hierarchy</span>
                 </a>
             </div>
         </div>
@@ -223,7 +215,7 @@
                 <a href="{% url 'pybirdai:edit_member_mapping_items' %}" target="_blank" class="review-link">
                     <span class="link-icon">✏️</span>
                     <span class="link-text">Edit Member Mapping Items</span>
-                    
+
                 </a>
                 <a href="{% url 'pybirdai:edit_mapping_to_cubes' %}" target="_blank" class="review-link">
                     <span class="link-icon">✏️</span>
@@ -259,7 +251,6 @@
         <a href="{% url 'pybirdai:workflow_dashboard' %}" class="operation-btn btn-secondary">Back to Dashboard</a>
     </div>
 
-    {% endif %}
 </div>
 
 <style>
