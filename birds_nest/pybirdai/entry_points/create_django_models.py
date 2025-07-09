@@ -16,6 +16,10 @@ from django.apps import AppConfig
 from django.conf import settings
 from pybirdai.context.sdd_context_django import SDDContext
 from pybirdai.context.context import Context
+from pybirdai.process_steps.sqldeveloper_import.convert_regdna_to_xcore import (
+    convert_context_packages_to_xcore,
+)
+
 from pybirdai.process_steps.sqldeveloper_import.import_sqldev_ldm_to_regdna import (
     SQLDevLDMImport,
 )
@@ -47,7 +51,18 @@ class RunCreateDjangoModels(AppConfig):
             SQLDevLDMImport.do_import(self, context)
         else:
             SQLDeveloperILImport.do_import(self, context)
+
+        output_directory = "results" + os.sep + "xcore_output"
+
+        try:
+            convert_context_packages_to_xcore(context, output_directory)
+        except Exception as e:
+            print(f"Error converting context packages to xcore: {e}")
+            raise
+
         RegDNAToDJango.convert(self, context)
+
+        print("Django models created successfully.")
 
 if __name__ == '__main__':
     django.setup()
