@@ -142,7 +142,7 @@ class ImportInputModel(object):
             context: The context object containing configuration settings.
         """
         logging.info(f"Creating models for pybirdai")
-        for model in set([_ for _ in apps.get_models() if _._meta.app_label == 'pybirdai']):
+        for model in apps.get_models():
             logging.info(f"Creating cube and structure for {model.__name__}")
             ImportInputModel._create_cube_and_structure(model, sdd_context, context)
             ImportInputModel._process_fields(model, sdd_context, context)
