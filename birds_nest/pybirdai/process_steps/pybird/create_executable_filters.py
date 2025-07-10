@@ -39,7 +39,7 @@ class CreateExecutableFilters:
         
         # Initialize AORTA tracking
         orchestration = Orchestration()
-        if hasattr(context, 'enable_lineage') and context.enable_lineage:
+        if hasattr(context, 'enable_lineage_tracking') and context.enable_lineage_tracking:
             orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             print("AORTA lineage tracking enabled for filter generation")
         file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep +  'report_cells.py', "a",  encoding='utf-8') 
