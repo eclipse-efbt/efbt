@@ -695,7 +695,8 @@ def workflow_dashboard(request):
               "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
               "config_files_source": "GITHUB",
               "config_files_github_url": "https://github.com/regcommunity/FreeBIRD",
-              "when_to_stop": "RESOURCE_DOWNLOAD"
+              "when_to_stop": "RESOURCE_DOWNLOAD",
+              "enable_lineage_tracking": true
             }""")
 
     # Check if database tables exist
@@ -774,6 +775,7 @@ def workflow_dashboard(request):
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
             "when_to_stop": "RESOURCE_DOWNLOAD",
+            "enable_lineage_tracking": True,
         }
 
     # Create context - handle missing database gracefully
@@ -2355,6 +2357,7 @@ def workflow_save_config(request):
             "config_files_source": request.POST.get("config_files_source", "MANUAL"),
             "config_files_github_url": request.POST.get("config_files_github_url", ""),
             "when_to_stop": "RESOURCE_DOWNLOAD",  # Default for workflow
+            "enable_lineage_tracking": request.POST.get("enable_lineage_tracking") == "true",
         }
 
         # Store GitHub token in memory only, don't persist to file

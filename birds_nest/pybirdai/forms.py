@@ -82,6 +82,13 @@ class AutomodeConfigurationSessionForm(forms.Form):
         help_text='Defines how far to take automode processing before stopping'
     )
     
+    enable_lineage_tracking = forms.BooleanField(
+        initial=True,
+        required=False,
+        widget=forms.CheckboxInput(),
+        help_text='Enable lineage tracking for transformation and filter generation'
+    )
+    
     # Add github_token as a non-model field for security (not stored in database)
     github_token = forms.CharField(
         max_length=255,
