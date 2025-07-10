@@ -87,13 +87,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 with open(bird_data_model_path,"w") as wf:
                     wf.write("")
 
-            db_file = "db.sqlite3"
-            if os.path.exists(db_file):
-                os.chmod(db_file, 0o666)
-                os.remove(db_file)
-
-
-
             # Step 1: Create Django models (this generates files but doesn't modify existing ones)
             logger.info("Step 1: Creating Django models...")
             try:
@@ -521,6 +514,9 @@ class RunAutomodeDatabaseSetup(AppConfig):
                             )
                             f_write.write(f"admin.site.register({node.name})\n")
 
+
+
+
     def _cleanup_results_admin_file(self, results_admin_path):
         """Clean up the results admin.py file after successful use to prevent duplicate content."""
         try:
@@ -611,6 +607,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
         start_time = time.time()
 
         try:
+
+            db_file = "db.sqlite3"
+            if os.path.exists(db_file):
+                os.chmod(db_file, 0o666)
+                os.remove(db_file)
             
             venv_path, original_dir, python_executable = self._get_python_exc()
 
@@ -650,6 +651,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
             if return_code_preconfigured_migration:
                 logger.info("PreconfiguredDatabaseFetcher failed, running manual process")
                 logger.info("Running migrate in subprocess...")
+
+                db_file = "db.sqlite3"
+                if os.path.exists(db_file):
+                    os.chmod(db_file, 0o666)
+                    os.remove(db_file)
 
                 # Run migrate
                 migrate_result = subprocess.run(

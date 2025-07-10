@@ -10,7 +10,7 @@
 {% block workflow_content %}
 <div class="task-content">
     <h1>Task 6: Test Suite Execution - Review</h1>
-    
+
     <div class="execution-overview">
         <div class="overview-card {% if execution_data.tests_executed %}success{% else %}warning{% endif %}">
             <h2>Execution Status</h2>
@@ -33,7 +33,7 @@
                 <span class="time-value">{{ execution_data.execution_time|default:"0:00:00" }}</span>
             </div>
         </div>
-        
+
         <div class="test-summary">
             <h3>Test Configuration</h3>
             <div class="test-config-info">
@@ -69,15 +69,15 @@
             </div>
         </div>
     </div>
-    
+
     <h2>Execution Steps</h2>
-    
+
     <div class="stage-results">
         <div class="stage-result">
             <h3>1. Datapoint Execution</h3>
             <div class="stage-metrics">
                 <span class="metric">Datapoint ID: <strong>{{ execution_data.datapoint_id|default:"Not specified" }}</strong></span>
-                <span class="metric">Status: 
+                <span class="metric">Status:
                     <strong class="{% if execution_data.datapoint_executed %}status-success{% else %}status-warning{% endif %}">
                         {% if execution_data.datapoint_executed %}✓ Complete{% else %}⚠ Issues{% endif %}
                     </strong>
@@ -89,12 +89,12 @@
             </div>
             {% endif %}
         </div>
-        
+
         <div class="stage-result">
             <h3>2. Test Suite Execution</h3>
             <div class="stage-metrics">
                 <span class="metric">Test Mode: <strong>{{ execution_data.test_mode|default:"Not configured" }}</strong></span>
-                <span class="metric">Status: 
+                <span class="metric">Status:
                     <strong class="{% if execution_data.tests_executed %}status-success{% else %}status-error{% endif %}">
                         {% if execution_data.tests_executed %}✓ Complete{% else %}✗ Failed{% endif %}
                     </strong>
@@ -107,9 +107,9 @@
             {% endif %}
         </div>
     </div>
-    
+
     <h2>Steps Completed</h2>
-    
+
     <div class="steps-completed">
         {% for step in execution_data.steps_completed %}
         <div class="step-item">
@@ -120,9 +120,9 @@
         <p>No steps completed yet.</p>
         {% endfor %}
     </div>
-    
+
     <h2>Test Results Summary</h2>
-    
+
     <div class="test-summary-section">
         <div class="test-summary-cards">
             <div class="summary-card total">
@@ -132,7 +132,7 @@
                     <p>Total Tests</p>
                 </div>
             </div>
-            
+
             <div class="summary-card passed">
                 <div class="card-icon">✅</div>
                 <div class="card-content">
@@ -140,7 +140,7 @@
                     <p>Passed Tests</p>
                 </div>
             </div>
-            
+
             <div class="summary-card failed">
                 <div class="card-icon">❌</div>
                 <div class="card-content">
@@ -148,7 +148,7 @@
                     <p>Failed Tests</p>
                 </div>
             </div>
-            
+
             <div class="summary-card success-rate">
                 <div class="card-icon">📈</div>
                 <div class="card-content">
@@ -158,9 +158,9 @@
             </div>
         </div>
     </div>
-    
+
     <h2>Test Results Details</h2>
-    
+
     <div class="test-results-section">
         {% if test_results %}
         <div class="test-results-grid">
@@ -170,7 +170,7 @@
                     <h4>{{ result.test_information.regulatory_template_id }}</h4>
                     <span class="test-timestamp">{{ result.timestamp|date:"Y-m-d H:i:s" }}</span>
                 </div>
-                
+
                 <div class="test-info">
                     <div class="info-row">
                         <span class="info-label">Datapoint:</span>
@@ -185,7 +185,7 @@
                         <span class="info-value">{{ result.test_information.scenario_name }}</span>
                     </div>
                 </div>
-                
+
                 <div class="test-status">
                     {% if result.test_results.passed|length > 0 %}
                         <span class="status-badge passed">✓ PASSED ({{ result.test_results.passed|length }})</span>
@@ -195,7 +195,7 @@
                         <span class="status-badge pending">⏳ NO RESULTS</span>
                     {% endif %}
                 </div>
-                
+
                 {% if result.test_results.details.failures|length > 0 %}
                 <div class="test-failures">
                     <h5>Failures:</h5>
@@ -206,27 +206,27 @@
                     </ul>
                 </div>
                 {% endif %}
-                
+
                 {% if result.test_results.details.captured_stdout|length > 0 %}
                 <div class="test-output">
                     <h5>Output:</h5>
                     <pre>{{ result.test_results.details.captured_stdout|join:"\n" }}</pre>
                 </div>
                 {% endif %}
-                
+
                 {% if result.test_results.details.captured_stderr|length > 0 %}
                 <div class="test-errors">
                     <h5>Errors:</h5>
                     <pre>{{ result.test_results.details.captured_stderr|join:"\n" }}</pre>
                 </div>
                 {% endif %}
-                
+
                 <div class="test-details-toggle">
                     <button class="btn btn-sm btn-outline-secondary" onclick="toggleDetails('{{ forloop.counter }}')">
                         <i class="fas fa-info-circle"></i> Show Details
                     </button>
                 </div>
-                
+
                 <div id="details-{{ forloop.counter }}" class="test-details" style="display: none;">
                     <h5>Platform Information:</h5>
                     <div class="platform-info">
@@ -243,7 +243,7 @@
                             <span class="info-value">{{ result.platform_info.packages|default:"Not specified" }}</span>
                         </div>
                     </div>
-                    
+
                     <h5>Path Configuration:</h5>
                     <div class="path-info">
                         <div class="info-row">
@@ -259,7 +259,7 @@
                             <span class="info-value">{{ result.paths.configfile|default:"Not specified" }}</span>
                         </div>
                     </div>
-                    
+
                     <h5>File Information:</h5>
                     <div class="file-info">
                         <div class="info-row">
@@ -277,9 +277,9 @@
         </div>
         {% endif %}
     </div>
-    
+
     <h2>Generated Reports</h2>
-    
+
     <div class="reports-section">
         <div class="report-grid">
             <div class="report-card">
@@ -287,19 +287,19 @@
                 <p>Financial Reporting templates</p>
                 <a href="#" class="btn btn-sm btn-primary">View Reports</a>
             </div>
-            
+
             <div class="report-card">
                 <h3>Validation Reports</h3>
                 <p>Data quality and validation results</p>
                 <a href="#" class="btn btn-sm btn-primary">View Reports</a>
             </div>
-            
+
             <div class="report-card">
                 <h3>Test Reports</h3>
                 <p>Detailed test execution results</p>
                 <a href="#" class="btn btn-sm btn-primary">View Reports</a>
             </div>
-            
+
             <div class="report-card">
                 <h3>Performance Report</h3>
                 <p>Execution performance analysis</p>
@@ -307,10 +307,10 @@
             </div>
         </div>
     </div>
-    
+
     {% if execution_data.test_error or execution_data.warning %}
     <h2>Issues and Warnings</h2>
-    
+
     <div class="issues-section">
         {% if execution_data.test_error %}
         <div class="alert alert-danger">
@@ -318,7 +318,7 @@
             <p>{{ execution_data.test_error }}</p>
         </div>
         {% endif %}
-        
+
         {% if execution_data.warning %}
         <div class="alert alert-warning">
             <h4>Execution Warning:</h4>
@@ -327,9 +327,9 @@
         {% endif %}
     </div>
     {% endif %}
-    
+
     <h2>Export Options</h2>
-    
+
     <div class="export-section">
         <h3>Download Results</h3>
         <div class="export-options">
@@ -347,11 +347,16 @@
             </button>
         </div>
     </div>
-    
+
     <div class="form-actions" style="margin-top: 30px;">
-        <a href="{% url 'pybirdai:workflow_task' task_number=6 operation='compare' %}" class="btn btn-primary">Go to Compare</a>
-        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-success">Complete Workflow</a>
+        <!-- <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" name="mark_reviewed" class="btn btn-success">Mark as Reviewed</button>
+        </form>
+        <a href="{% url 'pybirdai:workflow_task' task_number=6 operation='compare' %}" class="btn btn-primary">Go to Compare</a> -->
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="operation-btn btn-secondary">Back to Dashboard</a>
     </div>
+
 </div>
 
 <style>
@@ -828,7 +833,7 @@ function exportResults(format) {
 function toggleDetails(cardId) {
     const detailsDiv = document.getElementById('details-' + cardId);
     const button = event.target.closest('button');
-    
+
     if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
         detailsDiv.style.display = 'block';
         button.innerHTML = '<i class="fas fa-info-circle"></i> Hide Details';

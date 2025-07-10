@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>View Combinations</h1>
-<a href="{% url 'pybirdai:review_filters' %}">Back to Review  Filters</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=4 operation='review' %}">Back to Review</a>
 
 {% if messages %}
 <ul class="messages">
@@ -89,4 +89,4 @@
         margin-top: 20px;
     }
 </style>
-{% endblock %} 
+{% endblock %}
