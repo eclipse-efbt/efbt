@@ -3960,6 +3960,7 @@ def automode_configure(request):
                     'config_files_source': form.cleaned_data['config_files_source'],
                     'config_files_github_url': form.cleaned_data.get('config_files_github_url', ''),
                     'when_to_stop': form.cleaned_data['when_to_stop'],
+                    'enable_lineage_tracking': form.cleaned_data.get('enable_lineage_tracking', True),
                 }
 
                 # Store GitHub token (temporarily, for execution)
@@ -4015,7 +4016,8 @@ def automode_configure(request):
                     'technical_export_github_url': config.technical_export_github_url if config else '',
                     'config_files_source': config.config_files_source if config else 'MANUAL',
                     'config_files_github_url': config.config_files_github_url if config else '',
-                    'when_to_stop': config.when_to_stop if config else 'RESOURCE_DOWNLOAD'
+                    'when_to_stop': config.when_to_stop if config else 'RESOURCE_DOWNLOAD',
+                    'enable_lineage_tracking': True
                 }
             except Exception:
                 # If database doesn't exist or model isn't available, use defaults
@@ -4025,7 +4027,8 @@ def automode_configure(request):
                     'technical_export_github_url': '',
                     'config_files_source': 'MANUAL',
                     'config_files_github_url': '',
-                    'when_to_stop': 'RESOURCE_DOWNLOAD'
+                    'when_to_stop': 'RESOURCE_DOWNLOAD',
+                    'enable_lineage_tracking': True
                 }
 
         return JsonResponse({
