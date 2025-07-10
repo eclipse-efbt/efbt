@@ -22,14 +22,36 @@
 {% endif %}
 
 <!-- Progress Bar -->
-<div class="progress-bar">
+<!-- <div class="progress-bar">
     <div class="progress-fill" style="width: {{ progress }}%;">
         {{ progress }}% Complete
     </div>
-</div>
+</div> -->
+
+
 
 <!-- Task Grid -->
 <div class="task-grid">
+
+
+    <div class="task-card">
+    <h4 style="margin-top: 20px;">Reset Session</h4>
+    </div>
+    <div class="task-card">
+        <button type="button" id="reset-session-partial-btn" class="btn operation-btn" style="flex: 1;" onclick="resetSessionPartial(); return false;">
+            Tasks 3-6
+        </button>
+    </div>
+    <div class="task-card">
+        <button type="button" id="reset-session-full-btn" class="btn operation-btn" style="flex: 1;" onclick="resetSessionFull(); return false;">
+            All Tasks
+        </button>
+    </div>
+    <div class="task-card">
+    <div id="reset-session-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
+    </div>
+
+    <!--  -->
     <div class="task-card">
         <h3>Task</h3>
     </div>
@@ -45,34 +67,52 @@
 
     {% if database_ready and task_grid %}
         {% for task in task_grid %}
-        <div class="task-card {% if workflow_session and forloop.counter == workflow_session.current_task %}active{% endif %}">
+        <div class="task-card">
             <h3>{{ forloop.counter }}. {{ task.task_name }}</h3>
         </div>
 
         <div class="task-card">
+            {% if forloop.counter == 1 %}
+            <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
+                {% csrf_token %}
+                <a id="database-setup-btn" class="operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
+                    Do
+                </a>
+            </form>
+            {% elif forloop.counter == 2 %}
+            <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
+                {% csrf_token %}
+                <a id="migration-btn" class="operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
+                    Do
+                </a>
+            </form>
+            {% else %}
             <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
-               class="operation-btn {{ task.operations.do.status }}">
+               class="operation-btn {{ task.operations.do.status }}" >
                 Do
-                {% if task.operations.do.status == 'completed' %}✓{% endif %}
-                {% if task.operations.do.status == 'running' %}🔄{% endif %}
-                {% if task.operations.do.status == 'failed' %}✗{% endif %}
-                {% if task.operations.do.status == 'paused' %}⏸️{% endif %}
             </a>
+            {% endif %}
         </div>
 
         <div class="task-card">
+            {% if forloop.counter < 3 %}
             <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
-               class="operation-btn {{ task.operations.review.status }}">
+               class="operation-btn invalidated">
                 Review
-                {% if task.operations.review.status == 'completed' %}✓{% endif %}
             </a>
+            {% else %}
+            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
+               class="operation-btn {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
+                Review
+            </a>
+            {% endif %}
         </div>
 
         <div class="task-card">
             <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='compare' %}"
-               class="operation-btn {{ task.operations.compare.status }}">
+                class="operation-btn invalidated">
+     <!--           class="operation-btn {{ task.operations.compare.status }}"> -->
                 Compare
-                {% if task.operations.compare.status == 'completed' %}✓{% endif %}
             </a>
         </div>
         {% endfor %}
@@ -92,15 +132,35 @@
         </div>
 
         <div class="task-card">
-            <span class="operation-btn pending">Do ⏳</span>
+            {% if forloop.counter == 1 %}
+            <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
+                {% csrf_token %}
+                <a type="button" id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
+                    Do
+                </a>
+            </form>
+            {% elif forloop.counter == 2 %}
+            <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
+                {% csrf_token %}
+                <a type="button" id="migration-btn" class="btn operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
+                    Do
+                </a>
+            </form>
+            {% else %}
+                <span class="operation-btn pending">Review</span>
+            {% endif %}
         </div>
 
         <div class="task-card">
-            <span class="operation-btn pending">Review ⏳</span>
+            {% if forloop.counter < 1 %}
+                <span class="operation-btn pending">Review</span>
+            {% endif %}
         </div>
 
         <div class="task-card">
-            <span class="operation-btn pending">Compare ⏳</span>
+            {% if forloop.counter < 1 %}
+                <span class="operation-btn pending">Compare</span>
+            {% endif %}
         </div>
         {% endfor %}
     {% endif %}
@@ -117,7 +177,7 @@
 
             <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
                 {% csrf_token %}
-                <button type="submit" id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;">
+                <button type="button" id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
                     Setup Database (Step 1)
                 </button>
             </form>
@@ -167,6 +227,17 @@
                     <li>Session: ⏳ Waiting for database</li>
                 {% endif %}
             </ul>
+
+            <h4 style="margin-top: 20px;">Reset Session</h4>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="button" id="reset-session-partial-btn" class="btn btn-warning" style="flex: 1;" onclick="resetSessionPartial(); return false;">
+                    Reset Tasks 3-6
+                </button>
+                <button type="button" id="reset-session-full-btn" class="btn btn-danger" style="flex: 1;" onclick="resetSessionFull(); return false;">
+                    Reset All Tasks
+                </button>
+            </div>
+            <div id="reset-session-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
         </div>
     </div>
 </div>
@@ -187,64 +258,110 @@
 
 {% block extra_js %}
 <script>
-// Database setup form AJAX handler
-document.addEventListener('DOMContentLoaded', function() {
-    const databaseSetupForm = document.getElementById('database-setup-form');
-    const databaseSetupBtn = document.getElementById('database-setup-btn');
-    const databaseSetupStatus = document.getElementById('database-setup-status');
+// Simple database setup starter function (available immediately)
+function startDatabaseSetup() {
+    console.log('startDatabaseSetup() called directly!');
 
-    if (databaseSetupForm && databaseSetupBtn && databaseSetupStatus) {
-        databaseSetupForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+    const btn = document.getElementById('database-setup-btn');
+    const statusDiv = document.getElementById('database-setup-status');
 
-            // Disable button and show loading
-            databaseSetupBtn.disabled = true;
-            databaseSetupBtn.textContent = 'Setting up database...';
-            databaseSetupStatus.style.display = 'block';
-            databaseSetupStatus.style.background = '#e3f2fd';
-            databaseSetupStatus.style.color = '#1976d2';
-            databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Running database setup (Tasks 1-2)...';
-
-            // Get form data
-            const formData = new FormData(databaseSetupForm);
-
-            // Make AJAX request
-            fetch('/pybirdai/workflow/database-setup/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.status === 'started') {
-                    databaseSetupStatus.style.background = '#e3f2fd';
-                    databaseSetupStatus.style.color = '#1976d2';
-                    databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Database setup started in background. Polling for status...';
-
-                    // Start polling for status
-                    pollDatabaseSetupStatus(databaseSetupStatus, databaseSetupBtn);
-                } else {
-                    databaseSetupStatus.style.background = '#f8d7da';
-                    databaseSetupStatus.style.color = '#721c24';
-                    databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Setup failed: ' + (data.message || 'Unknown error');
-
-                    databaseSetupBtn.disabled = false;
-                    databaseSetupBtn.textContent = 'Setup Database (Tasks 1-2)';
-                }
-            })
-            .catch(error => {
-                console.error('Database setup error:', error);
-                databaseSetupStatus.style.background = '#f8d7da';
-                databaseSetupStatus.style.color = '#721c24';
-                databaseSetupStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
-
-                databaseSetupBtn.disabled = false;
-                databaseSetupBtn.textContent = 'Setup Database (Tasks 1-2)';
-            });
-        });
+    if (!btn) {
+        console.error('Database setup button not found!');
+        alert('Error: Database setup button not found!');
+        return;
     }
+
+    if (!statusDiv) {
+        console.error('Database setup status div not found!');
+        alert('Error: Database setup status div not found!');
+        return;
+    }
+
+    console.log('Button found:', btn);
+    console.log('Status div found:', statusDiv);
+
+    // Get CSRF token
+    const databaseSetupForm = document.getElementById('database-setup-form');
+    let csrfToken = '';
+
+    if (databaseSetupForm) {
+        const csrfInput = databaseSetupForm.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfInput) {
+            csrfToken = csrfInput.value;
+            console.log('CSRF token found:', csrfToken.substring(0, 10) + '...');
+        } else {
+            console.error('CSRF input not found in form!');
+        }
+    } else {
+        console.error('Database setup form not found!');
+    }
+
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+
+    // Start the actual database setup
+    doDatabaseSetup(btn, statusDiv, csrfToken);
+}
+
+function doDatabaseSetup(btn, statusDiv, csrfToken) {
+    console.log('Starting actual database setup...');
+
+    // Update UI
+    btn.disabled = true;
+    // btn.textContent = 'Setting up database...';
+    statusDiv.style.display = 'block';
+    statusDiv.style.background = '#e3f2fd';
+    statusDiv.style.color = '#1976d2';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting database setup (Tasks 1-2)...';
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    console.log('Sending AJAX request to /pybirdai/workflow/database-setup/');
+
+    // Make AJAX request
+    fetch('/pybirdai/workflow/database-setup/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log('Database setup response received:', response.status, response.statusText);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Database setup response data:', data);
+        if (data.success && data.status === 'started') {
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Database setup started in background. Polling for status...';
+            pollDatabaseSetupStatus(statusDiv, btn);
+        } else {
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Failed to start: ' + (data.message || 'Unknown error');
+            btn.disabled = false;
+            btn.textContent = 'Setup Database (Step 1)';
+        }
+    })
+    .catch(error => {
+        console.error('Database setup error:', error);
+        statusDiv.style.background = '#f8d7da';
+        statusDiv.style.color = '#721c24';
+        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
+        btn.disabled = false;
+        btn.textContent = 'Setup Database (Step 1)';
+    });
+}
+
+// Database setup form AJAX handler (still needed for DOM ready handler)
+document.addEventListener('DOMContentLoaded', function() {
 
     // Automode form AJAX handler
     const automodeForm = document.getElementById('automode-form');
@@ -366,7 +483,6 @@ function doMigration(btn, statusDiv, csrfToken) {
 
     // Update UI
     btn.disabled = true;
-    btn.textContent = 'Running Migrations...';
     statusDiv.style.display = 'block';
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
@@ -403,7 +519,6 @@ function doMigration(btn, statusDiv, csrfToken) {
             statusDiv.style.color = '#721c24';
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Failed to start: ' + (data.message || 'Unknown error');
             btn.disabled = false;
-            btn.textContent = 'Run Migrations (Step 2)';
         }
     })
     .catch(error => {
@@ -412,7 +527,6 @@ function doMigration(btn, statusDiv, csrfToken) {
         statusDiv.style.color = '#721c24';
         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
         btn.disabled = false;
-        btn.textContent = 'Run Migrations (Step 2)';
     });
 }
 
@@ -455,7 +569,6 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                         statusDiv.style.color = '#856404';
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Database setup is taking longer than expected. Please check server logs.';
                         btn.disabled = false;
-                        btn.textContent = 'Setup Database (Tasks 1-2)';
                     }
                 } else if (status.completed) {
                     // Setup completed
@@ -515,7 +628,6 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Database setup failed: ' + (status.error || status.message || 'Unknown error');
 
                         btn.disabled = false;
-                        btn.textContent = 'Setup Database (Tasks 1-2)';
                     }
                 }
             } else {
@@ -525,7 +637,6 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking database setup status';
 
                 btn.disabled = false;
-                btn.textContent = 'Setup Database (Tasks 1-2)';
             }
         })
         .catch(error => {
@@ -548,7 +659,6 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking database setup status: ' + error.message;
 
                 btn.disabled = false;
-                btn.textContent = 'Setup Database (Tasks 1-2)';
             }
         }).catch(error => {
           console.error('Database setup status polling error:', error);
@@ -601,7 +711,6 @@ function pollMigrationStatus(statusDiv, btn) {
                         statusDiv.style.color = '#856404';
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Migration is taking longer than expected. Please check server logs.';
                         btn.disabled = false;
-                        btn.textContent = 'Run Migrations (Step 2)';
                     }
                 } else if (status.completed) {
                     // Migration completed
@@ -621,7 +730,6 @@ function pollMigrationStatus(statusDiv, btn) {
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Migration failed: ' + (status.error || status.message || 'Unknown error');
 
                         btn.disabled = false;
-                        btn.textContent = 'Run Migrations (Step 2)';
                     }
                 }
             } else {
@@ -631,7 +739,6 @@ function pollMigrationStatus(statusDiv, btn) {
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking migration status';
 
                 btn.disabled = false;
-                btn.textContent = 'Run Migrations (Step 2)';
             }
         })
         .catch(error => {
@@ -958,6 +1065,127 @@ function startCloneImport() {
 
         btn.disabled = false;
         btn.textContent = 'Clone';
+    });
+}
+
+// Reset session functions
+function resetSessionPartial() {
+    if (!confirm('Are you sure you want to reset tasks 3-6? This will clear all progress from Task 3 onwards while keeping the database setup (Tasks 1-2) intact.')) {
+        return;
+    }
+
+    doResetSession('partial');
+}
+
+function resetSessionFull() {
+    if (!confirm('Are you sure you want to reset the entire workflow session? This will clear ALL progress including database setup and return to the beginning.')) {
+        return;
+    }
+
+    doResetSession('full');
+}
+
+function doResetSession(type) {
+    const isPartial = type === 'partial';
+    const btnId = isPartial ? 'reset-session-partial-btn' : 'reset-session-full-btn';
+    const url = isPartial ? '/pybirdai/workflow/reset-session-partial/' : '/pybirdai/workflow/reset-session-full/';
+
+    const btn = document.getElementById(btnId);
+    const statusDiv = document.getElementById('reset-session-status');
+
+    if (!btn || !statusDiv) {
+        console.error('Reset session button or status div not found!');
+        alert('Error: UI elements not found!');
+        return;
+    }
+
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+
+    // Update UI
+    btn.disabled = true;
+    btn.textContent = `Resetting ${isPartial ? 'Tasks 3-6' : 'All Tasks'}...`;
+    statusDiv.style.display = 'block';
+    statusDiv.style.background = '#e3f2fd';
+    statusDiv.style.color = '#1976d2';
+    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Resetting ${isPartial ? 'tasks 3-6' : 'entire workflow session'}...`;
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Make AJAX request
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log('Reset session response received:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Reset session response data:', data);
+        if (data.success) {
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.color = '#155724';
+            let message = `<span style="display: inline-block; margin-right: 8px;">✅</span>${data.message}`;
+
+            if (data.details) {
+                const details = data.details;
+                let detailsText = '';
+                if (details.removed_markers && details.removed_markers.length > 0) {
+                    detailsText += `<br><small>Removed markers: ${details.removed_markers.join(', ')}</small>`;
+                }
+                if (details.removed_directories && details.removed_directories.length > 0) {
+                    detailsText += `<br><small>Cleaned directories: ${details.removed_directories.length} items</small>`;
+                }
+                if (details.deleted_executions) {
+                    detailsText += `<br><small>Deleted executions: ${details.deleted_executions}</small>`;
+                }
+                message += detailsText;
+            }
+
+            statusDiv.innerHTML = message;
+
+            // Re-enable button and refresh page after delay
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+                statusDiv.innerHTML += '<br><small>Refreshing page to reflect changes...</small>';
+
+                // Refresh page to show updated state
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }, 3000);
+        } else {
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Reset failed: ${data.message || data.error || 'Unknown error'}`;
+
+            btn.disabled = false;
+            btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+        }
+    })
+    .catch(error => {
+        console.error('Reset session error:', error);
+        statusDiv.style.background = '#f8d7da';
+        statusDiv.style.color = '#721c24';
+        statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
+
+        btn.disabled = false;
+        btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
     });
 }
 </script>

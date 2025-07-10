@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Mapping to Cubes</h1>
-<a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}">Back to Review</a>
 
 
 
@@ -161,28 +161,28 @@ function confirmDelete(mappingToCubeId) {
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = "{% url 'pybirdai:delete_mapping_to_cube' 0 %}".replace('0', mappingToCubeId);
-        
+
         // Add CSRF token
         var csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = 'csrfmiddlewaretoken';
         csrfInput.value = '{{ csrf_token }}';
         form.appendChild(csrfInput);
-        
+
         // Add mapping_id
         var mappingInput = document.createElement('input');
         mappingInput.type = 'hidden';
         mappingInput.name = 'mapping_id';
         mappingInput.value = document.getElementById('mapping_id_' + mappingToCubeId).value;
         form.appendChild(mappingInput);
-        
+
         // Add cube_mapping_id
         var cubeInput = document.createElement('input');
         cubeInput.type = 'hidden';
         cubeInput.name = 'cube_mapping_id';
         cubeInput.value = document.getElementById('cube_mapping_id_' + mappingToCubeId).value;
         form.appendChild(cubeInput);
-        
+
         document.body.appendChild(form);
         form.submit();
     }
@@ -195,34 +195,34 @@ function confirmDelete(mappingToCubeId) {
         overflow-x: auto;
         margin-bottom: 1em;
     }
-    
+
     table {
         border-collapse: collapse;
         width: 100%;
         min-width: 800px;
     }
-    
+
     th, td {
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left;
     }
-    
+
     th {
         background-color: #f2f2f2;
         position: sticky;
         top: 0;
     }
-    
+
     .pagination {
         margin-top: 20px;
     }
-    
+
     .filter-form {
         margin: 20px 0;
         width: 100%;
     }
-    
+
     .filter-container {
         display: flex;
         flex-wrap: wrap;  /* Allow wrapping */
@@ -232,14 +232,14 @@ function confirmDelete(mappingToCubeId) {
         background-color: #f8f8f8;
         border-radius: 4px;
     }
-    
+
     .filter-item {
         display: flex;
         flex-direction: column;
         gap: 5px;
         min-width: 200px;
     }
-    
+
     .filter-form select {
         padding: 8px;
         border: 1px solid #ddd;
