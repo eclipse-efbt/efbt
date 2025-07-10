@@ -21,8 +21,8 @@ class Context(object):
     '''
     # variables to configure the behaviour
 
-    enable_lineage = True
-    use_lineage_enhanced_orchestrator = True  # Set to False to use original orchestrator
+    # enable_lineage_tracking will be set dynamically from configuration
+    enable_lineage_tracking = True
 
     enrich_ldm_relationships = False
     use_codes = True
@@ -124,6 +124,23 @@ class Context(object):
     generate_etl = True
 
 
+    def _get_configured_lineage_tracking(self):
+        """Get the configured lineage tracking setting from temporary file."""
+        # First try to read from temporary configuration file
+        try:
+            import os
+            import json
+            # Use the same path as in views.py
+            temp_config_path = os.path.join('.', 'automode_config.json')
+            if os.path.exists(temp_config_path):
+                with open(temp_config_path, 'r') as f:
+                    config_data = json.load(f)
+                return config_data.get('enable_lineage_tracking', True)
+        except Exception:
+            # If temp file fails, default to True
+            pass
+        return True
+    
     def _get_configured_data_model_type(self):
         """Get the configured data model type from temporary file or AutomodeConfiguration."""
         # First try to read from temporary configuration file
@@ -166,6 +183,8 @@ class Context(object):
     def __init__(self):
         # Initialize ldm_or_il based on AutomodeConfiguration if available
         self._ldm_or_il = self._get_configured_data_model_type()
+        # Initialize enable_lineage_tracking from configuration
+        self.enable_lineage_tracking = self._get_configured_lineage_tracking()
 
         ldm_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         ldm_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
