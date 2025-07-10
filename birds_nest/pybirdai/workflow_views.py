@@ -3053,11 +3053,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
 
     # Show loading screen for the substep
     substep_display_names = {
-<<<<<<< HEAD
         # Task 31 substeps
-=======
-        # Task 3 substeps
->>>>>>> 98ef87df (>feat: finish most of the pages. last need would be to create a new)
         'delete_database': 'Database Deletion',
         'import_input_model': 'Input Model Import',
         'generate_templates': 'Report Templates Generation',
