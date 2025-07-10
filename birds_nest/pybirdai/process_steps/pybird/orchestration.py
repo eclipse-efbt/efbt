@@ -1577,7 +1577,7 @@ def create_orchestration():
 	"""
 	from pybirdai.context.context import Context
 	
-	if hasattr(Context, 'use_lineage_enhanced_orchestrator') and Context.use_lineage_enhanced_orchestrator:
+	if hasattr(Context, 'enable_lineage_tracking') and Context.enable_lineage_tracking:
 		print("Using lineage-enhanced orchestrator")
 		return OrchestrationWithLineage()
 	else:
