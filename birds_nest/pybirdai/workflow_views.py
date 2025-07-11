@@ -30,6 +30,9 @@ import subprocess
 from .workflow_model import WorkflowTaskExecution, WorkflowSession
 from .workflow_services import AutomodeConfigurationService
 from .forms import AutomodeConfigurationSessionForm
+from .forms import (
+    SMCubesCoreForm,
+)
 from .entry_points import (
     automode_database_setup,
     create_filters,
@@ -82,57 +85,61 @@ _in_memory_github_token = None
 
 # In-memory storage for migration status (not persisted to database or file)
 _migration_status = {
-    'running': False,
-    'completed': False,
-    'success': False,
-    'error': None,
-    'message': '',
-    'started_at': None,
-    'completed_at': None
+    "running": False,
+    "completed": False,
+    "success": False,
+    "error": None,
+    "message": "",
+    "started_at": None,
+    "completed_at": None,
 }
 
 # In-memory storage for database setup status (not persisted to database or file)
 _database_setup_status = {
-    'running': False,
-    'completed': False,
-    'success': False,
-    'error': None,
-    'message': '',
-    'started_at': None,
-    'completed_at': None,
-    'current_task': None,
-    'completed_tasks': []
+    "running": False,
+    "completed": False,
+    "success": False,
+    "error": None,
+    "message": "",
+    "started_at": None,
+    "completed_at": None,
+    "current_task": None,
+    "completed_tasks": [],
 }
 
 # In-memory storage for automode status (not persisted to database or file)
 _automode_status = {
-    'running': False,
-    'completed': False,
-    'success': False,
-    'error': None,
-    'message': '',
-    'started_at': None,
-    'completed_at': None,
-    'current_task': None,
-    'target_task': None,
-    'completed_tasks': [],
-    'task_errors': []
+    "running": False,
+    "completed": False,
+    "success": False,
+    "error": None,
+    "message": "",
+    "started_at": None,
+    "completed_at": None,
+    "current_task": None,
+    "target_task": None,
+    "completed_tasks": [],
+    "task_errors": [],
 }
+
 
 def _get_github_token():
     """Get GitHub token from in-memory storage or environment variable."""
     global _in_memory_github_token
-    return _in_memory_github_token or os.environ.get('GITHUB_TOKEN', '')
+    return _in_memory_github_token or os.environ.get("GITHUB_TOKEN", "")
+
 
 def _set_github_token(token):
     """Set GitHub token in in-memory storage."""
     global _in_memory_github_token
     _in_memory_github_token = token.strip() if token else None
 
+
 def _clear_github_token():
     """Clear GitHub token from in-memory storage."""
     global _in_memory_github_token
     _in_memory_github_token = None
+
 
 def _run_migrations_async():
     """Run migrations in background thread."""
@@ -177,59 +184,117 @@ def _run_migrations_async():
 
     except Exception as e:
         logger.error(f"Background migration process failed: {e}")
-        _migration_status.update({
-            'running': False,
-            'completed': True,
-            'success': False,
-            'error': str(e),
-            'message': 'Database migrations failed',
-            'completed_at': time.time()
-        })
+        _migration_status.update(
+            {
+                "running": False,
+                "completed": True,
+                "success": False,
+                "error": str(e),
+                "message": "Database migrations failed",
+                "completed_at": time.time(),
+            }
+        )
+
 
 def _reset_migration_status():
     """Reset migration status to initial state."""
     global _migration_status
-    _migration_status.update({
-        'running': False,
-        'completed': False,
-        'success': False,
-        'error': None,
-        'message': '',
-        'started_at': None,
-        'completed_at': None
-    })
+    _migration_status.update(
+        {
+            "running": False,
+            "completed": False,
+            "success": False,
+            "error": None,
+            "message": "",
+            "started_at": None,
+            "completed_at": None,
+        }
+    )
+
 
 def _reset_database_setup_status():
     """Reset database setup status to initial state."""
     global _database_setup_status
-    _database_setup_status.update({
-        'running': False,
-        'completed': False,
-        'success': False,
-        'error': None,
-        'message': '',
-        'started_at': None,
-        'completed_at': None,
-        'current_task': None,
-        'completed_tasks': []
-    })
+    _database_setup_status.update(
+        {
+            "running": False,
+            "completed": False,
+            "success": False,
+            "error": None,
+            "message": "",
+            "started_at": None,
+            "completed_at": None,
+            "current_task": None,
+            "completed_tasks": [],
+        }
+    )
+
 
 def _reset_automode_status():
-    """Reset automode status to initial state."""
+    """Reset automode status to initial state"""
     global _automode_status
-    _automode_status.update({
-        'running': False,
-        'completed': False,
-        'success': False,
-        'error': None,
-        'message': '',
-        'started_at': None,
-        'completed_at': None,
-        'current_task': None,
-        'target_task': None,
-        'completed_tasks': [],
-        'task_errors': []
-    })
+    _automode_status.update(
+        {
+            "running": False,
+            "completed": False,
+            "success": False,
+            "error": None,
+            "message": "Ready to start automode",
+            "started_at": None,
+            "completed_at": None,
+            "current_task": 1,
+            "completed_tasks": [],
+        }
+    )
+
+
+def _load_task1_completion_from_marker():
+    """Load Task 1 completion state from marker file after database restart"""
+    try:
+        import os
+        import json
+        from django.conf import settings
+        from django.utils import timezone
+        from .bird_meta_data_model import WorkflowTaskExecution
+
+        base_dir = getattr(
+            settings,
+            "BASE_DIR",
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        )
+        task1_marker_path = os.path.join(base_dir, ".task1_completed_marker")
+
+        if os.path.exists(task1_marker_path):
+            with open(task1_marker_path, "r") as f:
+                completion_data = json.load(f)
+
+            # Create or update Task 1 execution record
+            task1_execution, created = WorkflowTaskExecution.objects.get_or_create(
+                task_number=1,
+                operation_type='do',
+                defaults={
+                    'status': 'completed',
+                    'started_at': timezone.now(),
+                    'completed_at': completion_data.get('completed_at', timezone.now()),
+                    'execution_data': completion_data.get('execution_data', {})
+                }
+            )
+            if not created and task1_execution.status != 'completed':
+                task1_execution.status = 'completed'
+                task1_execution.completed_at = completion_data.get('completed_at', timezone.now())
+                task1_execution.execution_data = completion_data.get('execution_data', {})
+                task1_execution.save()
+
+            # Clean up marker file
+            os.remove(task1_marker_path)
+            logger.info("Task 1 completion state loaded from marker file and saved to database")
+            return True
+
+    except Exception as e:
+        logger.warning(f"Could not load Task 1 completion from marker: {e}")
+
+    return False
+
 
 def _run_database_setup_async():
     """Run database setup (Tasks 1-2) in background thread."""
@@ -269,17 +334,21 @@ def _run_database_setup_async():
             os.remove(marker_path)
 
         if os.path.exists(config_path):
-            with open(config_path, 'r') as f:
+            with open(config_path, "r") as f:
                 config_data = json.load(f)
 
         # Create config object
         config = AutomodeConfiguration(
-            data_model_type=config_data.get('data_model_type', 'ELDM'),
-            technical_export_source=config_data.get('technical_export_source', 'BIRD_WEBSITE'),
-            technical_export_github_url=config_data.get('technical_export_github_url', ''),
-            config_files_source=config_data.get('config_files_source', 'MANUAL'),
-            config_files_github_url=config_data.get('config_files_github_url', ''),
-            when_to_stop=config_data.get('when_to_stop', 'RESOURCE_DOWNLOAD')
+            data_model_type=config_data.get("data_model_type", "ELDM"),
+            technical_export_source=config_data.get(
+                "technical_export_source", "BIRD_WEBSITE"
+            ),
+            technical_export_github_url=config_data.get(
+                "technical_export_github_url", ""
+            ),
+            config_files_source=config_data.get("config_files_source", "MANUAL"),
+            config_files_github_url=config_data.get("config_files_github_url", ""),
+            when_to_stop=config_data.get("when_to_stop", "RESOURCE_DOWNLOAD"),
         )
 
         service = AutomodeConfigurationService()
@@ -290,7 +359,7 @@ def _run_database_setup_async():
         task1_results = service.fetch_files_from_source(
             config=config,
             github_token=github_token,
-            force_refresh=False  # Changed to False to preserve existing files
+            force_refresh=False,  # Changed to False to preserve existing files
         )
 
         _database_setup_status['completed_tasks'].append('Task 1: Resource Download')
@@ -309,7 +378,9 @@ def _run_database_setup_async():
         db_results = app_config.run_automode_database_setup()
 
         # Additional cleanup - remove results admin.py if it exists to prevent future duplicates
-        results_admin_path = os.path.join(base_dir, 'results', 'database_configuration_files', 'admin.py')
+        results_admin_path = os.path.join(
+            base_dir, "results", "database_configuration_files", "admin.py"
+        )
         try:
             if os.path.exists(results_admin_path):
                 os.remove(results_admin_path)
@@ -318,7 +389,9 @@ def _run_database_setup_async():
             logger.warning(f"Could not clean up results admin file {results_admin_path}: {e}")
 
         # Check if restart is required (check both field names for compatibility)
-        if db_results.get('requires_restart') or db_results.get('server_restart_required'):
+        if db_results.get("requires_restart") or db_results.get(
+            "server_restart_required"
+        ):
             # First, update status to show completion BEFORE triggering restart
             _database_setup_status.update({
                 'running': False,
@@ -346,18 +419,25 @@ def _run_database_setup_async():
 
 
             # Create marker file FIRST (before restart) so it exists when page refreshes
-            marker_path = os.path.join(base_dir, '.migration_ready_marker')
-            with open(marker_path, 'w') as f:
-                f.write('ready')
+            marker_path = os.path.join(base_dir, ".migration_ready_marker")
+            with open(marker_path, "w") as f:
+                f.write("ready")
             logger.info(f"Created migration ready marker at: {marker_path}")
 
             # Now trigger the file operations that will cause Django restart
-            logger.info("Now triggering post-setup operations that will cause Django restart...")
+            logger.info(
+                "Now triggering post-setup operations that will cause Django restart..."
+            )
             try:
-                from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-                app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+                from .entry_points.automode_database_setup import (
+                    RunAutomodeDatabaseSetup,
+                )
+
+                app_config = RunAutomodeDatabaseSetup("pybirdai", "birds_nest")
                 app_config.run_post_setup_operations()
-                logger.info("Post-setup operations completed - Django should restart now.")
+                logger.info(
+                    "Post-setup operations completed - Django should restart now."
+                )
             except Exception as e:
                 logger.error(f"Post-setup operations failed: {e}")
                 # Continue anyway - the main setup was successful
@@ -384,14 +464,17 @@ def _run_database_setup_async():
 
     except Exception as e:
         logger.error(f"Background database setup process failed: {e}")
-        _database_setup_status.update({
-            'running': False,
-            'completed': True,
-            'success': False,
-            'error': str(e),
-            'message': f'Database setup failed at Task {_database_setup_status.get("current_task", "?")}',
-            'completed_at': time.time()
-        })
+        _database_setup_status.update(
+            {
+                "running": False,
+                "completed": True,
+                "success": False,
+                "error": str(e),
+                "message": f"Database setup failed at Task {_database_setup_status.get('current_task', '?')}",
+                "completed_at": time.time(),
+            }
+        )
+
 
 def _run_automode_async(target_task, session_data):
     """Run automode (Tasks 3-6) in background thread."""
@@ -422,7 +505,7 @@ def _run_automode_async(target_task, session_data):
 
         # Create a mock request object
         class MockRequest:
-            def __init__(self, method='POST', post_data=None):
+            def __init__(self, method="POST", post_data=None):
                 self.method = method
                 self.POST = post_data or {}
                 self.session = session_data
@@ -444,20 +527,24 @@ def _run_automode_async(target_task, session_data):
 
                 try:
                     from django.db import connection
+
                     with connection.cursor() as cursor:
                         cursor.execute("SELECT 1")  # Test database connection
 
                     # Database is available, create records
                     task_execution, _ = WorkflowTaskExecution.objects.get_or_create(
-                        task_number=task_num,
-                        operation_type='do'
+                        task_number=task_num, operation_type="do"
                     )
 
                     session_id = session_data.get('workflow_session_id')
                     if session_id:
-                        workflow_session = WorkflowSession.objects.filter(session_id=session_id).first()
+                        workflow_session = WorkflowSession.objects.filter(
+                            session_id=session_id
+                        ).first()
                 except Exception as db_error:
-                    logger.warning(f"Database not available for task {task_num}: {db_error}")
+                    logger.warning(
+                        f"Database not available for task {task_num}: {db_error}"
+                    )
                     # Continue without database records
 
                 # Get the appropriate task handler
@@ -473,37 +560,41 @@ def _run_automode_async(target_task, session_data):
                 result = handler(mock_request, 'do', task_execution, workflow_session)
 
                 # Check if it's a JsonResponse indicating success
-                if hasattr(result, 'content'):
+                if hasattr(result, "content"):
                     import json
+
                     response_data = json.loads(result.content)
-                    if response_data.get('success'):
-                        _automode_status['completed_tasks'].append(f'Task {task_num}')
+                    if response_data.get("success"):
+                        _automode_status["completed_tasks"].append(f"Task {task_num}")
                         logger.info(f"Task {task_num} completed successfully")
                     else:
-                        raise Exception(response_data.get('message', f'Task {task_num} failed'))
+                        raise Exception(
+                            response_data.get("message", f"Task {task_num} failed")
+                        )
                 else:
                     # If no JsonResponse, assume success
-                    _automode_status['completed_tasks'].append(f'Task {task_num}')
+                    _automode_status["completed_tasks"].append(f"Task {task_num}")
                     logger.info(f"Task {task_num} completed")
 
             except Exception as task_error:
                 logger.error(f"Task {task_num} failed: {task_error}")
-                _automode_status['task_errors'].append({
-                    'task': task_num,
-                    'error': str(task_error)
-                })
+                _automode_status["task_errors"].append(
+                    {"task": task_num, "error": str(task_error)}
+                )
                 # Continue with next task instead of stopping
 
         # Update final status
-        if _automode_status['task_errors']:
-            _automode_status.update({
-                'running': False,
-                'completed': True,
-                'success': False,
-                'error': f"Some tasks failed: {len(_automode_status['task_errors'])} errors",
-                'message': f"Automode completed with errors. Successfully completed: {', '.join(_automode_status['completed_tasks'])}",
-                'completed_at': time.time()
-            })
+        if _automode_status["task_errors"]:
+            _automode_status.update(
+                {
+                    "running": False,
+                    "completed": True,
+                    "success": False,
+                    "error": f"Some tasks failed: {len(_automode_status['task_errors'])} errors",
+                    "message": f"Automode completed with errors. Successfully completed: {', '.join(_automode_status['completed_tasks'])}",
+                    "completed_at": time.time(),
+                }
+            )
         else:
             _automode_status.update({
                 'running': False,
@@ -518,14 +609,16 @@ def _run_automode_async(target_task, session_data):
 
     except Exception as e:
         logger.error(f"Background automode process failed: {e}")
-        _automode_status.update({
-            'running': False,
-            'completed': True,
-            'success': False,
-            'error': str(e),
-            'message': f'Automode failed at Task {_automode_status.get("current_task", "?")}',
-            'completed_at': time.time()
-        })
+        _automode_status.update(
+            {
+                "running": False,
+                "completed": True,
+                "success": False,
+                "error": str(e),
+                "message": f"Automode failed at Task {_automode_status.get('current_task', '?')}",
+                "completed_at": time.time(),
+            }
+        )
 
 
 def workflow_dashboard(request):
@@ -558,11 +651,15 @@ def workflow_dashboard(request):
         # Try to access session data only if database is available
         with connection.cursor() as cursor:
             # Check if django_session table exists
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='django_session';")
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='django_session';"
+            )
             session_table_exists = cursor.fetchone() is not None
 
             # Check if WorkflowSession table exists
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='pybirdai_workflowsession';")
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='pybirdai_workflowsession';"
+            )
             workflow_table_exists = cursor.fetchone() is not None
 
         if session_table_exists and workflow_table_exists:
@@ -571,7 +668,7 @@ def workflow_dashboard(request):
 
             if not session_id:
                 session_id = str(uuid.uuid4())
-                request.session['workflow_session_id'] = session_id
+                request.session["workflow_session_id"] = session_id
                 workflow_session = WorkflowSession.objects.create(session_id=session_id)
             else:
                 workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
@@ -582,21 +679,21 @@ def workflow_dashboard(request):
 
     # Load configuration from temporary file
     config = {}
-    github_token = ''
+    github_token = ""
     migration_ready = False
     try:
         base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         config_path = os.path.join(base_dir, 'automode_config.json')
 
         if os.path.exists(config_path):
-            with open(config_path, 'r') as f:
+            with open(config_path, "r") as f:
                 config = json.load(f)
                 # Remove github_token from config if it exists (should not be persisted)
                 github_token_existed = config.pop('github_token', None) is not None
 
                 # If we removed a github_token, save the cleaned config back to file
                 if github_token_existed:
-                    with open(config_path, 'w') as f:
+                    with open(config_path, "w") as f:
                         json.dump(config, f, indent=2)
                     logger.info("Removed GitHub token from persistent config file for security")
 
@@ -604,7 +701,7 @@ def workflow_dashboard(request):
         github_token = _get_github_token()
 
         # Check if we're waiting for step 2 migrations
-        marker_path = os.path.join(base_dir, '.migration_ready_marker')
+        marker_path = os.path.join(base_dir, ".migration_ready_marker")
         migration_ready = os.path.exists(marker_path)
 
         setup_marker_path = os.path.join(base_dir, '.setup_ready_marker')
@@ -614,13 +711,13 @@ def workflow_dashboard(request):
         logger.error(f"Error loading configuration: {e}")
         # Use defaults if config cannot be loaded
         config = {
-            'data_model_type': 'ELDM',
-            'clone_mode': 'false',
-            'technical_export_source': 'BIRD_WEBSITE',
-            'technical_export_github_url': 'https://github.com/regcommunity/FreeBIRD',
-            'config_files_source': 'MANUAL',
-            'config_files_github_url': '',
-            'when_to_stop': 'RESOURCE_DOWNLOAD',
+            "data_model_type": "ELDM",
+            "clone_mode": "false",
+            "technical_export_source": "BIRD_WEBSITE",
+            "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
+            "config_files_source": "MANUAL",
+            "config_files_github_url": "",
+            "when_to_stop": "RESOURCE_DOWNLOAD",
         }
 
     # Create context - handle missing database gracefully
@@ -633,12 +730,17 @@ def workflow_dashboard(request):
     }
 
     if database_ready and workflow_session:
+        # Load Task 1 completion state from marker file if it exists
+        _load_task1_completion_from_marker()
+
         # Only include database-dependent data if database is available
-        context.update({
-            'workflow_session': workflow_session,
-            'task_grid': workflow_session.get_task_status_grid(),
-            'progress': workflow_session.get_progress_percentage(),
-        })
+        context.update(
+            {
+                "workflow_session": workflow_session,
+                "task_grid": workflow_session.get_task_status_grid(),
+                "progress": workflow_session.get_progress_percentage(),
+            }
+        )
     else:
         # Provide default data when no database is available
         context.update({
@@ -663,7 +765,7 @@ def workflow_task_router(request, task_number, operation):
         return redirect('pybirdai:workflow_dashboard')
 
     # Get or create task execution record
-    session_id = request.session.get('workflow_session_id')
+    session_id = request.session.get("workflow_session_id")
     if not session_id:
         return redirect('pybirdai:workflow_dashboard')
 
@@ -672,11 +774,11 @@ def workflow_task_router(request, task_number, operation):
     task_execution, created = WorkflowTaskExecution.objects.get_or_create(
         task_number=task_number,
         operation_type=operation,
-        defaults={'status': 'pending'}
+        defaults={"status": "pending"},
     )
 
     # Check if task can be executed
-    if operation == 'do' and not task_execution.can_execute():
+    if operation == "do" and not task_execution.can_execute():
         messages.error(request, "Previous tasks must be completed first")
         return redirect('pybirdai:workflow_dashboard')
 
@@ -695,7 +797,7 @@ def workflow_task_router(request, task_number, operation):
         return handler(request, operation, task_execution, workflow_session)
     else:
         messages.error(request, "Task handler not implemented")
-        return redirect('pybirdai:workflow_dashboard')
+        return redirect("pybirdai:workflow_dashboard")
 
 
 def task1_resource_download(request, operation, task_execution, workflow_session):
@@ -711,7 +813,7 @@ def task1_resource_download(request, operation, task_execution, workflow_session
                 workflow_session.save()
 
                 # Start task execution
-                task_execution.status = 'running'
+                task_execution.status = "running"
                 task_execution.started_at = timezone.now()
                 task_execution.save()
 
@@ -721,26 +823,30 @@ def task1_resource_download(request, operation, task_execution, workflow_session
 
                     # Create a temporary AutomodeConfiguration object (not saved to DB)
                     config = AutomodeConfiguration(
-                        data_model_type=config_data.get('data_model_type', 'ELDM'),
-                        technical_export_source=config_data.get('technical_export_source', 'BIRD_WEBSITE'),
-                        technical_export_github_url=config_data.get('technical_export_github_url', ''),
-                        config_files_source=config_data.get('config_files_source', 'MANUAL'),
-                        config_files_github_url=config_data.get('config_files_github_url', ''),
-                        when_to_stop=config_data.get('when_to_stop', 'RESOURCE_DOWNLOAD')
+                        data_model_type=config_data.get("eldm_or_eil", "ELDM"),
+                        technical_export_source=config_data.get(
+                            "technical_export_source", "BIRD_WEBSITE"
+                        ),
+                        technical_export_github_url="",  # Not used in ResourceDownloadForm
+                        config_files_source=config_data.get(
+                            "configuration_source", "MANUAL"
+                        ),
+                        config_files_github_url=config_data.get(
+                            "configuration_github_url", ""
+                        ),
+                        when_to_stop="RESOURCE_DOWNLOAD",  # Fixed for Task 1
                     )
 
                     service = AutomodeConfigurationService()
                     # Get GitHub token from in-memory storage
                     github_token = _get_github_token()
                     results = service.fetch_files_from_source(
-                        config=config,
-                        github_token=github_token,
-                        force_refresh=False
+                        config=config, github_token=github_token, force_refresh=False
                     )
 
                     # Store results
                     task_execution.execution_data = results
-                    task_execution.status = 'completed'
+                    task_execution.status = "completed"
                     task_execution.completed_at = timezone.now()
                     task_execution.save()
 
@@ -749,7 +855,7 @@ def task1_resource_download(request, operation, task_execution, workflow_session
 
                 except Exception as e:
                     logger.error(f"Resource download failed: {e}")
-                    task_execution.status = 'failed'
+                    task_execution.status = "failed"
                     task_execution.error_message = str(e)
                     task_execution.save()
                     messages.error(request, f"Resource download failed: {e}")
@@ -772,10 +878,14 @@ def task1_resource_download(request, operation, task_execution, workflow_session
 
     elif operation == 'compare':
         # Compare with previous versions
-        return render(request, 'pybirdai/workflow/task1/compare.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-        })
+        return render(
+            request,
+            "pybirdai/workflow/task1/compare.html",
+            {
+                "task_execution": task_execution,
+                "workflow_session": workflow_session,
+            },
+        )
 
 
 def task2_database_creation(request, operation, task_execution, workflow_session):
@@ -787,7 +897,7 @@ def task2_database_creation(request, operation, task_execution, workflow_session
 
             if action == 'start':
                 # Start database creation
-                task_execution.status = 'running'
+                task_execution.status = "running"
                 task_execution.started_at = timezone.now()
                 task_execution.save()
 
@@ -801,14 +911,14 @@ def task2_database_creation(request, operation, task_execution, workflow_session
 
                     # Store results and mark as paused (waiting for restart)
                     task_execution.execution_data = results
-                    task_execution.status = 'paused'
+                    task_execution.status = "paused"
                     task_execution.save()
 
                     messages.info(request, "Database models created. Please restart the server to apply migrations.")
 
                 except Exception as e:
                     logger.error(f"Database creation failed: {e}")
-                    task_execution.status = 'failed'
+                    task_execution.status = "failed"
                     task_execution.error_message = str(e)
                     task_execution.save()
                     messages.error(request, f"Database creation failed: {e}")
@@ -816,8 +926,11 @@ def task2_database_creation(request, operation, task_execution, workflow_session
             elif action == 'continue':
                 # Continue after restart
                 try:
-                    from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-                    app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+                    from .entry_points.automode_database_setup import (
+                        RunAutomodeDatabaseSetup,
+                    )
+
+                    app_config = RunAutomodeDatabaseSetup("pybirdai", "birds_nest")
                     app_config.run_post_setup_operations()
 
                     task_execution.status = 'completed'
@@ -829,7 +942,7 @@ def task2_database_creation(request, operation, task_execution, workflow_session
 
                 except Exception as e:
                     logger.error(f"Post-restart operations failed: {e}")
-                    task_execution.status = 'failed'
+                    task_execution.status = "failed"
                     task_execution.error_message = str(e)
                     task_execution.save()
                     messages.error(request, f"Post-restart operations failed: {e}")
@@ -861,7 +974,7 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
             is_ajax = hasattr(request, 'headers') and request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
             # Start SMCubes core creation
-            task_execution.status = 'running task3_smcubes_core'
+            task_execution.status = "running task3_smcubes_core"
             task_execution.started_at = timezone.now()
             task_execution.save()
 
@@ -875,13 +988,13 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 
                 execution_data = {
-                    'database_deleted': False,
-                    'hierarchies_imported': False,
-                    'hierarchy_analysis_imported': False,
-                    'semantic_integrations_processed': False,
-                    'input_model_imported': False,
-                    'report_templates_created': False,
-                    'steps_completed': []
+                    "database_deleted": False,
+                    "hierarchies_imported": False,
+                    "hierarchy_analysis_imported": False,
+                    "semantic_integrations_processed": False,
+                    "input_model_imported": False,
+                    "report_templates_created": False,
+                    "steps_completed": [],
                 }
 
                 # Execute subtasks based on selections or run all by default
@@ -895,9 +1008,9 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                 ])
 
                 # Delete database if requested (should run first)
-                if request.POST.get('delete_database') or run_all:
+                if form_data.get("delete_database") or run_all:
                     logger.info("Deleting existing database...")
-                    app_config = RunDeleteBirdMetadataDatabase('pybirdai', 'birds_nest')
+                    app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
                     app_config.run_delete_bird_metadata_database()
                     execution_data['database_deleted'] = True
                     execution_data['steps_completed'].append('Database deletion')
@@ -905,27 +1018,27 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                  # Import input model using ready() method (creates cubes and structures)
                 if request.POST.get('import_input_model') or run_all:
                     logger.info("Importing input model...")
-                    app_config = RunImportInputModelFromSQLDev('pybirdai', 'birds_nest')
+                    app_config = RunImportInputModelFromSQLDev("pybirdai", "birds_nest")
                     app_config.ready()  # Call ready() method since no static method exists
                     execution_data['input_model_imported'] = True
                     execution_data['steps_completed'].append('Input model import (cubes creation)')
 
                 # Import report templates
-                if request.POST.get('generate_templates') or run_all:
+                if form_data.get("generate_templates") or run_all:
                     logger.info("Importing report templates from website...")
                     RunImportReportTemplatesFromWebsite.run_import()
                     execution_data['report_templates_created'] = True
                     execution_data['steps_completed'].append('Report templates import')
 
                 # Import hierarchies from website
-                if request.POST.get('import_hierarchy_analysis') or run_all:
+                if form_data.get("import_hierarchy_analysis") or run_all:
                     logger.info("Importing hierarchies from website...")
                     RunImportHierarchiesFromWebsite.import_hierarchies()
                     execution_data['hierarchy_analysis_imported'] = True
                     execution_data['steps_completed'].append('Hierarchy analysis import')
 
                 # Import semantic integrations
-                if request.POST.get('process_semantic') or run_all:
+                if form_data.get("process_semantic") or run_all:
                     logger.info("Importing semantic integrations from website...")
                     RunImportSemanticIntegrationsFromWebsite.import_mappings_from_website()
                     execution_data['semantic_integrations_processed'] = True
@@ -935,7 +1048,7 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
 
                 # Store results
                 task_execution.execution_data = execution_data
-                task_execution.status = 'completed'
+                task_execution.status = "completed"
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
 
@@ -951,15 +1064,17 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                     })
 
                 # Only use messages for real requests, not automode MockRequest
-                if hasattr(request, '_messages'):
+                if hasattr(request, "_messages"):
                     messages.success(request, success_message)
-                    return redirect('pybirdai:workflow_task', task_number=3, operation='review')
+                    return redirect(
+                        "pybirdai:workflow_task", task_number=3, operation="review"
+                    )
                 # For automode, just return None (no redirect needed)
 
             except Exception as e:
                 traceback.print_exc()
                 logger.error(f"SMCubes core creation failed: {e}")
-                task_execution.status = 'failed'
+                task_execution.status = "failed"
                 task_execution.error_message = str(e)
                 task_execution.save()
 
@@ -973,11 +1088,19 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                     messages.error(request, f"SMCubes core creation failed: {e}")
 
         # Only render template for real requests, not automode MockRequest
-        if hasattr(request, '_messages'):
-            return render(request, 'pybirdai/workflow/task3/do.html', {
-                'task_execution': task_execution,
-                'workflow_session': workflow_session,
-            })
+        if hasattr(request, "_messages"):
+            # Create form instance for GET requests
+            if request.method == "GET":
+                form = SMCubesCoreForm()
+            return render(
+                request,
+                "pybirdai/workflow/task3/do.html",
+                {
+                    "form": form if request.method == "GET" else SMCubesCoreForm(),
+                    "task_execution": task_execution,
+                    "workflow_session": workflow_session,
+                },
+            )
         else:
             # For automode, return None (no template rendering needed)
             return None
@@ -995,21 +1118,21 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
     elif operation == 'compare':
         # Generate comparison data
         comparison_data = {
-            'hierarchies_added': 12,
-            'hierarchies_modified': 5,
-            'hierarchies_removed': 2,
-            'semantic_added': 25,
-            'semantic_modified': 10,
-            'semantic_removed': 3,
-            'cubes_added': 8,
-            'cubes_modified': 4,
-            'cubes_removed': 1,
-            'rules_affected': 45,
-            'code_files_affected': 23,
-            'tests_affected': 67,
-            'new_validations': 15,
-            'coverage_change': '+5%',
-            'potential_issues': 3,
+            "hierarchies_added": 12,
+            "hierarchies_modified": 5,
+            "hierarchies_removed": 2,
+            "semantic_added": 25,
+            "semantic_modified": 10,
+            "semantic_removed": 3,
+            "cubes_added": 8,
+            "cubes_modified": 4,
+            "cubes_removed": 1,
+            "rules_affected": 45,
+            "code_files_affected": 23,
+            "tests_affected": 67,
+            "new_validations": 15,
+            "coverage_change": "+5%",
+            "potential_issues": 3,
         }
 
         if request.method == 'POST' and 'approve_changes' in request.POST:
@@ -1033,7 +1156,7 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
             is_ajax = hasattr(request, 'headers') and request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
             # Start transformation rules creation
-            task_execution.status = 'running'
+            task_execution.status = "running"
             task_execution.started_at = timezone.now()
             task_execution.save()
 
@@ -1043,10 +1166,10 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
                 from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
 
                 execution_data = {
-                    'current_step': 'filters',
-                    'filters_created': False,
-                    'joins_metadata_created': False,
-                    'steps_completed': []
+                    "current_step": "filters",
+                    "filters_created": False,
+                    "joins_metadata_created": False,
+                    "steps_completed": [],
                 }
 
                 # Execute all steps by default or based on selections
@@ -1056,9 +1179,9 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
                 ])
 
                 # Create filters
-                if request.POST.get('generate_all_filters') or run_all:
+                if form_data.get("generate_all_filters") or run_all:
                     logger.info("Creating filters...")
-                    execution_data['current_step'] = 'filters'
+                    execution_data["current_step"] = "filters"
                     RunCreateFilters.run_create_filters()
                     execution_data['filters_created'] = True
                     execution_data['steps_completed'].append('Filters creation')
@@ -1066,7 +1189,7 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
                 # Create join metadata
                 if request.POST.get('create_joins_metadata') or run_all:
                     logger.info("Creating joins metadata...")
-                    execution_data['current_step'] = 'joins_metadata'
+                    execution_data["current_step"] = "joins_metadata"
                     RunCreateJoinsMetadata.run_create_joins_meta_data()  # Correct method name
                     execution_data['joins_metadata_created'] = True
                     execution_data['steps_completed'].append('Joins metadata creation')
@@ -1076,7 +1199,7 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
 
                 # Store results
                 task_execution.execution_data = execution_data
-                task_execution.status = 'completed'
+                task_execution.status = "completed"
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
 
@@ -1097,7 +1220,7 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
 
             except Exception as e:
                 logger.error(f"Transformation rules creation failed: {e}")
-                task_execution.status = 'failed'
+                task_execution.status = "failed"
                 task_execution.error_message = str(e)
                 task_execution.save()
 
@@ -1141,7 +1264,7 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
             is_ajax = hasattr(request, 'headers') and request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
             # Start Python code generation
-            task_execution.status = 'running'
+            task_execution.status = "running"
             task_execution.started_at = timezone.now()
             task_execution.save()
 
@@ -1172,12 +1295,37 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
                     execution_data['filter_code_generated'] = True
                     execution_data['steps_completed'].append('Executable filter code generation')
 
+                execution_data = {
+                    "current_phase": "filters",
+                    "filter_code_generated": False,
+                    "join_code_generated": False,
+                    "transformation_code_generated": False,
+                    "steps_completed": [],
+                }
+
+                # Execute Python code generation steps
+                run_all = not any(
+                    [
+                        request.POST.get("generate_filter_code"),
+                        request.POST.get("generate_join_code"),
+                    ]
+                )
+
+                # Generate executable filter code
+                if request.POST.get("generate_filter_code") or run_all:
+                    logger.info("Generating executable filter Python code...")
+                    execution_data["current_phase"] = "filters"
+                    RunCreateExecutableFilters.run_create_executable_filters()
+                    execution_data["filter_code_generated"] = True
+                    execution_data["steps_completed"].append(
+                        "Executable filter code generation"
+                    )
 
                 # Note: Join and transformation code generation would use different entry points
                 # For now, marking as completed to indicate the workflow step is done
-                if request.POST.get('generate_join_code') or run_all:
+                if request.POST.get("generate_join_code") or run_all:
                     logger.info("Join code generation (using filter infrastructure)...")
-                    execution_data['current_phase'] = 'joins'
+                    execution_data["current_phase"] = "joins"
                     RunCreateExecutableJoins.create_python_joins()  # Correct method name
                     execution_data['join_code_generated'] = True
                     execution_data['steps_completed'].append('Join code infrastructure ready')
@@ -1188,7 +1336,7 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
 
                 # Store results
                 task_execution.execution_data = execution_data
-                task_execution.status = 'completed'
+                task_execution.status = "completed"
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
 
@@ -1209,7 +1357,7 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
 
             except Exception as e:
                 logger.error(f"Python code generation failed: {e}")
-                task_execution.status = 'failed'
+                task_execution.status = "failed"
                 task_execution.error_message = str(e)
                 task_execution.save()
 
@@ -1304,7 +1452,7 @@ def task6_full_execution(request, operation, task_execution, workflow_session):
 
                 # Store results
                 task_execution.execution_data = execution_data
-                task_execution.status = 'completed'
+                task_execution.status = "completed"
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
 
@@ -1398,7 +1546,7 @@ def workflow_automode(request):
         })
 
     # Check if automode was recently completed
-    if _automode_status['completed']:
+    if _automode_status["completed"]:
         # Reset status for new run
         _reset_automode_status()
 
@@ -1415,13 +1563,18 @@ def workflow_automode(request):
     # Check if database is available (required for automode tasks 3-6)
     try:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='pybirdai_workflowsession';")
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='pybirdai_workflowsession';"
+            )
             if not cursor.fetchone():
-                return JsonResponse({
-                    'success': False,
-                    'message': 'Database not available. Please run "Setup Database (Tasks 1-2)" first.',
-                    'status': 'database_missing'
-                }, status=400)
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": 'Database not available. Please run "Setup Database (Tasks 1-2)" first.',
+                        "status": "database_missing",
+                    },
+                    status=400,
+                )
     except (OperationalError, ProgrammingError):
         return JsonResponse({
             'success': False,
@@ -1450,11 +1603,14 @@ def workflow_automode(request):
 
     except Exception as e:
         logger.error(f"Failed to start automode thread: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': f'Failed to start automode: {str(e)}',
-            'status': 'failed'
-        }, status=500)
+        return JsonResponse(
+            {
+                "success": False,
+                "message": f"Failed to start automode: {str(e)}",
+                "status": "failed",
+            },
+            status=500,
+        )
 
 
 @require_http_methods(["GET"])
@@ -1483,10 +1639,14 @@ def workflow_task_status(request, task_number):
     status_data = {}
     for execution in task_executions:
         status_data[execution.operation_type] = {
-            'status': execution.status,
-            'started_at': execution.started_at.isoformat() if execution.started_at else None,
-            'completed_at': execution.completed_at.isoformat() if execution.completed_at else None,
-            'error_message': execution.error_message
+            "status": execution.status,
+            "started_at": execution.started_at.isoformat()
+            if execution.started_at
+            else None,
+            "completed_at": execution.completed_at.isoformat()
+            if execution.completed_at
+            else None,
+            "error_message": execution.error_message,
         }
 
     return JsonResponse(status_data)
@@ -1502,17 +1662,21 @@ def workflow_save_config(request):
     try:
         # Get configuration data from request
         config_data = {
-            'data_model_type': request.POST.get('data_model_type', 'ELDM'),
-            'clone_mode': request.POST.get('clone_mode', 'false'),
-            'technical_export_source': request.POST.get('technical_export_source', 'BIRD_WEBSITE'),
-            'technical_export_github_url': request.POST.get('technical_export_github_url', ''),
-            'config_files_source': request.POST.get('config_files_source', 'MANUAL'),
-            'config_files_github_url': request.POST.get('config_files_github_url', ''),
-            'when_to_stop': 'RESOURCE_DOWNLOAD',  # Default for workflow
+            "data_model_type": request.POST.get("data_model_type", "ELDM"),
+            "clone_mode": request.POST.get("clone_mode", "false"),
+            "technical_export_source": request.POST.get(
+                "technical_export_source", "BIRD_WEBSITE"
+            ),
+            "technical_export_github_url": request.POST.get(
+                "technical_export_github_url", ""
+            ),
+            "config_files_source": request.POST.get("config_files_source", "MANUAL"),
+            "config_files_github_url": request.POST.get("config_files_github_url", ""),
+            "when_to_stop": "RESOURCE_DOWNLOAD",  # Default for workflow
         }
 
         # Store GitHub token in memory only, don't persist to file
-        github_token = request.POST.get('github_token', '')
+        github_token = request.POST.get("github_token", "")
         if github_token:
             # Store in module-level variable for in-memory use (no database required)
             _set_github_token(github_token)
@@ -1560,10 +1724,7 @@ def workflow_save_config(request):
 
     except Exception as e:
         logger.error(f"Error saving workflow configuration: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        }, status=500)
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 
 @require_http_methods(["POST"])
@@ -1580,7 +1741,7 @@ def workflow_run_migrations(request):
         })
 
     # Check if migrations were recently completed
-    if _migration_status['completed']:
+    if _migration_status["completed"]:
         # Reset status for new run
         _reset_migration_status()
 
@@ -1598,11 +1759,14 @@ def workflow_run_migrations(request):
 
     except Exception as e:
         logger.error(f"Failed to start migration thread: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': f'Failed to start migrations: {str(e)}',
-            'status': 'failed'
-        }, status=500)
+        return JsonResponse(
+            {
+                "success": False,
+                "message": f"Failed to start migrations: {str(e)}",
+                "status": "failed",
+            },
+            status=500,
+        )
 
 
 @require_http_methods(["GET"])
@@ -1638,7 +1802,7 @@ def workflow_database_setup(request):
         })
 
     # Check if setup was recently completed
-    if _database_setup_status['completed']:
+    if _database_setup_status["completed"]:
         # Reset status for new run
         _reset_database_setup_status()
 
@@ -1652,11 +1816,14 @@ def workflow_database_setup(request):
         config_path = os.path.join(base_dir, 'automode_config.json')
 
         if not os.path.exists(config_path):
-            return JsonResponse({
-                'success': False,
-                'message': 'Configuration not found. Please save configuration first.',
-                'status': 'config_missing'
-            }, status=400)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Configuration not found. Please save configuration first.",
+                    "status": "config_missing",
+                },
+                status=400,
+            )
     except Exception as e:
         logger.error(f"Error checking configuration: {e}")
         return JsonResponse({
@@ -1679,11 +1846,14 @@ def workflow_database_setup(request):
 
     except Exception as e:
         logger.error(f"Failed to start database setup thread: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': f'Failed to start database setup: {str(e)}',
-            'status': 'failed'
-        }, status=500)
+        return JsonResponse(
+            {
+                "success": False,
+                "message": f"Failed to start database setup: {str(e)}",
+                "status": "failed",
+            },
+            status=500,
+        )
 
 
 @require_http_methods(["GET"])
@@ -1753,7 +1923,7 @@ def workflow_clone_import(request):
         for csv_file in csv_files:
             filename = os.path.basename(csv_file)
             try:
-                with open(csv_file, 'r', encoding='utf-8') as f:
+                with open(csv_file, "r", encoding="utf-8") as f:
                     csv_data[filename] = f.read()
             except Exception as e:
                 logger.error(f"Error reading CSV file {filename}: {e}")

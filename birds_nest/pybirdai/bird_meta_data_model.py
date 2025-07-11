@@ -451,7 +451,7 @@ class MEMBER_MAPPING_ITEM(models.Model):
         blank=True,
         null=True,
     )
-    
+
 
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
@@ -525,7 +525,7 @@ class MAPPING_TO_CUBE(models.Model):
         blank=True,
         null=True,
     )
-    
+
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
 
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
@@ -744,7 +744,7 @@ class TABLE_CELL(models.Model):
         "system_data_code", max_length=1000, default=None, blank=True, null=True
     )
 
-    
+
     name = models.CharField("name", max_length=1000, default=None, blank=True, null=True)
 
     class Meta:
@@ -1128,18 +1128,18 @@ class AutomodeConfiguration(models.Model):
         ('ELDM', 'ELDM (Logical Data Model)'),
         ('EIL', 'EIL (Input Layer)'),
     ]
-    
+
     TECHNICAL_EXPORT_SOURCE_CHOICES = [
         ('BIRD_WEBSITE', 'BIRD Website'),
         ('GITHUB', 'GitHub Repository'),
         ('MANUAL_UPLOAD', 'Manual Upload'),
     ]
-    
+
     CONFIG_FILES_SOURCE_CHOICES = [
         ('MANUAL', 'Manual Upload'),
         ('GITHUB', 'GitHub Repository'),
     ]
-    
+
     WHEN_TO_STOP_CHOICES = [
         ('RESOURCE_DOWNLOAD', 'Stop after resource download and move to step by step mode'),
         ('DATABASE_CREATION', 'Stop after database creation'),
@@ -1147,80 +1147,80 @@ class AutomodeConfiguration(models.Model):
         ('PYTHON_CODE', 'Use previous customisation and stop after generating Python code'),
         ('FULL_EXECUTION', 'Do everything including creating Python code and running the test suite'),
     ]
-    
+
     data_model_type = models.CharField(
         max_length=10,
         choices=DATA_MODEL_CHOICES,
         default='ELDM',
         help_text='Select whether to use ELDM or EIL data model'
     )
-    
+
     technical_export_source = models.CharField(
         max_length=20,
         choices=TECHNICAL_EXPORT_SOURCE_CHOICES,
         default='BIRD_WEBSITE',
         help_text='Source for technical export files'
     )
-    
+
     technical_export_github_url = models.URLField(
         blank=True,
         null=True,
         help_text='GitHub repository URL for technical export files (when GitHub source is selected)'
     )
-    
+
     config_files_source = models.CharField(
         max_length=20,
         choices=CONFIG_FILES_SOURCE_CHOICES,
         default='MANUAL',
         help_text='Source for configuration files (joins, extra variables)'
     )
-    
+
     config_files_github_url = models.URLField(
         blank=True,
         null=True,
         help_text='GitHub repository URL for configuration files (when GitHub source is selected)'
     )
-    
+
     when_to_stop = models.CharField(
         max_length=20,
         choices=WHEN_TO_STOP_CHOICES,
         default='RESOURCE_DOWNLOAD',
         help_text='Defines how far to take automode processing before stopping'
     )
-    
+
     # Note: github_token is intentionally NOT stored in database for security reasons
     # The token should be provided at runtime and handled in memory only
-    
+
     is_active = models.BooleanField(
         default=True,
         help_text='Whether this configuration is currently active'
     )
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         verbose_name = "Automode Configuration"
         verbose_name_plural = "Automode Configurations"
         ordering = ['-updated_at']
-    
+
     def __str__(self):
         return f"Automode Config ({self.data_model_type}) - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
-    
+
     def clean(self):
         from django.core.exceptions import ValidationError
-        
+
         # Validate GitHub URLs are provided when GitHub source is selected
         if self.technical_export_source == 'GITHUB' and not self.technical_export_github_url:
             raise ValidationError({
                 'technical_export_github_url': 'GitHub URL is required when GitHub is selected as technical export source.'
             })
-        
+
         if self.config_files_source == 'GITHUB' and not self.config_files_github_url:
             raise ValidationError({
                 'config_files_github_url': 'GitHub URL is required when GitHub is selected as config files source.'
             })
-    
+
     @classmethod
     def get_active_configuration(cls):
         """Get the currently active configuration, or create a default one if none exists."""
@@ -1228,11 +1228,9 @@ class AutomodeConfiguration(models.Model):
             return cls.objects.filter(is_active=True).first()
         except cls.DoesNotExist:
             return cls.objects.create()
-    
+
     def save(self, *args, **kwargs):
         # Ensure only one configuration is active at a time
         if self.is_active:
             AutomodeConfiguration.objects.filter(is_active=True).update(is_active=False)
         super().save(*args, **kwargs)
-
-
