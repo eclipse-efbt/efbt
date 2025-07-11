@@ -30,6 +30,7 @@ import requests
 import platform
 
 
+
 from .workflow_model import WorkflowTaskExecution, WorkflowSession
 from .views import create_response_with_loading
 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
@@ -39,11 +40,18 @@ from .entry_points.import_hierarchy_analysis_from_website import RunImportHierar
 from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
 
 from .workflow_services import AutomodeConfigurationService
-from .forms import AutomodeConfigurationSessionForm
+from .forms import (
+    AutomodeConfigurationSessionForm,
+    ResourceDownloadForm,
+    SMCubesCoreForm,
+    SMCubesRulesForm,
+    PythonRulesForm,
+    FullExecutionForm,
 from .workflow_model import WorkflowTaskExecution, WorkflowSession
 
 from .forms import (
     SMCubesCoreForm,
+
 )
 from .entry_points import (
     automode_database_setup,
@@ -1918,6 +1926,7 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
         success_message = ''
 
         if substep_name == 'delete_database':
+
             logger.info("Executing delete database substep...")
 
             # Preserve session data before database deletion

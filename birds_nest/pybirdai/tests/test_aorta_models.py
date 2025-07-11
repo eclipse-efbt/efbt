@@ -12,7 +12,9 @@
 
 from django.test import TestCase, TransactionTestCase
 from django.contrib.contenttypes.models import ContentType
+
 from pybirdai.aorta_model import (
+
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
     DatabaseField, Function, FunctionText, TableCreationFunction,
     PopulatedDataBaseTable, EvaluatedDerivedTable, DatabaseRow,
@@ -143,6 +145,7 @@ class AortaModelTests(TestCase):
             object_id=self.db_field1.id
         )
 
+        
         # Test generic relation
         self.assertEqual(col_ref.referenced_column, self.db_field1)
         self.assertEqual(function.column_references.count(), 1)
@@ -221,6 +224,7 @@ class AortaModelTests(TestCase):
 class AortaOrchestrationTests(TransactionTestCase):
     """Test AORTA integration with orchestration"""
 
+    
     def setUp(self):
         """Set up orchestration with lineage"""
         self.orchestration = Orchestration()
@@ -233,7 +237,7 @@ class AortaOrchestrationTests(TransactionTestCase):
 
         mock_table = MockTable()
         mock_table.__class__.__name__ = "TestData_Table"
-
+        
         # Initialize with lineage
         self.orchestration.init_with_lineage(mock_table, "Test Execution")
 
@@ -253,21 +257,22 @@ class AortaOrchestrationTests(TransactionTestCase):
         class TestCalculation:
             def __init__(self):
                 self.base_value = 100
-
+            
             @lineage(dependencies={"base_value"})
             def calculate(self):
                 return self.base_value * 2
-
+        
         # Execute calculation
         calc = TestCalculation()
         result = calc.calculate()
-
+        
         # Verify result
         self.assertEqual(result, 200)
-
+        
         # Verify lineage was tracked (check orchestration state)
         self.assertTrue(orchestration.lineage_enabled)
         self.assertIsNotNone(orchestration.trail)
+    
 
     def test_export_lineage_graph(self):
         """Test lineage graph export"""
@@ -278,6 +283,7 @@ class AortaOrchestrationTests(TransactionTestCase):
             metadata_trail=metadata_trail
         )
 
+        
         # Add some tables
         db_table = DatabaseTable.objects.create(name="SourceTable")
         derived_table = DerivedTable.objects.create(name="ComputedTable")
@@ -294,10 +300,11 @@ class AortaOrchestrationTests(TransactionTestCase):
             table_id=derived_table.id
         )
 
+        
         # Export graph
         orchestration = Orchestration()
         graph = orchestration.export_lineage_graph(trail.id)
-
+ 
         # Verify graph structure
         self.assertIn('nodes', graph)
         self.assertIn('edges', graph)
@@ -352,7 +359,9 @@ class AortaAPITests(TestCase):
         response = self.client.get(f'/pybirdai/api/aorta/trails/{self.trail.id}/graph/')
         self.assertEqual(response.status_code, 200)
 
+        
         data = response.json()
         self.assertIn('nodes', data)
         self.assertIn('edges', data)
         self.assertIn('trail', data)
+

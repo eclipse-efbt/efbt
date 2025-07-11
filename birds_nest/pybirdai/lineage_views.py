@@ -5,6 +5,7 @@ from django.db.models import Prefetch
 from pybirdai.aorta_model import (
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
     DatabaseField, Function,
+
     PopulatedDataBaseTable, EvaluatedDerivedTable,
     FunctionColumnReference, DatabaseRow, DerivedTableRow,
     DatabaseColumnValue, EvaluatedFunction,
@@ -60,17 +61,18 @@ def get_trail_lineage_data(request, trail_id):
             'databaserow_set__column_values__column'
         )
 
+        
         for pop_table in populated_db_tables:
             table = pop_table.table
             table_node_id = get_node_id('database_table', table.id)
-
+            
             # Add table node with instance information
             row_count = pop_table.databaserow_set.count()
-
+            
             # Skip empty tables if requested
             if hide_empty_tables and row_count == 0:
                 continue
-
+          
             # Create a more descriptive label for tables with the same name
             label = table.name
             if row_count == 0:
@@ -78,9 +80,10 @@ def get_trail_lineage_data(request, trail_id):
             else:
                 label += f" ({row_count} rows)"
 
+            
             # Add table instance ID to make it unique
             label += f" [T{table.id}]"
-
+            
             nodes.append({
                 'id': table_node_id,
                 'label': label,
@@ -178,6 +181,7 @@ def get_trail_lineage_data(request, trail_id):
             'derivedtablerow_set__evaluated_functions__function'
         )
 
+        
         # Store eval table IDs for later use in queries
         eval_table_ids = []
 
@@ -186,9 +190,10 @@ def get_trail_lineage_data(request, trail_id):
             table_node_id = get_node_id('derived_table', table.id)
             eval_table_ids.append(eval_table.id)  # Store for later queries
 
+            
             # Add table node with instance information
             row_count = eval_table.derivedtablerow_set.count()
-
+            
             # Skip empty tables if requested
             if hide_empty_tables and row_count == 0:
                 continue
@@ -200,6 +205,7 @@ def get_trail_lineage_data(request, trail_id):
             else:
                 label += f" ({row_count} rows)"
 
+            
             # Add table instance ID to make it unique
             label += f" [DT{table.id}]"
 
@@ -289,6 +295,7 @@ def get_trail_lineage_data(request, trail_id):
                             if detail_level in ['column', 'row', 'value']:
                                 func_node_id = get_node_id('function', eval_func.function.id)
 
+
                                 # Ensure the Function node exists (in case it wasn't added in the table loop)
                                 function_exists = any(node['id'] == func_node_id for node in nodes)
                                 if not function_exists:
@@ -327,10 +334,11 @@ def get_trail_lineage_data(request, trail_id):
             else:
                 eval_func_sources = []
 
+            
             for source_ref in eval_func_sources:
                 try:
                     eval_func_node_id = get_node_id('evaluated_function', source_ref.evaluated_function.id)
-
+ 
                     # Create node for EvaluatedFunctionSourceValue
                     source_ref_node_id = get_node_id('eval_func_source_value', source_ref.id)
                     nodes.append({
@@ -353,15 +361,17 @@ def get_trail_lineage_data(request, trail_id):
                         'label': 'references'
                     })
 
+                    
                     # Edge from EvaluatedFunctionSourceValue to actual source value
                     if source_ref.content_type.model == 'databasecolumnvalue':
                         source_node_id = get_node_id('database_column_value', source_ref.object_id)
-
+                        
                         # Ensure the DatabaseColumnValue node exists
                         source_exists = any(node['id'] == source_node_id for node in nodes)
                         if not source_exists:
                             try:
                                 from pybirdai.aorta_model import DatabaseColumnValue
+
                                 col_value = DatabaseColumnValue.objects.get(id=source_ref.object_id)
                                 value_display = str(col_value.value or col_value.string_value or 'NULL')[:20]
                                 nodes.append({
@@ -378,14 +388,17 @@ def get_trail_lineage_data(request, trail_id):
                             except DatabaseColumnValue.DoesNotExist:
                                 continue
 
+                                
                     elif source_ref.content_type.model == 'evaluatedfunction':
                         source_node_id = get_node_id('evaluated_function', source_ref.object_id)
+                        
 
                         # Ensure the EvaluatedFunction node exists
                         source_exists = any(node['id'] == source_node_id for node in nodes)
                         if not source_exists:
                             try:
                                 from pybirdai.aorta_model import EvaluatedFunction
+
                                 eval_func = EvaluatedFunction.objects.get(id=source_ref.object_id)
                                 value_display = str(eval_func.value or eval_func.string_value or 'NULL')[:20]
                                 nodes.append({
@@ -423,10 +436,11 @@ def get_trail_lineage_data(request, trail_id):
             else:
                 row_sources = []
 
+            
             for source_ref in row_sources:
                 try:
                     derived_row_node_id = get_node_id('derived_row', source_ref.derived_row.id)
-
+                    
                     if source_ref.content_type.model == 'databaserow':
                         source_node_id = get_node_id('database_row', source_ref.object_id)
                     elif source_ref.content_type.model == 'derivedtablerow':
@@ -443,10 +457,11 @@ def get_trail_lineage_data(request, trail_id):
                 except Exception:
                     continue  # Skip if source not found
 
+        
         # 5. Add function-level dependencies (column references)
         if detail_level in ['column', 'row', 'value']:
             from django.contrib.contenttypes.models import ContentType
-
+            
             # Get derived table IDs that exist in this trail
             derived_table_ids_for_refs = [eval_table.table.id for eval_table in evaluated_tables]
 
@@ -457,9 +472,11 @@ def get_trail_lineage_data(request, trail_id):
             else:
                 function_refs = []
 
+            
             for ref in function_refs:
                 try:
                     func_node_id = get_node_id('function', ref.function.id)
+                    
 
                     if ref.content_type.model == 'databasefield':
                         ref_node_id = get_node_id('database_field', ref.object_id)
@@ -577,7 +594,6 @@ def get_node_details(request, trail_id, node_type, node_id):
     trail = get_object_or_404(Trail, pk=trail_id)
 
     details = {}
-
     try:
         if node_type == 'database_table':
             table = get_object_or_404(DatabaseTable, pk=node_id)
@@ -633,6 +649,7 @@ def get_node_details(request, trail_id, node_type, node_id):
                     except Function.DoesNotExist:
                         continue
 
+        
         return JsonResponse(details)
 
     except Exception as e:
@@ -643,7 +660,9 @@ def trail_list(request):
     """List all available trails"""
     trails = Trail.objects.all().order_by('-created_at')
 
+    
     context = {
         'trails': trails
     }
     return render(request, 'pybirdai/trail_list.html', context)
+

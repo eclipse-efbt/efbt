@@ -16,7 +16,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'birds_nest.settings')
 django.setup()
 
 from pybirdai.process_steps.pybird.orchestration import Orchestration
+
 from pybirdai.aorta_model import *
+
 from pybirdai.annotations.decorators import lineage, track_table_init, set_lineage_orchestration
 
 
@@ -65,6 +67,7 @@ def test_aorta_implementation():
     print("Testing Enhanced AORTA Lineage Tracking Implementation")
     print("=" * 60)
 
+
     # Clear any existing data
     Trail.objects.all().delete()
     MetaDataTrail.objects.all().delete()
@@ -83,6 +86,7 @@ def test_aorta_implementation():
     orchestration.init_with_lineage(mock_table, "Test Enhanced AORTA")
     mock_table.init()
 
+
     # Check what was created
     print(f"Created Trail: {Trail.objects.count()}")
     print(f"Created MetaDataTrail: {MetaDataTrail.objects.count()}")
@@ -91,6 +95,7 @@ def test_aorta_implementation():
     print(f"Created DatabaseField: {DatabaseField.objects.count()}")
     print(f"Created DatabaseRow: {DatabaseRow.objects.count()}")
     print(f"Created DatabaseColumnValue: {DatabaseColumnValue.objects.count()}")
+
 
     # Test 2: Function execution tracking
     print("\n2. Testing function execution tracking...")
@@ -106,14 +111,17 @@ def test_aorta_implementation():
     metric_result = computed_table.metric_value()
     print(f"Computed metric: {metric_result}")
 
+
     # Check function tracking
     print(f"Created DerivedTable: {DerivedTable.objects.count()}")
     print(f"Created Function: {Function.objects.count()}")
     print(f"Created FunctionText: {FunctionText.objects.count()}")
     print(f"Created FunctionColumnReference: {FunctionColumnReference.objects.count()}")
 
+
     # Test 3: Export lineage graph
     print("\n3. Testing lineage graph export...")
+
 
     trail = orchestration.get_lineage_trail()
     if trail:
@@ -125,6 +133,7 @@ def test_aorta_implementation():
         else:
             print("No graph generated")
 
+
     # Test 4: Show detailed results
     print("\n4. Detailed Results:")
     print("-" * 40)
@@ -133,12 +142,12 @@ def test_aorta_implementation():
         print(f"Trail: {trail.name} (ID: {trail.id})")
         print(f"  Created: {trail.created_at}")
 
+
         if trail.metadata_trail:
             print(f"  MetaDataTrail ID: {trail.metadata_trail.id}")
             for table_ref in trail.metadata_trail.table_references.all():
                 print(f"    Table Reference: {table_ref.table_content_type} (ID: {table_ref.table_id})")
 
-        # Get populated tables through the correct relationship
         pop_tables = PopulatedDataBaseTable.objects.filter(trail=trail)
         for pop_table in pop_tables:
             print(f"  PopulatedTable: {pop_table.table.name}")

@@ -128,8 +128,9 @@ def get_trail_complete_lineage(request, trail_id):
                         "row_id": row.id
                     })
 
+                
                 pop_table_data['rows'].append(row_data)
-
+            
             lineage_data['populated_database_tables'].append(pop_table_data)
 
         # 2. Get all evaluated derived tables for this trail
@@ -168,6 +169,7 @@ def get_trail_complete_lineage(request, trail_id):
                     table_data['functions'].append(function_data)
 
                 lineage_data['derived_tables'].append(table_data)
+
 
             # Add evaluated table instance
             eval_table_data = {
@@ -254,6 +256,7 @@ def get_trail_complete_lineage(request, trail_id):
                 derivedtable__id__in=derived_table_ids
             )
 
+            
             table_src_refs = TableCreationSourceTable.objects.filter(
                 table_creation_function__in=table_creation_functions
             ).select_related('table_creation_function', 'content_type')
@@ -311,7 +314,9 @@ def get_trail_complete_lineage(request, trail_id):
             "table_creation_function_columns": len(lineage_data['lineage_relationships']['table_creation_function_columns'])
         }
 
+        
         return JsonResponse(lineage_data, json_dumps_params={'indent': 2})
+        
 
     except Exception as e:
         import traceback
@@ -338,18 +343,19 @@ def get_trail_lineage_summary(request, trail_id):
         populated_db_tables = PopulatedDataBaseTable.objects.filter(trail=trail)
         evaluated_tables = EvaluatedDerivedTable.objects.filter(trail=trail)
 
+        
         total_db_rows = DatabaseRow.objects.filter(
             populated_table__trail=trail
         ).count()
-
+        
         total_derived_rows = DerivedTableRow.objects.filter(
             populated_table__trail=trail
         ).count()
-
+        
         total_column_values = DatabaseColumnValue.objects.filter(
             row__populated_table__trail=trail
         ).count()
-
+        
         total_evaluated_functions = EvaluatedFunction.objects.filter(
             row__populated_table__trail=trail
         ).count()

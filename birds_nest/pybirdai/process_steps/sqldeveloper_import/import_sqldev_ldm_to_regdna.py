@@ -32,7 +32,6 @@ class SQLDevLDMImport(object):
         '''
         import the items from the BIRD LDM csv files
 
-
     '''
 
         SQLDevLDMImport.import_classification_types(self, context)

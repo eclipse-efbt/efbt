@@ -76,7 +76,7 @@ admin.site.register(WorkflowTaskDependency)
 from .workflow_model import WorkflowSession
 admin.site.register(WorkflowSession)
 
-# AORTA Lineage Tracking Models
+
 from .aorta_model import DatabaseTable
 admin.site.register(DatabaseTable)
 from .aorta_model import DerivedTable

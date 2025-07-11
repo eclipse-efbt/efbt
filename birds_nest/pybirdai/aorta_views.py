@@ -62,7 +62,7 @@ class AortaTrailListView(View):
 
 class AortaTrailDetailView(View):
     """Get detailed information about a specific trail"""
-
+    
     def get(self, request, trail_id):
         trail = get_object_or_404(Trail, id=trail_id)
 
@@ -121,16 +121,15 @@ class AortaValueLineageView(View):
         # Determine if it's a DatabaseColumnValue or EvaluatedFunction
         value = None
         value_type = request.GET.get('type', 'evaluated')
-
         if value_type == 'database':
             value = get_object_or_404(DatabaseColumnValue, id=value_id)
         else:
             value = get_object_or_404(EvaluatedFunction, id=value_id)
-
+        
         lineage_tree = self._build_lineage_tree(value)
-
+        
         return JsonResponse(lineage_tree)
-
+    
     def _build_lineage_tree(self, value, visited=None):
         """Recursively build lineage tree"""
         if visited is None:
