@@ -25,6 +25,7 @@ from pybirdai.entry_points.migration_processor import (
     get_preconfigured_database_fetcher,
     generate_advanced_migration
 )
+import traceback
 from django.conf import settings
 
 from importlib import metadata
@@ -405,7 +406,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             logger.info("STEP 2 completed successfully!")
             logger.info("Database setup is now complete!")
-            
+
             return {
                 "success": True,
                 "step": 2,
@@ -414,6 +415,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
             }
 
         except Exception as e:
+            traceback.print_exc()
             logger.error(f"Post-setup operations STEP 2 failed: {str(e)}")
             raise
 
@@ -475,6 +477,46 @@ class RunAutomodeDatabaseSetup(AppConfig):
                         logger.error(f"Could not even rename database file: {e3}")
                         # Continue anyway - let Django handle it
 
+    def _cls_is_abstract(self, cls_node):
+            """
+            Check if a class definition has a Meta inner class with abstract=True.
+
+            Args:
+                source_code (str): Python source code containing class definitions
+
+            Returns:
+                bool: True if any class has Meta with abstract=True, False otherwise
+            """
+            try:
+                if isinstance(cls_node, ast.ClassDef):
+                    # Look for Meta class in the class body
+                    for item in cls_node.body:
+                        if (isinstance(item, ast.ClassDef) and
+                            item.name == 'Meta'):
+
+                            # Check if Meta class has abstract=True
+                            for meta_item in item.body:
+                                if isinstance(meta_item, ast.Assign):
+                                    # Check if assignment target is 'abstract'
+                                    for target in meta_item.targets:
+                                        if (isinstance(target, ast.Name) and
+                                            target.id == 'abstract'):
+
+                                            # Check if value is True
+                                            if (isinstance(meta_item.value, ast.Constant) and
+                                                meta_item.value.value is True):
+                                                return True
+                                            # Also handle ast.NameConstant for older Python versions
+                                            elif (isinstance(meta_item.value, ast.NameConstant) and
+                                                    meta_item.value.value is True):
+                                                return True
+
+                return False
+
+            except SyntaxError:
+                # If source code is invalid, return False
+                return False
+
     def _update_admin_file(
         self, pybirdai_admin_path, pybirdai_meta_data_model_path, pybirdai_data_model_path
     ):
@@ -484,37 +526,22 @@ class RunAutomodeDatabaseSetup(AppConfig):
         # Create initial admin.py content
         with open(pybirdai_admin_path, "w") as f_write:
             f_write.write("from django.contrib import admin\n")
+            BASE = f"pybirdai{os.sep}"
+            for file in ["bird_meta_data_model","workflow_model","aorta_model", "bird_data_model"]:
+                file_path=BASE+file+".py"
 
-            # Parse the meta data model file to find class definitions
-            with open(pybirdai_meta_data_model_path, "r") as f_read:
-                tree = ast.parse(f_read.read())
-                for node in ast.walk(tree):
-                    if isinstance(node, ast.ClassDef) and node.name not in [
-                        "Meta",
-                        "Admin",
-                    ]:
-                        if node.name not in registered_models:
-                            f_write.write(
-                                f"from .bird_meta_data_model import {node.name}\n"
-                            )
-                            f_write.write(f"admin.site.register({node.name})\n")
-
-
-            # Parse the bird data model file to find class definitions        
-            with open(pybirdai_data_model_path, "r") as f_read:
-                tree = ast.parse(f_read.read())
-                for node in ast.walk(tree):
-                    if isinstance(node, ast.ClassDef) and node.name not in [
-                        "Meta",
-                        "Admin",
-                    ]:
-                        if node.name not in registered_models:
-                            f_write.write(
-                                f"from .bird_data_model import {node.name}\n"
-                            )
-                            f_write.write(f"admin.site.register({node.name})\n")
-
-
+                # Parse the meta data model file to find class definitions
+                with open(file_path, "r") as f_read:
+                    tree = ast.parse(f_read.read())
+                    for node in ast.walk(tree):
+                        is_abstract = self._cls_is_abstract(node)
+                        if isinstance(node, ast.ClassDef) and node.name not in ('Meta', 'Admin') and not is_abstract:
+                            if node.name not in registered_models:
+                                f_write.write(
+                                    f"from .{file} import {node.name}\n"
+                                )
+                                f_write.write(f"admin.site.register({node.name})\n")
+                f_write.write("\n\n")
 
 
     def _cleanup_results_admin_file(self, results_admin_path):
@@ -612,17 +639,17 @@ class RunAutomodeDatabaseSetup(AppConfig):
             if os.path.exists(db_file):
                 os.chmod(db_file, 0o666)
                 os.remove(db_file)
-            
+
             venv_path, original_dir, python_executable = self._get_python_exc()
 
             files_to_parse = [f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"]
             migration_file_path = f"pybirdai{os.sep}migrations{os.sep}0001_initial.py"
-            
+
             result = generate_advanced_migration(
                 files_to_parse=files_to_parse,
                 migration_file_path=migration_file_path
             )
-            
+
             if not result.get('success'):
                 logger.error(f"Migration generation failed: {result.get('error')}")
                 return

@@ -18,7 +18,7 @@ Created on 22 Jan 2022
 
 import os
 import csv
-from pybirdai.entry_points.utils_processor import get_utils_processor as Utils
+from pybirdai.entry_points.utils_processor import Utils
 
 from pybirdai.regdna import ELAttribute, ELClass, ELEnum
 from pybirdai.regdna import ELEnumLiteral, ELReference
@@ -75,27 +75,27 @@ class SQLDeveloperILImport(object):
                     # this means that this class is a root
                     # of a type heirarchy....we will set such classes
                     # to be abstract.
-                    
+
                     containment_reference = ELReference()
                     containment_reference.name = eclass.name+"s"
                     containment_reference.eType = eclass
                     containment_reference.upperBound = -1
                     containment_reference.lowerBound = 0
                     containment_reference.containment = True
-                    
-                    
-                    
+
+
+
                     context.il_tables_package.eClassifiers.extend([
                                                                         eclass])
-                    
 
-                    # maintain a map a objectIDs to ELClasses, we add to 
-                    # the map even in input layters come from the websiute, 
-                    # this is because we want to find the table rrealtionship 
-                    # info that is not currently on the website, and use that to 
+
+                    # maintain a map a objectIDs to ELClasses, we add to
+                    # the map even in input layters come from the websiute,
+                    # this is because we want to find the table rrealtionship
+                    # info that is not currently on the website, and use that to
                     # enrich the website content
                     context.classes_map[object_id] = eclass
-                    
+
 
     def add_il_enums_to_package(self, context):
         '''
@@ -159,8 +159,8 @@ class SQLDeveloperILImport(object):
                             the_enum.eLiterals.extend([enum_literal])
 
                         except KeyError:
-                            print("missing domain: " + enum_id)                       
-                        
+                            print("missing domain: " + enum_id)
+
                     except IndexError:
                         print(
                             "row in DM_Domain_AVT.csv skipped  due to improper formatting at row number")
@@ -253,7 +253,7 @@ class SQLDeveloperILImport(object):
 
                             attribute.lowerBound = 0
                             attribute.upperBound = 1
-                            
+
                             if (the_enum.name == "String"):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.types.e_string
@@ -344,7 +344,7 @@ class SQLDeveloperILImport(object):
                                 attribute.eAttributeType = context.types.e_int
                                 attribute.upperBound = 1
                                 attribute.lowerBound = 1
-                                
+
                             elif (the_enum.name.startswith("All_possible_dates")):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.types.e_date
@@ -368,7 +368,7 @@ class SQLDeveloperILImport(object):
                                 attribute.upperBound = 1
                                 attribute.lowerBound = 1
 
-                            
+
 
                         if (attribute_kind == "Logical Type"):
                             data_type_id = row[14]
@@ -383,7 +383,7 @@ class SQLDeveloperILImport(object):
                                 attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
                                     self)
 
-                               
+
 
                             except KeyError:
                                 print("missing datatype: ")
@@ -395,7 +395,7 @@ class SQLDeveloperILImport(object):
                             SQLDeveloperILImport.add_composite_pk_if_missing(
                                 self, context, the_class)
                             the_class.eStructuralFeatures.extend([attribute])
-                            
+
 
                         except:
                             print("missing class2: ")
@@ -455,12 +455,12 @@ class SQLDeveloperILImport(object):
                     primary_key_or_not = row[34]
                     the_class = context.classes_map[class_id]
 
-                    
+
 
                     if len(preferred_abbreviation) == 0:
                         preferred_abbreviation = attribute_name
                         print("no preferred abbreviation for attribute: " + attribute_name)
-                        
+
                     the_attribute_name = Utils.make_valid_id(preferred_abbreviation)
 
                     # we only add attributes here if they are not representing a relationship
@@ -517,7 +517,7 @@ class SQLDeveloperILImport(object):
                         elif the_enum.name.startswith("INTGR"):
                             attribute.name = the_attribute_name
                             attribute.eType = context.types.e_int
-                            attribute.eAttributeType = context.types.e_int  
+                            attribute.eAttributeType = context.types.e_int
                         elif the_enum.name.startswith("YR"):
                             attribute.name = the_attribute_name
                             attribute.eType = context.types.e_int
@@ -546,7 +546,7 @@ class SQLDeveloperILImport(object):
                             attribute.eType = the_enum
                             attribute.eAttributeType = the_enum
 
-                            
+
                         if attribute_kind == "Logical Type":
                             data_type_id = row[14]
                             try:
@@ -646,7 +646,7 @@ class SQLDeveloperILImport(object):
                             e_reference.upperBound = -1
                             e_reference.lowerBound = 0
                             e_reference.containment = False
-                            
+
                         else:
                             e_reference = ELReference()
                             e_reference.name = reference_name
@@ -654,7 +654,7 @@ class SQLDeveloperILImport(object):
                             e_reference.upperBound = 1
                             e_reference.lowerBound = 0
                             e_reference.containment = False
-                            
+
                     else:
                         if (source_to_target_cardinality.strip() == "*"):
                             reference_name = reference_name + "s"
@@ -664,7 +664,7 @@ class SQLDeveloperILImport(object):
                             e_reference.upperBound = -1
                             e_reference.lowerBound = 1
                             e_reference.containment = False
-                            
+
                         else:
                             e_reference = ELReference()
                             e_reference.name = reference_name
@@ -672,7 +672,7 @@ class SQLDeveloperILImport(object):
                             e_reference.upperBound = 1
                             e_reference.lowerBound = 1
                             e_reference.containment = False
-                            
+
                     if not (the_class is None):
                         the_class.eStructuralFeatures.append(e_reference)
                         # reference_tuple = (the_class.name,e_reference.name,e_reference.eType.name,e_reference.upperBound,e_reference.lowerBound)

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.db.models import Prefetch
 from django.contrib.contenttypes.models import ContentType
-from pybirdai.models import (
+from pybirdai.aorta_model import (
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
     DatabaseField, Function, FunctionText, TableCreationFunction,
     PopulatedDataBaseTable, EvaluatedDerivedTable, DatabaseRow,
@@ -26,7 +26,7 @@ def serialize_datetime(obj):
 def get_trail_complete_lineage(request, trail_id):
     """
     Comprehensive API endpoint that returns ALL lineage information for a given trail.
-    
+
     Returns a complete JSON structure containing:
     - Trail metadata
     - All tables (database and derived)
@@ -35,7 +35,7 @@ def get_trail_complete_lineage(request, trail_id):
     - All lineage relationships
     """
     trail = get_object_or_404(Trail, pk=trail_id)
-    
+
     try:
         # Initialize the complete lineage structure
         lineage_data = {
@@ -66,7 +66,7 @@ def get_trail_complete_lineage(request, trail_id):
                 "total_counts": {}
             }
         }
-        
+
         # 1. Get all populated database tables for this trail
         populated_db_tables = PopulatedDataBaseTable.objects.filter(
             trail=trail
@@ -74,13 +74,13 @@ def get_trail_complete_lineage(request, trail_id):
             'table__database_fields',
             'databaserow_set__column_values__column'
         )
-        
+
         # Process database tables
         database_table_ids = set()
         for pop_table in populated_db_tables:
             table = pop_table.table
             database_table_ids.add(table.id)
-            
+
             # Add table definition if not already added
             if not any(dt['id'] == table.id for dt in lineage_data['database_tables']):
                 table_data = {
@@ -88,7 +88,7 @@ def get_trail_complete_lineage(request, trail_id):
                     "name": table.name,
                     "fields": []
                 }
-                
+
                 # Add fields
                 for field in table.database_fields.all():
                     table_data['fields'].append({
@@ -96,9 +96,9 @@ def get_trail_complete_lineage(request, trail_id):
                         "name": field.name,
                         "table_id": table.id
                     })
-                
+
                 lineage_data['database_tables'].append(table_data)
-            
+
             # Add populated table instance
             pop_table_data = {
                 "id": pop_table.id,
@@ -107,7 +107,7 @@ def get_trail_complete_lineage(request, trail_id):
                 "trail_id": trail.id,
                 "rows": []
             }
-            
+
             # Add rows and values
             for row in pop_table.databaserow_set.all():
                 row_data = {
@@ -116,7 +116,7 @@ def get_trail_complete_lineage(request, trail_id):
                     "populated_table_id": pop_table.id,
                     "values": []
                 }
-                
+
                 # Add column values
                 for col_value in row.column_values.all():
                     row_data['values'].append({
@@ -127,11 +127,11 @@ def get_trail_complete_lineage(request, trail_id):
                         "column_name": col_value.column.name,
                         "row_id": row.id
                     })
-                
+
                 pop_table_data['rows'].append(row_data)
-            
+
             lineage_data['populated_database_tables'].append(pop_table_data)
-        
+
         # 2. Get all evaluated derived tables for this trail
         evaluated_tables = EvaluatedDerivedTable.objects.filter(
             trail=trail
@@ -139,13 +139,13 @@ def get_trail_complete_lineage(request, trail_id):
             'table__derived_functions__function_text',
             'derivedtablerow_set__evaluated_functions__function'
         )
-        
+
         # Process derived tables
         derived_table_ids = set()
         for eval_table in evaluated_tables:
             table = eval_table.table
             derived_table_ids.add(table.id)
-            
+
             # Add table definition if not already added
             if not any(dt['id'] == table.id for dt in lineage_data['derived_tables']):
                 table_data = {
@@ -154,7 +154,7 @@ def get_trail_complete_lineage(request, trail_id):
                     "table_creation_function_id": table.table_creation_function.id if table.table_creation_function else None,
                     "functions": []
                 }
-                
+
                 # Add functions
                 for function in table.derived_functions.all():
                     function_data = {
@@ -166,9 +166,9 @@ def get_trail_complete_lineage(request, trail_id):
                         "function_language": function.function_text.language if function.function_text else None
                     }
                     table_data['functions'].append(function_data)
-                
+
                 lineage_data['derived_tables'].append(table_data)
-            
+
             # Add evaluated table instance
             eval_table_data = {
                 "id": eval_table.id,
@@ -177,7 +177,7 @@ def get_trail_complete_lineage(request, trail_id):
                 "trail_id": trail.id,
                 "rows": []
             }
-            
+
             # Add rows and evaluated functions
             for row in eval_table.derivedtablerow_set.all():
                 row_data = {
@@ -186,7 +186,7 @@ def get_trail_complete_lineage(request, trail_id):
                     "populated_table_id": eval_table.id,
                     "evaluated_functions": []
                 }
-                
+
                 # Add evaluated functions
                 for eval_func in row.evaluated_functions.all():
                     row_data['evaluated_functions'].append({
@@ -197,19 +197,19 @@ def get_trail_complete_lineage(request, trail_id):
                         "function_name": eval_func.function.name,
                         "row_id": row.id
                     })
-                
+
                 eval_table_data['rows'].append(row_data)
-            
+
             lineage_data['evaluated_derived_tables'].append(eval_table_data)
-        
+
         # 3. Get all lineage relationships
-        
+
         # Function column references
         if derived_table_ids:
             func_refs = FunctionColumnReference.objects.filter(
                 function__table__id__in=derived_table_ids
             ).select_related('function', 'content_type')
-            
+
             for ref in func_refs:
                 lineage_data['lineage_relationships']['function_column_references'].append({
                     "id": ref.id,
@@ -218,14 +218,14 @@ def get_trail_complete_lineage(request, trail_id):
                     "referenced_object_type": ref.content_type.model,
                     "referenced_object_id": ref.object_id
                 })
-        
+
         # Derived row source references
         eval_table_ids = [et.id for et in evaluated_tables]
         if eval_table_ids:
             row_refs = DerivedRowSourceReference.objects.filter(
                 derived_row__populated_table__id__in=eval_table_ids
             ).select_related('derived_row', 'content_type')
-            
+
             for ref in row_refs:
                 lineage_data['lineage_relationships']['derived_row_source_references'].append({
                     "id": ref.id,
@@ -233,13 +233,13 @@ def get_trail_complete_lineage(request, trail_id):
                     "source_object_type": ref.content_type.model,
                     "source_object_id": ref.object_id
                 })
-        
+
         # Evaluated function source values
         if eval_table_ids:
             value_refs = EvaluatedFunctionSourceValue.objects.filter(
                 evaluated_function__row__populated_table__id__in=eval_table_ids
             ).select_related('evaluated_function', 'content_type')
-            
+
             for ref in value_refs:
                 lineage_data['lineage_relationships']['evaluated_function_source_values'].append({
                     "id": ref.id,
@@ -247,17 +247,17 @@ def get_trail_complete_lineage(request, trail_id):
                     "source_object_type": ref.content_type.model,
                     "source_object_id": ref.object_id
                 })
-        
+
         # Table creation source tables
         if derived_table_ids:
             table_creation_functions = TableCreationFunction.objects.filter(
                 derivedtable__id__in=derived_table_ids
             )
-            
+
             table_src_refs = TableCreationSourceTable.objects.filter(
                 table_creation_function__in=table_creation_functions
             ).select_related('table_creation_function', 'content_type')
-            
+
             for ref in table_src_refs:
                 lineage_data['lineage_relationships']['table_creation_source_tables'].append({
                     "id": ref.id,
@@ -266,12 +266,12 @@ def get_trail_complete_lineage(request, trail_id):
                     "source_object_type": ref.content_type.model,
                     "source_object_id": ref.object_id
                 })
-            
+
             # Table creation function columns
             col_refs = TableCreationFunctionColumn.objects.filter(
                 table_creation_function__in=table_creation_functions
             ).select_related('table_creation_function', 'content_type')
-            
+
             for ref in col_refs:
                 lineage_data['lineage_relationships']['table_creation_function_columns'].append({
                     "id": ref.id,
@@ -281,19 +281,19 @@ def get_trail_complete_lineage(request, trail_id):
                     "referenced_object_id": ref.object_id,
                     "reference_text": ref.reference_text
                 })
-        
+
         # 4. Get metadata trail references
         table_refs = AortaTableReference.objects.filter(
             metadata_trail=trail.metadata_trail
         )
-        
+
         for ref in table_refs:
             lineage_data['metadata']['table_references'].append({
                 "id": ref.id,
                 "table_content_type": ref.table_content_type,
                 "table_id": ref.table_id
             })
-        
+
         # 5. Add summary counts
         lineage_data['metadata']['total_counts'] = {
             "database_tables": len(lineage_data['database_tables']),
@@ -310,14 +310,14 @@ def get_trail_complete_lineage(request, trail_id):
             "table_creation_source_tables": len(lineage_data['lineage_relationships']['table_creation_source_tables']),
             "table_creation_function_columns": len(lineage_data['lineage_relationships']['table_creation_function_columns'])
         }
-        
+
         return JsonResponse(lineage_data, json_dumps_params={'indent': 2})
-        
+
     except Exception as e:
         import traceback
         error_details = traceback.format_exc()
         print(f"Error in get_trail_complete_lineage: {error_details}")
-        
+
         return JsonResponse({
             'error': str(e),
             'trail_id': trail_id,
@@ -332,28 +332,28 @@ def get_trail_lineage_summary(request, trail_id):
     Lightweight endpoint that returns just summary statistics for a trail.
     """
     trail = get_object_or_404(Trail, pk=trail_id)
-    
+
     try:
         # Get counts
         populated_db_tables = PopulatedDataBaseTable.objects.filter(trail=trail)
         evaluated_tables = EvaluatedDerivedTable.objects.filter(trail=trail)
-        
+
         total_db_rows = DatabaseRow.objects.filter(
             populated_table__trail=trail
         ).count()
-        
+
         total_derived_rows = DerivedTableRow.objects.filter(
             populated_table__trail=trail
         ).count()
-        
+
         total_column_values = DatabaseColumnValue.objects.filter(
             row__populated_table__trail=trail
         ).count()
-        
+
         total_evaluated_functions = EvaluatedFunction.objects.filter(
             row__populated_table__trail=trail
         ).count()
-        
+
         summary = {
             "trail": {
                 "id": trail.id,
@@ -371,9 +371,9 @@ def get_trail_lineage_summary(request, trail_id):
                 "has_lineage_data": total_derived_rows > 0 or total_evaluated_functions > 0
             }
         }
-        
+
         return JsonResponse(summary)
-        
+
     except Exception as e:
         return JsonResponse({
             'error': str(e),

@@ -19,7 +19,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-from .models import (
+from .aorta_model import (
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
     DatabaseField, Function, FunctionText, TableCreationFunction,
     PopulatedDataBaseTable, EvaluatedDerivedTable, DatabaseRow,
@@ -32,16 +32,16 @@ from .process_steps.pybird.orchestration import Orchestration
 
 class AortaTrailListView(View):
     """List all execution trails"""
-    
+
     def get(self, request):
         trails = Trail.objects.all().order_by('-created_at')
-        
+
         # Pagination
         page_number = request.GET.get('page', 1)
         page_size = request.GET.get('page_size', 20)
         paginator = Paginator(trails, page_size)
         page_obj = paginator.get_page(page_number)
-        
+
         trails_data = []
         for trail in page_obj:
             trails_data.append({
@@ -51,7 +51,7 @@ class AortaTrailListView(View):
                 'table_count': trail.metadata_trail.table_references.count() if trail.metadata_trail else 0,
                 'execution_context': trail.execution_context
             })
-        
+
         return JsonResponse({
             'trails': trails_data,
             'total': paginator.count,
@@ -62,10 +62,10 @@ class AortaTrailListView(View):
 
 class AortaTrailDetailView(View):
     """Get detailed information about a specific trail"""
-    
+
     def get(self, request, trail_id):
         trail = get_object_or_404(Trail, id=trail_id)
-        
+
         # Get all tables in this trail
         tables = []
         for table_ref in trail.metadata_trail.table_references.all():
@@ -85,7 +85,7 @@ class AortaTrailDetailView(View):
                     'name': table.name,
                     'function_count': table.derived_functions.count()
                 })
-        
+
         # Get populated tables
         populated_tables = []
         for pop_table in trail.populated_database_tables.all():
@@ -94,14 +94,14 @@ class AortaTrailDetailView(View):
                 'table_name': pop_table.table.name,
                 'row_count': pop_table.databaserow_set.count()
             })
-        
+
         for pop_table in trail.evaluated_derived_tables.all():
             populated_tables.append({
                 'id': pop_table.id,
                 'table_name': pop_table.table.name,
                 'row_count': pop_table.derivedtablerow_set.count()
             })
-        
+
         return JsonResponse({
             'trail': {
                 'id': trail.id,
@@ -116,32 +116,32 @@ class AortaTrailDetailView(View):
 
 class AortaValueLineageView(View):
     """Get lineage tree for a specific value"""
-    
+
     def get(self, request, value_id):
         # Determine if it's a DatabaseColumnValue or EvaluatedFunction
         value = None
         value_type = request.GET.get('type', 'evaluated')
-        
+
         if value_type == 'database':
             value = get_object_or_404(DatabaseColumnValue, id=value_id)
         else:
             value = get_object_or_404(EvaluatedFunction, id=value_id)
-        
+
         lineage_tree = self._build_lineage_tree(value)
-        
+
         return JsonResponse(lineage_tree)
-    
+
     def _build_lineage_tree(self, value, visited=None):
         """Recursively build lineage tree"""
         if visited is None:
             visited = set()
-        
+
         # Avoid cycles
         value_key = f"{type(value).__name__}_{value.id}"
         if value_key in visited:
             return {'id': value_key, 'type': 'circular_reference'}
         visited.add(value_key)
-        
+
         if isinstance(value, DatabaseColumnValue):
             return {
                 'id': value.id,
@@ -151,14 +151,14 @@ class AortaValueLineageView(View):
                 'table': value.column.table.name,
                 'row_id': value.row.id
             }
-        
+
         elif isinstance(value, EvaluatedFunction):
             # Get source values
             source_values = []
             for source_ref in value.source_value_references.all():
                 if source_ref.source_value:
                     source_values.append(self._build_lineage_tree(source_ref.source_value, visited))
-            
+
             return {
                 'id': value.id,
                 'type': 'EvaluatedFunction',
@@ -167,23 +167,23 @@ class AortaValueLineageView(View):
                 'row_id': value.row.id,
                 'source_values': source_values
             }
-        
+
         return {'id': str(value), 'type': 'unknown'}
 
 
 class AortaTableDependenciesView(View):
     """Get dependencies for a specific table"""
-    
+
     def get(self, request, table_id):
         table_type = request.GET.get('type', 'derived')
-        
+
         if table_type == 'database':
             table = get_object_or_404(DatabaseTable, id=table_id)
             dependencies = {'upstream': [], 'downstream': []}
         else:
             table = get_object_or_404(DerivedTable, id=table_id)
             dependencies = self._get_table_dependencies(table)
-        
+
         return JsonResponse({
             'table': {
                 'id': table.id,
@@ -192,14 +192,14 @@ class AortaTableDependenciesView(View):
             },
             'dependencies': dependencies
         })
-    
+
     def _get_table_dependencies(self, table):
         """Get upstream and downstream dependencies for a table"""
         dependencies = {
             'upstream': [],
             'downstream': []
         }
-        
+
         # Get upstream dependencies (tables this table depends on)
         if hasattr(table, 'table_creation_function') and table.table_creation_function:
             for source_ref in table.table_creation_function.source_table_references.all():
@@ -209,32 +209,32 @@ class AortaTableDependenciesView(View):
                         'name': source_ref.source_table.name,
                         'type': type(source_ref.source_table).__name__
                     })
-        
+
         # Get downstream dependencies (tables that depend on this table)
         # This would require querying TableCreationSourceTable where this table is the source
         # Implementation depends on specific requirements
-        
+
         return dependencies
 
 
 class AortaLineageGraphView(View):
     """Export lineage as a graph structure for visualization"""
-    
+
     def get(self, request, trail_id):
         orchestration = Orchestration()
         graph = orchestration.export_lineage_graph(trail_id)
-        
+
         if not graph:
             return HttpResponseBadRequest("Trail not found")
-        
+
         # Enhance graph with additional data
         trail = Trail.objects.get(id=trail_id)
-        
+
         # Add function nodes and edges
         for table_ref in trail.metadata_trail.table_references.all():
             if table_ref.table_content_type == 'DerivedTable':
                 table = DerivedTable.objects.get(id=table_ref.table_id)
-                
+
                 # Add function nodes
                 for function in table.derived_functions.all():
                     graph['nodes'].append({
@@ -243,14 +243,14 @@ class AortaLineageGraphView(View):
                         'name': function.name,
                         'table_id': f'table_{table.id}'
                     })
-                    
+
                     # Add edges from function to table
                     graph['edges'].append({
                         'source': f'function_{function.id}',
                         'target': f'table_{table.id}',
                         'type': 'produces'
                     })
-                    
+
                     # Add edges from source columns to function
                     for col_ref in function.column_references.all():
                         if col_ref.referenced_column:
@@ -260,7 +260,7 @@ class AortaLineageGraphView(View):
                                 'target': f'function_{function.id}',
                                 'type': 'uses'
                             })
-        
+
         return JsonResponse(graph)
 
 

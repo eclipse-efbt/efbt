@@ -12,7 +12,7 @@
 #
 import os
 import csv
-from pybirdai.entry_points.utils_processor import get_utils_processor as Utils
+from pybirdai.entry_points.utils_processor import Utils
 
 from pybirdai.regdna import ELAttribute, ELClass, ELEnum
 from pybirdai.regdna import ELEnumLiteral, ELReference
@@ -31,8 +31,8 @@ class SQLDevLDMImport(object):
     def do_import(self, context):
         '''
         import the items from the BIRD LDM csv files
-       
-        
+
+
     '''
 
         SQLDevLDMImport.import_classification_types(self, context)
@@ -53,14 +53,14 @@ class SQLDevLDMImport(object):
 
     def generate_etl(self, context):
         InputLayerLinkEnricher().enrich_with_links_to_input_layer_columns(context)
-       
+
         csv_dir = context.output_directory + os.sep + 'csv'
         for file in os.listdir(csv_dir):
             file_path = os.path.join(csv_dir, file)
             if os.path.isfile(file_path):
                 os.remove(file_path)
         traverser = SubtypeExploder()
-        
+
         traverser.traverse(context,'SCRTY_EXCHNG_TRDBL_DRVTV',False)
         traverser.traverse(context,'SCRTY_EXCHNG_TRDBL_DRVTV',True)
         traverser.traverse(context,'CRDT_FCLTY',False)
@@ -276,7 +276,7 @@ class SQLDevLDMImport(object):
                     header_skipped = True
                 else:
 
-                    entity_name = row[0] 
+                    entity_name = row[0]
                     object_id = row[1]
                     engineering_type = row[27]
                     num_supertype_entity_id = row[26]
@@ -291,9 +291,9 @@ class SQLDevLDMImport(object):
                         process_class = False
                     if process_class:
                         altered_class_name = Utils.make_valid_id(class_name)
-                        eclass = ELClass(name=altered_class_name)  
+                        eclass = ELClass(name=altered_class_name)
                         eclass.original_name = entity_name
-                        
+
 
                         context.ldm_entities_package.eClassifiers.extend([
                                                                             eclass])
@@ -345,18 +345,18 @@ class SQLDevLDMImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    entity_name = row[0]    
+                    entity_name = row[0]
                     arc_name = row[1]
                     relation_name = row[2]
                     target_entity_name = row[3]
-                    
+
                     altered_arc_name = Utils.make_valid_id(arc_name)
                     num_of_siblings_arcs = 0
                     try:
                         num_of_siblings_arcs = len(entity_to_arc_dictionary[entity_name]) -1
                     except KeyError:
                         pass
-                    
+
                     if num_of_siblings_arcs > 0:
                         arc_class = None
                         try:
@@ -374,7 +374,7 @@ class SQLDevLDMImport(object):
                             # because it is a reference data class and we are skipping reference data
                             # in the LDM
                             if source_class is not None:
-          
+
                                 context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
                                 context.arc_to_source_map[altered_arc_name] = source_class
                                 context.ldm_entities_package.eClassifiers.extend([arc_class])
@@ -393,7 +393,7 @@ class SQLDevLDMImport(object):
                                 attribute.lowerBound = 0
                                 attribute.upperBound = 1
                                 the_reference_annotation = ELAnnotation()
-                                
+
                                 the_reference_annotation_directive = Utils.get_annotation_directive(source_class.eContainer(), "relationship_type")
                                 the_reference_annotation.source = the_reference_annotation_directive
                                 details = the_reference_annotation.details
@@ -416,8 +416,8 @@ class SQLDevLDMImport(object):
 
                                 source_class.eStructuralFeatures.append(
                                     non_containment_reference)
-                            
-                        
+
+
                         target_class = SQLDevLDMImport.find_class_with_long_name(self, context,Utils.make_valid_id(target_entity_name))
                         # It can be the case that the target class has not yet been created
                         # because it is a reference data class and we are skipping reference data
@@ -436,25 +436,25 @@ class SQLDevLDMImport(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    entity_name = row[0]    
+                    entity_name = row[0]
                     arc_name = row[1]
                     relation_name = row[2]
                     target_entity_name = row[3]
-                    
+
                     altered_arc_name = Utils.make_valid_id(arc_name)
                     arc_class = None
                     try:
                         arc_list = entity_to_arc_dictionary[entity_name]
                         if not (altered_arc_name in arc_list):
                             arc_list.append(altered_arc_name)
-                            
+
                     except KeyError:
                         arc_list = [altered_arc_name]
                         entity_to_arc_dictionary[entity_name] = arc_list
 
             context.entity_to_arc_dictionary = entity_to_arc_dictionary
             return entity_to_arc_dictionary
-        
+
     def find_class_with_name(self, context, name):
         '''
         get the class with this name from the input tables package
@@ -463,7 +463,7 @@ class SQLDevLDMImport(object):
             if isinstance(eclassifier, ELClass):
                 if eclassifier.name == name:
                     return eclassifier
-                
+
     def find_class_with_long_name(self, context, name):
         '''
         get the class with this name from the input tables package
@@ -472,12 +472,12 @@ class SQLDevLDMImport(object):
         for eclassifier in context.ldm_entities_package.eClassifiers:
             if isinstance(eclassifier, ELClass):
                 for annotation in  eclassifier.eAnnotations:
-                    for detail in annotation.details: 
+                    for detail in annotation.details:
                         if detail.key == 'long_name':
                             if detail.value == name:
                                 return eclassifier
         return None
-                
+
     def set_ldm_super_classes(self, context):
         '''
         for each entity in the LDM, set the superclass of the class,
@@ -653,9 +653,9 @@ class SQLDevLDMImport(object):
                     if len(preferred_abbreviation) == 0:
                         preferred_abbreviation = attribute_name
                         print("no preferred abbreviation for attribute: " + attribute_name)
-                        
+
                     the_attribute_name = Utils.make_valid_id(preferred_abbreviation)
-                    
+
                     process_attribute = True
                     if context.skip_reference_data_in_ldm and \
                         (class_id in context.reference_data_class_list):
@@ -669,8 +669,8 @@ class SQLDevLDMImport(object):
                             the_enum = context.enum_map[enum_id]
 
                             attribute = ELAttribute()
-                            
-                                                            
+
+
                             attribute.lowerBound = 0
                             attribute.upperBound = 1
                             if the_enum.name == "String":
@@ -716,7 +716,7 @@ class SQLDevLDMImport(object):
                             elif the_enum.name.startswith("INTGR"):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int  
+                                attribute.eAttributeType = context.types.e_int
                             elif the_enum.name.startswith("YR"):
                                 attribute.name = the_attribute_name
                                 attribute.eType = context.types.e_int
@@ -738,7 +738,7 @@ class SQLDevLDMImport(object):
                                 attribute.eType = context.types.e_date
                                 attribute.eAttributeType = context.types.e_boolean
 
-                                
+
 
                             # This is a common domain used for String identifiers in BIRD
                             # in SQLDeveloper
@@ -768,8 +768,8 @@ class SQLDevLDMImport(object):
                                 print(datatype_id)
 
                         try:
-                            
-                            
+
+
                             the_class = context.classes_map[class_id]
                             the_class.eStructuralFeatures.extend([attribute])
                             the_long_name_annotation = ELAnnotation()
@@ -786,7 +786,7 @@ class SQLDevLDMImport(object):
                             print("missing class2: ")
                             print(class_id)
 
-    
+
 
     def add_ldm_relationships_between_classes(self, context):
         '''
@@ -841,24 +841,24 @@ class SQLDevLDMImport(object):
                             ereference = ELReference()
                             ereference.name = reference_name
                             ereference.eType = target_class
-        
+
                             if target_optional == "N":
                                 ereference.containment = False
 
                                 linked_reference = ELReference()
-                                linked_reference.name = reference_name 
+                                linked_reference.name = reference_name
                                 linked_reference.eType = the_class
                                 linked_reference.upperBound = 1
                                 linked_reference.lowerBound = 1
                                 linked_reference.containment = False
                                 linked_reference.eOpposite = ereference
-                                
+
                                 ereference.eOpposite = linked_reference
 
                                 target_class.eStructuralFeatures.append(
                                     linked_reference)
-                                                            
-        
+
+
                             else:
                                 ereference.containment = False
 
@@ -871,42 +871,42 @@ class SQLDevLDMImport(object):
                                 mapentry.value = the_class.name + "." + ereference.name
                                 details.append(mapentry)
                                 target_class.eAnnotations.append(the_associated_class_annotation)
-        
+
                             if source_optional.strip() == "Y":
-                                if source_to_target_cardinality.strip() == "*":                            
-                                    # upper bound of -1 means there is no upper bounds, 
+                                if source_to_target_cardinality.strip() == "*":
+                                    # upper bound of -1 means there is no upper bounds,
                                     # so represents an open list of reference
                                     ereference.upperBound = -1
                                     ereference.lowerBound = 0
-        
+
                                 else:
                                     ereference.upperBound = 1
                                     ereference.lowerBound = 0
                             else:
                                 if source_to_target_cardinality.strip() == "*":
-        
+
                                     ereference.upperBound = -1
                                     ereference.lowerBound = 1
                                 else:
                                     ereference.upperBound = 1
                                     ereference.lowerBound = 1
-        
-                                
+
+
                             if not the_class is None:
                                 the_class.eStructuralFeatures.append(ereference)
 
-    
+
     def mark_root_class_as_entity_group_annotation(self,context):
         for the_class in context.classes_map.values():
             ultimate_superclass = SQLDevLDMImport.get_ultimate_superclass(self,context,the_class)
             if not (ultimate_superclass == the_class) :
                 the_entity_annotation = Utils.get_annotation_with_source(the_class, "entity_hierarchy")
-                if the_entity_annotation is None: 
+                if the_entity_annotation is None:
                     the_entity_annotation = ELAnnotation()
                     the_entity_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "entity_hierarchy")
                     the_entity_annotation.source = the_entity_annotation_directive
                     the_class.eAnnotations.append(the_entity_annotation)
-                
+
                 details = the_entity_annotation.details
                 mapentry  = ELStringToStringMapEntry()
                 mapentry.key = "entity_hierarchy"
@@ -915,37 +915,37 @@ class SQLDevLDMImport(object):
 
             if (ultimate_superclass == the_class) and ( SQLDevLDMImport.has_subclasses(self,context,the_class) or SQLDevLDMImport.has_delegate(self,context,the_class)):
                 the_entity_annotation = Utils.get_annotation_with_source(the_class, "entity_hierarchy")
-                if the_entity_annotation is None: 
-                    the_entity_annotation = ELAnnotation() 
+                if the_entity_annotation is None:
+                    the_entity_annotation = ELAnnotation()
                     the_entity_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "entity_hierarchy")
                     the_entity_annotation.source = the_entity_annotation_directive
                     the_class.eAnnotations.append(the_entity_annotation)
-                
+
                 details = the_entity_annotation.details
                 mapentry  = ELStringToStringMapEntry()
                 mapentry.key = "entity_hierarchy"
                 mapentry.value = ultimate_superclass.name
                 details.append(mapentry)
-         
+
     def remove_enums_not_used_by_attributes(self,context):
-        
+
         for enum in context.ldm_domains_package.eClassifiers:
             if not (enum in context.enums_used):
                 context.ldm_domains_package.eClassifiers.remove(enum)
-        
+
     def get_ultimate_superclass(self,context,the_class):
-        
+
         return_class = None
         if len(the_class.eSuperTypes) > 0:
             return_class = SQLDevLDMImport.get_ultimate_superclass(self,context,the_class.eSuperTypes[0])
-        elif SQLDevLDMImport.is_delegate_class(self,context,the_class): 
+        elif SQLDevLDMImport.is_delegate_class(self,context,the_class):
             return_class = SQLDevLDMImport.get_ultimate_superclass(self,context,
                                 SQLDevLDMImport.get_delegate_class(self,context,the_class))
         else:
             return_class = the_class
-        
+
         return return_class
-            
+
     def has_subclasses(self,context,the_class):
         for a_class in context.classes_map.values():
             if len(a_class.eSuperTypes) > 0:
@@ -953,33 +953,33 @@ class SQLDevLDMImport(object):
                 if superclass == the_class:
                     return True
 
-        return False 
-    
+        return False
+
     def has_delegate(self,context,the_class):
         for a_class in context.classes_map.values():
             for ref in a_class.eStructuralFeatures:
                 if ref.name.endswith('_delegate'):
                     return True
 
-        return False 
-        
+        return False
+
     def is_delegate_class(self,context,the_class):
 
         if not (SQLDevLDMImport.get_delegate_class(self,context,the_class) is None):
-                return True 
+                return True
         return False
-        
+
     def get_delegate_class(self,context,the_class):
         # find the calss that has a containment reference to this class
         for a_class in context.classes_map.values():
             for reference in a_class.eStructuralFeatures:
                 if (reference.name.endswith('_delegate')) and reference.eType == the_class:
                     return a_class
-                
+
         return None
-    
+
     def remove_duplicate_attributes_in_subclasses(self, context):
-        
+
         for classifier in context.ldm_entities_package.eClassifiers:
             if isinstance(classifier, ELClass):
                 feaures_to_remove = []
@@ -987,9 +987,9 @@ class SQLDevLDMImport(object):
                     if isinstance(feature, ELAttribute):
                         if SQLDevLDMImport.attribute_exists_in_any_superclass(self, classifier,feature, context):
                             feaures_to_remove.append(feature)
-                            
+
                 for feature_to_remove in feaures_to_remove:
-                    classifier.eStructuralFeatures.remove(feature_to_remove)                                    
+                    classifier.eStructuralFeatures.remove(feature_to_remove)
 
     def attribute_exists_in_any_superclass(self, el_class,attribute, context):
         return_value = False
@@ -998,17 +998,12 @@ class SQLDevLDMImport(object):
             for feature in super_class.eStructuralFeatures:
                 if isinstance(feature, ELAttribute):
                     if feature.name == attribute.name:
-                        return_value = True 
-        
+                        return_value = True
+
             if return_value == False:
                 return SQLDevLDMImport.attribute_exists_in_any_superclass(self, super_class,attribute, context)
             else:
                 return True
-                         
-        else:
-            return False               
-    
 
-        
-    
-        
+        else:
+            return False

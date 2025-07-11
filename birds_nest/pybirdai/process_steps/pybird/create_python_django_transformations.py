@@ -10,12 +10,12 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
-from pybirdai.entry_points.utils_processor import get_utils_processor as Utils
+from pybirdai.entry_points.utils_processor import Utils
 from pybirdai.bird_meta_data_model import *
 import os
 from django.conf import settings
 from pybirdai.process_steps.pybird.orchestration import Orchestration
-from pybirdai.models import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction
+from pybirdai.aorta_model import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction
 from datetime import datetime
 
 
@@ -26,22 +26,22 @@ class CreatePythonTransformations:
         '''
         Read in the transformation meta data and create python classes
         '''
-        
+
         # Initialize AORTA tracking
         orchestration = Orchestration()
         if hasattr(context, 'enable_lineage_tracking') and context.enable_lineage_tracking:
             orchestration.init_with_lineage(None, f"Transformation_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             print("AORTA lineage tracking enabled for transformation generation")
-        
+
         CreatePythonTransformations.delete_generated_python_join_files(context)
         CreatePythonTransformations.create_output_classes( sdd_context)
         CreatePythonTransformations.create_slice_classes(sdd_context)
         # get all the cube_links for a report
 
     def create_output_classes(  sdd_context):
-        
+
          #get all the cubes_structure_items for that cube and make a related Python class.
-        file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  'output_tables.py', "a",  encoding='utf-8') 
+        file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  'output_tables.py', "a",  encoding='utf-8')
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         file.write("from datetime import datetime\n")
         file.write("from pybirdai.annotations.decorators import lineage, track_table_init\n")
@@ -101,13 +101,13 @@ class CreatePythonTransformations:
 
     def create_slice_classes( sdd_context):
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
-            file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')   
+            file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')
             file.write("from pybirdai.bird_data_model import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
             file.write("from datetime import datetime\n")
             file.write("from pybirdai.annotations.decorators import lineage\n")
-        
+
             file.write("\nclass " + report_id + "_UnionItem:\n")
             file.write("\tbase = None #" + report_id + "_Base\n")
             cube_structure_items = []
@@ -175,22 +175,22 @@ class CreatePythonTransformations:
             file.write("\nclass " + report_id + "_UnionTable :\n")
             file.write("\t" + report_id + "_UnionItems = [] # " +  report_id + "_UnionItem []\n" )
             join_ids_added = []
-            for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
-                for cube_link in cube_links:                   
+            for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
+                for cube_link in cube_links:
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
                         if cube_link.join_identifier not in join_ids_added:
-                            file.write("\t" + report_id + "_" + cube_link.join_identifier.replace(' ','_') + "_Table = None # " +  cube_link.join_identifier.replace(' ','_') + "\n") 
+                            file.write("\t" + report_id + "_" + cube_link.join_identifier.replace(' ','_') + "_Table = None # " +  cube_link.join_identifier.replace(' ','_') + "\n")
                             join_ids_added.append(cube_link.join_identifier)
             file.write("\tdef calc_" + report_id + "_UnionItems(self) -> list[" + report_id + "_UnionItem] :\n")
             file.write("\t\titems = [] # " + report_id + "_UnionItem []\n")
 
             join_ids_added = []
-            for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():                
-                for cube_link in cube_links:                   
+            for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
+                for cube_link in cube_links:
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
-                        if cube_link.join_identifier not in join_ids_added:     
+                        if cube_link.join_identifier not in join_ids_added:
                             file.write("\t\tfor item in self." + report_id + "_" + cube_link.join_identifier.replace(' ','_') + "_Table." + cube_link.join_identifier.replace(' ','_') + "s:\n")
                             file.write("\t\t\tnewItem = " + report_id + "_UnionItem()\n")
                             file.write("\t\t\tnewItem.base = item\n")
@@ -205,18 +205,18 @@ class CreatePythonTransformations:
             file.write("\t\tself." + report_id + "_UnionItems.extend(self.calc_" + report_id + "_UnionItems())\n")
             file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
             file.write("\t\treturn None\n")
-            file.write("\n")					 
-			
+            file.write("\n")
+
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
-                class_header_is_written = False                
-                for cube_link in cube_links:                   
+                class_header_is_written = False
+                for cube_link in cube_links:
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
                         # only write the class header once
                         if not class_header_is_written:
                             file.write("\nclass " + cube_link.join_identifier.replace(' ','_') + "(" + report_id + "_Base):\n")
                             class_header_is_written = True
-                        
+
                         cube_structure_item_links = []
                         try:
                             cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
@@ -234,15 +234,15 @@ class CreatePythonTransformations:
                             file.write("\tdef " + cube_structure_item_link.foreign_cube_variable_code.variable_id.variable_id + "(self):\n")
                             file.write("\t\treturn self." +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
 
-		
+
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
-         
-                report_and_join =   join_for_report_id.split(':') 
+
+                report_and_join =   join_for_report_id.split(':')
                 join_id = report_and_join[1]
                 if report_and_join[0] == report_id:
                     file.write("\nclass " + report_id + "_" + join_id.replace(' ','_') + "_Table:\n" )
-                    for cube_link in cube_links:  
-                        cube_structure_item_links = []  
+                    for cube_link in cube_links:
+                        cube_structure_item_links = []
                         try:
                             cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
                         except KeyError:
@@ -254,11 +254,11 @@ class CreatePythonTransformations:
                                 file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + "_Table = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
                                 primary_cubes_added.append(cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
 
-                
+
                 if report_and_join[0] == report_id:
                     join_id = report_and_join[1]
                     file.write("\t" + join_id.replace(' ','_') + "s = []# " + join_id.replace(' ','_') + "[]\n")
-                    file.write("\tdef calc_" + join_id.replace(' ','_') + "s(self) :\n")                                
+                    file.write("\tdef calc_" + join_id.replace(' ','_') + "s(self) :\n")
                     file.write("\t\titems = [] # " + join_id.replace(' ','_') + "[\n")
                     file.write("\t\t# Join up any refered tables that you need to join\n")
                     file.write("\t\t# loop through the main table\n")
@@ -266,7 +266,7 @@ class CreatePythonTransformations:
                     file.write("\t\treturn items\n")
                     file.write("\tdef init(self):\n")
                     file.write("\t\tOrchestration().init(self)\n")
-                    file.write("\t\tself." + join_id.replace(' ','_') + "s = []\n")                    
+                    file.write("\t\tself." + join_id.replace(' ','_') + "s = []\n")
                     file.write("\t\tself." + join_id.replace(' ','_') + "s.extend(self.calc_" + join_id.replace(' ','_') + "s())\n")
                     file.write("\t\tCSVConverter.persist_object_as_csv(self,True)\n")
 
