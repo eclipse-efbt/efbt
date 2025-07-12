@@ -358,7 +358,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.info("STEP 1 completed successfully!")
 
             logger.info(
-                "Django will restart now. After restart, user needs to run migrations."
+                "Django will restart now. After restart, user needs to setup database."
             )
             return {
                 "success": True,

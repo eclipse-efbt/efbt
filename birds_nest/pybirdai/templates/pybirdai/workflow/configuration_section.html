@@ -25,16 +25,7 @@
                     </select>
                 </div>
                 
-                <!-- Clone Mode -->
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Clone Mode</label>
-                    <select name="clone_mode" class="form-control" style="width: 100%; padding: 8px;" disabled>
-                        <option value="false" {% if config.clone_mode == 'false' or not config.clone_mode %}selected{% endif %}>Disabled</option>
-                        <option value="true" {% if config.clone_mode == 'true' %}selected{% endif %}>Enabled</option>
-                    </select>
-                    <small style="color: #666; font-style: italic;">Clone mode functionality (coming soon)</small>
-                </div>
-                
+               
                 <!-- Enable Lineage Tracking -->
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">
