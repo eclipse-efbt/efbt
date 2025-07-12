@@ -15,7 +15,7 @@
     </p>
     <ol style="color: #856404; margin-left: 20px;">
         <li>Configure your data sources above</li>
-        <li>Click "Setup Database (Tasks 1-2)" to create the database</li>
+        <li>Click Retrieve Artifacts and Setup Database</li>
         <li>Once complete, the full workflow interface will be available</li>
     </ol>
 </div>
@@ -34,26 +34,9 @@
 <div class="task-grid">
 
 
-    <div class="task-card">
-    <h4 style="margin-top: 20px;">Reset Session</h4>
-    </div>
-    <div class="task-card">
-        <button type="button" id="reset-session-partial-btn" class="btn operation-btn" style="flex: 1;" onclick="resetSessionPartial(); return false;">
-            Tasks 3-6
-        </button>
-    </div>
-    <div class="task-card">
-        <button type="button" id="reset-session-full-btn" class="btn operation-btn" style="flex: 1;" onclick="resetSessionFull(); return false;">
-            All Tasks
-        </button>
-    </div>
-    <div class="task-card">
-    <div id="reset-session-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
-    </div>
-
     <!--  -->
     <div class="task-card">
-        <h3>Task</h3>
+        <div id="reset-session-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
     </div>
     <div class="task-card">
         <h3>Do</h3>
@@ -61,95 +44,48 @@
     <div class="task-card">
         <h3>Review</h3>
     </div>
-    <div class="task-card">
-        <h3>Compare</h3>
-    </div>
+ 
 
     {% if database_ready and task_grid %}
         {% for task in task_grid %}
         <div class="task-card">
-            <h3>{{ forloop.counter }}. {{ task.task_name }}</h3>
+            <h3>{{ forloop.counter}}. {{ task.task_name }}</h3>
         </div>
 
         <div class="task-card">
-            {% if forloop.counter == 1 %}
-            <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
-                {% csrf_token %}
-                <a id="database-setup-btn" class="operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
-                    Do
-                </a>
-            </form>
-            {% elif forloop.counter == 2 %}
-            <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
-                {% csrf_token %}
-                <a id="migration-btn" class="operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
-                    Do
-                </a>
-            </form>
-            {% else %}
+            
             <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
                class="operation-btn {{ task.operations.do.status }}" >
                 Do
             </a>
-            {% endif %}
+           
         </div>
 
         <div class="task-card">
-            {% if forloop.counter < 3 %}
-            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
-               class="operation-btn invalidated">
-                Review
-            </a>
-            {% else %}
+
             <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
                class="operation-btn {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
                 Review
             </a>
-            {% endif %}
+  
         </div>
 
-        <div class="task-card">
-            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='compare' %}"
-                class="operation-btn invalidated">
-     <!--           class="operation-btn {{ task.operations.compare.status }}"> -->
-                Compare
-            </a>
-        </div>
+        
         {% endfor %}
     {% else %}
         <!-- Default task grid when database is not available -->
-        {% for i in "123456" %}
+        {% for i in "1234" %}
         <div class="task-card">
             <h3>{{ forloop.counter }}.
-                {% if forloop.counter == 1 %}Resource Download
-                {% elif forloop.counter == 2 %}Database Creation
-                {% elif forloop.counter == 3 %}SMCubes Core Creation
-                {% elif forloop.counter == 4 %}SMCubes Transformation Rules
-                {% elif forloop.counter == 5 %}Python Transformation Rules
-                {% elif forloop.counter == 6 %}Full Execution
+                {% if forloop.counter == 1 %}SMCubes Core Creation
+                {% elif forloop.counter == 2 %}SMCubes Transformation Rules
+                {% elif forloop.counter == 3 %}Python Transformation Rules
+                {% elif forloop.counter == 4 %}Full Execution
                 {% endif %}
             </h3>
         </div>
 
-        <div class="task-card">
-            {% if forloop.counter == 1 %}
-            <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
-                {% csrf_token %}
-                <a type="button" id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
-                    Do
-                </a>
-            </form>
-            {% elif forloop.counter == 2 %}
-            <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
-                {% csrf_token %}
-                <a type="button" id="migration-btn" class="btn operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
-                    Do
-                </a>
-            </form>
-            {% else %}
-                <span class="operation-btn pending">Review</span>
-            {% endif %}
-        </div>
+        
 
         <div class="task-card">
             {% if forloop.counter < 1 %}
@@ -178,7 +114,7 @@
             <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
                 {% csrf_token %}
                 <button type="button" id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
-                    Setup Database (Step 1)
+                    Retrieve Artifacts
                 </button>
             </form>
             <div id="database-setup-status" style="display: none; margin-top: 10px; margin-bottom: 10px; padding: 10px; border-radius: 5px;"></div>
@@ -186,7 +122,7 @@
             <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
                 {% csrf_token %}
                 <button type="button" id="migration-btn" class="btn operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
-                    Run Migrations (Step 2)
+                    Setup Database
                 </button>
             </form>
             <div id="migration-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
@@ -198,19 +134,17 @@
 
         <div style="flex: 1;">
             <h3>Automode Execution</h3>
-            <p>Run tasks automatically from Task 3 up to selected point</p>
+            <p>Run tasks automatically from Task 1 up to selected point</p>
             <form id="automode-form" method="post" action="{% url 'pybirdai:workflow_automode' %}">
                 {% csrf_token %}
                 <select name="target_task" class="form-control" style="margin-bottom: 10px;">
-                    <option value="3">Task 3: SMCubes Core Creation</option>
-                    <option value="4">Task 4: SMCubes Transformation Rules</option>
-                    <option value="5">Task 5: Python Transformation Rules</option>
-                    <option value="6" selected>Task 6: Full Execution</option>
+                    <option value="1">Task 1: SMCubes Core Creation</option>
+                    <option value="2">Task 2: SMCubes Transformation Rules</option>
+                    <option value="3">Task 3: Python Transformation Rules</option>
+                    <option value="4" selected>Task 4: Full Execution</option>
                 </select>
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" id="automode-btn" class="btn btn-primary" style="flex: 1;">Run Automode (from Task 3)</button>
-                    <button type="button" id="clone-btn" class="btn btn-info" style="flex: 1;" onclick="startCloneImport(); return false;">Clone</button>
-                </div>
+                <button type="submit" id="automode-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Run Automode (from Task 1)</button>
+                <button type="button" id="clone-btn" class="btn btn-info" style="width: 100%;" onclick="startCloneImport(); return false;">Clone (beta version)</button>
             </form>
             <div id="automode-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
             <div id="clone-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
@@ -229,14 +163,12 @@
             </ul>
 
             <h4 style="margin-top: 20px;">Reset Session</h4>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button type="button" id="reset-session-partial-btn" class="btn btn-warning" style="flex: 1;" onclick="resetSessionPartial(); return false;">
-                    Reset Tasks 3-6
-                </button>
-                <button type="button" id="reset-session-full-btn" class="btn btn-danger" style="flex: 1;" onclick="resetSessionFull(); return false;">
-                    Reset All Tasks
-                </button>
-            </div>
+            <button type="button" id="reset-session-partial-btn" class="btn btn-warning" style="width: 100%; margin-bottom: 10px;" onclick="resetSessionPartial(); return false;">
+                Reset Tasks 1-4
+            </button>
+            <button type="button" id="reset-session-full-btn" class="btn btn-danger" style="width: 100%;" onclick="resetSessionFull(); return false;">
+                Reset Everything
+            </button>
             <div id="reset-session-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
         </div>
     </div>
@@ -340,14 +272,14 @@ function doDatabaseSetup(btn, statusDiv, csrfToken) {
     .then(data => {
         console.log('Database setup response data:', data);
         if (data.success && data.status === 'started') {
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Database setup started in background. Polling for status...';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Artefact retrieval started in background. Polling for status...';
             pollDatabaseSetupStatus(statusDiv, btn);
         } else {
             statusDiv.style.background = '#f8d7da';
             statusDiv.style.color = '#721c24';
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Failed to start: ' + (data.message || 'Unknown error');
             btn.disabled = false;
-            btn.textContent = 'Setup Database (Step 1)';
+            btn.textContent = 'Retireive Artifacts';
         }
     })
     .catch(error => {
@@ -356,7 +288,7 @@ function doDatabaseSetup(btn, statusDiv, csrfToken) {
         statusDiv.style.color = '#721c24';
         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
         btn.disabled = false;
-        btn.textContent = 'Setup Database (Step 1)';
+        btn.textContent = 'Retireive Artifacts';
     });
 }
 
@@ -380,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
             automodeStatus.style.display = 'block';
             automodeStatus.style.background = '#e3f2fd';
             automodeStatus.style.color = '#1976d2';
-            automodeStatus.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Running automode from Task 3 to Task ${targetTask}...`;
+            automodeStatus.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Running automode from Task 1 to Task ${targetTask}...`;
 
             // Get form data
             const formData = new FormData(automodeForm);
@@ -414,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>' + errorMsg;
 
                     automodeBtn.disabled = false;
-                    automodeBtn.textContent = 'Run Automode (from Task 3)';
+                    automodeBtn.textContent = 'Run Automode (from Task 1)';
                 }
             })
             .catch(error => {
@@ -424,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 automodeStatus.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
 
                 automodeBtn.disabled = false;
-                automodeBtn.textContent = 'Run Automode (from Task 3)';
+                automodeBtn.textContent = 'Run Automode (from Task 1)';
             });
         });
     }
@@ -486,7 +418,7 @@ function doMigration(btn, statusDiv, csrfToken) {
     statusDiv.style.display = 'block';
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting database migrations...';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting database setup...';
 
     // Create form data
     const formData = new FormData();
@@ -512,7 +444,7 @@ function doMigration(btn, statusDiv, csrfToken) {
     .then(data => {
         console.log('Migration response data:', data);
         if (data.success && data.status === 'started') {
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Database migrations started in background. Polling for status...';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Database setup started in background. Polling for status...';
             pollMigrationStatus(statusDiv, btn);
         } else {
             statusDiv.style.background = '#f8d7da';
@@ -553,9 +485,9 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
                 if (status.running) {
                     // Still running - update status message
                     const elapsedTime = Math.round(status.elapsed_time || 0);
-                    let message = `<span style="display: inline-block; margin-right: 8px;">⏳</span>${status.message || 'Database setup running...'} (${elapsedTime}s elapsed)`;
+                    let message = `<span style="display: inline-block; margin-right: 8px;">⏳</span>${status.message || 'Artefact Retrieval Running...'} (${elapsedTime}s elapsed)`;
                     if (status.current_task) {
-                        message += ` - Currently on Task ${status.current_task}`;
+                        message += ` - Processing`;
                     }
                     statusDiv.innerHTML = message;
 
@@ -699,7 +631,7 @@ function pollMigrationStatus(statusDiv, btn) {
                 if (status.running) {
                     // Still running - update status message
                     const elapsedTime = Math.round(status.elapsed_time || 0);
-                    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Database migrations running in background... (${elapsedTime}s elapsed)`;
+                    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Database setup running in background... (${elapsedTime}s elapsed)`;
 
                     // Continue polling
                     pollCount++;
@@ -709,7 +641,7 @@ function pollMigrationStatus(statusDiv, btn) {
                         // Timeout
                         statusDiv.style.background = '#fff3cd';
                         statusDiv.style.color = '#856404';
-                        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Migration is taking longer than expected. Please check server logs.';
+                        statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Database setup is taking longer than expected. Please check server logs.';
                         btn.disabled = false;
                     }
                 } else if (status.completed) {
@@ -805,7 +737,7 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                         statusDiv.style.color = '#856404';
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Automode is taking longer than expected. Please check server logs.';
                         btn.disabled = false;
-                        btn.textContent = 'Run Automode (from Task 3)';
+                        btn.textContent = 'Run Automode (from Task 1)';
                     }
                 } else if (status.completed) {
                     // Automode completed
@@ -831,7 +763,7 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>' + errorMsg;
 
                         btn.disabled = false;
-                        btn.textContent = 'Run Automode (from Task 3)';
+                        btn.textContent = 'Run Automode (from Task 1)';
                     }
                 }
             } else {
@@ -841,7 +773,7 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error checking automode status';
 
                 btn.disabled = false;
-                btn.textContent = 'Run Automode (from Task 3)';
+                btn.textContent = 'Run Automode (from Task 1)';
             }
         }).catch(error => {
           console.error('Database setup status polling error:', error);
@@ -883,9 +815,9 @@ function handleServerRestart(statusDiv, btn) {
         const timeStr = minutes > 0 ? `${minutes}m ${remainingSeconds}s` : `${seconds}s`;
 
         if (!serverWentDown) {
-            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Waiting for server restart... (${timeStr})<br><small>After restart, button will change to "Run Migrations (Step 2)"</small>`;
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Waiting for server restart... (${timeStr})<br><small>After restart, button will change to "Setup Database"</small>`;
         } else {
-            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>Server is restarting... (${timeStr})<br><small>Page will refresh to show "Run Migrations" button</small>`;
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">🔄</span>Server is restarting... (${timeStr})<br><small>Page will refresh to show "Setup Database" button</small>`;
         }
     }
 
@@ -911,7 +843,7 @@ function handleServerRestart(statusDiv, btn) {
                 console.log('Server restart completed - server is back online');
                 statusDiv.style.background = '#d4edda';
                 statusDiv.style.color = '#155724';
-                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Server restart completed! Refreshing page to show "Run Migrations" button...';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Server restart completed! Refreshing page to show "Setup Database" button...';
 
                 // Disable the database setup button immediately to prevent double-clicks
                 btn.disabled = true;
@@ -932,7 +864,7 @@ function handleServerRestart(statusDiv, btn) {
                     statusDiv.style.color = '#856404';
                     statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Server restart is taking longer than expected. Please refresh the page manually.';
                     btn.disabled = false;
-                    btn.textContent = 'Setup Database (Tasks 1-2)';
+                    btn.textContent = 'Retrieve Artifacts and Setup Database';
                 }
             }
         })
@@ -951,7 +883,7 @@ function handleServerRestart(statusDiv, btn) {
                 statusDiv.style.color = '#856404';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Server restart is taking longer than expected. Please refresh the page manually or check the server console.';
                 btn.disabled = false;
-                btn.textContent = 'Setup Database (Tasks 1-2)';
+                btn.textContent = 'Retrieve Artifacts and Setup Database';
             }
         });
     }
@@ -1005,7 +937,7 @@ function startCloneImport() {
     statusDiv.style.display = 'block';
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting CSV import from technical_export directory...';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Cloning Previous smcubes database setup from github';
 
     // Create form data
     const formData = new FormData();
@@ -1040,7 +972,7 @@ function startCloneImport() {
             // Re-enable button after success
             setTimeout(() => {
                 btn.disabled = false;
-                btn.textContent = 'Clone';
+                btn.textContent = 'Clone (beta version)';
                 // Optionally refresh to show updated data
                 if (data.refresh_recommended) {
                     setTimeout(() => {
@@ -1054,7 +986,7 @@ function startCloneImport() {
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Clone import failed: ' + (data.error || data.message || 'Unknown error');
 
             btn.disabled = false;
-            btn.textContent = 'Clone';
+            btn.textContent = 'Clone (beta version)';
         }
     })
     .catch(error => {
@@ -1064,13 +996,13 @@ function startCloneImport() {
         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
 
         btn.disabled = false;
-        btn.textContent = 'Clone';
+        btn.textContent = 'Clone (beta version)';
     });
 }
 
 // Reset session functions
 function resetSessionPartial() {
-    if (!confirm('Are you sure you want to reset tasks 3-6? This will clear all progress from Task 3 onwards while keeping the database setup (Tasks 1-2) intact.')) {
+    if (!confirm('Are you sure you want to reset tasks 1-4? This will clear all progress from Task 1 onwards while keeping the database setup (Tasks 1-2) intact.')) {
         return;
     }
 
@@ -1109,11 +1041,11 @@ function doResetSession(type) {
 
     // Update UI
     btn.disabled = true;
-    btn.textContent = `Resetting ${isPartial ? 'Tasks 3-6' : 'All Tasks'}...`;
+    btn.textContent = `Resetting ${isPartial ? 'Tasks 1-4' : 'All Tasks'}...`;
     statusDiv.style.display = 'block';
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Resetting ${isPartial ? 'tasks 3-6' : 'entire workflow session'}...`;
+    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Resetting ${isPartial ? 'tasks 1-4' : 'entire workflow session'}...`;
 
     // Create form data
     const formData = new FormData();
@@ -1161,7 +1093,7 @@ function doResetSession(type) {
             // Re-enable button and refresh page after delay
             setTimeout(() => {
                 btn.disabled = false;
-                btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+                btn.textContent = isPartial ? 'Reset Tasks 1-4' : 'Reset Everything';
                 statusDiv.innerHTML += '<br><small>Refreshing page to reflect changes...</small>';
 
                 // Refresh page to show updated state
@@ -1175,7 +1107,7 @@ function doResetSession(type) {
             statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Reset failed: ${data.message || data.error || 'Unknown error'}`;
 
             btn.disabled = false;
-            btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+            btn.textContent = isPartial ? 'Reset Tasks 1-4' : 'Reset Everything';
         }
     })
     .catch(error => {
@@ -1185,7 +1117,7 @@ function doResetSession(type) {
         statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
 
         btn.disabled = false;
-        btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+        btn.textContent = isPartial ? 'Reset Tasks 1-4' : 'Reset Everything';
     });
 }
 </script>
