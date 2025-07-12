@@ -1,49 +1,23 @@
-{% extends "pybirdai/workflow/base.html" %}
-
-{% block breadcrumb_items %}
+{% extends "pybirdai/workflow/base.html" %} {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
 <a href="{% url 'pybirdai:workflow_task' task_number=2 operation='do' %}"
-    >Task 2: Database Creation</a
+    >Task 2: SMCubes Transformation Rules</a
 >
 <span class="breadcrumb-separator">›</span>
 <span>Do</span>
-{% endblock %}
-
-{% block workflow_content %}
+{% endblock %} {% block workflow_content %}
 <div class="task-content">
-    <h1>Task 2: Database Creation - Do</h1>
+    <h1>Task 2: SMCubes Transformation Rules Creation - Do</h1>
 
-    {% if task_execution.status == 'completed' %}
+    {% if task_execution.status != 'pending' %}
     <div class="alert alert-success">
-        <strong>✓ Task Completed</strong>
-        <p>
-            Database has been created successfully. You can proceed to the
-            Review step.
-        </p>
+        <strong>At least 1 Subtask Completed</strong>
+        <p>SMCubes transformation rules have been created successfully.</p>
         <a
             href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}"
-            class="btn btn-primary"
+            class="operation-btn btn-primary"
             >Go to Review</a
         >
-    </div>
-    {% elif task_execution.status == 'paused' %}
-    <div class="alert alert-warning">
-        <strong>⏸️ Server Restart Required</strong>
-        <p>Django models have been created. Please follow these steps:</p>
-        <ol>
-            <li>Stop the Django development server (Ctrl+C in terminal)</li>
-            <li>Run migrations: <code>python manage.py migrate</code></li>
-            <li>Restart the server: <code>python manage.py runserver</code></li>
-            <li>Return to this page and click "Continue After Restart"</li>
-        </ol>
-
-        <form method="post" style="margin-top: 20px">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="continue" />
-            <button type="submit" class="btn btn-primary">
-                Continue After Restart
-            </button>
-        </form>
     </div>
     {% elif task_execution.status == 'failed' %}
     <div class="alert alert-danger">
@@ -51,116 +25,162 @@
         <p>{{ task_execution.error_message }}</p>
         <p>Please fix the issues and try again.</p>
     </div>
+    {% elif task_execution.status == 'running' %}
+    <div class="alert alert-info">
+        <strong>🔄 Task Running</strong>
+        <p>Transformation rules creation is in progress...</p>
+        <div class="progress">
+            <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                style="width: {{ task_execution.execution_data.progress|default:0 }}%"
+            ></div>
+        </div>
+    </div>
     {% endif %}
 
-    <h2>Database Creation Steps</h2>
+    <h2>Transformation Rules Creation Process</h2>
 
-    <div class="step-cards">
-        <div class="step-card">
-            <h3>Step 1: Model Generation</h3>
-            <p>Generate Django models from the imported LDM/EIL data model</p>
-            {% if task_execution.status == 'pending' %}
-            <span class="status-badge pending">Pending</span>
-            <button
-                type="button"
-                class="btn btn-sm btn-primary substep-btn"
-                data-substep="start"
-            >
-                Run Model Generation
-            </button>
-            {% elif task_execution.execution_data.model_generation_complete %}
+    <div class="subtask-list">
+        <h3>Subtasks to be executed:</h3>
+
+        <div class="subtask-item">
+            <h4>1. Filter Creation</h4>
+            <p>Generate SMCubes filters from business rules</p>
+            <ul>
+                <li>Parse filter definitions</li>
+                <li>Create filter metadata</li>
+                <li>Validate filter logic</li>
+            </ul>
+            {% if task_execution.execution_data.filters_created %}
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
-            <span class="status-badge running">In Progress</span>
+            <span class="status-badge pending">⏳ Pending</span>
             {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=2 substep_name='generate_all_filters' %}"
+                class="operation-btn btn-sm btn-primary"
+            >
+                Run Generate Filters
+            </a>
         </div>
 
-        <div class="step-card">
-            <h3>Step 2: Database Migration</h3>
-            <p>Create database tables and apply migrations</p>
-            {% if task_execution.status == 'pending' or task_execution.status == 'paused' %}
-            <span class="status-badge pending">Requires Restart</span>
-            {% if task_execution.status == 'paused' %}
-            <button
-                type="button"
-                class="btn btn-sm btn-success substep-btn"
-                data-substep="continue"
+        <div class="subtask-item">
+            <h4>2. Join Rules Creation</h4>
+            <p>Generate join metadata for data relationships</p>
+            <ul>
+                <li>Analyze data relationships</li>
+                <li>Create join specifications</li>
+                <li>Generate executable joins</li>
+            </ul>
+            {% if task_execution.execution_data.joins_metadata_created %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=2 substep_name='create_joins_metadata' %}"
+                class="operation-btn btn-sm btn-primary"
             >
-                Run Continue After Restart
-            </button>
-            {% endif %}
-            {% elif task_execution.execution_data.migration_complete %}
-            <span class="status-badge completed">✓ Completed</span>
-            {% else %}
-            <span class="status-badge pending">Pending</span>
-            {% endif %}
-        </div>
-
-        <div class="step-card">
-            <h3>Step 3: Initial Data Setup</h3>
-            <p>Populate initial metadata and configure database</p>
-            {% if task_execution.execution_data.initial_data_complete %}
-            <span class="status-badge completed">✓ Completed</span>
-            {% else %}
-            <span class="status-badge pending">Pending</span>
-            {% endif %}
+                Run Create Joins Metadata
+            </a>
         </div>
     </div>
 
-    {% if task_execution.status == 'pending' %}
-    <form method="post" style="margin-top: 30px">
+    <!-- {% if task_execution.status == 'pending' %}
+    <div id="task2-status" style="display: none"></div>
+    <form id="task2-form" method="post" style="margin-top: 30px">
         {% csrf_token %}
-        <input type="hidden" name="action" value="start" />
 
-        <div class="alert alert-info">
-            <h4>Important Notes:</h4>
-            <ul>
-                <li>
-                    This process will create Django models based on your
-                    imported data model
-                </li>
-                <li>
-                    A server restart will be required to apply database
-                    migrations
-                </li>
-                <li>
-                    Ensure you have completed Task 1 (Resource Download) before
-                    proceeding
-                </li>
-                <li>
-                    The process is fully automated but requires manual server
-                    restart
-                </li>
-            </ul>
+        <div class="execution-options">
+            <h3>Execution Options</h3>
+
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="generate_all_filters"
+                    id="generate_all_filters"
+                    checked
+                />
+                <label class="form-check-label" for="generate_all_filters">
+                    Generate All Available Filters
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="create_joins_metadata"
+                    id="create_joins_metadata"
+                    checked
+                />
+                <label class="form-check-label" for="create_joins_metadata">
+                    Create Join Metadata
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="validate_filters"
+                    id="validate_filters"
+                    checked
+                />
+                <label class="form-check-label" for="validate_filters">
+                    Validate Filter Logic
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="optimize_joins"
+                    id="optimize_joins"
+                    checked
+                />
+                <label class="form-check-label" for="optimize_joins">
+                    Optimize Join Execution Order
+                </label>
+            </div>
         </div>
 
         <button type="submit" class="btn btn-primary">
-            Start Database Creation
+            Start Transformation Rules Creation
         </button>
-        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary" >Cancel</a>
+        <a
+            href="{% url 'pybirdai:workflow_dashboard' %}"
+            class="btn btn-secondary"
+            >Cancel</a
+        >
     </form>
-    {% endif %}
+    {% endif %} -->
 </div>
 
 <style>
-    .step-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
+    .subtask-list {
         margin: 20px 0;
     }
 
-    .step-card {
+    .subtask-item {
         background: #f8f9fa;
         border: 1px solid #dee2e6;
         border-radius: 8px;
         padding: 20px;
+        margin-bottom: 15px;
     }
 
-    .step-card h3 {
+    .subtask-item h4 {
         margin-top: 0;
         margin-bottom: 10px;
         color: #495057;
+    }
+
+    .subtask-item ul {
+        margin: 10px 0;
+        padding-left: 20px;
     }
 
     .status-badge {
@@ -187,125 +207,85 @@
         color: #0f5132;
     }
 
-    .substep-btn {
-        margin-top: 10px;
-        margin-left: 10px;
-    }
-
-    .alert {
-        padding: 15px;
+    .execution-options {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
         margin-bottom: 20px;
-        border-radius: 4px;
     }
 
-    .alert-success {
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
+    .execution-options h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
     }
 
-    .alert-warning {
-        background-color: #fff3cd;
-        border: 1px solid #ffeaa7;
-        color: #856404;
+    .form-check {
+        margin-bottom: 10px;
     }
 
-    .alert-danger {
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-        color: #721c24;
+    .progress {
+        height: 20px;
+        margin-top: 10px;
     }
 
-    .alert-info {
-        background-color: #d1ecf1;
-        border: 1px solid #bee5eb;
-        color: #0c5460;
-    }
-
-    code {
-        background-color: #f8f9fa;
-        padding: 2px 4px;
-        border-radius: 3px;
-        font-family: monospace;
+    .progress-bar {
+        background-color: #0d6efd;
     }
 </style>
 
 <script>
-    // Handle individual substep buttons
-    document.addEventListener("DOMContentLoaded", function () {
-        const substepButtons = document.querySelectorAll(".substep-btn");
-        substepButtons.forEach((button) => {
-            button.addEventListener("click", function () {
-                const substepName = this.getAttribute("data-substep");
-                const taskNumber = 2;
+    // Auto-refresh if task is running
+
+    // Handle form submission with AJAX
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('task2-form');
+        const statusDiv = document.getElementById('task2-status');
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
 
                 // Show processing message
-                alert("Running substep: " + substepName);
+                statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Starting SMCubes rules creation. This may take a few minutes...</div>';
+                statusDiv.style.display = 'block';
 
-                // Disable button
-                this.disabled = true;
-                this.innerHTML =
-                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Running...';
+                // Disable submit button
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...';
 
-                // Get CSRF token
-                const csrfToken = document.querySelector(
-                    "[name=csrfmiddlewaretoken]",
-                ).value;
-
-                // Submit substep via AJAX
-                fetch(
-                    `/pybirdai/workflow/task/${taskNumber}/substep/${substepName}/`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest",
-                            "X-CSRFToken": csrfToken,
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                        body:
-                            "csrfmiddlewaretoken=" +
-                            encodeURIComponent(csrfToken),
-                    },
-                )
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            alert(
-                                "Success: " +
-                                    (data.message ||
-                                        "Substep completed successfully."),
-                            );
-                            // Refresh page after 2 seconds to show updated status
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else {
-                            alert(
-                                "Error: " + (data.message || "Substep failed."),
-                            );
-                            this.disabled = false;
-                            this.innerHTML =
-                                "Run " +
-                                substepName.replace(/\b\w/g, (l) =>
-                                    l.toUpperCase(),
-                                );
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        alert(
-                            "Error: An unexpected error occurred running the substep.",
-                        );
-                        this.disabled = false;
-                        this.innerHTML =
-                            "Run " +
-                            substepName.replace(/\b\w/g, (l) =>
-                                l.toUpperCase(),
-                            );
-                    });
+                // Submit form via AJAX
+                fetch(form.action || window.location.href, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'SMCubes rules creation completed successfully.') + '</div>';
+                        // Refresh page after 2 seconds to show completed status
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'SMCubes rules creation failed.') + '</div>';
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Start SMCubes Rules Creation';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred. Please try again.</div>';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Start SMCubes Rules Creation';
+                });
             });
-        });
+        }
+
     });
 </script>
-
 {% endblock %}
