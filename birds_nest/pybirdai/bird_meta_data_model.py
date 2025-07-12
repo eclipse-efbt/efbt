@@ -1239,18 +1239,15 @@ class WorkflowTaskExecution(models.Model):
     """Track execution state of workflow tasks"""
     
     TASK_CHOICES = [
-        (1, 'Resource Download'),
-        (2, 'Database Creation'),
-        (3, 'SMCubes Core Creation'),
-        (4, 'SMCubes Transformation Rules Creation'),
-        (5, 'Python Transformation Rules Creation'),
-        (6, 'Full Execution with Test Suite'),
+        (1, 'SMCubes Core Creation'),
+        (2, 'SMCubes Transformation Rules Creation'),
+        (3, 'Python Transformation Rules Creation'),
+        (4, 'Full Execution with Test Suite'),
     ]
     
     OPERATION_CHOICES = [
         ('do', 'Do'),
         ('review', 'Review'),
-        ('compare', 'Compare'),
     ]
     
     STATUS_CHOICES = [
@@ -1508,16 +1505,16 @@ class WorkflowSession(models.Model):
         verbose_name_plural = "WorkflowSessions"
     
     def get_task_status_grid(self):
-        """Get a 6x3 grid of task statuses"""
+        """Get a 4x3 grid of task statuses"""
         grid = []
-        for task_num in range(1, 7):
+        for task_num in range(1, 5):
             task_row = {
                 'task_number': task_num,
                 'task_name': dict(WorkflowTaskExecution.TASK_CHOICES)[task_num],
                 'operations': {}
             }
             
-            for op_type in ['do', 'review', 'compare']:
+            for op_type in ['do', 'review']:
                 try:
                     execution = WorkflowTaskExecution.objects.get(
                         task_number=task_num,
@@ -1543,7 +1540,7 @@ class WorkflowSession(models.Model):
     
     def get_progress_percentage(self):
         """Calculate overall progress percentage based on completed 'do' operations only"""
-        total_tasks = 6  # 6 tasks total
+        total_tasks = 4  # 4 tasks total
         completed_do_operations = WorkflowTaskExecution.objects.filter(
             operation_type='do',
             status='completed'

@@ -59,10 +59,10 @@ logger = logging.getLogger(__name__)
 def refresh_complete_status(task:int=3,all:bool=True):
 
     task_to_complete_mapping = {
-        3:5,
-        4:2,
-        5:2,
-        6:1
+        1:5,
+        2:2,
+        3:2,
+        4:1
     }
 
     def check_one_task(execution,task:int=3):
@@ -420,7 +420,7 @@ def _run_database_setup_async():
         # Task 2: Database Creation
         _database_setup_status.update({
             'current_task': 2,
-            'message': 'Running Task 2: Database Creation...'
+            'message': 'Running  Artfacts Retrieval...'
         })
 
         from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
@@ -533,7 +533,7 @@ def _run_database_setup_async():
 
 
 def _run_automode_async(target_task, session_data):
-    """Run automode (Tasks 3-6) in background thread."""
+    """Run automode (Tasks 1-4) in background thread."""
     global _automode_status
 
     try:
@@ -543,7 +543,7 @@ def _run_automode_async(target_task, session_data):
             'completed': False,
             'success': False,
             'error': None,
-            'message': f'Starting automode from Task 3 to Task {target_task}...',
+            'message': f'Starting automode from Task 1 to Task {target_task}...',
             'started_at': time.time(),
             'current_task': 3,
             'target_task': target_task,
@@ -553,10 +553,10 @@ def _run_automode_async(target_task, session_data):
 
         # Map task numbers to their handler functions
         task_handlers = {
-            3: task3_smcubes_core,
-            4: task4_smcubes_rules,
-            5: task5_python_rules,
-            6: task6_full_execution,
+            1: task1_smcubes_core,
+            2: task2_smcubes_rules,
+            3: task3_python_rules,
+            4: task4_full_execution,
         }
 
         # Create a mock request object
@@ -570,7 +570,7 @@ def _run_automode_async(target_task, session_data):
                 self.headers = {'X-Requested-With': 'XMLHttpRequest'}
 
         # Execute tasks sequentially
-        for task_num in range(3, target_task + 1):
+        for task_num in range(1, target_task + 1):
             try:
                 _automode_status.update({
                     'current_task': task_num,
@@ -800,6 +800,8 @@ def workflow_dashboard(request):
             }
         )
 
+        refresh_complete_status()
+
 
     else:
         # Provide default data when no database is available
@@ -810,7 +812,7 @@ def workflow_dashboard(request):
             'session_id': session_id or 'no-database',
         })
 
-    refresh_complete_status()
+    
 
 
     return render(request, 'pybirdai/workflow/dashboard.html', context)
@@ -879,12 +881,11 @@ def workflow_task_router(request, task_number, operation):
 
     # Route to appropriate handler
     task_handlers = {
-        1: task1_resource_download,
-        2: task2_database_creation,
-        3: task3_smcubes_core,
-        4: task4_smcubes_rules,
-        5: task5_python_rules,
-        6: task6_full_execution,
+      
+        1: task1_smcubes_core,
+        2: task2_smcubes_rules,
+        3: task3_python_rules,
+        4: task4_full_execution,
     }
 
     handler = task_handlers.get(task_number)
@@ -896,202 +897,11 @@ def workflow_task_router(request, task_number, operation):
         return redirect("pybirdai:workflow_dashboard")
 
 
-def task1_resource_download(request, operation, task_execution, workflow_session):
-    """Handle Task 1: Resource Download operations"""
-
-    if operation == 'do':
-        if request.method == 'POST':
-            form = AutomodeConfigurationSessionForm(request.POST)
-            if form.is_valid():
-                # Save configuration
-                config_data = form.cleaned_data
-                workflow_session.configuration = config_data
-                workflow_session.save()
-
-                # Start task execution
-                task_execution.status = "running"
-                task_execution.started_at = timezone.now()
-                task_execution.save()
-
-                try:
-                    # Execute resource download
-                    from .bird_meta_data_model import AutomodeConfiguration
-
-                    # Create a temporary AutomodeConfiguration object (not saved to DB)
-                    config = AutomodeConfiguration(
-                        data_model_type=config_data.get("eldm_or_eil", "ELDM"),
-                        technical_export_source=config_data.get(
-                            "technical_export_source", "BIRD_WEBSITE"
-                        ),
-                        technical_export_github_url="",  # Not used in ResourceDownloadForm
-                        config_files_source=config_data.get(
-                            "configuration_source", "MANUAL"
-                        ),
-                        config_files_github_url=config_data.get(
-                            "configuration_github_url", ""
-                        ),
-                        when_to_stop="RESOURCE_DOWNLOAD",  # Fixed for Task 1
-                    )
-
-                    service = AutomodeConfigurationService()
-                    # Get GitHub token from in-memory storage
-                    github_token = _get_github_token()
-                    results = service.fetch_files_from_source(
-                        config=config, github_token=github_token, force_refresh=False
-                    )
-
-                    # Store results
-                    task_execution.execution_data = results
-                    task_execution.status = "completed"
-                    task_execution.completed_at = timezone.now()
-                    task_execution.save()
-
-                    messages.success(request, "Resource download completed successfully")
-                    return redirect('pybirdai:workflow_task', task_number=1, operation='review')
-
-                except Exception as e:
-                    logger.error(f"Resource download failed: {e}")
-                    task_execution.status = "failed"
-                    task_execution.error_message = str(e)
-                    task_execution.save()
-                    messages.error(request, f"Resource download failed: {e}")
-        else:
-            form = AutomodeConfigurationSessionForm(initial=workflow_session.configuration)
-
-        return render(request, 'pybirdai/workflow/task1/do.html', {
-            'form': form,
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-        })
-
-    elif operation == 'review':
-        # Handle POST request for marking as reviewed
-        if request.method == 'POST' and 'mark_reviewed' in request.POST:
-            # Update task execution to mark as reviewed
-            task_execution.reviewed_at = timezone.now()
-            if not task_execution.execution_data:
-                task_execution.execution_data = {}
-            task_execution.execution_data['reviewed'] = True
-            task_execution.save()
-
-            messages.success(request, "Task 1: Resource Download marked as reviewed successfully")
-            return redirect('pybirdai:workflow_dashboard')
-
-        # Fetch execution data from the 'do' operation
-        do_execution = WorkflowTaskExecution.objects.filter(
-            task_number=1,
-            operation_type='do'
-        ).first()
-
-        execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
-
-        # Show downloaded files and validation results
-        return render(request, 'pybirdai/workflow/task1/review.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-            'execution_data': execution_data,
-        })
-
-    elif operation == 'compare':
-        # Compare with previous versions
-        return render(
-            request,
-            "pybirdai/workflow/task1/compare.html",
-            {
-                "task_execution": task_execution,
-                "workflow_session": workflow_session,
-            },
-        )
 
 
-def task2_database_creation(request, operation, task_execution, workflow_session):
-    """Handle Task 2: Database Creation operations"""
 
-    if operation == 'do':
-        if request.method == 'POST':
-            action = request.POST.get('action')
-
-            if action == 'start':
-                # Start database creation
-                task_execution.status = "running"
-                task_execution.started_at = timezone.now()
-                task_execution.save()
-
-                try:
-                    # Run database setup
-                    from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-                    app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
-
-                    # This will create models and prepare for migrations
-                    results = app_config.run_automode_database_setup()
-
-                    # Store results and mark as paused (waiting for restart)
-                    task_execution.execution_data = results
-                    task_execution.status = "paused"
-                    task_execution.save()
-
-                    messages.info(request, "Database models created. Please restart the server to apply migrations.")
-
-                except Exception as e:
-                    logger.error(f"Database creation failed: {e}")
-                    task_execution.status = "failed"
-                    task_execution.error_message = str(e)
-                    task_execution.save()
-                    messages.error(request, f"Database creation failed: {e}")
-
-            elif action == 'continue':
-                # Continue after restart
-                try:
-                    from .entry_points.automode_database_setup import (
-                        RunAutomodeDatabaseSetup,
-                    )
-
-                    app_config = RunAutomodeDatabaseSetup("pybirdai", "birds_nest")
-                    app_config.run_post_setup_operations()
-
-                    task_execution.status = 'completed'
-                    task_execution.completed_at = timezone.now()
-                    task_execution.save()
-
-                    messages.success(request, "Database creation completed successfully")
-                    return redirect('pybirdai:workflow_task', task_number=2, operation='review')
-
-                except Exception as e:
-                    logger.error(f"Post-restart operations failed: {e}")
-                    task_execution.status = "failed"
-                    task_execution.error_message = str(e)
-                    task_execution.save()
-                    messages.error(request, f"Post-restart operations failed: {e}")
-
-        return render(request, 'pybirdai/workflow/task2/do.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-        })
-
-    elif operation == 'review':
-        # Fetch execution data from the 'do' operation
-        do_execution = WorkflowTaskExecution.objects.filter(
-            task_number=2,
-            operation_type='do'
-        ).first()
-
-        execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
-
-        return render(request, 'pybirdai/workflow/task2/review.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-            'execution_data': execution_data,
-        })
-
-    elif operation == 'compare':
-        return render(request, 'pybirdai/workflow/task2/compare.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-        })
-
-
-def task3_smcubes_core(request, operation, task_execution, workflow_session):
-    """Handle Task 3: SMCubes Core Creation operations"""
+def task1_smcubes_core(request, operation, task_execution, workflow_session):
+    """Handle Task 1: SMCubes Core Creation operations"""
 
     if operation == 'do':
         if request.method == "GET":
@@ -1106,7 +916,7 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
             is_ajax = hasattr(request, 'headers') and request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
             # Start SMCubes core creation
-            task_execution.status = "running task3_smcubes_core"
+            task_execution.status = "running task1_smcubes_core"
             task_execution.started_at = timezone.now()
             task_execution.save()
 
@@ -1227,7 +1037,7 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
                 form = SMCubesCoreForm()
             return render(
                 request,
-                "pybirdai/workflow/task3/do.html",
+                "pybirdai/workflow/task1/do.html",
                 {
                     "form": form if request.method == "GET" else SMCubesCoreForm(),
                     "task_execution": task_execution,
@@ -1239,7 +1049,7 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
             return None
 
     elif operation == 'review':
-        refresh_complete_status(task=3,all=False)
+        refresh_complete_status(task=1,all=False)
         # Handle POST request for marking as reviewed
         if request.method == 'POST' and 'mark_reviewed' in request.POST:
             # Update task execution to mark as reviewed
@@ -1249,56 +1059,27 @@ def task3_smcubes_core(request, operation, task_execution, workflow_session):
             task_execution.execution_data['reviewed'] = True
             task_execution.save()
 
-            messages.success(request, "Task 3: SMCubes Core Creation marked as reviewed successfully")
+            messages.success(request, "Task 1: SMCubes Core Creation marked as reviewed successfully")
             return redirect('pybirdai:workflow_dashboard')
 
         # Fetch execution data from the 'do' operation
         do_execution = WorkflowTaskExecution.objects.filter(
-            task_number=3,
+            task_number=1,
             operation_type='do'
         ).first()
 
         execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
 
-        return render(request, 'pybirdai/workflow/task3/review.html', {
+        return render(request, 'pybirdai/workflow/task1/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
         })
 
-    elif operation == 'compare':
-        # Generate comparison data
-        comparison_data = {
-            "hierarchies_added": 12,
-            "hierarchies_modified": 5,
-            "hierarchies_removed": 2,
-            "semantic_added": 25,
-            "semantic_modified": 10,
-            "semantic_removed": 3,
-            "cubes_added": 8,
-            "cubes_modified": 4,
-            "cubes_removed": 1,
-            "rules_affected": 45,
-            "code_files_affected": 23,
-            "tests_affected": 67,
-            "new_validations": 15,
-            "coverage_change": "+5%",
-            "potential_issues": 3,
-        }
-
-        if request.method == 'POST' and 'approve_changes' in request.POST:
-            # Mark as reviewed
-            messages.success(request, "Changes approved successfully")
-            return redirect('pybirdai:workflow_task', task_number=4, operation='do')
-
-        return render(request, 'pybirdai/workflow/task3/compare.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-            'comparison_data': comparison_data,
-        })
+    
 
 
-def task4_smcubes_rules(request, operation, task_execution, workflow_session):
+def task2_smcubes_rules(request, operation, task_execution, workflow_session):
     """Handle Task 4: SMCubes Transformation Rules Creation operations"""
 
     if operation == 'do':
@@ -1379,9 +1160,9 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
                 if hasattr(request, '_messages'):
                     messages.success(request, success_message)
                     if all_subtasks_completed:
-                        return redirect('pybirdai:workflow_task', task_number=4, operation='review')
+                        return redirect('pybirdai:workflow_task', task_number=2, operation='review')
                     else:
-                        return redirect('pybirdai:workflow_task', task_number=4, operation='do')
+                        return redirect('pybirdai:workflow_task', task_number=2, operation='do')
 
             except Exception as e:
                 logger.error(f"Transformation rules creation failed: {e}")
@@ -1399,7 +1180,7 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
                     messages.error(request, f"Transformation rules creation failed: {e}")
 
         if hasattr(request, '_messages'):
-            return render(request, 'pybirdai/workflow/task4/do.html', {
+            return render(request, 'pybirdai/workflow/task2/do.html', {
                 'task_execution': task_execution,
                 'workflow_session': workflow_session,
             })
@@ -1408,10 +1189,10 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
 
     elif operation == 'review':
 
-        refresh_complete_status(task=4,all=False)
+        refresh_complete_status(task=2,all=False)
         # Fetch execution data from the 'do' operation
         do_execution = WorkflowTaskExecution.objects.filter(
-            task_number=4,
+            task_number=2,
             operation_type='do'
         ).first()
 
@@ -1420,20 +1201,16 @@ def task4_smcubes_rules(request, operation, task_execution, workflow_session):
 
         execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
 
-        return render(request, 'pybirdai/workflow/task4/review.html', {
+        return render(request, 'pybirdai/workflow/task2/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
         })
 
-    elif operation == 'compare':
-        return render(request, 'pybirdai/workflow/task4/compare.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-        })
+    
 
 
-def task5_python_rules(request, operation, task_execution, workflow_session):
+def task3_python_rules(request, operation, task_execution, workflow_session):
     """Handle Task 5: Python Transformation Rules Creation operations"""
 
     if operation == 'do':
@@ -1530,7 +1307,7 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
 
                 if hasattr(request, '_messages'):
                     messages.success(request, success_message)
-                    return redirect('pybirdai:workflow_task', task_number=5, operation='review')
+                    return redirect('pybirdai:workflow_task', task_number=3, operation='review')
 
             except Exception as e:
                 logger.error(f"Python code generation failed: {e}")
@@ -1548,7 +1325,7 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
                     messages.error(request, f"Python code generation failed: {e}")
 
         if hasattr(request, '_messages'):
-            return render(request, 'pybirdai/workflow/task5/do.html', {
+            return render(request, 'pybirdai/workflow/task3/do.html', {
                 'task_execution': task_execution,
                 'workflow_session': workflow_session,
             })
@@ -1556,10 +1333,10 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
             return None
 
     elif operation == 'review':
-        refresh_complete_status(task=5,all=False)
+        refresh_complete_status(task=3,all=False)
         # Fetch execution data from the 'do' operation
         do_execution = WorkflowTaskExecution.objects.filter(
-            task_number=5,
+            task_number=3,
             operation_type='do'
         ).first()
 
@@ -1570,21 +1347,17 @@ def task5_python_rules(request, operation, task_execution, workflow_session):
         if do_execution.status == "completed":
             task_execution.status = "completed"
 
-        return render(request, 'pybirdai/workflow/task5/review.html', {
+        return render(request, 'pybirdai/workflow/task3/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
         })
 
-    elif operation == 'compare':
-        return render(request, 'pybirdai/workflow/task5/compare.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-        })
+    
 
 
-def task6_full_execution(request, operation, task_execution, workflow_session):
-    """Handle Task 6: Test Suite Execution operations"""
+def task4_full_execution(request, operation, task_execution, workflow_session):
+    """Handle Task 4: Test Suite Execution operations"""
 
     if operation == 'do':
         if request.method == 'POST':
@@ -1680,11 +1453,11 @@ def task6_full_execution(request, operation, task_execution, workflow_session):
                 if hasattr(request, '_messages'):
                     if all_subtasks_completed:
                         messages.success(request, "Test suite execution completed successfully!")
-                        return redirect('pybirdai:workflow_task', task_number=6, operation='review')
+                        return redirect('pybirdai:workflow_task', task_number=4, operation='review')
                     else:
                         steps_completed = len(execution_data.get('steps_completed', []))
                         messages.success(request, f"Test suite partially completed. {steps_completed} steps completed.")
-                        return redirect('pybirdai:workflow_task', task_number=6, operation='do')
+                        return redirect('pybirdai:workflow_task', task_number=4, operation='do')
 
             except Exception as e:
                 logger.error(f"Test execution failed: {e}")
@@ -1695,7 +1468,7 @@ def task6_full_execution(request, operation, task_execution, workflow_session):
                     messages.error(request, f"Test execution failed: {e}")
 
         if hasattr(request, '_messages'):
-            return render(request, 'pybirdai/workflow/task6/do.html', {
+            return render(request, 'pybirdai/workflow/task4/do.html', {
                 'task_execution': task_execution,
                 'workflow_session': workflow_session,
             })
@@ -1703,7 +1476,7 @@ def task6_full_execution(request, operation, task_execution, workflow_session):
             return None
 
     elif operation == 'review':
-        refresh_complete_status(task=6,all=False)
+        refresh_complete_status(task=4,all=False)
         # Load test results from JSON files
         test_results = load_test_results()
 
@@ -1741,7 +1514,7 @@ def task6_full_execution(request, operation, task_execution, workflow_session):
 
         # Fetch execution data from the 'do' operation
         do_execution = WorkflowTaskExecution.objects.filter(
-            task_number=6,
+            task_number=4,
             operation_type='do'
         ).first()
 
@@ -1750,7 +1523,7 @@ def task6_full_execution(request, operation, task_execution, workflow_session):
         if do_execution.status == "completed":
             task_execution.status = "completed"
 
-        return render(request, 'pybirdai/workflow/task6/review.html', {
+        return render(request, 'pybirdai/workflow/task4/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
@@ -1761,11 +1534,7 @@ def task6_full_execution(request, operation, task_execution, workflow_session):
             'grouped_results': grouped_results,
         })
 
-    elif operation == 'compare':
-        return render(request, 'pybirdai/workflow/task6/compare.html', {
-            'task_execution': task_execution,
-            'workflow_session': workflow_session,
-        })
+    
 
 
 @require_http_methods(["POST"])
@@ -1773,10 +1542,10 @@ def workflow_task_substep(request, task_number, substep_name):
     """Handle individual substep execution for workflow tasks"""
 
     # Validate task number
-    if task_number < 2 or task_number > 6:
+    if task_number < 0 or task_number > 4:
         return JsonResponse({
             'success': False,
-            'message': 'Invalid task number. Substeps are only available for tasks 2-6.'
+            'message': 'Invalid task number. Substeps are only available for tasks 1-4.'
         }, status=400)
 
     # Get or create task execution record
@@ -1810,16 +1579,15 @@ def workflow_task_substep(request, task_number, substep_name):
 
     # Route to appropriate substep handler
     try:
-        if task_number == 2:
+        
+        if task_number == 1:
+            return _execute_task1_substep(request, substep_name, task_execution, workflow_session)
+        elif task_number == 2:
             return _execute_task2_substep(request, substep_name, task_execution, workflow_session)
         elif task_number == 3:
             return _execute_task3_substep(request, substep_name, task_execution, workflow_session)
         elif task_number == 4:
             return _execute_task4_substep(request, substep_name, task_execution, workflow_session)
-        elif task_number == 5:
-            return _execute_task5_substep(request, substep_name, task_execution, workflow_session)
-        elif task_number == 6:
-            return _execute_task6_substep(request, substep_name, task_execution, workflow_session)
         else:
             return JsonResponse({
                 'success': False,
@@ -1896,8 +1664,8 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
         }, status=400)
 
 
-def _execute_task3_substep(request, substep_name, task_execution, workflow_session):
-    """Execute individual substeps for Task 3: SMCubes Core Creation"""
+def _execute_task1_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 1: SMCubes Core Creation"""
 
     try:
         # Import necessary modules
@@ -1997,15 +1765,15 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
 
     except Exception as e:
         traceback.print_exc()
-        logger.error(f"Task 3 substep {substep_name} failed: {e}")
+        logger.error(f"Task 1 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
             'message': str(e)
         }, status=500)
 
 
-def _execute_task4_substep(request, substep_name, task_execution, workflow_session):
-    """Execute individual substeps for Task 4: SMCubes Transformation Rules"""
+def _execute_task2_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 2: SMCubes Transformation Rules"""
 
     try:
         from .entry_points.create_filters import RunCreateFilters
@@ -2069,15 +1837,15 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
 
     except Exception as e:
         traceback.print_exc()
-        logger.error(f"Task 4 substep {substep_name} failed: {e}")
+        logger.error(f"Task 2 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
             'message': str(e)
         }, status=500)
 
 
-def _execute_task5_substep(request, substep_name, task_execution, workflow_session):
-    """Execute individual substeps for Task 5: Python Transformation Rules"""
+def _execute_task3_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 3: Python Transformation Rules"""
 
     try:
         from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
@@ -2141,15 +1909,15 @@ def _execute_task5_substep(request, substep_name, task_execution, workflow_sessi
 
     except Exception as e:
         traceback.print_exc()
-        logger.error(f"Task 5 substep {substep_name} failed: {e}")
+        logger.error(f"Task 3 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
             'message': str(e)
         }, status=500)
 
 
-def _execute_task6_substep(request, substep_name, task_execution, workflow_session):
-    """Execute individual substeps for Task 6: Test Suite Execution"""
+def _execute_task4_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 4: Test Suite Execution"""
 
     try:
         from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
@@ -2207,7 +1975,7 @@ def _execute_task6_substep(request, substep_name, task_execution, workflow_sessi
 
     except Exception as e:
         traceback.print_exc()
-        logger.error(f"Task 6 substep {substep_name} failed: {e}")
+        logger.error(f"Task 4 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
             'message': str(e)
@@ -2216,7 +1984,7 @@ def _execute_task6_substep(request, substep_name, task_execution, workflow_sessi
 
 @require_http_methods(["POST"])
 def workflow_automode(request):
-    """Start automode tasks 3-6 in background thread"""
+    """Start automode tasks 1-4 in background thread"""
     global _automode_status
     from django.db import connection
     from django.db.utils import OperationalError, ProgrammingError
@@ -2234,17 +2002,17 @@ def workflow_automode(request):
         # Reset status for new run
         _reset_automode_status()
 
-    target_task = int(request.POST.get('target_task', 6))
+    target_task = int(request.POST.get('target_task', 4))
 
-    # Ensure target task is at least 3 since we start from task 3
-    if target_task < 3:
+    # Ensure target task is at least 1 since we start from Task 1
+    if target_task < 1:
         return JsonResponse({
             'success': False,
-            'message': 'Target task must be 3 or higher',
+            'message': 'Target task must be 1 or higher',
             'status': 'invalid_target'
         }, status=400)
 
-    # Check if database is available (required for automode tasks 3-6)
+    # Check if database is available (required for automode tasks 1-4)
     try:
         with connection.cursor() as cursor:
             cursor.execute(
@@ -2254,7 +2022,7 @@ def workflow_automode(request):
                 return JsonResponse(
                     {
                         "success": False,
-                        "message": 'Database not available. Please run "Setup Database (Tasks 1-2)" first.',
+                        "message": 'Database not available. Please run Retrieve Artifacts and Setup Database first.',
                         "status": "database_missing",
                     },
                     status=400,
@@ -2262,7 +2030,7 @@ def workflow_automode(request):
     except (OperationalError, ProgrammingError):
         return JsonResponse({
             'success': False,
-            'message': 'Database not available. Please run "Setup Database (Tasks 1-2)" first.',
+            'message': 'Database not available. Please run Retrieve Artifacts and Setup Database first.',
             'status': 'database_error'
         }, status=400)
 
@@ -2280,7 +2048,7 @@ def workflow_automode(request):
 
         return JsonResponse({
             'success': True,
-            'message': f'Automode started in background (tasks 3 to {target_task}). Use /workflow/automode-status/ to check progress.',
+            'message': f'Automode started in background (tasks 1 to {target_task}). Use /workflow/automode-status/ to check progress.',
             'status': 'started',
             'check_status_url': '/pybirdai/workflow/automode-status/'
         })
@@ -2414,7 +2182,7 @@ def workflow_save_config(request):
 
 @require_http_methods(["POST"])
 def workflow_run_migrations(request):
-    """Start STEP 2: Database migrations in background thread"""
+    """Start Migratioin step: Database migrations in background thread"""
     global _migration_status
 
     # Check if migrations are already running
@@ -2475,7 +2243,7 @@ def workflow_migration_status(request):
 
 @require_http_methods(["POST"])
 def workflow_database_setup(request):
-    """Start tasks 1-2 database setup in background thread"""
+    """Start tasks for  database setup in background thread"""
     global _database_setup_status
 
     # Check if setup is already running
@@ -2645,6 +2413,50 @@ def workflow_clone_import(request):
                 if not result.get('success', False):
                     logger.error(f"Failed to import {filename}: {result.get('error', 'Unknown error')}")
 
+            # If clone was successful, mark tasks 1 and 2 as completed
+            if all_successful:
+                try:
+                    # Mark Task 1 (SMCubes Core Creation) as completed
+                    task1_do, created = WorkflowTaskExecution.objects.get_or_create(
+                        task_number=1,
+                        operation_type='do',
+                        defaults={
+                            'status': 'completed',
+                            'started_at': timezone.now(),
+                            'completed_at': timezone.now(),
+                            'execution_data': {'source': 'clone_import'}
+                        }
+                    )
+                    if not created and task1_do.status != 'completed':
+                        task1_do.status = 'completed'
+                        task1_do.completed_at = timezone.now()
+                        task1_do.execution_data = {'source': 'clone_import'}
+                        task1_do.save()
+                    
+                    # Mark Task 2 (SMCubes Transformation Rules Creation) as completed
+                    task2_do, created = WorkflowTaskExecution.objects.get_or_create(
+                        task_number=2,
+                        operation_type='do',
+                        defaults={
+                            'status': 'completed',
+                            'started_at': timezone.now(),
+                            'completed_at': timezone.now(),
+                            'execution_data': {'source': 'clone_import'}
+                        }
+                    )
+                    if not created and task2_do.status != 'completed':
+                        task2_do.status = 'completed'
+                        task2_do.completed_at = timezone.now()
+                        task2_do.execution_data = {'source': 'clone_import'}
+                        task2_do.save()
+                    
+                    logger.info("Clone import completed: Tasks 1 and 2 marked as completed")
+                    message += " (Tasks 1 & 2 marked as completed)"
+                    
+                except Exception as e:
+                    logger.error(f"Error marking tasks as completed after clone: {e}")
+                    # Don't fail the whole operation if task marking fails
+
             return JsonResponse({
                 'success': all_successful,
                 'message': message,
@@ -2749,14 +2561,14 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
             )
 
             # Delegate to appropriate task-specific substep handler
-            if task_number == 3:
+            if task_number == 1:
+                result = _execute_task1_substep(request, substep_name, task_execution, workflow_session)
+            elif task_number == 2:
+                result = _execute_task2_substep(request, substep_name, task_execution, workflow_session)
+            elif task_number == 3:
                 result = _execute_task3_substep(request, substep_name, task_execution, workflow_session)
             elif task_number == 4:
                 result = _execute_task4_substep(request, substep_name, task_execution, workflow_session)
-            elif task_number == 5:
-                result = _execute_task5_substep(request, substep_name, task_execution, workflow_session)
-            elif task_number == 6:
-                result = _execute_task6_substep(request, substep_name, task_execution, workflow_session)
             else:
                 logger.error(f"No substep handler for task {task_number}")
                 return JsonResponse({
@@ -2791,29 +2603,27 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
 
     # Show loading screen for the substep
     substep_display_names = {
-        # Task 3 substeps
+        # Task 31 substeps
         'delete_database': 'Database Deletion',
         'import_input_model': 'Input Model Import',
         'generate_templates': 'Report Templates Generation',
         'import_hierarchy_analysis': 'Hierarchy Analysis Import',
         'process_semantic': 'Semantic Integrations Processing',
-        # Task 4 substeps
+        # Task 2 substeps
         'generate_all_filters': 'Filter Generation',
         'create_joins_metadata': 'Join Metadata Creation',
-        # Task 5 substeps
+        # Task 3 substeps
         'generate_filter_code': 'Filter Code Generation',
         'generate_join_code': 'Join Code Generation',
-        # Task 6 substeps
+        # Task 4 substeps
         'run_tests': 'Test Suite Execution'
     }
 
     task_display_names = {
-        1: 'Resource Download',
-        2: 'Database Creation',
-        3: 'SMCubes Core Creation',
-        4: 'SMCubes Transformation Rules Creation',
-        5: 'Python Transformation Rules Creation',
-        6: 'Full Execution with Test Suite'
+        1: 'SMCubes Core Creation',
+        2: 'SMCubes Transformation Rules Creation',
+        3: 'Python Transformation Rules Creation',
+        4: 'Full Execution with Test Suite'
     }
 
     substep_display = substep_display_names.get(substep_name, substep_name.replace('_', ' ').title())
@@ -2840,7 +2650,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
         if upcoming_completed_count >= 5:
             return_url = f'/pybirdai/workflow/task/{task_number}/review/'
             return_text = f"Review {task_display}"
-            success_message = f"{substep_display} completed successfully. Task 3 is now complete!"
+            success_message = f"{substep_display} completed successfully. Task  is now complete!"
         else:
             return_url = f'/pybirdai/workflow/task/{task_number}/do/'
             return_text = f"Back to {task_display}"
@@ -2865,7 +2675,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
 def workflow_reset_session_full(request):
     """
     Reset the entire workflow session (full reset).
-    Removes all marker files and resets all tasks (1-6).
+    Removes all marker files and resets all tasks (1-4).
     """
     logger.info("Full workflow session reset requested")
 
@@ -2899,9 +2709,7 @@ def workflow_reset_session_full(request):
             '.task1_completed_marker',
             '.task2_completed_marker',
             '.task3_completed_marker',
-            '.task4_completed_marker',
-            '.task5_completed_marker',
-            '.task6_completed_marker'
+            '.task4_completed_marker'
         ]
 
         removed_markers = []
@@ -2966,13 +2774,13 @@ def workflow_reset_session_full(request):
 @require_http_methods(["POST"])
 def workflow_reset_session_partial(request):
     """
-    Reset workflow session from task 3 onwards (partial reset).
-    Keeps tasks 1-2 completed and only resets tasks 3-6.
+    Reset workflow session from task 1 onwards (partial reset).
+ 
     """
-    logger.info("Partial workflow session reset requested (tasks 3-6)")
+    logger.info("Partial workflow session reset requested (tasks 1-4) but not database reset")
 
     try:
-        # Reset only automode status (tasks 3-6)
+        # Reset only automode status (tasks 1-4)
         _reset_automode_status()
 
         # Get current session
@@ -2980,26 +2788,26 @@ def workflow_reset_session_partial(request):
         if session_id:
             try:
                 workflow_session = WorkflowSession.objects.get(session_id=session_id)
-                workflow_session.current_task = 3
+                workflow_session.current_task = 1
                 workflow_session.updated_at = timezone.now()
                 workflow_session.save()
-                logger.info(f"Reset workflow session {session_id} current_task to 3")
+                logger.info(f"Reset workflow session {session_id} current_task to 1")
             except WorkflowSession.DoesNotExist:
                 logger.warning(f"Workflow session {session_id} not found during reset")
 
-        # Delete only task executions for tasks 3-6
+        # Delete only task executions for tasks 1-4
         deleted_count = WorkflowTaskExecution.objects.filter(
-            task_number__in=[3, 4, 5, 6]
+            task_number__in=[1, 2, 3, 4]
         ).delete()[0]
-        logger.info(f"Deleted {deleted_count} task executions for tasks 3-6")
+        logger.info(f"Deleted {deleted_count} task executions for tasks 1-4")
 
-        # Remove only marker files for tasks 3-6
+        # Remove only marker files for tasks 1-4
         base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
         marker_files = [
+            '.task1_completed_marker',
+            '.task2_completed_marker',
             '.task3_completed_marker',
-            '.task4_completed_marker',
-            '.task5_completed_marker',
-            '.task6_completed_marker'
+            '.task4_completed_marker'
         ]
 
         removed_markers = []
@@ -3037,7 +2845,7 @@ def workflow_reset_session_partial(request):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'success': True,
-                'message': 'Partial workflow session reset completed successfully (tasks 3-6)',
+                'message': 'Partial workflow session reset completed successfully (tasks 1-4)',
                 'details': {
                     'removed_markers': removed_markers,
                     'removed_directories': removed_dirs,
@@ -3045,7 +2853,7 @@ def workflow_reset_session_partial(request):
                 }
             })
         else:
-            messages.success(request, 'Partial workflow session reset completed successfully (tasks 3-6)')
+            messages.success(request, 'Partial workflow session reset completed successfully (tasks 1-4)')
             return redirect('pybirdai:workflow_dashboard')
 
     except Exception as e:
