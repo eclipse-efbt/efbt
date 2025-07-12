@@ -1990,10 +1990,10 @@ def workflow_task_substep(request, task_number, substep_name):
     """Handle individual substep execution for workflow tasks"""
 
     # Validate task number
-    if task_number < 2 or task_number > 6:
+    if task_number < 0 or task_number > 4:
         return JsonResponse({
             'success': False,
-            'message': 'Invalid task number. Substeps are only available for tasks 2-6.'
+            'message': 'Invalid task number. Substeps are only available for tasks 1-4.'
         }, status=400)
 
     # Get or create task execution record
@@ -2027,16 +2027,15 @@ def workflow_task_substep(request, task_number, substep_name):
 
     # Route to appropriate substep handler
     try:
-        if task_number == 2:
+        
+        if task_number == 1:
+            return _execute_task1_substep(request, substep_name, task_execution, workflow_session)
+        elif task_number == 2:
             return _execute_task2_substep(request, substep_name, task_execution, workflow_session)
         elif task_number == 3:
             return _execute_task3_substep(request, substep_name, task_execution, workflow_session)
         elif task_number == 4:
             return _execute_task4_substep(request, substep_name, task_execution, workflow_session)
-        elif task_number == 5:
-            return _execute_task5_substep(request, substep_name, task_execution, workflow_session)
-        elif task_number == 6:
-            return _execute_task6_substep(request, substep_name, task_execution, workflow_session)
         else:
             return JsonResponse({
                 'success': False,
@@ -2113,8 +2112,8 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
         }, status=400)
 
 
-def _execute_task3_substep(request, substep_name, task_execution, workflow_session):
-    """Execute individual substeps for Task 3: SMCubes Core Creation"""
+def _execute_task1_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 1: SMCubes Core Creation"""
 
     try:
         # Import necessary modules
@@ -2214,15 +2213,15 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
 
     except Exception as e:
         traceback.print_exc()
-        logger.error(f"Task 3 substep {substep_name} failed: {e}")
+        logger.error(f"Task 1 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
             'message': str(e)
         }, status=500)
 
 
-def _execute_task4_substep(request, substep_name, task_execution, workflow_session):
-    """Execute individual substeps for Task 4: SMCubes Transformation Rules"""
+def _execute_task2_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 2: SMCubes Transformation Rules"""
 
     try:
         from .entry_points.create_filters import RunCreateFilters
@@ -2286,15 +2285,15 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
 
     except Exception as e:
         traceback.print_exc()
-        logger.error(f"Task 4 substep {substep_name} failed: {e}")
+        logger.error(f"Task 2 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
             'message': str(e)
         }, status=500)
 
 
-def _execute_task5_substep(request, substep_name, task_execution, workflow_session):
-    """Execute individual substeps for Task 5: Python Transformation Rules"""
+def _execute_task3_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 3: Python Transformation Rules"""
 
     try:
         from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
@@ -2358,15 +2357,15 @@ def _execute_task5_substep(request, substep_name, task_execution, workflow_sessi
 
     except Exception as e:
         traceback.print_exc()
-        logger.error(f"Task 5 substep {substep_name} failed: {e}")
+        logger.error(f"Task 3 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
             'message': str(e)
         }, status=500)
 
 
-def _execute_task6_substep(request, substep_name, task_execution, workflow_session):
-    """Execute individual substeps for Task 6: Test Suite Execution"""
+def _execute_task4_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 4: Test Suite Execution"""
 
     try:
         from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
@@ -2424,7 +2423,7 @@ def _execute_task6_substep(request, substep_name, task_execution, workflow_sessi
 
     except Exception as e:
         traceback.print_exc()
-        logger.error(f"Task 6 substep {substep_name} failed: {e}")
+        logger.error(f"Task 4 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
             'message': str(e)

@@ -1123,7 +1123,7 @@ function doResetSession(type) {
 
 // Reset session functions
 function resetSessionPartial() {
-    if (!confirm('Are you sure you want to reset tasks 3-6? This will clear all progress from Task 3 onwards while keeping the database setup (Tasks 1-2) intact.')) {
+    if (!confirm('Are you sure you want to reset tasks 1-4? This will clear all progress from Task 1 onwards while keeping the database setup (Tasks 1-2) intact.')) {
         return;
     }
 
@@ -1162,11 +1162,11 @@ function doResetSession(type) {
 
     // Update UI
     btn.disabled = true;
-    btn.textContent = `Resetting ${isPartial ? 'Tasks 3-6' : 'All Tasks'}...`;
+    btn.textContent = `Resetting ${isPartial ? 'Tasks 1-4' : 'All Tasks'}...`;
     statusDiv.style.display = 'block';
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Resetting ${isPartial ? 'tasks 3-6' : 'entire workflow session'}...`;
+    statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">⏳</span>Resetting ${isPartial ? 'tasks 1-4' : 'entire workflow session'}...`;
 
     // Create form data
     const formData = new FormData();
@@ -1214,7 +1214,7 @@ function doResetSession(type) {
             // Re-enable button and refresh page after delay
             setTimeout(() => {
                 btn.disabled = false;
-                btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+                btn.textContent = isPartial ? 'Reset Tasks 1-4' : 'Reset Everything';
                 statusDiv.innerHTML += '<br><small>Refreshing page to reflect changes...</small>';
 
                 // Refresh page to show updated state
@@ -1228,7 +1228,7 @@ function doResetSession(type) {
             statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Reset failed: ${data.message || data.error || 'Unknown error'}`;
 
             btn.disabled = false;
-            btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+            btn.textContent = isPartial ? 'Reset Tasks 1-4' : 'Reset Everything';
         }
     })
     .catch(error => {
@@ -1238,7 +1238,7 @@ function doResetSession(type) {
         statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
 
         btn.disabled = false;
-        btn.textContent = isPartial ? 'Reset Tasks 3-6' : 'Reset All Tasks';
+        btn.textContent = isPartial ? 'Reset Tasks 1-4' : 'Reset Everything';
     });
 }
 </script>
