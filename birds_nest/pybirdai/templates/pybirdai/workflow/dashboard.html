@@ -143,10 +143,8 @@
                     <option value="3">Task 3: Python Transformation Rules</option>
                     <option value="4" selected>Task 4: Full Execution</option>
                 </select>
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" id="automode-btn" class="btn btn-primary" style="flex: 1;">Run Automode (from Task 1)</button>
-                    <button type="button" id="clone-btn" class="btn btn-info" style="flex: 1;" onclick="startCloneImport(); return false;">Clone (beta version)</button>
-                </div>
+                <button type="submit" id="automode-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Run Automode (from Task 1)</button>
+                <button type="button" id="clone-btn" class="btn btn-info" style="width: 100%;" onclick="startCloneImport(); return false;">Clone (beta version)</button>
             </form>
             <div id="automode-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
             <div id="clone-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
@@ -165,14 +163,12 @@
             </ul>
 
             <h4 style="margin-top: 20px;">Reset Session</h4>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button type="button" id="reset-session-partial-btn" class="btn btn-warning" style="flex: 1;" onclick="resetSessionPartial(); return false;">
-                    Reset Tasks 1-4
-                </button>
-                <button type="button" id="reset-session-full-btn" class="btn btn-danger" style="flex: 1;" onclick="resetSessionFull(); return false;">
-                    Reset Everything
-                </button>
-            </div>
+            <button type="button" id="reset-session-partial-btn" class="btn btn-warning" style="width: 100%; margin-bottom: 10px;" onclick="resetSessionPartial(); return false;">
+                Reset Tasks 1-4
+            </button>
+            <button type="button" id="reset-session-full-btn" class="btn btn-danger" style="width: 100%;" onclick="resetSessionFull(); return false;">
+                Reset Everything
+            </button>
             <div id="reset-session-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
         </div>
     </div>
