@@ -224,7 +224,7 @@ def _run_migrations_async():
 
         logger.info("Background migration process completed successfully")
 
-        time.sleep(3)
+        time.sleep(6)
 
 
         match platform.system():
@@ -497,7 +497,7 @@ def _run_database_setup_async():
             # Add final log message that frontend can detect
             logger.warning("The restart process has been initiated. Please wait for the server to come back online.")
 
-            time.sleep(3)
+            time.sleep(10)
  
             match platform.system():
                 case "Windows":
