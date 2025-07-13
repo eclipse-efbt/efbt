@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Show Gaps in Cube Structure Item Links</h1>
-<a href="{% url 'pybirdai:review_join_meta_data' %}">Back to Review  Transformations Rules MetaData</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
 <div class="filters">
     <form method="get" id="cubeForm">
         <div class="form-group">
@@ -29,7 +29,7 @@
                     <ul>
                         {% for cube_link in gap.cube_links %}
                             <li>
-                                {{ cube_link.cube_link_id }} - 
+                                {{ cube_link.cube_link_id }} -
                                 Primary: {{ cube_link.primary_cube_id.cube_id }},
                                 Foreign: {{ cube_link.foreign_cube_id.cube_id }}
                             </li>
@@ -76,7 +76,7 @@
                     <ul>
                         {% for cube_link in gap.cube_links %}
                             <li>
-                                {{ cube_link.cube_link_id }} - 
+                                {{ cube_link.cube_link_id }} -
                                 Primary: {{ cube_link.primary_cube_id.cube_id }},
                                 Foreign: {{ cube_link.foreign_cube_id.cube_id }}
                             </li>
@@ -122,17 +122,17 @@
         background-color: #f8f9fa;
         border-radius: 5px;
     }
-    
+
     .form-group {
         margin-bottom: 15px;
     }
-    
+
     .form-group label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
     }
-    
+
     select {
         width: 100%;
         max-width: 400px;
@@ -140,7 +140,7 @@
         border: 1px solid #ced4da;
         border-radius: 4px;
     }
-    
+
     .gap-section {
         margin: 20px 0;
         padding: 20px;
@@ -148,41 +148,41 @@
         border: 1px solid #dee2e6;
         border-radius: 5px;
     }
-    
+
     .cube-links {
         margin: 15px 0;
     }
-    
+
     .cube-links ul {
         list-style-type: none;
         padding-left: 0;
     }
-    
+
     .cube-links li {
         margin: 5px 0;
         padding: 5px;
         background-color: #f8f9fa;
         border-radius: 3px;
     }
-    
+
     .missing-items table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
     }
-    
+
     .missing-items th,
     .missing-items td {
         padding: 8px;
         border: 1px solid #dee2e6;
         text-align: left;
     }
-    
+
     .missing-items th {
         background-color: #f8f9fa;
         font-weight: bold;
     }
-    
+
     .no-gaps {
         margin: 20px 0;
         padding: 15px;
@@ -191,4 +191,4 @@
         text-align: center;
     }
 </style>
-{% endblock %} 
+{% endblock %}

@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>View Combination Items</h1>
-<a href="{% url 'pybirdai:review_filters' %}">Back to Review  Filters</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -57,7 +57,7 @@
             <option value="{{ vid }}" {% if vid == selected_variable_id %}selected{% endif %}>{{ vid }}</option>
         {% endfor %}
     </select>
-    
+
     <label for="member_id">Member ID:</label>
     <select id="member_id" name="member_id">
         <option value="">All Members</option>
@@ -65,7 +65,7 @@
             <option value="{{ mid }}" {% if mid == selected_member_id %}selected{% endif %}>{{ mid }}</option>
         {% endfor %}
     </select>
-    
+
     <button type="submit">Apply Filters</button>
     {% if request.GET.variable_id or request.GET.member_id %}
         <a href="{% url 'pybirdai:combination_items' %}">Clear Filters</a>
@@ -114,4 +114,4 @@
     </span>
 </div>
 
-{% endblock %} 
+{% endblock %}

@@ -1,0 +1,289 @@
+{% extends "pybirdai/workflow/base.html" %} {% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=4 operation='do' %}">Task 6: Test Suite Execution</a>
+<span class="breadcrumb-separator">›</span>
+<span>Do</span>
+{% endblock %} {% block workflow_content %}
+<div class="task-content">
+    <h1>Task 4: Test Suite Execution</h1>
+
+    {% if task_execution.status != 'running' and task_execution.status != 'completed' and task_execution.status != 'failed' %}
+    <div class="alert alert-info">
+        <strong>Test Execution not started</strong>
+        <p>The test suite was not started.</p>
+    </div>
+    {% elif task_execution.status == 'running' %}
+        <div class="alert alert-info">
+            <strong>Test Execution in Progress...</strong>
+            <p>The test suite is currently running.</p>
+            <div class="progress mt-2">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+            </div>
+        </div>
+    {% elif task_execution.status == 'completed' %}
+        <div class="alert alert-success">
+            <strong>Test Execution Completed!</strong>
+            <p>Test suite execution has completed successfully.</p>
+            <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='review' %}" class="operation-btn btn-primary">Review Results</a>
+        </div>
+    {% elif task_execution.status == 'failed' %}
+        <div class="alert alert-danger">
+            <strong>Test Execution Failed</strong>
+            <p>{{ task_execution.error_message }}</p>
+            <button type="button" class="opeation-btn btn-failed" onclick="resetExecution()">Reset and Try Again</button>
+        </div>
+    {% endif %}
+        <div class="subtask-list">
+            <h3>Subtasks to be executed:</h3>
+
+            <div class="subtask-item">
+                <h4>1. Configuration File Tests</h4>
+                <p>Execute comprehensive test suite from configuration file</p>
+                <ul>
+                    <li>Load test scenarios from JSON configuration</li>
+                    <li>Run regulatory template validations</li>
+                    <li>Generate test reports and statistics</li>
+                </ul>
+                {% if task_execution.execution_data.tests_executed %}
+                <span class="status-badge completed">✓ Completed</span>
+                {% else %}
+                <span class="status-badge pending">⏳ Pending</span>
+                {% endif %}
+                <a
+                    href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=4 substep_name='run_tests' %}"
+                    class="operation-btn btn-sm btn-primary"
+                >
+                    Run Configuration Tests
+                </a>
+            </div>
+        </div>
+
+        <!-- {% if task_execution.status == 'pending' %}
+        <div id="task4-status" style="display: none"></div>
+        <form id="task4-form" method="post" style="margin-top: 30px">
+            {% csrf_token %}
+
+            <div class="execution-options">
+                <h3>Execution Options</h3>
+
+                <div class="form-check">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="use_config_file"
+                        id="use_config_file"
+                        checked
+                    />
+                    <label class="form-check-label" for="use_config_file">
+                        Use Configuration File Tests
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="generate_reports"
+                        id="generate_reports"
+                        checked
+                    />
+                    <label class="form-check-label" for="generate_reports">
+                        Generate Test Reports
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="validate_results"
+                        id="validate_results"
+                        checked
+                    />
+                    <label class="form-check-label" for="validate_results">
+                        Validate Test Results
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Start Test Suite Execution
+            </button>
+            <a
+                href="{% url 'pybirdai:workflow_dashboard' %}"
+                class="btn btn-secondary"
+                >Cancel</a
+            >
+        </form>
+        {% endif %} -->
+
+        <div class="alert alert-info" style="margin-top: 20px;">
+            <h5>What This Task Does:</h5>
+            <ul>
+                <li><strong>Test Suite Execution:</strong> Runs comprehensive tests to validate the regulatory templates</li>
+                <li><strong>Configuration-based Testing:</strong> Uses JSON configuration file for multiple test scenarios</li>
+                <li><strong>Results Validation:</strong> Compares expected vs actual results and generates detailed reports</li>
+                <li><strong>Test Report Generation:</strong> Creates detailed test execution reports with pass/fail statistics</li>
+            </ul>
+        </div>
+</div>
+
+<style>
+    .subtask-list {
+        margin: 20px 0;
+    }
+
+    .subtask-item {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .subtask-item h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #495057;
+    }
+
+    .subtask-item ul {
+        margin: 10px 0;
+        padding-left: 20px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .status-badge.pending {
+        background-color: #e9ecef;
+        color: #6c757d;
+    }
+
+    .status-badge.running {
+        background-color: #cfe2ff;
+        color: #084298;
+    }
+
+    .status-badge.completed {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .execution-options {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .execution-options h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    .form-check {
+        margin-bottom: 10px;
+    }
+
+    .progress {
+        height: 20px;
+        margin-top: 10px;
+    }
+
+    .progress-bar {
+        background-color: #0d6efd;
+    }
+
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+    }
+</style>
+
+<script>
+    // Note: Auto-refresh removed since we now use loading pattern for individual substeps
+
+    // Handle form submission with AJAX
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('task4-form');
+        const statusDiv = document.getElementById('task4-status');
+
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Show processing message
+                statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Starting test suite execution. This may take a few minutes...</div>';
+                statusDiv.style.display = 'block';
+
+                // Disable submit button
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Running Tests...';
+
+                // Submit form via AJAX
+                fetch(form.action || window.location.href, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'Test suite execution completed successfully.') + '</div>';
+                        // Refresh page after 2 seconds to show completed status
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'Test suite execution failed.') + '</div>';
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Start Test Suite Execution';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred. Please try again.</div>';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Start Test Suite Execution';
+                });
+            });
+        }
+    });
+
+    function resetExecution() {
+        if (confirm('Are you sure you want to reset the test execution? This will clear the current status.')) {
+            location.reload();
+        }
+    }
+</script>
+{% endblock %}

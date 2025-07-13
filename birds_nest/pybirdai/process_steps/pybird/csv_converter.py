@@ -60,8 +60,13 @@ class CSVConverter:
 		django_model = False
 		if isinstance(theObject, QuerySet):
 			relevant_model = apps.get_model('pybirdai',table_name)
+			print(f"relevant_model: {relevant_model}")
 			object_list = relevant_model.objects.all()
+			print(f"newObject: {object_list}")
 			django_model = True
+			
+			# Track Django model access through orchestration
+			CSVConverter._track_django_model_access(table_name, object_list)
 		else:
 			object_list = CSVConverter.get_contained_objects(theObject)
 
@@ -253,4 +258,65 @@ class CSVConverter:
 			else:
 				returnString = str(referencedItem)
 		return returnString
+	
+	@staticmethod
+	def _track_django_model_access(table_name, queryset):
+		"""Track Django model access through orchestration for lineage"""
+		try:
+			# Import here to avoid circular imports
+			from pybirdai.annotations.decorators import _lineage_context
+			
+			# Get the orchestration instance from the global context
+			orchestration = _lineage_context.get('orchestration')
+			if not orchestration or not orchestration.lineage_enabled:
+				return
+			
+			# Create a mock table wrapper object for the Django model
+			class DjangoModelTableWrapper:
+				def __init__(self, model_name):
+					self.__class__.__name__ = f"{model_name}_Table"
+					self.model_name = model_name
+					
+				def __str__(self):
+					return f"DjangoModelTableWrapper({self.model_name})"
+			
+			# Create the wrapper and track it
+			wrapper = DjangoModelTableWrapper(table_name)
+			
+			# Check if orchestration supports lineage tracking
+			if hasattr(orchestration, 'init_with_lineage'):
+				# Initialize through orchestration to create PopulatedDataBaseTable
+				orchestration.init_with_lineage(wrapper, f"Django Model Access: {table_name}")
+				
+				# Track the data if there are rows
+				if queryset.exists():
+					# Convert QuerySet to list of dictionaries for tracking
+					data_items = []
+					for obj in queryset:
+						row_data = {}
+						# Get model fields to extract data
+						for field in obj._meta.fields:
+							try:
+								value = getattr(obj, field.name)
+								if value is not None:
+									row_data[field.name] = value
+							except:
+								pass
+						if row_data:
+							data_items.append(row_data)
+					
+					# Track the data processing - use the original table name, not "_data" suffix
+					# This ensures Django model data is associated with PopulatedDataBaseTable, not EvaluatedDerivedTable
+					if data_items:
+						orchestration.track_data_processing(table_name, data_items)
+			else:
+				# Original orchestrator - no lineage tracking
+				pass
+			
+			print(f"Tracked Django model access: {table_name} ({queryset.count()} rows)")
+			
+		except Exception as e:
+			print(f"Error tracking Django model access for {table_name}: {e}")
+			# Don't let tracking errors break the actual processing
+			pass
 

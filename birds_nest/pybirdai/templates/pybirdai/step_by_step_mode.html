@@ -1,0 +1,158 @@
+<!--
+# Copyright (c) 2024 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Step by step mode{% endblock %}
+
+{% block extra_css %}
+<style>
+    .task-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+    
+    .task-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+    
+    .task-item:hover {
+        background: #e9ecef;
+        border-color: #adb5bd;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #333;
+    }
+    
+    .task-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        margin-bottom: 15px;
+    }
+    
+    .task-item span {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+    
+    @media (max-width: 768px) {
+        .task-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .task-item {
+            padding: 15px;
+        }
+        
+        .task-item img {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .task-item span {
+            font-size: 13px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .task-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .task-item {
+            padding: 10px;
+        }
+        
+        .task-item img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+        
+        .task-item span {
+            font-size: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center;">Step by step mode</h1>
+<div class="task-grid">
+    <a href="{% url 'pybirdai:create_bird_database' %}" class="task-item">
+        <img src="{% static 'images/create_bird_database.webp' %}" alt="create_bird_database">
+        <span>Create BIRD Database</span>
+    </a>
+    <a href="{% url 'pybirdai:populate_bird_metadata_database' %}" class="task-item">
+        <img src="{% static 'images/populate_bird_metadata_database.webp' %}" alt="populate_bird_metadata_database">
+        <span>Populate BIRD Metadata Database </span>
+    </a>
+    
+    <a href="{% url 'pybirdai:create_transformations_metadata' %}" class="task-item">
+        <img src="{% static 'images/create_transformations_metadata.webp' %}" alt="create_transformations_metadata">
+        <span>Create Transformations Meta Data  </span>
+    </a>
+    <a href="{% url 'pybirdai:create_transformation_rules_in_python' %}" class="task-item">
+        <img src="{% static 'images/smcubes_to_python.webp' %}" alt="smcubes_to_python">
+        <span>Create Python Transformations from Meta Data </span>
+    </a>
+    <a href="{% url 'pybirdai:insert_data_into_bird_database' %}" class="task-item" target="_blank">
+        <img src="{% static 'images/insert_data_into_bird_database.webp' %}" alt="insert_data_into_bird_database">
+        <span>Insert Data into BIRD  Database </span>
+    </a>
+    <a href="{% url 'pybirdai:report_templates' %}" class="task-item">
+        <img src="{% static 'images/report_templates.webp' %}" alt="Concept icon">
+        <span>View Populated Templates</span>
+    </a>    
+    <a href="{% url 'pybirdai:bird_diffs_and_corrections' %}" class="task-item">
+        <img src="{% static 'images/input_output_icon.webp' %}" alt="BIRD Diffs">
+        <span>BIRD Export,Diffs and Corrections</span>
+    </a>
+    <a href="{% url 'pybirdai:test_report_view' %}" class="task-item">
+        <img
+            src="{% static 'images/report_checklist.webp' %}"
+            alt="Test Reports"
+        />
+        <span>Browse Test Reports</span>
+    </a>
+    
+</div>
+
+<div style="text-align: center; margin-top: 30px;">
+    <a href="{% url 'pybirdai:home' %}" class="task-item" style="display: inline-flex; max-width: 200px;">
+        <img src="{% static 'images/back_arrow.jpg' %}" alt="back_arrow">
+        <span>Back to Home</span>
+    </a>
+</div>
+
+{% endblock %} 

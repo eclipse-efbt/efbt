@@ -1,0 +1,228 @@
+{% extends "pybirdai/workflow/base.html" %} {% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}"
+    >Task 3: Python Transformation Rules</a
+>
+<span class="breadcrumb-separator">›</span>
+<span>Do</span>
+{% endblock %} {% block workflow_content %}
+<div class="task-content">
+    <h1>Task 3: Python Transformation Rules Creation - Do</h1>
+
+    {% if task_execution.status != 'pending' %}
+    <div class="alert alert-success">
+        <strong>At least 1 Subtask Completed</strong>
+        <p>Python transformation code has been generated successfully.</p>
+        <a
+            href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}"
+            class="operation-btn btn-primary"
+            >Go to Review</a
+        >
+    </div>
+    {% elif task_execution.status == 'failed' %}
+    <div class="alert alert-danger">
+        <strong>✗ Task Failed</strong>
+        <p>{{ task_execution.error_message }}</p>
+        <p>Please fix the issues and try again.</p>
+    </div>
+    {% elif task_execution.status == 'running' %}
+    <div class="alert alert-info">
+        <strong>🔄 Task Running</strong>
+        <p>Generating Python transformation code...</p>
+        <div class="progress">
+            <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                style="width: {{ task_execution.execution_data.progress|default:0 }}%"
+            ></div>
+        </div>
+        <p class="mt-2">
+            Current: {{
+            task_execution.execution_data.current_file|default:"Initializing..."
+            }}
+        </p>
+    </div>
+    {% endif %}
+
+    <h2>Python Code Generation Process</h2>
+
+    <div class="subtask-list">
+        <h3>Subtasks to be executed:</h3>
+
+        <div class="subtask-item">
+            <h4>1. Filter Code Generation</h4>
+            <p>Convert SMCubes filters to executable Python code</p>
+            <ul>
+                <li>Generate filter functions</li>
+                <li>Create filter classes</li>
+                <li>Build filter orchestration</li>
+                <li>Add performance optimizations</li>
+            </ul>
+            {% if task_execution.execution_data.filter_code_generated %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='generate_filter_code' %}"
+                class="operation-btn btn-sm btn-primary"
+            >
+                Run Generate Filter Code
+            </a>
+
+        </div>
+
+        <div class="subtask-item">
+            <h4>2. Join Code Generation</h4>
+            <p>Create executable join operations</p>
+            <ul>
+                <li>Generate join methods</li>
+                <li>Create data merging logic</li>
+                <li>Build relationship handlers</li>
+                <li>Implement join optimization</li>
+            </ul>
+            {% if task_execution.execution_data.join_code_generated %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='generate_join_code' %}"
+                class="operation-btn btn-sm btn-primary"
+            >
+                Run Generate Join Code
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .subtask-list {
+        margin: 20px 0;
+    }
+
+    .subtask-item {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .subtask-item h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #495057;
+    }
+
+    .subtask-item ul {
+        margin: 10px 0;
+        padding-left: 20px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .status-badge.pending {
+        background-color: #e9ecef;
+        color: #6c757d;
+    }
+
+    .status-badge.running {
+        background-color: #cfe2ff;
+        color: #084298;
+    }
+
+    .status-badge.completed {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .execution-options {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .execution-options h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    .form-check {
+        margin-bottom: 10px;
+    }
+
+    .progress {
+        height: 20px;
+        margin-top: 10px;
+    }
+
+    .progress-bar {
+        background-color: #0d6efd;
+    }
+</style>
+
+<script>
+    // Note: Auto-refresh removed since we now use loading pattern for individual substeps
+
+        // Handle form submission with AJAX
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('task3-form');
+            const statusDiv = document.getElementById('task3-status');
+
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // Show processing message
+                    statusDiv.innerHTML = '<div class="alert alert-info"><strong>🔄 Processing...</strong> Starting Python code generation. This may take a few minutes...</div>';
+                    statusDiv.style.display = 'block';
+
+                    // Disable submit button
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...';
+
+                    // Submit form via AJAX
+                    fetch(form.action || window.location.href, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            statusDiv.innerHTML = '<div class="alert alert-success"><strong>✓ Success!</strong> ' + (data.message || 'Python code generation completed successfully.') + '</div>';
+                            // Refresh page after 2 seconds to show completed status
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> ' + (data.message || 'Python code generation failed.') + '</div>';
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = 'Start Python Code Generation';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        statusDiv.innerHTML = '<div class="alert alert-danger"><strong>✗ Error!</strong> An unexpected error occurred. Please try again.</div>';
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Start Python Code Generation';
+                    });
+                });
+            }
+
+        });
+    </script>
+    {% endblock %}
+</div>
