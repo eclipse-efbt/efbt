@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Variable Mapping Items</h1>
-<p><a href="{% url 'pybirdai:review_semantic_integrations' %}">Back to Review Semantic Integrations</a></p>
+<a href="{% url 'pybirdai:workflow_task' task_number=1 operation='review' %}">Back to Review</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}

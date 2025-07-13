@@ -12,6 +12,9 @@
 
 from pybirdai.utils.utils import Utils
 from django.conf import settings
+from pybirdai.process_steps.pybird.orchestration import Orchestration
+from pybirdai.models import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction
+from datetime import datetime
 
 import os
 
@@ -33,6 +36,12 @@ class CreateExecutableFilters:
         CreateExecutableFilters.delete_generated_python_filter_files(self, context)
         CreateExecutableFilters.delete_generated_html_filter_files(self, context)
         CreateExecutableFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
+        
+        # Initialize AORTA tracking
+        orchestration = Orchestration()
+        if hasattr(context, 'enable_lineage_tracking') and context.enable_lineage_tracking:
+            orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+            print("AORTA lineage tracking enabled for filter generation")
         file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep +  'report_cells.py', "a",  encoding='utf-8') 
         report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  'report_templates.html', "a",  encoding='utf-8') 
         report_html_file.write("{% extends 'base.html' %}\n")
@@ -45,11 +54,12 @@ class CreateExecutableFilters:
         report_html_file.write("<body>\n")
         report_html_file.write("<h1>Report Templates</h1>\n")
         report_html_file.write("<table border=\"1\">\n") 
-        report_html_file.write("<a href=\"{% url 'pybirdai:home'%}\">Back to the PyBIRD AI Home Page</a>\n")
+        report_html_file.write("<a href=\"{% url 'pybirdai:step_by_step_mode'%}\">Back to the PyBIRD AI Home Page</a>\n")
 
         file.write("from pybirdai.bird_data_model import *\n")
         file.write("from .output_tables import *\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
+        file.write("from pybirdai.annotations.decorators import lineage\n")
 
         # create a copy of combination_to_rol_cube_map which is ordered by cube_id
         cube_ids = sorted(sdd_context.combination_to_rol_cube_map.keys())   
@@ -74,12 +84,13 @@ class CreateExecutableFilters:
 
             for combination in combination_list:
                 if combination.combination_id.metric:
-                    filter_html_file.write("<tr><td><a href=\"{% url 'pybirdai:execute_data_point' '" + cube_id + "_" + combination.combination_id.combination_id + "'%}\">" + cube_id + "_" + combination.combination_id.combination_id + "</a></td></tr>\n")
+                    filter_html_file.write("<tr><td><a href=\"{% url 'pybirdai:execute_data_point' '" + combination.combination_id.combination_id + "'%}\">" + cube_id + "_" + combination.combination_id.combination_id + "</a></td></tr>\n")
                     
                     
-                    file.write("class Cell_" +  cube_id + "_" + combination.combination_id.combination_id + ":\n")
+                    file.write("class Cell_" + combination.combination_id.combination_id + ":\n")
                     file.write("\t" + cube_id + "_Table = None\n")
                     file.write("\t" + cube_id + "s = []\n")
+                    file.write("\t@lineage(dependencies={\"" + cube_id + "s\"})\n")
                     file.write("\tdef metric_value(self):\n"  )
                     file.write("\t\ttotal = 0\n")
                     file.write("\t\tfor item in self." + cube_id + "s:\n")
@@ -100,13 +111,16 @@ class CreateExecutableFilters:
                                                                                       combination_item.member_id,
                                                                                       combination_item.member_hierarchy)
                         
-                        file.write("\t\t\tif ")
-                        for leaf_node_member in leaf_node_members:
-                            file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n")
-                        file.write("\t\t\t\tFalse:\n")
-                        file.write("\t\t\t\tpass\n")
-                        file.write("\t\t\telse:\n")
-                        file.write("\t\t\t\tfilter_passed = False\n")
+                        if len(leaf_node_members) > 0:
+                            file.write("\t\t\tif ")
+                            for leaf_node_member in leaf_node_members:
+                                file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n")
+                            file.write("\t\t\t\tFalse:\n")
+                            file.write("\t\t\t\tpass\n")
+                            file.write("\t\t\telse:\n")
+                            file.write("\t\t\t\tfilter_passed = False\n")
+                        else:
+                            print("No leaf node members for " + combination_item.variable_id.name +":" + combination_item.member_id.member_id)
                         
                     file.write("\t\t\tif filter_passed:\n")
                     file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")

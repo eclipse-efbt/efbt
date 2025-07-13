@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Output Layers</h1>
-<a href="{% url 'pybirdai:review_filters' %}">Back to Review Filters</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -90,4 +90,4 @@
         margin-top: 20px;
     }
 </style>
-{% endblock %} 
+{% endblock %}

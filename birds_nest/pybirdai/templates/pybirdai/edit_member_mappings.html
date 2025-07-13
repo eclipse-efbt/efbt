@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Member Mappings</h1>
-<a href="{% url 'pybirdai:review_semantic_integrations'%}">Back to Review Semantic Integrations</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=1 operation='review' %}">Back to Review</a>
 
 <div style="margin: 20px 0;">
     <button type="button" onclick="showNewMappingForm()" class="create-button">Create New Member Mapping</button>
@@ -182,7 +182,7 @@ function hideNewMappingForm() {
         overflow: auto;
         background-color: rgba(0,0,0,0.4);
     }
-    
+
     .modal-content {
         background-color: #fefefe;
         margin: 15% auto;
@@ -191,16 +191,16 @@ function hideNewMappingForm() {
         width: 80%;
         max-width: 500px;
     }
-    
+
     .form-group {
         margin-bottom: 15px;
     }
-    
+
     .form-group label {
         display: block;
         margin-bottom: 5px;
     }
-    
+
     .form-group input,
     .form-group select {
         width: 100%;
@@ -208,16 +208,16 @@ function hideNewMappingForm() {
         border: 1px solid #ddd;
         border-radius: 4px;
     }
-    
+
     .button-group {
         margin-top: 20px;
         text-align: right;
     }
-    
+
     .button-group button {
         margin-left: 10px;
     }
-    
+
     .create-button {
         background-color: #4CAF50;
         color: white;
@@ -226,7 +226,7 @@ function hideNewMappingForm() {
         border-radius: 4px;
         cursor: pointer;
     }
-    
+
     .create-button:hover {
         background-color: #45a049;
     }

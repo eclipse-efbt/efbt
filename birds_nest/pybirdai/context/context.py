@@ -21,7 +21,10 @@ class Context(object):
     '''
     # variables to configure the behaviour
     
-    ldm_or_il = 'ldm'
+
+
+    # enable_lineage_tracking will be set dynamically from configuration
+    enable_lineage_tracking = True
 
     enrich_ldm_relationships = False
     use_codes = True
@@ -118,7 +121,72 @@ class Context(object):
 
     save_derived_sdd_items = True
 
+    input_layer_name = "Input Layer 6.5"
+
+    generate_etl = True
+
+
+    def _get_configured_lineage_tracking(self):
+        """Get the configured lineage tracking setting from temporary file."""
+        # First try to read from temporary configuration file
+        try:
+            import os
+            import json
+            # Use the same path as in views.py
+            temp_config_path = os.path.join('.', 'automode_config.json')
+            if os.path.exists(temp_config_path):
+                with open(temp_config_path, 'r') as f:
+                    config_data = json.load(f)
+                return config_data.get('enable_lineage_tracking', True)
+        except Exception:
+            # If temp file fails, default to True
+            pass
+        return True
+    
+    def _get_configured_data_model_type(self):
+        """Get the configured data model type from temporary file or AutomodeConfiguration."""
+        # First try to read from temporary configuration file
+        try:
+            import os
+            import json
+            # Use the same path as in views.py
+            temp_config_path = os.path.join('.', 'automode_config.json')
+            if os.path.exists(temp_config_path):
+                with open(temp_config_path, 'r') as f:
+                    config_data = json.load(f)
+                data_model_type = config_data.get('data_model_type', 'ELDM')
+                return 'ldm' if data_model_type == 'ELDM' else 'il'
+        except Exception:
+            # If temp file fails, try database
+            pass
+        
+        # Fallback to database configuration
+        try:
+            # Import here to avoid circular imports
+            from ..bird_meta_data_model import AutomodeConfiguration
+            config = AutomodeConfiguration.get_active_configuration()
+            if config:
+                return 'ldm' if config.data_model_type == 'ELDM' else 'il'
+        except:
+            # If no configuration exists or there's an error, default to 'ldm'
+            pass
+        return 'ldm'
+    
+    @property
+    def ldm_or_il(self):
+        """Get the current data model type (ldm or il)."""
+        return self._ldm_or_il
+    
+    @ldm_or_il.setter
+    def ldm_or_il(self, value):
+        """Set the data model type (ldm or il)."""
+        self._ldm_or_il = value
+
     def __init__(self):
+        # Initialize ldm_or_il based on AutomodeConfiguration if available
+        self._ldm_or_il = self._get_configured_data_model_type()
+        # Initialize enable_lineage_tracking from configuration
+        self.enable_lineage_tracking = self._get_configured_lineage_tracking()
 
         ldm_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         ldm_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
@@ -126,6 +194,7 @@ class Context(object):
         ldm_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
         code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
         long_name_directive_ldm_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        ldm_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
 
         il_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         il_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
@@ -133,6 +202,7 @@ class Context(object):
         il_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
         il_code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
         long_name_directive_il_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        il_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
 
        
         self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
@@ -140,6 +210,7 @@ class Context(object):
         self.ldm_entities_package.annotationDirectives.append(ldm_entity_hierarchy_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(ldm_relationship_type_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(long_name_directive_ldm_entities)
+        self.ldm_entities_package.annotationDirectives.append(ldm_mapping_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(code_annotation_directive)
 
         self.il_tables_package.annotationDirectives.append(il_key_annotation_directive)
@@ -147,6 +218,7 @@ class Context(object):
         self.il_tables_package.annotationDirectives.append(il_entity_hierarchy_annotation_directive)
         self.il_tables_package.annotationDirectives.append(il_relationship_type_annotation_directive)
         self.il_tables_package.annotationDirectives.append(long_name_directive_il_entities)
+        self.il_tables_package.annotationDirectives.append(il_mapping_annotation_directive)
         self.il_tables_package.annotationDirectives.append(il_code_annotation_directive)
 
         types = EcoreLiteTypes()

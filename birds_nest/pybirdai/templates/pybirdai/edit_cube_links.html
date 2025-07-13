@@ -14,7 +14,7 @@
 
 {% block content %}
 <h1>Edit Cube Links</h1>
-<a href="{% url 'pybirdai:review_join_meta_data' %}">Back to Review  Transformations Rules MetaData</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -23,9 +23,8 @@
 </ul>
 {% endif %}
 
-<!-- Add filter form -->
-<form method="get" class="filter-form">
-    <div class="filters">
+<div class="filters" style="flex-shrink: 0;">
+    <form method="get" class="filter-form">
         <div class="filter-group">
             <label for="foreign_cube">Foreign Cube:</label>
             <select name="foreign_cube" id="foreign_cube">
@@ -44,14 +43,19 @@
                 {% endfor %}
             </select>
         </div>
-        <button type="submit">Apply Filters</button>
+        <button type="submit" class="filter-button">Apply Filters</button>
         <a href="{% url 'pybirdai:edit_cube_links' %}" class="reset-button">Reset Filters</a>
+    </form>
+    <div class="table-controls" style="flex-shrink: 0; margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
+        <div style="border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
+            <button type="button" onclick="showAddForm()" class="table-control-btn" style="padding: 10px 16px; background-color: #2E7D32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Add New Cube Link</button>
+        </div>
+        <div style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; margin-top: 10px;">
+            <span style="display: inline-block; font-weight: bold; margin-bottom: 5px;">Visualisation:</span>
+            <button type="button" onclick="visualizeCubeLinks()" class="table-control-btn" style="padding: 10px 16px; background-color: #1976D2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">View Network Graph</button>
+            <button type="button" onclick="exportVisualization()" class="table-control-btn" style="margin-left: 10px; padding: 10px 16px; background-color: #7B1FA2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Export Diagram</button>
+        </div>
     </div>
-</form>
-
-<!-- Add New Link Button -->
-<div class="add-new-section">
-    <button type="button" onclick="showAddForm()" class="add-button">Add New Cube Link</button>
 </div>
 
 <!-- Add New Link Form (Hidden by default) -->
@@ -106,9 +110,9 @@
         </div>
         <div class="form-group">
             <label for="join_identifier">Join Identifier:</label>
-            <input type="text" name="join_identifier" id="join_identifier" 
+            <input type="text" name="join_identifier" id="join_identifier"
                    value="{{ selected_identifier }}"
-                   oninput="updateLinkId()" 
+                   oninput="updateLinkId()"
                    onblur="updateLinkId()"
                    required>
         </div>
@@ -182,6 +186,107 @@
 </div>
 
 <script>
+function visualizeCubeLinks() {
+    // Get current filter values
+    const foreignCube = document.getElementById('foreign_cube').value || '';
+    const joinIdentifier = document.querySelector('select[name="join_identifier"]').value || '';
+
+    // Create modal for visualization
+    const modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+    modal.style.zIndex = '1000';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+
+    // Create content container
+    const content = document.createElement('div');
+    content.style.backgroundColor = 'white';
+    content.style.borderRadius = '8px';
+    content.style.width = '90%';
+    content.style.height = '85%';
+    content.style.padding = '20px';
+    content.style.position = 'relative';
+    content.style.overflow = 'auto';
+
+    // Prepare query parameters
+    const params = new URLSearchParams({
+        cube_id: foreignCube,
+        join_identifier: joinIdentifier,
+        in_md: 'false'
+    });
+
+    // Create the visualization URL
+    const visualizationUrl = `/pybirdai/return_cubelink_visualisation/?${params.toString()}`;
+
+    // Add close button
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Close';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '10px';
+    closeBtn.style.right = '10px';
+    closeBtn.style.padding = '8px 16px';
+    closeBtn.style.backgroundColor = '#f44336';
+    closeBtn.style.color = 'white';
+    closeBtn.style.border = 'none';
+    closeBtn.style.borderRadius = '4px';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    // Create iframe to embed visualization with security attributes
+    const iframe = document.createElement('iframe');
+    iframe.src = visualizationUrl;
+    iframe.style.width = '100%';
+    iframe.style.height = 'calc(100% - 70px)';
+    iframe.style.border = 'none';
+    iframe.style.marginTop = '20px';
+    iframe.style.borderRadius = '4px';
+    iframe.style.backgroundColor = '#f5f5f5';
+    // Add security attributes
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-forms');
+    iframe.setAttribute('referrerpolicy', 'same-origin');
+    iframe.setAttribute('loading', 'lazy');
+
+    // Append elements
+    content.appendChild(iframe);
+    content.appendChild(closeBtn);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+}
+
+function exportVisualization() {
+    // Get current filter values
+    const foreignCube = document.getElementById('foreign_cube').value || '';
+    const joinIdentifier = document.querySelector('select[name="join_identifier"]').value || '';
+
+    // Prepare query parameters
+    const params = new URLSearchParams({
+        cube_id: foreignCube,
+        join_identifier: joinIdentifier,
+        in_md: 'true'
+    });
+
+    // Open in a new tab
+    // Create a URL for downloading the visualization as an MD file
+    const downloadUrl = `/pybirdai/return_cubelink_visualisation/?${params.toString()}`;
+
+    // Create a temporary anchor element to trigger the download
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = `cube_links_${params.toString().replace(/&/g, '_')}.md`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
 function confirmDelete(cubeLinkId) {
     if (confirm('Are you sure you want to delete this cube link?')) {
         fetch("{% url 'pybirdai:delete_cube_link' 0 %}".replace('0', cubeLinkId), {
@@ -226,9 +331,9 @@ function updateLinkId() {
     const foreignCube = document.getElementById('foreign_cube_id').value || '';
     const primaryCube = document.getElementById('primary_cube_id').value || '';
     const joinIdentifier = document.getElementById('addLinkForm').querySelector('[name="join_identifier"]').value || '';
-    
+
     console.log('Updating link ID with:', {foreignCube, primaryCube, joinIdentifier}); // Debug log
-    
+
     // Always create the ID if we have any values, even if some are empty
     const linkId = `${foreignCube}:${primaryCube}:${joinIdentifier}`;
     document.getElementById('cube_link_id').value = linkId;
@@ -239,13 +344,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const joinIdentifierInput = document.getElementById('join_identifier');
     const foreignCubeSelect = document.getElementById('foreign_cube_id');
     const primaryCubeSelect = document.getElementById('primary_cube_id');
-    
+
     joinIdentifierInput.addEventListener('input', updateLinkId);
     joinIdentifierInput.addEventListener('change', updateLinkId);
     joinIdentifierInput.addEventListener('blur', updateLinkId);
     foreignCubeSelect.addEventListener('change', updateLinkId);
     primaryCubeSelect.addEventListener('change', updateLinkId);
-    
+
     // Initial update
     updateLinkId();
 });
@@ -293,57 +398,158 @@ document.addEventListener('DOMContentLoaded', function() {
         background-color: #218838;
     }
 
+    /* Updated filter styles */
+    .filters {
+        background-color: #eef2f7;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .filter-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-end;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .filter-group label {
+        color: #345;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .filter-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #cfdbe6;
+        border-radius: 6px;
+        background-color: white;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        transition: border-color 0.3s ease;
+    }
+
+    .filter-group select:focus {
+        border-color: #4a90e2;
+        outline: none;
+    }
+
+    .filter-button, .reset-button {
+        padding: 12px 20px;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .filter-button {
+        background-color: #4a90e2;
+        color: white;
+    }
+
+    .filter-button:hover {
+        background-color: #3a7bc8;
+        transform: translateY(-2px);
+    }
+
+    .reset-button {
+        background-color: #f5f5f5;
+        color: #555;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .reset-button:hover {
+        background-color: #e5e5e5;
+        transform: translateY(-2px);
+    }
+
+    /* Updated form styles */
     .add-form {
         background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 5px;
-        margin: 20px 0;
-        max-width: 500px;
+        padding: 30px;
+        border-radius: 8px;
+        margin: 25px 0;
+        max-width: 650px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border: 1px solid #e9ecef;
     }
 
     .form-group {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
     .form-group label {
         display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #345;
     }
 
     .form-group input,
     .form-group select {
         width: 100%;
-        padding: 8px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
+        padding: 12px;
+        border: 1px solid #cfdbe6;
+        border-radius: 6px;
+        background-color: white;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        outline: none;
+    }
+
+    .form-group input[readonly] {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }
+
+    .submit-button, .cancel-button {
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .submit-button {
-        background-color: #007bff;
+        background-color: #28a745;
         color: white;
-        padding: 8px 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 10px;
-    }
-
-    .cancel-button {
-        background-color: #6c757d;
-        color: white;
-        padding: 8px 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+        margin-right: 12px;
     }
 
     .submit-button:hover {
-        background-color: #0056b3;
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+
+    .cancel-button {
+        background-color: #dc3545;
+        color: white;
     }
 
     .cancel-button:hover {
-        background-color: #5a6268;
+        background-color: #c82333;
+        transform: translateY(-2px);
     }
 </style>
 {% endblock %}
