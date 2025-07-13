@@ -1,5 +1,12 @@
 Please have a look at the Eclipse Free BIRD Tools Wiki at https://github.com/eclipse/efbt/wiki .
 
+To Run on Github codespaces run: sh ./code_space_startup.sh
+
+To Run on Windows:
+
+cd efbt
+.\windows_startup.bat
+
 The Eclipse Free BIRD Tools website is at https://www.eclipse.org/efbt/index.html
 
 Governance information and project stats are available at https://projects.eclipse.org/projects/technology.efbt
