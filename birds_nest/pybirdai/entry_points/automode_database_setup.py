@@ -26,6 +26,7 @@ from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extracto
 from pybirdai.utils.speed_improvements_initial_migration.artifact_fetcher import PreconfiguredDatabaseFetcher
 from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
 from django.conf import settings
+import psutil
 
 from importlib import metadata
 
@@ -604,16 +605,32 @@ class RunAutomodeDatabaseSetup(AppConfig):
         import sys
         import time
 
+        original_dir = os.getcwd()  # Ensure this is always set
         start_time = time.time()
 
-        try:
+        def is_file_locked(filepath):
+            for proc in psutil.process_iter(['pid', 'open_files']):
+                try:
+                    if any(f.path == filepath for f in proc.info['open_files'] or []):
+                        return True
+                except Exception:
+                    continue
+            return False
 
+        try:
             db_file = "db.sqlite3"
             if os.path.exists(db_file):
-                os.chmod(db_file, 0o666)
-                os.remove(db_file)
+                try:
+                    if is_file_locked(os.path.abspath(db_file)):
+                        logger.warning(f"Database file {db_file} is locked by another process. Please stop all Django/related processes and try again.")
+                        #raise RuntimeError(f"Database file {db_file} is locked. Please stop all Django/related processes (such as the development server) and try again.")
+                    os.chmod(db_file, 0o666)
+                    os.remove(db_file)
+                except Exception as e:
+                    logger.warning(f"Error removing database file {db_file}: {e}")
+                    
             
-            venv_path, original_dir, python_executable = self._get_python_exc()
+            venv_path, _, python_executable = self._get_python_exc()
 
             generator = AdvancedMigrationGenerator()
             models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
@@ -654,8 +671,16 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
                 db_file = "db.sqlite3"
                 if os.path.exists(db_file):
-                    os.chmod(db_file, 0o666)
-                    os.remove(db_file)
+                    try:
+
+                        if is_file_locked(os.path.abspath(db_file)):
+                            logger.warning(f"Database file {db_file} is locked by another process. Please stop all Django/related processes and try again.")
+                            raise RuntimeError(f"Database file {db_file} is locked. Please stop all Django/related processes (such as the development server) and try again.")
+                        os.chmod(db_file, 0o666)
+                        os.remove(db_file)
+                    except Exception as e:
+                        logger.warning(f"Error removing database file {db_file}: {e}")
+                        
 
                 # Run migrate
                 migrate_result = subprocess.run(
@@ -693,7 +718,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
             logger.error(f"Migration subprocess failed: {e}")
             raise
         finally:
-            # Restore original directory
             os.chdir(original_dir)
 
     def _create_setup_ready_marker(self, base_dir):
