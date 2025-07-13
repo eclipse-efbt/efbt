@@ -229,7 +229,7 @@ def _run_migrations_async():
 
         match platform.system():
             case "Windows":
-                os.system("taskkill /F /IM runserver")
+                os._exit(0)
             case _:
                 os.system("pkill -f runserver")
 
@@ -498,10 +498,10 @@ def _run_database_setup_async():
             logger.warning("The restart process has been initiated. Please wait for the server to come back online.")
 
             time.sleep(10)
-
+ 
             match platform.system():
                 case "Windows":
-                    os.system("taskkill /F /IM runserver")
+                    os._exit(0)
                 case _:
                     os.system("pkill -f runserver")
         else:
