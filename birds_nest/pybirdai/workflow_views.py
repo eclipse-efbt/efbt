@@ -17,6 +17,7 @@ from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
+import django
 import uuid
 import logging
 import os
@@ -72,12 +73,15 @@ def refresh_complete_status(task:int=3,all:bool=True):
         return execution
 
     if all:
-        task_executions = WorkflowTaskExecution.objects.all()
-        for task_number,_ in task_to_complete_mapping.items():
-            for execution in task_executions:
-                execution = check_one_task(execution,task_number)
-                execution.save()
-        return
+        try:
+            task_executions = WorkflowTaskExecution.objects.all()
+            for task_number,_ in task_to_complete_mapping.items():
+                for execution in task_executions:
+                    execution = check_one_task(execution,task_number)
+                    execution.save()
+            return
+        except django.db.utils.OperationalError:
+            return
 
     task_executions = WorkflowTaskExecution.objects.filter(
         task_number=task,
@@ -498,7 +502,7 @@ def _run_database_setup_async():
             logger.warning("The restart process has been initiated. Please wait for the server to come back online.")
 
             time.sleep(10)
- 
+
             match platform.system():
                 case "Windows":
                     os._exit(0)
@@ -812,7 +816,7 @@ def workflow_dashboard(request):
             'session_id': session_id or 'no-database',
         })
 
-    
+
 
 
     return render(request, 'pybirdai/workflow/dashboard.html', context)
@@ -881,7 +885,7 @@ def workflow_task_router(request, task_number, operation):
 
     # Route to appropriate handler
     task_handlers = {
-      
+
         1: task1_smcubes_core,
         2: task2_smcubes_rules,
         3: task3_python_rules,
@@ -1076,7 +1080,7 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
             'execution_data': execution_data,
         })
 
-    
+
 
 
 def task2_smcubes_rules(request, operation, task_execution, workflow_session):
@@ -1207,7 +1211,7 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
             'execution_data': execution_data,
         })
 
-    
+
 
 
 def task3_python_rules(request, operation, task_execution, workflow_session):
@@ -1353,7 +1357,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
             'execution_data': execution_data,
         })
 
-    
+
 
 
 def task4_full_execution(request, operation, task_execution, workflow_session):
@@ -1534,7 +1538,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
             'grouped_results': grouped_results,
         })
 
-    
+
 
 
 @require_http_methods(["POST"])
@@ -1579,7 +1583,7 @@ def workflow_task_substep(request, task_number, substep_name):
 
     # Route to appropriate substep handler
     try:
-        
+
         if task_number == 1:
             return _execute_task1_substep(request, substep_name, task_execution, workflow_session)
         elif task_number == 2:
@@ -2432,7 +2436,7 @@ def workflow_clone_import(request):
                         task1_do.completed_at = timezone.now()
                         task1_do.execution_data = {'source': 'clone_import'}
                         task1_do.save()
-                    
+
                     # Mark Task 2 (SMCubes Transformation Rules Creation) as completed
                     task2_do, created = WorkflowTaskExecution.objects.get_or_create(
                         task_number=2,
@@ -2449,10 +2453,10 @@ def workflow_clone_import(request):
                         task2_do.completed_at = timezone.now()
                         task2_do.execution_data = {'source': 'clone_import'}
                         task2_do.save()
-                    
+
                     logger.info("Clone import completed: Tasks 1 and 2 marked as completed")
                     message += " (Tasks 1 & 2 marked as completed)"
-                    
+
                 except Exception as e:
                     logger.error(f"Error marking tasks as completed after clone: {e}")
                     # Don't fail the whole operation if task marking fails
@@ -2775,7 +2779,7 @@ def workflow_reset_session_full(request):
 def workflow_reset_session_partial(request):
     """
     Reset workflow session from task 1 onwards (partial reset).
- 
+
     """
     logger.info("Partial workflow session reset requested (tasks 1-4) but not database reset")
 
@@ -2867,3 +2871,112 @@ def workflow_reset_session_partial(request):
         else:
             messages.error(request, f'Failed to reset partial workflow session: {str(e)}')
             return redirect('pybirdai:workflow_dashboard')
+
+def export_database_to_github(request):
+    """
+    Export database to GitHub repository using fork workflow with automatic branch creation and pull request.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Only POST method allowed'})
+
+    try:
+        # Get form data
+        github_token = request.POST.get('github_token', '').strip()
+        repository_url = request.POST.get('repository_url', '').strip()
+        organization = request.POST.get('organization', '').strip() or None
+        target_branch = request.POST.get('target_branch', 'develop').strip()
+        use_fork_workflow = request.POST.get('use_fork_workflow') == 'on'
+
+        if not github_token:
+            return JsonResponse({'success': False, 'error': 'GitHub token is required'})
+
+        # Validate repository URL format if provided
+        if repository_url and not repository_url.startswith('https://github.com/'):
+            return JsonResponse({'success': False, 'error': 'Repository URL must be a valid GitHub URL (https://github.com/...)'})
+
+        # Import the GitHub integration service
+        from .workflow_services import GitHubIntegrationService
+
+        # Create service instance
+        github_service = GitHubIntegrationService(github_token)
+
+        # Export database to CSV first
+        from .views import _export_database_to_csv_logic
+        zip_file_path, extract_dir = _export_database_to_csv_logic()
+
+        # Determine repository URL (use automode config if not provided)
+        if not repository_url:
+            config = github_service.get_automode_config()
+            if config and config.technical_export_github_url:
+                repository_url = config.technical_export_github_url
+            else:
+                repository_url = 'https://github.com/regcommunity/FreeBIRD'
+
+        if use_fork_workflow:
+            # Use new fork workflow (default behavior)
+            result = github_service.fork_and_create_pr_workflow(
+                source_repository_url=repository_url,
+                organization=organization,
+                csv_directory=extract_dir,
+                target_branch=target_branch,
+                pr_title="PyBIRD AI Database Export",
+                pr_body="""## Database Export from PyBIRD AI
+
+This pull request contains CSV files exported from the PyBIRD AI database using the fork workflow.
+
+### Export Details:
+- Generated automatically by PyBIRD AI's database export functionality
+- Fork workflow ensures secure, isolated changes
+- Files located in `export/database_export_ldm/`
+
+### Testing:
+- [ ] Verify CSV file integrity
+- [ ] Check data completeness
+- [ ] Validate against expected schema
+
+This export was generated automatically by PyBIRD AI's fork workflow."""
+            )
+            
+            # Prepare response data for fork workflow
+            response_data = {
+                'success': result['success'],
+                'fork_created': result.get('fork_created', False),
+                'branch_created': result.get('branch_created', False),
+                'files_pushed': result.get('files_pushed', False),
+                'pr_created': result.get('pr_created', False),
+                'pull_request_url': result.get('pr_url'),
+                'fork_url': result.get('fork_data', {}).get('html_url') if result.get('fork_data') else None,
+                'message': 'Database exported via fork workflow successfully' if result['success'] else 'Fork workflow failed'
+            }
+            
+            if not result['success']:
+                response_data['error'] = result.get('error', 'Unknown error occurred during fork workflow')
+                
+        else:
+            # Fallback to original workflow for backward compatibility
+            result = github_service.export_and_push_to_github(repository_url=repository_url)
+            
+            response_data = {
+                'success': result['success'],
+                'branch_created': result.get('branch_created', False),
+                'files_pushed': result.get('files_pushed', False),
+                'pr_created': result.get('pr_created', False),
+                'pull_request_url': result.get('pr_url'),
+                'message': 'Database exported to GitHub successfully' if result['success'] else 'Direct push workflow failed'
+            }
+            
+            if not result['success']:
+                response_data['error'] = result.get('error', 'Unknown error occurred during GitHub export')
+
+        return JsonResponse(response_data)
+
+    except ImportError as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'GitHub integration service not available: {str(e)}'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error during GitHub export: {str(e)}'
+        })
