@@ -13,21 +13,8 @@ def main():
     _.to_csv("export_debug/mapped/variable.csv",index=False)
     _, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
     _.to_csv("export_debug/mapped/member_hierarchy.csv",index=False)
-    _, hierarchy_node_map = new_maps.map_hierarchy_node(path="target/HierarchyNode.csv", hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
+    _, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
     _.to_csv("export_debug/mapped/member_hierarchy_node.csv",index=False)
-    """
-    Rendering Package
-    """
-    _, table_map = new_maps.map_tables(framework_id_map=framework_map)
-    _.to_csv("export_debug/mapped/table.csv",index=False)
-    _, axis_map = new_maps.map_axis(table_map=table_map)
-    _.to_csv("export_debug/mapped/axis.csv",index=False)
-    _, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
-    _.to_csv("export_debug/mapped/axis_ordinate.csv",index=False)
-    _, cell_map = new_maps.map_table_cell(table_map=table_map)
-    _.to_csv("export_debug/mapped/table_cell.csv",index=False)
-    _, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map)
-    _.to_csv("export_debug/mapped/cell_position.csv",index=False)
 
     """
     Data Definition Package
@@ -38,6 +25,24 @@ def main():
     (combination, combination_item), dpv_map = new_maps.map_datapoint_version(context_map=context_map,context_data=context_data) # to combinations and items
     combination.to_csv("export_debug/mapped/combination.csv",index=False)
     combination_item.to_csv("export_debug/mapped/combination_item.csv",index=False)
+
+    """
+    Rendering Package
+    """
+    _, table_map = new_maps.map_tables(framework_id_map=framework_map)
+    _.to_csv("export_debug/mapped/table.csv",index=False)
+    _, axis_map = new_maps.map_axis(table_map=table_map)
+    _.to_csv("export_debug/mapped/axis.csv",index=False)
+    _, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
+    _.to_csv("export_debug/mapped/axis_ordinate.csv",index=False)
+    _, cell_map = new_maps.map_table_cell(table_map=table_map,dp_map=dpv_map)
+    _.to_csv("export_debug/mapped/table_cell.csv",index=False)
+    _, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map)
+    _.to_csv("export_debug/mapped/cell_position.csv",index=False)
+    _, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map)
+    _.to_csv("export_debug/mapped/ordinate_item.csv",index=False)
+
+
 
 
 
