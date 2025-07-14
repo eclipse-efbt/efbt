@@ -402,6 +402,11 @@ urlpatterns = [
         name="export_database_to_csv",
     ),
     path(
+        "export-database-to-github/",
+        workflow_views.export_database_to_github,
+        name="export_database_to_github",
+    ),
+    path(
         "bird_diffs_and_corrections/",
         views.bird_diffs_and_corrections,
         name="bird_diffs_and_corrections",
