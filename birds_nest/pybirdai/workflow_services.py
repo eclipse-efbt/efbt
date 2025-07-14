@@ -17,6 +17,7 @@ from django.core.exceptions import ValidationError
 from .utils.github_file_fetcher import GitHubFileFetcher
 from .utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from .context.context import Context
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -1127,5 +1128,715 @@ class AutomodeConfigurationService:
             error_msg = f"Error during test suite execution: {str(e)}"
             logger.error(error_msg)
             results['errors'].append(error_msg)
+
+        return results
+
+
+class GitHubIntegrationService:
+    """Service class for GitHub integration operations including pushing CSV files and creating pull requests."""
+
+    def __init__(self, github_token: str = None):
+        """
+        Initialize the GitHub integration service.
+
+        Args:
+            github_token (str, optional): GitHub personal access token
+        """
+        self.github_token = github_token or os.getenv('GITHUB_TOKEN')
+        if not self.github_token:
+            raise ValueError("GitHub token is required. Set GITHUB_TOKEN environment variable or provide token parameter.")
+
+    def _get_headers(self):
+        """Get headers for GitHub API requests."""
+        return {
+            'Authorization': f'Bearer {self.github_token}',
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+        }
+
+    def _parse_github_url(self, repository_url: str):
+        """
+        Parse GitHub repository URL to extract owner and repo.
+
+        Args:
+            repository_url (str): GitHub repository URL
+
+        Returns:
+            tuple: (owner, repo) or (None, None) if parsing fails
+        """
+        try:
+            normalized_url = repository_url.rstrip('/')
+            if normalized_url.endswith('.git'):
+                normalized_url = normalized_url[:-4]
+
+            parts = normalized_url.replace('https://github.com/', '').split('/')
+            if len(parts) >= 2:
+                return parts[0], parts[1]
+            return None, None
+        except Exception as e:
+            logger.error(f"Error parsing GitHub URL {repository_url}: {e}")
+            return None, None
+
+    def get_automode_config(self):
+        """
+        Get the active automode configuration from the database.
+
+        Returns:
+            AutomodeConfiguration: Active configuration or None if not found
+        """
+        try:
+            from .bird_meta_data_model import AutomodeConfiguration
+            return AutomodeConfiguration.objects.filter(is_active=True).first()
+        except Exception as e:
+            logger.error(f"Error getting automode configuration: {e}")
+            return None
+
+    def create_branch(self, owner: str, repo: str, branch_name: str, base_branch: str = 'main'):
+        """
+        Create a new branch in the repository.
+
+        Args:
+            owner (str): Repository owner
+            repo (str): Repository name
+            branch_name (str): Name of the new branch
+            base_branch (str): Base branch to create from (default: 'main')
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            # Get the SHA of the base branch
+            base_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{base_branch}"
+            response = requests.get(base_url, headers=self._get_headers())
+
+            if response.status_code != 200:
+                logger.error(f"Failed to get base branch {base_branch}: {response.status_code}")
+                return False
+
+            base_sha = response.json()['object']['sha']
+
+            # Create the new branch
+            create_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs"
+            data = {
+                'ref': f'refs/heads/{branch_name}',
+                'sha': base_sha
+            }
+
+            response = requests.post(create_url, headers=self._get_headers(), json=data)
+
+            if response.status_code == 201:
+                logger.info(f"Successfully created branch {branch_name}")
+                return True
+            else:
+                logger.error(f"Failed to create branch {branch_name}: {response.status_code} - {response.text}")
+                return False
+
+        except Exception as e:
+            logger.error(f"Error creating branch {branch_name}: {e}")
+            return False
+
+    def fork_repository(self, source_owner: str, source_repo: str, organization: str = None):
+        """
+        Fork a repository to the authenticated user's account or organization.
+
+        Args:
+            source_owner (str): Owner of the source repository
+            source_repo (str): Name of the source repository
+            organization (str, optional): Organization to fork to (if None, forks to user account)
+
+        Returns:
+            tuple: (success: bool, fork_data: dict or None)
+        """
+        try:
+            # Check if fork already exists
+            fork_owner = organization if organization else self._get_authenticated_user()
+            if not fork_owner:
+                logger.error("Could not determine fork owner")
+                return False, None
+
+            # Check if fork already exists
+            check_url = f"https://api.github.com/repos/{fork_owner}/{source_repo}"
+            check_response = requests.get(check_url, headers=self._get_headers())
+
+            if check_response.status_code == 200:
+                logger.info(f"Fork already exists: {fork_owner}/{source_repo}")
+                return True, check_response.json()
+
+            # Create the fork
+            fork_url = f"https://api.github.com/repos/{source_owner}/{source_repo}/forks"
+            data = {}
+            if organization:
+                data['organization'] = organization
+
+            response = requests.post(fork_url, headers=self._get_headers(), json=data)
+
+            if response.status_code in [202, 201]:
+                fork_data = response.json()
+                logger.info(f"Successfully created fork: {fork_data['full_name']}")
+                return True, fork_data
+            else:
+                logger.error(f"Failed to create fork: {response.status_code} - {response.text}")
+                return False, None
+
+        except Exception as e:
+            logger.error(f"Error forking repository {source_owner}/{source_repo}: {e}")
+            return False, None
+
+    def _get_authenticated_user(self):
+        """Get the authenticated user's username."""
+        try:
+            user_url = "https://api.github.com/user"
+            response = requests.get(user_url, headers=self._get_headers())
+
+            if response.status_code == 200:
+                return response.json()['login']
+            else:
+                logger.error(f"Failed to get authenticated user: {response.status_code}")
+                return None
+        except Exception as e:
+            logger.error(f"Error getting authenticated user: {e}")
+            return None
+
+    def wait_for_fork_completion(self, owner: str, repo: str, max_attempts: int = 30):
+        """
+        Wait for fork to be ready (GitHub forks can take time to complete).
+
+        Args:
+            owner (str): Fork owner
+            repo (str): Fork repository name
+            max_attempts (int): Maximum attempts to check fork status
+
+        Returns:
+            bool: True if fork is ready, False otherwise
+        """
+        import time
+
+        logger.info(f"Waiting for fork {owner}/{repo} to be ready...")
+
+        for attempt in range(max_attempts):
+            try:
+                # Check if the fork is accessible
+                check_url = f"https://api.github.com/repos/{owner}/{repo}"
+                response = requests.get(check_url, headers=self._get_headers())
+
+                if response.status_code == 200:
+                    # Also check if we can access the branches (indicates fork is ready)
+                    branches_url = f"https://api.github.com/repos/{owner}/{repo}/branches"
+                    branches_response = requests.get(branches_url, headers=self._get_headers())
+
+                    if branches_response.status_code == 200:
+                        logger.info(f"Fork {owner}/{repo} is ready")
+                        return True
+
+                logger.debug(f"Fork not ready yet, attempt {attempt + 1}/{max_attempts}")
+
+                if attempt < max_attempts - 1:
+                    time.sleep(2)  # Wait 2 seconds between attempts
+
+            except Exception as e:
+                logger.error(f"Error checking fork status: {e}")
+                if attempt < max_attempts - 1:
+                    time.sleep(2)
+
+        logger.error(f"Fork {owner}/{repo} did not become ready after {max_attempts} attempts")
+        return False
+
+    def push_csv_files(self, owner: str, repo: str, branch_name: str, csv_directory: str):
+        """
+        Push CSV files to a GitHub repository branch using bulk upload (single commit).
+
+        Args:
+            owner (str): Repository owner
+            repo (str): Repository name
+            branch_name (str): Branch to push to
+            csv_directory (str): Local directory containing CSV files
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            import base64
+            import glob
+
+            csv_files = glob.glob(os.path.join(csv_directory, '*.csv'))
+
+            FILES_NOT_TO_PUSH = [
+                "workflowtaskexecution.csv",
+                "workflowsession.csv",
+                "workflowtaskdependency.csv",
+                "automodeconfiguration.csv"
+            ]
+
+            # Filter out files that shouldn't be pushed
+            files_to_push = []
+            for csv_file in csv_files:
+                file_name = os.path.basename(csv_file)
+                if file_name not in FILES_NOT_TO_PUSH:
+                    files_to_push.append(csv_file)
+
+            if not files_to_push:
+                logger.warning(f"No CSV files to push found in directory: {csv_directory}")
+                return False
+
+            logger.info(f"Found {len(files_to_push)} CSV files to push using bulk upload")
+
+            # Step 1: Get the current commit SHA for the branch
+            logger.info(f"Getting current commit SHA for branch {branch_name}")
+            ref_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{branch_name}"
+            ref_response = requests.get(ref_url, headers=self._get_headers())
+            
+            if ref_response.status_code != 200:
+                logger.error(f"Failed to get branch reference: {ref_response.status_code} - {ref_response.text}")
+                return False
+            
+            current_commit_sha = ref_response.json()['object']['sha']
+            logger.info(f"Current commit SHA: {current_commit_sha}")
+
+            # Step 2: Get the base tree SHA from the current commit
+            commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits/{current_commit_sha}"
+            commit_response = requests.get(commit_url, headers=self._get_headers())
+            
+            if commit_response.status_code != 200:
+                logger.error(f"Failed to get commit details: {commit_response.status_code} - {commit_response.text}")
+                return False
+            
+            base_tree_sha = commit_response.json()['tree']['sha']
+            logger.info(f"Base tree SHA: {base_tree_sha}")
+
+            # Step 3: Create blobs for all CSV files
+            logger.info("Creating blobs for CSV files...")
+            blobs = []
+            
+            for csv_file in files_to_push:
+                file_name = os.path.basename(csv_file)
+                
+                # Read and encode file content
+                with open(csv_file, 'rb') as f:
+                    content = f.read()
+                
+                # Create blob
+                blob_url = f"https://api.github.com/repos/{owner}/{repo}/git/blobs"
+                blob_data = {
+                    'content': base64.b64encode(content).decode('utf-8'),
+                    'encoding': 'base64'
+                }
+                
+                blob_response = requests.post(blob_url, headers=self._get_headers(), json=blob_data)
+                
+                if blob_response.status_code != 201:
+                    logger.error(f"Failed to create blob for {file_name}: {blob_response.status_code} - {blob_response.text}")
+                    return False
+                
+                blob_sha = blob_response.json()['sha']
+                remote_path = f"export/database_export_ldm/{file_name}"
+                
+                blobs.append({
+                    'path': remote_path,
+                    'mode': '100644',
+                    'type': 'blob',
+                    'sha': blob_sha
+                })
+                
+                logger.info(f"Created blob for {file_name}: {blob_sha}")
+
+            # Step 4: Create tree with all blobs
+            logger.info("Creating tree with all file blobs...")
+            tree_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees"
+            tree_data = {
+                'tree': blobs,
+                'base_tree': base_tree_sha
+            }
+            
+            tree_response = requests.post(tree_url, headers=self._get_headers(), json=tree_data)
+            
+            if tree_response.status_code != 201:
+                logger.error(f"Failed to create tree: {tree_response.status_code} - {tree_response.text}")
+                return False
+            
+            tree_sha = tree_response.json()['sha']
+            logger.info(f"Created tree: {tree_sha}")
+
+            # Step 5: Create commit with the tree
+            logger.info("Creating commit...")
+            commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits"
+            commit_data = {
+                'tree': tree_sha,
+                'message': f'Bulk update {len(files_to_push)} CSV files via PyBIRD AI export',
+                'parents': [current_commit_sha]
+            }
+            
+            commit_response = requests.post(commit_url, headers=self._get_headers(), json=commit_data)
+            
+            if commit_response.status_code != 201:
+                logger.error(f"Failed to create commit: {commit_response.status_code} - {commit_response.text}")
+                return False
+            
+            new_commit_sha = commit_response.json()['sha']
+            logger.info(f"Created commit: {new_commit_sha}")
+
+            # Step 6: Update branch reference to point to new commit
+            logger.info(f"Updating branch {branch_name} to point to new commit...")
+            update_ref_data = {
+                'sha': new_commit_sha
+            }
+            
+            update_response = requests.patch(ref_url, headers=self._get_headers(), json=update_ref_data)
+            
+            if update_response.status_code != 200:
+                logger.error(f"Failed to update branch reference: {update_response.status_code} - {update_response.text}")
+                return False
+
+            logger.info(f"Successfully pushed {len(files_to_push)} CSV files in a single commit")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error pushing CSV files: {e}")
+            traceback.print_exc()
+            return False
+
+    def create_pull_request(self, owner: str, repo: str, branch_name: str, base_branch: str = 'main',
+                          title: str = None, body: str = None, head_owner: str = None):
+        """
+        Create a pull request for the branch.
+
+        Args:
+            owner (str): Repository owner
+            repo (str): Repository name
+            branch_name (str): Source branch for the pull request
+            base_branch (str): Target branch for the pull request (default: 'main')
+            title (str): Pull request title
+            body (str): Pull request body
+            head_owner (str, optional): Owner of the head repository (for cross-repo PRs)
+
+        Returns:
+            tuple: (success: bool, pr_url: str or None)
+        """
+        try:
+            from datetime import datetime
+
+            if not title:
+                title = f"PyBIRD AI CSV Export - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+
+            if not body:
+                body = f"""## Database Export from PyBIRD AI
+
+This pull request contains CSV files exported from the PyBIRD AI database.
+
+### Files Updated:
+- Database export CSV files in `export/database_export_ldm/`
+
+### Export Details:
+- Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- Source: PyBIRD AI automated export
+- Branch: {branch_name}
+
+### Testing:
+- [ ] Verify CSV file integrity
+- [ ] Check data completeness
+- [ ] Validate against expected schema
+
+This export was generated automatically by PyBIRD AI's database export functionality."""
+
+            # Create pull request
+            pr_url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
+
+            # For cross-repository PRs, format head as "owner:branch"
+            if head_owner and head_owner != owner:
+                head = f"{head_owner}:{branch_name}"
+            else:
+                head = branch_name
+
+            data = {
+                'title': title,
+                'body': body,
+                'head': head,
+                'base': base_branch
+            }
+
+            print(base_branch)
+
+            response = requests.post(pr_url, headers=self._get_headers(), json=data)
+
+            if response.status_code == 201:
+                pr_data = response.json()
+                pr_html_url = pr_data['html_url']
+                logger.info(f"Successfully created pull request: {pr_html_url}")
+                return True, pr_html_url
+            else:
+                logger.error(f"Failed to create pull request: {response.status_code} - {response.text}")
+                return False, None
+
+        except Exception as e:
+            logger.error(f"Error creating pull request: {e}")
+            return False, None
+
+    def create_cross_fork_pull_request(self, source_owner: str, source_repo: str,
+                                      fork_owner: str, branch_name: str,
+                                      base_branch: str = 'develop',
+                                      title: str = None, body: str = None):
+        """
+        Create a pull request from a fork to the upstream repository.
+
+        Args:
+            source_owner (str): Original repository owner
+            source_repo (str): Original repository name
+            fork_owner (str): Fork owner (user or organization)
+            branch_name (str): Branch in the fork with changes
+            base_branch (str): Target branch in upstream (default: 'develop')
+            title (str, optional): PR title
+            body (str, optional): PR body
+
+        Returns:
+            tuple: (success: bool, pr_url: str or None)
+        """
+        logger.info(f"Creating cross-fork PR from {fork_owner}/{source_repo}:{branch_name} to {source_owner}/{source_repo}:{base_branch}")
+
+        # Use the existing create_pull_request method with head_owner parameter
+        return self.create_pull_request(
+            owner=source_owner,
+            repo=source_repo,
+            branch_name=branch_name,
+            base_branch=base_branch,
+            title=title,
+            body=body,
+            head_owner=fork_owner
+        )
+
+    def export_and_push_to_github(self, branch_name: str = None, repository_url: str = None):
+        """
+        Complete workflow: export database to CSV and push to GitHub with PR.
+
+        Args:
+            branch_name (str, optional): Custom branch name. If None, generates timestamp-based name.
+            repository_url (str, optional): GitHub repository URL. If None, uses automode config.
+
+        Returns:
+            dict: Results of the operation
+        """
+        from datetime import datetime
+        from .views import _export_database_to_csv_logic
+
+        results = {
+            'success': False,
+            'csv_exported': False,
+            'branch_created': False,
+            'files_pushed': False,
+            'pr_created': False,
+            'pr_url': None,
+            'error': None
+        }
+
+        try:
+            # Get repository URL from automode config if not provided
+            if not repository_url:
+                config = self.get_automode_config()
+                if config and config.technical_export_github_url:
+                    repository_url = config.technical_export_github_url
+                else:
+                    repository_url = 'https://github.com/regcommunity/FreeBIRD'
+
+            # Parse GitHub URL
+            owner, repo = self._parse_github_url(repository_url)
+            if not owner or not repo:
+                results['error'] = f"Invalid GitHub repository URL: {repository_url}"
+                return results
+
+            # Generate branch name if not provided
+            if not branch_name:
+                timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+                branch_name = f"csv-export-{timestamp}"
+
+            logger.info(f"Starting export and push to {owner}/{repo} on branch {branch_name}")
+
+            # Step 1: Export database to CSV
+            logger.info("Exporting database to CSV...")
+            zip_file_path, extract_dir = _export_database_to_csv_logic()
+            results['csv_exported'] = True
+            logger.info(f"CSV export completed: {extract_dir}")
+
+            # Step 2: Create branch
+            logger.info(f"Creating branch {branch_name}...")
+            if self.create_branch(owner, repo, branch_name):
+                results['branch_created'] = True
+                logger.info(f"Branch {branch_name} created successfully")
+            else:
+                traceback.print_exc()
+                results['error'] = f"Failed to create branch {branch_name}"
+                return results
+
+            # Step 3: Push CSV files
+            logger.info("Pushing CSV files to GitHub...")
+            if self.push_csv_files(owner, repo, branch_name, extract_dir):
+                results['files_pushed'] = True
+                logger.info("CSV files pushed successfully")
+            else:
+                results['error'] = "Failed to push CSV files"
+                return results
+
+            # Step 4: Create pull request
+            logger.info(f"Creating pull request for {owner}/{repo} on branch {branch_name}")
+            pr_success, pr_url = self.create_pull_request(owner, repo, branch_name)
+            if pr_success:
+                results['pr_created'] = True
+                results['pr_url'] = pr_url
+                logger.info(f"Pull request created: {pr_url}")
+            else:
+                results['error'] = "Failed to create pull request"
+                return results
+
+            results['success'] = True
+            logger.info("Export and push to GitHub completed successfully")
+
+        except Exception as e:
+            traceback.print_exc()
+            results['error'] = f"Unexpected error: {str(e)}"
+            logger.error(f"Error in export_and_push_to_github: {e}")
+
+        return results
+
+    def fork_and_create_pr_workflow(self, source_repository_url: str,
+                                   target_repository_url: str = None,
+                                   organization: str = None,
+                                   branch_name: str = None,
+                                   csv_directory: str = None,
+                                   pr_title: str = None,
+                                   pr_body: str = None,
+                                   target_branch: str = 'main'):
+        """
+        Complete workflow: Fork repo, create branch, push changes, create PR.
+
+        Args:
+            source_repository_url (str): Source GitHub repository to fork from
+            target_repository_url (str, optional): Target repository for PR (defaults to source)
+            organization (str, optional): Organization to fork to (if None, forks to user)
+            branch_name (str, optional): Branch name for changes
+            csv_directory (str, optional): Directory with files to push
+            pr_title (str, optional): Pull request title
+            pr_body (str, optional): Pull request body
+            target_branch (str): Target branch for PR (default: 'develop')
+
+        Returns:
+            dict: Results of the operation
+        """
+        from datetime import datetime
+
+        results = {
+            'success': False,
+            'fork_created': False,
+            'fork_data': None,
+            'branch_created': False,
+            'files_pushed': False,
+            'pr_created': False,
+            'pr_url': None,
+            'error': None
+        }
+
+        try:
+            # Parse source repository URL
+            source_owner, source_repo = self._parse_github_url(source_repository_url)
+            if not source_owner or not source_repo:
+                results['error'] = f"Invalid source repository URL: {source_repository_url}"
+                return results
+
+            # Use source as target if not specified
+            if not target_repository_url:
+                target_repository_url = source_repository_url
+
+            target_owner, target_repo = self._parse_github_url(target_repository_url)
+            if not target_owner or not target_repo:
+                results['error'] = f"Invalid target repository URL: {target_repository_url}"
+                return results
+
+            # Generate branch name if not provided
+            if not branch_name:
+                timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+                branch_name = f"pybird-export-{timestamp}"
+
+            logger.info(f"Starting fork and PR workflow from {source_owner}/{source_repo}")
+
+            # Step 1: Fork the repository
+            logger.info(f"Forking repository {source_owner}/{source_repo}...")
+            fork_success, fork_data = self.fork_repository(source_owner, source_repo, organization)
+            if not fork_success:
+                results['error'] = "Failed to fork repository"
+                return results
+
+            results['fork_created'] = True
+            results['fork_data'] = fork_data
+
+            # Get fork owner
+            fork_owner = fork_data['owner']['login']
+            logger.info(f"Fork created/found: {fork_owner}/{source_repo}")
+
+            # Step 2: Wait for fork to be ready
+            if not self.wait_for_fork_completion(fork_owner, source_repo):
+                results['error'] = "Fork did not become ready in time"
+                return results
+
+            # Step 3: Create branch in fork
+            logger.info(f"Creating branch {branch_name} in fork...")
+            if self.create_branch(fork_owner, source_repo, branch_name):
+                results['branch_created'] = True
+                logger.info(f"Branch {branch_name} created successfully")
+            else:
+                results['error'] = f"Failed to create branch {branch_name}"
+                return results
+
+            # Step 4: Push files if directory provided
+            if csv_directory:
+                logger.info("Pushing files to fork...")
+                if self.push_csv_files(fork_owner, source_repo, branch_name, csv_directory):
+                    results['files_pushed'] = True
+                    logger.info("Files pushed successfully")
+                else:
+                    results['error'] = "Failed to push files"
+                    return results
+
+            # Step 5: Create pull request
+            logger.info(f"Creating pull request to {target_owner}/{target_repo}:{target_branch}")
+
+            # Default PR body if not provided
+            if not pr_body:
+                pr_body = f"""## PyBIRD AI Export
+
+This pull request was created automatically by PyBIRD AI's fork workflow.
+
+### Details:
+- Forked from: {source_owner}/{source_repo}
+- Fork location: {fork_owner}/{source_repo}
+- Branch: {branch_name}
+- Target: {target_owner}/{target_repo}:{target_branch}
+- Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+### Changes:
+- Database export files in `export/database_export_ldm/`
+
+This export was generated automatically by PyBIRD AI's database export functionality."""
+
+            pr_success, pr_url = self.create_cross_fork_pull_request(
+                source_owner=target_owner,
+                source_repo=target_repo,
+                fork_owner=fork_owner,
+                branch_name=branch_name,
+                base_branch=target_branch,
+                title=pr_title,
+                body=pr_body
+            )
+
+            if pr_success:
+                results['pr_created'] = True
+                results['pr_url'] = pr_url
+                logger.info(f"Pull request created: {pr_url}")
+            else:
+                results['error'] = "Failed to create pull request"
+                return results
+
+            results['success'] = True
+            logger.info("Fork and PR workflow completed successfully")
+
+        except Exception as e:
+            traceback.print_exc()
+            results['error'] = f"Unexpected error: {str(e)}"
+            logger.error(f"Error in fork_and_create_pr_workflow: {e}")
 
         return results

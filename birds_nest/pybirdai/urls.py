@@ -418,6 +418,11 @@ urlpatterns = [
         name="export_database_to_csv",
     ),
     path(
+        'export-database-to-github/',
+        workflow_views.export_database_to_github,
+        name='export_database_to_github'
+    ),
+    path(
         "bird_diffs_and_corrections/",
         views.bird_diffs_and_corrections,
         name="bird_diffs_and_corrections",
@@ -540,7 +545,7 @@ urlpatterns = [
         name="run_fetch_curated_resources",
     ),
     # New hierarchy editor API endpoints
-   
+
     path(
         "workflow/task/<int:task_number>/substep/<str:substep_name>/",
         workflow_views.workflow_task_substep,
