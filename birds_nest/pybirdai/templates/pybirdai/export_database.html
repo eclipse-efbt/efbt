@@ -7,23 +7,87 @@
 <div class="container">
     <h1>Export Database to CSV Files</h1>
     <a href="{% url 'pybirdai:bird_diffs_and_corrections'%}" >Back to BIRD Export Diffs and Corrections</a> <br><br>
-    
+
     <p>Click the button below to export all database tables to CSV files. Each table will be exported to a separate CSV file, and all files will be bundled in a zip archive.</p>
-    
-    <form method="post" id="exportForm">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary" id="exportButton">Export Database</button>
-    </form>
-    
+
+    <div class="export-options">
+        <div class="export-section">
+            <h3>Local Export</h3>
+            <form method="post" id="exportForm">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary" id="exportButton">Export Database</button>
+            </form>
+        </div>
+
+        <div class="export-section">
+            <h3>Export to GitHub</h3>
+            <p>Export database to GitHub repository using fork workflow for secure, isolated changes. The system will fork the repository, create a branch, push the CSV files, and create a pull request back to the original repository.</p>
+            <form id="githubExportForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="githubToken">GitHub Token:</label>
+                    <input type="password" id="githubToken" name="github_token" class="form-control" placeholder="Enter your GitHub personal access token" required>
+                    <small class="form-text text-muted">Your token is not stored and only used for this export.</small>
+                </div>
+                <div class="form-group">
+                    <label for="repositoryUrl">Repository URL (optional):</label>
+                    <input type="url" id="repositoryUrl" name="repository_url" class="form-control" placeholder="https://github.com/username/repository">
+                    <small class="form-text text-muted">Leave empty to use configured repository from automode settings.</small>
+                </div>
+                <div class="form-group">
+                    <label for="organization">Fork to Organization (optional):</label>
+                    <input type="text" id="organization" name="organization" class="form-control" placeholder="organization-name">
+                    <small class="form-text text-muted">Leave empty to fork to your personal account.</small>
+                </div>
+                <div class="form-group">
+                    <label for="targetBranch">Target Branch:</label>
+                    <input type="text" id="targetBranch" name="target_branch" class="form-control" value="develop" placeholder="develop">
+                    <small class="form-text text-muted">Branch in the target repository for the pull request.</small>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="useForkWorkflow" name="use_fork_workflow" checked>
+                        Use Fork Workflow (Recommended)
+                    </label>
+                    <small class="form-text text-muted">Fork the repository first for secure, isolated changes. Uncheck for direct push (requires write access).</small>
+                </div>
+                <button type="submit" class="btn btn-success" id="githubExportButton">Export to GitHub</button>
+            </form>
+        </div>
+    </div>
+
     <div id="loadingIndicator" style="display: none;">
         <div class="spinner"></div>
         <p>Exporting database tables to CSV files... Please wait.</p>
     </div>
-    
+
+    <div id="githubLoadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <p>Exporting to GitHub... This may take a few minutes.</p>
+        <ul id="githubProgress" style="text-align: left; max-width: 400px; margin: 20px auto;">
+            <li>Exporting database to CSV files...</li>
+            <li>Forking repository (if needed)...</li>
+            <li>Creating new branch in fork...</li>
+            <li>Uploading CSV files to fork...</li>
+            <li>Creating pull request to upstream...</li>
+        </ul>
+    </div>
+
     <div id="successMessage" style="display: none;" class="alert alert-success">
         <p>Export completed successfully! Your download should start automatically.</p>
     </div>
-    
+
+    <div id="githubSuccessMessage" style="display: none;" class="alert alert-success">
+        <h4>GitHub Export Successful!</h4>
+        <p>Database exported to GitHub repository.</p>
+        <div id="githubDetails"></div>
+    </div>
+
+    <div id="errorMessage" style="display: none;" class="alert alert-danger">
+        <h4>Export Failed</h4>
+        <p id="errorText"></p>
+    </div>
+
     <div class="mt-4">
         <h3>Notes:</h3>
         <ul>
@@ -41,7 +105,7 @@
         margin: 2rem auto;
         padding: 0 1rem;
     }
-    
+
     .btn-primary {
         background-color: #007bff;
         border-color: #007bff;
@@ -50,21 +114,78 @@
         border-radius: 0.25rem;
         cursor: pointer;
     }
-    
+
     .btn-primary:hover {
         background-color: #0056b3;
         border-color: #0056b3;
     }
-    
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .export-options {
+        display: flex;
+        gap: 2rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+    }
+
+    .export-section {
+        flex: 1;
+        min-width: 300px;
+        padding: 1.5rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        background-color: #f8f9fa;
+    }
+
+    .export-section h3 {
+        margin-top: 0;
+        color: #495057;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        box-sizing: border-box;
+    }
+
+    .form-text {
+        font-size: 0.875em;
+        color: #6c757d;
+    }
+
+    .text-muted {
+        color: #6c757d;
+    }
+
     .mt-4 {
         margin-top: 2rem;
     }
-    
+
     ul {
         list-style-type: disc;
         margin-left: 1.5rem;
     }
-    
+
     .spinner {
         width: 40px;
         height: 40px;
@@ -74,25 +195,25 @@
         animation: spin 1s linear infinite;
         margin: 20px auto;
     }
-    
+
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-    
+
     .alert {
         padding: 15px;
         margin: 20px 0;
         border: 1px solid transparent;
         border-radius: 4px;
     }
-    
+
     .alert-success {
         color: #155724;
         background-color: #d4edda;
         border-color: #c3e6cb;
     }
-    
+
     #loadingIndicator {
         text-align: center;
         margin: 20px 0;
@@ -102,12 +223,12 @@
 <script>
 document.getElementById('exportForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
+
     // Show loading indicator and disable button
     document.getElementById('loadingIndicator').style.display = 'block';
     document.getElementById('exportButton').disabled = true;
     document.getElementById('successMessage').style.display = 'none';
-    
+
     // Submit the form
     fetch(this.action, {
         method: 'POST',
@@ -129,7 +250,7 @@ document.getElementById('exportForm').addEventListener('submit', function(e) {
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
-        
+
         // Show success message
         document.getElementById('successMessage').style.display = 'block';
     })
@@ -142,5 +263,77 @@ document.getElementById('exportForm').addEventListener('submit', function(e) {
         document.getElementById('exportButton').disabled = false;
     });
 });
+
+// GitHub Export Form Handler
+document.getElementById('githubExportForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Hide all messages
+    document.getElementById('githubSuccessMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+
+    // Show loading indicator and disable button
+    document.getElementById('githubLoadingIndicator').style.display = 'block';
+    document.getElementById('githubExportButton').disabled = true;
+
+    // Get form data
+    const formData = new FormData(this);
+
+    // Submit the form
+    fetch('{% url "pybirdai:export_database_to_github" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message with details
+            document.getElementById('githubSuccessMessage').style.display = 'block';
+
+            let detailsHtml = '<ul>';
+            
+            // Show fork workflow specific details
+            if (data.fork_created) {
+                detailsHtml += `<li><strong>Status:</strong> Fork workflow completed successfully</li>`;
+                if (data.fork_url) {
+                    detailsHtml += `<li><strong>Fork:</strong> <a href="${data.fork_url}" target="_blank">${data.fork_url}</a></li>`;
+                }
+            } else if (data.branch_created) {
+                detailsHtml += `<li><strong>Status:</strong> Direct push workflow completed</li>`;
+            }
+            
+            if (data.branch_created) {
+                detailsHtml += `<li><strong>Branch:</strong> Created successfully</li>`;
+            }
+            if (data.files_pushed) {
+                detailsHtml += `<li><strong>Files:</strong> CSV files uploaded successfully</li>`;
+            }
+            if (data.pull_request_url) {
+                detailsHtml += `<li><strong>Pull Request:</strong> <a href="${data.pull_request_url}" target="_blank">${data.pull_request_url}</a></li>`;
+            }
+            
+            detailsHtml += `<li><strong>Message:</strong> ${data.message}</li>`;
+            detailsHtml += '</ul>';
+
+            document.getElementById('githubDetails').innerHTML = detailsHtml;
+        } else {
+            // Show error message
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('errorText').textContent = data.error || 'Unknown error occurred during GitHub export.';
+        }
+    })
+    .catch(error => {
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorText').textContent = 'Network error: ' + error.message;
+    })
+    .finally(() => {
+        // Hide loading indicator and enable button
+        document.getElementById('githubLoadingIndicator').style.display = 'none';
+        document.getElementById('githubExportButton').disabled = false;
+    });
+});
 </script>
-{% endblock %} 
+{% endblock %}
