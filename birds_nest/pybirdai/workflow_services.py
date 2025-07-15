@@ -1546,10 +1546,10 @@ This export was generated automatically by PyBIRD AI's database export functiona
 
             # For cross-repository PRs, format head as "owner:branch"
             if head_owner and head_owner != owner:
-                logger.info("PR to head -> ",head_owner,owner,branch_name)
+                logger.info(f"PR to head -> {head_owner},{owner},{branch_name}")
                 head = f"{head_owner}:{branch_name}"
             else:
-                logger.info("PR to head -> ",branch_name)
+                logger.info(f"PR to head -> {branch_name}")
                 head = branch_name
 
             data = {
