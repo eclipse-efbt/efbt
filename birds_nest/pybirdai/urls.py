@@ -54,6 +54,7 @@ urlpatterns = [
     path('delete-mapping-definition/<str:mapping_id>/', views.delete_mapping_definition, name='delete_mapping_definition'),
     path('delete-cube/<str:cube_id>/', views.delete_cube, name='delete_cube'),
     path('import_report_templates/', views.import_report_templates, name='import_report_templates'),
+    path('import_dpm_data/', views.import_dpm_data, name='import_dpm_data'),
     path('run_import_semantic_integrations_from_website/', views.run_import_semantic_integrations_from_website, name='run_import_semantic_integrations_from_website'),
     path('run_import_hierarchies/', views.run_import_hierarchies, name='run_import_hierarchies'),
     path('missing-children/', report_views.missing_children, name='missing_children'),
