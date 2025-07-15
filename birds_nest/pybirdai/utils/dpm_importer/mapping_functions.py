@@ -399,8 +399,6 @@ def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={}
     dp_items = pd.merge(dpv[["NEW_DATA_POINT_VID","CONTEXT_ID"]].copy(),context_data,on="CONTEXT_ID").drop(axis=1,labels=["CONTEXT_ID"])
     id_mapping = dict(zip(dpv["DATA_POINT_VID"], dpv["NEW_DATA_POINT_VID"]))
 
-    print(list(dimension_map.items())[0:3])
-
     def is_number(char):
         if char in "0123456789":
             return True
@@ -453,10 +451,12 @@ def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={}
         "MEMBER_ID": "MEMBER_ID"
     },inplace=True)
 
+    dp_items["VARIABLE_SET"] = ""
+    dp_items["SUBDOMAIN_ID"] = ""
 
     dp_items = dp_items.loc[
         :,
-        ["COMBINATION_ID","VARIABLE_ID","MEMBER_ID"]
+        ["COMBINATION_ID","VARIABLE_ID","MEMBER_ID","VARIABLE_SET","SUBDOMAIN_ID"]
 ]
 
     dpv = dpv.loc[
