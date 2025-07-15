@@ -40,15 +40,15 @@ class RunImportDPMData(AppConfig):
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
         # Run DPM import service
-        dpm_service = DPMImporterService()
+        dpm_service = DPMImporterService(output_directory=context.file_directory)
         dpm_service.run_application()
-        
+
         # After DPM import, run the report templates import
         RunImportReportTemplatesFromWebsite.run_import()
 
