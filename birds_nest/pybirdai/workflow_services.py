@@ -1259,10 +1259,16 @@ class GitHubIntegrationService:
                 return False, None
 
             # Check if fork already exists
+
             check_url = f"https://api.github.com/repos/{fork_owner}/{source_repo}"
             check_response = requests.get(check_url, headers=self._get_headers())
+            try:
+                import json
+                is_fork = json.loads(check_response.text).get("fork",False)
+            except:
+                is_fork = False
 
-            if check_response.status_code == 200:
+            if check_response.status_code == 200 and is_fork:
                 logger.info(f"Fork already exists: {fork_owner}/{source_repo}")
                 return True, check_response.json()
 
@@ -1277,6 +1283,9 @@ class GitHubIntegrationService:
             if response.status_code in [202, 201]:
                 fork_data = response.json()
                 logger.info(f"Successfully created fork: {fork_data['full_name']}")
+                os.makedirs(os.path.dirname(f"{fork_data['full_name']}.json"), exist_ok=True)
+                with open(f"{fork_data['full_name']}.json", "w") as f:
+                    json.dump(fork_data, f)
                 return True, fork_data
             else:
                 logger.error(f"Failed to create fork: {response.status_code} - {response.text}")
@@ -1498,7 +1507,7 @@ class GitHubIntegrationService:
             traceback.print_exc()
             return False
 
-    def create_pull_request(self, owner: str, repo: str, branch_name: str, base_branch: str = 'main',
+    def create_pull_request(self, owner: str, repo: str, branch_name: str, fork_repo: str= None, base_branch: str = 'main',
                           title: str = None, body: str = None, head_owner: str = None):
         """
         Create a pull request for the branch.
@@ -1546,11 +1555,11 @@ This export was generated automatically by PyBIRD AI's database export functiona
 
             # For cross-repository PRs, format head as "owner:branch"
             if head_owner and head_owner != owner:
-                logger.info(f"PR to head -> {head_owner},{owner},{branch_name}")
                 head = f"{head_owner}:{branch_name}"
             else:
-                logger.info(f"PR to head -> {branch_name}")
                 head = branch_name
+
+            logger.info(f"PR to head -> {head}")
 
             data = {
                 'title': title,
@@ -1558,6 +1567,8 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 'head': head,
                 'base': base_branch
             }
+            if fork_repo and fork_repo != repo:
+                data['head_repo'] = f"{head_owner}/{fork_repo}"
 
             response = requests.post(pr_url, headers=self._get_headers(), json=data)
 
@@ -1574,7 +1585,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
             logger.error(f"Error creating pull request: {e}")
             return False, None
 
-    def create_cross_fork_pull_request(self, source_owner: str, source_repo: str,
+    def create_cross_fork_pull_request(self, source_owner: str, source_repo: str, fork_repo: str,
                                       fork_owner: str, branch_name: str,
                                       base_branch: str = 'develop',
                                       title: str = None, body: str = None):
@@ -1599,6 +1610,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
         return self.create_pull_request(
             owner=source_owner,
             repo=source_repo,
+            fork_repo=fork_repo,
             branch_name=branch_name,
             base_branch=base_branch,
             title=title,
@@ -1770,16 +1782,17 @@ This export was generated automatically by PyBIRD AI's database export functiona
 
             # Get fork owner
             fork_owner = fork_data['owner']['login']
-            logger.info(f"Fork created/found: {fork_owner}/{source_repo}")
+            head_repo = fork_data['name']
+            logger.info(f"Fork created/found: {fork_owner}/{head_repo}")
 
             # Step 2: Wait for fork to be ready
-            if not self.wait_for_fork_completion(fork_owner, source_repo):
+            if not self.wait_for_fork_completion(fork_owner, head_repo):
                 results['error'] = "Fork did not become ready in time"
                 return results
 
             # Step 3: Create branch in fork
             logger.info(f"Creating branch {branch_name} in fork...")
-            if self.create_branch(fork_owner, source_repo, branch_name):
+            if self.create_branch(fork_owner, head_repo, branch_name):
                 results['branch_created'] = True
                 logger.info(f"Branch {branch_name} created successfully")
             else:
@@ -1789,7 +1802,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
             # Step 4: Push files if directory provided
             if csv_directory:
                 logger.info("Pushing files to fork...")
-                if self.push_csv_files(fork_owner, source_repo, branch_name, csv_directory):
+                if self.push_csv_files(fork_owner, head_repo, branch_name, csv_directory):
                     results['files_pushed'] = True
                     logger.info("Files pushed successfully")
                 else:
@@ -1807,7 +1820,7 @@ This pull request was created automatically by PyBIRD AI's fork workflow.
 
 ### Details:
 - Forked from: {source_owner}/{source_repo}
-- Fork location: {fork_owner}/{source_repo}
+- Fork location: {fork_owner}/{head_repo}
 - Branch: {branch_name}
 - Target: {target_owner}/{target_repo}:{target_branch}
 - Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -1820,6 +1833,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
             pr_success, pr_url = self.create_cross_fork_pull_request(
                 source_owner=target_owner,
                 source_repo=target_repo,
+                fork_repo=head_repo,
                 fork_owner=fork_owner,
                 branch_name=branch_name,
                 base_branch=target_branch,
