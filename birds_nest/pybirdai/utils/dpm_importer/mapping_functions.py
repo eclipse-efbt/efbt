@@ -389,7 +389,7 @@ def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_m
     data["ORDINATE_ID"] = data["ORDINATE_ID"].apply(ordinate_map.get)
     return data, {}
 
-def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={},context_data:pd.DataFrame=pd.DataFrame()):
+def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={},context_data:pd.DataFrame=pd.DataFrame(),dimension_map:dict={},member_map:dict={}):
     types = defaultdict(lambda: str, ContextID="str")
     dpv = pd.read_csv(path,dtype=types)
     column_mapping = {col: pascal_to_upper_snake(col) for col in dpv.columns}
@@ -398,6 +398,72 @@ def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={}
     dpv["NEW_DATA_POINT_VID"] = "EBA_" + dpv["DATA_POINT_VID"].astype(str)
     dp_items = pd.merge(dpv[["NEW_DATA_POINT_VID","CONTEXT_ID"]].copy(),context_data,on="CONTEXT_ID").drop(axis=1,labels=["CONTEXT_ID"])
     id_mapping = dict(zip(dpv["DATA_POINT_VID"], dpv["NEW_DATA_POINT_VID"]))
+
+    print(list(dimension_map.items())[0:3])
+
+    def is_number(char):
+        if char in "0123456789":
+            return True
+        return False
+
+    def compute_code(string):
+        new_key = ""
+        value = ""
+        previous_char = ""
+        key_value = dict()
+        is_new_key = True
+        is_new_value = False
+        for idx,char in enumerate(string):
+            if previous_char.isnumeric() and char.isalpha():
+                new_key = ""
+                is_new_key = True
+                is_new_value = False
+
+            if char.isnumeric() and previous_char.isalpha():
+                is_new_value = True
+                is_new_key = False
+
+            if is_new_key:
+                new_key += char
+
+            if is_new_value:
+                if "EBA_"+new_key not in key_value:
+                    key_value["EBA_"+new_key] = ""
+                key_value["EBA_"+new_key] += char
+
+            previous_char = char
+
+        return "|".join(f"{key}({member_map.get(int(value))})" for key, value in key_value.items())
+
+    dpv.rename(columns={
+        "NEW_DATA_POINT_VID":"COMBINATION_ID",
+        "DATA_POINT_VID":"CODE",
+        "FROM_DATE":"VALID_FROM",
+        "TO_DATE":"VALID_TO",
+        "CATEGORISATION_KEY":"NAME"
+    },
+        inplace=True)
+
+    dpv["NAME"] = dpv["NAME"].apply(compute_code)
+    dpv["VERSION"] = ""
+
+    dp_items.rename(columns={
+        "NEW_DATA_POINT_VID":"COMBINATION_ID",
+        "DIMENSION_ID": "VARIABLE_ID",
+        "MEMBER_ID": "MEMBER_ID"
+    },inplace=True)
+
+
+    dp_items = dp_items.loc[
+        :,
+        ["COMBINATION_ID","VARIABLE_ID","MEMBER_ID"]
+]
+
+    dpv = dpv.loc[
+        :,
+        ["COMBINATION_ID","CODE","NAME","MAINTENANCE_AGENCY_ID","VERSION","VALID_FROM","VALID_TO"]
+]
+
     return (dpv,dp_items), id_mapping
 
 def map_context_definition(path="target/ContextDefinition.csv",dimension_map:dict={},member_map:dict={}):
@@ -408,6 +474,7 @@ def map_context_definition(path="target/ContextDefinition.csv",dimension_map:dic
     data["MAINTENANCE_AGENCY_ID"] = "EBA"
     data["DIMENSION_ID"] = data["DIMENSION_ID"].astype(int).apply(dimension_map.get)
     data["MEMBER_ID"] = data["MEMBER_ID"].astype(int).apply(member_map.get)
+
     return data, {}
 
 def map_hierarchy(path="target/Hierarchy.csv",domain_id_map:dict={}):
