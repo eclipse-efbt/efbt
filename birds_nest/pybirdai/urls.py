@@ -716,4 +716,5 @@ urlpatterns = [
         lineage_api.get_trail_lineage_summary,
         name="get_trail_lineage_summary",
     ),
+    path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
 ]

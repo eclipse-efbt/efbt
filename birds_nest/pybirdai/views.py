@@ -30,6 +30,7 @@ from . import bird_meta_data_model
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
 from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+from .entry_points.import_dpm_data import RunImportDPMData
 from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
 from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
 from .entry_points.create_filters import RunCreateFilters
@@ -301,6 +302,20 @@ def import_report_templates(request):
         "Import Report templates from website completed successfully.",
         '/pybirdai/workflow/task/3/do/',
         "Do"
+    )
+
+def import_dpm_data(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import()
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Importing DPM Data (this may take several minutes, don't press the back button on this web page)",
+        "Import DPM data completed successfully. Report templates have also been imported.",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
     )
 
 def run_create_filters(request):
