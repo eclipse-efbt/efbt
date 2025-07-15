@@ -1384,59 +1384,59 @@ class GitHubIntegrationService:
             logger.info(f"Getting current commit SHA for branch {branch_name}")
             ref_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{branch_name}"
             ref_response = requests.get(ref_url, headers=self._get_headers())
-            
+
             if ref_response.status_code != 200:
                 logger.error(f"Failed to get branch reference: {ref_response.status_code} - {ref_response.text}")
                 return False
-            
+
             current_commit_sha = ref_response.json()['object']['sha']
             logger.info(f"Current commit SHA: {current_commit_sha}")
 
             # Step 2: Get the base tree SHA from the current commit
             commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits/{current_commit_sha}"
             commit_response = requests.get(commit_url, headers=self._get_headers())
-            
+
             if commit_response.status_code != 200:
                 logger.error(f"Failed to get commit details: {commit_response.status_code} - {commit_response.text}")
                 return False
-            
+
             base_tree_sha = commit_response.json()['tree']['sha']
             logger.info(f"Base tree SHA: {base_tree_sha}")
 
             # Step 3: Create blobs for all CSV files
             logger.info("Creating blobs for CSV files...")
             blobs = []
-            
+
             for csv_file in files_to_push:
                 file_name = os.path.basename(csv_file)
-                
+
                 # Read and encode file content
                 with open(csv_file, 'rb') as f:
                     content = f.read()
-                
+
                 # Create blob
                 blob_url = f"https://api.github.com/repos/{owner}/{repo}/git/blobs"
                 blob_data = {
                     'content': base64.b64encode(content).decode('utf-8'),
                     'encoding': 'base64'
                 }
-                
+
                 blob_response = requests.post(blob_url, headers=self._get_headers(), json=blob_data)
-                
+
                 if blob_response.status_code != 201:
                     logger.error(f"Failed to create blob for {file_name}: {blob_response.status_code} - {blob_response.text}")
                     return False
-                
+
                 blob_sha = blob_response.json()['sha']
                 remote_path = f"export/database_export_ldm/{file_name}"
-                
+
                 blobs.append({
                     'path': remote_path,
                     'mode': '100644',
                     'type': 'blob',
                     'sha': blob_sha
                 })
-                
+
                 logger.info(f"Created blob for {file_name}: {blob_sha}")
 
             # Step 4: Create tree with all blobs
@@ -1446,13 +1446,13 @@ class GitHubIntegrationService:
                 'tree': blobs,
                 'base_tree': base_tree_sha
             }
-            
+
             tree_response = requests.post(tree_url, headers=self._get_headers(), json=tree_data)
-            
+
             if tree_response.status_code != 201:
                 logger.error(f"Failed to create tree: {tree_response.status_code} - {tree_response.text}")
                 return False
-            
+
             tree_sha = tree_response.json()['sha']
             logger.info(f"Created tree: {tree_sha}")
 
@@ -1464,13 +1464,13 @@ class GitHubIntegrationService:
                 'message': f'Bulk update {len(files_to_push)} CSV files via PyBIRD AI export',
                 'parents': [current_commit_sha]
             }
-            
+
             commit_response = requests.post(commit_url, headers=self._get_headers(), json=commit_data)
-            
+
             if commit_response.status_code != 201:
                 logger.error(f"Failed to create commit: {commit_response.status_code} - {commit_response.text}")
                 return False
-            
+
             new_commit_sha = commit_response.json()['sha']
             logger.info(f"Created commit: {new_commit_sha}")
 
@@ -1479,9 +1479,9 @@ class GitHubIntegrationService:
             update_ref_data = {
                 'sha': new_commit_sha
             }
-            
+
             update_response = requests.patch(ref_url, headers=self._get_headers(), json=update_ref_data)
-            
+
             if update_response.status_code != 200:
                 logger.error(f"Failed to update branch reference: {update_response.status_code} - {update_response.text}")
                 return False
@@ -1542,8 +1542,10 @@ This export was generated automatically by PyBIRD AI's database export functiona
 
             # For cross-repository PRs, format head as "owner:branch"
             if head_owner and head_owner != owner:
+                logger.info("PR to head -> ",head_owner,owner,branch_name)
                 head = f"{head_owner}:{branch_name}"
             else:
+                logger.info("PR to head -> ",branch_name)
                 head = branch_name
 
             data = {
@@ -1552,8 +1554,6 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 'head': head,
                 'base': base_branch
             }
-
-            print(base_branch)
 
             response = requests.post(pr_url, headers=self._get_headers(), json=data)
 
