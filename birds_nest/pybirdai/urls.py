@@ -148,7 +148,7 @@ urlpatterns = [
     path('automode-import-bird-metamodel-from-website/', views.automode_import_bird_metamodel_from_website, name='automode_import_bird_metamodel_from_website'),
 
     path('run_fetch_curated_resources/', views.run_fetch_curated_resources, name='run_fetch_curated_resources'),
-    
+
     # New hierarchy editor API endpoints
     path('api/hierarchy/<str:hierarchy_id>/json/', views.get_hierarchy_json, name='get_hierarchy_json'),
     path('api/hierarchy/save/', views.save_hierarchy_json, name='save_hierarchy_json'),
