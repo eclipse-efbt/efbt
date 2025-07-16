@@ -460,6 +460,9 @@ def index(request):
 def home_view(request):
     return render(request, 'pybirdai/home.html')
 
+def dpm_data_view(request):
+    return render(request, 'pybirdai/dpm_data.html')
+
 def automode_view(request):
     return render(request, 'pybirdai/automode.html')
 
