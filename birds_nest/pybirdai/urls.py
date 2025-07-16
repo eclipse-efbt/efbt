@@ -1,20 +1,9 @@
-# coding=UTF-8
-# Copyright (c) 2024 Bird Software Solutions Ltd
-# This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License 2.0
-# which accompanies this distribution, and is available at
-# https://www.eclipse.org/legal/epl-2.0/
-#
-# SPDX-License-Identifier: EPL-2.0
-#
-# Contributors:
-#    Neil Mackenzie - initial API and implementation
 from django.urls import path
-
 from . import views
 from . import report_views
 from . import aorta_views
 from . import workflow_views
+
 from . import lineage_views
 from . import lineage_api
 
@@ -26,7 +15,8 @@ app_name = "pybirdai"  # Add this line if using namespaces
 urlpatterns = [
     path(
         "", views.home_view, name="home"
-    ),  # This should handle the root URL of your app
+    ),
+    path("dpm-data/", views.dpm_data_view, name="dpm_data"),
     path("automode/", views.automode_view, name="automode"),
     path(
         "automode/create-database/",
@@ -161,6 +151,8 @@ urlpatterns = [
         views.import_report_templates,
         name="import_report_templates",
     ),
+    path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
+    path("prepare_dpm_data/", views.prepare_dpm_data, name="prepare_dpm_data"),
     path(
         "run_import_semantic_integrations_from_website/",
         views.run_import_semantic_integrations_from_website,
@@ -418,6 +410,12 @@ urlpatterns = [
         name="export_database_to_csv",
     ),
     path(
+
+        'export-database-to-github/',
+        workflow_views.export_database_to_github,
+        name='export_database_to_github'
+    ),
+    path(
         "bird_diffs_and_corrections/",
         views.bird_diffs_and_corrections,
         name="bird_diffs_and_corrections",
@@ -475,7 +473,6 @@ urlpatterns = [
         views.return_cubelink_visualisation,
         name="return_cubelink_visualisation",
     ),
-    # path('return_cubelink_visualisation/?cube_id', views.return_cubelink_visualisation, name='return_cubelink_visualisation'),
     path(
         "return_cubelink_visualisation/?cube_id=<int:cube_id>&join_identifier=<str:join_identifier>&in_md=<str:in_md>",
         views.return_cubelink_visualisation,
@@ -539,8 +536,6 @@ urlpatterns = [
         views.run_fetch_curated_resources,
         name="run_fetch_curated_resources",
     ),
-    # New hierarchy editor API endpoints
-   
     path(
         "workflow/task/<int:task_number>/substep/<str:substep_name>/",
         workflow_views.workflow_task_substep,
@@ -654,7 +649,6 @@ urlpatterns = [
         workflow_views.workflow_clone_import,
         name="workflow_clone_import",
     ),
-    # AORTA Lineage Tracking API endpoints
     path(
         "api/aorta/trails/",
         aorta_views.AortaTrailListView.as_view(),
@@ -680,7 +674,6 @@ urlpatterns = [
         aorta_views.AortaLineageGraphView.as_view(),
         name="aorta-lineage-graph",
     ),
-    # Trail Lineage Visualization
     path("trails/", lineage_views.trail_list, name="trail_list"),
     path(
         "trails/<int:trail_id>/lineage/",
@@ -697,7 +690,6 @@ urlpatterns = [
         lineage_views.get_node_details,
         name="get_node_details",
     ),
-    # Comprehensive Lineage API
     path(
         "api/trail/<int:trail_id>/complete-lineage/",
         lineage_api.get_trail_complete_lineage,
