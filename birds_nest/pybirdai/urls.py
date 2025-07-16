@@ -524,6 +524,31 @@ urlpatterns = [
         name="run_fetch_curated_resources",
     ),
     path(
+        "workflow/task/<int:task_number>/substep/<str:substep_name>/",
+        workflow_views.workflow_task_substep,
+        name="workflow_task_substep",
+    ),
+    path(
+        "workflow/session-check/",
+        workflow_views.workflow_session_check,
+        name="workflow_session_check",
+    ),
+    path(
+        "workflow/task/<int:task_number>/substep-loading/<str:substep_name>/",
+        workflow_views.workflow_task_substep_with_loading,
+        name="workflow_task_substep_with_loading",
+    ),
+    path(
+        "workflow/reset-session-full/",
+        workflow_views.workflow_reset_session_full,
+        name="workflow_reset_session_full",
+    ),
+    path(
+        "workflow/reset-session-partial/",
+        workflow_views.workflow_reset_session_partial,
+        name="workflow_reset_session_partial",
+    ),
+    path(
         "api/hierarchy/<str:hierarchy_id>/json/",
         views.get_hierarchy_json,
         name="get_hierarchy_json",
@@ -562,11 +587,6 @@ urlpatterns = [
         "workflow/task/<int:task_number>/<str:operation>/",
         workflow_views.workflow_task_router,
         name="workflow_task",
-    ),
-    path(
-        "workflow/task/<int:task_number>/substep/<str:substep_name>/",
-        workflow_views.workflow_task_substep,
-        name="workflow_task_substep",
     ),
     path(
         "workflow/automode/", workflow_views.workflow_automode, name="workflow_automode"
@@ -610,26 +630,6 @@ urlpatterns = [
         "workflow/clone-import/",
         workflow_views.workflow_clone_import,
         name="workflow_clone_import",
-    ),
-    path(
-        "workflow/session-check/",
-        workflow_views.workflow_session_check,
-        name="workflow_session_check",
-    ),
-    path(
-        "workflow/task/<int:task_number>/substep-loading/<str:substep_name>/",
-        workflow_views.workflow_task_substep_with_loading,
-        name="workflow_task_substep_with_loading",
-    ),
-    path(
-        "workflow/reset-session-full/",
-        workflow_views.workflow_reset_session_full,
-        name="workflow_reset_session_full",
-    ),
-    path(
-        "workflow/reset-session-partial/",
-        workflow_views.workflow_reset_session_partial,
-        name="workflow_reset_session_partial",
     ),
     path(
         "api/aorta/trails/",
