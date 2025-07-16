@@ -711,10 +711,14 @@ class AutomodeConfigurationService:
         }
 
         if config.config_files_source == 'GITHUB':
-            results['config_files'] = self._fetch_from_github(config.config_files_github_url, github_token, force_refresh)
+            branch = getattr(config, 'github_branch', 'main')
+            results['config_files'] = self._fetch_from_github(config.config_files_github_url, github_token, force_refresh, branch)
 
         if config.technical_export_source == 'BIRD_WEBSITE':
             results['technical_export'] = self._fetch_from_bird_website(force_refresh)
+        elif config.technical_export_source == 'GITHUB':
+            branch = getattr(config, 'github_branch', 'main')
+            results['technical_export'] = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
 
         return results
 
@@ -761,15 +765,15 @@ class AutomodeConfigurationService:
             logger.error(f"Error fetching from BIRD website: {e}")
             raise
 
-    def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD", token: str = None, force_refresh: bool = False) -> int:
+    def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from .utils.clone_repo_service import CloneRepoService
         """Fetch technical export files from GitHub repository."""
-        logger.info(f"Fetching technical export files from GitHub: {github_url}")
+        logger.info(f"Fetching technical export files from GitHub: {github_url} (branch: {branch})")
 
         try:
             repo_name = github_url.split("/")[-1]
             fetcher = CloneRepoService(token)
-            fetcher.clone_repo(github_url,repo_name)        # Download and extract repository
+            fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
             fetcher.setup_files(repo_name)       # Organize files according to mapping
             fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
 
