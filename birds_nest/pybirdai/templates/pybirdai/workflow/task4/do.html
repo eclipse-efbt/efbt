@@ -48,6 +48,13 @@
                 <span class="status-badge completed">✓ Completed</span>
                 {% else %}
                 <span class="status-badge pending">⏳ Pending</span>
+                <button
+                    type="button"
+                    class="btn btn-sm btn-primary substep-btn"
+                    data-substep="generate_all_filters"
+                >
+                    Run Generate Filters
+                </button>
                 {% endif %}
                 <a
                     href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=4 substep_name='run_tests' %}"
