@@ -144,6 +144,7 @@ urlpatterns = [
         views.import_report_templates,
         name="import_report_templates",
     ),
+    path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
     path(
         "run_import_semantic_integrations_from_website/",
         views.run_import_semantic_integrations_from_website,
@@ -598,6 +599,11 @@ urlpatterns = [
         name="workflow_task",
     ),
     path(
+        "workflow/task/<int:task_number>/substep/<str:substep_name>/",
+        workflow_views.workflow_task_substep,
+        name="workflow_task_substep",
+    ),
+    path(
         "workflow/automode/", workflow_views.workflow_automode, name="workflow_automode"
     ),
     path(
@@ -639,11 +645,6 @@ urlpatterns = [
         "workflow/clone-import/",
         workflow_views.workflow_clone_import,
         name="workflow_clone_import",
-    ),
-    path(
-        "workflow/task/<int:task_number>/substep/<str:substep_name>/",
-        workflow_views.workflow_task_substep,
-        name="workflow_task_substep",
     ),
     path(
         "workflow/session-check/",
@@ -716,5 +717,4 @@ urlpatterns = [
         lineage_api.get_trail_lineage_summary,
         name="get_trail_lineage_summary",
     ),
-    path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
 ]

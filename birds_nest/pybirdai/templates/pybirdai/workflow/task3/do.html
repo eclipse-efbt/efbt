@@ -61,6 +61,13 @@
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
+            <button
+                type="button"
+                class="btn btn-sm btn-warning substep-btn"
+                data-substep="delete_database"
+            >
+                Run Delete Database
+            </button>
             {% endif %}
             <a
                 href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='generate_filter_code' %}"
@@ -84,6 +91,13 @@
             <span class="status-badge completed">✓ Completed</span>
             {% else %}
             <span class="status-badge pending">⏳ Pending</span>
+            <button
+                type="button"
+                class="btn btn-sm btn-primary substep-btn"
+                data-substep="import_input_model"
+            >
+                Run Import Input Model
+            </button>
             {% endif %}
             <a
                 href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=3 substep_name='generate_join_code' %}"

@@ -1,0 +1,587 @@
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}">Task 3: SMCubes Core Creation</a>
+<span class="breadcrumb-separator">›</span>
+<span>Compare</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 3: SMCubes Core Creation - Compare</h1>
+    
+    <!-- Comparison Controls -->
+    <div class="comparison-controls">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="baseline-version" class="form-label">Select Baseline Version:</label>
+                <select class="form-select" id="baseline-version" onchange="refreshComparison()">
+                    <option value="">Select a previous execution...</option>
+                    {% for execution in previous_executions %}
+                    <option value="{{ execution.id }}">{{ execution.created_at|date:"Y-m-d H:i" }} - {{ execution.status }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" onclick="exportComparisonReport('csv')">Export as CSV</button>
+                    <button class="btn btn-secondary" onclick="exportComparisonReport('pdf')">Export as PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Previous Versions Message -->
+    {% if not previous_executions %}
+    <div class="alert alert-info">
+        <h4>No Previous Versions Available</h4>
+        <p>This is the first execution of Task 3: SMCubes Core Creation. There are no previous versions to compare against.</p>
+        <p>Once you execute this task again, you'll be able to compare versions and track changes.</p>
+    </div>
+    {% else %}
+    
+    <!-- Comparison Content (Initially Hidden) -->
+    <div id="comparison-content" class="comparison-grid" style="display: none;">
+        
+        <!-- Change Summary -->
+        <div class="comparison-section">
+            <h3>Change Summary</h3>
+            <div class="change-summary">
+                <div class="change-item added">
+                    <div class="change-icon">+</div>
+                    <div class="change-details">
+                        <strong id="added-count">0</strong>
+                        <p>SMCubes Added</p>
+                    </div>
+                </div>
+                <div class="change-item modified">
+                    <div class="change-icon">~</div>
+                    <div class="change-details">
+                        <strong id="modified-count">0</strong>
+                        <p>SMCubes Modified</p>
+                    </div>
+                </div>
+                <div class="change-item removed">
+                    <div class="change-icon">-</div>
+                    <div class="change-details">
+                        <strong id="removed-count">0</strong>
+                        <p>SMCubes Removed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side-by-Side Comparison -->
+        <div class="comparison-section">
+            <h3>SMCubes Structure Comparison</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Current Version</h5>
+                    <div id="current-smcubes" class="smcubes-list">
+                        <!-- Current SMCubes will be loaded here -->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Baseline Version</h5>
+                    <div id="baseline-smcubes" class="smcubes-list">
+                        <!-- Baseline SMCubes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cube Details Comparison -->
+        <div class="comparison-section">
+            <h3>Cube Structure Changes</h3>
+            <div class="accordion" id="cube-changes-accordion">
+                <!-- Cube change details will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Detailed Changes -->
+        <div class="comparison-section">
+            <h3>Detailed Changes</h3>
+            <div class="change-details-list">
+                <div id="detailed-changes" class="change-list">
+                    <!-- Detailed changes will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Impact Analysis -->
+        <div class="comparison-section impact-analysis">
+            <h3>Impact Analysis</h3>
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <h4>SMCubes Statistics</h4>
+                    <ul id="smcubes-stats">
+                        <li>Total cubes: <span id="total-cubes">0</span></li>
+                        <li>Total dimensions: <span id="total-dimensions">0</span></li>
+                        <li>Total measures: <span id="total-measures">0</span></li>
+                    </ul>
+                </div>
+                <div class="impact-card">
+                    <h4>Cube Types</h4>
+                    <ul id="cube-types">
+                        <li>Data cubes: <span id="data-cubes">0</span></li>
+                        <li>Metadata cubes: <span id="metadata-cubes">0</span></li>
+                        <li>Reference cubes: <span id="reference-cubes">0</span></li>
+                    </ul>
+                </div>
+                <div class="impact-card">
+                    <h4>Processing Status</h4>
+                    <ul id="processing-status">
+                        <li>Processing time: <span id="processing-time">0s</span></li>
+                        <li>Validation errors: <span id="validation-errors">0</span></li>
+                        <li>Warnings: <span id="warnings">0</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rollback Options -->
+        <div class="comparison-section">
+            <h3>Rollback Options</h3>
+            <div class="alert alert-warning">
+                <strong>Replace with Previous Version</strong>
+                <p>You can replace the current SMCubes core with the selected baseline version.</p>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-danger" onclick="replaceWithPrevious()" id="rollback-btn" disabled>
+                        Replace with Selected Version
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="exportCubeDefinitions()" id="export-cubes-btn" disabled>
+                        Export Cube Definitions
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+    
+
+<style>
+.comparison-controls {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.comparison-grid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.comparison-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.comparison-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.change-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.change-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.change-item.added {
+    background: #d1e7dd;
+}
+
+.change-item.modified {
+    background: #fff3cd;
+}
+
+.change-item.removed {
+    background: #f8d7da;
+}
+
+.change-icon {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 10px;
+    width: 30px;
+    text-align: center;
+}
+
+.change-item.added .change-icon {
+    color: #0f5132;
+}
+
+.change-item.modified .change-icon {
+    color: #664d03;
+}
+
+.change-item.removed .change-icon {
+    color: #842029;
+}
+
+.change-details strong {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.change-details p {
+    margin: 0;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.smcubes-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.cube-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.cube-item:last-child {
+    border-bottom: none;
+}
+
+.cube-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.cube-info {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.dimension-count {
+    background: #e9ecef;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.measure-count {
+    background: #d1ecf1;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.change-details-list {
+    margin-top: 20px;
+    border-top: 1px solid #dee2e6;
+    padding-top: 15px;
+}
+
+.change-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.change-entry {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.change-type {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 10px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.change-type.added {
+    background: #198754;
+    color: white;
+}
+
+.change-type.modified {
+    background: #ffc107;
+    color: #000;
+}
+
+.change-type.removed {
+    background: #dc3545;
+    color: white;
+}
+
+.change-name {
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.change-description {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.impact-analysis {
+    margin-top: 30px;
+}
+
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.impact-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.impact-card h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.impact-card ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.loading-spinner {
+    display: none;
+    text-align: center;
+    padding: 20px;
+}
+
+.accordion-item {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+}
+
+.cube-diff {
+    font-family: monospace;
+    font-size: 12px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.cube-diff .added {
+    color: #198754;
+}
+
+.cube-diff .removed {
+    color: #dc3545;
+}
+
+.cube-diff .modified {
+    color: #ffc107;
+}
+</style>
+
+<script>
+function refreshComparison() {
+    const baseline = document.getElementById('baseline-version').value;
+    const comparisonContent = document.getElementById('comparison-content');
+    
+    if (!baseline) {
+        comparisonContent.style.display = 'none';
+        return;
+    }
+    
+    // Show loading
+    comparisonContent.innerHTML = '<div class="loading-spinner"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div><p>Loading comparison data...</p></div>';
+    comparisonContent.style.display = 'block';
+    
+    // Make AJAX call to get comparison data
+    fetch(`{% url "pybirdai:workflow_task_compare" task_number=3 %}?baseline=${baseline}`)
+        .then(response => response.json())
+        .then(data => {
+            updateComparisonView(data);
+            document.getElementById('rollback-btn').disabled = false;
+            document.getElementById('export-cubes-btn').disabled = false;
+        })
+        .catch(error => {
+            console.error('Error loading comparison:', error);
+            comparisonContent.innerHTML = '<div class="alert alert-danger">Error loading comparison data. Please try again.</div>';
+        });
+}
+
+function updateComparisonView(data) {
+    // Update change summary
+    document.getElementById('added-count').textContent = data.added || 0;
+    document.getElementById('modified-count').textContent = data.modified || 0;
+    document.getElementById('removed-count').textContent = data.removed || 0;
+    
+    // Update SMCubes lists
+    updateSMCubesList('current-smcubes', data.current_smcubes || []);
+    updateSMCubesList('baseline-smcubes', data.baseline_smcubes || []);
+    
+    // Update cube changes accordion
+    updateCubeChangesAccordion(data.cube_changes || []);
+    
+    // Update detailed changes
+    updateDetailedChanges(data.changes || []);
+    
+    // Update impact analysis
+    updateImpactAnalysis(data.impact || {});
+    
+    // Show comparison content
+    document.getElementById('comparison-content').style.display = 'block';
+    document.getElementById('comparison-content').innerHTML = document.getElementById('comparison-content').innerHTML;
+}
+
+function updateSMCubesList(containerId, cubes) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = cubes.map(cube => `
+        <div class="cube-item">
+            <div>
+                <div class="cube-name">${cube.name}</div>
+                <div class="cube-info">${cube.description || 'No description'}</div>
+            </div>
+            <div>
+                <span class="dimension-count">${cube.dimensions || 0} dims</span>
+                <span class="measure-count">${cube.measures || 0} measures</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateCubeChangesAccordion(changes) {
+    const accordion = document.getElementById('cube-changes-accordion');
+    accordion.innerHTML = changes.map((change, index) => `
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
+                    <span class="change-type ${change.type}">${change.type.toUpperCase()}</span>
+                    ${change.cube_name}
+                </button>
+            </h2>
+            <div id="collapse${index}" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="cube-diff">
+                        ${change.dimension_changes.map(dim => `
+                            <div class="${dim.change_type}">${dim.change_type === 'added' ? '+' : dim.change_type === 'removed' ? '-' : '~'} Dimension: ${dim.dimension_name}</div>
+                        `).join('')}
+                        ${change.measure_changes.map(measure => `
+                            <div class="${measure.change_type}">${measure.change_type === 'added' ? '+' : measure.change_type === 'removed' ? '-' : '~'} Measure: ${measure.measure_name}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateDetailedChanges(changes) {
+    const container = document.getElementById('detailed-changes');
+    container.innerHTML = changes.map(change => `
+        <div class="change-entry">
+            <span class="change-type ${change.type}">${change.type.toUpperCase()}</span>
+            <span class="change-name">${change.name}</span>
+            <span class="change-description">${change.description}</span>
+        </div>
+    `).join('');
+}
+
+function updateImpactAnalysis(impact) {
+    document.getElementById('total-cubes').textContent = impact.total_cubes || 0;
+    document.getElementById('total-dimensions').textContent = impact.total_dimensions || 0;
+    document.getElementById('total-measures').textContent = impact.total_measures || 0;
+    document.getElementById('data-cubes').textContent = impact.data_cubes || 0;
+    document.getElementById('metadata-cubes').textContent = impact.metadata_cubes || 0;
+    document.getElementById('reference-cubes').textContent = impact.reference_cubes || 0;
+    document.getElementById('processing-time').textContent = impact.processing_time || '0s';
+    document.getElementById('validation-errors').textContent = impact.validation_errors || 0;
+    document.getElementById('warnings').textContent = impact.warnings || 0;
+}
+
+function exportComparisonReport(format) {
+    const baseline = document.getElementById('baseline-version').value;
+    if (!baseline) {
+        alert('Please select a baseline version first.');
+        return;
+    }
+    
+    const url = `{% url "pybirdai:workflow_task_compare" task_number=3 %}?baseline=${baseline}&export=${format}`;
+    window.open(url, '_blank');
+}
+
+function replaceWithPrevious() {
+    const baseline = document.getElementById('baseline-version').value;
+    if (!baseline) {
+        alert('Please select a baseline version first.');
+        return;
+    }
+    
+    if (confirm('Are you sure you want to replace the current SMCubes core with the selected baseline version? This action cannot be undone.')) {
+        fetch(`{% url "pybirdai:workflow_task_rollback" task_number=3 %}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                baseline_id: baseline,
+                action: 'replace'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('SMCubes core has been successfully replaced with the baseline version.');
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error during rollback:', error);
+            alert('An error occurred during rollback. Please try again.');
+        });
+    }
+}
+
+function exportCubeDefinitions() {
+    const baseline = document.getElementById('baseline-version').value;
+    if (!baseline) {
+        alert('Please select a baseline version first.');
+        return;
+    }
+    
+    const url = `{% url "pybirdai:workflow_task_rollback" task_number=3 %}?baseline=${baseline}&action=export_cubes`;
+    window.open(url, '_blank');
+}
+</script>
+{% endblock %}
