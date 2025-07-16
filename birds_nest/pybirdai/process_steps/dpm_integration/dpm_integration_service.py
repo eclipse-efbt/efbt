@@ -10,7 +10,7 @@ DEFAULT_DB_VERSION = f"{FILES_ROOT}/2024-12/330f4dba-be0d-4cdd-b0ed-b5a6b1fbc049
 DEFAULT_DB_LOCAL_PATH = "dpm_database.zip"
 SCRIPT_RUNNER = "" if platform.system() == "Windows" else "bash "
 PROCESS_FILE_END = ".bat" if platform.system() == "Windows" else ".sh"
-SCRIPT_PATH = f"pybirdai{os.sep}utils{os.sep}dpm_importer{os.sep}process{PROCESS_FILE_END}"
+SCRIPT_PATH = f"pybirdai{os.sep}process_steps{os.sep}dpm_integration{os.sep}process{PROCESS_FILE_END}"
 EXTRACTED_DB_PATH = f"dpm_database{os.sep}dpm_database.accdb"
 
 class DPMImporterService:
