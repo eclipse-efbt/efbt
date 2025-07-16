@@ -30,7 +30,7 @@ class RunImportDPMData(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_import():
+    def run_import(import_:bool):
         # Import and run the DPM integration service
         from pybirdai.process_steps.dpm_integration.dpm_integration_service import DPMImporterService
         from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
@@ -39,22 +39,24 @@ class RunImportDPMData(AppConfig):
 
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
-        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.file_directory = os.path.join(base_dir, 'results')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
 
         
         context = Context()
-        context.file_directory = sdd_context.file_directory
+        context.file_directory = sdd_context.output_directory
         context.output_directory = sdd_context.output_directory
 
         # Run DPM import service
-        logging.info("Mapping the DPM Metadata")
-        dpm_service = DPMImporterService(output_directory=context.file_directory)
-        dpm_service.run_application()
+        if not import_:
+            logging.info("Mapping the DPM Metadata")
+            dpm_service = DPMImporterService(output_directory=context.file_directory)
+            dpm_service.run_application()
 
         # After DPM import, run the report templates import
-        logging.info("Running Import on the DPM Metadata")
-        RunImportReportTemplatesFromWebsite.run_import()
+        if import_:
+            logging.info("Running Import on the DPM Metadata")
+            RunImportReportTemplatesFromWebsite.run_import()
 
     def ready(self):
         # This method is still needed for Django's AppConfig
