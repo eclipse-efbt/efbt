@@ -59,6 +59,9 @@ class DPMImporterService:
 
     def run_application(self,extract_cleanup:bool=False,download_cleanup:bool=False,with_extract:bool=True):
         if with_extract:
+            shutil.rmtree("dpm_database")
+
+        if with_extract:
             if not os.path.exists(DEFAULT_DB_LOCAL_PATH):
                 self.fetch_link_for_database_download()
                 self.download_dpm_database()
