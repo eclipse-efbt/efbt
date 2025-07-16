@@ -145,6 +145,7 @@ urlpatterns = [
         name="import_report_templates",
     ),
     path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
+    path("prepare_dpm_data/", views.prepare_dpm_data, name="prepare_dpm_data"),
     path(
         "run_import_semantic_integrations_from_website/",
         views.run_import_semantic_integrations_from_website,
