@@ -4,6 +4,7 @@ import os
 import zipfile
 import shutil
 import platform
+import logging
 
 FILES_ROOT = "https://www.eba.europa.eu/sites/default/files"
 DEFAULT_DB_VERSION = f"{FILES_ROOT}/2024-12/330f4dba-be0d-4cdd-b0ed-b5a6b1fbc049/dpm_database_v4_0_20241218.zip"
@@ -65,7 +66,9 @@ class DPMImporterService:
             if not os.path.exists(DEFAULT_DB_LOCAL_PATH):
                 self.fetch_link_for_database_download()
                 self.download_dpm_database()
-            self.extract_dpm_database()
+            if not (os.path.exists("target") and os.listdir("target")):
+                self.extract_dpm_database()
+        logging.info("Starting Mapping")
         self.map_csvs_to_sdd_exchange_format()
 
         if extract_cleanup:
@@ -90,44 +93,58 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         """
 
         self.write_csv_maintenance_agency()
+        logging.info("Created Maintenance Agency File")
         _, framework_map = new_maps.map_frameworks() # frameworks
         _.to_csv(f"{self.output_directory}framework.csv",index=False)
+        logging.info("Mapped Framework Entities")
         _, domain_map = new_maps.map_domains() # domains
         _.to_csv(f"{self.output_directory}domain.csv",index=False)
+        logging.info("Mapped Domain Entities")
         _, member_map = new_maps.map_members(domain_id_map=domain_map) # members
         _.to_csv(f"{self.output_directory}member.csv",index=False)
+        logging.info("Mapped Members Entities")
         _, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map) # to enumerated variables
         _.to_csv(f"{self.output_directory}variable.csv",index=False)
+        logging.info("Mapped Variables Entities")
         _, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
         _.to_csv(f"{self.output_directory}member_hierarchy.csv",index=False)
+        logging.info("Mapped Hierarchy Entities")
         _, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
         _.to_csv(f"{self.output_directory}member_hierarchy_node.csv",index=False)
+        logging.info("Mapped HierarchyNode Entities")
 
         """
         Data Definition Package
         """
 
         context_data, context_map = new_maps.map_context_definition(dimension_map=dimension_map,member_map=member_map) # to combination_items (need to improve EBA_ATY and subdomain generation)
-        # _, metric_map = new_maps.map_metrics()
+        
         (combination, combination_item), dpv_map = new_maps.map_datapoint_version(context_map=context_map,context_data=context_data,dimension_map=dimension_map,member_map=member_map) # to combinations and items
         combination.to_csv(f"{self.output_directory}combination.csv",index=False)
         combination_item.to_csv(f"{self.output_directory}combination_item.csv",index=False)
+        logging.info("Mapped Combination(and Items) Entities")
 
         """
         Rendering Package
         """
         _, table_map = new_maps.map_tables(framework_id_map=framework_map)
         _.to_csv(f"{self.output_directory}table.csv",index=False)
+        logging.info("Mapped Table Entities")
         _, axis_map = new_maps.map_axis(table_map=table_map)
         _.to_csv(f"{self.output_directory}axis.csv",index=False)
+        logging.info("Mapped Table Entities")
         _, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
         _.to_csv(f"{self.output_directory}axis_ordinate.csv",index=False)
+        logging.info("Mapped AxisOrdinates Entities")
         _, cell_map = new_maps.map_table_cell(table_map=table_map,dp_map=dpv_map)
         _.to_csv(f"{self.output_directory}table_cell.csv",index=False)
+        logging.info("Mapped TableCell Entities")
         _, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map)
         _.to_csv(f"{self.output_directory}cell_position.csv",index=False)
+        logging.info("Mapped CellPositions Entities")
         _, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map)
         _.to_csv(f"{self.output_directory}ordinate_item.csv",index=False)
+        logging.info("Mapped OrdinateItems Entities")
 
 if __name__ == "__main__":
     DPMImporterService().run_application()
