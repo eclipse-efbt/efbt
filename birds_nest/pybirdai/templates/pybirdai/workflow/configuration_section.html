@@ -91,6 +91,16 @@
                     <input type="hidden" name="config_files_github_url" id="config_files_github_url_hidden">
                 </div>
                 
+                <!-- GitHub Branch Selection -->
+                <div class="form-group" id="github-branch-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Branch</label>
+                    <input type="text" name="github_branch" id="github_branch" class="form-control" 
+                           placeholder="main"
+                           value="{{ config.github_branch|default:'main' }}"
+                           style="width: 100%; padding: 8px;">
+                    <small style="color: #666;">Branch to pull files from (default: main)</small>
+                </div>
+                
                 <!-- GitHub Token -->
                 <div class="form-group" id="github-token-group" style="margin-bottom: 20px; display: none;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Personal Access Token</label>
@@ -174,6 +184,7 @@ function updateWorkflowConfigVisibility() {
     
     // Show single GitHub repo field if either source is GitHub
     document.getElementById('github-repo-group').style.display = anyGithubSelected ? 'block' : 'none';
+    document.getElementById('github-branch-group').style.display = anyGithubSelected ? 'block' : 'none';
     document.getElementById('github-token-group').style.display = anyGithubSelected ? 'block' : 'none';
     
     // Update hidden fields when GitHub URL changes
