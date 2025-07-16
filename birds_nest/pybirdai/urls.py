@@ -1,16 +1,21 @@
 from django.urls import path
 from . import views
 from . import report_views
-from . import workflow_views
 from . import aorta_views
+from . import workflow_views
+
 from . import lineage_views
 from . import lineage_api
+
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
-app_name = "pybirdai"
+app_name = "pybirdai"  # Add this line if using namespaces
+
 urlpatterns = [
-    path("", views.home_view, name="home"),
+    path(
+        "", views.home_view, name="home"
+    ),
     path("automode/", views.automode_view, name="automode"),
     path(
         "automode/create-database/",
@@ -403,6 +408,12 @@ urlpatterns = [
         name="export_database_to_csv",
     ),
     path(
+
+        'export-database-to-github/',
+        workflow_views.export_database_to_github,
+        name='export_database_to_github'
+    ),
+    path(
         "bird_diffs_and_corrections/",
         views.bird_diffs_and_corrections,
         name="bird_diffs_and_corrections",
@@ -582,6 +593,11 @@ urlpatterns = [
         name="automode_debug_config",
     ),
     path("automode/status/", views.automode_status, name="automode_status"),
+    path(
+        "run_fetch_curated_resources/",
+        views.run_fetch_curated_resources,
+        name="run_fetch_curated_resources",
+    ),
     path("workflow/", workflow_views.workflow_dashboard, name="workflow_dashboard"),
     path(
         "workflow/task/<int:task_number>/<str:operation>/",
@@ -681,5 +697,6 @@ urlpatterns = [
         "api/trail/<int:trail_id>/summary/",
         lineage_api.get_trail_lineage_summary,
         name="get_trail_lineage_summary",
-    ),
+    )
+
 ]
