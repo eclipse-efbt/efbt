@@ -60,14 +60,14 @@ class DPMImporterService:
 
     def run_application(self,extract_cleanup:bool=False,download_cleanup:bool=False,with_extract:bool=True):
         if with_extract:
-            shutil.rmtree("dpm_database")
+            if os.path.exists("dpm_database"):
+                shutil.rmtree("dpm_database")
 
         if with_extract:
             if not os.path.exists(DEFAULT_DB_LOCAL_PATH):
                 self.fetch_link_for_database_download()
                 self.download_dpm_database()
-            if not (os.path.exists("target") and os.listdir("target")):
-                self.extract_dpm_database()
+            self.extract_dpm_database()
         logging.info("Starting Mapping")
         self.map_csvs_to_sdd_exchange_format()
 
