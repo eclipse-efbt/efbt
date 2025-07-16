@@ -30,6 +30,7 @@ from . import bird_meta_data_model
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
 from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+from .entry_points.import_dpm_data import RunImportDPMData
 from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
 from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
 from .entry_points.create_filters import RunCreateFilters
@@ -83,7 +84,7 @@ from .utils.utils_views import ensure_results_directory,process_test_results_fil
 import time
 from datetime import datetime
 from django.views.decorators.clickjacking import xframe_options_exempt
-
+import traceback
 from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
 
 
@@ -299,6 +300,34 @@ def import_report_templates(request):
         '/pybirdai/workflow/task/3/do/',
         "Do"
     )
+  
+def prepare_dpm_data(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import(import_=False)
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Preparing DPM Data (this may take several minutes, don't press the back button on this web page)",
+        "Import DPM data prepared successfully. Report templates have also been imported.",
+        '/pybirdai/import_dpm_data',
+        "Populate BIRD Metadata Database"
+    )
+
+def import_dpm_data(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import(import_=True)
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Importing DPM Data (this may take several minutes, don't press the back button on this web page)",
+        "Import DPM data completed successfully. Report templates have also been imported.",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
+    )
 
 def run_create_filters(request):
     if request.GET.get('execute') == 'true':
@@ -426,6 +455,9 @@ def index(request):
 
 def home_view(request):
     return render(request, 'pybirdai/home.html')
+
+def dpm_data_view(request):
+    return render(request, 'pybirdai/dpm_data.html')
 
 def automode_view(request):
     return render(request, 'pybirdai/automode.html')
@@ -1246,6 +1278,7 @@ def create_response_with_loading(request, task_title, success_message, return_ur
         try:
             return JsonResponse({'status': 'success'})
         except Exception as e:
+            traceback.print_exc()
             return JsonResponse({'status': 'error', 'message': str(e)})
 
     return HttpResponse(html_response)
@@ -1412,7 +1445,7 @@ def create_response_with_loading_extended(request, task_title, success_message, 
                             document.getElementById('error-text').textContent = error.message;
                             document.getElementById('error-message').style.display = 'block';
                         }});
-                    }}, 100); // Small delay to ensure loading screen is visible
+                    }}, 150000); // Small delay to ensure loading screen is visible
                 }});
             </script>
         </body>

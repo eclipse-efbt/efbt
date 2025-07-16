@@ -83,6 +83,7 @@ def refresh_complete_status(task:int=3,all:bool=True):
         except django.db.utils.OperationalError:
             return
 
+
     task_executions = WorkflowTaskExecution.objects.filter(
         task_number=task,
         operation_type='do'
@@ -817,8 +818,6 @@ def workflow_dashboard(request):
         })
 
 
-
-
     return render(request, 'pybirdai/workflow/dashboard.html', context)
 
 
@@ -885,7 +884,6 @@ def workflow_task_router(request, task_number, operation):
 
     # Route to appropriate handler
     task_handlers = {
-
         1: task1_smcubes_core,
         2: task2_smcubes_rules,
         3: task3_python_rules,
@@ -1081,8 +1079,6 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
         })
 
 
-
-
 def task2_smcubes_rules(request, operation, task_execution, workflow_session):
     """Handle Task 4: SMCubes Transformation Rules Creation operations"""
 
@@ -1210,8 +1206,6 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
             'workflow_session': workflow_session,
             'execution_data': execution_data,
         })
-
-
 
 
 def task3_python_rules(request, operation, task_execution, workflow_session):
@@ -1357,6 +1351,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
             'execution_data': execution_data,
         })
 
+    
 
 
 
@@ -1539,6 +1534,449 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
         })
 
 
+@require_http_methods(["POST"])
+def workflow_task_substep(request, task_number, substep_name):
+    """Handle individual substep execution for workflow tasks"""
+
+    # Validate task number
+    if task_number < 0 or task_number > 4:
+        return JsonResponse({
+            'success': False,
+            'message': 'Invalid task number. Substeps are only available for tasks 1-4.'
+        }, status=400)
+
+    # Get or create task execution record
+    try:
+        session_id = request.session.get("workflow_session_id")
+        if not session_id:
+            return JsonResponse({
+                'success': False,
+                'message': 'No workflow session found'
+            }, status=400)
+
+        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+        task_execution, _ = WorkflowTaskExecution.objects.get_or_create(
+            task_number=task_number,
+            operation_type='do',
+            defaults={'status': 'running'}
+        )
+
+        # Update status to running if not already
+        if task_execution.status != 'running':
+            task_execution.status = 'running'
+            task_execution.started_at = timezone.now()
+            task_execution.save()
+
+    except Exception as e:
+        logger.error(f"Error getting workflow session: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to get workflow session'
+        }, status=500)
+
+    # Route to appropriate substep handler
+    try:
+
+        if task_number == 1:
+            return _execute_task1_substep(request, substep_name, task_execution, workflow_session)
+        elif task_number == 2:
+            return _execute_task2_substep(request, substep_name, task_execution, workflow_session)
+        elif task_number == 3:
+            return _execute_task3_substep(request, substep_name, task_execution, workflow_session)
+        elif task_number == 4:
+            return _execute_task4_substep(request, substep_name, task_execution, workflow_session)
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': f'No substep handler for task {task_number}'
+            }, status=400)
+
+    except Exception as e:
+        logger.error(f"Error executing substep {substep_name} for task {task_number}: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': f'Failed to execute substep: {str(e)}'
+        }, status=500)
+
+
+def _execute_task2_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 2: Database Creation"""
+
+    if substep_name == 'start':
+        try:
+            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+            results = app_config.run_automode_database_setup()
+
+            # Update execution data
+            execution_data = task_execution.execution_data or {}
+            execution_data['database_models_created'] = True
+            execution_data['requires_restart'] = results.get('requires_restart', False)
+            task_execution.execution_data = execution_data
+            task_execution.save()
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Database models created successfully',
+                'requires_restart': results.get('requires_restart', False)
+            })
+
+        except Exception as e:
+            logger.error(f"Database creation substep failed: {e}")
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            }, status=500)
+
+    elif substep_name == 'continue':
+        try:
+            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+            app_config.run_post_setup_operations()
+
+            # Update execution data
+            execution_data = task_execution.execution_data or {}
+            execution_data['migrations_applied'] = True
+            task_execution.execution_data = execution_data
+            task_execution.status = 'completed'
+            task_execution.completed_at = timezone.now()
+            task_execution.save()
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Migrations applied successfully'
+            })
+
+        except Exception as e:
+            logger.error(f"Migration substep failed: {e}")
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            }, status=500)
+
+    else:
+        return JsonResponse({
+            'success': False,
+            'message': f'Unknown substep: {substep_name}'
+        }, status=400)
+
+
+def _execute_task1_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 1: SMCubes Core Creation"""
+
+    try:
+        # Import necessary modules
+        from .entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
+        from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
+        from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
+        from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+        from .entry_points.import_input_model import RunImportInputModelFromSQLDev
+        from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+
+        # Get or initialize execution data
+        execution_data = task_execution.execution_data or {
+            'steps_completed': []
+        }
+        if 'steps_completed' not in execution_data:
+            execution_data['steps_completed'] = []
+
+        success_message = ''
+
+        if substep_name == 'delete_database':
+            logger.info("Executing delete database substep via old AJAX method...")
+            logger.warning("Note: Consider using the new loading-based endpoint for better user experience")
+            app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
+            app_config.run_delete_bird_metadata_database()
+            execution_data['database_deleted'] = True
+            execution_data['steps_completed'].append('Database deletion')
+            success_message = 'Database deleted successfully'
+
+        elif substep_name == 'import_input_model':
+            logger.info("Executing import input model substep...")
+            app_config = RunImportInputModelFromSQLDev("pybirdai", "birds_nest")
+            app_config.ready()
+            execution_data['input_model_imported'] = True
+            execution_data['steps_completed'].append('Input model import')
+            success_message = 'Input model imported successfully'
+
+        elif substep_name == 'generate_templates':
+            logger.info("Executing generate templates substep...")
+            RunImportReportTemplatesFromWebsite.run_import()
+            execution_data['report_templates_created'] = True
+            execution_data['steps_completed'].append('Report templates import')
+            success_message = 'Report templates imported successfully'
+
+        elif substep_name == 'import_hierarchy_analysis':
+            logger.info("Executing import hierarchy analysis substep...")
+            RunImportHierarchiesFromWebsite.import_hierarchies()
+            execution_data['hierarchy_analysis_imported'] = True
+            execution_data['steps_completed'].append('Hierarchy analysis import')
+            success_message = 'Hierarchy analysis imported successfully'
+
+        elif substep_name == 'process_semantic':
+            logger.info("Executing process semantic substep...")
+            RunImportSemanticIntegrationsFromWebsite.import_mappings_from_website()
+            execution_data['semantic_integrations_processed'] = True
+            execution_data['steps_completed'].append('Semantic integrations import')
+            success_message = 'Semantic integrations processed successfully'
+
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': f'Unknown substep: {substep_name}'
+            }, status=400)
+
+        # Check if all subtasks are completed before marking main task as completed
+        #
+        all_subtasks_completed = (
+            execution_data.get('database_deleted', False) and
+            execution_data.get('input_model_imported', False) and
+            execution_data.get('report_templates_created', False) and
+            execution_data.get('hierarchy_analysis_imported', False) and
+            execution_data.get('semantic_integrations_processed', False)
+        )
+
+        any_subtasks_completed = (
+            execution_data.get('database_deleted', False) or
+            execution_data.get('input_model_imported', False) or
+            execution_data.get('report_templates_created', False) or
+            execution_data.get('hierarchy_analysis_imported', False) or
+            execution_data.get('semantic_integrations_processed', False)
+        )
+
+        # Update task execution
+        task_execution.execution_data = execution_data
+        if any_subtasks_completed:
+            task_execution.status = "running"
+            task_execution.completed_at = timezone.now()
+        if all_subtasks_completed:
+            task_execution.status = "completed"
+            task_execution.completed_at = timezone.now()
+        task_execution.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': success_message,
+            'steps_completed': len(execution_data.get('steps_completed', []))
+        })
+
+    except Exception as e:
+        traceback.print_exc()
+        logger.error(f"Task 1 substep {substep_name} failed: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': str(e)
+        }, status=500)
+
+
+def _execute_task2_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 2: SMCubes Transformation Rules"""
+
+    try:
+        from .entry_points.create_filters import RunCreateFilters
+        from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
+
+        # Get or initialize execution data
+        execution_data = task_execution.execution_data or {
+            'steps_completed': []
+        }
+        if 'steps_completed' not in execution_data:
+            execution_data['steps_completed'] = []
+
+        success_message = ''
+
+        if substep_name == 'generate_all_filters':
+            logger.info("Executing generate filters substep...")
+            RunCreateFilters.run_create_filters()
+            execution_data['filters_created'] = True
+            execution_data['steps_completed'].append('Filters creation')
+            success_message = 'Filters created successfully'
+
+        elif substep_name == 'create_joins_metadata':
+            logger.info("Executing create joins metadata substep...")
+            RunCreateJoinsMetadata.run_create_joins_meta_data()
+            execution_data['joins_metadata_created'] = True
+            execution_data['steps_completed'].append('Joins metadata creation')
+            success_message = 'Joins metadata created successfully'
+
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': f'Unknown substep: {substep_name}'
+            }, status=400)
+
+        # Check if all subtasks are completed before marking main task as completed
+        all_subtasks_completed = (
+            execution_data.get('filters_created', False) and
+            execution_data.get('joins_metadata_created', False)
+        )
+
+        any_subtasks_completed = (
+            execution_data.get('filters_created', False) or
+            execution_data.get('joins_metadata_created', False)
+        )
+
+        # Update task execution
+        task_execution.execution_data = execution_data
+        if any_subtasks_completed:
+            task_execution.status = "running"
+            task_execution.completed_at = timezone.now()
+        if all_subtasks_completed:
+            task_execution.status = "completed"
+            task_execution.completed_at = timezone.now()
+        task_execution.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': success_message,
+            'steps_completed': len(execution_data.get('steps_completed', []))
+        })
+
+    except Exception as e:
+        traceback.print_exc()
+        logger.error(f"Task 2 substep {substep_name} failed: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': str(e)
+        }, status=500)
+
+
+def _execute_task3_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 3: Python Transformation Rules"""
+
+    try:
+        from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
+        from .entry_points.create_executable_joins import RunCreateExecutableJoins
+
+        # Get or initialize execution data
+        execution_data = task_execution.execution_data or {
+            'steps_completed': []
+        }
+        if 'steps_completed' not in execution_data:
+            execution_data['steps_completed'] = []
+
+        success_message = ''
+
+        if substep_name == 'generate_filter_code':
+            logger.info("Executing generate filter code substep...")
+            RunCreateExecutableFilters.run_create_executable_filters()
+            execution_data['filter_code_generated'] = True
+            execution_data['steps_completed'].append('Executable filter code generation')
+            success_message = 'Filter code generated successfully'
+
+        elif substep_name == 'generate_join_code':
+            logger.info("Executing generate join code substep...")
+            RunCreateExecutableJoins.create_python_joins()
+            execution_data['join_code_generated'] = True
+            execution_data['steps_completed'].append('Join code generation')
+            success_message = 'Join code generated successfully'
+
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': f'Unknown substep: {substep_name}'
+            }, status=400)
+
+        # Check if all subtasks are completed before marking main task as completed
+        all_subtasks_completed = (
+            execution_data.get('filter_code_generated', False) and
+            execution_data.get('join_code_generated', False)
+        )
+
+        any_subtasks_completed = (
+            execution_data.get('filter_code_generated', False) or
+            execution_data.get('join_code_generated', False)
+        )
+
+        # Update task execution
+        task_execution.execution_data = execution_data
+        if any_subtasks_completed:
+            task_execution.status = "running"
+            task_execution.completed_at = timezone.now()
+        if all_subtasks_completed:
+            task_execution.status = "completed"
+            task_execution.completed_at = timezone.now()
+        task_execution.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': success_message,
+            'steps_completed': len(execution_data.get('steps_completed', []))
+        })
+
+    except Exception as e:
+        traceback.print_exc()
+        logger.error(f"Task 3 substep {substep_name} failed: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': str(e)
+        }, status=500)
+
+
+def _execute_task4_substep(request, substep_name, task_execution, workflow_session):
+    """Execute individual substeps for Task 4: Test Suite Execution"""
+
+    try:
+        from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+
+        # Get or initialize execution data
+        execution_data = task_execution.execution_data or {
+            'steps_completed': []
+        }
+        if 'steps_completed' not in execution_data:
+            execution_data['steps_completed'] = []
+
+        if substep_name == 'run_tests':
+            logger.info("Executing run tests substep...")
+
+            # Create test runner instance
+            test_runner = RegulatoryTemplateTestRunner(False)
+
+            # Configure test runner
+            config_file = request.POST.get('config_file', 'tests/configuration_file_tests.json')
+            test_runner.args.uv = "False"
+            test_runner.args.config_file = config_file
+            test_runner.args.dp_value = None
+            test_runner.args.reg_tid = None
+            test_runner.args.dp_suffix = None
+            test_runner.args.scenario = None
+
+            # Execute tests
+            test_runner.main()
+
+            execution_data['tests_executed'] = True
+            execution_data['steps_completed'].append('Test suite execution')
+            success_message = 'Tests executed successfully'
+
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': f'Unknown substep: {substep_name}'
+            }, status=400)
+
+        # Check if all subtasks are completed before marking main task as completed
+        all_subtasks_completed = execution_data.get('tests_executed', False)
+
+        # Update task execution
+        task_execution.execution_data = execution_data
+        if all_subtasks_completed:
+            task_execution.status = "completed"
+            task_execution.completed_at = timezone.now()
+        task_execution.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': success_message,
+            'steps_completed': len(execution_data.get('steps_completed', []))
+        })
+
+    except Exception as e:
+        traceback.print_exc()
+        logger.error(f"Task 4 substep {substep_name} failed: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': str(e)
+        }, status=500)
 
 
 @require_http_methods(["POST"])
@@ -1583,7 +2021,7 @@ def workflow_task_substep(request, task_number, substep_name):
 
     # Route to appropriate substep handler
     try:
-
+        
         if task_number == 1:
             return _execute_task1_substep(request, substep_name, task_execution, workflow_session)
         elif task_number == 2:
@@ -2779,7 +3217,6 @@ def workflow_reset_session_full(request):
 def workflow_reset_session_partial(request):
     """
     Reset workflow session from task 1 onwards (partial reset).
-
     """
     logger.info("Partial workflow session reset requested (tasks 1-4) but not database reset")
 
@@ -2871,6 +3308,7 @@ def workflow_reset_session_partial(request):
         else:
             messages.error(request, f'Failed to reset partial workflow session: {str(e)}')
             return redirect('pybirdai:workflow_dashboard')
+
 
 def export_database_to_github(request):
     """
