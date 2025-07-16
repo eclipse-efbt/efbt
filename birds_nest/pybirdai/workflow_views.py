@@ -407,6 +407,8 @@ def _run_database_setup_async():
             config_files_github_url=config_data.get("config_files_github_url", ""),
             when_to_stop=config_data.get("when_to_stop", "RESOURCE_DOWNLOAD"),
         )
+        # Add github_branch as a dynamic attribute since it's not in the model
+        config.github_branch = config_data.get("github_branch", "main")
 
         service = AutomodeConfigurationService()
         github_token = _get_github_token()
@@ -700,6 +702,7 @@ def workflow_dashboard(request):
               "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
               "config_files_source": "GITHUB",
               "config_files_github_url": "https://github.com/regcommunity/FreeBIRD",
+              "github_branch": "main",
               "when_to_stop": "RESOURCE_DOWNLOAD",
               "enable_lineage_tracking": true
             }""")
@@ -779,6 +782,7 @@ def workflow_dashboard(request):
             "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
+            "github_branch": "main",
             "when_to_stop": "RESOURCE_DOWNLOAD",
             "enable_lineage_tracking": True,
         }
@@ -793,21 +797,27 @@ def workflow_dashboard(request):
     }
 
     if database_ready and workflow_session:
-        # Load Task 1 completion state from marker file if it exists
-        _load_task1_completion_from_marker()
+        try:
+            # Load Task 1 completion state from marker file if it exists
+            _load_task1_completion_from_marker()
 
-        # Only include database-dependent data if database is available
-        context.update(
-            {
-                "workflow_session": workflow_session,
-                "task_grid": workflow_session.get_task_status_grid(),
-                "progress": workflow_session.get_progress_percentage(),
-            }
-        )
+            # Only include database-dependent data if database is available
+            context.update(
+                {
+                    "workflow_session": workflow_session,
+                    "task_grid": workflow_session.get_task_status_grid(),
+                    "progress": workflow_session.get_progress_percentage(),
+                }
+            )
 
-        refresh_complete_status()
-
-
+            refresh_complete_status()
+        except:
+            context.update({
+                'workflow_session': None,
+                'task_grid': [],
+                'progress': 0,
+                'session_id': session_id or 'no-database',
+            })
     else:
         # Provide default data when no database is available
         context.update({
@@ -816,7 +826,6 @@ def workflow_dashboard(request):
             'progress': 0,
             'session_id': session_id or 'no-database',
         })
-
 
     return render(request, 'pybirdai/workflow/dashboard.html', context)
 
@@ -1207,7 +1216,6 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
             'execution_data': execution_data,
         })
 
-
 def task3_python_rules(request, operation, task_execution, workflow_session):
     """Handle Task 5: Python Transformation Rules Creation operations"""
 
@@ -1351,7 +1359,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
             'execution_data': execution_data,
         })
 
-    
+
 
 
 
@@ -1532,6 +1540,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
             'failed_tests': failed_tests,
             'grouped_results': grouped_results,
         })
+
 
 
 @require_http_methods(["POST"])
@@ -1979,6 +1988,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
         }, status=500)
 
 
+
 @require_http_methods(["POST"])
 def workflow_task_substep(request, task_number, substep_name):
     """Handle individual substep execution for workflow tasks"""
@@ -2021,7 +2031,7 @@ def workflow_task_substep(request, task_number, substep_name):
 
     # Route to appropriate substep handler
     try:
-        
+
         if task_number == 1:
             return _execute_task1_substep(request, substep_name, task_execution, workflow_session)
         elif task_number == 2:
@@ -2566,6 +2576,7 @@ def workflow_save_config(request):
             ),
             "config_files_source": request.POST.get("config_files_source", "MANUAL"),
             "config_files_github_url": request.POST.get("config_files_github_url", ""),
+            "github_branch": request.POST.get("github_branch", "main"),
             "when_to_stop": "RESOURCE_DOWNLOAD",  # Default for workflow
             "enable_lineage_tracking": request.POST.get("enable_lineage_tracking") == "true",
         }
