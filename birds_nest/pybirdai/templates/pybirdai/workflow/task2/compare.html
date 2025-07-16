@@ -2,14 +2,14 @@
 
 {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
-<a href="{% url 'pybirdai:workflow_task' task_number=5 operation='do' %}">Task 5: Python Transformation Rules</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='do' %}">Task 2: Database Creation</a>
 <span class="breadcrumb-separator">›</span>
 <span>Compare</span>
 {% endblock %}
 
 {% block workflow_content %}
 <div class="task-content">
-    <h1>Task 5: Python Transformation Rules - Compare</h1>
+    <h1>Task 2: Database Creation - Compare</h1>
     
     <!-- Comparison Controls -->
     <div class="comparison-controls">
@@ -37,7 +37,7 @@
     {% if not previous_executions %}
     <div class="alert alert-info">
         <h4>No Previous Versions Available</h4>
-        <p>This is the first execution of Task 5: Python Transformation Rules. There are no previous versions to compare against.</p>
+        <p>This is the first execution of Task 2: Database Creation. There are no previous versions to compare against.</p>
         <p>Once you execute this task again, you'll be able to compare versions and track changes.</p>
     </div>
     {% else %}
@@ -53,21 +53,21 @@
                     <div class="change-icon">+</div>
                     <div class="change-details">
                         <strong id="added-count">0</strong>
-                        <p>Python Files Added</p>
+                        <p>Tables Added</p>
                     </div>
                 </div>
                 <div class="change-item modified">
                     <div class="change-icon">~</div>
                     <div class="change-details">
                         <strong id="modified-count">0</strong>
-                        <p>Python Files Modified</p>
+                        <p>Tables Modified</p>
                     </div>
                 </div>
                 <div class="change-item removed">
                     <div class="change-icon">-</div>
                     <div class="change-details">
                         <strong id="removed-count">0</strong>
-                        <p>Python Files Removed</p>
+                        <p>Tables Removed</p>
                     </div>
                 </div>
             </div>
@@ -75,33 +75,28 @@
 
         <!-- Side-by-Side Comparison -->
         <div class="comparison-section">
-            <h3>Python Code Comparison</h3>
+            <h3>Database Schema Comparison</h3>
             <div class="row">
                 <div class="col-md-6">
                     <h5>Current Version</h5>
-                    <div id="current-python" class="python-list">
-                        <!-- Current Python files will be loaded here -->
+                    <div id="current-schema" class="schema-list">
+                        <!-- Current schema will be loaded here -->
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h5>Baseline Version</h5>
-                    <div id="baseline-python" class="python-list">
-                        <!-- Baseline Python files will be loaded here -->
+                    <div id="baseline-schema" class="schema-list">
+                        <!-- Baseline schema will be loaded here -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Code Diff Viewer -->
+        <!-- Table Details Comparison -->
         <div class="comparison-section">
-            <h3>Code Changes</h3>
-            <div class="code-diff-controls">
-                <select id="file-selector" class="form-select" onchange="loadFileDiff()">
-                    <option value="">Select a file to view changes...</option>
-                </select>
-            </div>
-            <div id="code-diff-viewer" class="code-diff">
-                <!-- Code diff will be loaded here -->
+            <h3>Table Structure Changes</h3>
+            <div class="accordion" id="table-changes-accordion">
+                <!-- Table change details will be loaded here -->
             </div>
         </div>
 
@@ -120,27 +115,27 @@
             <h3>Impact Analysis</h3>
             <div class="impact-grid">
                 <div class="impact-card">
-                    <h4>Code Statistics</h4>
-                    <ul id="code-stats">
-                        <li>Total files: <span id="total-files">0</span></li>
-                        <li>Lines of code: <span id="total-loc">0</span></li>
-                        <li>Functions: <span id="total-functions">0</span></li>
+                    <h4>Database Statistics</h4>
+                    <ul id="database-stats">
+                        <li>Total tables: <span id="total-tables">0</span></li>
+                        <li>Total indexes: <span id="total-indexes">0</span></li>
+                        <li>Creation time: <span id="creation-time">0s</span></li>
                     </ul>
                 </div>
                 <div class="impact-card">
-                    <h4>File Types</h4>
-                    <ul id="file-types">
-                        <li>Transformation files: <span id="transformation-files">0</span></li>
-                        <li>Utility files: <span id="utility-files">0</span></li>
-                        <li>Test files: <span id="test-files">0</span></li>
+                    <h4>Model Types</h4>
+                    <ul id="model-types">
+                        <li>Core models: <span id="core-count">0</span></li>
+                        <li>Metadata models: <span id="metadata-count">0</span></li>
+                        <li>Reference models: <span id="reference-count">0</span></li>
                     </ul>
                 </div>
                 <div class="impact-card">
-                    <h4>Generation Status</h4>
-                    <ul id="generation-status">
-                        <li>Generation time: <span id="generation-time">0s</span></li>
-                        <li>Syntax errors: <span id="syntax-errors">0</span></li>
-                        <li>Warnings: <span id="warnings">0</span></li>
+                    <h4>Migration Status</h4>
+                    <ul id="migration-status">
+                        <li>Applied migrations: <span id="applied-migrations">0</span></li>
+                        <li>Pending migrations: <span id="pending-migrations">0</span></li>
+                        <li>Database size: <span id="database-size">0 MB</span></li>
                     </ul>
                 </div>
             </div>
@@ -151,13 +146,13 @@
             <h3>Rollback Options</h3>
             <div class="alert alert-warning">
                 <strong>Replace with Previous Version</strong>
-                <p>You can replace the current Python transformation code with the selected baseline version.</p>
+                <p>You can replace the current database structure with the selected baseline version.</p>
                 <div class="d-flex gap-2">
                     <button class="btn btn-danger" onclick="replaceWithPrevious()" id="rollback-btn" disabled>
                         Replace with Selected Version
                     </button>
-                    <button class="btn btn-outline-secondary" onclick="downloadPythonCode()" id="download-code-btn" disabled>
-                        Download Python Code
+                    <button class="btn btn-outline-secondary" onclick="exportDatabaseSchema()" id="export-schema-btn" disabled>
+                        Export Schema SQL
                     </button>
                 </div>
             </div>
@@ -165,7 +160,6 @@
     </div>
     {% endif %}
 </div>
-    
 
 <style>
 .comparison-controls {
@@ -251,6 +245,44 @@
     color: #6c757d;
 }
 
+.schema-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.table-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table-item:last-child {
+    border-bottom: none;
+}
+
+.table-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.table-info {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.field-count {
+    background: #e9ecef;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
 .change-details-list {
     margin-top: 20px;
     border-top: 1px solid #dee2e6;
@@ -265,7 +297,7 @@
 .change-entry {
     display: flex;
     align-items: center;
-    padding: 5px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #f0f0f0;
 }
 
@@ -334,103 +366,37 @@
     padding-left: 20px;
 }
 
-.python-list {
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    padding: 10px;
-}
-
-.python-file {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.python-file:last-child {
-    border-bottom: none;
-}
-
-.file-name {
-    font-weight: 500;
-    color: #495057;
-    font-family: monospace;
-}
-
-.file-info {
-    color: #6c757d;
-    font-size: 12px;
-}
-
-.file-size {
-    background: #e9ecef;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 500;
-    margin-right: 5px;
-}
-
-.file-loc {
-    background: #d1ecf1;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 500;
-}
-
-.code-diff-controls {
-    margin-bottom: 15px;
-}
-
-.code-diff {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    min-height: 200px;
-    padding: 15px;
-    font-family: monospace;
-    font-size: 12px;
-    overflow-x: auto;
-}
-
-.code-diff .diff-line {
-    padding: 2px 5px;
-    margin: 1px 0;
-    border-radius: 2px;
-}
-
-.code-diff .diff-line.added {
-    background: #d1e7dd;
-    color: #0f5132;
-}
-
-.code-diff .diff-line.removed {
-    background: #f8d7da;
-    color: #842029;
-}
-
-.code-diff .diff-line.context {
-    background: transparent;
-    color: #495057;
-}
-
-.code-diff .line-number {
-    display: inline-block;
-    width: 40px;
-    text-align: right;
-    color: #6c757d;
-    margin-right: 10px;
-    user-select: none;
-}
-
 .loading-spinner {
     display: none;
     text-align: center;
     padding: 20px;
+}
+
+.accordion-item {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+}
+
+.field-diff {
+    font-family: monospace;
+    font-size: 12px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.field-diff .added {
+    color: #198754;
+}
+
+.field-diff .removed {
+    color: #dc3545;
+}
+
+.field-diff .modified {
+    color: #ffc107;
 }
 </style>
 
@@ -449,12 +415,12 @@ function refreshComparison() {
     comparisonContent.style.display = 'block';
     
     // Make AJAX call to get comparison data
-    fetch(`{% url "pybirdai:workflow_task_compare" task_number=5 %}?baseline=${baseline}`)
+    fetch(`{% url "pybirdai:workflow_task_compare" task_number=2 %}?baseline=${baseline}`)
         .then(response => response.json())
         .then(data => {
             updateComparisonView(data);
             document.getElementById('rollback-btn').disabled = false;
-            document.getElementById('download-code-btn').disabled = false;
+            document.getElementById('export-schema-btn').disabled = false;
         })
         .catch(error => {
             console.error('Error loading comparison:', error);
@@ -468,12 +434,12 @@ function updateComparisonView(data) {
     document.getElementById('modified-count').textContent = data.modified || 0;
     document.getElementById('removed-count').textContent = data.removed || 0;
     
-    // Update Python files lists
-    updatePythonFilesList('current-python', data.current_files || []);
-    updatePythonFilesList('baseline-python', data.baseline_files || []);
+    // Update schema lists
+    updateSchemaList('current-schema', data.current_schema || []);
+    updateSchemaList('baseline-schema', data.baseline_schema || []);
     
-    // Update file selector
-    updateFileSelector(data.modified_files || []);
+    // Update table changes accordion
+    updateTableChangesAccordion(data.table_changes || []);
     
     // Update detailed changes
     updateDetailedChanges(data.changes || []);
@@ -486,64 +452,40 @@ function updateComparisonView(data) {
     document.getElementById('comparison-content').innerHTML = document.getElementById('comparison-content').innerHTML;
 }
 
-function updatePythonFilesList(containerId, files) {
+function updateSchemaList(containerId, tables) {
     const container = document.getElementById(containerId);
-    container.innerHTML = files.map(file => `
-        <div class="python-file">
+    container.innerHTML = tables.map(table => `
+        <div class="table-item">
             <div>
-                <div class="file-name">${file.name}</div>
-                <div class="file-info">${file.path || 'No path'}</div>
+                <div class="table-name">${table.name}</div>
+                <div class="table-info">${table.app_label || 'Unknown'}</div>
             </div>
-            <div>
-                <span class="file-size">${file.size || '0 KB'}</span>
-                <span class="file-loc">${file.lines || 0} lines</span>
-            </div>
+            <div class="field-count">${table.field_count || 0} fields</div>
         </div>
     `).join('');
 }
 
-function updateFileSelector(modifiedFiles) {
-    const selector = document.getElementById('file-selector');
-    selector.innerHTML = '<option value="">Select a file to view changes...</option>' + 
-        modifiedFiles.map(file => `<option value="${file.id}">${file.name}</option>`).join('');
-}
-
-function loadFileDiff() {
-    const fileId = document.getElementById('file-selector').value;
-    const baseline = document.getElementById('baseline-version').value;
-    
-    if (!fileId || !baseline) {
-        return;
-    }
-    
-    const viewer = document.getElementById('code-diff-viewer');
-    viewer.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm" role="status"></div> Loading diff...</div>';
-    
-    fetch(`{% url "pybirdai:workflow_task_compare" task_number=5 %}?baseline=${baseline}&file=${fileId}`)
-        .then(response => response.json())
-        .then(data => {
-            displayCodeDiff(data.diff || []);
-        })
-        .catch(error => {
-            console.error('Error loading file diff:', error);
-            viewer.innerHTML = '<div class="alert alert-danger">Error loading file diff.</div>';
-        });
-}
-
-function displayCodeDiff(diffLines) {
-    const viewer = document.getElementById('code-diff-viewer');
-    viewer.innerHTML = diffLines.map(line => `
-        <div class="diff-line ${line.type}">
-            <span class="line-number">${line.line_number || ''}</span>
-            <span class="diff-content">${escapeHtml(line.content)}</span>
+function updateTableChangesAccordion(changes) {
+    const accordion = document.getElementById('table-changes-accordion');
+    accordion.innerHTML = changes.map((change, index) => `
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
+                    <span class="change-type ${change.type}">${change.type.toUpperCase()}</span>
+                    ${change.table_name}
+                </button>
+            </h2>
+            <div id="collapse${index}" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="field-diff">
+                        ${change.field_changes.map(field => `
+                            <div class="${field.change_type}">${field.change_type === 'added' ? '+' : field.change_type === 'removed' ? '-' : '~'} ${field.field_name}: ${field.field_type}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
         </div>
     `).join('');
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
 }
 
 function updateDetailedChanges(changes) {
@@ -558,15 +500,15 @@ function updateDetailedChanges(changes) {
 }
 
 function updateImpactAnalysis(impact) {
-    document.getElementById('total-files').textContent = impact.total_files || 0;
-    document.getElementById('total-loc').textContent = impact.total_loc || 0;
-    document.getElementById('total-functions').textContent = impact.total_functions || 0;
-    document.getElementById('transformation-files').textContent = impact.transformation_files || 0;
-    document.getElementById('utility-files').textContent = impact.utility_files || 0;
-    document.getElementById('test-files').textContent = impact.test_files || 0;
-    document.getElementById('generation-time').textContent = impact.generation_time || '0s';
-    document.getElementById('syntax-errors').textContent = impact.syntax_errors || 0;
-    document.getElementById('warnings').textContent = impact.warnings || 0;
+    document.getElementById('total-tables').textContent = impact.total_tables || 0;
+    document.getElementById('total-indexes').textContent = impact.total_indexes || 0;
+    document.getElementById('creation-time').textContent = impact.creation_time || '0s';
+    document.getElementById('core-count').textContent = impact.core_count || 0;
+    document.getElementById('metadata-count').textContent = impact.metadata_count || 0;
+    document.getElementById('reference-count').textContent = impact.reference_count || 0;
+    document.getElementById('applied-migrations').textContent = impact.applied_migrations || 0;
+    document.getElementById('pending-migrations').textContent = impact.pending_migrations || 0;
+    document.getElementById('database-size').textContent = impact.database_size || '0 MB';
 }
 
 function exportComparisonReport(format) {
@@ -576,7 +518,7 @@ function exportComparisonReport(format) {
         return;
     }
     
-    const url = `{% url "pybirdai:workflow_task_compare" task_number=5 %}?baseline=${baseline}&export=${format}`;
+    const url = `{% url "pybirdai:workflow_task_compare" task_number=2 %}?baseline=${baseline}&export=${format}`;
     window.open(url, '_blank');
 }
 
@@ -587,8 +529,8 @@ function replaceWithPrevious() {
         return;
     }
     
-    if (confirm('Are you sure you want to replace the current Python transformation code with the selected baseline version? This action cannot be undone.')) {
-        fetch(`{% url "pybirdai:workflow_task_rollback" task_number=5 %}`, {
+    if (confirm('Are you sure you want to replace the current database structure with the selected baseline version? This will drop and recreate all tables. This action cannot be undone.')) {
+        fetch(`{% url "pybirdai:workflow_task_rollback" task_number=2 %}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -602,7 +544,7 @@ function replaceWithPrevious() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Python transformation code has been successfully replaced with the baseline version.');
+                alert('Database structure has been successfully replaced with the baseline version.');
                 location.reload();
             } else {
                 alert('Error: ' + data.error);
@@ -615,14 +557,14 @@ function replaceWithPrevious() {
     }
 }
 
-function downloadPythonCode() {
+function exportDatabaseSchema() {
     const baseline = document.getElementById('baseline-version').value;
     if (!baseline) {
         alert('Please select a baseline version first.');
         return;
     }
     
-    const url = `{% url "pybirdai:workflow_task_rollback" task_number=5 %}?baseline=${baseline}&action=download_code`;
+    const url = `{% url "pybirdai:workflow_task_rollback" task_number=2 %}?baseline=${baseline}&action=export_schema`;
     window.open(url, '_blank');
 }
 </script>
