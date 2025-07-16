@@ -17,6 +17,7 @@ import os
 from django.apps import AppConfig
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
+import logging
 
 class RunImportDPMData(AppConfig):
     """
@@ -47,10 +48,12 @@ class RunImportDPMData(AppConfig):
         context.output_directory = sdd_context.output_directory
 
         # Run DPM import service
+        logging.info("Mapping the DPM Metadata")
         dpm_service = DPMImporterService(output_directory=context.file_directory)
         dpm_service.run_application()
 
         # After DPM import, run the report templates import
+        logging.info("Running Import on the DPM Metadata")
         RunImportReportTemplatesFromWebsite.run_import()
 
     def ready(self):
