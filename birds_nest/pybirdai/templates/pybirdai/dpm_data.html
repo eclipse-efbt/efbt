@@ -14,7 +14,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}FreeBIRD Application Home{% endblock %}
+{% block title %}DPM Data Operations{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -107,37 +107,15 @@
 {% endblock %}
 
 {% block content %}
-<h1 style="text-align: center;">Home</h1>
+<h1 style="text-align: center;">DPM Data Operations</h1>
 <div class="task-grid">
-    <a href="{% url 'pybirdai:workflow_dashboard' %}" class="task-item">
-        <img src="{% static 'images/create_bird_database.webp' %}" alt="automode">
-        <span>Task Workflow Dashboard</span>
+    <a href="{% url 'pybirdai:prepare_dpm_data' %}" class="task-item">
+        <img src="{% static 'images/import_data_model_artefacts.webp' %}" alt="Prepare DPM Data">
+        <span>Prepare DPM Data</span>
     </a>
-    <a href="{% url 'pybirdai:report_templates' %}" class="task-item">
-        <img src="{% static 'images/report_templates.webp' %}" alt="Concept icon">
-        <span>View Populated Templates</span>
-    </a>        
-    <a href="{% url 'pybirdai:test_report_view' %}" class="task-item">
-        <img
-            src="{% static 'images/report_checklist.webp' %}"
-            alt="Test Reports"
-        />
-        <span>Browse Test Reports</span>
-    </a>
-    <a href="{% url 'pybirdai:trail_list' %}" class="task-item">
-        <img
-            src="{% static 'images/create_transformations_metadata.webp' %}"
-            alt="Trail Lineage"
-        />
-        <span>Trail Lineage Viewer</span>
-    </a>
-    <a href="{% url 'pybirdai:dpm_data' %}" class="task-item">
-        <img
-            src="{% static 'images/import_data_model_artefacts.webp' %}"
-            alt="DPM Data Operations"
-        />
-        <span>DPM Data Operations</span>
+    <a href="{% url 'pybirdai:import_dpm_data' %}" class="task-item">
+        <img src="{% static 'images/import_bird.webp' %}" alt="Import DPM Data">
+        <span>Import DPM Data</span>
     </a>
 </div>
-
 {% endblock %}
