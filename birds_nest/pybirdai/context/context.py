@@ -21,6 +21,7 @@ class Context(object):
     '''
     # variables to configure the behaviour
     
+    ldm_or_il = 'ldm'
 
 
     # enable_lineage_tracking will be set dynamically from configuration
