@@ -160,11 +160,12 @@ class JoinsMetaDataCreator:
         output_file = os.path.join(
             context.output_directory, "csv", "ldm_entity_related_entities.csv"
         )
+        memoization_parents_from_disjoint_subtyping_eldm_search = {}
         with open(output_file, "w", encoding="utf-8") as f:
             f.write("ldm_entity,related_entities\n")
             for model in apps.get_models():
                 if model._meta.app_label == "pybirdai":
-                    entities = ELDMSearch.get_all_related_entities(self, context, model)
+                    entities = ELDMSearch.get_all_related_entities(self, context, model, memoization_parents_from_disjoint_subtyping_eldm_search)
                     related_entities_string = ":".join(
                         entity.__name__ for entity in entities
                     )

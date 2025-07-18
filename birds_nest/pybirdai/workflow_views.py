@@ -231,12 +231,7 @@ def _run_migrations_async():
 
         time.sleep(6)
 
-
-        match platform.system():
-            case "Windows":
-                os._exit(0)
-            case _:
-                os.system("pkill -f runserver")
+        os._exit(0)
 
 
     except Exception as e:
@@ -506,11 +501,7 @@ def _run_database_setup_async():
 
             time.sleep(10)
 
-            match platform.system():
-                case "Windows":
-                    os._exit(0)
-                case _:
-                    os.system("pkill -f runserver")
+            os._exit(0)
         else:
             # No restart required, setup is complete
             _database_setup_status.update({
@@ -577,7 +568,12 @@ def _run_automode_async(target_task, session_data):
                 self.headers = {'X-Requested-With': 'XMLHttpRequest'}
 
         # Execute tasks sequentially
+        import cProfile, pstats, io
+        from pstats import SortKey
+
         for task_num in range(1, target_task + 1):
+            pr = cProfile.Profile()
+            pr.enable()
             try:
                 _automode_status.update({
                     'current_task': task_num,
@@ -644,7 +640,9 @@ def _run_automode_async(target_task, session_data):
                 _automode_status["task_errors"].append(
                     {"task": task_num, "error": str(task_error)}
                 )
-                # Continue with next task instead of stopping
+
+            pr.disable()
+            pr.dump_stats(f"cProfile_1_to_{task_num}_dump")
 
         # Update final status
         if _automode_status["task_errors"]:
