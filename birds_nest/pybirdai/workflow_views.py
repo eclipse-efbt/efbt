@@ -566,12 +566,10 @@ def _run_automode_async(target_task, session_data):
                 self.headers = {'X-Requested-With': 'XMLHttpRequest'}
 
         # Execute tasks sequentially
-        import cProfile, pstats, io
-        from pstats import SortKey
+
 
         for task_num in range(1, target_task + 1):
-            pr = cProfile.Profile()
-            pr.enable()
+
             try:
                 _automode_status.update({
                     'current_task': task_num,
@@ -639,8 +637,6 @@ def _run_automode_async(target_task, session_data):
                     {"task": task_num, "error": str(task_error)}
                 )
 
-            pr.disable()
-            pr.dump_stats(f"cProfile_1_to_{task_num}_dump")
 
         # Update final status
         if _automode_status["task_errors"]:
