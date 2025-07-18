@@ -17,7 +17,7 @@ from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
-import django
+from django.db import OperationalError
 import uuid
 import logging
 import os
@@ -58,28 +58,27 @@ logger = logging.getLogger(__name__)
 
 def refresh_complete_status(task:int=3,all:bool=True):
 
-    task_to_complete_mapping = {
-        1:5,
-        2:2,
-        3:2,
-        4:1
-    }
+    try:
 
-    def check_one_task(execution,task:int=3):
-        steps_completed = sum([_ for _ in execution.execution_data.values() if isinstance(_,bool)])
-        if (execution.task_number == task) and (steps_completed == task_to_complete_mapping[task]):
-            execution.status = "completed"
-        return execution
+        task_to_complete_mapping = {
+            1:5,
+            2:2,
+            3:2,
+            4:1
+        }
 
-    if all:
-        try:
+        def check_one_task(execution,task:int=3):
+            steps_completed = sum([_ for _ in execution.execution_data.values() if isinstance(_,bool)])
+            if (execution.task_number == task) and (steps_completed == task_to_complete_mapping[task]):
+                execution.status = "completed"
+            return execution
+
+        if all:
             task_executions = WorkflowTaskExecution.objects.all()
             for task_number,_ in task_to_complete_mapping.items():
                 for execution in task_executions:
                     execution = check_one_task(execution,task_number)
                     execution.save()
-            return
-        except django.db.utils.OperationalError:
             return
 
     task_executions = WorkflowTaskExecution.objects.filter(
