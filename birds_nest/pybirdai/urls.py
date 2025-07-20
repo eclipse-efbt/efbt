@@ -3,6 +3,7 @@ from . import views
 from . import report_views
 from . import aorta_views
 from . import workflow_views
+from . import toolbox_views
 
 from . import lineage_views
 from . import lineage_api
@@ -699,6 +700,38 @@ urlpatterns = [
         "api/trail/<int:trail_id>/summary/",
         lineage_api.get_trail_lineage_summary,
         name="get_trail_lineage_summary",
-    )
+    ),
+    
+    # Mapping Assistant URLs
+    path(
+        "mapping-assistant/",
+        toolbox_views.mapping_assistant_view,
+        name="mapping_assistant"
+    ),
+    path(
+        "mapping-assistant/review/",
+        toolbox_views.mapping_assistant_review,
+        name="mapping_assistant_review"
+    ),
+    path(
+        "api/generate-mapping-proposal/",
+        toolbox_views.generate_mapping_proposal_api,
+        name="generate_mapping_proposal_api"
+    ),
+    path(
+        "api/accept-mapping-proposals/",
+        toolbox_views.accept_mapping_proposals_api,
+        name="accept_mapping_proposals_api"
+    ),
+    path(
+        "api/templates-for-framework/<str:framework_id>/",
+        toolbox_views.get_templates_for_framework_api,
+        name="get_templates_for_framework_api"
+    ),
+    path(
+        "api/framework-summary/<str:framework_id>/",
+        toolbox_views.get_framework_summary_api,
+        name="get_framework_summary_api"
+    ),
 
 ]
