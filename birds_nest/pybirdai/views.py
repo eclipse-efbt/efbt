@@ -23,7 +23,7 @@ from .bird_meta_data_model import (
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
     MAINTENANCE_AGENCY,  MEMBER_HIERARCHY, DOMAIN,MEMBER_HIERARCHY_NODE,
-    SUBDOMAIN, SUBDOMAIN_ENUMERATION
+    SUBDOMAIN, SUBDOMAIN_ENUMERATION,FRAMEWORK
 )
 import json
 from . import bird_meta_data_model
@@ -31,6 +31,7 @@ from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
 from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
 from .entry_points.import_dpm_data import RunImportDPMData
+from .entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
 from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
 from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
 from .entry_points.create_filters import RunCreateFilters
@@ -299,34 +300,6 @@ def import_report_templates(request):
         "Import Report templates from website completed successfully.",
         '/pybirdai/workflow/task/3/do/',
         "Do"
-    )
-  
-def prepare_dpm_data(request):
-    if request.GET.get('execute') == 'true':
-        app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=False)
-        return JsonResponse({'status': 'success'})
-
-    return create_response_with_loading(
-        request,
-        "Preparing DPM Data (this may take several minutes, don't press the back button on this web page)",
-        "Import DPM data prepared successfully. Report templates have also been imported.",
-        '/pybirdai/import_dpm_data',
-        "Populate BIRD Metadata Database"
-    )
-
-def import_dpm_data(request):
-    if request.GET.get('execute') == 'true':
-        app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=True)
-        return JsonResponse({'status': 'success'})
-
-    return create_response_with_loading(
-        request,
-        "Importing DPM Data (this may take several minutes, don't press the back button on this web page)",
-        "Import DPM data completed successfully. Report templates have also been imported.",
-        '/pybirdai/populate-bird-metadata-database',
-        "Populate BIRD Metadata Database"
     )
 
 def run_create_filters(request):
@@ -4333,3 +4306,50 @@ def automode_status(request):
             'success': False,
             'error': f'Error getting status: {str(e)}'
         })
+
+def prepare_dpm_data(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import(import_=False)
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Preparing DPM Data (this may take several minutes, don't press the back button on this web page)",
+        "Import DPM data prepared successfully. Report templates have also been imported.",
+        '/pybirdai/import_dpm_data',
+        "Populate BIRD Metadata Database"
+    )
+
+def import_dpm_data(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import(import_=True)
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Importing DPM Data (this may take several minutes, don't press the back button on this web page)",
+        "Import DPM data completed successfully. Report templates have also been imported.",
+        '/pybirdai/',
+        "Populate BIRD Metadata Database"
+    )
+
+
+def dpm_output_layer_creation(request):
+    if request.method == 'GET' and request.GET.get('execute') == 'true':
+        # Get parameters from request
+        framework = request.GET.get('framework')
+        table_code = request.GET.get('table_code')
+
+        # Execute the output layer creation
+        app_config = RunDPMOutputLayerCreation('pybirdai', 'birds_nest')
+        results = app_config.run_creation(framework=framework, table_code=table_code)
+
+        return JsonResponse(results)
+
+    # If not executing, show the form page
+    framework_ids = sum(list(map(list,FRAMEWORK.objects.all().values_list("framework_id"))),[])
+    return render(request, 'pybirdai/dpm_output_layer_creation.html', {
+        'frameworks': framework_ids
+    })

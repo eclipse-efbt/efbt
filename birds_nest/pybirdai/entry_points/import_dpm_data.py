@@ -33,7 +33,9 @@ class RunImportDPMData(AppConfig):
     def run_import(import_:bool):
         # Import and run the DPM integration service
         from pybirdai.process_steps.dpm_integration.dpm_integration_service import DPMImporterService
-        from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+        from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import (
+            ImportWebsiteToSDDModel
+        )
         from pybirdai.context.context import Context
         from django.conf import settings
 
@@ -42,7 +44,7 @@ class RunImportDPMData(AppConfig):
         sdd_context.file_directory = os.path.join(base_dir, 'results')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
 
-        
+
         context = Context()
         context.file_directory = sdd_context.output_directory
         context.output_directory = sdd_context.output_directory
@@ -56,7 +58,7 @@ class RunImportDPMData(AppConfig):
         # After DPM import, run the report templates import
         if import_:
             logging.info("Running Import on the DPM Metadata")
-            RunImportReportTemplatesFromWebsite.run_import()
+            ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context,dpm=True)
 
     def ready(self):
         # This method is still needed for Django's AppConfig
