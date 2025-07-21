@@ -16,16 +16,21 @@ from django.conf import settings
 from pybirdai.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from pathlib import Path
+import cProfile
+from django.db import connection
 
 
 class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for importing SDD csv files into an instance of the analysis model
     '''
-    def import_report_templates_from_sdd(self, sdd_context):
+    def import_report_templates_from_sdd(self, sdd_context, dpm:bool=False):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
+
+        pr = cProfile.Profile()
+        pr.enable()
         ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportWebsiteToSDDModel.create_frameworks(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,False)
@@ -33,12 +38,19 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_all_variables(self, sdd_context,False)
 
         ImportWebsiteToSDDModel.create_report_tables(self, sdd_context)
-        ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
         ImportWebsiteToSDDModel.create_axis(self, sdd_context)
         ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
-        ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
-        ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
+        if dpm:
+            ImportWebsiteToSDDModel.create_table_cells_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_ordinate_items_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_cell_positions_copy(self, sdd_context)
+        else:
+            ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
+            ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
+            ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
+        pr.disable()
+        pr.dump_stats("import_compute_dump")
 
 
 
@@ -597,6 +609,87 @@ class ImportWebsiteToSDDModel(object):
         if context.save_sdd_to_db and ordinates_to_create:
             AXIS_ORDINATE.objects.bulk_create(ordinates_to_create, batch_size=1000,ignore_conflicts=True)
 
+    def create_table_cells_copy(self, context):
+        # Ensure paths are absolute
+        import subprocess
+
+        with connection.cursor() as cursor:
+            cursor.execute("PRAGMA foreign_keys = 0;")
+            cursor.execute("DELETE FROM pybirdai_table_cell;")
+            cursor.execute("PRAGMA foreign_keys = 1;")
+
+        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + "table_cell.csv"
+        db_file = str(settings.BASE_DIR) + os.sep + "db.sqlite3"
+        csv_file = Path(csv_file).absolute()
+        db_file = Path(db_file).absolute()
+        delimiter = ","
+        table_name = "pybirdai_table_cell"
+
+        # Check if CSV file exists
+        if not csv_file.exists():
+            raise FileNotFoundError(f"CSV file not found: {csv_file}")
+
+        # Create the SQLite commands
+        commands = [
+            ".mode csv",
+            f".separator '{delimiter}'",
+        ]
+
+        commands.append(f".import --skip 1 '{csv_file}' {table_name}")
+
+        # Join commands with newlines
+        sqlite_script = '\n'.join(commands)
+
+        result = subprocess.run(
+                ['sqlite3', str(db_file)],
+                input=sqlite_script,
+                text=True,
+                capture_output=True,
+                check=True
+            )
+        return result
+
+    def create_ordinate_items_copy(self, context):
+        # Ensure paths are absolute
+        import subprocess
+
+        with connection.cursor() as cursor:
+            cursor.execute("PRAGMA foreign_keys = 0;")
+            cursor.execute("DELETE FROM pybirdai_ordinate_item")
+            cursor.execute("PRAGMA foreign_keys = 1;")
+
+
+        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + "ordinate_item.csv"
+        db_file = str(settings.BASE_DIR) + os.sep + "db.sqlite3"
+        csv_file = Path(csv_file).absolute()
+        db_file = Path(db_file).absolute()
+        delimiter = ","
+        table_name = "pybirdai_ordinate_item"
+
+        # Check if CSV file exists
+        if not csv_file.exists():
+            raise FileNotFoundError(f"CSV file not found: {csv_file}")
+
+        # Create the SQLite commands
+        commands = [
+            ".mode csv",
+            f".separator '{delimiter}'",
+        ]
+
+        commands.append(f".import --skip 1 '{csv_file}' {table_name}")
+
+        # Join commands with newlines
+        sqlite_script = '\n'.join(commands)
+
+        result = subprocess.run(
+                ['sqlite3', str(db_file)],
+                input=sqlite_script,
+                text=True,
+                capture_output=True,
+                check=True
+            )
+        return result
+
     def create_ordinate_items(self, context):
         '''
         Import all ordinate items from the rendering package CSV file
@@ -640,9 +733,9 @@ class ImportWebsiteToSDDModel(object):
                         context.axis_ordinate_to_ordinate_items_map[ordinate_item.axis_ordinate_id.axis_ordinate_id] = [ordinate_item]
 
         if context.save_sdd_to_db and ordinate_items_to_create:
-            ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=1000,ignore_conflicts=True)
+            ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=50000,ignore_conflicts=True)
 
-    def create_table_cells(self, context):
+    def create_table_cells(self, context, dpm:bool=False):
         '''
         Import all table cells from the rendering package CSV file
         '''
@@ -660,7 +753,7 @@ class ImportWebsiteToSDDModel(object):
                     table_cell_combination_id = row[ColumnIndexes().table_cell_combination_id]
                     table_cell_table_id = row[ColumnIndexes().table_cell_table_id]
 
-                    if table_cell_cell_id.endswith("_REF"):
+                    if table_cell_cell_id.endswith("_REF") or dpm:
                         table_cell = TABLE_CELL(
                             name=ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id))
                         table_cell.cell_id = ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id)
@@ -677,7 +770,47 @@ class ImportWebsiteToSDDModel(object):
         if context.save_sdd_to_db and table_cells_to_create:
             TABLE_CELL.objects.bulk_create(table_cells_to_create, batch_size=1000,ignore_conflicts=True)
 
-    def create_cell_positions(self, context):
+    def create_cell_positions_copy(self, context):
+        # Ensure paths are absolute
+        import subprocess
+
+        with connection.cursor() as cursor:
+            cursor.execute("PRAGMA foreign_keys = 0;")
+            cursor.execute("DELETE FROM pybirdai_cell_position")
+            cursor.execute("PRAGMA foreign_keys = 1;")
+
+        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + "cell_position.csv"
+        db_file = str(settings.BASE_DIR) + os.sep + "db.sqlite3"
+        csv_file = Path(csv_file).absolute()
+        db_file = Path(db_file).absolute()
+        delimiter = ","
+        table_name = "pybirdai_cell_position"
+
+        # Check if CSV file exists
+        if not csv_file.exists():
+            raise FileNotFoundError(f"CSV file not found: {csv_file}")
+
+        # Create the SQLite commands
+        commands = [
+            ".mode csv",
+            f".separator '{delimiter}'",
+        ]
+
+        commands.append(f".import --skip 1 '{csv_file}' {table_name}")
+
+        # Join commands with newlines
+        sqlite_script = '\n'.join(commands)
+
+        result = subprocess.run(
+                ['sqlite3', str(db_file)],
+                input=sqlite_script,
+                text=True,
+                capture_output=True,
+                check=True
+            )
+        return result
+
+    def create_cell_positions(self, context, dpm:bool = False):
         '''
         Import all cell positions from the rendering package CSV file
         '''
@@ -694,7 +827,7 @@ class ImportWebsiteToSDDModel(object):
                     cell_positions_cell_id = row[ColumnIndexes().cell_positions_cell_id]
                     cell_positions_axis_ordinate_id = row[ColumnIndexes().cell_positions_axis_ordinate_id]
 
-                    if cell_positions_cell_id.endswith("_REF"):
+                    if cell_positions_cell_id.endswith("_REF") or dpm:
                         cell_position = CELL_POSITION()
                         cell_position.axis_ordinate_id = ImportWebsiteToSDDModel.find_axis_ordinate_with_id(
                             self, context, ImportWebsiteToSDDModel.replace_dots(self, cell_positions_axis_ordinate_id))

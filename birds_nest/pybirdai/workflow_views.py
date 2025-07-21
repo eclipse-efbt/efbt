@@ -28,7 +28,6 @@ import json
 import glob
 import subprocess
 import requests
-import platform
 
 from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
 from .views import create_response_with_loading
@@ -232,12 +231,7 @@ def _run_migrations_async():
         time.sleep(6)
 
 
-        match platform.system():
-            case "Windows":
-                os._exit(0)
-            case _:
-                os.system("pkill -f runserver")
-
+        os._exit(0)
 
     except Exception as e:
         logger.error(f"Background migration process failed: {e}")
@@ -506,11 +500,7 @@ def _run_database_setup_async():
 
             time.sleep(10)
 
-            match platform.system():
-                case "Windows":
-                    os._exit(0)
-                case _:
-                    os.system("pkill -f runserver")
+            os._exit(0)
         else:
             # No restart required, setup is complete
             _database_setup_status.update({
@@ -3385,7 +3375,7 @@ This pull request contains CSV files exported from the PyBIRD AI database using 
 
 This export was generated automatically by PyBIRD AI's fork workflow."""
             )
-            
+
             # Prepare response data for fork workflow
             response_data = {
                 'success': result['success'],
@@ -3397,14 +3387,14 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
                 'fork_url': result.get('fork_data', {}).get('html_url') if result.get('fork_data') else None,
                 'message': 'Database exported via fork workflow successfully' if result['success'] else 'Fork workflow failed'
             }
-            
+
             if not result['success']:
                 response_data['error'] = result.get('error', 'Unknown error occurred during fork workflow')
-                
+
         else:
             # Fallback to original workflow for backward compatibility
             result = github_service.export_and_push_to_github(repository_url=repository_url)
-            
+
             response_data = {
                 'success': result['success'],
                 'branch_created': result.get('branch_created', False),
@@ -3413,7 +3403,7 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
                 'pull_request_url': result.get('pr_url'),
                 'message': 'Database exported to GitHub successfully' if result['success'] else 'Direct push workflow failed'
             }
-            
+
             if not result['success']:
                 response_data['error'] = result.get('error', 'Unknown error occurred during GitHub export')
 

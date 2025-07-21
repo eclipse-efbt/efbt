@@ -19,8 +19,7 @@ from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
 from .bird_meta_data_model import (
-    VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
-    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
+    VARIABLE_MAPPING, MAINTENANCE_AGENCY,
     COMBINATION, COMBINATION_ITEM, CUBE, FRAMEWORK, CUBE_TO_COMBINATION
 )
 import json
@@ -55,9 +54,10 @@ def mapping_assistant_view(request):
     """Main view for the Mapping Assistant tool with mode selection."""
     if request.method == 'GET':
         # Get data for all modes
-        combinations = COMBINATION.objects.all().order_by('combination_id')
-        frameworks = FRAMEWORK.objects.all().order_by('framework_id')
-        cubes = CUBE.objects.all().order_by('cube_id')
+        maintenance_agency = MAINTENANCE_AGENCY.objects.get(pk="EBA")
+        combinations = COMBINATION.objects.filter(maintenance_agency_id=maintenance_agency).order_by('combination_id')
+        frameworks = FRAMEWORK.objects.filter(maintenance_agency_id=maintenance_agency).order_by('framework_id')
+        cubes = CUBE.objects.filter(maintenance_agency_id=maintenance_agency).order_by('cube_id')
         variable_mappings = VARIABLE_MAPPING.objects.all().order_by('variable_mapping_id')
 
         context = {

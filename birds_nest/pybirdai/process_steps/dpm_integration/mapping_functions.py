@@ -345,6 +345,8 @@ def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict
 
     cells["IS_SHADED"] = cells["IS_SHADED"].astype(bool)
 
+    if not dp_map:
+        cells["DATA_POINT_VID"] = ""
     if dp_map:
         cells["DATA_POINT_VID"] = cells["DATA_POINT_VID"].astype(str)
 
@@ -362,19 +364,17 @@ def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict
         columns={
             "NEW_CELL_ID":"CELL_ID",
             "TABLE_VID":"TABLE_ID",
-            "DATA_POINT_VID":"COMBINATION_ID"
+            "DATA_POINT_VID":"TABLE_CELL_COMBINATION_ID"
         },inplace=True
     )
 
-
-
-
     cells["SYSTEM_DATA_CODE"] = ""
+    cells["NAME"] = cells["CELL_ID"]
 
     cells = cells.loc[
         :,
         [
-            "CELL_ID","IS_SHADED","COMBINATION_ID","TABLE_ID","SYSTEM_DATA_CODE"
+            "CELL_ID","IS_SHADED","TABLE_CELL_COMBINATION_ID","SYSTEM_DATA_CODE","NAME","TABLE_ID"
         ]
     ]
 
@@ -387,6 +387,8 @@ def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_m
     data = data.rename(columns=column_mapping)
     data["CELL_ID"] = data["CELL_ID"].apply(cell_map.get)
     data["ORDINATE_ID"] = data["ORDINATE_ID"].apply(ordinate_map.get)
+    data.reset_index(inplace=True)
+    data.rename(columns={"index": "ID"},inplace=True)
     return data, {}
 
 def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={},context_data:pd.DataFrame=pd.DataFrame(),dimension_map:dict={},member_map:dict={}):
@@ -588,10 +590,20 @@ def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member
     data["MEMBER_HIERARCHY_VALID_FROM"] = ""
     data.loc[data.STARTING_MEMBER_ID.isna(),"IS_STARTING_MEMBER_INCLUDED"] = False
 
+    data.reset_index(inplace=True)
+    data.rename(columns={"index": "ID"},inplace=True)
+
     data = data.loc[
         :,
         [
-            "AXIS_ORDINATE_ID","VARIABLE_ID","MEMBER_ID","MEMBER_HIERARCHY_ID","MEMBER_HIERARCHY_VALID_FROM","STARTING_MEMBER_ID","IS_STARTING_MEMBER_INCLUDED"
+            "ID",
+            "MEMBER_HIERARCHY_VALID_FROM",
+            "IS_STARTING_MEMBER_INCLUDED",
+            "AXIS_ORDINATE_ID",
+            "VARIABLE_ID",
+            "MEMBER_ID",
+            "MEMBER_HIERARCHY_ID",
+            "STARTING_MEMBER_ID"
         ]
     ]
 
