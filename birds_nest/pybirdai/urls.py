@@ -147,6 +147,7 @@ urlpatterns = [
     ),
     path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
     path("prepare_dpm_data/", views.prepare_dpm_data, name="prepare_dpm_data"),
+    path("dpm_output_layer_creation/", views.dpm_output_layer_creation, name="dpm_output_layer_creation"),
     path(
         "run_import_semantic_integrations_from_website/",
         views.run_import_semantic_integrations_from_website,
