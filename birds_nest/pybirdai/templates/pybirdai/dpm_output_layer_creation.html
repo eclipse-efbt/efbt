@@ -141,6 +141,17 @@
         </div>
 
         <div class="form-group">
+            <label for="version">Version (Optional):</label>
+            <select id="version" name="version">
+                <option value="">-- All versions --</option>
+                {% for ver in versions %}
+                <option value="{{ ver }}">{{ ver }}</option>
+                {% endfor %}
+            </select>
+            <div class="form-help">Select a specific DPM version, or leave empty for all versions</div>
+        </div>
+
+        <div class="form-group">
             <label for="table_code">OR Table Code:</label>
             <input type="text" id="table_code" name="table_code" placeholder="e.g., EBA_FINREP_F_01_01">
             <div class="form-help">Enter a specific table code to process only that table</div>
@@ -166,6 +177,7 @@ document.getElementById('outputLayerForm').addEventListener('submit', async func
 
     const framework = document.getElementById('framework').value;
     const tableCode = document.getElementById('table_code').value;
+    const version = document.getElementById('version').value;
 
     if (!framework && !tableCode) {
         alert('Please select a framework or enter a table code.');
@@ -180,6 +192,7 @@ document.getElementById('outputLayerForm').addEventListener('submit', async func
     let url = '{% url "pybirdai:dpm_output_layer_creation" %}?execute=true';
     if (framework) url += '&framework=' + encodeURIComponent(framework);
     if (tableCode) url += '&table_code=' + encodeURIComponent(tableCode);
+    if (version) url += '&version=' + encodeURIComponent(version);
 
     try {
         const response = await fetch(url);
@@ -200,7 +213,7 @@ document.getElementById('outputLayerForm').addEventListener('submit', async func
                 html += '<p>Created output layers for ' + data.processed.length + ' table(s):</p>';
                 html += '<ul>';
                 data.processed.forEach(item => {
-                    html += '<li>' + (item.table || item.table_code) + '</li>';
+                    html += '<li>' + (item.table_id || item.table_code) + '</li>';
                 });
                 html += '</ul>';
             }

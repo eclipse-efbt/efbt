@@ -10,9 +10,9 @@
 # Contributors:
 #    Benjamin Arfa - initial API and implementation
 #
-# This script creates output layers (CUBE, CUBE_STRUCTURE, COMBINATION, etc.) 
+# This script creates output layers (CUBE, CUBE_STRUCTURE, COMBINATION, etc.)
 # from DPM table data for any framework
-
+#
 import django
 import os
 from django.apps import AppConfig
@@ -23,93 +23,90 @@ import logging
 class RunDPMOutputLayerCreation(AppConfig):
     """
     Django AppConfig for running the DPM output layer creation process.
-    
-    This class creates output layers (CUBE, CUBE_STRUCTURE, COMBINATION, etc.)
+
+    This entry point creates output layers (CUBE, CUBE_STRUCTURE, COMBINATION, etc.)
     from DPM table data, supporting any framework (FINREP, COREP, AE, etc.).
     """
-    
+
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
-    
+
     @staticmethod
-    def run_creation(framework=None, table_code=None):
+    def run_creation(
+        framework: str = "",
+        version: str = "",
+        table_code: str = ""):
         """
         Run the output layer creation process.
-        
+
+        This is the entry point that delegates to the business logic layer.
+        Supports four different processing modes:
+        1. Framework + Version: Process all tables for a specific framework version
+        2. Framework only: Process all tables for a framework (all versions)
+        3. Table code + Version: Process a specific table with version
+        4. Table code only: Process all tables with the given code
+
         Args:
             framework: Optional framework name (e.g., 'FINREP', 'COREP', 'AE')
-            table_code: Optional specific table code to process
-        
+            version: Optional version string (e.g., '3.0.0')
+            table_code: Optional specific table code to process (e.g., 'F01.01')
+
         Returns:
-            dict: Results of the creation process
+            dict: Results from the business layer processing
         """
         from pybirdai.process_steps.report_filters.create_non_reference_output_layers import CreateNROutputLayers
         from pybirdai.context.context import Context
-        from django.conf import settings
-        
+
         # Set up context
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'results')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+
         context = Context()
         context.file_directory = sdd_context.output_directory
         context.output_directory = sdd_context.output_directory
-        
+
         # Create output layer creator instance
         creator = CreateNROutputLayers()
-        
-        results = {
-            'status': 'success',
-            'processed': [],
-            'errors': []
-        }
-        
+
+        # Determine which processing mode to use and delegate to business layer
         try:
-            if table_code:
-                # Process specific table
-                logging.info(f"Creating output layers for table: {table_code}")
-                cube, cube_structure = creator.process_table_by_code(table_code, save_to_db=True)
-                results['processed'].append({
-                    'table_code': table_code,
-                    'cube': cube.cube_id,
-                    'cube_structure': cube_structure.cube_structure_id
-                })
-                logging.info(f"Successfully created output layers for table: {table_code}")
+            if framework and version:
+                # Mode 1: Framework + Version
+                logging.info(f"Processing framework '{framework}' version '{version}'")
+                return creator.process_by_framework_version(framework, version, save_to_db=True)
                 
-            elif framework:
-                # Process all tables for a framework
-                logging.info(f"Creating output layers for framework: {framework}")
-                framework_results = creator.process_framework_tables(framework, save_to_db=True)
+            elif framework and not version:
+                # Mode 2: Framework only (all versions)
+                logging.info(f"Processing all versions of framework '{framework}'")
+                return creator.process_by_framework(framework, save_to_db=True)
                 
-                for result in framework_results:
-                    if result['status'] == 'success':
-                        results['processed'].append({
-                            'table': result['table'].table_id,
-                            'cube': result['cube'].cube_id,
-                            'cube_structure': result['cube_structure'].cube_structure_id
-                        })
-                    else:
-                        results['errors'].append({
-                            'table': result['table'].table_id,
-                            'error': result['error']
-                        })
+            elif not framework and table_code and version:
+                # Mode 3: Table code + Version
+                logging.info(f"Processing table '{table_code}' version '{version}'")
+                return creator.process_by_table_code_version(table_code, version, save_to_db=True)
                 
-                logging.info(f"Processed {len(results['processed'])} tables for framework: {framework}")
+            elif not framework and table_code and not version:
+                # Mode 4: Table code only (all versions)
+                logging.info(f"Processing all versions of table '{table_code}'")
+                return creator.process_by_table_code(table_code, save_to_db=True)
                 
             else:
-                # No specific framework or table specified
-                results['status'] = 'error'
-                results['message'] = 'Please specify either a framework or table_code parameter'
-                logging.warning("No framework or table_code specified for output layer creation")
+                # Invalid parameter combination
+                return {
+                    'status': 'error',
+                    'message': 'Invalid parameters. Please provide either: '
+                               '1) framework and optionally version, or '
+                               '2) table_code and optionally version'
+                }
                 
         except Exception as e:
             logging.error(f"Error during output layer creation: {str(e)}")
-            results['status'] = 'error'
-            results['message'] = str(e)
-            
-        return results
-    
+            return {
+                'status': 'error',
+                'message': f'Unexpected error: {str(e)}'
+            }
+
     def ready(self):
         # This method is still needed for Django's AppConfig
         pass
