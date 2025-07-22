@@ -36,14 +36,36 @@ class CreateNROutputLayers:
         self.combination_counter = 0
         self.timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
 
-    def extract_framework_from_table(self, table):
+    def extract_framework_from_table_id(self, table_id):
         """
-        Extract framework identifier from table name or ID.
-        Frameworks typically appear as EBA_FINREP, EBA_COREP, EBA_AE, etc.
+        Extract framework identifier from table ID.
+        Table IDs have format: FRAMEWORK_VERSION_TABLECODE
+        e.g., EBA_FINREP_3.0.0_F01.01 -> EBA_FINREP
         """
-        table_identifier = table.table_id if hasattr(table, 'table_id') else str(table)
+        # Split by underscore and take all parts except the last two (version and table code)
+        parts = table_id.split('_')[:2]
+        return '_'.join(parts)
 
-        return "_".join(table_identifier.rsplit("_",2)[:2])
+    def extract_version_from_table_id(self, table_id):
+        """
+        Extract version from table ID.
+        e.g., EBA_FINREP_3.0.0_F01.01 -> 3.0.0
+        """
+        parts = table_id.split('_')
+        for part in parts:
+            if '.' in part and any(c.isdigit() for c in part):
+                return part
+        return None
+
+    def get_framework_object(self, framework_id):
+        """
+        Get FRAMEWORK object from database.
+        Returns None if not found.
+        """
+        try:
+            return FRAMEWORK.objects.get(framework_id=framework_id)
+        except FRAMEWORK.DoesNotExist:
+            return None
 
     def get_tables_by_framework(self, framework):
         """
@@ -54,7 +76,18 @@ class CreateNROutputLayers:
         tables = TABLE.objects.filter(table_id__contains=framework_upper)
         return tables
 
-    def get_table_by_code(self, table_code):
+    def get_tables_by_framework_version(self, framework, version):
+        """
+        Query tables by framework name.
+        """
+        framework_upper = framework.upper()
+        # Query using various patterns
+        tables = TABLE.objects.filter(
+            table_id__contains=framework_upper).filter(
+            table_id__contains="_"+version.replace(".","_"))
+        return tables
+
+    def get_tables_by_code(self, table_code):
         """
         Get a specific table by its code.
         """
@@ -64,6 +97,19 @@ class CreateNROutputLayers:
             # Try with name
             try:
                 return TABLE.objects.get(name=table_code)
+            except TABLE.DoesNotExist:
+                return None
+
+    def get_table_by_code_version(self, table_code, version):
+        """
+        Get a specific table by its code.
+        """
+        try:
+            return TABLE.objects.filter(table_id__contains=version).get(table_id=table_code)
+        except TABLE.DoesNotExist:
+            # Try with name
+            try:
+                return TABLE.objects.filter(table_id__contains=version).get(name=table_code)
             except TABLE.DoesNotExist:
                 return None
 
@@ -145,7 +191,7 @@ class CreateNROutputLayers:
         cube.name = table.name or cube_name
         cube.description = table.description
         cube.cube_type = 'RC'  # Report Cube
-        cube.framework = framework_object
+        cube.framework_id = framework_object
 
         # Create cube structure
         cube_structure = CUBE_STRUCTURE()
@@ -193,7 +239,7 @@ class CreateNROutputLayers:
             combination.name = f"Combination for {cell.cell_id}"
 
             # Update the cell with the new combination_id
-            cell.combination_id = combination
+            cell.table_cell_combination_id = combination
             self.cells_to_update.append(cell)
 
             # Get all positions for this cell
@@ -376,38 +422,253 @@ class CreateNROutputLayers:
                 self.cells_to_update, ['table_cell_combination_id'], batch_size=5000
             )
 
-    def process_framework_tables(self, framework, save_to_db=True):
+    def process_by_framework_version(self, framework, version, save_to_db=True):
         """
-        Process all tables for a given framework.
-        """
-        tables = self.get_tables_by_framework(framework)
-        framework_object = FRAMEWORK.objects.get(framework_id=framework)
-        results = []
+        Process all tables for a specific framework version.
 
-        for table in tables:
-            try:
-                cube, cube_structure = self.create_output_layers(table, framework_object , save_to_db)
-                results.append({
-                    'table': table,
-                    'cube': cube,
-                    'cube_structure': cube_structure,
-                    'status': 'success'
-                })
-            except Exception as e:
-                results.append({
-                    'table': table,
-                    'status': 'error',
-                    'error': str(e)
-                })
+        Args:
+            framework: Framework identifier (e.g., 'EBA_FINREP')
+            version: Version string (e.g., '3.0.0')
+            save_to_db: Whether to save results to database
+
+        Returns:
+            dict: Processing results with status, processed tables, and errors
+        """
+        results = {
+            'status': 'success',
+            'framework': framework,
+            'version': version,
+            'processed': [],
+            'errors': []
+        }
+
+        try:
+            # Get framework object
+            framework_object = self.get_framework_object(framework)
+            if not framework_object:
+                results['status'] = 'error'
+                results['message'] = f"Framework '{framework}' not found in database"
+                return results
+
+            # Get tables for this framework version
+            tables = self.get_tables_by_framework_version(framework, version)
+
+            if not tables:
+                results['status'] = 'warning'
+                results['message'] = f"No tables found for framework '{framework}' version '{version}'"
+                return results
+
+            # Process each table
+            for table in tables:
+                try:
+                    cube, cube_structure = self.create_output_layers(table, framework_object, save_to_db)
+                    results['processed'].append({
+                        'table_id': table.table_id,
+                        'table_name': table.name,
+                        'cube_id': cube.cube_id,
+                        'cube_structure_id': cube_structure.cube_structure_id
+                    })
+                except Exception as e:
+                    results['errors'].append({
+                        'table_id': table.table_id,
+                        'error': str(e)
+                    })
+
+            if results['errors'] and not results['processed']:
+                results['status'] = 'error'
+            elif results['errors']:
+                results['status'] = 'partial'
+
+        except Exception as e:
+            results['status'] = 'error'
+            results['message'] = f"Error processing framework version: {str(e)}"
 
         return results
 
-    def process_table_by_code(self, table_code, save_to_db=True):
+    def process_by_framework(self, framework, save_to_db=True):
         """
-        Process a single table by its code.
-        """
-        table = self.get_table_by_code(table_code)
-        if not table:
-            raise ValueError(f"Table with code '{table_code}' not found")
+        Process all tables for a framework (all versions).
 
-        return self.create_output_layers(table, save_to_db)
+        Args:
+            framework: Framework identifier (e.g., 'EBA_FINREP')
+            save_to_db: Whether to save results to database
+
+        Returns:
+            dict: Processing results with status, processed tables, and errors
+        """
+        results = {
+            'status': 'success',
+            'framework': framework,
+            'processed': [],
+            'errors': []
+        }
+
+        try:
+            # Get framework object
+            framework_object = self.get_framework_object(framework)
+            if not framework_object:
+                results['status'] = 'error'
+                results['message'] = f"Framework '{framework}' not found in database"
+                return results
+
+            # Get all tables for this framework
+            tables = self.get_tables_by_framework(framework)
+
+            if not tables:
+                results['status'] = 'warning'
+                results['message'] = f"No tables found for framework '{framework}'"
+                return results
+
+            # Process each table
+            for table in tables:
+                try:
+                    cube, cube_structure = self.create_output_layers(table, framework_object, save_to_db)
+                    results['processed'].append({
+                        'table_id': table.table_id,
+                        'table_name': table.name,
+                        'cube_id': cube.cube_id,
+                        'cube_structure_id': cube_structure.cube_structure_id,
+                        'version': self.extract_version_from_table_id(table.table_id)
+                    })
+                except Exception as e:
+                    results['errors'].append({
+                        'table_id': table.table_id,
+                        'error': str(e)
+                    })
+
+            if results['errors'] and not results['processed']:
+                results['status'] = 'error'
+            elif results['errors']:
+                results['status'] = 'partial'
+
+        except Exception as e:
+            results['status'] = 'error'
+            results['message'] = f"Error processing framework: {str(e)}"
+
+        return results
+
+    def process_by_table_code_version(self, table_code, version, save_to_db=True):
+        """
+        Process a specific table with a specific version.
+
+        Args:
+            table_code: Table code (e.g., 'F01.01')
+            version: Version string (e.g., '3.0.0')
+            save_to_db: Whether to save results to database
+
+        Returns:
+            dict: Processing results with status and table details
+        """
+        results = {
+            'status': 'success',
+            'table_code': table_code,
+            'version': version,
+            'processed': None,
+            'error': None
+        }
+
+        try:
+            # Get table by code and version
+            table = self.get_table_by_code_version(table_code, version)
+
+            if not table:
+                results['status'] = 'error'
+                results['error'] = f"Table with code '{table_code}' and version '{version}' not found"
+                return results
+
+            # Extract framework from table ID
+            framework_id = self.extract_framework_from_table_id(table.table_id)
+            framework_object = self.get_framework_object(framework_id) if framework_id else None
+
+            if not framework_object:
+                results['status'] = 'warning'
+                results['error'] = f"Framework not found for table '{table.table_id}', proceeding without framework"
+
+            # Process the table
+            cube, cube_structure = self.create_output_layers(table, framework_object, save_to_db)
+
+            results['processed'] = {
+                'table_id': table.table_id,
+                'table_name': table.name,
+                'cube_id': cube.cube_id,
+                'cube_structure_id': cube_structure.cube_structure_id,
+                'framework': framework_id
+            }
+
+        except Exception as e:
+            results['status'] = 'error'
+            results['error'] = str(e)
+
+        return results
+
+    def process_by_table_code(self, table_code, save_to_db=True):
+        """
+        Process all tables matching a table code (across all versions).
+
+        Args:
+            table_code: Table code (e.g., 'F01.01')
+            save_to_db: Whether to save results to database
+
+        Returns:
+            dict: Processing results with status, processed tables, and errors
+        """
+        results = {
+            'status': 'success',
+            'table_code': table_code,
+            'processed': [],
+            'errors': []
+        }
+
+        try:
+            # Get all tables with this code
+            tables = TABLE.objects.filter(
+                Q(table_id__endswith=f"_{table_code}") |
+                Q(name=table_code)
+            )
+
+            if not tables:
+                results['status'] = 'error'
+                results['message'] = f"No tables found with code '{table_code}'"
+                return results
+
+            # Process each table
+            for table in tables:
+                try:
+                    # Extract framework from table ID
+                    framework_id = self.extract_framework_from_table_id(table.table_id)
+                    framework_object = self.get_framework_object(framework_id) if framework_id else None
+
+                    if not framework_object:
+                        results['errors'].append({
+                            'table_id': table.table_id,
+                            'error': f"Framework not found for table, skipping"
+                        })
+                        continue
+
+                    cube, cube_structure = self.create_output_layers(table, framework_object, save_to_db)
+
+                    results['processed'].append({
+                        'table_id': table.table_id,
+                        'table_name': table.name,
+                        'cube_id': cube.cube_id,
+                        'cube_structure_id': cube_structure.cube_structure_id,
+                        'framework': framework_id,
+                        'version': self.extract_version_from_table_id(table.table_id)
+                    })
+
+                except Exception as e:
+                    results['errors'].append({
+                        'table_id': table.table_id,
+                        'error': str(e)
+                    })
+
+            if results['errors'] and not results['processed']:
+                results['status'] = 'error'
+            elif results['errors']:
+                results['status'] = 'partial'
+
+        except Exception as e:
+            results['status'] = 'error'
+            results['message'] = f"Error processing table code: {str(e)}"
+
+        return results

@@ -211,7 +211,9 @@ def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
         + tables["ORIGINAL_TABLE_CODE"].str.split().str.join("_")
         + "_"
         + tables["TABLE_VID"].apply(table_to_taxonomy_mapping.get)
-    )
+    ).str.replace(".","_")
+
+    tables.drop(columns=["TABLE_ID"], inplace=True)
 
     # Create ID mapping for return
     id_mapping = dict(zip(tables["TABLE_VID"], tables["NEW_TABLE_ID"]))
@@ -219,8 +221,6 @@ def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
     tables.rename(columns={
         "NEW_TABLE_ID":"TABLE_ID",
         "ORIGINAL_TABLE_LABEL":"DESCRIPTION",
-        "TABLE_ID":"MAINTENANCE_AGENCY_ID",
-        "TABLE_ID":"VERSION",
         "FROM_DATE":"VALID_FROM",
         "TO_DATE":"VALID_TO"
     },inplace=True)
