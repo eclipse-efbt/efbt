@@ -183,14 +183,14 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         export_path = "birds_nest/resources/derivation_files/"
         try:
             logger.info(f"Fetching derivation files from {export_path}")
-            print(f"DEBUG: Fetching files from {export_path}")
+            logger.debug(f"Fetching files from {export_path}")
             files = self.fetch_files(export_path)
             for file_info in files:
                 file_name = file_info.get('name')
                 local_path = os.path.join(target_directory, file_name)
                 result = self.download_file(file_info, local_path)
             logger.info(f"Found {len(files)} items in {export_path}")
-            print(f"DEBUG: Raw files response: {len(files)} items")
+            logger.debug(f"Raw files response: {len(files)} items")
         except Exception as e:
             logger.error(f"Error fetching derivation files from {export_path}: {e}")
             files = []
@@ -207,11 +207,11 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
             force_refresh (bool): Force re-download even if files exist
         """
         logger.info(f"Fetching technical export files from export/database_export_ldm to {target_directory}")
-        print(f"DEBUG: Fetching technical export files to {target_directory}")
+        logger.debug(f"Fetching technical export files to {target_directory}")
 
         # Clear directories if force refresh is requested
         if force_refresh:
-            print("DEBUG: Force refresh enabled - clearing existing files")
+            logger.debug("Force refresh enabled - clearing existing files")
             bird_dir = os.path.join(target_directory, '..', 'bird')
             admin_dir = os.path.join(target_directory, '..', 'admin')
 
@@ -228,20 +228,20 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         files_downloaded = 0
 
         try:
-            print(f"DEBUG: Fetching files from {export_path}")
+            logger.debug(f"Fetching files from {export_path}")
             files = self.fetch_files(export_path)
-            print(f"DEBUG: Raw files response: {len(files)} items")
+            logger.debug(f"Raw files response: {len(files)} items")
 
             csv_files = [f for f in files if f.get('type') == 'file' and f.get('name', '').endswith('.csv')]
-            print(f"DEBUG: Found {len(csv_files)} CSV files")
+            logger.debug(f"Found {len(csv_files)} CSV files")
 
             if not csv_files:
                 logger.warning(f"No CSV files found in {export_path}")
-                print(f"DEBUG: No CSV files found. All files: {[f.get('name', 'Unknown') for f in files]}")
+                logger.debug(f"No CSV files found. All files: {[f.get('name', 'Unknown') for f in files]}")
                 return 0
 
             logger.info(f"Found {len(csv_files)} CSV files in {export_path}")
-            print(f"DEBUG: CSV files found: {[f.get('name', 'Unknown') for f in csv_files]}")
+            logger.debug(f"CSV files found: {[f.get('name', 'Unknown') for f in csv_files]}")
 
             # Categorize files based on naming patterns
             bird_files = []
@@ -250,37 +250,37 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
 
             for file_info in csv_files:
                 file_name = file_info.get('name', '')
-                print(f"DEBUG: Categorizing file: {file_name}")
+                logger.debug(f"Categorizing file: {file_name}")
                 if file_name.lower().startswith('bird_'):
                     bird_files.append(file_info)
-                    print(f"DEBUG: -> bird_ file")
+                    logger.debug(f"-> bird_ file")
                 elif file_name.lower().startswith('auth_'):
                     admin_files.append(file_info)
-                    print(f"DEBUG: -> admin_ file")
+                    logger.debug(f"-> admin_ file")
                 else:
                     technical_export_files.append(file_info)
-                    print(f"DEBUG: -> technical export file")
+                    logger.debug(f"-> technical export file")
 
             logger.info(f"Categorized files: {len(bird_files)} bird_ files, {len(admin_files)} admin_ files, {len(technical_export_files)} technical export files")
-            print(f"DEBUG: Categories: bird_={len(bird_files)}, admin_={len(admin_files)}, technical_export={len(technical_export_files)}")
+            logger.debug(f"Categories: bird_={len(bird_files)}, admin_={len(admin_files)}, technical_export={len(technical_export_files)}")
 
             # Download bird_ files to bird/ subdirectory
             if bird_files:
                 bird_dir = os.path.join(target_directory, '..', 'bird')
-                print(f"DEBUG: Bird directory: {bird_dir}")
+                logger.debug(f"Bird directory: {bird_dir}")
                 self._ensure_directory_exists(bird_dir)
 
                 for file_info in bird_files:
                     file_name = file_info.get('name')
                     local_path = os.path.join(bird_dir, file_name)
-                    print(f"DEBUG: Downloading bird file {file_name} to {local_path}")
+                    logger.debug(f"Downloading bird file {file_name} to {local_path}")
 
                     if os.path.exists(local_path) and not force_refresh:
                         logger.debug(f"Skipping existing bird file: {file_name}")
                         continue
 
                     result = self.download_file(file_info, local_path)
-                    print(f"DEBUG: Download result for {file_name}: {result}")
+                    logger.debug(f"Download result for {file_name}: {result}")
                     if result:
                         files_downloaded += 1
                         logger.info(f"Downloaded bird file: {file_name} to bird/")
@@ -288,20 +288,20 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
             # Download admin_ files to admin/ subdirectory
             if admin_files:
                 admin_dir = os.path.join(target_directory, '..', 'admin')
-                print(f"DEBUG: Admin directory: {admin_dir}")
+                logger.debug(f"Admin directory: {admin_dir}")
                 self._ensure_directory_exists(admin_dir)
 
                 for file_info in admin_files:
                     file_name = file_info.get('name')
                     local_path = os.path.join(admin_dir, file_name)
-                    print(f"DEBUG: Downloading admin file {file_name} to {local_path}")
+                    logger.debug(f"Downloading admin file {file_name} to {local_path}")
 
                     if os.path.exists(local_path) and not force_refresh:
                         logger.debug(f"Skipping existing admin file: {file_name}")
                         continue
 
                     result = self.download_file(file_info, local_path)
-                    print(f"DEBUG: Download result for {file_name}: {result}")
+                    logger.debug(f"Download result for {file_name}: {result}")
                     if result:
                         files_downloaded += 1
                         logger.info(f"Downloaded admin file: {file_name} to admin/")
@@ -310,31 +310,31 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
             for file_info in technical_export_files:
                 file_name = file_info.get('name')
                 local_path = os.path.join(target_directory, file_name)
-                print(f"DEBUG: Downloading technical export file {file_name} to {local_path}")
+                logger.debug(f"Downloading technical export file {file_name} to {local_path}")
 
                 if os.path.exists(local_path) and not force_refresh:
                     logger.debug(f"Skipping existing technical export file: {file_name}")
                     continue
 
                 result = self.download_file(file_info, local_path)
-                print(f"DEBUG: Download result for {file_name}: {result}")
+                logger.debug(f"Download result for {file_name}: {result}")
                 if result:
                     files_downloaded += 1
                     logger.info(f"Downloaded technical export file: {file_name}")
 
         except Exception as e:
             logger.error(f"Error accessing {export_path}: {e}")
-            print(f"DEBUG: Exception occurred: {e}")
+            logger.debug(f"Exception occurred: {e}")
             import traceback
             traceback.print_exc()
             return 0
 
         if files_downloaded == 0:
             logger.warning("No new files downloaded from export/database_export_ldm")
-            print("DEBUG: No files were downloaded")
+            logger.debug("No files were downloaded")
         else:
             logger.info(f"Successfully downloaded {files_downloaded} files from export/database_export_ldm")
-            print(f"DEBUG: Successfully downloaded {files_downloaded} files")
+            logger.debug(f"Successfully downloaded {files_downloaded} files")
 
         return files_downloaded
 

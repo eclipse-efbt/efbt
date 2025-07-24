@@ -62,50 +62,37 @@ class JoinsMetaDataCreator:
         self.add_reports(context, sdd_context, framework)
 
     def do_stuff_and_prepare_context(self, context: Any, sdd_context: Any):
-        context.combination_item_dictionary = {}
-        for combination_item in COMBINATION_ITEM.objects.all():
-            try:
-                combination_item_list = context.combination_item_dictionary[
-                    combination_item.combination_id
-                ]
-                combination_item_list.append(combination_item)
-            except KeyError:
-                context.combination_item_dictionary[combination_item.combination_id] = [
-                    combination_item
-                ]
 
         self.member_hierarchy_service = MemberHierarchyService()
         sdd_context = self.member_hierarchy_service.prepare_node_dictionaries_and_lists(
             sdd_context
         )
 
-        all_main_categories = set(sum(context.report_to_main_category_map.values(), []))
-        context.category_to_combinations = {
-            category: {
-                item.combination_id
-                for item in COMBINATION_ITEM.objects.all().filter(
-                    member_id__member_id=category
-                )
-            }
-            for category in all_main_categories
-        }
-        context.category_to_ci = {
-            category: {
-                combination_id: {
-                    item.variable_id: item.member_id
-                    for item in context.combination_item_dictionary[combination_id]
-                }
-                for combination_id in combinations
-            }
-            for category, combinations in context.category_to_combinations.items()
-        }
+        all_main_categories = set(map(lambda pk: MEMBER.objects.get(pk=pk),
+            sum(context.report_to_main_category_map.values(), [])))
 
-        context.domain_to_member = {
-            domain: {
-                member_id for member_id in MEMBER.objects.all().filter(domain_id=domain)
-            }
-            for domain in DOMAIN.objects.all()
-        }
+        context.category_to_ci = {}
+        context.domain_to_member = {}
+
+        for combination in COMBINATION.objects.prefetch_related(
+            "combination_item_set__variable_id",
+            "combination_item_set__member_id"):
+            if any(item.member_id in all_main_categories for item in combination.combination_item_set.all()):
+                result = {
+                    item.variable_id: item.member_id
+                    for item in combination.combination_item_set.all()
+                }
+                category = set(result.values()).intersection(all_main_categories).pop()
+                if category.member_id not in context.category_to_ci:
+                    context.category_to_ci[category.member_id] = {}
+                context.category_to_ci[category.member_id].update({
+                    combination: result
+                })
+
+        for member in MEMBER.objects.prefetch_related("domain_id"):
+            if member.domain_id not in context.domain_to_member:
+                context.domain_to_member[member.domain_id] = set()
+            context.domain_to_member[member.domain_id].add(member)
 
         context.facetted_items = {
             output_item.variable_id
@@ -359,9 +346,9 @@ class JoinsMetaDataCreator:
 
                 except KeyError:
                     # traceback.print_exc()
-                    print(f"no tables for main category:{mc}")
+                    logging.warning(f"no tables for main category:{mc}")
         except KeyError:
-            print(f"no main category for report :{report_template}")
+            logging.warning(f"no main category for report :{report_template}")
 
         # Bulk create all collected CUBE_LINK objects
         if context.save_derived_sdd_items and cube_links_to_create:
@@ -668,8 +655,8 @@ class JoinsMetaDataCreator:
                 for csi in field_list
                 if csi.variable_id and csi.variable_id.name == output_variable_name
             ]
-        if not related_variables:
-            logging.warning(f"No related variables found for {output_item}")
+        # if not related_variables:
+        #     logging.warning(f"No related variables found for {output_item}")
         return related_variables
 
     def find_output_layer_cube(
