@@ -17,7 +17,7 @@ from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
-import django
+from django.db import OperationalError
 import uuid
 import logging
 import os
@@ -59,41 +59,41 @@ logger = logging.getLogger(__name__)
 
 def refresh_complete_status(task:int=3,all:bool=True):
 
-    task_to_complete_mapping = {
-        1:5,
-        2:2,
-        3:2,
-        4:1
-    }
+    try:
 
-    def check_one_task(execution,task:int=3):
-        steps_completed = sum([_ for _ in execution.execution_data.values() if isinstance(_,bool)])
-        if (execution.task_number == task) and (steps_completed == task_to_complete_mapping[task]):
-            execution.status = "completed"
-        return execution
+        task_to_complete_mapping = {
+            1:5,
+            2:2,
+            3:2,
+            4:1
+        }
 
-    if all:
-        try:
+        def check_one_task(execution,task:int=3):
+            steps_completed = sum([_ for _ in execution.execution_data.values() if isinstance(_,bool)])
+            if (execution.task_number == task) and (steps_completed == task_to_complete_mapping[task]):
+                execution.status = "completed"
+            return execution
+
+        if all:
             task_executions = WorkflowTaskExecution.objects.all()
             for task_number,_ in task_to_complete_mapping.items():
                 for execution in task_executions:
                     execution = check_one_task(execution,task_number)
                     execution.save()
             return
-        except django.db.utils.OperationalError:
-            return
 
-
-    task_executions = WorkflowTaskExecution.objects.filter(
-        task_number=task,
-        operation_type='do'
-    ).first()
-    if isinstance(task_executions,WorkflowTaskExecution):
-        task_executions = [task_executions]
-    for execution in task_executions:
-        execution = check_one_task(execution,task)
-        execution.save()
-    return
+        task_executions = WorkflowTaskExecution.objects.filter(
+            task_number=task,
+            operation_type='do'
+        ).first()
+        if isinstance(task_executions,WorkflowTaskExecution):
+            task_executions = [task_executions]
+        for execution in task_executions:
+            execution = check_one_task(execution,task)
+            execution.save()
+        return
+    except OperationalError:
+        return
 
 
 def load_test_results():
@@ -231,12 +231,7 @@ def _run_migrations_async():
 
         time.sleep(6)
 
-
-        match platform.system():
-            case "Windows":
-                os._exit(0)
-            case _:
-                os.system("pkill -f runserver")
+        os._exit(0)
 
 
     except Exception as e:
@@ -506,11 +501,7 @@ def _run_database_setup_async():
 
             time.sleep(10)
 
-            match platform.system():
-                case "Windows":
-                    os._exit(0)
-                case _:
-                    os.system("pkill -f runserver")
+            os._exit(0)
         else:
             # No restart required, setup is complete
             _database_setup_status.update({
@@ -577,7 +568,12 @@ def _run_automode_async(target_task, session_data):
                 self.headers = {'X-Requested-With': 'XMLHttpRequest'}
 
         # Execute tasks sequentially
+        import cProfile, pstats, io
+        from pstats import SortKey
+
         for task_num in range(1, target_task + 1):
+            pr = cProfile.Profile()
+            pr.enable()
             try:
                 _automode_status.update({
                     'current_task': task_num,
@@ -644,7 +640,9 @@ def _run_automode_async(target_task, session_data):
                 _automode_status["task_errors"].append(
                     {"task": task_num, "error": str(task_error)}
                 )
-                # Continue with next task instead of stopping
+
+            pr.disable()
+            pr.dump_stats(f"cProfile_1_to_{task_num}_dump")
 
         # Update final status
         if _automode_status["task_errors"]:
@@ -901,7 +899,6 @@ def workflow_task_router(request, task_number, operation):
 
     handler = task_handlers.get(task_number)
     if handler:
-        print("found a handler for task", task_number)
         return handler(request, operation, task_execution, workflow_session)
     else:
         messages.error(request, "Task handler not implemented")
@@ -958,7 +955,6 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
 
                 ])
 
-                print(execution_data)
 
                 # Delete database if requested (should run first)
                 if request.POST.get("delete_database") or run_all:
@@ -1347,8 +1343,6 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
         ).first()
 
         execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
-
-        print(execution_data, do_execution.status, task_execution.status)
 
         if do_execution.status == "completed":
             task_execution.status = "completed"
@@ -3385,7 +3379,7 @@ This pull request contains CSV files exported from the PyBIRD AI database using 
 
 This export was generated automatically by PyBIRD AI's fork workflow."""
             )
-            
+
             # Prepare response data for fork workflow
             response_data = {
                 'success': result['success'],
@@ -3397,14 +3391,14 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
                 'fork_url': result.get('fork_data', {}).get('html_url') if result.get('fork_data') else None,
                 'message': 'Database exported via fork workflow successfully' if result['success'] else 'Fork workflow failed'
             }
-            
+
             if not result['success']:
                 response_data['error'] = result.get('error', 'Unknown error occurred during fork workflow')
-                
+
         else:
             # Fallback to original workflow for backward compatibility
             result = github_service.export_and_push_to_github(repository_url=repository_url)
-            
+
             response_data = {
                 'success': result['success'],
                 'branch_created': result.get('branch_created', False),
@@ -3413,7 +3407,7 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
                 'pull_request_url': result.get('pr_url'),
                 'message': 'Database exported to GitHub successfully' if result['success'] else 'Direct push workflow failed'
             }
-            
+
             if not result['success']:
                 response_data['error'] = result.get('error', 'Unknown error occurred during GitHub export')
 
