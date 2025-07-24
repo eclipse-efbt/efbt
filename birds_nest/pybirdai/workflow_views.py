@@ -898,7 +898,6 @@ def workflow_task_router(request, task_number, operation):
 
     handler = task_handlers.get(task_number)
     if handler:
-        print("found a handler for task", task_number)
         return handler(request, operation, task_execution, workflow_session)
     else:
         messages.error(request, "Task handler not implemented")
@@ -955,7 +954,6 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
 
                 ])
 
-                print(execution_data)
 
                 # Delete database if requested (should run first)
                 if request.POST.get("delete_database") or run_all:
@@ -1349,8 +1347,6 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
         ).first()
 
         execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
-
-        print(execution_data, do_execution.status, task_execution.status)
 
         if do_execution.status == "completed":
             task_execution.status = "completed"
