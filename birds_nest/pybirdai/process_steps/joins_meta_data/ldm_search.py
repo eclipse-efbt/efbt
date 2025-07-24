@@ -137,8 +137,8 @@ class ELDMSearch:
         print(f"Getting parents from disjoint subtyping for {entity.__name__}")
         # get a link tot the full django model, then loop trhought all tables inthe model
         list_of_results = []
-        if entity.__name__ in memoization_parents_from_disjoint_subtyping_eldm_search:
-            return memoization_parents_from_disjoint_subtyping_eldm_search[entity.__name__]
+        if hash(entity) in memoization_parents_from_disjoint_subtyping_eldm_search:
+            return memoization_parents_from_disjoint_subtyping_eldm_search[hash(entity)]
         for model in apps.get_models():
             if model._meta.app_label == 'pybirdai':
                 #print(f"{model._meta.app_label}  -> {model.__name__}")
@@ -148,5 +148,5 @@ class ELDMSearch:
                         and feature.name.endswith("_delegate")
                     ) and feature.name[0:len(feature.name)-9] == entity.__name__:
                         list_of_results.append(model)
-        memoization_parents_from_disjoint_subtyping_eldm_search[entity.__name__] = list_of_results
+        memoization_parents_from_disjoint_subtyping_eldm_search[hash(entity)] = list_of_results
         return list_of_results
