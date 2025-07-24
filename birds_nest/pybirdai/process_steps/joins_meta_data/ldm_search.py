@@ -19,7 +19,7 @@ class ELDMSearch:
     A class for searching and retrieving related entities in a Django model hierarchy.
     """
 
-    def get_all_related_entities(self, context, entity):
+    def get_all_related_entities(self, context, entity, memoization_parents_from_disjoint_subtyping_eldm_search):
         """
         Retrieve all related entities for a given entity.
 
@@ -30,15 +30,15 @@ class ELDMSearch:
         Returns:
             list: A list of related entities.
         """
-        entities = []
+        entities = set()
         ELDMSearch._get_superclasses_and_associated_entities(
-            context, entity, entities, 0, 4
+            context, entity, entities, 0, 4, memoization_parents_from_disjoint_subtyping_eldm_search
         )
-        ELDMSearch._get_associated_entities(context, entity, entities, 0, 4)
-        return entities
+        ELDMSearch._get_associated_entities(context, entity, entities, 0, 4, memoization_parents_from_disjoint_subtyping_eldm_search)
+        return list(entities)
 
     def _get_associated_entities(
-        context, entity, entities, link_count, link_limit
+        context, entity, entities, link_count, link_limit, memoization_parents_from_disjoint_subtyping_eldm_search
     ):
         """
         Recursively retrieve associated entities through foreign key relationships.
@@ -46,7 +46,7 @@ class ELDMSearch:
         Args:
             context: The context in which the search is performed.
             entity: The entity for which to find associated entities.
-            entities (list): The list to store found entities.
+            entities (set): The set to store found entities.
             link_count (int): The current depth of the recursive search.
             link_limit (int): The maximum depth of the recursive search.
         """
@@ -60,18 +60,17 @@ class ELDMSearch:
                 and not feature.name.endswith("_delegate")
             ):
                 related_model = feature.related_model
-                if related_model not in entities:
-                    entities.append(related_model)
+                entities.add(related_model)
 
                 ELDMSearch._get_superclasses_and_associated_entities(
-                    context, related_model, entities, link_count + 1, link_limit
+                    context, related_model, entities, link_count + 1, link_limit, memoization_parents_from_disjoint_subtyping_eldm_search
                 )
                 ELDMSearch._get_associated_entities(
-                    context, related_model, entities, link_count + 1, link_limit
+                    context, related_model, entities, link_count + 1, link_limit, memoization_parents_from_disjoint_subtyping_eldm_search
                 )
 
     def _get_superclasses_and_associated_entities(
-        context, entity, entities, link_count, link_limit
+        context, entity, entities, link_count, link_limit, memoization_parents_from_disjoint_subtyping_eldm_search
     ):
         """
         Recursively retrieve superclasses and their associated entities.
@@ -79,19 +78,20 @@ class ELDMSearch:
         Args:
             context: The context in which the search is performed.
             entity: The entity for which to find superclasses and associated entities.
-            entities (list): The list to store found entities.
+            entities (set): The set to store found entities.
             link_count (int): The current depth of the recursive search.
             link_limit (int): The maximum depth of the recursive search.
         """
-        parents_from_disjoint_subtyping = ELDMSearch._get_parents_from_disjoint_subtyping(entity)
+
+        parents_from_disjoint_subtyping = ELDMSearch._get_parents_from_disjoint_subtyping(entity, memoization_parents_from_disjoint_subtyping_eldm_search)
         for parent in parents_from_disjoint_subtyping:
             if parent not in entities:
-                entities.append(parent)
+                entities.add(parent)
                 ELDMSearch._get_associated_entities(
-                context, parent, entities, link_count, link_limit
+                context, parent, entities, link_count, link_limit, memoization_parents_from_disjoint_subtyping_eldm_search
                 )
                 ELDMSearch._get_superclasses_and_associated_entities(
-                    context, parent, entities, link_count, link_limit
+                    context, parent, entities, link_count, link_limit, memoization_parents_from_disjoint_subtyping_eldm_search
                 )
 
         parent_list = entity._meta.get_parent_list()
@@ -99,12 +99,12 @@ class ELDMSearch:
         if parent_list:
             super_entity = parent_list[0]
             if super_entity not in entities:
-                entities.append(super_entity)
+                entities.add(super_entity)
                 ELDMSearch._get_associated_entities(
-                    context, super_entity, entities, link_count, link_limit
+                    context, super_entity, entities, link_count, link_limit,memoization_parents_from_disjoint_subtyping_eldm_search
                 )
                 ELDMSearch._get_superclasses_and_associated_entities(
-                    context, super_entity, entities, link_count, link_limit
+                    context, super_entity, entities, link_count, link_limit,memoization_parents_from_disjoint_subtyping_eldm_search
                 )
 
         #for feature in entity._meta.get_fields():
@@ -124,7 +124,7 @@ class ELDMSearch:
         #        )
 
 
-    def _get_parents_from_disjoint_subtyping(entity):
+    def _get_parents_from_disjoint_subtyping(entity, memoization_parents_from_disjoint_subtyping_eldm_search):
         """
         Retrieve parents from disjoint subtyping relationships.
 
@@ -135,8 +135,10 @@ class ELDMSearch:
             list: A list of parents from disjoint subtyping.
         """
         print(f"Getting parents from disjoint subtyping for {entity.__name__}")
-        parents_from_disjoint_subtyping = []
         # get a link tot the full django model, then loop trhought all tables inthe model
+        list_of_results = []
+        if hash(entity) in memoization_parents_from_disjoint_subtyping_eldm_search:
+            return memoization_parents_from_disjoint_subtyping_eldm_search[hash(entity)]
         for model in apps.get_models():
             if model._meta.app_label == 'pybirdai':
                 #print(f"{model._meta.app_label}  -> {model.__name__}")
@@ -144,7 +146,7 @@ class ELDMSearch:
                     if (
                         isinstance(feature, ForeignKey)
                         and feature.name.endswith("_delegate")
-                    ):
-                        if feature.name[0:len(feature.name)-9] == entity.__name__:
-                            parents_from_disjoint_subtyping.append(model)
-        return parents_from_disjoint_subtyping
+                    ) and feature.name[0:len(feature.name)-9] == entity.__name__:
+                        list_of_results.append(model)
+        memoization_parents_from_disjoint_subtyping_eldm_search[hash(entity)] = list_of_results
+        return list_of_results
