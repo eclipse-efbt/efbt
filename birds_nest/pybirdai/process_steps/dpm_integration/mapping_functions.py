@@ -381,14 +381,23 @@ def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict
     return cells, id_mapping
 
 
-def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_map:dict={}):
+def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_map:dict={},start_index_after_last:bool=False):
     data = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in data.columns}
     data = data.rename(columns=column_mapping)
     data["CELL_ID"] = data["CELL_ID"].apply(cell_map.get)
     data["ORDINATE_ID"] = data["ORDINATE_ID"].apply(ordinate_map.get)
-    data.reset_index(inplace=True)
-    data.rename(columns={"index": "ID"},inplace=True)
+    
+    if start_index_after_last and "ID" in data.columns and not data.empty:
+        start_idx = data["ID"].max() + 1 if pd.notnull(data["ID"].max()) else 0
+        data.reset_index(drop=True, inplace=True)
+        data["ID"] = range(start_idx, start_idx + len(data))
+    else:
+        if "ID" in data.columns:
+            data.drop(columns=["ID"], inplace=True)
+        data.reset_index(inplace=True)
+        data.rename(columns={"index": "ID"},inplace=True)
+    
     return data, {}
 
 def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={},context_data:pd.DataFrame=pd.DataFrame(),dimension_map:dict={},member_map:dict={}):
@@ -557,7 +566,7 @@ def traceback_restrictions(path="target/OpenMemberRestriction.csv"):
     restriction_df.columns = cols
     return restriction_df
 
-def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member_map:dict={}, dimension_map:dict={}, ordinate_map:dict={}, hierarchy_map:dict={}):
+def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member_map:dict={}, dimension_map:dict={}, ordinate_map:dict={}, hierarchy_map:dict={}, start_index_after_last:bool=False):
     data = pd.read_csv(path)
     restrictions = traceback_restrictions()
     data = pd.merge(data,restrictions,on="RestrictionID"
@@ -590,8 +599,15 @@ def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member
     data["MEMBER_HIERARCHY_VALID_FROM"] = ""
     data.loc[data.STARTING_MEMBER_ID.isna(),"IS_STARTING_MEMBER_INCLUDED"] = False
 
-    data.reset_index(inplace=True)
-    data.rename(columns={"index": "ID"},inplace=True)
+    if start_index_after_last and "ID" in data.columns and not data.empty:
+        start_idx = data["ID"].max() + 1 if pd.notnull(data["ID"].max()) else 0
+        data.reset_index(drop=True, inplace=True)
+        data["ID"] = range(start_idx, start_idx + len(data))
+    else:
+        if "ID" in data.columns:
+            data.drop(columns=["ID"], inplace=True)
+        data.reset_index(inplace=True)
+        data.rename(columns={"index": "ID"},inplace=True)
 
     data = data.loc[
         :,
