@@ -16,7 +16,6 @@ from django.conf import settings
 from pybirdai.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from pathlib import Path
-import cProfile
 from django.db import connection
 
 
@@ -29,8 +28,6 @@ class ImportWebsiteToSDDModel(object):
         Import SDD csv files into an instance of the analysis model
         '''
 
-        pr = cProfile.Profile()
-        pr.enable()
         ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportWebsiteToSDDModel.create_frameworks(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,False)
@@ -49,8 +46,6 @@ class ImportWebsiteToSDDModel(object):
             ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
             ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
             ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
-        pr.disable()
-        pr.dump_stats("import_compute_dump")
 
 
 
