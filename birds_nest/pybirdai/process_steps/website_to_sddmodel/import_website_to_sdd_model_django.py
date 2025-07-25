@@ -16,7 +16,8 @@ from django.conf import settings
 from pybirdai.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from pathlib import Path
-from django.db import connection
+from django.db import connection, transaction
+import subprocess
 
 
 class ImportWebsiteToSDDModel(object):
@@ -39,9 +40,9 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
 
         if dpm:
-            ImportWebsiteToSDDModel.create_table_cells_copy(self, sdd_context)
-            ImportWebsiteToSDDModel.create_ordinate_items_copy(self, sdd_context)
-            ImportWebsiteToSDDModel.create_cell_positions_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_table_cells_csv_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_ordinate_items_csv_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_cell_positions_csv_copy(self, sdd_context)
         else:
             ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
             ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
@@ -604,86 +605,134 @@ class ImportWebsiteToSDDModel(object):
         if context.save_sdd_to_db and ordinates_to_create:
             AXIS_ORDINATE.objects.bulk_create(ordinates_to_create, batch_size=1000,ignore_conflicts=True)
 
-    def create_table_cells_copy(self, context):
-        # Ensure paths are absolute
-        import subprocess
+    def _create_instances_from_csv_copy(self, context, cls):
+        sdd_table_name = cls.__name__.lower()
+        table_name = f"pybirdai_{sdd_table_name}"
 
-        with connection.cursor() as cursor:
-            cursor.execute("PRAGMA foreign_keys = 0;")
-            cursor.execute("DELETE FROM pybirdai_table_cell;")
-            cursor.execute("PRAGMA foreign_keys = 1;")
-
-        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + "table_cell.csv"
-        db_file = str(settings.BASE_DIR) + os.sep + "db.sqlite3"
+        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + f"{sdd_table_name}.csv"
         csv_file = Path(csv_file).absolute()
-        db_file = Path(db_file).absolute()
         delimiter = ","
-        table_name = "pybirdai_table_cell"
 
         # Check if CSV file exists
         if not csv_file.exists():
             raise FileNotFoundError(f"CSV file not found: {csv_file}")
 
-        # Create the SQLite commands
-        commands = [
-            ".mode csv",
-            f".separator '{delimiter}'",
-        ]
+        try:
 
-        commands.append(f".import --skip 1 '{csv_file}' {table_name}")
+            with connection.cursor() as cursor:
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 0;")
+                    cursor.execute(f"DELETE FROM {table_name};")
+                    cursor.execute("PRAGMA foreign_keys = 1;")
+                elif connection.vendor == 'postgresql':
+                    cursor.execute(f"TRUNCATE TABLE {table_name} CASCADE;")
+                elif connection.vendor in ['microsoft', 'mssql']:
+                    cursor.execute(f"TRUNCATE TABLE {table_name};")
+                else:
+                    cursor.execute(f"DELETE FROM {table_name};")
 
-        # Join commands with newlines
-        sqlite_script = '\n'.join(commands)
+            # Import CSV data based on database vendor
+            if connection.vendor == 'sqlite':
+                # SQLite needs to be handled outside transaction for subprocess
+                # Get database file path
+                db_file = Path(connection.settings_dict['NAME']).absolute()
 
-        result = subprocess.run(
-                ['sqlite3', str(db_file)],
-                input=sqlite_script,
-                text=True,
-                capture_output=True,
-                check=True
-            )
-        return result
+                # Create the SQLite commands
+                commands = [
+                    ".mode csv",
+                    f".separator '{delimiter}'",
+                    f".import --skip 1 '{csv_file}' {table_name}"
+                ]
 
-    def create_ordinate_items_copy(self, context):
+                # Join commands with newlines
+                sqlite_script = '\n'.join(commands)
+
+                result = subprocess.run(
+                        ['sqlite3', str(db_file)],
+                        input=sqlite_script,
+                        text=True,
+                        capture_output=True,
+                        check=True
+                    )
+                if result.stderr:
+                    raise Exception(f"SQLite import error: {result.stderr}")
+                return result
+
+            elif connection.vendor == 'postgresql':
+                # PostgreSQL COPY command
+                with connection.cursor() as cursor:
+                    with open(csv_file, 'r', encoding='utf-8') as f:
+                        # Skip header line
+                        next(f)
+                        # Use COPY FROM STDIN
+                        cursor.copy_expert(
+                            f"COPY {table_name} FROM STDIN WITH (FORMAT CSV, DELIMITER '{delimiter}')",
+                            f
+                        )
+                return None
+
+            elif connection.vendor in ['microsoft', 'mssql']:
+                # MSSQL bulk insert - requires special handling
+                # Note: BULK INSERT requires the file to be accessible by SQL Server
+                with connection.cursor() as cursor:
+                    # Try using BULK INSERT if file is accessible
+                    try:
+                        cursor.execute(f"""
+                            BULK INSERT {table_name}
+                            FROM '{csv_file}'
+                            WITH (
+                                FORMAT = 'CSV',
+                                FIRSTROW = 2,
+                                FIELDTERMINATOR = '{delimiter}',
+                                ROWTERMINATOR = '\\n'
+                            )
+                        """)
+                    except Exception as e:
+                        # Fallback to row-by-row insert if BULK INSERT fails
+                        print(f"BULK INSERT failed: {e}. Falling back to row-by-row insert.")
+                        self._fallback_csv_import(csv_file, table_name, delimiter)
+                return None
+
+            else:
+                # Fallback for other databases
+                print(f"Database vendor '{connection.vendor}' not explicitly supported. Using fallback method.")
+                self._fallback_csv_import(csv_file, table_name, delimiter)
+                return None
+
+        except Exception as e:
+            print(f"Error importing CSV for {table_name}: {str(e)}")
+            raise
+
+    def _fallback_csv_import(self, context, cls):
+        '''
+        Fallback method for CSV import using raw SQL inserts
+        This method is database-agnostic and works with any database backend
+        '''
+        import csv
+
+        fallback_import_func = {
+            TABLE_CELL: self.create_table_cells,
+            ORDINATE_ITEM: self.create_ordinate_items,
+            CELL_POSITION: self.create_cell_positions
+            }[cls](context)
+
+        try:
+            self.fallback_import_func(context)
+        except Exception as e:
+            print(f"Error in fallback CSV import for {table_name}: {str(e)}")
+            raise
+
+    def create_table_cells_csv_copy(self, context):
         # Ensure paths are absolute
-        import subprocess
+        self._create_instances_from_csv_copy(context, TABLE_CELL)
 
-        with connection.cursor() as cursor:
-            cursor.execute("PRAGMA foreign_keys = 0;")
-            cursor.execute("DELETE FROM pybirdai_ordinate_item")
-            cursor.execute("PRAGMA foreign_keys = 1;")
+    def create_ordinate_items_csv_copy(self, context):
+        # Ensure paths are absolute
+        self._create_instances_from_csv_copy(context, ORDINATE_ITEM)
 
-
-        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + "ordinate_item.csv"
-        db_file = str(settings.BASE_DIR) + os.sep + "db.sqlite3"
-        csv_file = Path(csv_file).absolute()
-        db_file = Path(db_file).absolute()
-        delimiter = ","
-        table_name = "pybirdai_ordinate_item"
-
-        # Check if CSV file exists
-        if not csv_file.exists():
-            raise FileNotFoundError(f"CSV file not found: {csv_file}")
-
-        # Create the SQLite commands
-        commands = [
-            ".mode csv",
-            f".separator '{delimiter}'",
-        ]
-
-        commands.append(f".import --skip 1 '{csv_file}' {table_name}")
-
-        # Join commands with newlines
-        sqlite_script = '\n'.join(commands)
-
-        result = subprocess.run(
-                ['sqlite3', str(db_file)],
-                input=sqlite_script,
-                text=True,
-                capture_output=True,
-                check=True
-            )
-        return result
+    def create_cell_positions_csv_copy(self, context):
+        # Ensure paths are absolute
+        self._create_instances_from_csv_copy(context, CELL_POSITION)
 
     def create_ordinate_items(self, context):
         '''
@@ -764,46 +813,6 @@ class ImportWebsiteToSDDModel(object):
 
         if context.save_sdd_to_db and table_cells_to_create:
             TABLE_CELL.objects.bulk_create(table_cells_to_create, batch_size=1000,ignore_conflicts=True)
-
-    def create_cell_positions_copy(self, context):
-        # Ensure paths are absolute
-        import subprocess
-
-        with connection.cursor() as cursor:
-            cursor.execute("PRAGMA foreign_keys = 0;")
-            cursor.execute("DELETE FROM pybirdai_cell_position")
-            cursor.execute("PRAGMA foreign_keys = 1;")
-
-        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + "cell_position.csv"
-        db_file = str(settings.BASE_DIR) + os.sep + "db.sqlite3"
-        csv_file = Path(csv_file).absolute()
-        db_file = Path(db_file).absolute()
-        delimiter = ","
-        table_name = "pybirdai_cell_position"
-
-        # Check if CSV file exists
-        if not csv_file.exists():
-            raise FileNotFoundError(f"CSV file not found: {csv_file}")
-
-        # Create the SQLite commands
-        commands = [
-            ".mode csv",
-            f".separator '{delimiter}'",
-        ]
-
-        commands.append(f".import --skip 1 '{csv_file}' {table_name}")
-
-        # Join commands with newlines
-        sqlite_script = '\n'.join(commands)
-
-        result = subprocess.run(
-                ['sqlite3', str(db_file)],
-                input=sqlite_script,
-                text=True,
-                capture_output=True,
-                check=True
-            )
-        return result
 
     def create_cell_positions(self, context, dpm:bool = False):
         '''
