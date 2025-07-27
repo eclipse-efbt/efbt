@@ -201,6 +201,7 @@ class CloneRepoService:
 
         logger.info(f"Found extracted folder: {extracted_folder}")
 
+
         # Process each mapping in REPO_MAPPING
         for source_folder, target_mappings in REPO_MAPPING.items():
             source_path = os.path.join(extracted_folder, source_folder)
@@ -239,7 +240,7 @@ class CloneRepoService:
             target_folder = list(REPO_MAPPING[source_folder].keys())[0]
             if os.path.exists(target_folder):
                 shutil.rmtree(target_folder)
-            source_folder = f"{destination_path}{os.sep}{destination_path}-main{os.sep}{source_folder}"
+            source_folder = f"{extracted_folder}{os.sep}{source_folder}"
             shutil.copytree(source_folder, target_folder)
 
         end_time = time.time()
