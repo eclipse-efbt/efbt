@@ -30,7 +30,6 @@ import json
 import os
 import csv
 from .models import bird_meta_data_model
-
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
 from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
@@ -4387,7 +4386,7 @@ def dpm_output_layer_creation(request):
 
     # If not executing, show the form page
     framework_ids = sum(list(map(list,FRAMEWORK.objects.all().values_list("framework_id"))),[])
-    
+
     # Read DPM versions from CSV
     versions = []
     csv_path = os.path.join(settings.BASE_DIR, 'target', 'DpmPackage.csv')
@@ -4395,7 +4394,7 @@ def dpm_output_layer_creation(request):
         with open(csv_path, 'r') as file:
             reader = csv.DictReader(file)
             versions = [row['DpmPackageCode'] for row in reader]
-    
+
     return render(request, 'pybirdai/dpm_output_layer_creation.html', {
         'frameworks': framework_ids,
         'versions': versions
