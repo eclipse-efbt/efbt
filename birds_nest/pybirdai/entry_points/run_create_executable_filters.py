@@ -30,7 +30,7 @@ class RunCreateExecutableFilters(AppConfig):
 
     @staticmethod
     def run_create_executable_filters():
-        from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
+        from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
 
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
@@ -54,7 +54,7 @@ class RunCreateExecutableFilters(AppConfig):
 
     @staticmethod
     def run_create_executable_filters_from_db():
-        from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
+        from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
 
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel

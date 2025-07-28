@@ -47,7 +47,7 @@ class RunDatabaseSetup(AppConfig):
     pybirdai_admin_path = "pybirdai/admin.py"
     pybirdai_meta_data_model_path = "pybirdai/bird_meta_data_model.py"
     results_admin_path = "results/database_configuration_files/admin.py"
-    pybirdai_models_path = "pybirdai/bird_data_model.py" # Target file
+    pybirdai_models_path = "pybirdai/models/bird_data_model.py" # Target file
     results_models_path = "results/database_configuration_files/models.py" # Source file
 
     # --- Cleanup steps ---

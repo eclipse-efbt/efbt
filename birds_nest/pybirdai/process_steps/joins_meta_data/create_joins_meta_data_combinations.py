@@ -13,7 +13,7 @@
 #
 
 import logging
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 from django.apps import apps
 from django.db.models.fields import (
     CharField,
