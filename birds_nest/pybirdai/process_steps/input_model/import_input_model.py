@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 from django.apps import apps
 from django.db import models
 import os
@@ -179,7 +179,11 @@ class ImportInputModel(object):
         import ast
 
         # Read bird_data_model.py and find functions with lineage decorator
-        bird_data_model_path = os.path.join(settings.BASE_DIR, 'pybirdai/bird_data_model.py')
+        bird_data_model_path = os.path.join(
+            settings.BASE_DIR,
+            "pybirdai",
+            "models",
+            'bird_data_model.py')
 
 
         with open(bird_data_model_path, 'r', encoding='utf-8') as file:

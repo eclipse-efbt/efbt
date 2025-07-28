@@ -1120,6 +1120,7 @@ class MEMBER_LINK(models.Model):
         verbose_name_plural = "MEMBER_LINKs"
 
 
+<<<<<<< HEAD:birds_nest/pybirdai/bird_meta_data_model.py
 class AutomodeConfiguration(models.Model):
     DATA_MODEL_CHOICES = [
         ('ELDM', 'ELDM (Logical Data Model)'),
@@ -1549,3 +1550,7 @@ class WorkflowSession(models.Model):
         ).count()
 
         return int((completed_do_operations / total_tasks) * 100)
+=======
+
+
+>>>>>>> ff8d92df (>fix: moved the models and adapted the library to deal with the change.):birds_nest/pybirdai/models/bird_meta_data_model.py

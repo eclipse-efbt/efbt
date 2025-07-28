@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 from pybirdai.context.sdd_context_django import SDDContext
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 from django.apps import apps
 from django.db import connection
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField

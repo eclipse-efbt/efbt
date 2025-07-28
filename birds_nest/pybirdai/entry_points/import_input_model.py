@@ -37,7 +37,7 @@ class RunImportInputModelFromSQLDev(AppConfig):
         This method sets up the necessary contexts, creates reference domains
         and variables, and imports the website data into the SDD model.
         """
-        from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
+        from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
 
         from pybirdai.process_steps.input_model.import_input_model import (
             ImportInputModel
