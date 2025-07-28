@@ -15,6 +15,7 @@ uv.lock
 birds_nest/uv.lock
 create_joins_metadata.log
 birds_nest/pybirdai/bird_data_model.py
+birds_nest/pybirdai/models/bird_data_model.py
 birds_nest/pybirdai/admin.py
 **/.DS_Store
 .DS_Store
