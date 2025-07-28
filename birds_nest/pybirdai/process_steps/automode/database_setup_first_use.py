@@ -45,7 +45,7 @@ class RunDatabaseSetup(AppConfig):
     initial_migration_file = "pybirdai/migrations/0001_initial.py"
     db_file = "db.sqlite3"
     pybirdai_admin_path = "pybirdai/admin.py"
-    pybirdai_meta_data_model_path = "pybirdai/bird_meta_data_model.py"
+    pybirdai_meta_data_model_path = "pybirdai/models/bird_meta_data_model.py"
     results_admin_path = "results/database_configuration_files/admin.py"
     pybirdai_models_path = "pybirdai/models/bird_data_model.py" # Target file
     results_models_path = "results/database_configuration_files/models.py" # Source file
