@@ -1,6 +1,6 @@
 import json
 from typing import Dict, List
-from ...bird_meta_data_model import (
+from ...models.bird_meta_data_model import (
     MEMBER, MEMBER_HIERARCHY, DOMAIN
 )
 from .django_model_converter import DjangoModelConverter
@@ -11,8 +11,8 @@ BOX_HEIGHT = 120
 
 class HierarchyNodeDTO:
     """Data Transfer Object for hierarchy nodes"""
-    
-    def __init__(self, id_: str = "My Identifier", x: int = 0, y: int = 0, 
+
+    def __init__(self, id_: str = "My Identifier", x: int = 0, y: int = 0,
                  width: int = BOX_WIDTH, height: int = BOX_HEIGHT,
                  name: str = "My Name", text: str = "My Description"):
         self.id_ = id_
@@ -56,7 +56,7 @@ class HierarchyNodeDTO:
 
 class HierarchyArrowDTO:
     """Data Transfer Object for hierarchy arrows"""
-    
+
     def __init__(self, from_: str = "", to_: str = ""):
         self.from_ = from_  # child
         self.to_ = to_      # parent
@@ -84,7 +84,7 @@ class HierarchyArrowDTO:
 
 class DjangoMemberHierarchyIntegration:
     """Django model-based integration for member hierarchy visualization"""
-    
+
     def __init__(self):
         self.converter = DjangoModelConverter()
 
@@ -109,13 +109,13 @@ class DjangoMemberHierarchyIntegration:
         try:
             domain = DOMAIN.objects.get(domain_id=domain_id)
             hierarchies = MEMBER_HIERARCHY.objects.filter(domain_id=domain)
-            
+
             result = {}
             for hierarchy in hierarchies:
                 result[hierarchy.member_hierarchy_id] = self.get_hierarchy_by_id(
                     hierarchy.member_hierarchy_id
                 )
-            
+
             return result
         except DOMAIN.DoesNotExist:
             return {}
@@ -127,13 +127,13 @@ class DjangoMemberHierarchyIntegration:
         if not is_valid:
             print(f"Hierarchy validation failed: {errors}")
             return False
-        
+
         return self.converter.visualization_to_django_nodes(hierarchy_id, visualization_data)
 
     def get_available_hierarchies(self) -> List[Dict]:
         """Get a summary of all available hierarchies"""
         hierarchies = MEMBER_HIERARCHY.objects.select_related('domain_id').all()
-        
+
         return [
             {
                 'member_hierarchy_id': h.member_hierarchy_id,
@@ -150,7 +150,7 @@ class DjangoMemberHierarchyIntegration:
         try:
             domain = DOMAIN.objects.get(domain_id=domain_id)
             members = MEMBER.objects.filter(domain_id=domain)
-            
+
             return [
                 {
                     'member_id': m.member_id,
@@ -180,7 +180,7 @@ def get_hierarchy_json_response(hierarchy_id: str) -> dict:
 def save_hierarchy_json(hierarchy_id: str, visualization_data: dict) -> dict:
     """Save hierarchy from visualization data and return response dict"""
     integration = get_hierarchy_integration()
-    
+
     # Validate structure first
     is_valid, errors = integration.converter.validate_hierarchy_structure(visualization_data)
     if not is_valid:
@@ -189,9 +189,9 @@ def save_hierarchy_json(hierarchy_id: str, visualization_data: dict) -> dict:
             'message': 'Hierarchy validation failed',
             'errors': errors
         }
-    
+
     success = integration.save_hierarchy_from_visualization(hierarchy_id, visualization_data)
-    
+
     return {
         'success': success,
         'message': 'Hierarchy saved successfully' if success else 'Failed to save hierarchy'

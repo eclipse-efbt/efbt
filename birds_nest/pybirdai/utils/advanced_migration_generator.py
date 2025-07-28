@@ -916,7 +916,7 @@ if __name__ == '__main__':
         print("Example: python advanced_migration_generator.py models.py 0001_initial.py")
     generator = AdvancedMigrationGenerator()
 
-    models = generator.parse_files([f"pybirdai{os.sep}bird_data_model.py", f"pybirdai{os.sep}bird_meta_data_model.py"])
+    models = generator.parse_files([f"pybirdai{os.sep}models{os.sep}bird_data_model.py", f"pybirdai{os.sep}models{os.sep}bird_meta_data_model.py"])
 
     # Generate migration code
     migration_code = generator.generate_migration_code(models)

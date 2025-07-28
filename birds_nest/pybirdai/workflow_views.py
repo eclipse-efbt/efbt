@@ -30,7 +30,7 @@ import subprocess
 import requests
 import platform
 
-from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
+from .models.workflow_model import WorkflowTaskExecution, WorkflowSession
 from .views import create_response_with_loading
 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
@@ -312,7 +312,7 @@ def _load_task1_completion_from_marker():
         import json
         from django.conf import settings
         from django.utils import timezone
-        from .bird_meta_data_model import WorkflowTaskExecution
+        from .models.workflow_model import WorkflowTaskExecution
 
         base_dir = getattr(
             settings,
@@ -374,7 +374,7 @@ def _run_database_setup_async():
         import json
         import os
         from django.conf import settings
-        from .bird_meta_data_model import AutomodeConfiguration
+        from .models.workflow_model import AutomodeConfiguration
         from .workflow_services import AutomodeConfigurationService
 
         # Task 1: Resource Download
@@ -3385,7 +3385,7 @@ This pull request contains CSV files exported from the PyBIRD AI database using 
 
 This export was generated automatically by PyBIRD AI's fork workflow."""
             )
-            
+
             # Prepare response data for fork workflow
             response_data = {
                 'success': result['success'],
@@ -3397,14 +3397,14 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
                 'fork_url': result.get('fork_data', {}).get('html_url') if result.get('fork_data') else None,
                 'message': 'Database exported via fork workflow successfully' if result['success'] else 'Fork workflow failed'
             }
-            
+
             if not result['success']:
                 response_data['error'] = result.get('error', 'Unknown error occurred during fork workflow')
-                
+
         else:
             # Fallback to original workflow for backward compatibility
             result = github_service.export_and_push_to_github(repository_url=repository_url)
-            
+
             response_data = {
                 'success': result['success'],
                 'branch_created': result.get('branch_created', False),
@@ -3413,7 +3413,7 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
                 'pull_request_url': result.get('pr_url'),
                 'message': 'Database exported to GitHub successfully' if result['success'] else 'Direct push workflow failed'
             }
-            
+
             if not result['success']:
                 response_data['error'] = result.get('error', 'Unknown error occurred during GitHub export')
 

@@ -51,7 +51,7 @@ class DatabaseConnector:
         """Get all cube links that involve a specific cube (either as primary or foreign)"""
         logger.info("Getting cube links for cube_id: %s", cube_id)
         DjangoSetup.configure_django()
-        from pybirdai.bird_meta_data_model import CUBE_LINK
+        from pybirdai.models.bird_meta_data_model import CUBE_LINK
         links = CUBE_LINK.objects.filter(
             models.Q(primary_cube_id=cube_id) |
             models.Q(foreign_cube_id=cube_id)
@@ -64,7 +64,7 @@ class DatabaseConnector:
         """Get cube structure item links for a specific cube link"""
         logger.info("Getting all cube links")
         DjangoSetup.configure_django()
-        from pybirdai.bird_meta_data_model import CUBE_LINK
+        from pybirdai.models.bird_meta_data_model import CUBE_LINK
         links = CUBE_LINK.objects.all()
         logger.debug("Found %d total cube links", len(links))
         return links
@@ -74,7 +74,7 @@ class DatabaseConnector:
         """Get cube structure item links for a specific cube link"""
         logger.info("Getting cube structure item links for cube_link_id: %s", cube_link.cube_link_id)
         DjangoSetup.configure_django()
-        from pybirdai.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK
+        from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK
         links = CUBE_STRUCTURE_ITEM_LINK.objects.select_related(
             'primary_cube_variable_code',
             'foreign_cube_variable_code',
@@ -88,7 +88,7 @@ class DatabaseConnector:
         """Get quadruples of linked cube structure items"""
         logger.info("Building linked cube structure items for cube_link_id: %s", cube_link.cube_link_id)
         DjangoSetup.configure_django()
-        from pybirdai.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK,CUBE_STRUCTURE,CUBE_STRUCTURE_ITEM
+        from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK,CUBE_STRUCTURE,CUBE_STRUCTURE_ITEM
 
 
         linked_items = []
@@ -109,7 +109,7 @@ class DatabaseConnector:
     def create_visualization_json(linked_cube_structure_items):
 
         DjangoSetup.configure_django()
-        from pybirdai.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK,CUBE_STRUCTURE,CUBE_STRUCTURE_ITEM
+        from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK,CUBE_STRUCTURE,CUBE_STRUCTURE_ITEM
 
         """Create JSON structure for visualization"""
         logger.info("Creating visualization JSON from %d linked items", len(linked_cube_structure_items))

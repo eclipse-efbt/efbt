@@ -36,8 +36,8 @@ class DjangoSetup:
 
 def _export_database_to_csv_logic():
     import re
-    from pybirdai import bird_meta_data_model
-    from pybirdai import bird_data_model
+    from pybirdai.models import bird_meta_data_model
+    from pybirdai.models import bird_data_model
     from django.db import transaction, connection
     from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
     def clean_whitespace(text):

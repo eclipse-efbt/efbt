@@ -15,7 +15,7 @@ import csv
 import os
 from django.apps import apps
 from django.utils import timezone
-from pybirdai.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK
+from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK
 
 class ExporterJoins:
 

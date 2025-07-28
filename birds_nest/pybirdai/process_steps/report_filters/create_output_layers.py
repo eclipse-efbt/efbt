@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 
 import os
 import csv
