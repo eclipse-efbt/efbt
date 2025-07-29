@@ -13,6 +13,7 @@ from django.shortcuts import render
 from django.conf import settings
 import csv
 import os
+import glob
 
 # CSV views
 def mappings_csv_view(request, filename):
@@ -112,7 +113,37 @@ def create_transformation_rules_in_smcubes(request):
     return render(request, 'pybirdai/create_transformation_rules_in_smcubes.html')
 
 def report_templates(request):
-    return render(request, 'pybirdai/report_templates.html')
+    """
+    Display available FINREP report templates dynamically based on files in templates directory.
+    """
+    # Get the templates directory path
+    templates_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'templates', 'pybirdai')
+    
+    # Find all HTML files containing "FINREP" in the templates directory
+    finrep_templates = []
+    
+    if os.path.exists(templates_dir):
+        # Look for HTML files containing FINREP
+        pattern = os.path.join(templates_dir, '*FINREP*.html')
+        template_files = glob.glob(pattern)
+        
+        for template_path in template_files:
+            filename = os.path.basename(template_path)
+            # Extract display name (remove .html extension)
+            display_name = filename.replace('.html', '')
+            finrep_templates.append({
+                'filename': filename,
+                'display_name': display_name
+            })
+        
+        # Sort templates by display name for consistent ordering
+        finrep_templates.sort(key=lambda x: x['display_name'])
+    
+    context = {
+        'templates': finrep_templates
+    }
+    
+    return render(request, 'pybirdai/report_templates.html', context)
 
 def create_transformations_metadata(request):
     return render(request, 'pybirdai/create_transformations_metadata.html')
