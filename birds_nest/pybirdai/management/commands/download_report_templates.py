@@ -36,6 +36,12 @@ class Command(BaseCommand):
             help='Remote directory path containing the HTML files'
         )
         parser.add_argument(
+            '--fallback-remote-dir',
+            type=str,
+            default='birds_nest/pybirdai/templates/pybirdai',
+            help='Fallback remote directory if primary has no templates'
+        )
+        parser.add_argument(
             '--local-dir',
             type=str,
             default=None,
@@ -50,15 +56,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         repository_url = options['repository']
         remote_dir = options['remote_dir']
+        fallback_remote_dir = options['fallback_remote_dir']
         local_dir = options.get('local_dir')
         force = options.get('force', False)
 
         # Set default local directory if not provided
         if not local_dir:
-            local_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'templates', 'pybirdai')
+            local_dir = os.path.join('pybirdai', 'templates', 'pybirdai')
 
         self.stdout.write(self.style.SUCCESS(f'Downloading REF_FINREP report templates from {repository_url}'))
-        self.stdout.write(f'Remote directory: {remote_dir}')
+        self.stdout.write(f'Primary remote directory: {remote_dir}')
+        self.stdout.write(f'Fallback remote directory: {fallback_remote_dir}')
         self.stdout.write(f'Local directory: {local_dir}')
 
         try:
@@ -73,7 +81,7 @@ class Command(BaseCommand):
                     return
 
             # Download report templates
-            downloaded_count = fetcher.fetch_report_template_htmls(remote_dir, local_dir)
+            downloaded_count = fetcher.fetch_report_template_htmls(remote_dir, fallback_remote_dir, local_dir)
             
             if downloaded_count > 0:
                 self.stdout.write(self.style.SUCCESS(f'Successfully downloaded {downloaded_count} REF_FINREP report templates'))
