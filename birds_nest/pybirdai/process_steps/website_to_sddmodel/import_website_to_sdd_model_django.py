@@ -13,7 +13,7 @@
 import os
 import csv
 from django.conf import settings
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from pathlib import Path
 
