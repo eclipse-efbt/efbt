@@ -42,7 +42,8 @@ class RunImportInputModelFromSQLDev(AppConfig):
         from pybirdai.process_steps.input_model.import_input_model import (
             ImportInputModel
         )
-        from pybirdai.context.context_ancrdt import Context
+        from pybirdai.context.context import Context
+        # from pybirdai.context.context_ancrdt import Context
 
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()

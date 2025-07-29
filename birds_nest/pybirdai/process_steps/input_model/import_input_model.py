@@ -47,7 +47,10 @@ class ImportInputModel(object):
         ImportInputModel._fetch_derived_fields_from_model(context)
         ImportInputModel._create_maintenance_agency(sdd_context)
         ImportInputModel._create_primitive_domains(sdd_context)
-        ImportInputModel._create_subdomain_to_domain_map(sdd_context,alternative_folder=context.alternative_folder_for_subdomains)
+        if hasattr(context, 'alternative_folder_for_subdomains'):
+            ImportInputModel._create_subdomain_to_domain_map(sdd_context,alternative_folder=context.alternative_folder_for_subdomains)
+        else:
+            ImportInputModel._create_subdomain_to_domain_map(sdd_context)
         ImportInputModel._process_models(sdd_context, context)
          # Load extra variables from CSV file
         from django.conf import settings
@@ -120,7 +123,7 @@ class ImportInputModel(object):
         # Bulk create all domains
         DOMAIN.objects.bulk_create(domains, ignore_conflicts=True)
 
-    def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str="sqldev_subdomains"):
+    def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str=""):
         file_location = sdd_context.file_directory + os.sep + (alternative_folder or "technical_export") + os.sep + "subdomain.csv"
 
         header_skipped = False
@@ -405,14 +408,6 @@ class ImportInputModel(object):
 
             if members_to_create and sdd_context.save_sdd_to_db:
                 MEMBER.objects.bulk_create(members_to_create, ignore_conflicts=True)
-                
-                DOMAIN.objects.bulk_create(domains_to_create)
-
-            if subdomains_to_create and sdd_context.save_sdd_to_db:
-                SUBDOMAIN.objects.bulk_create(subdomains_to_create)
-
-            if members_to_create and sdd_context.save_sdd_to_db:
-                MEMBER.objects.bulk_create(members_to_create)
 
             if subdomain_enums_to_create and sdd_context.save_sdd_to_db:
                 SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create, ignore_conflicts=True)
