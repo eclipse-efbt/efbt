@@ -5,9 +5,28 @@ import os
 import glob
 import logging
 import json
+import subprocess
+import tempfile
+import itertools
 from datetime import datetime
+from pathlib import Path
+
+# Django setup for standalone testing
+class DjangoSetup:
+    @staticmethod
+    def setup():
+        import django
+        from django.conf import settings
+        if not settings.configured:
+            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'birds_nest.settings')
+            django.setup()
+
+# Ensure Django is set up
+DjangoSetup.setup()
+
 from django.db import transaction
 from django.db import models
+from django.db import connection
 from pybirdai import bird_meta_data_model
 from pybirdai.utils.clone_mode.clone_mode_column_index import ColumnIndexes
 import traceback
@@ -569,12 +588,433 @@ class CSVDataImporter:
     def _get_model_fields(self, model_class):
         """Get model fields as a dictionary"""
         return {field.name: field for field in model_class._meta.fields}
+    
+    def _calculate_optimal_batch_size(self, model_class, base_batch_size=250):
+        """Calculate optimal batch size based on model field count and database constraints"""
+        field_count = len(model_class._meta.fields)
+        
+        # SQLite has a limit of 999 variables per statement
+        # Leave some margin for safety
+        max_variables = 900 if connection.vendor == 'sqlite' else 10000
+        
+        # Calculate max records per batch
+        max_records_per_batch = max_variables // max(field_count, 1)
+        
+        # Use the smaller of base batch size or calculated maximum
+        optimal_batch_size = min(base_batch_size, max_records_per_batch)
+        
+        # Ensure minimum batch size of 10
+        optimal_batch_size = max(10, optimal_batch_size)
+        
+        logger.debug(f"Model {model_class.__name__}: {field_count} fields, "
+                    f"optimal batch size: {optimal_batch_size} (max variables: {max_variables})")
+        
+        return optimal_batch_size
 
-    def import_csv_file(self, csv_filename, csv_content):
-        """Import a single CSV file using column index mappings"""
+    def _bulk_sqlite_import_with_index(self, csv_content, model_class, table_name):
+        """
+        High-performance bulk import for large tables using SQLite3 directly.
+        Auto-generates sequential indices for models using Django's auto-generated primary keys.
+        """
+        logger.info(f"Starting bulk SQLite3 import for {table_name}")
+        
+        # Parse CSV content
+        headers, rows = self._parse_csv_content(csv_content)
+        
+        if not rows:
+            logger.warning(f"No data rows found in CSV for {table_name}")
+            return []
+        
+        # Check if model uses auto-generated primary key
+        pk_fields = [field for field in model_class._meta.fields if field.primary_key]
+        has_auto_pk = len(pk_fields) == 1 and pk_fields[0].name == 'id'
+        
+        if not has_auto_pk:
+            raise ValueError(f"Bulk import with auto-generated index only supports models with auto-generated 'id' primary key. {model_class.__name__} doesn't qualify.")
+        
+        # Get database file path
+        db_file = Path(connection.settings_dict['NAME']).absolute()
+        if not db_file.exists():
+            raise FileNotFoundError(f"Database file not found: {db_file}")
+        
+        # Create temporary CSV file with auto-generated indices
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_file:
+            csv_writer = csv.writer(temp_file)
+            
+            # Write headers with 'id' column first
+            # For foreign key fields, we need to use the Django field names (with _id suffix)
+            django_headers = ['id']
+            if table_name in self.column_mappings:
+                column_mapping = self.column_mappings[table_name]
+                for i, header in enumerate(headers):
+                    if i in column_mapping:
+                        field_name = column_mapping[i]
+                        # Check if this is a foreign key field
+                        model_fields = self._get_model_fields(model_class)
+                        if field_name in model_fields and isinstance(model_fields[field_name], models.ForeignKey):
+                            django_headers.append(f"{field_name}_id")
+                        else:
+                            django_headers.append(field_name)
+                    else:
+                        django_headers.append(header)
+            else:
+                django_headers.extend(headers)
+            
+            csv_writer.writerow(django_headers)
+            
+            # Write rows with auto-generated sequential IDs
+            id_generator = itertools.count(1)  # Start from 1
+            for row in rows:
+                # Generate sequential ID
+                row_id = next(id_generator)
+                modified_row = [row_id] + list(row)
+                csv_writer.writerow(modified_row)
+            
+            temp_csv_path = temp_file.name
+        
+        try:
+            # Clear existing data first
+            with connection.cursor() as cursor:
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 0;")
+                
+                cursor.execute(f"DELETE FROM {table_name};")
+                
+                if connection.vendor == 'sqlite':
+                    cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
+                    cursor.execute("PRAGMA foreign_keys = 1;")
+            
+            logger.info(f"Cleared existing data from {table_name}")
+            
+            # Prepare SQLite import commands
+            sqlite_commands = [
+                ".mode csv",
+                f".separator ','",
+                f".import --skip 1 '{temp_csv_path}' {table_name}"
+            ]
+            
+            sqlite_script = '\n'.join(sqlite_commands)
+            
+            # Execute SQLite import
+            logger.info(f"Executing bulk SQLite import for {table_name}")
+            result = subprocess.run(
+                ['sqlite3', str(db_file)],
+                input=sqlite_script,
+                text=True,
+                capture_output=True,
+                check=False
+            )
+            
+            if result.returncode != 0:
+                error_msg = f"SQLite bulk import failed: {result.stderr}"
+                logger.error(error_msg)
+                raise Exception(error_msg)
+            
+            # Verify import success
+            with connection.cursor() as cursor:
+                cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
+                imported_count = cursor.fetchone()[0]
+            
+            logger.info(f"Bulk SQLite import completed: {imported_count} records imported to {table_name}")
+            
+            # Note: FK resolution is no longer needed since we now store values in correct _id columns during bulk import
+            logger.info(f"Foreign keys stored directly in correct columns during bulk import")
+            
+            # Return mock objects list (limited for memory efficiency)  
+            imported_objects = list(model_class.objects.all()[:min(100, imported_count)])
+            return imported_objects
+            
+        except Exception as e:
+            logger.error(f"Bulk SQLite import failed for {table_name}: {e}")
+            raise
+        finally:
+            # Clean up temporary file
+            try:
+                os.unlink(temp_csv_path)
+            except Exception as cleanup_error:
+                logger.warning(f"Failed to clean up temporary file {temp_csv_path}: {cleanup_error}")
+
+    def _is_high_volume_table(self, table_name, row_count):
+        """
+        Determine if a table should use bulk SQLite import based on volume and table characteristics.
+        """
+        # Known high-volume tables that benefit from bulk import
+        high_volume_tables = {
+            'pybirdai_cell_position',
+            'pybirdai_table_cell', 
+            'pybirdai_axis_ordinate',
+            'pybirdai_ordinate_item'
+        }
+        
+        # Use bulk import for known high-volume tables or tables with >50,000 rows
+        return table_name in high_volume_tables or row_count > 50000
+
+    def _resolve_foreign_keys_post_bulk_import(self, model_class, table_name, csv_headers):
+        """
+        Resolve foreign key relationships after bulk SQLite import.
+        The bulk import stores string values, we need to convert them to proper FK references.
+        """
+        logger.info(f"Resolving foreign keys for {table_name}")
+        
+        model_fields = self._get_model_fields(model_class)
+        fk_fields = {name: field for name, field in model_fields.items() if isinstance(field, models.ForeignKey)}
+        
+        if not fk_fields:
+            logger.info(f"No foreign keys to resolve for {table_name}")
+            return
+        
+        # Get column mappings for this table
+        if table_name not in self.column_mappings:
+            logger.warning(f"No column mappings found for {table_name}, skipping FK resolution")
+            return
+            
+        column_mapping = self.column_mappings[table_name]
+        
+        # Build mapping of CSV column index to FK field name
+        csv_to_fk_mapping = {}
+        for col_idx, field_name in column_mapping.items():
+            if field_name in fk_fields and col_idx < len(csv_headers):
+                csv_to_fk_mapping[col_idx] = field_name
+        
+        if not csv_to_fk_mapping:
+            logger.info(f"No FK mappings found for {table_name}")
+            return
+        
+        logger.info(f"Resolving {len(csv_to_fk_mapping)} foreign key fields: {list(csv_to_fk_mapping.values())}")
+        
+        # Process FK resolution in batches to avoid memory issues
+        batch_size = 1000
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+            total_records = cursor.fetchone()[0]
+            
+            for offset in range(0, total_records, batch_size):
+                # Get batch of records with string FK values
+                cursor.execute(f"SELECT id, {', '.join(csv_to_fk_mapping.values())} FROM {table_name} LIMIT {batch_size} OFFSET {offset}")
+                records = cursor.fetchall()
+                
+                if not records:
+                    break
+                
+                # Process each record in the batch
+                updates = []
+                for record in records:
+                    record_id = record[0]
+                    fk_updates = {}
+                    
+                    # Process each FK field
+                    for i, (col_idx, field_name) in enumerate(csv_to_fk_mapping.items(), 1):
+                        fk_string_value = record[i]
+                        
+                        if fk_string_value and fk_string_value.strip():
+                            # Get related model and try to find the object
+                            fk_field = fk_fields[field_name]
+                            related_model = fk_field.related_model
+                            
+                            try:
+                                # Try to find the related object by primary key
+                                related_obj = related_model.objects.get(pk=fk_string_value.strip())
+                                fk_updates[f"{field_name}_id"] = related_obj.pk
+                            except related_model.DoesNotExist:
+                                logger.warning(f"Foreign key object not found: {related_model.__name__} with pk '{fk_string_value}'")
+                                # Create a minimal object if it doesn't exist
+                                try:
+                                    related_obj = related_model.objects.create(pk=fk_string_value.strip())
+                                    fk_updates[f"{field_name}_id"] = related_obj.pk
+                                    logger.info(f"Created missing {related_model.__name__} object with pk '{fk_string_value}'")
+                                except Exception as create_error:
+                                    logger.error(f"Failed to create missing FK object: {create_error}")
+                            except Exception as lookup_error:
+                                logger.error(f"Error looking up FK object: {lookup_error}")
+                    
+                    if fk_updates:
+                        updates.append((record_id, fk_updates))
+                
+                # Execute batch updates
+                for record_id, fk_updates in updates:
+                    if fk_updates:
+                        set_clause = ', '.join([f"{field} = ?" for field in fk_updates.keys()])
+                        values = list(fk_updates.values()) + [record_id]
+                        cursor.execute(f"UPDATE {table_name} SET {set_clause} WHERE id = ?", values)
+                
+                logger.debug(f"Processed FK resolution for batch {offset}-{offset + len(records)} of {total_records}")
+        
+        logger.info(f"Completed foreign key resolution for {table_name}")
+
+    def _fallback_csv_import(self, csv_file, table_name, delimiter):
+        """Fallback CSV import for databases that don't support native CSV import"""
+        logger.info(f"Using fallback CSV import for {table_name}")
+        
+        # Read CSV and import row by row (existing bulk_create approach)
+        with open(csv_file, 'r', encoding='utf-8') as f:
+            csv_reader = csv.reader(f, delimiter=delimiter)
+            headers = next(csv_reader)  # Skip header
+            
+            # Get model class
+            if table_name not in self.model_map:
+                raise ValueError(f"No model found for table: {table_name}")
+            
+            model_class = self.model_map[table_name]
+            model_fields = self._get_model_fields(model_class)
+            
+            # Prepare objects for bulk create
+            objects_to_create = []
+            # Calculate optimal batch size based on model field count
+            batch_size = self._calculate_optimal_batch_size(model_class)
+            
+            for row in csv_reader:
+                if not any(row):  # Skip empty rows
+                    continue
+                
+                obj_data = {}
+                # Map CSV columns to model fields based on position
+                for i, value in enumerate(row):
+                    if i < len(headers) and headers[i] in model_fields:
+                        field = model_fields[headers[i]]
+                        converted_value = self._convert_value(field, value, defer_foreign_keys=True)
+                        if converted_value is not None:
+                            obj_data[headers[i]] = converted_value
+                
+                if obj_data:
+                    obj = model_class(**obj_data)
+                    objects_to_create.append(obj)
+                    
+                    if len(objects_to_create) >= batch_size:
+                        model_class.objects.bulk_create(objects_to_create, batch_size=batch_size)
+                        objects_to_create = []
+                        logger.debug(f"Bulk created {batch_size} objects for {table_name}")
+            
+            # Create remaining objects
+            if objects_to_create:
+                model_class.objects.bulk_create(objects_to_create, batch_size=batch_size)
+                logger.debug(f"Bulk created final {len(objects_to_create)} objects for {table_name}")
+
+    def _create_instances_from_csv_copy(self, csv_file_path, model_class):
+        """
+        Fast CSV import using SQLite3 command line tool consistently for all databases.
+        This approach uses the sqlite3 command to dump CSV files into the database.
+        """
+        table_name = model_class._meta.db_table
+        csv_file = Path(csv_file_path).absolute()
+        delimiter = ","
+
+        # Check if CSV file exists
+        if not csv_file.exists():
+            raise FileNotFoundError(f"CSV file not found: {csv_file}")
+
+        # Validate CSV file has content and proper headers
+        try:
+            with open(csv_file, 'r', encoding='utf-8') as f:
+                first_line = f.readline().strip()
+                if not first_line:
+                    raise ValueError(f"CSV file {csv_file} is empty")
+                
+                # Check if file has reasonable number of columns (basic validation)
+                headers = first_line.split(delimiter)
+                if len(headers) < 1:
+                    raise ValueError(f"CSV file {csv_file} has no columns")
+                
+                logger.info(f"CSV validation passed: {len(headers)} columns found in {csv_file}")
+                
+        except Exception as e:
+            logger.error(f"CSV validation failed for {csv_file}: {e}")
+            raise
+
+        logger.info(f"Starting fast CSV import for {table_name} from {csv_file}")
+
+        try:
+            # Clear the table first with proper foreign key handling
+            with connection.cursor() as cursor:
+                # Disable foreign key constraints for SQLite
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 0;")
+                
+                # Delete all records from the table
+                cursor.execute(f"DELETE FROM {table_name};")
+                
+                # For SQLite, also reset the auto-increment counter if it exists
+                if connection.vendor == 'sqlite':
+                    cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
+                    cursor.execute("PRAGMA foreign_keys = 1;")
+                
+                # Verify table is empty
+                cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
+                count = cursor.fetchone()[0]
+                if count > 0:
+                    raise Exception(f"Failed to clear table {table_name}. Still has {count} records.")
+                
+                logger.info(f"Successfully cleared table {table_name}")
+
+            # Get database file path (assumes SQLite database)
+            db_file = Path(connection.settings_dict['NAME']).absolute()
+            
+            # Validate that we have a SQLite database file
+            if not db_file.exists():
+                raise FileNotFoundError(f"Database file not found: {db_file}")
+
+            # Create the SQLite commands
+            commands = [
+                ".mode csv",
+                f".separator '{delimiter}'",
+                f".import --skip 1 '{csv_file}' {table_name}"
+            ]
+
+            # Join commands with newlines
+            sqlite_script = '\n'.join(commands)
+
+            # Execute the SQLite import
+            logger.info(f"Executing SQLite import: sqlite3 {db_file}")
+            result = subprocess.run(
+                ['sqlite3', str(db_file)],
+                input=sqlite_script,
+                text=True,
+                capture_output=True,
+                check=False  # Don't raise exception immediately, handle errors manually
+            )
+            
+            # Check for errors
+            if result.returncode != 0:
+                error_msg = f"SQLite import failed with return code {result.returncode}"
+                if result.stderr:
+                    error_msg += f": {result.stderr}"
+                if result.stdout:
+                    error_msg += f" (stdout: {result.stdout})"
+                raise Exception(error_msg)
+            
+            if result.stderr and result.stderr.strip():
+                logger.warning(f"SQLite import warnings: {result.stderr}")
+                
+            # Verify import success by checking record count
+            with connection.cursor() as cursor:
+                cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
+                imported_count = cursor.fetchone()[0]
+                logger.info(f"SQLite import completed successfully for {table_name}: {imported_count} records imported")
+                
+                if imported_count == 0:
+                    logger.warning(f"No records were imported into {table_name}. Check CSV file format.")
+            
+            return result
+
+        except Exception as e:
+            logger.error(f"Error importing CSV for {table_name}: {str(e)}")
+            # Provide more detailed error information
+            if hasattr(e, 'stderr') and e.stderr:
+                logger.error(f"SQLite stderr: {e.stderr}")
+            if hasattr(e, 'stdout') and e.stdout:
+                logger.error(f"SQLite stdout: {e.stdout}")
+            raise
+
+    def import_csv_file(self, csv_filename, csv_content, use_fast_import=False):
+        """Import a single CSV file using column index mappings
+        
+        Args:
+            csv_filename: Name of the CSV file
+            csv_content: Content of the CSV file as string
+            use_fast_import: If True, use fast SQL-based import method
+        """
         if "bird" in csv_filename:
             return []
-        logger.info(f"Starting import of CSV file: {csv_filename}")
+        logger.info(f"Starting import of CSV file: {csv_filename} (fast_import={use_fast_import})")
 
         # Write detailed debug info to a separate file
         debug_file = f"debug_import_{csv_filename.replace('.csv', '')}.txt"
@@ -584,23 +1024,98 @@ class CSVDataImporter:
         logger.info(f"Mapped CSV file '{csv_filename}' to table '{table_name}'")
 
         if table_name not in self.model_map:
-            error_msg = f"No model found for table: {table_name}"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+            logger.warning(f"No model found for table: {table_name}. Skipping file {csv_filename}")
+            return []
 
         if table_name not in self.column_mappings:
-            error_msg = f"No column mapping found for table: {table_name}"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+            logger.warning(f"No column mapping found for table: {table_name}. Skipping file {csv_filename}")
+            return []
 
         model_class = self.model_map[table_name]
         column_mapping = self.column_mappings[table_name]
         model_fields = self._get_model_fields(model_class)
+        
+        # Calculate optimal batch size for this model
+        optimal_batch_size = self._calculate_optimal_batch_size(model_class)
 
         logger.info(f"Using model {model_class.__name__} for table {table_name}")
+        logger.info(f"Optimal batch size for {model_class.__name__}: {optimal_batch_size}")
         
-        # Parse CSV and show first few rows for debugging
+        # Parse CSV to get row count for high-volume detection
         headers, rows = self._parse_csv_content(csv_content)
+        row_count = len(rows)
+        
+        # Check if this should use bulk SQLite import for high-volume data
+        if self._is_high_volume_table(table_name, row_count):
+            logger.info(f"High-volume table detected ({row_count} rows). Using bulk SQLite3 import for {table_name}")
+            
+            # Check if model is compatible with bulk import (has auto-generated PK)
+            pk_fields = [field for field in model_fields.values() if field.primary_key]
+            has_auto_pk = len(pk_fields) == 1 and pk_fields[0].name == 'id'
+            
+            if has_auto_pk:
+                try:
+                    return self._bulk_sqlite_import_with_index(csv_content, model_class, table_name)
+                except Exception as bulk_error:
+                    logger.warning(f"Bulk SQLite import failed for {table_name}: {bulk_error}")
+                    logger.info(f"Falling back to Django ORM import for {table_name}")
+                    
+                    # Log the specific error type for debugging
+                    error_str = str(bulk_error).lower()
+                    if "no such table" in error_str:
+                        logger.error(f"Database table {table_name} does not exist. Please run migrations first.")
+                    elif "database is locked" in error_str:
+                        logger.error(f"Database is locked. Ensure no other processes are using the database.")
+                    elif "permission denied" in error_str:
+                        logger.error(f"Permission denied accessing database file.")
+                    
+                    # Continue with normal Django ORM import below
+            else:
+                logger.info(f"Table {table_name} not compatible with bulk import (no auto PK). Using Django ORM.")
+        
+        # Fast import path: Use SQL-based import for simple cases
+        if use_fast_import:
+            logger.info(f"Using fast SQL-based import for {csv_filename}")
+            
+            # Check if this table has complex foreign key relationships that require custom handling
+            # For now, we'll use fast import for tables without complex FK dependencies
+            has_complex_fks = any(
+                isinstance(field, models.ForeignKey) and 
+                field.related_model._meta.db_table in self.id_mappings
+                for field in model_fields.values()
+            )
+            
+            if not has_complex_fks:
+                try:
+                    # Write CSV content to a temporary file
+                    import tempfile
+                    with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_file:
+                        temp_file.write(csv_content)
+                        temp_csv_path = temp_file.name
+                    
+                    try:
+                        # Use fast SQL import
+                        self._create_instances_from_csv_copy(temp_csv_path, model_class)
+                        
+                        # Get count of imported records
+                        imported_count = model_class.objects.count()
+                        logger.info(f"Fast import completed: {imported_count} records imported for {table_name}")
+                        
+                        # Create mock objects list for return value compatibility
+                        imported_objects = list(model_class.objects.all()[:min(100, imported_count)])  # Limit to avoid memory issues
+                        return imported_objects
+                        
+                    finally:
+                        # Clean up temporary file
+                        os.unlink(temp_csv_path)
+                        
+                except Exception as e:
+                    logger.warning(f"Fast import failed for {csv_filename}: {e}. Falling back to standard import.")
+                    # Continue with standard import below
+            else:
+                logger.info(f"Complex foreign keys detected for {table_name}, using standard import method")
+        
+        # Show CSV information for debugging (already parsed above)
         logger.info(f"CSV headers: {headers}")
         if rows:
             logger.info(f"First CSV row: {rows[0]}")
@@ -681,15 +1196,32 @@ class CSVDataImporter:
                 logger.info(f"No adjustment: {col_idx} for field {field_name}")
         logger.info(f"Final adjusted column mapping: {adjusted_column_mapping}")
 
-        # Clear existing data in the table first
+        # Clear existing data in the table first with proper foreign key handling
         existing_count = model_class.objects.count()
         logger.info(f"Table {table_name} has {existing_count} existing records before import")
         if existing_count > 0:
-            model_class.objects.all().delete()
+            # Use raw SQL for more efficient clearing and proper foreign key handling
+            with connection.cursor() as cursor:
+                # Disable foreign key constraints for SQLite during clearing
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 0;")
+                
+                # Delete all records from the table
+                cursor.execute(f"DELETE FROM {table_name};")
+                
+                # For SQLite, also reset the auto-increment counter if it exists
+                if connection.vendor == 'sqlite':
+                    cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
+                    cursor.execute("PRAGMA foreign_keys = 1;")
+                
             logger.info(f"Cleared {existing_count} existing records from {table_name}")
+            
             # Verify clearing worked
             remaining_count = model_class.objects.count()
             logger.info(f"After clearing, table {table_name} has {remaining_count} records")
+            
+            if remaining_count > 0:
+                raise Exception(f"Failed to clear table {table_name}. Still has {remaining_count} records after clearing.")
 
         # First pass: collect all foreign key references
         foreign_key_refs = {}
@@ -751,7 +1283,7 @@ class CSVDataImporter:
                     # Create missing foreign key objects
                     if missing_ids:
                         missing_objects = [related_model(pk=pk_id) for pk_id in missing_ids]
-                        related_model.objects.bulk_create(missing_objects, batch_size=1000, ignore_conflicts=True)
+                        related_model.objects.bulk_create(missing_objects, batch_size=optimal_batch_size, ignore_conflicts=True)
                         logger.info(f"Created {len(missing_objects)} missing {related_model.__name__} objects")
                     
                     # Cache all foreign key objects
@@ -853,6 +1385,30 @@ class CSVDataImporter:
                     logger.warning(f"Skipping row {row_num} due to error: {e}")
                     continue
 
+        # Validate and deduplicate objects if model has explicit primary key
+        if has_explicit_pk and objects_to_create:
+            logger.info(f"Validating primary keys for {len(objects_to_create)} objects")
+            pk_field_name = next((f.name for f in model_class._meta.fields if f.primary_key), None)
+            
+            if pk_field_name:
+                seen_pks = set()
+                unique_objects = []
+                duplicate_count = 0
+                
+                for obj in objects_to_create:
+                    pk_value = getattr(obj, pk_field_name, None)
+                    if pk_value is not None:
+                        if pk_value not in seen_pks:
+                            seen_pks.add(pk_value)
+                            unique_objects.append(obj)
+                        else:
+                            duplicate_count += 1
+                
+                if duplicate_count > 0:
+                    logger.warning(f"Found {duplicate_count} duplicate primary keys in {table_name}. "
+                                 f"Keeping {len(unique_objects)} unique objects.")
+                    objects_to_create = unique_objects
+
         # Bulk create all objects
         imported_objects = []
         if objects_to_create:
@@ -867,15 +1423,24 @@ class CSVDataImporter:
                     logger.info(f"First object fields: {first_obj.__dict__}")
                 
                 # For models that need ID mappings, don't ignore conflicts so we get proper IDs
+                # For models with explicit primary keys, ignore conflicts to handle duplicates
                 if should_store_id_mappings:
                     imported_objects = model_class.objects.bulk_create(
                         objects_to_create, 
-                        batch_size=1000
+                        batch_size=optimal_batch_size
+                    )
+                elif has_explicit_pk:
+                    # Models with explicit primary keys may have duplicates, ignore conflicts
+                    logger.info(f"Using ignore_conflicts=True for model {model_class.__name__} with explicit primary key")
+                    imported_objects = model_class.objects.bulk_create(
+                        objects_to_create, 
+                        batch_size=optimal_batch_size,
+                        ignore_conflicts=True
                     )
                 else:
                     imported_objects = model_class.objects.bulk_create(
                         objects_to_create, 
-                        batch_size=1000,
+                        batch_size=optimal_batch_size,
                         ignore_conflicts=False  # Changed to False to see actual errors
                     )
                 logger.info(f"Successfully bulk created {len(imported_objects)} objects to {table_name}")
@@ -968,7 +1533,7 @@ class CSVDataImporter:
                             model_class.objects.bulk_update(
                                 objects_to_update, 
                                 fields=field_names,
-                                batch_size=1000
+                                batch_size=optimal_batch_size
                             )
                             logger.info(f"Updated {len(objects_to_update)} objects with resolved foreign keys")
                 
@@ -978,11 +1543,80 @@ class CSVDataImporter:
                     logger.info(f"Not storing ID mappings (should_store_id_mappings={should_store_id_mappings})")
                 
             except Exception as e:
-                logger.error(f"Bulk create failed for {table_name}: {e}")
-                # If bulk create fails, log the errors
-                for error in errors[:10]:  # Show first 10 errors
-                    logger.error(f"Row {error['row_num']}: {error['error']}")
-                raise
+                error_str = str(e).lower()
+                
+                # Check if it's a SQLite "too many variables" error
+                if "too many sql variables" in error_str or "too many variables" in error_str:
+                    logger.warning(f"SQLite variable limit exceeded for {table_name}. Attempting recovery with smaller batch size.")
+                    
+                    # Try with progressively smaller batch sizes
+                    recovery_batch_sizes = [optimal_batch_size // 2, optimal_batch_size // 4, 10]
+                    
+                    for recovery_batch_size in recovery_batch_sizes:
+                        if recovery_batch_size <= 0:
+                            continue
+                            
+                        logger.info(f"Retrying {table_name} with batch size {recovery_batch_size}")
+                        try:
+                            # Split objects into smaller batches
+                            imported_objects = []
+                            for i in range(0, len(objects_to_create), recovery_batch_size):
+                                batch = objects_to_create[i:i + recovery_batch_size]
+                                if should_store_id_mappings:
+                                    batch_result = model_class.objects.bulk_create(
+                                        batch, 
+                                        batch_size=recovery_batch_size
+                                    )
+                                elif has_explicit_pk:
+                                    batch_result = model_class.objects.bulk_create(
+                                        batch, 
+                                        batch_size=recovery_batch_size,
+                                        ignore_conflicts=True
+                                    )
+                                else:
+                                    batch_result = model_class.objects.bulk_create(
+                                        batch, 
+                                        batch_size=recovery_batch_size,
+                                        ignore_conflicts=False
+                                    )
+                                imported_objects.extend(batch_result)
+                                
+                            logger.info(f"Recovery successful for {table_name} with batch size {recovery_batch_size}")
+                            break
+                            
+                        except Exception as recovery_error:
+                            logger.warning(f"Recovery attempt with batch size {recovery_batch_size} failed: {recovery_error}")
+                            continue
+                    else:
+                        # All recovery attempts failed
+                        logger.error(f"All recovery attempts failed for {table_name}. Original error: {e}")
+                        raise
+                        
+                elif "unique constraint failed" in error_str or "duplicate key" in error_str:
+                    logger.error(f"UNIQUE constraint violation in {table_name}: {e}")
+                    logger.error(f"This suggests duplicate primary keys in the CSV data.")
+                    
+                    # For explicit primary key models, try again with ignore_conflicts=True
+                    if has_explicit_pk and not should_store_id_mappings:
+                        logger.info(f"Retrying {table_name} with ignore_conflicts=True to handle duplicates")
+                        try:
+                            imported_objects = model_class.objects.bulk_create(
+                                objects_to_create, 
+                                batch_size=optimal_batch_size,
+                                ignore_conflicts=True
+                            )
+                            logger.info(f"Recovery successful for {table_name} by ignoring duplicate conflicts")
+                        except Exception as recovery_error:
+                            logger.error(f"Recovery attempt failed: {recovery_error}")
+                            raise
+                    else:
+                        raise
+                else:
+                    logger.error(f"Bulk create failed for {table_name}: {e}")
+                    # If bulk create fails, log the errors
+                    for error in errors[:10]:  # Show first 10 errors
+                        logger.error(f"Row {error['row_num']}: {error['error']}")
+                    raise
 
         # Log any errors encountered
         if errors:
@@ -992,11 +1626,11 @@ class CSVDataImporter:
 
         return imported_objects
 
-    def import_from_csv_string(self, csv_string, filename="data.csv"):
+    def import_from_csv_string(self, csv_string, filename="data.csv", use_fast_import=False):
         """Import CSV data from a string"""
-        logger.info(f"Importing CSV data from string (filename: {filename})")
+        logger.info(f"Importing CSV data from string (filename: {filename}, fast_import={use_fast_import})")
         try:
-            imported_objects = self.import_csv_file(filename, csv_string)
+            imported_objects = self.import_csv_file(filename, csv_string, use_fast_import=use_fast_import)
             result = {
                 filename: {
                     'success': True,
@@ -1160,9 +1794,9 @@ class CSVDataImporter:
         self._save_results(results, "csv_strings_import")
         return results
 
-    def import_from_csv_strings_ordered(self, csv_strings_list):
+    def import_from_csv_strings_ordered(self, csv_strings_list, use_fast_import=False):
         """Import CSV data from a list of CSV strings in dependency order"""
-        logger.info(f"Starting ordered import from {len(csv_strings_list)} CSV strings")
+        logger.info(f"Starting ordered import from {len(csv_strings_list)} CSV strings (fast_import={use_fast_import})")
         
         # Debug: Show all available CSV files
         logger.info(f"Available CSV files: {list(csv_strings_list.keys())}")
@@ -1192,7 +1826,7 @@ class CSVDataImporter:
                 logger.info(f"Importing {csv_filename} for table {table_name}")
                 try:
                     csv_content = csv_strings_list[csv_filename]
-                    imported_objects = self.import_csv_file(csv_filename, csv_content)
+                    imported_objects = self.import_csv_file(csv_filename, csv_content, use_fast_import=use_fast_import)
                     results[csv_filename] = {
                         'success': True,
                         'imported_count': len(imported_objects),
@@ -1213,7 +1847,7 @@ class CSVDataImporter:
             if filename not in results:
                 logger.info(f"Importing remaining file: {filename}")
                 try:
-                    imported_objects = self.import_csv_file(filename, csv_content)
+                    imported_objects = self.import_csv_file(filename, csv_content, use_fast_import=use_fast_import)
                     results[filename] = {
                         'success': True,
                         'imported_count': len(imported_objects),
@@ -1233,12 +1867,13 @@ class CSVDataImporter:
         return results
 
 
-def import_bird_data_from_csv_export(path_or_content):
+def import_bird_data_from_csv_export(path_or_content, use_fast_import=False):
     """
     Convenience function to import bird data from a CSV export.
 
     Args:
         path_or_content: Either a file path (string) to a zip file, folder, or CSV file, or file content (bytes) for zip
+        use_fast_import: If True, use fast SQL-based import method
 
     Returns:
         Dictionary with import results for each CSV file
@@ -1259,9 +1894,9 @@ def import_bird_data_from_csv_export(path_or_content):
     logger.info("Completed bird data import from CSV export")
     return result
 
-    def import_from_path_ordered(self, path):
+    def import_from_path_ordered(self, path, use_fast_import=False):
         """Import CSV files from a path in dependency order"""
-        logger.info(f"Starting ordered import from path: {path}")
+        logger.info(f"Starting ordered import from path: {path} (fast_import={use_fast_import})")
 
         # First, collect all available CSV files
         csv_files_data = {}
@@ -1300,7 +1935,7 @@ def import_bird_data_from_csv_export(path_or_content):
             if csv_filename and csv_filename in csv_files_data:
                 logger.info(f"Importing {csv_filename} for table {table_name}")
                 try:
-                    imported_objects = self.import_csv_file(csv_filename, csv_files_data[csv_filename])
+                    imported_objects = self.import_csv_file(csv_filename, csv_files_data[csv_filename], use_fast_import=use_fast_import)
                     results[csv_filename] = {
                         'success': True,
                         'imported_count': len(imported_objects),
@@ -1321,7 +1956,7 @@ def import_bird_data_from_csv_export(path_or_content):
             if filename not in results:
                 logger.info(f"Importing remaining file: {filename}")
                 try:
-                    imported_objects = self.import_csv_file(filename, csv_content)
+                    imported_objects = self.import_csv_file(filename, csv_content, use_fast_import=use_fast_import)
                     results[filename] = {
                         'success': True,
                         'imported_count': len(imported_objects),
@@ -1338,13 +1973,14 @@ def import_bird_data_from_csv_export(path_or_content):
         logger.info(f"Completed ordered import. Processed {len(results)} files")
         return results
 
-def import_bird_data_from_csv_export_ordered(path_or_content):
+def import_bird_data_from_csv_export_ordered(path_or_content, use_fast_import=False):
     """
     Convenience function to import bird data from a CSV export in dependency order.
     This ensures foreign key relationships are respected during import.
 
     Args:
         path_or_content: Either a file path (string) to a zip file, folder, or CSV file, or file content (bytes) for zip
+        use_fast_import: If True, use fast SQL-based import method
 
     Returns:
         Dictionary with import results for each CSV file
@@ -1361,14 +1997,14 @@ def import_bird_data_from_csv_export_ordered(path_or_content):
             temp_file_path = temp_file.name
 
         try:
-            result = importer.import_from_path_ordered(temp_file_path)
+            result = importer.import_from_path_ordered(temp_file_path, use_fast_import=use_fast_import)
             importer._save_results(result, "bird_data_import_ordered_bytes")
         finally:
             # Clean up temporary file
             os.unlink(temp_file_path)
     else:
         logger.info(f"Processing as file path in ordered mode: {path_or_content}")
-        result = importer.import_from_path_ordered(path_or_content)
+        result = importer.import_from_path_ordered(path_or_content, use_fast_import=use_fast_import)
         importer._save_results(result, "bird_data_import_ordered_path")
 
     logger.info("Completed ordered bird data import from CSV export")

@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 from pybirdai.utils.utils import Utils
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 import os
 import csv
 from uuid import uuid4
@@ -203,15 +203,16 @@ class CreateReportFilters:
 
         for var_id, member_id in tuples:
             if member_id is None:
-                try:
-                    dpm_var_id = var_id.variable_id.replace('EBA_', 'DPM_')
-                    variable_mapping_items = var_mapping_dict[dpm_var_id]
-                    # Use next() with generator expression for early exit
-                    return next((item.variable_id for item in variable_mapping_items 
+                if var_id is not None:
+                    try:
+                        dpm_var_id = var_id.variable_id.replace('EBA_', 'DPM_')
+                        variable_mapping_items = var_mapping_dict[dpm_var_id]
+                        # Use next() with generator expression for early exit
+                        return next((item.variable_id for item in variable_mapping_items 
 
-                               if ((item.is_source == 'false') or (item.is_source == 'False'))), None)
-                except KeyError:
-                    print(f"Could not find variable mapping for {var_id.variable_id}")
+                                if ((item.is_source == 'false') or (item.is_source == 'False'))), None)
+                    except KeyError:
+                        print(f"Could not find variable mapping for {var_id.variable_id}")
         return None
 
     def create_filters( self, report_cell, tuples, relevant_mappings, report_rol_cube, sdd_context, context):

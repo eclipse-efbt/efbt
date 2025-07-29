@@ -18,7 +18,7 @@ from django.db import transaction, connection
 from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
-from .bird_meta_data_model import (
+from .models.bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
@@ -26,9 +26,11 @@ from .bird_meta_data_model import (
     SUBDOMAIN, SUBDOMAIN_ENUMERATION,FRAMEWORK
 )
 import json
+
 import os
 import csv
-from . import bird_meta_data_model
+from .models import bird_meta_data_model
+
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
 
 from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
@@ -302,6 +304,34 @@ def import_report_templates(request):
         "Import Report templates from website completed successfully.",
         '/pybirdai/workflow/task/3/do/',
         "Do"
+    )
+
+def prepare_dpm_data(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import(import_=False)
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Preparing DPM Data (this may take several minutes, don't press the back button on this web page)",
+        "Import DPM data prepared successfully. Report templates have also been imported.",
+        '/pybirdai/import_dpm_data',
+        "Populate BIRD Metadata Database"
+    )
+
+def import_dpm_data(request):
+    if request.GET.get('execute') == 'true':
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import(import_=True)
+        return JsonResponse({'status': 'success'})
+
+    return create_response_with_loading(
+        request,
+        "Importing DPM Data (this may take several minutes, don't press the back button on this web page)",
+        "Import DPM data completed successfully. Report templates have also been imported.",
+        '/pybirdai/populate-bird-metadata-database',
+        "Populate BIRD Metadata Database"
     )
 
 def run_create_filters(request):
@@ -3561,6 +3591,7 @@ def run_fetch_curated_resources(request):
 
             fetcher.fetch_derivation_model_file(
                 "birds_nest/pybirdai",
+                # "birds_nest/models/pybirdai",
                 "bird_data_model.py",
                 f"resources{os.sep}derivation_implementation",
                 "bird_data_model_with_derivation.py"
@@ -3572,6 +3603,9 @@ def run_fetch_curated_resources(request):
 
             logger.info("STEP 3: Fetching test fixtures and templates")
             fetcher.fetch_test_fixtures()
+
+            logger.info("STEP 4: Fetching REF_FINREP report template HTML files")
+            fetcher.fetch_report_template_htmls()
 
             logger.info("File fetching process completed successfully!")
             print("File fetching process completed!")
@@ -3871,7 +3905,7 @@ def automode_configure(request):
         else:
             # Fall back to database configuration if temp file is empty
             try:
-                from .bird_meta_data_model import AutomodeConfiguration
+                from .models.workflow_model import AutomodeConfiguration
                 config = AutomodeConfiguration.get_active_configuration()
                 config_data = {
                     'data_model_type': config.data_model_type if config else 'ELDM',
@@ -3940,7 +3974,7 @@ def automode_execute(request):
                           request.POST.get('github_token', '')).strip() or None
 
             # Create a temporary configuration object from temp file data
-            from .bird_meta_data_model import AutomodeConfiguration
+            from .models.workflow_model import AutomodeConfiguration
             temp_config = AutomodeConfiguration(
                 data_model_type=temp_config_data['data_model_type'],
                 technical_export_source=temp_config_data['technical_export_source'],
@@ -4257,7 +4291,7 @@ def automode_debug_config(request):
 
 def automode_status(request):
     """Get current automode configuration status and file information."""
-    from .bird_meta_data_model import AutomodeConfiguration
+    from .models.workflow_model import AutomodeConfiguration
     import os
     import logging
 

@@ -143,8 +143,8 @@ class PreconfiguredDatabaseFetcher(ArtifactFetcher):
             logger.error(f"Error extracting zip: {e}")
             return False
 
-    def fetch(self, bird_data_model_path: str = f"pybirdai{os.sep}bird_data_model.py",
-              bird_meta_data_model_path: str = f"pybirdai{os.sep}bird_meta_data_model.py") -> Optional[bytes]:
+    def fetch(self, bird_data_model_path: str = f"pybirdai{os.sep}models{os.sep}bird_data_model.py",
+              bird_meta_data_model_path: str = f"pybirdai{os.sep}models{os.sep}bird_meta_data_model.py") -> Optional[bytes]:
         """
         Fetch the db.sqlite3 artifact if the specified model files match those in the workflow run.
         """
