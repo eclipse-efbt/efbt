@@ -16,16 +16,19 @@ from django.conf import settings
 from pybirdai.models.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from pathlib import Path
+from django.db import connection, transaction
+import subprocess
 
 
 class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for importing SDD csv files into an instance of the analysis model
     '''
-    def import_report_templates_from_sdd(self, sdd_context):
+    def import_report_templates_from_sdd(self, sdd_context, dpm:bool=False):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
+
         ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportWebsiteToSDDModel.create_frameworks(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,False)
@@ -33,12 +36,17 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_all_variables(self, sdd_context,False)
 
         ImportWebsiteToSDDModel.create_report_tables(self, sdd_context)
-        ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
         ImportWebsiteToSDDModel.create_axis(self, sdd_context)
         ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
-        ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
-        ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
+        if dpm:
+            ImportWebsiteToSDDModel.create_table_cells_csv_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_ordinate_items_csv_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_cell_positions_csv_copy(self, sdd_context)
+        else:
+            ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
+            ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
+            ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
 
 
@@ -597,6 +605,135 @@ class ImportWebsiteToSDDModel(object):
         if context.save_sdd_to_db and ordinates_to_create:
             AXIS_ORDINATE.objects.bulk_create(ordinates_to_create, batch_size=1000,ignore_conflicts=True)
 
+    def _create_instances_from_csv_copy(self, context, cls):
+        sdd_table_name = cls.__name__.lower()
+        table_name = f"pybirdai_{sdd_table_name}"
+
+        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + f"{sdd_table_name}.csv"
+        csv_file = Path(csv_file).absolute()
+        delimiter = ","
+
+        # Check if CSV file exists
+        if not csv_file.exists():
+            raise FileNotFoundError(f"CSV file not found: {csv_file}")
+
+        try:
+
+            with connection.cursor() as cursor:
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 0;")
+                    cursor.execute(f"DELETE FROM {table_name};")
+                    cursor.execute("PRAGMA foreign_keys = 1;")
+                elif connection.vendor == 'postgresql':
+                    cursor.execute(f"TRUNCATE TABLE {table_name} CASCADE;")
+                elif connection.vendor in ['microsoft', 'mssql']:
+                    cursor.execute(f"TRUNCATE TABLE {table_name};")
+                else:
+                    cursor.execute(f"DELETE FROM {table_name};")
+
+            # Import CSV data based on database vendor
+            if connection.vendor == 'sqlite':
+                # SQLite needs to be handled outside transaction for subprocess
+                # Get database file path
+                db_file = Path(connection.settings_dict['NAME']).absolute()
+
+                # Create the SQLite commands
+                commands = [
+                    ".mode csv",
+                    f".separator '{delimiter}'",
+                    f".import --skip 1 '{csv_file}' {table_name}"
+                ]
+
+                # Join commands with newlines
+                sqlite_script = '\n'.join(commands)
+
+                result = subprocess.run(
+                        ['sqlite3', str(db_file)],
+                        input=sqlite_script,
+                        text=True,
+                        capture_output=True,
+                        check=True
+                    )
+                if result.stderr:
+                    raise Exception(f"SQLite import error: {result.stderr}")
+                return result
+
+            elif connection.vendor == 'postgresql':
+                # PostgreSQL COPY command
+                with connection.cursor() as cursor:
+                    with open(csv_file, 'r', encoding='utf-8') as f:
+                        # Skip header line
+                        next(f)
+                        # Use COPY FROM STDIN
+                        cursor.copy_expert(
+                            f"COPY {table_name} FROM STDIN WITH (FORMAT CSV, DELIMITER '{delimiter}')",
+                            f
+                        )
+                return None
+
+            elif connection.vendor in ['microsoft', 'mssql']:
+                # MSSQL bulk insert - requires special handling
+                # Note: BULK INSERT requires the file to be accessible by SQL Server
+                with connection.cursor() as cursor:
+                    # Try using BULK INSERT if file is accessible
+                    try:
+                        cursor.execute(f"""
+                            BULK INSERT {table_name}
+                            FROM '{csv_file}'
+                            WITH (
+                                FORMAT = 'CSV',
+                                FIRSTROW = 2,
+                                FIELDTERMINATOR = '{delimiter}',
+                                ROWTERMINATOR = '\\n'
+                            )
+                        """)
+                    except Exception as e:
+                        # Fallback to row-by-row insert if BULK INSERT fails
+                        print(f"BULK INSERT failed: {e}. Falling back to row-by-row insert.")
+                        self._fallback_csv_import(csv_file, table_name, delimiter)
+                return None
+
+            else:
+                # Fallback for other databases
+                print(f"Database vendor '{connection.vendor}' not explicitly supported. Using fallback method.")
+                self._fallback_csv_import(csv_file, table_name, delimiter)
+                return None
+
+        except Exception as e:
+            print(f"Error importing CSV for {table_name}: {str(e)}")
+            raise
+
+    def _fallback_csv_import(self, context, cls):
+        '''
+        Fallback method for CSV import using raw SQL inserts
+        This method is database-agnostic and works with any database backend
+        '''
+        import csv
+
+        fallback_import_func = {
+            TABLE_CELL: self.create_table_cells,
+            ORDINATE_ITEM: self.create_ordinate_items,
+            CELL_POSITION: self.create_cell_positions
+            }[cls](context)
+
+        try:
+            self.fallback_import_func(context)
+        except Exception as e:
+            print(f"Error in fallback CSV import for {table_name}: {str(e)}")
+            raise
+
+    def create_table_cells_csv_copy(self, context):
+        # Ensure paths are absolute
+        self._create_instances_from_csv_copy(context, TABLE_CELL)
+
+    def create_ordinate_items_csv_copy(self, context):
+        # Ensure paths are absolute
+        self._create_instances_from_csv_copy(context, ORDINATE_ITEM)
+
+    def create_cell_positions_csv_copy(self, context):
+        # Ensure paths are absolute
+        self._create_instances_from_csv_copy(context, CELL_POSITION)
+
     def create_ordinate_items(self, context):
         '''
         Import all ordinate items from the rendering package CSV file
@@ -640,9 +777,9 @@ class ImportWebsiteToSDDModel(object):
                         context.axis_ordinate_to_ordinate_items_map[ordinate_item.axis_ordinate_id.axis_ordinate_id] = [ordinate_item]
 
         if context.save_sdd_to_db and ordinate_items_to_create:
-            ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=1000,ignore_conflicts=True)
+            ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=50000,ignore_conflicts=True)
 
-    def create_table_cells(self, context):
+    def create_table_cells(self, context, dpm:bool=False):
         '''
         Import all table cells from the rendering package CSV file
         '''
@@ -660,7 +797,7 @@ class ImportWebsiteToSDDModel(object):
                     table_cell_combination_id = row[ColumnIndexes().table_cell_combination_id]
                     table_cell_table_id = row[ColumnIndexes().table_cell_table_id]
 
-                    if table_cell_cell_id.endswith("_REF"):
+                    if table_cell_cell_id.endswith("_REF") or dpm:
                         table_cell = TABLE_CELL(
                             name=ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id))
                         table_cell.cell_id = ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id)
@@ -677,7 +814,7 @@ class ImportWebsiteToSDDModel(object):
         if context.save_sdd_to_db and table_cells_to_create:
             TABLE_CELL.objects.bulk_create(table_cells_to_create, batch_size=1000,ignore_conflicts=True)
 
-    def create_cell_positions(self, context):
+    def create_cell_positions(self, context, dpm:bool = False):
         '''
         Import all cell positions from the rendering package CSV file
         '''
@@ -694,7 +831,7 @@ class ImportWebsiteToSDDModel(object):
                     cell_positions_cell_id = row[ColumnIndexes().cell_positions_cell_id]
                     cell_positions_axis_ordinate_id = row[ColumnIndexes().cell_positions_axis_ordinate_id]
 
-                    if cell_positions_cell_id.endswith("_REF"):
+                    if cell_positions_cell_id.endswith("_REF") or dpm:
                         cell_position = CELL_POSITION()
                         cell_position.axis_ordinate_id = ImportWebsiteToSDDModel.find_axis_ordinate_with_id(
                             self, context, ImportWebsiteToSDDModel.replace_dots(self, cell_positions_axis_ordinate_id))

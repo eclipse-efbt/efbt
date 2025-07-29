@@ -117,12 +117,12 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         Data Definition Package
         """
 
-        context_data, context_map = new_maps.map_context_definition(dimension_map=dimension_map,member_map=member_map) # to combination_items (need to improve EBA_ATY and subdomain generation)
-        
-        (combination, combination_item), dpv_map = new_maps.map_datapoint_version(context_map=context_map,context_data=context_data,dimension_map=dimension_map,member_map=member_map) # to combinations and items
-        combination.to_csv(f"{self.output_directory}combination.csv",index=False)
-        combination_item.to_csv(f"{self.output_directory}combination_item.csv",index=False)
-        logging.info("Mapped Combination(and Items) Entities")
+        # context_data, context_map = new_maps.map_context_definition(dimension_map=dimension_map,member_map=member_map) # to combination_items (need to improve EBA_ATY and subdomain generation)
+
+        # (combination, combination_item), dpv_map = new_maps.map_datapoint_version(context_map=context_map,context_data=context_data,dimension_map=dimension_map,member_map=member_map) # to combinations and items
+        # combination.to_csv(f"{self.output_directory}combination.csv",index=False)
+        # combination_item.to_csv(f"{self.output_directory}combination_item.csv",index=False)
+        # logging.info("Mapped Combination(and Items) Entities")
 
         """
         Rendering Package
@@ -136,13 +136,13 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         _, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
         _.to_csv(f"{self.output_directory}axis_ordinate.csv",index=False)
         logging.info("Mapped AxisOrdinates Entities")
-        _, cell_map = new_maps.map_table_cell(table_map=table_map,dp_map=dpv_map)
+        _, cell_map = new_maps.map_table_cell(table_map=table_map)
         _.to_csv(f"{self.output_directory}table_cell.csv",index=False)
         logging.info("Mapped TableCell Entities")
-        _, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map)
+        _, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map,start_index_after_last=False)
         _.to_csv(f"{self.output_directory}cell_position.csv",index=False)
         logging.info("Mapped CellPositions Entities")
-        _, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map)
+        _, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map,start_index_after_last=False)
         _.to_csv(f"{self.output_directory}ordinate_item.csv",index=False)
         logging.info("Mapped OrdinateItems Entities")
 

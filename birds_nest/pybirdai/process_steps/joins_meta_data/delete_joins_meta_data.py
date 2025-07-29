@@ -13,6 +13,7 @@
 from pybirdai.context.sdd_context_django import SDDContext
 from pybirdai.models.bird_meta_data_model import *
 from django.apps import apps
+from django.db import connection
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 import os
 import csv
@@ -39,13 +40,13 @@ class TransformationMetaDataDestroyer:
             cursor.execute("DELETE FROM pybirdai_cube_to_combination")
             cursor.execute("DELETE FROM pybirdai_combination_item")
             cursor.execute("DELETE FROM pybirdai_combination")
-            cursor.execute("DELETE FROM pybirdai_cube where cube_structure_id_id like '%structure'") 
+            cursor.execute("DELETE FROM pybirdai_cube where cube_structure_id_id like '%structure'")
             cursor.execute("DELETE FROM pybirdai_cube_structure_item where cube_structure_id_id like '%structure'")
             cursor.execute("DELETE FROM pybirdai_cube_structure where cube_structure_id like '%structure'")
             print("DELETE FROM pybirdai_cube_structure where cube_structure_id like '%structure'")
 
         # check if we should really delete all of these or just some.
-        
+
         for key,value in sdd_context.bird_cube_dictionary.items():
             if key.endswith('_cube_structure'):
                 del sdd_context.bird_cube_dictionary[key]
@@ -70,8 +71,14 @@ class TransformationMetaDataDestroyer:
             sdd_context (Any): The SDD context object.
             framework (str): The framework being used (e.g., "FINREP_REF").
         """
-        CUBE_LINK.objects.all().delete()
-        CUBE_STRUCTURE_ITEM_LINK.objects.all().delete()
+
+        model_classes = [CUBE_LINK,
+        CUBE_STRUCTURE_ITEM_LINK]
+
+        for model_cls in model_classes:
+            self.delete_items_for_sqlite(model_cls)
+
+
 
         sdd_context.cube_link_dictionary = {}
         sdd_context.cube_link_to_foreign_cube_map = {}
@@ -79,7 +86,7 @@ class TransformationMetaDataDestroyer:
         sdd_context.cube_link_to_join_for_report_id_map = {}
         sdd_context.cube_structure_item_links_dictionary = {}
         sdd_context.cube_structure_item_link_to_cube_link_map = {}
-        
+
 
     def delete_semantic_integration_meta_data(self, context: Any, sdd_context: Any, framework: str) -> None:
         """
@@ -90,14 +97,18 @@ class TransformationMetaDataDestroyer:
             sdd_context (Any): The SDD context object.
             framework (str): The framework being used (e.g., "FINREP_REF").
         """
-       
 
-        MAPPING_TO_CUBE.objects.all().delete()
-        MAPPING_DEFINITION.objects.all().delete()
-        VARIABLE_MAPPING_ITEM.objects.all().delete()
-        VARIABLE_MAPPING.objects.all().delete()
-        MEMBER_MAPPING_ITEM.objects.all().delete()
-        MEMBER_MAPPING.objects.all().delete()
+        model_classes = [MAPPING_TO_CUBE,
+        MAPPING_DEFINITION,
+        VARIABLE_MAPPING_ITEM,
+        VARIABLE_MAPPING,
+        MEMBER_MAPPING_ITEM,
+        MEMBER_MAPPING]
+
+        for model_cls in model_classes:
+            self.delete_items_for_sqlite(model_cls)
+
+
 
         sdd_context.mapping_definition_dictionary = {}
         sdd_context.variable_mapping_dictionary = {}
@@ -108,41 +119,51 @@ class TransformationMetaDataDestroyer:
 
         TransformationMetaDataDestroyer.delete_joins_meta_data(self,context,sdd_context,framework)
 
+    def delete_items_for_sqlite(self,model_clss):
+        with connection.cursor() as cursor:
+            cursor.execute("PRAGMA foreign_keys = 0;")
+            for model_cls in model_clss:
+                cursor.execute(f"DELETE FROM pybirdai_{model_cls.__name__.lower()};")
+            cursor.execute("PRAGMA foreign_keys = 1;")
+
     def delete_bird_metadata_database(self, context: Any, sdd_context: Any, framework: str) -> None:
         """
         Delete the Bird Metadata Database.
         """
-        CUBE_LINK.objects.all().delete()
-        CUBE_STRUCTURE_ITEM_LINK.objects.all().delete()
-        CUBE_STRUCTURE_ITEM.objects.all().delete()
-        CUBE_STRUCTURE.objects.all().delete()
-        CUBE.objects.all().delete()
-        DOMAIN.objects.all().delete()
-        VARIABLE.objects.all().delete()
-        MEMBER.objects.all().delete()
-        MEMBER_MAPPING.objects.all().delete()
-        MEMBER_MAPPING_ITEM.objects.all().delete()
-        VARIABLE_MAPPING.objects.all().delete()
-        VARIABLE_MAPPING_ITEM.objects.all().delete()
-        TABLE_CELL.objects.all().delete()
-        CELL_POSITION.objects.all().delete()
-        AXIS_ORDINATE.objects.all().delete()
-        ORDINATE_ITEM.objects.all().delete()
-        MAPPING_DEFINITION.objects.all().delete()
-        MAPPING_TO_CUBE.objects.all().delete()
-        TABLE.objects.all().delete()
-        CELL_POSITION.objects.all().delete()
-        AXIS.objects.all().delete()
-        SUBDOMAIN.objects.all().delete()
-        SUBDOMAIN_ENUMERATION.objects.all().delete()
-        FACET_COLLECTION.objects.all().delete()
-        MAINTENANCE_AGENCY.objects.all().delete()
-        FRAMEWORK.objects.all().delete()
-        MEMBER_HIERARCHY.objects.all().delete()
-        MEMBER_HIERARCHY_NODE.objects.all().delete()
-        COMBINATION.objects.all().delete()
-        COMBINATION_ITEM.objects.all().delete()
-        CUBE_TO_COMBINATION.objects.all().delete()
+        model_classes = [
+            CUBE_LINK,
+            CUBE_STRUCTURE_ITEM_LINK,
+            CUBE_STRUCTURE_ITEM,
+            CUBE_STRUCTURE,
+            CUBE,
+            DOMAIN,
+            VARIABLE,
+            MEMBER,
+            MEMBER_MAPPING,
+            MEMBER_MAPPING_ITEM,
+            VARIABLE_MAPPING,
+            VARIABLE_MAPPING_ITEM,
+            TABLE_CELL,
+            CELL_POSITION,
+            AXIS_ORDINATE,
+            ORDINATE_ITEM,
+            MAPPING_DEFINITION,
+            MAPPING_TO_CUBE,
+            TABLE,
+            CELL_POSITION,
+            AXIS,
+            SUBDOMAIN,
+            SUBDOMAIN_ENUMERATION,
+            FACET_COLLECTION,
+            MAINTENANCE_AGENCY,
+            FRAMEWORK,
+            MEMBER_HIERARCHY,
+            MEMBER_HIERARCHY_NODE,
+            COMBINATION,
+            COMBINATION_ITEM,
+            CUBE_TO_COMBINATION
+        ]
+        self.delete_items_for_sqlite(model_classes)
 
         sdd_context.mapping_definition_dictionary = {}
         sdd_context.variable_mapping_dictionary = {}
@@ -156,8 +177,8 @@ class TransformationMetaDataDestroyer:
         sdd_context.domain_dictionary = {}
         sdd_context.member_dictionary = {}
         sdd_context.member_id_to_domain_map = {}
-        sdd_context.member_id_to_member_code_map = {}        
-        sdd_context.variable_dictionary = {}                
+        sdd_context.member_id_to_member_code_map = {}
+        sdd_context.variable_dictionary = {}
         sdd_context.variable_to_domain_map = {}
         sdd_context.variable_to_long_names_map = {}
         sdd_context.variable_to_primary_concept_map = {}
@@ -188,8 +209,8 @@ class TransformationMetaDataDestroyer:
         sdd_context.member_plus_hierarchy_to_child_literals = {}
         sdd_context.domain_to_hierarchy_dictionary = {}
 
-        
-        
+
+
         SDDContext.mapping_definition_dictionary = {}
         SDDContext.variable_mapping_dictionary = {}
         SDDContext.variable_mapping_item_dictionary = {}
@@ -202,8 +223,8 @@ class TransformationMetaDataDestroyer:
         SDDContext.domain_dictionary = {}
         SDDContext.member_dictionary = {}
         SDDContext.member_id_to_domain_map = {}
-        SDDContext.member_id_to_member_code_map = {}        
-        SDDContext.variable_dictionary = {}        
+        SDDContext.member_id_to_member_code_map = {}
+        SDDContext.variable_dictionary = {}
         SDDContext.variable_to_domain_map = {}
         SDDContext.variable_to_long_names_map = {}
         SDDContext.variable_to_primary_concept_map = {}
@@ -233,7 +254,3 @@ class TransformationMetaDataDestroyer:
         SDDContext.members_that_are_nodes = {}
         SDDContext.member_plus_hierarchy_to_child_literals = {}
         SDDContext.domain_to_hierarchy_dictionary = {}
-
-
-
-        
