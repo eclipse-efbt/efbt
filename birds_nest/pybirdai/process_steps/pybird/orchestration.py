@@ -350,176 +350,6 @@ class OrchestrationWithLineage:
 		except Exception:
 			return False
 	
-	def _track_table_columns(self, table_obj, aorta_table):
-		"""Track columns/fields in a table"""
-		try:
-			# Only track fields for DatabaseTable instances
-			# For DerivedTable instances, columns are tracked as Functions
-			if isinstance(aorta_table, DatabaseTable):
-				fields_to_track = []
-				table_name = aorta_table.name
-				
-				# For Django models, use the model's _meta.fields
-				if self._is_django_model(table_name):
-					try:
-						from django.apps import apps
-						model_class = apps.get_model('pybirdai', table_name)
-						fields_to_track = [field.name for field in model_class._meta.fields]
-						print(f"Using Django model fields for {table_name}: {len(fields_to_track)} fields")
-					except Exception as e:
-						print(f"Error getting Django model fields for {table_name}: {e}")
-						fields_to_track = []
-				else:
-					# For non-Django tables, detect column methods from the row objects they contain
-					fields_to_track = self._detect_table_fields_from_row_type(table_obj)
-				
-				# Create DatabaseField instances
-				for field_name in fields_to_track:
-					db_field = DatabaseField.objects.create(
-						name=field_name,
-						table=aorta_table
-					)
-					# print(f"Tracked column: {aorta_table.name}.{field_name}")
-		except Exception as e:
-			print(f"Error tracking columns for {aorta_table.name}: {e}")
-	
-	def _detect_table_fields_from_row_type(self, table_obj):
-		"""Detect fields by examining the row object type that this table contains"""
-		try:
-			# For derived tables, try to determine the row object type
-			table_class_name = table_obj.__class__.__name__
-			
-			# Pattern: F_01_01_REF_FINREP_3_0_Table contains F_01_01_REF_FINREP_3_0 objects
-			if table_class_name.endswith('_Table'):
-				row_class_name = table_class_name[:-6]  # Remove '_Table' suffix
-				
-				# Try to import and inspect the row class
-				try:
-					# Look for the row class in the same module
-					table_module = table_obj.__class__.__module__
-					module = __import__(table_module, fromlist=[row_class_name])
-					
-					if hasattr(module, row_class_name):
-						row_class = getattr(module, row_class_name)
-						# Create a temporary instance to inspect its methods
-						try:
-							row_instance = row_class()
-							fields = self._detect_column_methods(row_instance)
-							print(f"Detected {len(fields)} fields from row type {row_class_name}: {fields[:5]}...")
-							return fields
-						except Exception as e:
-							print(f"Could not instantiate {row_class_name}: {e}")
-							
-				except Exception as e:
-					print(f"Could not find row class {row_class_name}: {e}")
-			
-			# Fallback: try to detect from table attributes that might be lists of row objects
-			for attr_name in dir(table_obj):
-				if not attr_name.startswith('_'):
-					attr_value = getattr(table_obj, attr_name, None)
-					if isinstance(attr_value, list) and len(attr_value) > 0:
-						# Try to get column methods from the first item in the list
-						first_item = attr_value[0]
-						fields = self._detect_column_methods(first_item)
-						if fields:
-							print(f"Detected {len(fields)} fields from list attribute {attr_name}: {fields[:5]}...")
-							return fields
-			
-			print(f"No fields detected for non-Django table {table_class_name}")
-			return []
-			
-		except Exception as e:
-			print(f"Error detecting fields for table {table_obj.__class__.__name__}: {e}")
-			return []
-	
-	def _detect_column_methods(self, table_obj):
-		"""Detect column methods in non-Django table objects using robust approaches"""
-		import inspect
-		column_methods = set()
-		
-		# Get all callable methods
-		methods = [name for name in dir(table_obj) 
-				  if (not name.startswith('_') and 
-					  callable(getattr(table_obj, name, None)))]
-		
-		for method_name in methods:
-			try:
-				method = getattr(table_obj, method_name)
-				
-				# Approach 1: Check for @lineage decorator (most reliable)
-				if self._has_lineage_decorator(method):
-					column_methods.add(method_name)
-					continue
-				
-				# Approach 2: Method signature and naming patterns
-				if self._is_likely_column_method(method, method_name):
-					column_methods.add(method_name)
-					
-			except Exception:
-				continue
-		
-		# Filter out known infrastructure methods
-		excluded_methods = {'init', 'metric_value'}
-		excluded_prefixes = {'calc_'}
-		
-		final_methods = []
-		for method_name in column_methods:
-			if (method_name not in excluded_methods and 
-				not any(method_name.startswith(prefix) for prefix in excluded_prefixes)):
-				final_methods.append(method_name)
-		
-		print(f"Detected {len(final_methods)} column methods for non-Django table: {final_methods[:5]}...")
-		return final_methods
-	
-	def _has_lineage_decorator(self, method):
-		"""Check if a method has the @lineage decorator"""
-		try:
-			# Check if method has wrapper attributes indicating decoration
-			if hasattr(method, '__wrapped__'):
-				return True
-			
-			# Check method name or qualname for lineage wrapper signs
-			if hasattr(method, '__qualname__') and 'lineage' in str(method.__qualname__):
-				return True
-				
-			# Check for common decorator attributes
-			if hasattr(method, '__dict__') and any('lineage' in str(key) for key in method.__dict__):
-				return True
-				
-			return False
-		except:
-			return False
-	
-	def _is_likely_column_method(self, method, method_name):
-		"""Check if method is likely a column method based on signature and naming"""
-		try:
-			import inspect
-			
-			# Check method name - should be all uppercase (common column pattern)
-			if not method_name.isupper():
-				return False
-			
-			# Check method signature - should only have 'self' parameter
-			sig = inspect.signature(method)
-			params = list(sig.parameters.keys())
-			if len(params) != 1 or params[0] != 'self':
-				return False
-			
-			# Check return type annotation if present
-			if sig.return_annotation != inspect.Signature.empty:
-				valid_types = [int, str, 'int', 'str']
-				if sig.return_annotation in valid_types:
-					return True
-			
-			# Check docstring for enumeration mentions (common in column methods)
-			if method.__doc__ and 'enumeration' in method.__doc__.lower():
-				return True
-			
-			return True  # If all checks pass, likely a column method
-			
-		except Exception:
-			return False
-	
 	def init(self,theObject):
 		# Check if this object has already been initialized
 		object_id = id(theObject)
@@ -1388,21 +1218,18 @@ class OrchestrationWithLineage:
 						table_content_type='DerivedTable',
 						table_id=derived_table.id
 					)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 0dda9d9f (Re-include all the CoCaLiMo and Aorta standards #1536)
+
 					if not existing_refs.exists():
 						AortaTableReference.objects.create(
 							metadata_trail=self.metadata_trail,
 							table_content_type='DerivedTable',
 							table_id=derived_table.id
 						)
-<<<<<<< HEAD
-=======
->>>>>>> 0e3a0c54 (Re-include all the CoCaLiMo and Aorta standards #1536)
+
 =======
 >>>>>>> 0dda9d9f (Re-include all the CoCaLiMo and Aorta standards #1536)
+=======
+>>>>>>> develop
 				
 				# Create EvaluatedDerivedTable
 				evaluated_table = EvaluatedDerivedTable.objects.create(

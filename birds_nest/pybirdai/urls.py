@@ -1,16 +1,21 @@
 from django.urls import path
 from . import views
 from . import report_views
+from . import aorta_views
 from . import workflow_views
-from . import toolbox_views
+
 from . import lineage_views
 from . import lineage_api
+
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
-app_name = "pybirdai"
+app_name = "pybirdai"  # Add this line if using namespaces
+
 urlpatterns = [
-    path("", views.home_view, name="home"),
+    path(
+        "", views.home_view, name="home"
+    ),
     path("dpm-data/", views.dpm_data_view, name="dpm_data"),
     path("automode/", views.automode_view, name="automode"),
     path(
@@ -148,11 +153,7 @@ urlpatterns = [
     ),
     path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
     path("prepare_dpm_data/", views.prepare_dpm_data, name="prepare_dpm_data"),
-    path(
-        "dpm_output_layer_creation/",
-        views.dpm_output_layer_creation,
-        name="dpm_output_layer_creation",
-    ),
+    path("dpm_output_layer_creation/", views.dpm_output_layer_creation, name="dpm_output_layer_creation"),
     path(
         "run_import_semantic_integrations_from_website/",
         views.run_import_semantic_integrations_from_website,
@@ -410,9 +411,10 @@ urlpatterns = [
         name="export_database_to_csv",
     ),
     path(
-        "export-database-to-github/",
+
+        'export-database-to-github/',
         workflow_views.export_database_to_github,
-        name="export_database_to_github",
+        name='export_database_to_github'
     ),
     path(
         "bird_diffs_and_corrections/",
@@ -478,42 +480,6 @@ urlpatterns = [
         name="return_cubelink_visualisation",
     ),
     path("test_report_view/", views.test_report_view, name="test_report_view"),
-    path(
-        "edit-member-links-page/",
-        views.edit_member_links_page,
-        name="edit_member_links_page",
-    ),
-    path("add-member-link/", views.add_member_link, name="add_member_link"),
-    path("edit-member-link/", views.edit_member_link, name="edit_member_link"),
-    path("delete-member-link/", views.delete_member_link, name="delete_member_link"),
-    path(
-        "download-member-link-template/",
-        views.download_member_link_template,
-        name="download_member_link_template",
-    ),
-    path(
-        "upload-member-link-template/",
-        views.upload_member_link_template,
-        name="upload_member_link_template",
-    ),
-    path("import_ancrdt_model/", views.import_ancrdt_model, name="import_ancrdt_model"),
-    path(
-        "create_joins_meta_data_ancrdt/",
-        views.create_joins_meta_data_ancrdt,
-        name="create_joins_meta_data_ancrdt",
-    ),
-    path(
-        "create_executable_joins_ancrdt/",
-        views.create_executable_joins_ancrdt,
-        name="create_executable_joins_ancrdt",
-    ),
-    path("edit_view_file/", views.edit_view_file, name="edit_view_file"),
-    path(
-        "anacredit_transformation_results_endpoint/",
-        views.anacredit_transformation_results_endpoint,
-        name="anacredit_transformation_results_endpoint",
-    ),
-    path("fetch_ancredit_data/", views.fetch_ancrdt_data, name="fetch_ancredit_data"),
     path(
         "bulk-delete-cube-structure-item-links/",
         views.bulk_delete_cube_structure_item_links,
@@ -630,6 +596,11 @@ urlpatterns = [
         name="automode_debug_config",
     ),
     path("automode/status/", views.automode_status, name="automode_status"),
+    path(
+        "run_fetch_curated_resources/",
+        views.run_fetch_curated_resources,
+        name="run_fetch_curated_resources",
+    ),
     path("workflow/", workflow_views.workflow_dashboard, name="workflow_dashboard"),
     path(
         "workflow/task/<int:task_number>/<str:operation>/",
@@ -730,46 +701,5 @@ urlpatterns = [
         lineage_api.get_trail_lineage_summary,
         name="get_trail_lineage_summary",
     ),
-    path(
-        "mapping-assistant/",
-        toolbox_views.mapping_assistant_view,
-        name="mapping_assistant",
-    ),
-    path(
-        "mapping-assistant/review/",
-        toolbox_views.mapping_assistant_review,
-        name="mapping_assistant_review",
-    ),
-    path(
-        "api/generate-mapping-proposal/",
-        toolbox_views.generate_mapping_proposal_api,
-        name="generate_mapping_proposal_api",
-    ),
-    path(
-        "api/accept-mapping-proposals/",
-        toolbox_views.accept_mapping_proposals_api,
-        name="accept_mapping_proposals_api",
-    ),
-    path(
-        "api/templates-for-framework/<str:framework_id>/",
-        toolbox_views.get_templates_for_framework_api,
-        name="get_templates_for_framework_api",
-    ),
-    path(
-        "api/framework-summary/<str:framework_id>/",
-        toolbox_views.get_framework_summary_api,
-        name="get_framework_summary_api",
-    ),
-    path(
-        "anacredit_transformation_results_endpoint",
-        views.anacredit_transformation_results_endpoint,
-        name="anacredit_transformation_results_endpoint",
-    ),
-    path("fetch_ancredit_data", views.fetch_ancrdt_data, name="fetch_ancredit_data"),
-    path(
-        "anacredit_transformation_results_endpoint/",
-        views.anacredit_transformation_results_endpoint,
-        name="anacredit_transformation_results_endpoint",
-    ),
-    path("fetch_ancredit_data/", views.fetch_ancrdt_data, name="fetch_ancredit_data"),
+
 ]

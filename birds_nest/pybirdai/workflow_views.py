@@ -81,16 +81,18 @@ def refresh_complete_status(task:int=3,all:bool=True):
                     execution.save()
             return
 
-    task_executions = WorkflowTaskExecution.objects.filter(
-        task_number=task,
-        operation_type='do'
-    ).first()
-    if isinstance(task_executions,WorkflowTaskExecution):
-        task_executions = [task_executions]
-    for execution in task_executions:
-        execution = check_one_task(execution,task)
-        execution.save()
-    return
+        task_executions = WorkflowTaskExecution.objects.filter(
+            task_number=task,
+            operation_type='do'
+        ).first()
+        if isinstance(task_executions,WorkflowTaskExecution):
+            task_executions = [task_executions]
+        for execution in task_executions:
+            execution = check_one_task(execution,task)
+            execution.save()
+        return
+    except OperationalError:
+        return
 
 
 def load_test_results():
@@ -228,6 +230,7 @@ def _run_migrations_async():
 
         time.sleep(6)
 
+        os._exit(0)
 
     except Exception as e:
         logger.error(f"Background migration process failed: {e}")
@@ -885,7 +888,6 @@ def workflow_task_router(request, task_number, operation):
 
     # Route to appropriate handler
     task_handlers = {
-
         1: task1_smcubes_core,
         2: task2_smcubes_rules,
         3: task3_python_rules,
@@ -1079,8 +1081,6 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
         })
 
 
-
-
 def task2_smcubes_rules(request, operation, task_execution, workflow_session):
     """Handle Task 4: SMCubes Transformation Rules Creation operations"""
 
@@ -1208,9 +1208,6 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
             'workflow_session': workflow_session,
             'execution_data': execution_data,
         })
-
-
-
 
 def task3_python_rules(request, operation, task_execution, workflow_session):
     """Handle Task 5: Python Transformation Rules Creation operations"""
@@ -1352,6 +1349,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
             'workflow_session': workflow_session,
             'execution_data': execution_data,
         })
+
 
 
 
@@ -1980,6 +1978,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
             'success': False,
             'message': str(e)
         }, status=500)
+
 
 
 @require_http_methods(["POST"])
@@ -3294,11 +3293,6 @@ def workflow_reset_session_partial(request):
             return JsonResponse({
                 'success': True,
                 'message': 'Partial workflow session reset completed successfully (tasks 1-4)',
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': True,
-                'message': 'Partial workflow session reset completed successfully (tasks 3-6)',
->>>>>>> c489c6b7 (>feat: - Adding reset session button (3-6 and all tasks) - finished)
                 'details': {
                     'removed_markers': removed_markers,
                     'removed_directories': removed_dirs,
@@ -3320,7 +3314,7 @@ def workflow_reset_session_partial(request):
         else:
             messages.error(request, f'Failed to reset partial workflow session: {str(e)}')
             return redirect('pybirdai:workflow_dashboard')
-=======
+
 
 def export_database_to_github(request):
     """
@@ -3430,4 +3424,3 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
             'success': False,
             'error': f'Error during GitHub export: {str(e)}'
         })
->>>>>>> 71405dd7 (>feat: pushing the github feature, accessible under)
