@@ -11,7 +11,7 @@
 #    Benjamin Arfa - initial API and implementation
 #
 
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 from django.db.models import Q
 import re
 import os
