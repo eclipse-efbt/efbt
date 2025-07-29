@@ -392,6 +392,7 @@ class GitHubFileFetcher:
     def fetch_derivation_model_file(
             self,
             remote_dir = "birds_nest/pybirdai",
+            # remote_dir = "birds_nest/models/pybirdai",
             remote_file_name = "bird_data_model.py",
             local_target_dir = f"resources{os.sep}derivation_implementation",
             local_target_file_name = "bird_data_model_with_derivation.py"
@@ -454,6 +455,7 @@ def main():
 
     fetcher.fetch_derivation_model_file(
         "birds_nest/pybirdai",
+        # "birds_nest/models/pybirdai",
         "bird_data_model.py",
         f"resources{os.sep}derivation_implementation",
         "bird_data_model_with_derivation.py"
