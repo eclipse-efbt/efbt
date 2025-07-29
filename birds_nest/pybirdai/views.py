@@ -3599,6 +3599,9 @@ def run_fetch_curated_resources(request):
             logger.info("STEP 3: Fetching test fixtures and templates")
             fetcher.fetch_test_fixtures()
 
+            logger.info("STEP 4: Fetching REF_FINREP report template HTML files")
+            fetcher.fetch_report_template_htmls()
+
             logger.info("File fetching process completed successfully!")
             print("File fetching process completed!")
 
