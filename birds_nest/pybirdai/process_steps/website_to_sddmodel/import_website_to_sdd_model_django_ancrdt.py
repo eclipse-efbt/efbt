@@ -13,9 +13,10 @@
 import os
 import csv
 from django.conf import settings
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context_ancrdt import ColumnIndexes
 from pathlib import Path
+import traceback
 
 
 class ImportWebsiteToSDDModel(object):
@@ -160,7 +161,7 @@ class ImportWebsiteToSDDModel(object):
                 if not header_skipped:
                     header_skipped = True
                 else:
-                    maintenence_agency = row[ColumnIndexes().domain_maintenence_agency]
+                    maintenance_agency = row[ColumnIndexes().domain_maintenence_agency]
                     code = row[ColumnIndexes().domain_domain_id_index]
                     data_type = row[ColumnIndexes().domain_domain_data_type]
                     description = row[ColumnIndexes().domain_domain_description]
@@ -170,30 +171,34 @@ class ImportWebsiteToSDDModel(object):
                     domain_name = row[ColumnIndexes().domain_domain_name_index]
 
                     include = False or ancrdt_include
-                    if (ref) and (maintenence_agency == "ECB"):
+                    if (ref) and (maintenance_agency == "ECB"):
                         include = True
-                    if (not ref) and not (maintenence_agency == "ECB"):
+                    if (not ref) and not (maintenance_agency == "ECB"):
                         include = True
 
-                    if include:
-                        domain = DOMAIN(name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
-                        if ref:
-                            maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"SDD_DOMAIN")
-                        else:
-                            maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
-                        domain.maintenance_agency_id = maintenance_agency
-                        domain.code = code
-                        domain.description = description
-                        domain.domain_id = ImportWebsiteToSDDModel.replace_dots(self, domain_id)
-                        domain.name = domain_name
-                        domain.is_enumerated = True if is_enumerated else False
-                        domain.is_reference = True if is_reference else False
+                    try:
+                        if include:
+                            domain = DOMAIN(name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
+                            if ref or maintenance_agency == "":
+                                maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"SDD_DOMAIN")
+                            else:
+                                maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency)
+                            domain.maintenance_agency_id = maintenance_agency
+                            domain.code = code
+                            domain.description = description
+                            domain.domain_id = ImportWebsiteToSDDModel.replace_dots(self, domain_id)
+                            domain.name = domain_name
+                            domain.is_enumerated = True if is_enumerated else False
+                            domain.is_reference = True if is_reference else False
 
-                        domains_to_create.append(domain)
-                        if ref:
-                            context.domain_dictionary[domain.domain_id] = domain
-                        else:
-                            context.domain_dictionary[domain.domain_id] = domain
+                            domains_to_create.append(domain)
+                            if ref:
+                                context.domain_dictionary[domain.domain_id] = domain
+                            else:
+                                context.domain_dictionary[domain.domain_id] = domain
+                    except:
+                        raise ValueError(f"{row} :: {traceback.format_exc()}")
+
 
         if context.save_sdd_to_db and domains_to_create:
             DOMAIN.objects.bulk_create(domains_to_create, batch_size=1000, ignore_conflicts=True)
@@ -217,34 +222,45 @@ class ImportWebsiteToSDDModel(object):
                     domain_id = row[ColumnIndexes().member_domain_id_index]
                     member_id = row[ColumnIndexes().member_member_id_index]
                     member_name = row[ColumnIndexes().member_member_name_index]
-                    maintenence_agency = row[ColumnIndexes().member_member_maintenence_agency]
+                    maintenance_agency = row[ColumnIndexes().member_member_maintenence_agency]
 
                     if (member_name is None) or (member_name == ""):
                         member_name = member_id
 
                     include = False or ancrdt_include
-                    if (ref) and (maintenence_agency == "ECB"):
+                    if (ref) and (maintenance_agency == "ECB"):
                         include = True
-                    if (not ref) and not (maintenence_agency == "ECB"):
+                    if (not ref) and not (maintenance_agency == "ECB"):
                         include = True
 
-                    if include:
-                        member = MEMBER(name=ImportWebsiteToSDDModel.replace_dots(self, member_id))
-                        member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
-                        member.code = code
-                        member.description = description
-                        member.name = member_name
-                        maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
-                        member.maintenance_agency_id = maintenance_agency
-                        domain = ImportWebsiteToSDDModel.find_domain_with_id(self, context, domain_id)
-                        member.domain_id = domain
+                    try:
 
-                        members_to_create.append(member)
-                        context.member_dictionary[member.member_id] = member
+                        if include:
 
-                        if not (domain_id is None) and not (domain_id == ""):
-                            context.member_id_to_domain_map[member] = domain
-                            context.member_id_to_member_code_map[member.member_id] = code
+                            if ref or maintenance_agency == "":
+                                maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"ECB")
+                            else:
+                                maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency)
+
+                            member = MEMBER(name=ImportWebsiteToSDDModel.replace_dots(self, member_id))
+                            member.member_id = ImportWebsiteToSDDModel.replace_dots(self, member_id)
+                            member.code = code
+                            member.description = description
+                            member.name = member_name
+                            member.maintenance_agency_id = maintenance_agency
+                            domain = ImportWebsiteToSDDModel.find_domain_with_id(self, context, domain_id)
+                            member.domain_id = domain
+
+                            members_to_create.append(member)
+                            context.member_dictionary[member.member_id] = member
+
+                            if not (domain_id is None) and not (domain_id == ""):
+                                context.member_id_to_domain_map[member] = domain
+                                context.member_id_to_member_code_map[member.member_id] = code
+
+                    except:
+                        raise ValueError(f"{row} :: {traceback.format_exc()}")
+
 
         if context.save_sdd_to_db and members_to_create:
             MEMBER.objects.bulk_create(members_to_create, batch_size=1000, ignore_conflicts=True)
