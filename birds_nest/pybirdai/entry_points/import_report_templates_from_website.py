@@ -14,9 +14,12 @@
 
 import django
 import os
+import logging
 from django.apps import AppConfig
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 class RunImportReportTemplatesFromWebsite(AppConfig):
     """
@@ -48,6 +51,12 @@ class RunImportReportTemplatesFromWebsite(AppConfig):
 
         if not sdd_context.exclude_reference_info_from_website:
             ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context)
+            
+            # Download REF_FINREP report template HTML files from GitHub
+            from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
+            logger.info("Downloading REF_FINREP report template HTML files from GitHub")
+            fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
+            fetcher.fetch_report_template_htmls()
 
     def ready(self):
         # This method is still needed for Django's AppConfig
