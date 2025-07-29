@@ -15,7 +15,7 @@ limitations under the License.
 """
 
 from pybirdai.utils.utils import Utils
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 import os
 from django.conf import settings
 import ast

@@ -110,7 +110,7 @@ class JoinsMetaDataCreatorANCRDT:
         Generate generation rules for the given context and framework.
         """
         # Import here to ensure Django is fully configured first
-        from pybirdai.bird_meta_data_model import CUBE, CUBE_STRUCTURE_ITEM, CUBE_STRUCTURE, DOMAIN, VARIABLE, CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK,MAINTENANCE_AGENCY,MEMBER_LINK
+        from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE_ITEM, CUBE_STRUCTURE, DOMAIN, VARIABLE, CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK,MAINTENANCE_AGENCY,MEMBER_LINK
 
         ignored_domains = [DOMAIN.objects.get(domain_id=domain_id) for domain_id in IGNORED_DOMAINS]
 
@@ -191,7 +191,7 @@ class JoinsMetaDataCreatorANCRDT:
         return comparison_results
 
     def compare(self, cube_items_1: dict, cube_items_2: dict,ignored_domains:list,flag_log:bool=False):
-        from pybirdai.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK,MAINTENANCE_AGENCY,MEMBER
+        from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK,MAINTENANCE_AGENCY,MEMBER
 
         matched_variables = dict()
         cube_iter = itertools.product(cube_items_1.items(), cube_items_2.items())
@@ -212,7 +212,7 @@ class JoinsMetaDataCreatorANCRDT:
         return matched_variables
 
     def fetch_members(self,subdomain):
-        from pybirdai.bird_meta_data_model import MEMBER
+        from pybirdai.models.bird_meta_data_model import MEMBER
         members = MEMBER.objects.all().filter(
             subdomain_enumeration__subdomain_id = subdomain
         )
@@ -222,7 +222,7 @@ class JoinsMetaDataCreatorANCRDT:
 
     def fetch_cube_structure_items_dict(self, cube):
         # Import here to ensure Django is fully configured first
-        from pybirdai.bird_meta_data_model import CUBE, CUBE_STRUCTURE_ITEM, CUBE_STRUCTURE
+        from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE_ITEM, CUBE_STRUCTURE
 
         cube_structure = CUBE_STRUCTURE.objects.get(cube=cube)
         cube_structure_items = CUBE_STRUCTURE_ITEM.objects.all().filter(

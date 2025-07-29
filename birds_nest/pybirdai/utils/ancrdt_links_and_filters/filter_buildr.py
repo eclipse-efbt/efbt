@@ -62,7 +62,7 @@ class TransformationBuildr:
         cube_structure_item_link_id: str,
     ):
         DjangoSetup.configure_django()
-        from pybirdai.bird_meta_data_model import CUBE_LINK, MEMBER_LINK,CUBE_STRUCTURE_ITEM_LINK
+        from pybirdai.models.bird_meta_data_model import CUBE_LINK, MEMBER_LINK,CUBE_STRUCTURE_ITEM_LINK
 
         conditions = []
         # Query related MEMBER_LINK objects for the given cube_structure_item_link
@@ -112,7 +112,7 @@ class TransformationBuildr:
         cube_structure_item_link_id: str,
     ):
         DjangoSetup.configure_django()
-        from pybirdai.bird_meta_data_model import CUBE_LINK, MEMBER_LINK,CUBE_STRUCTURE_ITEM_LINK
+        from pybirdai.models.bird_meta_data_model import CUBE_LINK, MEMBER_LINK,CUBE_STRUCTURE_ITEM_LINK
         conditions = []
         # Query related MEMBER_LINK objects for the given cube_structure_item_link
         cube_structure_item_link = CUBE_STRUCTURE_ITEM_LINK.objects.get(
@@ -138,7 +138,7 @@ class TransformationBuildr:
 
 if __name__ == "__main__":
     DjangoSetup.configure_django()
-    from pybirdai.bird_meta_data_model import (
+    from pybirdai.models.bird_meta_data_model import (
         CUBE_LINK,
         MEMBER_LINK,
         CUBE_STRUCTURE_ITEM_LINK,
