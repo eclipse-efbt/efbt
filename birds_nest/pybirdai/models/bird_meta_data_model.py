@@ -9,7 +9,7 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
-from django.db import models
+from django.db import models, OperationalError
 from django.utils import timezone
 
 # All CSV headers are listed as comments above their respective classes
@@ -448,7 +448,7 @@ class MEMBER_MAPPING_ITEM(models.Model):
         blank=True,
         null=True,
     )
-    
+
 
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
@@ -522,7 +522,7 @@ class MAPPING_TO_CUBE(models.Model):
         blank=True,
         null=True,
     )
-    
+
     valid_from = models.DateTimeField("valid_from", default=None, blank=True, null=True)
 
     valid_to = models.DateTimeField("valid_to", default=None, blank=True, null=True)
@@ -741,7 +741,7 @@ class TABLE_CELL(models.Model):
         "system_data_code", max_length=1000, default=None, blank=True, null=True
     )
 
-    
+
     name = models.CharField("name", max_length=1000, default=None, blank=True, null=True)
 
     class Meta:

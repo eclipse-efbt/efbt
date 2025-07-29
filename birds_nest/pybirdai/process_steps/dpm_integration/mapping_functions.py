@@ -211,7 +211,9 @@ def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
         + tables["ORIGINAL_TABLE_CODE"].str.split().str.join("_")
         + "_"
         + tables["TABLE_VID"].apply(table_to_taxonomy_mapping.get)
-    )
+    ).str.replace(".","_")
+
+    tables.drop(columns=["TABLE_ID"], inplace=True)
 
     # Create ID mapping for return
     id_mapping = dict(zip(tables["TABLE_VID"], tables["NEW_TABLE_ID"]))
@@ -219,8 +221,6 @@ def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
     tables.rename(columns={
         "NEW_TABLE_ID":"TABLE_ID",
         "ORIGINAL_TABLE_LABEL":"DESCRIPTION",
-        "TABLE_ID":"MAINTENANCE_AGENCY_ID",
-        "TABLE_ID":"VERSION",
         "FROM_DATE":"VALID_FROM",
         "TO_DATE":"VALID_TO"
     },inplace=True)
@@ -345,6 +345,8 @@ def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict
 
     cells["IS_SHADED"] = cells["IS_SHADED"].astype(bool)
 
+    if not dp_map:
+        cells["DATA_POINT_VID"] = ""
     if dp_map:
         cells["DATA_POINT_VID"] = cells["DATA_POINT_VID"].astype(str)
 
@@ -362,31 +364,40 @@ def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict
         columns={
             "NEW_CELL_ID":"CELL_ID",
             "TABLE_VID":"TABLE_ID",
-            "DATA_POINT_VID":"COMBINATION_ID"
+            "DATA_POINT_VID":"TABLE_CELL_COMBINATION_ID"
         },inplace=True
     )
 
-
-
-
     cells["SYSTEM_DATA_CODE"] = ""
+    cells["NAME"] = cells["CELL_ID"]
 
     cells = cells.loc[
         :,
         [
-            "CELL_ID","IS_SHADED","COMBINATION_ID","TABLE_ID","SYSTEM_DATA_CODE"
+            "CELL_ID","IS_SHADED","TABLE_CELL_COMBINATION_ID","SYSTEM_DATA_CODE","NAME","TABLE_ID"
         ]
     ]
 
     return cells, id_mapping
 
 
-def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_map:dict={}):
+def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_map:dict={},start_index_after_last:bool=False):
     data = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in data.columns}
     data = data.rename(columns=column_mapping)
     data["CELL_ID"] = data["CELL_ID"].apply(cell_map.get)
     data["ORDINATE_ID"] = data["ORDINATE_ID"].apply(ordinate_map.get)
+    
+    if start_index_after_last and "ID" in data.columns and not data.empty:
+        start_idx = data["ID"].max() + 1 if pd.notnull(data["ID"].max()) else 0
+        data.reset_index(drop=True, inplace=True)
+        data["ID"] = range(start_idx, start_idx + len(data))
+    else:
+        if "ID" in data.columns:
+            data.drop(columns=["ID"], inplace=True)
+        data.reset_index(inplace=True)
+        data.rename(columns={"index": "ID"},inplace=True)
+    
     return data, {}
 
 def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={},context_data:pd.DataFrame=pd.DataFrame(),dimension_map:dict={},member_map:dict={}):
@@ -555,7 +566,7 @@ def traceback_restrictions(path="target/OpenMemberRestriction.csv"):
     restriction_df.columns = cols
     return restriction_df
 
-def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member_map:dict={}, dimension_map:dict={}, ordinate_map:dict={}, hierarchy_map:dict={}):
+def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member_map:dict={}, dimension_map:dict={}, ordinate_map:dict={}, hierarchy_map:dict={}, start_index_after_last:bool=False):
     data = pd.read_csv(path)
     restrictions = traceback_restrictions()
     data = pd.merge(data,restrictions,on="RestrictionID"
@@ -588,10 +599,27 @@ def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member
     data["MEMBER_HIERARCHY_VALID_FROM"] = ""
     data.loc[data.STARTING_MEMBER_ID.isna(),"IS_STARTING_MEMBER_INCLUDED"] = False
 
+    if start_index_after_last and "ID" in data.columns and not data.empty:
+        start_idx = data["ID"].max() + 1 if pd.notnull(data["ID"].max()) else 0
+        data.reset_index(drop=True, inplace=True)
+        data["ID"] = range(start_idx, start_idx + len(data))
+    else:
+        if "ID" in data.columns:
+            data.drop(columns=["ID"], inplace=True)
+        data.reset_index(inplace=True)
+        data.rename(columns={"index": "ID"},inplace=True)
+
     data = data.loc[
         :,
         [
-            "AXIS_ORDINATE_ID","VARIABLE_ID","MEMBER_ID","MEMBER_HIERARCHY_ID","MEMBER_HIERARCHY_VALID_FROM","STARTING_MEMBER_ID","IS_STARTING_MEMBER_INCLUDED"
+            "ID",
+            "MEMBER_HIERARCHY_VALID_FROM",
+            "IS_STARTING_MEMBER_INCLUDED",
+            "AXIS_ORDINATE_ID",
+            "VARIABLE_ID",
+            "MEMBER_ID",
+            "MEMBER_HIERARCHY_ID",
+            "STARTING_MEMBER_ID"
         ]
     ]
 
