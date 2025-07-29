@@ -11,7 +11,7 @@
 #    Benjamin Arfa - initial API and implementation
 #
 
-from pybirdai.bird_meta_data_model import MEMBER_HIERARCHY, MEMBER_LINK
+from pybirdai.models.bird_meta_data_model import MEMBER_HIERARCHY, MEMBER_LINK
 
 
 class MemberHierarchyService:

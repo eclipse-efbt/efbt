@@ -29,7 +29,7 @@ import glob
 import subprocess
 import requests
 
-from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
+from .models.workflow_model import WorkflowTaskExecution, WorkflowSession
 from .views import create_response_with_loading
 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
@@ -305,7 +305,7 @@ def _load_task1_completion_from_marker():
         import json
         from django.conf import settings
         from django.utils import timezone
-        from .bird_meta_data_model import WorkflowTaskExecution
+        from .models.workflow_model import WorkflowTaskExecution
 
         base_dir = getattr(
             settings,
@@ -367,7 +367,7 @@ def _run_database_setup_async():
         import json
         import os
         from django.conf import settings
-        from .bird_meta_data_model import AutomodeConfiguration
+        from .models.workflow_model import AutomodeConfiguration
         from .workflow_services import AutomodeConfigurationService
 
         # Task 1: Resource Download

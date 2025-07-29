@@ -392,6 +392,7 @@ class GitHubFileFetcher:
     def fetch_derivation_model_file(
             self,
             remote_dir = "birds_nest/pybirdai",
+            # remote_dir = "birds_nest/models/pybirdai",
             remote_file_name = "bird_data_model.py",
             local_target_dir = f"resources{os.sep}derivation_implementation",
             local_target_file_name = "bird_data_model_with_derivation.py"
@@ -442,6 +443,61 @@ class GitHubFileFetcher:
 
         return 0
 
+    def fetch_report_template_htmls(self,
+                                   remote_dir="birds_nest/results/generated_html",
+                                   fallback_remote_dir="birds_nest/pybirdai/templates/pybirdai",
+                                   local_target_dir="pybirdai/templates/pybirdai"):
+        """
+        Fetch report template HTML files containing REF_FINREP from GitHub repository.
+        First tries the primary remote directory, then falls back to secondary if no templates found.
+
+        Args:
+            remote_dir (str): Primary remote directory path containing the HTML files
+            fallback_remote_dir (str): Fallback remote directory if primary has no templates
+            local_target_dir (str): Local directory path to save the templates
+        """
+        logger.info(f"Fetching REF_FINREP report templates from {remote_dir}")
+
+        # Ensure the local directory exists
+        self._ensure_directory_exists(local_target_dir)
+
+        # First try to fetch from the primary directory
+        files = self.fetch_files(remote_dir)
+        downloaded_count = 0
+        
+        # Check if there are any FINREP HTML files in the primary directory
+        finrep_files = [f for f in files if f.get('type') == 'file' and 
+                        f.get('name', '').endswith('.html') and 
+                        'FINREP' in f.get('name', '')]
+        
+        # If no FINREP files found in primary, try fallback directory
+        if not finrep_files:
+            logger.info(f"No FINREP templates found in {remote_dir}, trying fallback directory: {fallback_remote_dir}")
+            files = self.fetch_files(fallback_remote_dir)
+            finrep_files = [f for f in files if f.get('type') == 'file' and 
+                           f.get('name', '').endswith('.html') and 
+                           'FINREP' in f.get('name', '')]
+            if finrep_files:
+                logger.info(f"Found {len(finrep_files)} FINREP templates in fallback directory")
+
+        # Download the FINREP files
+        for file_info in finrep_files:
+            name = file_info.get('name', '')
+            logger.debug(f"Processing report template: {name}")
+
+            # Download the file
+            local_file_path = os.path.join(local_target_dir, name)
+            result = self.download_file(file_info, local_file_path)
+
+            if result:
+                logger.info(f"Successfully downloaded report template: {name}")
+                downloaded_count += 1
+            else:
+                logger.warning(f"Failed to download report template: {name}")
+
+        logger.info(f"Downloaded {downloaded_count} REF_FINREP report templates")
+        return downloaded_count
+
 def main():
     """Main function to orchestrate the file fetching process"""
     logger.info("Starting GitHub file fetching process")
@@ -454,6 +510,7 @@ def main():
 
     fetcher.fetch_derivation_model_file(
         "birds_nest/pybirdai",
+        # "birds_nest/models/pybirdai",
         "bird_data_model.py",
         f"resources{os.sep}derivation_implementation",
         "bird_data_model_with_derivation.py"
@@ -469,6 +526,9 @@ def main():
 
     logger.info("STEP 4: Fetching test templates")
     fetcher.fetch_filter_code()
+
+    logger.info("STEP 5: Fetching REF_FINREP report template HTML files")
+    fetcher.fetch_report_template_htmls()
 
     logger.info("File fetching process completed successfully!")
     print("File fetching process completed!")

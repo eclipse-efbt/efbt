@@ -15,7 +15,7 @@ import csv
 from datetime import datetime
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from pybirdai.bird_meta_data_model import (
+from pybirdai.models.bird_meta_data_model import (
     CUBE_LINK,
     CUBE_STRUCTURE_ITEM_LINK,
     MAINTENANCE_AGENCY,

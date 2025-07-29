@@ -708,6 +708,7 @@ class AutomodeConfigurationService:
             'generated_python': 0,
             'filter_code': 0,
             'test_fixtures': 0,
+            'report_templates': 0,
             'errors': []
         }
 
@@ -720,6 +721,18 @@ class AutomodeConfigurationService:
         elif config.technical_export_source == 'GITHUB':
             branch = getattr(config, 'github_branch', 'main')
             results['technical_export'] = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
+
+        # Fetch REF_FINREP report template HTML files
+        try:
+            logger.info("Fetching REF_FINREP report template HTML files from GitHub...")
+            from .utils.github_file_fetcher import GitHubFileFetcher
+            fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
+            results['report_templates'] = fetcher.fetch_report_template_htmls()
+            logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates")
+        except Exception as e:
+            error_msg = f"Error fetching report templates: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
 
         return results
 
@@ -1189,7 +1202,7 @@ class GitHubIntegrationService:
             AutomodeConfiguration: Active configuration or None if not found
         """
         try:
-            from .bird_meta_data_model import AutomodeConfiguration
+            from .models.workflow_model import AutomodeConfiguration
             return AutomodeConfiguration.objects.filter(is_active=True).first()
         except Exception as e:
             logger.error(f"Error getting automode configuration: {e}")
