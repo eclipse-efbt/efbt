@@ -14,7 +14,7 @@ import os
 import csv
 from django.conf import settings
 from pybirdai.models.bird_meta_data_model import *
-from pybirdai.context.csv_column_index_context_ancrdt import ColumnIndexes
+from pybirdai.process_steps.ancrdt_transformation.csv_column_index_context_ancrdt import ColumnIndexes
 from pathlib import Path
 import traceback
 

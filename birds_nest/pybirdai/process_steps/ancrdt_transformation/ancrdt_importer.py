@@ -62,9 +62,9 @@ class RunANCRDTImport(AppConfig):
     @staticmethod
     def run_import():
         DjangoSetup.configure_django()
-        from pybirdai.context.context_ancrdt import Context
-        from pybirdai.context.sdd_context_django_ancrdt import SDDContext
-        from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django_ancrdt import (
+        from pybirdai.process_steps.ancrdt_transformation.context_ancrdt import Context
+        from pybirdai.process_steps.ancrdt_transformation.sdd_context_django_ancrdt import SDDContext
+        from pybirdai.process_steps.ancrdt_transformation.import_website_to_sdd_model_django_ancrdt import (
             ImportWebsiteToSDDModel
         )
         # Move the content of the ready() method here
