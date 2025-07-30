@@ -711,16 +711,50 @@ function pollMigrationStatus(statusDiv, btn) {
                     }
                 } else if (status.completed) {
                     // Migration completed
+                    console.log('Migration completed! Status object:', status);
+
                     if (status.success) {
                         statusDiv.style.background = '#d4edda';
                         statusDiv.style.color = '#155724';
                         const elapsedTime = Math.round(status.elapsed_time || 0);
-                        statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">✅</span>Database migrations completed successfully in ${elapsedTime}s!<br>The database is now ready for use.`;
+                        let message = `<span style="display: inline-block; margin-right: 8px;">✅</span>${status.message || 'Database migrations completed successfully'} (${elapsedTime}s)`;
 
-                        // Refresh page after success to show updated database status
-                        setTimeout(() => {
-                            location.reload();
-                        }, 3000);
+                        // Check for server restart requirement
+                        const serverRestartRequired = status.server_restart_required === true;
+                        const messageIndicatesRestart = status.message && (
+                            status.message.includes('restart required') ||
+                            status.message.includes('Server restart required') ||
+                            status.message.includes('server restart')
+                        );
+
+                        console.log('Migration restart check:', {
+                            serverRestartRequired,
+                            messageIndicatesRestart,
+                            message: status.message
+                        });
+
+                        if (serverRestartRequired || messageIndicatesRestart) {
+                            console.log('🔄 Database setup completed - server restart required detected!');
+                            message += '<br><strong>🔄 Server restart in progress...</strong>';
+                            if (status.restart_info) {
+                                message += `<br><small>${status.restart_info}</small>`;
+                            } else if (status.estimated_restart_time) {
+                                message += `<br><small>${status.estimated_restart_time}</small>`;
+                            }
+                            statusDiv.innerHTML = message;
+
+                            // Handle server restart scenario
+                            handleServerRestart(statusDiv, btn);
+                        } else {
+                            console.log('✅ Database setup completed - no server restart required');
+                            statusDiv.innerHTML = message + '<br>The database is now ready for use.';
+
+                            // Regular refresh for non-restart scenarios
+                            setTimeout(() => {
+                                console.log('Refreshing page after successful migration (no restart)');
+                                location.reload();
+                            }, 3000);
+                        }
                     } else {
                         statusDiv.style.background = '#f8d7da';
                         statusDiv.style.color = '#721c24';
@@ -739,15 +773,26 @@ function pollMigrationStatus(statusDiv, btn) {
             }
         })
         .catch(error => {
-          console.error('Migration status status polling error:', error);
+            console.error('Migration status polling error:', error);
 
-          // Refresh page on error to reset state
-          setTimeout(() => {
-              console.log('Refreshing page due to database setup polling error');
-              location.reload();
-          }, 2000);
-        }
-        );
+            // Check if this might be a server restart scenario (connection lost during polling)
+            if (error.name === 'TypeError' || error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.name === 'TimeoutError') {
+                console.log('🔄 Connection lost during migration polling - likely server restart!');
+                // Possible server restart - show appropriate message
+                statusDiv.style.background = '#e3f2fd';
+                statusDiv.style.color = '#1976d2';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Connection lost - server is restarting...';
+
+                // Switch to restart detection mode
+                handleServerRestart(statusDiv, btn);
+            } else {
+                // Other error - refresh page to reset state
+                setTimeout(() => {
+                    console.log('Refreshing page due to migration polling error');
+                    location.reload();
+                }, 2000);
+            }
+        });
     }
 
     // Start polling
