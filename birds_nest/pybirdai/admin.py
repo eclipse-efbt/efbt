@@ -115,4 +115,3 @@ from .models.workflow_model import WorkflowTaskDependency
 admin.site.register(WorkflowTaskDependency)
 from .models.workflow_model import WorkflowSession
 admin.site.register(WorkflowSession)
->>>>>>> ff8d92df (>fix: moved the models and adapted the library to deal with the change.)
