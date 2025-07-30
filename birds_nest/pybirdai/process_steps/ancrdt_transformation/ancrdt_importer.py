@@ -13,27 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-"""Entry point for creating generation rules."""
 
-import os
-from pathlib import Path
-import sys
 import django
+import os
+import sys
 from django.apps import AppConfig
 from django.conf import settings
-
 import logging
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("log.log"),
-        logging.StreamHandler()
-    ]
-)
-
+# Create a logger
 logger = logging.getLogger(__name__)
 
 class DjangoSetup:
@@ -61,48 +49,41 @@ class DjangoSetup:
             logger.error(f"Django configuration failed: {str(e)}")
             raise
 
-class RunCreateExecutableJoins(AppConfig):
-    """Django AppConfig for running the creation of generation rules."""
+class RunANCRDTImport(AppConfig):
+    """
+    Django AppConfig for running the website to SDD model conversion process.
 
-    DjangoSetup.configure_django()
-    path = os.path.join(settings.BASE_DIR, 'birds_nest')
+    This class sets up the necessary context and runs the import process
+    to convert website data into an SDD  model.
+    """
+
+    # path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def create_python_joins_from_db(logger=logger):
-        """Execute the process of creating generation rules from the database when the app is ready."""
-
-        from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
-            ImportDatabaseToSDDModel
+    def run_import():
+        DjangoSetup.configure_django()
+        from pybirdai.context.context_ancrdt import Context
+        from pybirdai.context.sdd_context_django_ancrdt import SDDContext
+        from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django_ancrdt import (
+            ImportWebsiteToSDDModel
         )
-        from pybirdai.context.sdd_context_django import SDDContext
-        from pybirdai.context.context import Context
-        from pybirdai.utils.ancrdt_links_and_filters.create_python_django_transformations_ancrdt import (
-            CreatePythonTransformations
-        )
+        # Move the content of the ready() method here
+        path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
+        sdd_context.save_sdd_to_db = True
 
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        # Only import the necessary tables for joins
-        importer = ImportDatabaseToSDDModel()
-
-        importer.import_sdd_for_joins(sdd_context, [
-            'MAINTENANCE_AGENCY',
-            'DOMAIN',
-            'VARIABLE',
-            'CUBE',
-            'CUBE_STRUCTURE',
-            'CUBE_STRUCTURE_ITEM',
-            'CUBE_LINK',
-            'CUBE_STRUCTURE_ITEM_LINK'
-        ])
-        CreatePythonTransformations().create_python_joins(context, sdd_context,logger)
+        import_anacrdt_path = f"..{os.sep}results{os.sep}ancrdt_csv"
+        ancrdt_include = True
+        if not sdd_context.exclude_reference_info_from_website:
+            ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context,import_anacrdt_path,ancrdt_include)
 
     def ready(self):
         # This method is still needed for Django's AppConfig
@@ -110,7 +91,7 @@ class RunCreateExecutableJoins(AppConfig):
 
 def main():
     DjangoSetup.configure_django()
-    RunCreateExecutableJoins.create_python_joins_from_db()
+    RunANCRDTImport.run_import()
 
 if __name__ == "__main__":
     main()

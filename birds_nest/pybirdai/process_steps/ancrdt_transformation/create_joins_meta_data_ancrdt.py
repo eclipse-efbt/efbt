@@ -81,28 +81,38 @@ class JoinsMetaDataCreatorANCRDT:
         join_config_file1 = os.path.join(os.getcwd(),"resources/joins_configuration", "join_for_product_to_reference_category_ANCRDT_REF.csv")
         join_config_file2 = os.path.join(os.getcwd(),"resources/joins_configuration", "join_for_product_il_definitions_ANCRDT_REF.csv")
         try:
+            # First, read all data from file2 into a dictionary for efficient lookup
+            file2_data = {}
+            with open(join_config_file2, encoding='utf-8') as f2:
+                reader2 = csv.DictReader(f2)
+                for row2 in reader2:
+                    file2_data[row2['Name']] = row2
+
+            # Now read file1 and match with file2 data
             with open(join_config_file1, encoding='utf-8') as f1:
                 reader1 = csv.DictReader(f1)
                 for row1 in reader1:
-                    if (row1['rolc'],row1['join_identifier']) not in self.join_map:
-                        self.join_map[(row1['rolc'],row1['join_identifier'])] = {}
-                    with open(join_config_file2, encoding='utf-8') as f2:
-                        reader2 = csv.DictReader(f2)
-                        for row2 in reader2:
-                            if row2['Name'] == row1['join_identifier']:
-                                self.join_map[(row1['rolc'],row1['join_identifier'])] = {
-                                    "rolc":row1['rolc'],
-                                    "join_identifier":row1['join_identifier'],
-                                    "ilc":[_
-                                        for _ in [row2["Main Table"]]+row2["Related Tables"].split(":")
-                                        if _
-                                    ]
-                                }
-
+                    key = (row1['rolc'], row1['join_identifier'])
+                    # Look for matching entry in file2 data
+                    if row1['join_identifier'] in file2_data:
+                        row2 = file2_data[row1['join_identifier']]
+                        self.join_map[key] = {
+                            "rolc": row1['rolc'],
+                            "join_identifier": row1['join_identifier'],
+                            "ilc": [_
+                                for _ in [row2["Main Table"]] + row2["Related Tables"].split(":")
+                                if _
+                            ]
+                        }
+                    else:
+                        logger.warning(f"No matching entry found in file2 for join_identifier: {row1['join_identifier']}")
 
             logger.info(f"Successfully loaded {len(self.join_map)} join configurations")
-        except FileNotFoundError:
-            logger.error(f"Join configuration file not found: {join_config_file1}")
+        except FileNotFoundError as e:
+            logger.error(f"Join configuration file not found: {e.filename}")
+            raise
+        except KeyError as e:
+            logger.error(f"Missing expected column in CSV file: {e}")
             raise
 
     def generate_joins_meta_data(self) -> dict:

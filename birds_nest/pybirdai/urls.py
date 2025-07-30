@@ -158,6 +158,7 @@ urlpatterns = [
     
     # ANCRDT Transformation URLs
     path("ancrdt/", ancrdt_transformation_views.ancrdt_dashboard, name="ancrdt_dashboard"),
+    path("ancrdt/fetch-csv/", ancrdt_transformation_views.ancrdt_fetch_csv, name="ancrdt_fetch_csv"),
     path("ancrdt/import/", ancrdt_transformation_views.ancrdt_import, name="ancrdt_import"),
     path("ancrdt/create-joins-metadata/", ancrdt_transformation_views.ancrdt_create_joins_metadata, name="ancrdt_create_joins_metadata"),
     path("ancrdt/create-executable-joins/", ancrdt_transformation_views.ancrdt_create_executable_joins, name="ancrdt_create_executable_joins"),
