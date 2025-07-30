@@ -47,7 +47,10 @@ class ImportInputModel(object):
         ImportInputModel._fetch_derived_fields_from_model(context)
         ImportInputModel._create_maintenance_agency(sdd_context)
         ImportInputModel._create_primitive_domains(sdd_context)
-        ImportInputModel._create_subdomain_to_domain_map(sdd_context)
+        if hasattr(context, 'alternative_folder_for_subdomains'):
+            ImportInputModel._create_subdomain_to_domain_map(sdd_context,alternative_folder=context.alternative_folder_for_subdomains)
+        else:
+            ImportInputModel._create_subdomain_to_domain_map(sdd_context)
         ImportInputModel._process_models(sdd_context, context)
          # Load extra variables from CSV file
         from django.conf import settings
@@ -58,6 +61,7 @@ class ImportInputModel(object):
             print(f"Loaded {variables_loaded} extra variables from CSV file.")
         else:
             print("No extra variables loaded (file not found or empty).")
+
 
 
     def _create_maintenance_agency(sdd_context):
@@ -90,6 +94,7 @@ class ImportInputModel(object):
         # Bulk create all agencies
         created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies, ignore_conflicts=True)
 
+
         # Update dictionary with created instances
         sdd_context.agency_dictionary.update({
             agency.code: agency for agency in created_agencies
@@ -118,8 +123,9 @@ class ImportInputModel(object):
         # Bulk create all domains
         DOMAIN.objects.bulk_create(domains, ignore_conflicts=True)
 
-    def _create_subdomain_to_domain_map(sdd_context):
-        file_location = sdd_context.file_directory + os.sep + "technical_export" + os.sep + "subdomain.csv"
+    def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str=""):
+        file_location = sdd_context.file_directory + os.sep + (alternative_folder or "technical_export") + os.sep + "subdomain.csv"
+
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -304,6 +310,7 @@ class ImportInputModel(object):
                 logging.info("Party_role cube structure items to be created :: %s", len(cube_structure_items_to_create))
             for item in cube_structure_items_to_create:
                 item.save()
+            #CUBE_STRUCTURE_ITEM.objects.bulk_create(cube_structure_items_to_create)
 
     @staticmethod
     def _get_default_domain(field, sdd_context):

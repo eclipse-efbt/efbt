@@ -38,6 +38,7 @@ from .models.lineage_model import EvaluatedFunctionSourceValue
 admin.site.register(EvaluatedFunctionSourceValue)
 from .models.lineage_model import TableCreationSourceTable
 admin.site.register(TableCreationSourceTable)
+
 from .models.lineage_model import TableCreationFunctionColumn
 admin.site.register(TableCreationFunctionColumn)
 from .models.bird_meta_data_model import SUBDOMAIN

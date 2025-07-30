@@ -1,0 +1,151 @@
+<!--
+# Copyright (c) 2025 Arfa Digital Consulting
+# Licensed under the Apache License, Version 2.0
+-->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ANCRDT Transformation{% endblock %}
+
+{% block extra_css %}
+<style>
+    .task-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .task-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+
+    .task-item:hover {
+        background: #e9ecef;
+        border-color: #adb5bd;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #333;
+    }
+
+    .task-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        margin-bottom: 15px;
+    }
+
+    .task-item span {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    .process-description {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #f0f8ff;
+        border: 1px solid #b0d4ff;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .process-description h2 {
+        color: #2c5aa0;
+        margin-bottom: 10px;
+    }
+
+    .process-description p {
+        color: #555;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .task-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .task-item {
+            padding: 15px;
+        }
+
+        .task-item img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .task-item span {
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .task-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .task-item {
+            padding: 10px;
+        }
+
+        .task-item img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .task-item span {
+            font-size: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center;">ANCRDT Transformation Process</h1>
+
+<div class="process-description">
+    <h2>About ANCRDT Transformation</h2>
+    <p>
+        The ANCRDT (Anacredit) transformation process converts regulatory data models into executable 
+        transformations for ANACREDIT reporting. This four-step process fetches CSV data from the ECB website,
+        imports ANCRDT data, creates join metadata, and generates executable Python code for data transformations.
+    </p>
+</div>
+
+<div class="task-grid">
+    <a href="{% url 'pybirdai:ancrdt_fetch_csv' %}" class="task-item">
+        <img src="{% static 'images/import_data_model_artefacts.webp' %}" alt="Fetch ANCRDT CSV">
+        <span>Step 0: Fetch ANCRDT CSV</span>
+    </a>
+    <a href="{% url 'pybirdai:ancrdt_import' %}" class="task-item">
+        <img src="{% static 'images/import_bird.webp' %}" alt="Import ANCRDT Data">
+        <span>Step 1: Import ANCRDT Data</span>
+    </a>
+    <a href="{% url 'pybirdai:ancrdt_create_joins_metadata' %}" class="task-item">
+        <img src="{% static 'images/joins_configuration.webp' %}" alt="Create Joins Metadata">
+        <span>Step 2: Create Joins Metadata</span>
+    </a>
+    <a href="{% url 'pybirdai:ancrdt_create_executable_joins' %}" class="task-item">
+        <img src="{% static 'images/executable.webp' %}" alt="Create Executable Joins">
+        <span>Step 3: Create Executable Joins</span>
+    </a>
+</div>
+{% endblock %}

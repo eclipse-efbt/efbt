@@ -819,6 +819,9 @@ def workflow_dashboard(request):
             'session_id': session_id or 'no-database',
         })
 
+
+
+
     return render(request, 'pybirdai/workflow/dashboard.html', context)
 
 
@@ -1528,6 +1531,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
             'failed_tests': failed_tests,
             'grouped_results': grouped_results,
         })
+
 
 
 
@@ -3112,6 +3116,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
     )
 
 
+
 @require_http_methods(["POST"])
 def workflow_reset_session_full(request):
     """
@@ -3216,6 +3221,7 @@ def workflow_reset_session_full(request):
 def workflow_reset_session_partial(request):
     """
     Reset workflow session from task 1 onwards (partial reset).
+
     """
     logger.info("Partial workflow session reset requested (tasks 1-4) but not database reset")
 
@@ -3281,6 +3287,7 @@ def workflow_reset_session_partial(request):
                     logger.info(f"Removed temporary directory: {temp_dir}")
                 except Exception as e:
                     logger.warning(f"Failed to remove temporary directory {temp_dir}: {e}")
+
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
