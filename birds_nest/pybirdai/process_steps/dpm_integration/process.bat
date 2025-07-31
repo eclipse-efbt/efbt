@@ -27,8 +27,23 @@ if not exist "target" mkdir target
 echo Exporting Access database: %DATABASE%
 echo.
 
+REM Detect if we should use 32-bit or 64-bit PowerShell
+REM Access.Application COM object requires matching architecture
+set "PS_PATH=powershell"
+
+REM Check if 64-bit PowerShell exists and use it
+if exist "%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe" (
+    REM Running from 32-bit context, use 64-bit PowerShell
+    set "PS_PATH=%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe"
+    echo Using 64-bit PowerShell from sysnative
+) else if exist "%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe" (
+    REM Use System32 PowerShell (will be 64-bit on 64-bit OS)
+    set "PS_PATH=%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe"
+    echo Using PowerShell from System32
+)
+
 REM Call PowerShell script to do the actual export
-powershell -ExecutionPolicy Bypass -Command ^
+%PS_PATH% -ExecutionPolicy Bypass -Command ^
 "$ErrorActionPreference = 'Stop'; ^
 try { ^
     $access = New-Object -ComObject Access.Application; ^

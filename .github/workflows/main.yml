@@ -26,12 +26,27 @@ jobs:
     - name: Install Microsoft Access Database Engine 2016 (Windows)
       if: runner.os == 'Windows'
       run: |
-        # Install Microsoft Access Database Engine 2016 Redistributable (64-bit)
+        # Detect system architecture and PowerShell bitness
+        Write-Host "Detecting system architecture..."
+        $is64Bit = [Environment]::Is64BitOperatingSystem
+        $psIs64Bit = [Environment]::Is64BitProcess
+        
+        Write-Host "Operating System is 64-bit: $is64Bit"
+        Write-Host "PowerShell process is 64-bit: $psIs64Bit"
+        
+        # Install Microsoft Access Database Engine 2016 Redistributable
         Write-Host "Installing Microsoft Access Database Engine 2016 Redistributable..."
         
-        # Direct download URL for Access Database Engine 2016
-        $downloadUrl = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessDatabaseEngine_X64.exe"
-        $installerPath = "$env:TEMP\AccessDatabaseEngine_X64.exe"
+        # Choose appropriate installer based on architecture
+        if ($psIs64Bit) {
+            $downloadUrl = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessDatabaseEngine_X64.exe"
+            $installerPath = "$env:TEMP\AccessDatabaseEngine_X64.exe"
+            Write-Host "Using 64-bit Access Database Engine installer"
+        } else {
+            $downloadUrl = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessDatabaseEngine.exe"
+            $installerPath = "$env:TEMP\AccessDatabaseEngine.exe"
+            Write-Host "Using 32-bit Access Database Engine installer"
+        }
         
         # Download the installer
         Write-Host "Downloading Access Database Engine from Microsoft..."
