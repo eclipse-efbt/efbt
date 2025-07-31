@@ -605,11 +605,13 @@ class RunAutomodeDatabaseSetup(AppConfig):
             key=lambda x: int(x.split("_")[0]))
 
         for file in found_migration_files:
+            fake_migrate_cmd = [python_executable, "manage.py", "migrate", "--fake", "pybirdai", file.replace(".py", "")]
             migrate_result = subprocess.run(
-                [python_executable, "manage.py", "migrate", "--fake", "pybirdai", file.replace(".py", "")],
+                fake_migrate_cmd,
                 capture_output=True,
                 text=True,
                 timeout=600,
+                shell=(os.name == 'nt'),  # Use shell=True on Windows
             )
 
         return 0, migrate_result
@@ -621,7 +623,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
         # Get the virtual environment path if we're in one
         venv_path = os.environ.get("VIRTUAL_ENV")
         if venv_path:
-            python_executable = os.path.join(venv_path, "bin", "python")
+            # Handle Windows vs Unix virtual environment structure
+            if os.name == 'nt':  # Windows
+                python_executable = os.path.join(venv_path, "Scripts", "python.exe")
+            else:  # Unix/Linux/macOS
+                python_executable = os.path.join(venv_path, "bin", "python")
 
         # Change to project directory for subprocess
         original_dir = os.getcwd()
@@ -667,14 +673,20 @@ class RunAutomodeDatabaseSetup(AppConfig):
             generator.save_migration_file(models, f"pybirdai{os.sep}migrations{os.sep}0001_initial.py")
 
             logger.info("Running makemigrations in subprocess...")
+            logger.info(f"Using Python executable: {python_executable}")
+            logger.info(f"Current working directory: {os.getcwd()}")
             makemig_start = time.time()
 
-            # Run makemigrations
+            # Run makemigrations with proper Windows handling
+            makemig_cmd = [python_executable, "manage.py", "makemigrations", "pybirdai"]
+            logger.info(f"Running command: {' '.join(makemig_cmd)}")
+            
             makemig_result = subprocess.run(
-                [python_executable, "manage.py", "makemigrations", "pybirdai"],
+                makemig_cmd,
                 capture_output=True,
                 text=True,
                 timeout=900,
+                shell=(os.name == 'nt'),  # Use shell=True on Windows
             )  # 15 minute timeout
 
             makemig_time = time.time() - makemig_start
@@ -683,6 +695,10 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 logger.error(
                     f"Makemigrations failed with return code {makemig_result.returncode}"
                 )
+                logger.error(f"Python executable used: {python_executable}")
+                logger.error(f"Python executable exists: {os.path.exists(python_executable)}")
+                logger.error(f"manage.py exists: {os.path.exists('manage.py')}")
+                logger.error(f"Current directory: {os.getcwd()}")
                 logger.error(f"Stdout: {makemig_result.stdout}")
                 logger.error(f"Stderr: {makemig_result.stderr}")
                 raise RuntimeError(f"Makemigrations failed: {makemig_result.stderr}")
@@ -712,17 +728,25 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
 
                 # Run migrate
+                migrate_cmd = [python_executable, "manage.py", "migrate"]
+                logger.info(f"Running migrate command: {' '.join(migrate_cmd)}")
+                
                 migrate_result = subprocess.run(
-                    [python_executable, "manage.py", "migrate"],
+                    migrate_cmd,
                     capture_output=True,
                     text=True,
                     timeout=600,
+                    shell=(os.name == 'nt'),  # Use shell=True on Windows
                 )  # 10 minute timeout
 
                 if migrate_result.returncode != 0:
                     logger.error(
                         f"Migrate failed with return code {migrate_result.returncode}"
                     )
+                    logger.error(f"Python executable used: {python_executable}")
+                    logger.error(f"Python executable exists: {os.path.exists(python_executable)}")
+                    logger.error(f"manage.py exists: {os.path.exists('manage.py')}")
+                    logger.error(f"Current directory: {os.getcwd()}")
                     logger.error(f"Stdout: {migrate_result.stdout}")
                     logger.error(f"Stderr: {migrate_result.stderr}")
                     raise RuntimeError(f"Migrate failed: {migrate_result.stderr}")
