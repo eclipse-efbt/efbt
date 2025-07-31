@@ -3,6 +3,7 @@ name: BIRD Tests
 on:
   push:
     branches:
+      - master
       - develop
       - 'feature-improve.*'
 jobs:
