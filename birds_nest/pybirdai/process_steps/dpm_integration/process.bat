@@ -33,21 +33,21 @@ echo Using PowerShell Core (pwsh.exe) from PATH
 
 REM Call PowerShell script to do the actual export
 %PS_PATH% -ExecutionPolicy Bypass -Command ^
-"$ErrorActionPreference = 'Stop'; ^
+"$ErrorActionPreference = \"Stop\"; ^
 try { ^
-    Write-Host 'Using ADODB/DAO method for Access database export...'; ^
-    $connectionString = 'Provider=Microsoft.ACE.OLEDB.16.0;Data Source=%FULL_PATH%;'; ^
+    Write-Host \"Using ADODB/DAO method for Access database export...\"; ^
+    $connectionString = \"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=%FULL_PATH%;\"; ^
     $connection = New-Object -ComObject ADODB.Connection; ^
     $connection.Open($connectionString); ^
-    Write-Host 'Connected to database successfully'; ^
+    Write-Host \"Connected to database successfully\"; ^
     ^
     $recordset = New-Object -ComObject ADODB.Recordset; ^
-    $recordset.Open('SELECT Name FROM MSysObjects WHERE Type=1 AND Flags=0', $connection); ^
+    $recordset.Open(\\\"SELECT Name FROM MSysObjects WHERE Type=1 AND Flags=0\\\", $connection); ^
     ^
     $tables = @(); ^
     while (-not $recordset.EOF) { ^
-        $tableName = $recordset.Fields.Item('Name').Value; ^
-        if ($tableName -notlike 'MSys*' -and $tableName -notlike '~*') { ^
+        $tableName = $recordset.Fields.Item(\\\"Name\\\").Value; ^
+        if ($tableName -notlike \\\"MSys*\\\" -and $tableName -notlike \\\"~*\\\") { ^
             $tables += $tableName; ^
         } ^
         $recordset.MoveNext(); ^
@@ -74,18 +74,18 @@ try { ^
             for ($i = 0; $i -lt $rs.Fields.Count; $i++) { ^
                 $headers += $rs.Fields.Item($i).Name; ^
             } ^
-            $stream.WriteText(($headers -join ',') + \"`r`n\"); ^
+            $stream.WriteText(($headers -join \\\",\\\") + \\\"`r`n\\\"); ^
             ^
             while (-not $rs.EOF) { ^
                 $row = @(); ^
                 for ($i = 0; $i -lt $rs.Fields.Count; $i++) { ^
                     $value = $rs.Fields.Item($i).Value; ^
-                    if ($null -eq $value) { $value = ''; } ^
-                    $value = $value.ToString().Replace('\"', '\"\"'); ^
-                    if ($value.Contains(',') -or $value.Contains(\"`r\") -or $value.Contains(\"`n\") -or $value.Contains('\"')) { $value = \"\"\"$value\"\"\"; } ^
+                    if ($null -eq $value) { $value = \\\"\\\"; } ^
+                    $value = $value.ToString().Replace(\\\"\\\\\\\"\\\", \\\"\\\\\\\"\\\\\\\"\\\"); ^
+                    if ($value.Contains(\\\",\\\") -or $value.Contains(\\\"`r\\\") -or $value.Contains(\\\"`n\\\") -or $value.Contains(\\\"\\\\\\\"\\\")) { $value = \\\"\\\\\\\"\\\\\\\"$value\\\\\\\"\\\\\\\"\\\"; } ^
                     $row += $value; ^
                 } ^
-                $stream.WriteText(($row -join ',') + \"`r`n\"); ^
+                $stream.WriteText(($row -join \\\",\\\") + \\\"`r`n\\\"); ^
                 $rs.MoveNext(); ^
             } ^
             ^
