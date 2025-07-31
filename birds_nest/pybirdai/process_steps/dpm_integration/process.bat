@@ -27,44 +27,9 @@ if not exist "target" mkdir target
 echo Exporting Access database: %DATABASE%
 echo.
 
-REM Detect PowerShell availability - try PowerShell Core first, then Windows PowerShell
-
-REM First try PowerShell Core (pwsh) which is commonly available in CI environments
-where /q pwsh 2>nul
-if %errorlevel% equ 0 (
-    set "PS_PATH=pwsh"
-    echo Using PowerShell Core (pwsh)
-    goto :PowerShellFound
-)
-
-REM Check for Windows PowerShell in different locations
-if exist "%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe" (
-    set "PS_PATH=%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe"
-    echo Using Windows PowerShell from System32
-    goto :PowerShellFound
-)
-
-if exist "%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe" (
-    REM Only exists when running from 32-bit process on 64-bit OS
-    set "PS_PATH=%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe"
-    echo Using 64-bit PowerShell from sysnative
-    goto :PowerShellFound
-)
-
-REM Try PowerShell from PATH as last resort
-where /q powershell 2>nul
-if %errorlevel% equ 0 (
-    set "PS_PATH=powershell"
-    echo Using PowerShell from PATH
-    goto :PowerShellFound
-)
-
-REM No PowerShell found
-echo Error: Neither PowerShell Core (pwsh) nor Windows PowerShell could be found
-echo Please ensure PowerShell is installed and available in PATH
-exit /b 1
-
-:PowerShellFound
+REM Use PowerShell Core (pwsh.exe) which should be available in PATH
+set "PS_PATH=pwsh.exe"
+echo Using PowerShell Core (pwsh.exe) from PATH
 
 REM Call PowerShell script to do the actual export
 %PS_PATH% -ExecutionPolicy Bypass -Command ^
