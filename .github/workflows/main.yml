@@ -18,35 +18,41 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }} (64-bit)
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+        architecture: 'x64'  # Explicitly request 64-bit Python
 
-    - name: Install Microsoft Access Database Engine 2016 (Windows)
+    - name: Verify 64-bit environment
       if: runner.os == 'Windows'
+      shell: pwsh
       run: |
-        # Detect system architecture and PowerShell bitness
-        Write-Host "Detecting system architecture..."
-        $is64Bit = [Environment]::Is64BitOperatingSystem
-        $psIs64Bit = [Environment]::Is64BitProcess
+        Write-Host "=== Environment Architecture Check ==="
+        Write-Host "PowerShell Core Architecture: $([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture)"
+        Write-Host "OS Architecture: $([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)"
+        Write-Host "Is 64-bit Process: $([Environment]::Is64BitProcess)"
+        Write-Host "Is 64-bit OS: $([Environment]::Is64BitOperatingSystem)"
+        Write-Host "Processor Architecture: $env:PROCESSOR_ARCHITECTURE"
+        Write-Host "Python path: $(Get-Command python).Path"
         
-        Write-Host "Operating System is 64-bit: $is64Bit"
-        Write-Host "PowerShell process is 64-bit: $psIs64Bit"
-        
-        # Install Microsoft Access Database Engine 2016 Redistributable
-        Write-Host "Installing Microsoft Access Database Engine 2016 Redistributable..."
-        
-        # Choose appropriate installer based on architecture
-        if ($psIs64Bit) {
-            $downloadUrl = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessDatabaseEngine_X64.exe"
-            $installerPath = "$env:TEMP\AccessDatabaseEngine_X64.exe"
-            Write-Host "Using 64-bit Access Database Engine installer"
-        } else {
-            $downloadUrl = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessDatabaseEngine.exe"
-            $installerPath = "$env:TEMP\AccessDatabaseEngine.exe"
-            Write-Host "Using 32-bit Access Database Engine installer"
+        # Verify we're in 64-bit
+        if (-not [Environment]::Is64BitProcess) {
+            throw "Not running in 64-bit mode!"
         }
+
+    - name: Install Microsoft Access Database Engine 2016 x64 (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        # Force 64-bit installation
+        Write-Host "Installing Microsoft Access Database Engine 2016 x64..."
+        
+        # 64-bit installer URL
+        $downloadUrl = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessDatabaseEngine_X64.exe"
+        $installerPath = "$env:TEMP\AccessDatabaseEngine_X64.exe"
+        
+        Write-Host "Downloading 64-bit Access Database Engine..."
         
         # Download the installer
         Write-Host "Downloading Access Database Engine from Microsoft..."
@@ -89,12 +95,13 @@ jobs:
             Write-Host "Error: Installer file not found at $installerPath"
             exit 1
         }
-      shell: powershell
+      shell: pwsh
 
     - name: Installation of uv
       uses: astral-sh/setup-uv@v1
 
     - name: Setup environment
+      shell: pwsh
       run: |
         cd birds_nest
         uv sync
@@ -110,6 +117,9 @@ jobs:
     #     uv run pybirdai/standalone/run_ancrdt_pipeline.py
 
     - name: Run DPM Feature pipelines
+      shell: pwsh
       run: |
+        # Verify we're still in 64-bit mode before running
+        Write-Host "Running DPM pipeline in 64-bit mode: $([Environment]::Is64BitProcess)"
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline.py
