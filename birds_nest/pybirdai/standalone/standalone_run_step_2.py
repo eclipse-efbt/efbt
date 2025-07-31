@@ -37,8 +37,8 @@ class DjangoSetup:
 
 if __name__ == "__main__":
     DjangoSetup.configure_django()
-    from .entry_points.create_filters import RunCreateFilters
-    from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
+    from pybirdai.entry_points.create_filters import RunCreateFilters
+    from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
 
     logger.info("Executing generate filters substep...")
     RunCreateFilters.run_create_filters()
