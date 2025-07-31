@@ -12,7 +12,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-latest, windows-latest]
         python-version: [3.13]
 
     steps:
@@ -23,6 +23,14 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: 'x64'  # Explicitly request 64-bit Python
+
+    - name: Setup Linux environment
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mdbtools
+        sudo chmod -R u+w birds_nest/
+        sudo chown www-data:www-data birds_nest/
 
     - name: Verify 64-bit environment
       if: runner.os == 'Windows'
@@ -104,35 +112,35 @@ jobs:
         $downloadUrl = "https://www.sqlite.org/2024/sqlite-tools-win-x64-3460000.zip"
         $zipPath = "$env:TEMP\sqlite-tools.zip"
         $extractPath = "$env:TEMP\sqlite-tools"
-        
+
         try {
           # Download SQLite tools
           Write-Host "Downloading SQLite tools..."
           Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
-          
+
           if (-not (Test-Path $zipPath)) {
             throw "Failed to download SQLite tools"
           }
-          
+
           # Extract to temp folder
           Write-Host "Extracting SQLite tools..."
           Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
-          
+
           # List contents for debugging
           Write-Host "Contents of extracted folder:"
           Get-ChildItem -Path $extractPath -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
-          
+
           # Find sqlite3.exe (removed -Name parameter to get file objects)
           $sqliteExe = Get-ChildItem -Path $extractPath -Filter "sqlite3.exe" -Recurse | Select-Object -First 1
-          
+
           if ($sqliteExe -and $sqliteExe.FullName) {
             $sourcePath = $sqliteExe.FullName
             Write-Host "Found sqlite3.exe at: $sourcePath"
-            
+
             # Copy to system directory
             Copy-Item $sourcePath "C:\Windows\System32\sqlite3.exe" -Force
             Write-Host "SQLite installed successfully"
-            
+
             # Verify installation
             $version = & sqlite3 -version
             Write-Host "SQLite version: $version"
@@ -156,46 +164,100 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-uv-
 
-    - name: Setup environment
+    - name: Setup environment (Windows)
+      if: runner.os == 'Windows'
       shell: pwsh
       run: |
         cd birds_nest
         uv sync
 
-    # - name: Run Core Feature Setup
-    #   run: |
-    #     cd birds_nest
-    #     uv run pybirdai/standalone/run_core_pipeline.py
-    #
-    # - name: Run Core Feature Pipeline
-    #   run: |
-    #     cd birds_nest
-    #     uv run pybirdai/standalone/run_core_pipeline.py
+    - name: Setup environment (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        cd birds_nest
+        uv sync
 
-    # - name: Run Core Feature Setup
-    #   run: |
-    #     cd birds_nest
-    #     uv run pybirdai/standalone/run_core_pipeline.py
-    #
-    # - name: Run Core Feature Pipeline
-    #   run: |
-    #     cd birds_nest
-    #     uv run pybirdai/standalone/run_core_pipeline.py
-    #
-    # - name: Run Core Feature Setup
-    #   run: |
-    #     cd birds_nest
-    #     uv run pybirdai/standalone/run_core_pipeline.py
+    - name: Run Core Feature Setup (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_setup.py
 
-    - name: Run DPM Feature Setup
+    - name: Run Core Feature Setup (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_setup.py
+
+    - name: Run Core Feature Pipeline (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
+
+    - name: Run Core Feature Pipeline (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
+
+    - name: Run ANCRDT Feature Setup (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_setup.py
+
+    - name: Run ANCRDT Feature Setup (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_setup.py
+
+    - name: Run ANCRDT Feature Pipeline (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+
+    - name: Run ANCRDT Feature Pipeline (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+
+    - name: Run DPM Feature Setup (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline_setup.py
 
-    - name: Run DPM Feature pipelines
+    - name: Run DPM Feature Setup (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_dpm_pipeline_setup.py
+
+    - name: Run DPM Feature Pipeline (Windows)
+      if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        # Verify we're still in 64-bit mode before running
-        Write-Host "Running DPM pipeline in 64-bit mode: $([Environment]::Is64BitProcess)"
+        cd birds_nest
+        uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
+
+    - name: Run DPM Feature Pipeline (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
