@@ -76,33 +76,12 @@ try { ^
 
 if errorlevel 1 (
     echo.
-    echo PowerShell/Access method failed. Trying Python fallback...
-    echo.
-    
-    REM Try Python-based export as fallback
-    REM Check if we're in a uv environment and use appropriate Python command
-    if exist "pyproject.toml" (
-        echo Detected uv project, using 'uv run python'
-        uv run python "%~dp0export_access_python.py" "%FULL_PATH%" --output-dir target
-    ) else (
-        echo Using system python
-        python "%~dp0export_access_python.py" "%FULL_PATH%" --output-dir target
-    )
-    
-    if errorlevel 1 (
-        echo.
-        echo Both export methods failed. Make sure:
-        echo - Microsoft Access or Access Runtime is installed (for PowerShell method)
-        echo - OR Python with pandas/pyodbc is available (for Python method)
-        echo - The database file is not corrupted
-        echo - The database is not password protected
-        echo - No other application is using the database
-        exit /b 1
-    ) else (
-        echo.
-        echo Export completed successfully using Python method
-        exit /b 0
-    )
+    echo Export failed. Make sure:
+    echo - Microsoft Access or Access Runtime is installed
+    echo - The database file is not corrupted
+    echo - The database is not password protected
+    echo - No other application is using the database
+    exit /b 1
 )
 
 exit /b 0
