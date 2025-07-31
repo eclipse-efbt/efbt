@@ -28,14 +28,51 @@ echo Exporting Access database: %DATABASE%
 echo.
 
 REM Call PowerShell script to do the actual export
-set "SCRIPT_DIR=%~dp0"
-set "PS_SCRIPT=%SCRIPT_DIR%export_access_tables.ps1"
-echo PowerShell script path: %PS_SCRIPT%
-if not exist "%PS_SCRIPT%" (
-    echo Error: PowerShell script not found at %PS_SCRIPT%
-    exit /b 1
-)
-powershell -ExecutionPolicy Bypass -File "%PS_SCRIPT%" -DatabasePath "%FULL_PATH%"
+powershell -ExecutionPolicy Bypass -Command ^
+"$ErrorActionPreference = 'Stop'; ^
+try { ^
+    $access = New-Object -ComObject Access.Application; ^
+    $access.Visible = $false; ^
+    Write-Host 'Opening database...'; ^
+    $db = $access.OpenCurrentDatabase('%FULL_PATH%'); ^
+    $tables = $access.CurrentDb().TableDefs; ^
+    $tableCount = 0; ^
+    $exportedCount = 0; ^
+    foreach ($table in $tables) { ^
+        if ($table.Name -notlike 'MSys*' -and $table.Name -notlike '~*') { ^
+            $tableCount++; ^
+            $tableName = $table.Name; ^
+            $csvPath = Join-Path (Get-Location) \"target\$tableName.csv\"; ^
+            Write-Host \"Exporting table: $tableName\"; ^
+            try { ^
+                $access.DoCmd.TransferText(2, $null, $tableName, $csvPath, $true); ^
+                Write-Host \"Successfully exported $tableName to target\$tableName.csv\"; ^
+                $exportedCount++; ^
+            } catch { ^
+                Write-Host \"Error exporting table $($tableName): $($_.Exception.Message)\" -ForegroundColor Red; ^
+            } ^
+        } ^
+    }; ^
+    Write-Host \"\"; ^
+    Write-Host \"Export Summary:\"; ^
+    Write-Host \"- Total tables found: $tableCount\"; ^
+    Write-Host \"- Successfully exported: $exportedCount\"; ^
+    $access.CloseCurrentDatabase(); ^
+    $access.Quit(); ^
+    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($access) | Out-Null; ^
+    [System.GC]::Collect(); ^
+    [System.GC]::WaitForPendingFinalizers(); ^
+    Write-Host \"Export complete\"; ^
+} catch { ^
+    Write-Host \"Error: $($_.Exception.Message)\" -ForegroundColor Red; ^
+    if ($access) { ^
+        try { ^
+            $access.Quit(); ^
+            [System.Runtime.Interopservices.Marshal]::ReleaseComObject($access) | Out-Null; ^
+        } catch {} ^
+    }; ^
+    exit 1; ^
+}"
 
 if errorlevel 1 (
     echo.
