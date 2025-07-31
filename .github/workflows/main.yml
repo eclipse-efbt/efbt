@@ -111,14 +111,17 @@ jobs:
         # Extract to temp folder
         Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
         
-        # Copy sqlite3.exe to a location in PATH
-        $sqliteExe = Get-ChildItem -Path $extractPath -Name "sqlite3.exe" -Recurse | Select-Object -First 1
+        # Find and copy sqlite3.exe to a location in PATH
+        $sqliteExe = Get-ChildItem -Path $extractPath -Name "sqlite3.exe" -Recurse
         if ($sqliteExe) {
-          $sourcePath = Join-Path $extractPath $sqliteExe.Directory.Name "sqlite3.exe"
+          $sourcePath = $sqliteExe.FullName
           Copy-Item $sourcePath "C:\Windows\System32\sqlite3.exe" -Force
-          Write-Host "SQLite installed successfully"
+          Write-Host "SQLite installed successfully from $sourcePath"
         } else {
           Write-Host "Error: sqlite3.exe not found in downloaded package"
+          # List contents for debugging
+          Write-Host "Contents of extracted folder:"
+          Get-ChildItem -Path $extractPath -Recurse
           exit 1
         }
         
