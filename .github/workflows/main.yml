@@ -99,21 +99,49 @@ jobs:
     - name: Installation of uv
       uses: astral-sh/setup-uv@v1
 
+    - name: Cache uv dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/uv
+        key: ${{ runner.os }}-uv-${{ hashFiles('birds_nest/uv.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-uv-
+
     - name: Setup environment
       shell: pwsh
       run: |
         cd birds_nest
         uv sync
 
-    # - name: Run Core Feature pipelines
+    # - name: Run Core Feature Setup
+    #   run: |
+    #     cd birds_nest
+    #     uv run pybirdai/standalone/run_core_pipeline.py
+    #
+    # - name: Run Core Feature Pipeline
     #   run: |
     #     cd birds_nest
     #     uv run pybirdai/standalone/run_core_pipeline.py
 
-    # - name: Run ANCRDT Feature pipelines
+    # - name: Run Core Feature Setup
     #   run: |
     #     cd birds_nest
-    #     uv run pybirdai/standalone/run_ancrdt_pipeline.py
+    #     uv run pybirdai/standalone/run_core_pipeline.py
+    #
+    # - name: Run Core Feature Pipeline
+    #   run: |
+    #     cd birds_nest
+    #     uv run pybirdai/standalone/run_core_pipeline.py
+    #
+    # - name: Run Core Feature Setup
+    #   run: |
+    #     cd birds_nest
+    #     uv run pybirdai/standalone/run_core_pipeline.py
+
+    - name: Run DPM Feature Setup
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_dpm_pipeline_setup.py
 
     - name: Run DPM Feature pipelines
       shell: pwsh
@@ -121,4 +149,4 @@ jobs:
         # Verify we're still in 64-bit mode before running
         Write-Host "Running DPM pipeline in 64-bit mode: $([Environment]::Is64BitProcess)"
         cd birds_nest
-        uv run pybirdai/standalone/run_dpm_pipeline.py
+        uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
