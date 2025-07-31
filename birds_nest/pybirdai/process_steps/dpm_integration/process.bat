@@ -28,7 +28,14 @@ echo Exporting Access database: %DATABASE%
 echo.
 
 REM Call PowerShell script to do the actual export
-powershell -ExecutionPolicy Bypass -File "%~dp0export_access_tables.ps1" -DatabasePath "%FULL_PATH%"
+set "SCRIPT_DIR=%~dp0"
+set "PS_SCRIPT=%SCRIPT_DIR%export_access_tables.ps1"
+echo PowerShell script path: %PS_SCRIPT%
+if not exist "%PS_SCRIPT%" (
+    echo Error: PowerShell script not found at %PS_SCRIPT%
+    exit /b 1
+)
+powershell -ExecutionPolicy Bypass -File "%PS_SCRIPT%" -DatabasePath "%FULL_PATH%"
 
 if errorlevel 1 (
     echo.
