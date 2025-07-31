@@ -27,29 +27,44 @@ if not exist "target" mkdir target
 echo Exporting Access database: %DATABASE%
 echo.
 
-REM Detect if we should use 32-bit or 64-bit PowerShell
-REM Access.Application COM object requires matching architecture
+REM Detect PowerShell availability - try PowerShell Core first, then Windows PowerShell
 
-REM Check for PowerShell in different locations
+REM First try PowerShell Core (pwsh) which is commonly available in CI environments
+where /q pwsh 2>nul
+if %errorlevel% equ 0 (
+    set "PS_PATH=pwsh"
+    echo Using PowerShell Core (pwsh)
+    goto :PowerShellFound
+)
+
+REM Check for Windows PowerShell in different locations
 if exist "%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe" (
     set "PS_PATH=%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe"
-    echo Using PowerShell from System32
-) else if exist "%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe" (
+    echo Using Windows PowerShell from System32
+    goto :PowerShellFound
+)
+
+if exist "%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe" (
     REM Only exists when running from 32-bit process on 64-bit OS
     set "PS_PATH=%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe"
     echo Using 64-bit PowerShell from sysnative
-) else (
-    REM Fallback to PATH
-    set "PS_PATH=powershell"
-    echo Using PowerShell from PATH
+    goto :PowerShellFound
 )
 
-REM Verify PowerShell exists
-where /q "%PS_PATH%" 2>nul
-if errorlevel 1 (
-    echo Error: PowerShell not found at %PS_PATH%
-    exit /b 1
+REM Try PowerShell from PATH as last resort
+where /q powershell 2>nul
+if %errorlevel% equ 0 (
+    set "PS_PATH=powershell"
+    echo Using PowerShell from PATH
+    goto :PowerShellFound
 )
+
+REM No PowerShell found
+echo Error: Neither PowerShell Core (pwsh) nor Windows PowerShell could be found
+echo Please ensure PowerShell is installed and available in PATH
+exit /b 1
+
+:PowerShellFound
 
 REM Call PowerShell script to do the actual export
 %PS_PATH% -ExecutionPolicy Bypass -Command ^
