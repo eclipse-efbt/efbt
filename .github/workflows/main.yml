@@ -23,6 +23,59 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Install Microsoft Access Database Engine 2016 (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        # Install Microsoft Access Database Engine 2016 Redistributable (64-bit)
+        Write-Host "Installing Microsoft Access Database Engine 2016 Redistributable..."
+        
+        # Direct download URL for Access Database Engine 2016
+        $downloadUrl = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessDatabaseEngine_X64.exe"
+        $installerPath = "$env:TEMP\AccessDatabaseEngine_X64.exe"
+        
+        # Download the installer
+        Write-Host "Downloading Access Database Engine from Microsoft..."
+        try {
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath -UseBasicParsing
+            Write-Host "Download completed successfully"
+        } catch {
+            Write-Host "Error downloading: $_"
+            # Try alternative download method
+            $webClient = New-Object System.Net.WebClient
+            $webClient.DownloadFile($downloadUrl, $installerPath)
+        }
+        
+        # Verify download
+        if (Test-Path $installerPath) {
+            $fileSize = (Get-Item $installerPath).Length
+            Write-Host "Installer downloaded: $fileSize bytes"
+            
+            # Install silently
+            Write-Host "Installing Access Database Engine silently..."
+            $process = Start-Process -FilePath $installerPath -ArgumentList "/quiet", "/norestart", "ACCEPT=YES" -PassThru -Wait
+            
+            # Check exit code
+            if ($process.ExitCode -eq 0) {
+                Write-Host "Access Database Engine installed successfully"
+            } else {
+                Write-Host "Installation completed with exit code: $($process.ExitCode)"
+            }
+            
+            # Verify installation by checking for ACE OLEDB provider
+            Write-Host "Verifying installation..."
+            $aceProvider = Get-ItemProperty "HKLM:\SOFTWARE\Classes\Microsoft.ACE.OLEDB.16.0" -ErrorAction SilentlyContinue
+            if ($aceProvider) {
+                Write-Host "ACE OLEDB 16.0 provider is registered"
+            } else {
+                Write-Host "Warning: ACE OLEDB provider not found in registry"
+            }
+        } else {
+            Write-Host "Error: Installer file not found at $installerPath"
+            exit 1
+        }
+      shell: powershell
+
     - name: Installation of uv
       uses: astral-sh/setup-uv@v1
 
