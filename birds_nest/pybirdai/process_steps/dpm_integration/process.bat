@@ -59,7 +59,7 @@ try { ^
     Write-Host \"- Successfully exported: $exportedCount\"; ^
     $access.CloseCurrentDatabase(); ^
     $access.Quit(); ^
-    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($access) | Out-Null; ^
+    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($access); ^
     [System.GC]::Collect(); ^
     [System.GC]::WaitForPendingFinalizers(); ^
     Write-Host \"Export complete\"; ^
@@ -68,7 +68,7 @@ try { ^
     if ($access) { ^
         try { ^
             $access.Quit(); ^
-            [System.Runtime.Interopservices.Marshal]::ReleaseComObject($access) | Out-Null; ^
+            [System.Runtime.Interopservices.Marshal]::ReleaseComObject($access); ^
         } catch {} ^
     }; ^
     exit 1; ^
