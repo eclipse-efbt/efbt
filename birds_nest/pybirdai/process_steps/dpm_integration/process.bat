@@ -29,11 +29,27 @@ echo.
 
 REM Detect if we should use 32-bit or 64-bit PowerShell
 REM Access.Application COM object requires matching architecture
-set "PS_PATH=powershell"
 
-REM Running from 32-bit context, use 64-bit PowerShell
-set "PS_PATH=%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe"
-echo Using 64-bit PowerShell from sysnative
+REM Check for PowerShell in different locations
+if exist "%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe" (
+    set "PS_PATH=%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe"
+    echo Using PowerShell from System32
+) else if exist "%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe" (
+    REM Only exists when running from 32-bit process on 64-bit OS
+    set "PS_PATH=%WINDIR%\sysnative\WindowsPowerShell\v1.0\powershell.exe"
+    echo Using 64-bit PowerShell from sysnative
+) else (
+    REM Fallback to PATH
+    set "PS_PATH=powershell"
+    echo Using PowerShell from PATH
+)
+
+REM Verify PowerShell exists
+where /q "%PS_PATH%" 2>nul
+if errorlevel 1 (
+    echo Error: PowerShell not found at %PS_PATH%
+    exit /b 1
+)
 
 REM Call PowerShell script to do the actual export
 %PS_PATH% -ExecutionPolicy Bypass -Command ^
@@ -86,7 +102,7 @@ try { ^
                     $value = $rs.Fields.Item($i).Value; ^
                     if ($null -eq $value) { $value = ''; } ^
                     $value = $value.ToString().Replace('\"', '\"\"'); ^
-                    if ($value -match '[,\r\n\"]') { $value = \"\"\"$value\"\"\"; } ^
+                    if ($value.Contains(',') -or $value.Contains(\"`r\") -or $value.Contains(\"`n\") -or $value.Contains('\"')) { $value = \"\"\"$value\"\"\"; } ^
                     $row += $value; ^
                 } ^
                 $stream.WriteText(($row -join ',') + \"`r`n\"); ^
