@@ -23,6 +23,22 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Install Microsoft Access Runtime (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        # Download and install Microsoft Access 2016 Runtime (free)
+        $url = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessRuntime_x64_en-us.exe"
+        $output = "$env:TEMP\AccessRuntime.exe"
+        
+        Write-Host "Downloading Microsoft Access Runtime..."
+        Invoke-WebRequest -Uri $url -OutFile $output
+        
+        Write-Host "Installing Microsoft Access Runtime..."
+        Start-Process -FilePath $output -ArgumentList "/quiet", "/norestart" -Wait
+        
+        Write-Host "Microsoft Access Runtime installation completed"
+      shell: powershell
+
     - name: Installation of uv
       uses: astral-sh/setup-uv@v1
 
