@@ -46,19 +46,24 @@ jobs:
         $downloadUrl = "https://download.microsoft.com/download/3/5/C/35C84C36-661A-44E6-9324-8786B8DBE231/AccessDatabaseEngine_X64.exe"
         $installerPath = "$env:TEMP\AccessDatabaseEngine_X64.exe"
 
-        Write-Host "Downloading 64-bit Access Database Engine..."
-
-        # Download the installer
-        Write-Host "Downloading Access Database Engine from Microsoft..."
-        try {
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath -UseBasicParsing
-            Write-Host "Download completed successfully"
-        } catch {
-            Write-Host "Error downloading: $_"
-            # Try alternative download method
-            $webClient = New-Object System.Net.WebClient
-            $webClient.DownloadFile($downloadUrl, $installerPath)
+        # Check if installer was restored from cache
+        if (Test-Path $installerPath) {
+            Write-Host "✅ Access Database Engine installer found in cache"
+            $fileSize = (Get-Item $installerPath).Length
+            Write-Host "Cached installer size: $fileSize bytes"
+        } else {
+            Write-Host "⬇️ Downloading Access Database Engine from Microsoft..."
+            # Download the installer
+            try {
+                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+                Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath -UseBasicParsing
+                Write-Host "Download completed successfully"
+            } catch {
+                Write-Host "Error downloading: $_"
+                # Try alternative download method
+                $webClient = New-Object System.Net.WebClient
+                $webClient.DownloadFile($downloadUrl, $installerPath)
+            }
         }
 
         # Verify download
@@ -99,12 +104,18 @@ jobs:
         $extractPath = "$env:TEMP\sqlite-tools"
 
         try {
-          # Download SQLite tools
-          Write-Host "Downloading SQLite tools..."
-          Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
-
-          if (-not (Test-Path $zipPath)) {
-            throw "Failed to download SQLite tools"
+          # Check if SQLite tools were restored from cache
+          if (Test-Path $zipPath) {
+              Write-Host "✅ SQLite tools found in cache"
+              $fileSize = (Get-Item $zipPath).Length
+              Write-Host "Cached SQLite tools size: $fileSize bytes"
+          } else {
+              Write-Host "⬇️ Downloading SQLite tools..."
+              Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
+              
+              if (-not (Test-Path $zipPath)) {
+                throw "Failed to download SQLite tools"
+              }
           }
 
           # Extract to temp folder
@@ -138,21 +149,49 @@ jobs:
           exit 1
         }
 
+    - name: Cache Windows installers
+      id: cache-installers
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ runner.temp }}/AccessDatabaseEngine_X64.exe
+          ${{ runner.temp }}/sqlite-tools.zip
+        key: windows-installers-ace2016-sqlite3460000-v1
+        enableCrossOsArchive: false
+
     - name: Installation of uv
       uses: astral-sh/setup-uv@v1
 
-    - name: Cache uv dependencies
+    - name: Cache UV dependencies and tools
+      id: cache-uv
       uses: actions/cache@v4
       with:
-        path: ~/.cache/uv
-        key: windows-uv-${{ hashFiles('birds_nest/uv.lock') }}
+        path: |
+          ~/.cache/uv
+          ~/.local/share/uv
+        key: windows-x64-py3.13-uv-${{ hashFiles('birds_nest/uv.lock', 'birds_nest/pyproject.toml') }}
         restore-keys: |
+          windows-x64-py3.13-uv-${{ hashFiles('birds_nest/uv.lock') }}
+          windows-x64-py3.13-uv-
+          windows-x64-uv-
           windows-uv-
+
+    - name: Cache status report
+      shell: pwsh
+      run: |
+        Write-Host "=== Cache Status Report ==="
+        Write-Host "Windows Installers Cache Hit: ${{ steps.cache-installers.outputs.cache-hit }}"
+        Write-Host "UV Dependencies Cache Hit: ${{ steps.cache-uv.outputs.cache-hit }}"
 
     - name: Setup environment
       shell: pwsh
       run: |
         cd birds_nest
+        if ("${{ steps.cache-uv.outputs.cache-hit }}" -eq "true") {
+            Write-Host "✅ UV cache hit - dependencies should be ready"
+        } else {
+            Write-Host "⬇️ UV cache miss - installing dependencies"
+        }
         uv sync
 
     - name: Run Core Feature Setup
@@ -197,8 +236,24 @@ jobs:
       with:
         python-version: '3.13'
 
+    - name: Cache apt packages
+      id: cache-apt
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/apt/archives
+        key: ubuntu-latest-apt-mdbtools-${{ runner.os }}-v1
+        restore-keys: |
+          ubuntu-latest-apt-mdbtools-${{ runner.os }}
+          ubuntu-latest-apt-mdbtools-
+          ubuntu-latest-apt-
+
     - name: Setup Unix environment
       run: |
+        if [ "${{ steps.cache-apt.outputs.cache-hit }}" = "true" ]; then
+            echo "✅ APT cache hit - packages may be cached"
+        else
+            echo "⬇️ APT cache miss - updating package lists"
+        fi
         sudo apt-get update
         sudo apt-get install -y mdbtools
         # Ensure the runner user owns and can write to the birds_nest directory
@@ -208,17 +263,34 @@ jobs:
     - name: Installation of uv
       uses: astral-sh/setup-uv@v1
 
-    - name: Cache uv dependencies
+    - name: Cache UV dependencies and tools
+      id: cache-uv
       uses: actions/cache@v4
       with:
-        path: ~/.cache/uv
-        key: unix-uv-${{ hashFiles('birds_nest/uv.lock') }}
+        path: |
+          ~/.cache/uv
+          ~/.local/share/uv
+        key: unix-x64-py3.13-uv-${{ hashFiles('birds_nest/uv.lock', 'birds_nest/pyproject.toml') }}
         restore-keys: |
+          unix-x64-py3.13-uv-${{ hashFiles('birds_nest/uv.lock') }}
+          unix-x64-py3.13-uv-
+          unix-x64-uv-
           unix-uv-
+
+    - name: Cache status report
+      run: |
+        echo "=== Cache Status Report ==="
+        echo "APT Packages Cache Hit: ${{ steps.cache-apt.outputs.cache-hit }}"
+        echo "UV Dependencies Cache Hit: ${{ steps.cache-uv.outputs.cache-hit }}"
 
     - name: Setup environment
       run: |
         cd birds_nest
+        if [ "${{ steps.cache-uv.outputs.cache-hit }}" = "true" ]; then
+            echo "✅ UV cache hit - dependencies should be ready"
+        else
+            echo "⬇️ UV cache miss - installing dependencies"
+        fi
         uv sync
 
     - name: Run Core Feature Setup
