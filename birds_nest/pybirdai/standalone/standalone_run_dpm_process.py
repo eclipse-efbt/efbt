@@ -39,6 +39,10 @@ if __name__ == "__main__":
     DjangoSetup.configure_django()
     from pybirdai.entry_points.import_dpm_data import RunImportDPMData
     from pybirdai.entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
+    from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+
+    app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
+    app_config.run_delete_bird_metadata_database()
 
     app_config = RunImportDPMData('pybirdai', 'birds_nest')
     app_config.run_import(import_=False)
@@ -46,7 +50,5 @@ if __name__ == "__main__":
     app_config = RunImportDPMData('pybirdai', 'birds_nest')
     app_config.run_import(import_=True)
 
-    framework = "EBA_COREP"
-    version = "4.0"
     app_config = RunDPMOutputLayerCreation('pybirdai', 'birds_nest')
-    results = app_config.run_creation(framework=framework, table_code="", version=version)
+    results = app_config.run_creation(framework="EBA_COREP", table_code="", version="4.0")
