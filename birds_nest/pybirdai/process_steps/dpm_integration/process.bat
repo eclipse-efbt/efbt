@@ -31,91 +31,99 @@ REM Use PowerShell Core (pwsh.exe) which should be available in PATH
 set "PS_PATH=pwsh.exe"
 echo Using PowerShell Core (pwsh.exe) from PATH
 
-REM Call PowerShell script to do the actual export
-%PS_PATH% -ExecutionPolicy Bypass -Command ^
-"$ErrorActionPreference = \"Stop\"; ^
-try { ^
-    Write-Host \"Using ADODB/DAO method for Access database export...\"; ^
-    $connectionString = \"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=%FULL_PATH%;\"; ^
-    $connection = New-Object -ComObject ADODB.Connection; ^
-    $connection.Open($connectionString); ^
-    Write-Host \"Connected to database successfully\"; ^
-    ^
-    $recordset = New-Object -ComObject ADODB.Recordset; ^
-    $recordset.Open(\\\"SELECT Name FROM MSysObjects WHERE Type=1 AND Flags=0\\\", $connection); ^
-    ^
-    $tables = @(); ^
-    while (-not $recordset.EOF) { ^
-        $tableName = $recordset.Fields.Item(\\\"Name\\\").Value; ^
-        if ($tableName -notlike \\\"MSys*\\\" -and $tableName -notlike \\\"~*\\\") { ^
-            $tables += $tableName; ^
-        } ^
-        $recordset.MoveNext(); ^
-    } ^
-    $recordset.Close(); ^
-    ^
-    Write-Host \"Found $($tables.Count) tables to export\"; ^
-    $exportedCount = 0; ^
-    ^
-    foreach ($tableName in $tables) { ^
-        try { ^
-            Write-Host \"Exporting table: $tableName\"; ^
-            $query = \"SELECT * FROM [$tableName]\"; ^
-            $rs = New-Object -ComObject ADODB.Recordset; ^
-            $rs.Open($query, $connection); ^
-            ^
-            $csvPath = Join-Path (Get-Location) \"target\$tableName.csv\"; ^
-            $stream = New-Object -ComObject ADODB.Stream; ^
-            $stream.Open(); ^
-            $stream.Type = 2; ^
-            $stream.Charset = 'utf-8'; ^
-            ^
-            $headers = @(); ^
-            for ($i = 0; $i -lt $rs.Fields.Count; $i++) { ^
-                $headers += $rs.Fields.Item($i).Name; ^
-            } ^
-            $stream.WriteText(($headers -join \\\",\\\") + \\\"`r`n\\\"); ^
-            ^
-            while (-not $rs.EOF) { ^
-                $row = @(); ^
-                for ($i = 0; $i -lt $rs.Fields.Count; $i++) { ^
-                    $value = $rs.Fields.Item($i).Value; ^
-                    if ($null -eq $value) { $value = \\\"\\\"; } ^
-                    $value = $value.ToString().Replace(\\\"\\\\\\\"\\\", \\\"\\\\\\\"\\\\\\\"\\\"); ^
-                    if ($value.Contains(\\\",\\\") -or $value.Contains(\\\"`r\\\") -or $value.Contains(\\\"`n\\\") -or $value.Contains(\\\"\\\\\\\"\\\")) { $value = \\\"\\\\\\\"\\\\\\\"$value\\\\\\\"\\\\\\\"\\\"; } ^
-                    $row += $value; ^
-                } ^
-                $stream.WriteText(($row -join \\\",\\\") + \\\"`r`n\\\"); ^
-                $rs.MoveNext(); ^
-            } ^
-            ^
-            $stream.SaveToFile($csvPath, 2); ^
-            $stream.Close(); ^
-            $rs.Close(); ^
-            ^
-            Write-Host \"Successfully exported $tableName to target\$tableName.csv\"; ^
-            $exportedCount++; ^
-        } catch { ^
-            Write-Host \"Error exporting table $($tableName): $($_.Exception.Message)\" -ForegroundColor Red; ^
-        } ^
-    } ^
-    ^
-    Write-Host \"\"; ^
-    Write-Host \"Export Summary:\"; ^
-    Write-Host \"- Total tables found: $($tables.Count)\"; ^
-    Write-Host \"- Successfully exported: $exportedCount\"; ^
-    ^
-    $connection.Close(); ^
-    Write-Host \"Export complete\"; ^
-} catch { ^
-    Write-Host \"Error: $($_.Exception.Message)\" -ForegroundColor Red; ^
-    if ($connection) { ^
-        try { ^
-            $connection.Close(); ^
-        } catch {} ^
-    } ^
-    exit 1; ^
-}"
+REM Create temporary PowerShell script file
+set "TEMP_PS_FILE=%TEMP%\access_export_%RANDOM%.ps1"
+
+REM Write PowerShell script to temporary file
+echo $ErrorActionPreference = "Stop" > "%TEMP_PS_FILE%"
+echo try { >> "%TEMP_PS_FILE%"
+echo     Write-Host "Using ADODB/DAO method for Access database export..." >> "%TEMP_PS_FILE%"
+echo     $connectionString = "Provider=Microsoft.ACE.OLEDB.16.0;Data Source=%FULL_PATH%;" >> "%TEMP_PS_FILE%"
+echo     $connection = New-Object -ComObject ADODB.Connection >> "%TEMP_PS_FILE%"
+echo     $connection.Open($connectionString) >> "%TEMP_PS_FILE%"
+echo     Write-Host "Connected to database successfully" >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo     $recordset = New-Object -ComObject ADODB.Recordset >> "%TEMP_PS_FILE%"
+echo     $recordset.Open("SELECT Name FROM MSysObjects WHERE Type=1 AND Flags=0", $connection) >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo     $tables = @() >> "%TEMP_PS_FILE%"
+echo     while (-not $recordset.EOF) { >> "%TEMP_PS_FILE%"
+echo         $tableName = $recordset.Fields.Item("Name").Value >> "%TEMP_PS_FILE%"
+echo         if ($tableName -notlike "MSys*" -and $tableName -notlike "~*") { >> "%TEMP_PS_FILE%"
+echo             $tables += $tableName >> "%TEMP_PS_FILE%"
+echo         } >> "%TEMP_PS_FILE%"
+echo         $recordset.MoveNext() >> "%TEMP_PS_FILE%"
+echo     } >> "%TEMP_PS_FILE%"
+echo     $recordset.Close() >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo     Write-Host "Found $($tables.Count) tables to export" >> "%TEMP_PS_FILE%"
+echo     $exportedCount = 0 >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo     foreach ($tableName in $tables) { >> "%TEMP_PS_FILE%"
+echo         try { >> "%TEMP_PS_FILE%"
+echo             Write-Host "Exporting table: $tableName" >> "%TEMP_PS_FILE%"
+echo             $query = "SELECT * FROM [$tableName]" >> "%TEMP_PS_FILE%"
+echo             $rs = New-Object -ComObject ADODB.Recordset >> "%TEMP_PS_FILE%"
+echo             $rs.Open($query, $connection) >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo             $csvPath = Join-Path (Get-Location) "target\$tableName.csv" >> "%TEMP_PS_FILE%"
+echo             $stream = New-Object -ComObject ADODB.Stream >> "%TEMP_PS_FILE%"
+echo             $stream.Open() >> "%TEMP_PS_FILE%"
+echo             $stream.Type = 2 >> "%TEMP_PS_FILE%"
+echo             $stream.Charset = "utf-8" >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo             $headers = @() >> "%TEMP_PS_FILE%"
+echo             for ($i = 0; $i -lt $rs.Fields.Count; $i++) { >> "%TEMP_PS_FILE%"
+echo                 $headers += $rs.Fields.Item($i).Name >> "%TEMP_PS_FILE%"
+echo             } >> "%TEMP_PS_FILE%"
+echo             $stream.WriteText(($headers -join ",") + "`r`n") >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo             while (-not $rs.EOF) { >> "%TEMP_PS_FILE%"
+echo                 $row = @() >> "%TEMP_PS_FILE%"
+echo                 for ($i = 0; $i -lt $rs.Fields.Count; $i++) { >> "%TEMP_PS_FILE%"
+echo                     $value = $rs.Fields.Item($i).Value >> "%TEMP_PS_FILE%"
+echo                     if ($null -eq $value) { $value = "" } >> "%TEMP_PS_FILE%"
+echo                     $value = $value.ToString().Replace('"', '""') >> "%TEMP_PS_FILE%"
+echo                     if ($value.Contains(",") -or $value.Contains("`r") -or $value.Contains("`n") -or $value.Contains('"')) { $value = """$value""" } >> "%TEMP_PS_FILE%"
+echo                     $row += $value >> "%TEMP_PS_FILE%"
+echo                 } >> "%TEMP_PS_FILE%"
+echo                 $stream.WriteText(($row -join ",") + "`r`n") >> "%TEMP_PS_FILE%"
+echo                 $rs.MoveNext() >> "%TEMP_PS_FILE%"
+echo             } >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo             $stream.SaveToFile($csvPath, 2) >> "%TEMP_PS_FILE%"
+echo             $stream.Close() >> "%TEMP_PS_FILE%"
+echo             $rs.Close() >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo             Write-Host "Successfully exported $tableName to target\$tableName.csv" >> "%TEMP_PS_FILE%"
+echo             $exportedCount++ >> "%TEMP_PS_FILE%"
+echo         } catch { >> "%TEMP_PS_FILE%"
+echo             Write-Host "Error exporting table $($tableName): $($_.Exception.Message)" -ForegroundColor Red >> "%TEMP_PS_FILE%"
+echo         } >> "%TEMP_PS_FILE%"
+echo     } >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo     Write-Host "" >> "%TEMP_PS_FILE%"
+echo     Write-Host "Export Summary:" >> "%TEMP_PS_FILE%"
+echo     Write-Host "- Total tables found: $($tables.Count)" >> "%TEMP_PS_FILE%"
+echo     Write-Host "- Successfully exported: $exportedCount" >> "%TEMP_PS_FILE%"
+echo. >> "%TEMP_PS_FILE%"
+echo     $connection.Close() >> "%TEMP_PS_FILE%"
+echo     Write-Host "Export complete" >> "%TEMP_PS_FILE%"
+echo } catch { >> "%TEMP_PS_FILE%"
+echo     Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red >> "%TEMP_PS_FILE%"
+echo     if ($connection) { >> "%TEMP_PS_FILE%"
+echo         try { >> "%TEMP_PS_FILE%"
+echo             $connection.Close() >> "%TEMP_PS_FILE%"
+echo         } catch {} >> "%TEMP_PS_FILE%"
+echo     } >> "%TEMP_PS_FILE%"
+echo     exit 1 >> "%TEMP_PS_FILE%"
+echo } >> "%TEMP_PS_FILE%"
+
+REM Execute the PowerShell script
+%PS_PATH% -ExecutionPolicy Bypass -File "%TEMP_PS_FILE%"
+
+REM Clean up temporary file
+del "%TEMP_PS_FILE%" 2>nul
 
 if errorlevel 1 (
     echo.
