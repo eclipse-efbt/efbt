@@ -29,8 +29,9 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y mdbtools
-        sudo chmod -R u+w birds_nest/
-        sudo chown www-data:www-data birds_nest/
+        # Ensure the runner user owns and can write to the birds_nest directory
+        sudo chown -R $USER:$USER birds_nest/
+        chmod -R u+w birds_nest/
 
     - name: Verify 64-bit environment
       if: runner.os == 'Windows'
