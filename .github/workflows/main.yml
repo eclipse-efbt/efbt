@@ -96,6 +96,35 @@ jobs:
             exit 1
         }
 
+    - name: Install SQLite (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        Write-Host "Installing SQLite for Windows..."
+        $downloadUrl = "https://www.sqlite.org/2024/sqlite-tools-win-x64-3460000.zip"
+        $zipPath = "$env:TEMP\sqlite-tools.zip"
+        $extractPath = "$env:TEMP\sqlite-tools"
+        
+        # Download SQLite tools
+        Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
+        
+        # Extract to temp folder
+        Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
+        
+        # Copy sqlite3.exe to a location in PATH
+        $sqliteExe = Get-ChildItem -Path $extractPath -Name "sqlite3.exe" -Recurse | Select-Object -First 1
+        if ($sqliteExe) {
+          $sourcePath = Join-Path $extractPath $sqliteExe.Directory.Name "sqlite3.exe"
+          Copy-Item $sourcePath "C:\Windows\System32\sqlite3.exe" -Force
+          Write-Host "SQLite installed successfully"
+        } else {
+          Write-Host "Error: sqlite3.exe not found in downloaded package"
+          exit 1
+        }
+        
+        # Verify installation
+        sqlite3 -version
+
     - name: Installation of uv
       uses: astral-sh/setup-uv@v1
 
