@@ -1,7 +1,10 @@
 name: BIRD Tests
 
-on: push
-
+on:
+  push:
+    branches:
+      - develop
+      - 'feature-improve.*'
 jobs:
   build:
 
