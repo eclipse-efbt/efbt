@@ -105,28 +105,45 @@ jobs:
         $zipPath = "$env:TEMP\sqlite-tools.zip"
         $extractPath = "$env:TEMP\sqlite-tools"
         
-        # Download SQLite tools
-        Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
-        
-        # Extract to temp folder
-        Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
-        
-        # Find and copy sqlite3.exe to a location in PATH
-        $sqliteExe = Get-ChildItem -Path $extractPath -Name "sqlite3.exe" -Recurse
-        if ($sqliteExe) {
-          $sourcePath = $sqliteExe.FullName
-          Copy-Item $sourcePath "C:\Windows\System32\sqlite3.exe" -Force
-          Write-Host "SQLite installed successfully from $sourcePath"
-        } else {
-          Write-Host "Error: sqlite3.exe not found in downloaded package"
+        try {
+          # Download SQLite tools
+          Write-Host "Downloading SQLite tools..."
+          Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
+          
+          if (-not (Test-Path $zipPath)) {
+            throw "Failed to download SQLite tools"
+          }
+          
+          # Extract to temp folder
+          Write-Host "Extracting SQLite tools..."
+          Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
+          
           # List contents for debugging
           Write-Host "Contents of extracted folder:"
-          Get-ChildItem -Path $extractPath -Recurse
+          Get-ChildItem -Path $extractPath -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
+          
+          # Find sqlite3.exe (removed -Name parameter to get file objects)
+          $sqliteExe = Get-ChildItem -Path $extractPath -Filter "sqlite3.exe" -Recurse | Select-Object -First 1
+          
+          if ($sqliteExe -and $sqliteExe.FullName) {
+            $sourcePath = $sqliteExe.FullName
+            Write-Host "Found sqlite3.exe at: $sourcePath"
+            
+            # Copy to system directory
+            Copy-Item $sourcePath "C:\Windows\System32\sqlite3.exe" -Force
+            Write-Host "SQLite installed successfully"
+            
+            # Verify installation
+            $version = & sqlite3 -version
+            Write-Host "SQLite version: $version"
+          } else {
+            throw "sqlite3.exe not found in downloaded package"
+          }
+        }
+        catch {
+          Write-Host "Error installing SQLite: $($_.Exception.Message)"
           exit 1
         }
-        
-        # Verify installation
-        sqlite3 -version
 
     - name: Installation of uv
       uses: astral-sh/setup-uv@v1
