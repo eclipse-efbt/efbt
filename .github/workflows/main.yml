@@ -5,36 +5,21 @@ on:
     branches-ignore:
       - main
       - master
+
 jobs:
-  build:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      max-parallel: 4
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        python-version: [3.13]
-
+  build-windows:
+    runs-on: windows-latest
+    
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }} (64-bit)
+    - name: Set up Python 3.13 (64-bit)
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
-        architecture: 'x64'  # Explicitly request 64-bit Python
-
-    - name: Setup Linux environment
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y mdbtools
-        # Ensure the runner user owns and can write to the birds_nest directory
-        sudo chown -R $USER:$USER birds_nest/
-        chmod -R u+w birds_nest/
+        python-version: '3.13'
+        architecture: 'x64'
 
     - name: Verify 64-bit environment
-      if: runner.os == 'Windows'
       shell: pwsh
       run: |
         Write-Host "=== Environment Architecture Check ==="
@@ -50,8 +35,7 @@ jobs:
             throw "Not running in 64-bit mode!"
         }
 
-    - name: Install Microsoft Access Database Engine 2016 x64 (Windows)
-      if: runner.os == 'Windows'
+    - name: Install Microsoft Access Database Engine 2016 x64
       shell: pwsh
       run: |
         # Force 64-bit installation
@@ -105,43 +89,42 @@ jobs:
             exit 1
         }
 
-    - name: Install SQLite (Windows)
-      if: runner.os == 'Windows'
+    - name: Install SQLite
       shell: pwsh
       run: |
         Write-Host "Installing SQLite for Windows..."
         $downloadUrl = "https://www.sqlite.org/2024/sqlite-tools-win-x64-3460000.zip"
         $zipPath = "$env:TEMP\sqlite-tools.zip"
         $extractPath = "$env:TEMP\sqlite-tools"
-
+        
         try {
           # Download SQLite tools
           Write-Host "Downloading SQLite tools..."
           Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
-
+          
           if (-not (Test-Path $zipPath)) {
             throw "Failed to download SQLite tools"
           }
-
+          
           # Extract to temp folder
           Write-Host "Extracting SQLite tools..."
           Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
-
+          
           # List contents for debugging
           Write-Host "Contents of extracted folder:"
           Get-ChildItem -Path $extractPath -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
-
+          
           # Find sqlite3.exe (removed -Name parameter to get file objects)
           $sqliteExe = Get-ChildItem -Path $extractPath -Filter "sqlite3.exe" -Recurse | Select-Object -First 1
-
+          
           if ($sqliteExe -and $sqliteExe.FullName) {
             $sourcePath = $sqliteExe.FullName
             Write-Host "Found sqlite3.exe at: $sourcePath"
-
+            
             # Copy to system directory
             Copy-Item $sourcePath "C:\Windows\System32\sqlite3.exe" -Force
             Write-Host "SQLite installed successfully"
-
+            
             # Verify installation
             $version = & sqlite3 -version
             Write-Host "SQLite version: $version"
@@ -161,104 +144,102 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.cache/uv
-        key: ${{ runner.os }}-uv-${{ hashFiles('birds_nest/uv.lock') }}
+        key: windows-uv-${{ hashFiles('birds_nest/uv.lock') }}
         restore-keys: |
-          ${{ runner.os }}-uv-
+          windows-uv-
 
-    - name: Setup environment (Windows)
-      if: runner.os == 'Windows'
+    - name: Setup environment
       shell: pwsh
       run: |
         cd birds_nest
         uv sync
 
-    - name: Setup environment (Linux)
-      if: runner.os == 'Linux'
-      shell: bash
+    - name: Run Core Feature Setup
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_setup.py
+
+    - name: Run Core Feature Pipeline
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
+
+    - name: Run DPM Feature Pipeline
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
+
+    - name: Run ANCRDT Feature Setup
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_setup.py
+
+    - name: Run ANCRDT Feature Pipeline
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+
+  build-unix:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.13'
+
+    - name: Setup Unix environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mdbtools
+        # Ensure the runner user owns and can write to the birds_nest directory
+        sudo chown -R $USER:$USER birds_nest/
+        chmod -R u+w birds_nest/
+
+    - name: Installation of uv
+      uses: astral-sh/setup-uv@v1
+
+    - name: Cache uv dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/uv
+        key: unix-uv-${{ hashFiles('birds_nest/uv.lock') }}
+        restore-keys: |
+          unix-uv-
+
+    - name: Setup environment
       run: |
         cd birds_nest
         uv sync
 
-    - name: Run Core Feature Setup (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
+    - name: Run Core Feature Setup
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_core_pipeline_setup.py
 
-    - name: Run Core Feature Setup (Linux)
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline_setup.py
-
-    - name: Run Core Feature Pipeline (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
+    - name: Run Core Feature Pipeline
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
 
-    - name: Run Core Feature Pipeline (Linux)
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
-
-    - name: Run ANCRDT Feature Setup (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_setup.py
-
-    - name: Run ANCRDT Feature Setup (Linux)
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_setup.py
-
-    - name: Run ANCRDT Feature Pipeline (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
-
-    - name: Run ANCRDT Feature Pipeline (Linux)
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
-
-    - name: Run DPM Feature Setup (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_dpm_pipeline_setup.py
-
-    - name: Run DPM Feature Setup (Linux)
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_dpm_pipeline_setup.py
-
-    - name: Run DPM Feature Pipeline (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
+    - name: Run DPM Feature Pipeline
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
 
-    - name: Run DPM Feature Pipeline (Linux)
-      if: runner.os == 'Linux'
-      shell: bash
+    - name: Run ANCRDT Feature Setup
       run: |
         cd birds_nest
-        uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
+        uv run pybirdai/standalone/run_ancrdt_pipeline_setup.py
+
+    - name: Run ANCRDT Feature Pipeline
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
