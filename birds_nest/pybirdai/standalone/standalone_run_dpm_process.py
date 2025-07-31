@@ -37,8 +37,8 @@ class DjangoSetup:
 
 if __name__ == "__main__":
     DjangoSetup.configure_django()
-    from .entry_points.import_dpm_data import RunImportDPMData
-    from .entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
+    from pybirdai.entry_points.import_dpm_data import RunImportDPMData
+    from pybirdai.entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
 
     app_config = RunImportDPMData('pybirdai', 'birds_nest')
     app_config.run_import(import_=False)
