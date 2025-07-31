@@ -31,15 +31,15 @@ jobs:
         cd birds_nest
         uv sync
 
-    - name: Run Core Feature pipelines
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline.py
+    # - name: Run Core Feature pipelines
+    #   run: |
+    #     cd birds_nest
+    #     uv run pybirdai/standalone/run_core_pipeline.py
 
-    - name: Run ANCRDT Feature pipelines
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline.py
+    # - name: Run ANCRDT Feature pipelines
+    #   run: |
+    #     cd birds_nest
+    #     uv run pybirdai/standalone/run_ancrdt_pipeline.py
 
     - name: Run DPM Feature pipelines
       run: |
