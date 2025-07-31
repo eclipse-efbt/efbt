@@ -41,8 +41,8 @@ if __name__ == "__main__":
     os.system("uv run pybirdai/standalone/standalone_fetch_artifacts_eil.py")
     os.system("uv run pybirdai/standalone/standalone_setup_migrate_database.py")
 
-    from pybridai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+    from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
     app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
     app_config.run_delete_bird_metadata_database()
 
-    os.system("uv run pybirdai/standalone/standalone_dpm_process.py")
+    os.system("uv run pybirdai/standalone/standalone_run_dpm_process.py")
