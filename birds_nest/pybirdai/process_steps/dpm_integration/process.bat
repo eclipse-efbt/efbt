@@ -46,46 +46,85 @@ REM Call PowerShell script to do the actual export
 %PS_PATH% -ExecutionPolicy Bypass -Command ^
 "$ErrorActionPreference = 'Stop'; ^
 try { ^
-    $access = New-Object -ComObject Access.Application; ^
-    $access.Visible = $false; ^
-    Write-Host 'Opening database...'; ^
-    $db = $access.OpenCurrentDatabase('%FULL_PATH%'); ^
-    $tables = $access.CurrentDb().TableDefs; ^
-    $tableCount = 0; ^
-    $exportedCount = 0; ^
-    foreach ($table in $tables) { ^
-        if ($table.Name -notlike 'MSys*' -and $table.Name -notlike '~*') { ^
-            $tableCount++; ^
-            $tableName = $table.Name; ^
-            $csvPath = Join-Path (Get-Location) \"target\$tableName.csv\"; ^
-            Write-Host \"Exporting table: $tableName\"; ^
-            try { ^
-                $access.DoCmd.TransferText(2, $null, $tableName, $csvPath, $true); ^
-                Write-Host \"Successfully exported $tableName to target\$tableName.csv\"; ^
-                $exportedCount++; ^
-            } catch { ^
-                Write-Host \"Error exporting table $($tableName): $($_.Exception.Message)\" -ForegroundColor Red; ^
-            } ^
+    Write-Host 'Using ADODB/DAO method for Access database export...'; ^
+    $connectionString = 'Provider=Microsoft.ACE.OLEDB.16.0;Data Source=%FULL_PATH%;'; ^
+    $connection = New-Object -ComObject ADODB.Connection; ^
+    $connection.Open($connectionString); ^
+    Write-Host 'Connected to database successfully'; ^
+    ^
+    $recordset = New-Object -ComObject ADODB.Recordset; ^
+    $recordset.Open('SELECT Name FROM MSysObjects WHERE Type=1 AND Flags=0', $connection); ^
+    ^
+    $tables = @(); ^
+    while (-not $recordset.EOF) { ^
+        $tableName = $recordset.Fields.Item('Name').Value; ^
+        if ($tableName -notlike 'MSys*' -and $tableName -notlike '~*') { ^
+            $tables += $tableName; ^
         } ^
-    }; ^
+        $recordset.MoveNext(); ^
+    } ^
+    $recordset.Close(); ^
+    ^
+    Write-Host \"Found $($tables.Count) tables to export\"; ^
+    $exportedCount = 0; ^
+    ^
+    foreach ($tableName in $tables) { ^
+        try { ^
+            Write-Host \"Exporting table: $tableName\"; ^
+            $query = \"SELECT * FROM [$tableName]\"; ^
+            $rs = New-Object -ComObject ADODB.Recordset; ^
+            $rs.Open($query, $connection); ^
+            ^
+            $csvPath = Join-Path (Get-Location) \"target\$tableName.csv\"; ^
+            $stream = New-Object -ComObject ADODB.Stream; ^
+            $stream.Open(); ^
+            $stream.Type = 2; ^
+            $stream.Charset = 'utf-8'; ^
+            ^
+            $headers = @(); ^
+            for ($i = 0; $i -lt $rs.Fields.Count; $i++) { ^
+                $headers += $rs.Fields.Item($i).Name; ^
+            } ^
+            $stream.WriteText(($headers -join ',') + \"`r`n\"); ^
+            ^
+            while (-not $rs.EOF) { ^
+                $row = @(); ^
+                for ($i = 0; $i -lt $rs.Fields.Count; $i++) { ^
+                    $value = $rs.Fields.Item($i).Value; ^
+                    if ($null -eq $value) { $value = ''; } ^
+                    $value = $value.ToString().Replace('\"', '\"\"'); ^
+                    if ($value -match '[,\r\n\"]') { $value = \"\"\"$value\"\"\"; } ^
+                    $row += $value; ^
+                } ^
+                $stream.WriteText(($row -join ',') + \"`r`n\"); ^
+                $rs.MoveNext(); ^
+            } ^
+            ^
+            $stream.SaveToFile($csvPath, 2); ^
+            $stream.Close(); ^
+            $rs.Close(); ^
+            ^
+            Write-Host \"Successfully exported $tableName to target\$tableName.csv\"; ^
+            $exportedCount++; ^
+        } catch { ^
+            Write-Host \"Error exporting table $($tableName): $($_.Exception.Message)\" -ForegroundColor Red; ^
+        } ^
+    } ^
+    ^
     Write-Host \"\"; ^
     Write-Host \"Export Summary:\"; ^
-    Write-Host \"- Total tables found: $tableCount\"; ^
+    Write-Host \"- Total tables found: $($tables.Count)\"; ^
     Write-Host \"- Successfully exported: $exportedCount\"; ^
-    $access.CloseCurrentDatabase(); ^
-    $access.Quit(); ^
-    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($access); ^
-    [System.GC]::Collect(); ^
-    [System.GC]::WaitForPendingFinalizers(); ^
+    ^
+    $connection.Close(); ^
     Write-Host \"Export complete\"; ^
 } catch { ^
     Write-Host \"Error: $($_.Exception.Message)\" -ForegroundColor Red; ^
-    if ($access) { ^
+    if ($connection) { ^
         try { ^
-            $access.Quit(); ^
-            [System.Runtime.Interopservices.Marshal]::ReleaseComObject($access); ^
+            $connection.Close(); ^
         } catch {} ^
-    }; ^
+    } ^
     exit 1; ^
 }"
 
