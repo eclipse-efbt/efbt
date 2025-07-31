@@ -37,8 +37,8 @@ class DjangoSetup:
 
 if __name__ == "__main__":
     DjangoSetup.configure_django()
-    from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
-    from .entry_points.create_executable_joins import RunCreateExecutableJoins
+    from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
+    from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 
     logger.info("Executing generate filter code substep...")
     RunCreateExecutableFilters.run_create_executable_filters()
