@@ -234,6 +234,7 @@ class RegulatoryTemplateTestRunner:
                 print("  None - All tests passed!")
 
             print("\n" + "=" * 80 + "\n")
+
             return True
         except Exception as e:
             logger.error(f"Failed to read and print test results: {str(e)}")
@@ -371,6 +372,8 @@ class RegulatoryTemplateTestRunner:
 
         cursor.close()
         connection.close()
+        from pybirdai.utils.datapoint_test_run.generate_test_url import main
+        main()
 
     def run_tests(self, reg_tid: str="", dp_suffix: str="", dp_value: str="", use_uv: bool=False, specific_scenario: str=None):
         """
