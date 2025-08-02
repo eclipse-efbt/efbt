@@ -179,6 +179,15 @@ jobs:
           windows-x64-uv-
           windows-uv-
 
+    - name: Run Formatter
+      shell: pwsh
+      # using https://docs.astral.sh/ruff/formatter/ as a format checker for the code
+      run: |
+        cd birds_nest
+        uv run ruff check pybirdai/utils/
+        uv run ruff check pybirdai/entry_points/
+        uv run ruff check pybirdai/process_steps/
+
     - name: Cache status report
       shell: pwsh
       run: |
@@ -295,6 +304,14 @@ jobs:
             echo "⬇️ UV cache miss - installing dependencies"
         fi
         uv sync
+
+    - name: Run Formatter
+      # using https://docs.astral.sh/ruff/formatter/ as a format checker for the code
+      run: |
+        cd birds_nest
+        uv run ruff check pybirdai/utils/
+        uv run ruff check pybirdai/entry_points/
+        uv run ruff check pybirdai/process_steps/
 
     - name: Run Core Feature Setup
       run: |
