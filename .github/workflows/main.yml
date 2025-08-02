@@ -5,6 +5,9 @@ on:
     branches-ignore:
       - main
       - master
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   build-windows:
@@ -112,7 +115,7 @@ jobs:
           } else {
               Write-Host "⬇️ Downloading SQLite tools..."
               Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
-              
+
               if (-not (Test-Path $zipPath)) {
                 throw "Failed to download SQLite tools"
               }
