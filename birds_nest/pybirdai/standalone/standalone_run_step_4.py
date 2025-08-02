@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     # Configure test runner
     config_file = f'tests{os.sep}configuration_file_tests.json'
-    test_runner.args.uv = "False"
+    test_runner.args.uv = "True"
     test_runner.args.config_file = config_file
     test_runner.args.dp_value = None
     test_runner.args.reg_tid = None

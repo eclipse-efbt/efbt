@@ -128,7 +128,7 @@ class RegulatoryTemplateTestRunner:
         Returns:
             Tuple of command lists for test generation, running, and results conversion
         """
-        subprocess_list = ["uv", "run"] if use_uv else ["python"]
+        subprocess_list = ["uv", "run"] if use_uv else ["python","-m"]
 
         test_generation = subprocess_list.copy()
         test_runs = subprocess_list.copy()
@@ -142,7 +142,7 @@ class RegulatoryTemplateTestRunner:
             "--scenario", scenario
         ])
 
-        test_runs.extend(["-m", "pytest", "-v"])
+        test_runs.extend(["pytest", "-v"])
         test_results_conversion.extend([PARSER_FILE_PATH])
 
         return test_generation, test_runs, test_results_conversion
