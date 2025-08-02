@@ -33,4 +33,3 @@ birds_nest/automode_config.json
 .*marker
 **/tests/configuration_file_tests.json
 **/tmp
-birds_nest/run_ruff_checks.sh
