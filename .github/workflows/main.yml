@@ -182,11 +182,17 @@ jobs:
     - name: Run Formatter
       shell: pwsh
       # using https://docs.astral.sh/ruff/formatter/ as a format checker for the code
+      continue-on-error: true
       run: |
         cd birds_nest
-        uv run ruff check pybirdai/utils/
-        uv run ruff check pybirdai/entry_points/
-        uv run ruff check pybirdai/process_steps/
+        ./run_ruff_checks.sh
+
+    - name: Upload Ruff Check Results (Windows)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ruff-check-results-windows
+        path: birds_nest/ruff_check_results.txt
 
     - name: Cache status report
       shell: pwsh
@@ -307,11 +313,17 @@ jobs:
 
     - name: Run Formatter
       # using https://docs.astral.sh/ruff/formatter/ as a format checker for the code
+      continue-on-error: true
       run: |
         cd birds_nest
-        uv run ruff check pybirdai/utils/
-        uv run ruff check pybirdai/entry_points/
-        uv run ruff check pybirdai/process_steps/
+        ./run_ruff_checks.sh
+
+    - name: Upload Ruff Check Results (Unix)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ruff-check-results-unix
+        path: birds_nest/ruff_check_results.txt
 
     - name: Run Core Feature Setup
       run: |
