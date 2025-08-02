@@ -12,6 +12,7 @@
 #
 
 import os
+import sys
 import ast
 import argparse
 import logging
@@ -42,9 +43,50 @@ class TestCodeGenerator:
         Set up the Django environment by configuring the settings module.
 
         This method sets the DJANGO_SETTINGS_MODULE environment variable and imports Django settings.
+        It detects whether we're running under uv or regular Python and handles accordingly.
         """
         os.environ['DJANGO_SETTINGS_MODULE'] = 'birds_nest.settings'
-        from django.conf import settings
+        
+        # Check if we're running under uv
+        is_uv_environment = (
+            os.getenv('UV_PROJECT_ENVIRONMENT') is not None or
+            os.getenv('VIRTUAL_ENV') and 'uv' in os.getenv('VIRTUAL_ENV', '') or
+            'uv' in os.getenv('_', '')  # Check the command that started the process
+        )
+        
+        try:
+            if is_uv_environment:
+                logger.info("Detected uv environment - Django should be available via uv dependencies")
+            else:
+                logger.info("Detected standard Python environment - using virtual environment or system Python")
+                # For regular Python venv, we might need to ensure we're in the right directory
+                # and that the virtual environment is activated
+                venv_path = os.getenv('VIRTUAL_ENV')
+                if venv_path:
+                    logger.info(f"Using virtual environment: {venv_path}")
+                else:
+                    logger.warning("No virtual environment detected - using system Python")
+            
+            from django.conf import settings
+            logger.info("Successfully imported Django settings")
+            
+        except ImportError as e:
+            logger.error(f"Failed to import Django settings: {e}")
+            logger.error("Django import failed. Environment details:")
+            logger.error(f"  - UV_PROJECT_ENVIRONMENT: {os.getenv('UV_PROJECT_ENVIRONMENT')}")
+            logger.error(f"  - VIRTUAL_ENV: {os.getenv('VIRTUAL_ENV')}")
+            logger.error(f"  - Python executable: {sys.executable}")
+            logger.error(f"  - Current working directory: {os.getcwd()}")
+            
+            if is_uv_environment:
+                logger.error("Running under uv but Django not available.")
+                logger.error("Ensure this script is called with 'uv run python script.py'")
+            else:
+                logger.error("Running under regular Python but Django not available.")
+                logger.error("Ensure Django is installed: pip install django")
+                logger.error("Or activate the virtual environment with Django installed")
+            
+            raise RuntimeError("Django not available in current Python environment") from e
 
     @staticmethod
     def parse_arguments():

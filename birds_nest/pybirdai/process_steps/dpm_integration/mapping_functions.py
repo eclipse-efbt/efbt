@@ -17,7 +17,7 @@ def clean_spaces(df):
     return df
 
 
-def map_frameworks(path="target/ReportingFramework.csv"):
+def map_frameworks(path=os.path.join("target", "ReportingFramework.csv")):
     frameworks = pd.read_csv(path)
     framework_columns = [
         "MAINTENANCE_AGENCY_ID","FRAMEWORK_ID","NAME","CODE","DESCRIPTION","FRAMEWORK_TYPE","REPORTING_POPULATION","OTHER_LINKS","ORDER","FRAMEWORK_STATUS"
@@ -46,7 +46,7 @@ def map_frameworks(path="target/ReportingFramework.csv"):
     return frameworks, framework_id_mapping
 
 
-def map_domains(path="target/Domain.csv"):
+def map_domains(path=os.path.join("target", "Domain.csv")):
     domains = pd.read_csv(path)
 
     # Transform column names to UPPER_SNAKE_CASE
@@ -86,7 +86,7 @@ def map_domains(path="target/Domain.csv"):
     return domains, id_mapping
 
 
-def map_members(path="target/Member.csv", domain_id_map: dict = {}):
+def map_members(path=os.path.join("target", "Member.csv"), domain_id_map: dict = {}):
     members = pd.read_csv(path)
 
     # Transform column names to UPPER_SNAKE_CASE
@@ -124,7 +124,7 @@ def map_members(path="target/Member.csv", domain_id_map: dict = {}):
     return members, id_mapping
 
 
-def map_dimensions(path="target/Dimension.csv", domain_id_map: dict = {}):
+def map_dimensions(path=os.path.join("target", "Dimension.csv"), domain_id_map: dict = {}):
     dimensions = pd.read_csv(path)
 
     # Transform column names to UPPER_SNAKE_CASE
@@ -190,9 +190,12 @@ def load_taxonomy_version_to_table_mapping(base_path="target"):
     result = merged.set_index("TABLE_VID").to_dict()
     return result["DPM_PACKAGE_CODE"]
 
-def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
+def map_tables(path=os.path.join("target", "Table.csv"), framework_id_map: dict = {}):
     tables = pd.read_csv(path).drop(axis=1,labels=["ConceptID"])
-    tables_versions = pd.read_csv(path.replace("Table.csv","TableVersion.csv")).drop(axis=1,labels=["ConceptID"])
+    # Get directory and create proper path for TableVersion.csv
+    path_dir = os.path.dirname(path)
+    tables_versions_path = os.path.join(path_dir, "TableVersion.csv")
+    tables_versions = pd.read_csv(tables_versions_path).drop(axis=1,labels=["ConceptID"])
     tables = pd.merge(tables, tables_versions, on="TableID")
     template_to_framework_mapping = load_template_to_framework_mapping()
     table_to_taxonomy_mapping = load_taxonomy_version_to_table_mapping()
@@ -242,7 +245,7 @@ def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
     return tables, id_mapping
 
 
-def map_axis(path="target/Axis.csv", table_map:dict = {}):
+def map_axis(path=os.path.join("target", "Axis.csv"), table_map:dict = {}):
     orientation_id_map = {"X":"1","Y":"2","Z":"3","0":"0"}
     axes = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in axes.columns}
@@ -287,7 +290,7 @@ def map_axis(path="target/Axis.csv", table_map:dict = {}):
     return axes, id_mapping
 
 
-def map_axis_ordinate(path="target/AxisOrdinate.csv",axis_map:dict = {}):
+def map_axis_ordinate(path=os.path.join("target", "AxisOrdinate.csv"),axis_map:dict = {}):
     types = defaultdict(lambda: str, OrdinateID="int", OrdinateCode="str", AxisID="int")
     ordinates = pd.read_csv(path, dtype=types)
     column_mapping = {col: pascal_to_upper_snake(col) for col in ordinates.columns}
@@ -335,7 +338,7 @@ def map_axis_ordinate(path="target/AxisOrdinate.csv",axis_map:dict = {}):
     return ordinates, id_mapping
 
 
-def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict = {}):
+def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map:dict = {}, dp_map:dict = {}):
     cells = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in cells.columns}
     cells = cells.rename(columns=column_mapping)
@@ -381,7 +384,7 @@ def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict
     return cells, id_mapping
 
 
-def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_map:dict={},start_index_after_last:bool=False):
+def map_cell_position(path=os.path.join("target", "CellPosition.csv"),cell_map:dict={},ordinate_map:dict={},start_index_after_last:bool=False):
     data = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in data.columns}
     data = data.rename(columns=column_mapping)
@@ -400,7 +403,7 @@ def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_m
     
     return data, {}
 
-def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={},context_data:pd.DataFrame=pd.DataFrame(),dimension_map:dict={},member_map:dict={}):
+def map_datapoint_version(path=os.path.join("target", "DataPointVersion.csv"),context_map:dict={},context_data:pd.DataFrame=pd.DataFrame(),dimension_map:dict={},member_map:dict={}):
     types = defaultdict(lambda: str, ContextID="str")
     dpv = pd.read_csv(path,dtype=types)
     column_mapping = {col: pascal_to_upper_snake(col) for col in dpv.columns}
@@ -477,7 +480,7 @@ def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={}
 
     return (dpv,dp_items), id_mapping
 
-def map_context_definition(path="target/ContextDefinition.csv",dimension_map:dict={},member_map:dict={}):
+def map_context_definition(path=os.path.join("target", "ContextDefinition.csv"),dimension_map:dict={},member_map:dict={}):
     types = defaultdict(lambda: str, ContextID="str")
     data = pd.read_csv(path,dtype=types)
     column_mapping = {col: pascal_to_upper_snake(col) for col in data.columns}
@@ -488,7 +491,7 @@ def map_context_definition(path="target/ContextDefinition.csv",dimension_map:dic
 
     return data, {}
 
-def map_hierarchy(path="target/Hierarchy.csv",domain_id_map:dict={}):
+def map_hierarchy(path=os.path.join("target", "Hierarchy.csv"),domain_id_map:dict={}):
     hierarchies = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in hierarchies.columns}
     hierarchies = hierarchies.rename(columns=column_mapping)
@@ -521,7 +524,7 @@ def map_hierarchy(path="target/Hierarchy.csv",domain_id_map:dict={}):
     return hierarchies, id_mapping
 
 
-def map_hierarchy_node(path="target/HierarchyNode.csv", hierarchy_map:dict={}, member_map:dict={}):
+def map_hierarchy_node(path=os.path.join("target", "HierarchyNode.csv"), hierarchy_map:dict={}, member_map:dict={}):
     data = pd.read_csv(path)
     data["ParentMemberID"] = data["ParentMemberID"].fillna(0).astype(int)
     data["MemberID"] = data["MemberID"].fillna(0).astype(int)
@@ -559,14 +562,14 @@ def map_hierarchy_node(path="target/HierarchyNode.csv", hierarchy_map:dict={}, m
 
     return data, {}
 
-def traceback_restrictions(path="target/OpenMemberRestriction.csv"):
+def traceback_restrictions(path=os.path.join("target", "OpenMemberRestriction.csv")):
     restriction_df = pd.read_csv(path)
     cols = ("Restriction" + restriction_df.columns).tolist()
     cols[0] = "RestrictionID"
     restriction_df.columns = cols
     return restriction_df
 
-def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member_map:dict={}, dimension_map:dict={}, ordinate_map:dict={}, hierarchy_map:dict={}, start_index_after_last:bool=False):
+def map_ordinate_categorisation(path=os.path.join("target", "OrdinateCategorisation.csv"), member_map:dict={}, dimension_map:dict={}, ordinate_map:dict={}, hierarchy_map:dict={}, start_index_after_last:bool=False):
     data = pd.read_csv(path)
     restrictions = traceback_restrictions()
     data = pd.merge(data,restrictions,on="RestrictionID"

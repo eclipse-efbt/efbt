@@ -128,7 +128,7 @@ class RegulatoryTemplateTestRunner:
         Returns:
             Tuple of command lists for test generation, running, and results conversion
         """
-        subprocess_list = ["uv", "run"] if use_uv else ["python"]
+        subprocess_list = ["uv", "run"] if use_uv else ["python","-m"]
 
         test_generation = subprocess_list.copy()
         test_runs = subprocess_list.copy()
@@ -142,7 +142,7 @@ class RegulatoryTemplateTestRunner:
             "--scenario", scenario
         ])
 
-        test_runs.extend(["-m", "pytest", "-v"])
+        test_runs.extend(["pytest", "-v"])
         test_results_conversion.extend([PARSER_FILE_PATH])
 
         return test_generation, test_runs, test_results_conversion
@@ -234,6 +234,7 @@ class RegulatoryTemplateTestRunner:
                 print("  None - All tests passed!")
 
             print("\n" + "=" * 80 + "\n")
+
             return True
         except Exception as e:
             logger.error(f"Failed to read and print test results: {str(e)}")
@@ -371,6 +372,8 @@ class RegulatoryTemplateTestRunner:
 
         cursor.close()
         connection.close()
+        from pybirdai.utils.datapoint_test_run.generate_test_url import main
+        main()
 
     def run_tests(self, reg_tid: str="", dp_suffix: str="", dp_value: str="", use_uv: bool=False, specific_scenario: str=None):
         """
