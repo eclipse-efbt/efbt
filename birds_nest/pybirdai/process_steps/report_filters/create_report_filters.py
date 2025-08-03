@@ -117,7 +117,7 @@ class CreateReportFilters:
 
         if not cell or not cell.table_id:
             return
-
+        
         cube_mapping_id = CreateReportFilters.get_report_cube_mapping_id_for_table_id(cell.table_id.table_id, framework)
         relevant_mappings = sdd_context.mapping_to_cube_dictionary.get(cube_mapping_id, [])
 
@@ -126,7 +126,6 @@ class CreateReportFilters:
             #print(f"Could not find report for {cell.table_id.table_id}")
             pass
             return
-
         combination_id = cell.table_cell_combination_id
         if combination_id and not(combination_id == ''):
             CreateReportFilters.create_combination_and_filters(self,combination_id, tuples, relevant_mappings, report_rol_cube, sdd_context, context)
@@ -278,7 +277,6 @@ class CreateReportFilters:
 
                 source_items = [(item.variable_id, item.member_id) for item in member_mapping_items 
                               if ((item.is_source.lower() == 'true') )]
-                
                 # Check if all source items are in non_ref_tuple_list
                 if all(item in non_ref_set for item in source_items):
                     ref_tuple_list.extend(

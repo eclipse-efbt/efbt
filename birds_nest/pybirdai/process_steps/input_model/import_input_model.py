@@ -88,6 +88,11 @@ class ImportInputModel(object):
                 name="SDD_DOMAIN",
                 code="SDD_DOMAIN",
                 maintenance_agency_id="SDD_DOMAIN"
+            ),
+            MAINTENANCE_AGENCY(
+                name="ECB",
+                code="ECB",
+                maintenance_agency_id="ECB"
             )
         ]
 
@@ -115,7 +120,8 @@ class ImportInputModel(object):
                 domain_id=domain_type,
                 name=domain_type,
                 description=domain_type,
-                data_type=domain_type
+                data_type=domain_type,
+                maintenance_agency_id=sdd_context.agency_dictionary["ECB"]
             )
             domains.append(domain)
             sdd_context.domain_dictionary[domain_type] = domain
@@ -136,6 +142,8 @@ class ImportInputModel(object):
                 else:
                     domain_id = row[ColumnIndexes().subdomain_domain_id_index]
                     subdomain_id = row[ColumnIndexes().subdomain_subdomain_id_index]
+                    if subdomain_id.endswith("_domain"):
+                        subdomain_id = subdomain_id[:-7]
                     sdd_context.subdomain_to_domain_map[subdomain_id] = domain_id
 
     def _process_models(sdd_context, context):
@@ -359,7 +367,8 @@ class ImportInputModel(object):
             if domain_id and domain_id not in sdd_context.domain_dictionary:
                 domain = DOMAIN(
                     domain_id=domain_id,
-                    name=domain_id
+                    name=domain_id,
+                    maintenance_agency_id=sdd_context.agency_dictionary["ECB"]
                 )
                 domains_to_create.append(domain)
                 sdd_context.domain_dictionary[domain_id] = domain
@@ -370,7 +379,8 @@ class ImportInputModel(object):
             if subdomain_id and subdomain_id not in sdd_context.subdomain_dictionary:
                 subdomain = SUBDOMAIN(
                     subdomain_id=subdomain_id,
-                    domain_id=sdd_context.domain_dictionary.get(domain_id)
+                    domain_id=sdd_context.domain_dictionary.get(domain_id),
+                    maintenance_agency_id=sdd_context.agency_dictionary["ECB"]
                 )
                 subdomains_to_create.append(subdomain)
                 sdd_context.subdomain_dictionary[subdomain_id] = subdomain
