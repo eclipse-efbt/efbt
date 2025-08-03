@@ -19,11 +19,16 @@ import sqlite3
 import typing
 from datetime import datetime
 import glob
+import sys
+import io
 
 import logging
 from pathlib import Path
 
-import os
+# Force UTF-8 encoding for stdout on Windows to handle Unicode characters
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 # Define constants
 # Base directories
 TESTS_DIR = "tests"
