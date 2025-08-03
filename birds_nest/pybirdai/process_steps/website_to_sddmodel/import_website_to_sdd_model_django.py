@@ -18,7 +18,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from pathlib import Path
 from django.db import connection, transaction
 import subprocess
-
+import platform
 
 class ImportWebsiteToSDDModel(object):
     '''
@@ -647,8 +647,12 @@ class ImportWebsiteToSDDModel(object):
                 # Join commands with newlines
                 sqlite_script = '\n'.join(commands)
 
+                sqlite_program = "sqlite3"
+                if platform.system() == 'Windows':
+                    sqlite_program += ".exe"
+
                 result = subprocess.run(
-                        ['sqlite3', str(db_file)],
+                        [sqlite_program, str(db_file)],
                         input=sqlite_script,
                         text=True,
                         capture_output=True,
