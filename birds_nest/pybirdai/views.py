@@ -2278,7 +2278,7 @@ def return_semantic_integration_menu(request: Any, mapping_id: str = "") -> Any:
     mtcs = MAPPING_TO_CUBE.objects.all()
     logger.debug(f"Found {len(mtcs)} MAPPING_TO_CUBE records")
     maps = [mtc.cube_mapping_id for mtc in mtcs if 'M_F_01_01_REF_FINREP 3_0' == mtc.cube_mapping_id]
-
+    
     mapping_definitions = MAPPING_DEFINITION.objects.all()
     results = build_mapping_results(mapping_definitions)
     context = {"mapping_data": {k: v for k, v in results.items() if v["has_member_mapping"]}}

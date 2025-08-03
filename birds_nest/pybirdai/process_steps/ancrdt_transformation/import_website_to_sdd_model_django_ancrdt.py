@@ -179,7 +179,7 @@ class ImportWebsiteToSDDModel(object):
                     try:
                         if include:
                             domain = DOMAIN(name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
-                            if ref or maintenance_agency == "":
+                            if maintenance_agency == "":
                                 maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"SDD_DOMAIN")
                             else:
                                 maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenance_agency)
