@@ -311,34 +311,6 @@ def import_report_templates(request):
         "Do"
     )
 
-def prepare_dpm_data(request):
-    if request.GET.get('execute') == 'true':
-        app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=False)
-        return JsonResponse({'status': 'success'})
-
-    return create_response_with_loading(
-        request,
-        "Preparing DPM Data (this may take several minutes, don't press the back button on this web page)",
-        "Import DPM data prepared successfully. Report templates have also been imported.",
-        '/pybirdai/import_dpm_data',
-        "Populate BIRD Metadata Database"
-    )
-
-def import_dpm_data(request):
-    if request.GET.get('execute') == 'true':
-        app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=True)
-        return JsonResponse({'status': 'success'})
-
-    return create_response_with_loading(
-        request,
-        "Importing DPM Data (this may take several minutes, don't press the back button on this web page)",
-        "Import DPM data completed successfully. Report templates have also been imported.",
-        '/pybirdai/populate-bird-metadata-database',
-        "Populate BIRD Metadata Database"
-    )
-
 def run_create_filters(request):
     if request.GET.get('execute') == 'true':
         # Execute the actual task
