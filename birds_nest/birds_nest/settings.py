@@ -24,9 +24,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+logger = logging.getLogger(__name__)
 
 
 # Quick-start development settings - unsuitable for production
@@ -43,15 +46,48 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+# Auto-discover extensions
+def discover_extensions():
+    """Auto-discover extensions in the extensions directory"""
+    extensions_dir = BASE_DIR / 'extensions'
+    discovered_extensions = []
+    
+    if extensions_dir.exists() and extensions_dir.is_dir():
+        for ext_dir in extensions_dir.iterdir():
+            if (ext_dir.is_dir() and 
+                (ext_dir / '__init__.py').exists() and 
+                not ext_dir.name.startswith('.')):
+                
+                extension_name = f'extensions.{ext_dir.name}'
+                discovered_extensions.append(extension_name)
+                logger.info(f"Discovered extension: {extension_name}")
+    
+    return discovered_extensions
+
+# Discover available extensions
+DISCOVERED_EXTENSIONS = discover_extensions()
+
+# Core Django apps
+CORE_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pybirdai',  # Make sure this line is present
+    'pybirdai',  # Main PyBIRD AI application
 ]
+
+# Combine core apps with discovered extensions
+INSTALLED_APPS = CORE_APPS + DISCOVERED_EXTENSIONS
+
+# Allow local overrides for development
+try:
+    from .local_settings import LOCAL_EXTENSIONS
+    INSTALLED_APPS += LOCAL_EXTENSIONS
+    logger.info(f"Added local extensions: {LOCAL_EXTENSIONS}")
+except ImportError:
+    pass
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,6 +112,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'pybirdai.context_processors.extensions_context',
             ],
         },
     },

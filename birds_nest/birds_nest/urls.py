@@ -28,9 +28,34 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from birds_nest.views import homepage_redirect
+from django.conf import settings
+import logging
 
+logger = logging.getLogger(__name__)
+
+def discover_extension_urls():
+    """Dynamically discover and include extension URLs"""
+    extension_patterns = []
+
+    for app_name in settings.DISCOVERED_EXTENSIONS:
+        # Convert 'extensions.risk_analytics' to 'risk_analytics'
+        extension_name = app_name.split('.')[-1]
+
+        # Try to import the extension's urls module
+        urls_module = f"{app_name}.urls"
+        extension_patterns.append(
+            path(f'pybirdai/extensions/{extension_name}/', include(urls_module))
+        )
+        logger.info(f"Added URL pattern for extension: {extension_name}")
+
+    return extension_patterns
+
+# Base URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pybirdai/', include('pybirdai.urls')),
     path('', homepage_redirect, name='homepage_redirect'),
 ]
+
+# Add discovered extension URLs
+urlpatterns += discover_extension_urls()

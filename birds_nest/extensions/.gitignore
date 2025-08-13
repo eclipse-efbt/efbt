@@ -1,0 +1,5 @@
+# Ignore all extensions by default
+# Developers should add their extensions locally
+*
+!.gitignore
+!README.md
