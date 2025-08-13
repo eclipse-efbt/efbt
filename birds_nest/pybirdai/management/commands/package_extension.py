@@ -37,11 +37,6 @@ class Command(BaseCommand):
             help='GitHub username or organization'
         )
         parser.add_argument(
-            '--gitlab-user',
-            type=str,
-            help='GitLab username or organization'
-        )
-        parser.add_argument(
             '--repo-name',
             type=str,
             required=True,
@@ -50,7 +45,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--token',
             type=str,
-            help='GitHub/GitLab personal access token (can also use GITHUB_TOKEN or GITLAB_TOKEN env var)'
+            help='GitHub personal access token (can also use GITHUB_TOKEN env var)'
         )
         parser.add_argument(
             '--private',
@@ -69,60 +64,26 @@ class Command(BaseCommand):
             type=str,
             help='Output directory for packaged extension (default: temp directory)'
         )
-        parser.add_argument(
-            '--author',
-            type=str,
-            default='BIRD Extension Developer',
-            help='Author name for the extension'
-        )
-        parser.add_argument(
-            '--author-email',
-            type=str,
-            default='developer@example.com',
-            help='Author email for the extension'
-        )
-        parser.add_argument(
-            '--license',
-            type=str,
-            default='EPL-2.0',
-            help='License for the extension'
-        )
-        parser.add_argument(
-            '--ext-version',
-            type=str,
-            default='1.0.0',
-            help='Version of the extension'
-        )
-        parser.add_argument(
-            '--description',
-            type=str,
-            help='Description of the extension'
-        )
 
     def handle(self, *args, **options):
         extension_name = options['name']
         repo_name = options['repo_name']
 
-        # Determine platform
+        # Only support GitHub for simplicity
         github_user = options.get('github_user')
-        gitlab_user = options.get('gitlab_user')
+        
+        if not github_user:
+            raise CommandError('Please specify --github-user')
 
-        if not github_user and not gitlab_user:
-            raise CommandError('Please specify either --github-user or --gitlab-user')
-
-        if github_user and gitlab_user:
-            raise CommandError('Please specify only one of --github-user or --gitlab-user')
-
-        platform = 'github' if github_user else 'gitlab'
-        username = github_user if github_user else gitlab_user
+        platform = 'github'
+        username = github_user
 
         # Get token
         token = options.get('token')
         if not token:
-            env_var = 'GITHUB_TOKEN' if platform == 'github' else 'GITLAB_TOKEN'
-            token = os.environ.get(env_var)
+            token = os.environ.get('GITHUB_TOKEN')
             if not token and not options['no_push']:
-                raise CommandError(f'Please provide --token or set {env_var} environment variable')
+                raise CommandError('Please provide --token or set GITHUB_TOKEN environment variable')
 
         # Paths
         base_dir = Path(settings.BASE_DIR)
@@ -164,14 +125,15 @@ class Command(BaseCommand):
 
             # Step 4: Generate README with dependency information
             readme_gen = ReadmeGenerator()
+            # Use default values for version and description
             readme_gen.generate(
                 package_dir,
                 extension_name,
                 repo_name,
                 username,
                 platform,
-                options['ext_version'],
-                options.get('description', f'BIRD Bench extension: {extension_name}'),
+                '1.0.0',  # Default version
+                f'BIRD Bench extension: {extension_name}',  # Default description
                 dependency_analysis=None  # We're not doing full dependency analysis anymore
             )
 
@@ -197,7 +159,7 @@ class Command(BaseCommand):
                 repo_url = git_manager.create_remote_repository(
                     username,
                     repo_name,
-                    description=options.get('description', f'BIRD Bench extension: {extension_name}'),
+                    description=f'BIRD Bench extension: {extension_name}',  # Default description
                     private=options['private']
                 )
 

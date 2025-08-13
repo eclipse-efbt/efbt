@@ -41,59 +41,12 @@ class Command(BaseCommand):
         parser.add_argument(
             '--token',
             type=str,
-            help='GitHub/GitLab personal access token (can also use GITHUB_TOKEN or GITLAB_TOKEN env var)'
-        )
-        parser.add_argument(
-            '--oauth',
-            action='store_true',
-            help='Use OAuth flow for authentication (opens browser)'
-        )
-        parser.add_argument(
-            '--branch',
-            type=str,
-            default='main',
-            help='Branch to clone (default: main)'
+            help='GitHub personal access token (can also use GITHUB_TOKEN env var)'
         )
         parser.add_argument(
             '--force',
             action='store_true',
             help='Overwrite existing extension if it exists'
-        )
-        parser.add_argument(
-            '--license-check',
-            action='store_true',
-            default=True,
-            help='Verify license before installing (default: True)'
-        )
-        parser.add_argument(
-            '--no-license-check',
-            action='store_false',
-            dest='license_check',
-            help='Skip license verification'
-        )
-        parser.add_argument(
-            '--install-deps',
-            action='store_true',
-            default=True,
-            help='Install extension dependencies (default: True)'
-        )
-        parser.add_argument(
-            '--no-install-deps',
-            action='store_false',
-            dest='install_deps',
-            help='Skip dependency installation'
-        )
-        parser.add_argument(
-            '--run-migrations',
-            action='store_true',
-            default=True,
-            help='Run database migrations for extension (default: True)'
-        )
-        parser.add_argument(
-            '--no-run-migrations',
-            action='store_false',
-            dest='run_migrations',
-            help='Skip database migrations'
         )
         parser.add_argument(
             '--uv',
@@ -133,20 +86,29 @@ class Command(BaseCommand):
             )
 
         # Get authentication token
-        token = self._get_auth_token(options, platform)
+        token = options.get('token')
+        if not token:
+            # Only check GITHUB_TOKEN since we're simplifying to GitHub only
+            token = os.environ.get('GITHUB_TOKEN')
+            if not token:
+                self.stdout.write(
+                    self.style.WARNING(
+                        'No authentication token provided. '
+                        'Use --token or set GITHUB_TOKEN environment variable'
+                    )
+                )
 
         try:
             self.stdout.write(f'Fetching extension from {repo_url}...')
 
-            # Step 1: Check repository access and license
-            if options['license_check']:
-                self._verify_repository_access_and_license(
-                    platform, username, repo_name, token
-                )
+            # Step 1: Check repository access (always check)
+            self._verify_repository_access_and_license(
+                platform, username, repo_name, token
+            )
 
-            # Step 2: Clone repository
+            # Step 2: Clone repository (always use 'main' branch)
             temp_dir = self._clone_repository(
-                repo_info, token, options['branch']
+                repo_info, token, 'main'
             )
 
             try:
@@ -158,13 +120,11 @@ class Command(BaseCommand):
                     temp_dir, extension_path, extension_name, options['force']
                 )
 
-                # Step 5: Install dependencies
-                if options['install_deps']:
-                    self._install_dependencies(extension_path,use_uv)
+                # Step 5: Install dependencies (always install)
+                self._install_dependencies(extension_path, use_uv)
 
-                # # Step 6: Run migrations
-                # if options['run_migrations']:
-                #     self._run_migrations(extension_name)
+                # Step 6: Run migrations (commented out - keep as is)
+                # self._run_migrations(extension_name)
 
                 self.stdout.write(
                     self.style.SUCCESS(
@@ -225,48 +185,7 @@ class Command(BaseCommand):
             'full_url': repo_url
         }
 
-    def _get_auth_token(self, options, platform):
-        """Get authentication token"""
-        token = options.get('token')
-
-        if not token:
-            env_var = 'GITHUB_TOKEN' if platform == 'github' else 'GITLAB_TOKEN'
-            token = os.environ.get(env_var)
-
-        if not token and options['oauth']:
-            token = self._perform_oauth_flow(platform)
-
-        if not token:
-            self.stdout.write(
-                self.style.WARNING(
-                    f'No authentication token provided. '
-                    f'Use --token, set {env_var} environment variable, or use --oauth'
-                )
-            )
-            return None
-
-        return token
-
-    def _perform_oauth_flow(self, platform):
-        """Perform OAuth flow (simplified simulation)"""
-        self.stdout.write(f'Starting OAuth flow for {platform}...')
-
-        # In a real implementation, this would:
-        # 1. Open browser to OAuth URL
-        # 2. Handle callback
-        # 3. Exchange code for token
-
-        # For demonstration, we'll simulate this
-        self.stdout.write(
-            self.style.WARNING(
-                f'OAuth flow simulation - in production this would:\n'
-                f'1. Open browser to {platform} OAuth page\n'
-                f'2. User authorizes application\n'
-                f'3. Exchange code for access token\n\n'
-                f'For now, please provide a personal access token manually.'
-            )
-        )
-        return None
+    # OAuth methods removed for simplicity - authentication handled inline
 
     def _verify_repository_access_and_license(self, platform, username, repo_name, token):
         """Verify repository access and license"""

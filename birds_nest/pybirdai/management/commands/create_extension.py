@@ -28,46 +28,6 @@ class Command(BaseCommand):
             help='Name of the extension (e.g., "risk_analytics")'
         )
         parser.add_argument(
-            '--type',
-            choices=['commercial', 'public', 'private'],
-            default='public',
-            help='Type of extension (default: public)'
-        )
-        parser.add_argument(
-            '--display-name',
-            type=str,
-            help='Human-readable display name for the extension'
-        )
-        parser.add_argument(
-            '--description',
-            type=str,
-            help='Description of what the extension does'
-        )
-        parser.add_argument(
-            '--author',
-            type=str,
-            default='Extension Developer',
-            help='Author name for the extension'
-        )
-        parser.add_argument(
-            '--author-email',
-            type=str,
-            default='developer@example.com',
-            help='Author email for the extension'
-        )
-        parser.add_argument(
-            '--ext-version',
-            type=str,
-            default='1.0.0',
-            help='Initial version of the extension'
-        )
-        parser.add_argument(
-            '--license',
-            type=str,
-            default='EPL-2.0',
-            help='License for the extension'
-        )
-        parser.add_argument(
             '--force',
             action='store_true',
             help='Overwrite existing extension if it exists'
@@ -152,18 +112,19 @@ class Command(BaseCommand):
 
     def _get_template_context(self, extension_name, options):
         """Get template context variables"""
-        display_name = options.get('display_name') or extension_name.replace('_', ' ').title()
-        description = options.get('description') or f'{display_name} extension for BIRD Bench'
+        # Use sensible defaults directly
+        display_name = extension_name.replace('_', ' ').title()
+        description = f'{display_name} extension for BIRD Bench'
         
         return {
             'extension_name': extension_name,
             'display_name': display_name,
             'description': description,
-            'author': options['author'],
-            'author_email': options['author_email'],
-            'version': options['ext_version'],
-            'license': options['license'],
-            'extension_type': options['type'],
+            'author': 'Extension Developer',
+            'author_email': 'developer@example.com',
+            'version': '1.0.0',
+            'license': 'EPL-2.0',
+            'extension_type': 'public',
             'year': datetime.datetime.now().year,
             'date': datetime.datetime.now().isoformat(),
             'class_name': ''.join(word.capitalize() for word in extension_name.split('_'))
