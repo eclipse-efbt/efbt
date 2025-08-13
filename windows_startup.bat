@@ -14,6 +14,7 @@ python -m pip install pandas --quiet
 python -m pip install numpy==2.2.4 --quiet
 python -m pip install requests==2.32.3 --quiet
 python -m pip install psutil --quiet
+python -m pip install toml --quiet
 :loop
 python manage.py runserver --noreload
 goto loop
