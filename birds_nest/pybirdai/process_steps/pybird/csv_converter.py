@@ -292,6 +292,7 @@ class CSVConverter:
 				if queryset.exists():
 					# Convert QuerySet to list of dictionaries for tracking
 					data_items = []
+					django_model_objects = []  # Keep track of original Django model objects
 					for obj in queryset:
 						row_data = {}
 						# Get model fields to extract data
@@ -304,11 +305,13 @@ class CSVConverter:
 								pass
 						if row_data:
 							data_items.append(row_data)
+							django_model_objects.append(obj)  # Store the original Django object
 					
 					# Track the data processing - use the original table name, not "_data" suffix
 					# This ensures Django model data is associated with PopulatedDataBaseTable, not EvaluatedDerivedTable
 					if data_items:
-						orchestration.track_data_processing(table_name, data_items)
+						# Pass both the dictionaries (for CSV) and Django objects (for tracking)
+						orchestration.track_data_processing(table_name, data_items, django_model_objects)
 			else:
 				# Original orchestrator - no lineage tracking
 				pass

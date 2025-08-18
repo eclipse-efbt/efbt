@@ -1305,7 +1305,10 @@ class OrchestrationWithLineage:
 	
 	def track_calculation_used_row(self, calculation_name, row):
 		"""Track that a specific row was used in a calculation (passed filters)"""
+		print(f"🔍 track_calculation_used_row called: {calculation_name}, {type(row).__name__}")
+		
 		if not self.lineage_enabled or not self.trail:
+			print(f"❌ Lineage tracking disabled or no trail: lineage_enabled={self.lineage_enabled}, trail={self.trail}")
 			return
 		
 		try:
@@ -1314,6 +1317,68 @@ class OrchestrationWithLineage:
 				content_type = ContentType.objects.get_for_model(DatabaseRow)
 			elif isinstance(row, DerivedTableRow):
 				content_type = ContentType.objects.get_for_model(DerivedTableRow)
+			# Check if this is a Django model instance (database record)
+			elif hasattr(row, '_meta') and hasattr(row._meta, 'model'):
+				# This is a Django model instance - we need to create/find the appropriate DatabaseRow
+				model_name = type(row).__name__
+				
+				# Ensure we have a database table for this model
+				if model_name not in self.current_populated_tables:
+					# Create database table
+					db_table = DatabaseTable.objects.create(name=model_name)
+					
+					# Add to metadata trail
+					if self.metadata_trail:
+						AortaTableReference.objects.create(
+							metadata_trail=self.metadata_trail,
+							table_content_type='DatabaseTable',
+							table_id=db_table.id
+						)
+					
+					# Create PopulatedDataBaseTable
+					populated_table = PopulatedDataBaseTable.objects.create(
+						trail=self.trail,
+						table=db_table
+					)
+					
+					self.current_populated_tables[model_name] = populated_table
+					print(f"Created database table for Django model: {model_name}")
+				
+				# Get the populated database table
+				populated_table = self.current_populated_tables[model_name]
+				
+				# Create unique identifier for this model instance
+				if hasattr(row, 'pk') and row.pk:
+					object_identifier = f"{model_name}_{row.pk}"
+				else:
+					object_identifier = f"{model_name}_{id(row)}"
+				
+				# Check if we already have a database row for this model instance
+				existing_rows = populated_table.databaserow_set.filter(
+					row_identifier=object_identifier
+				)
+				
+				if existing_rows.exists():
+					db_row = existing_rows.first()
+				else:
+					# Create new database row for this model instance
+					db_row = DatabaseRow.objects.create(
+						populated_table=populated_table,
+						row_identifier=object_identifier
+					)
+					
+					# Create column values for the model fields
+					for field in row._meta.fields:
+						if hasattr(row, field.name):
+							field_value = getattr(row, field.name)
+							if field_value is not None:
+								self._track_column_value_for_django_field(db_row, field.name, field_value, populated_table.table)
+					
+					print(f"Created database row for Django model {model_name}")
+				
+				row = db_row
+				
+				content_type = ContentType.objects.get_for_model(DatabaseRow)
 			else:
 				# For business objects, determine the appropriate tracking strategy
 				row_class_name = type(row).__name__
@@ -1388,16 +1453,20 @@ class OrchestrationWithLineage:
 			).exists()
 			
 			if not existing:
-				CalculationUsedRow.objects.create(
+				used_row = CalculationUsedRow.objects.create(
 					trail=self.trail,
 					calculation_name=calculation_name,
 					content_type=content_type,
 					object_id=row.id
 				)
-				# print(f"Tracked used row for {calculation_name}: {row}")
+				print(f"✅ Created CalculationUsedRow: {calculation_name} -> {type(row).__name__} (id: {row.id})")
+			else:
+				print(f"⚠️ CalculationUsedRow already exists for {calculation_name} -> {type(row).__name__}")
 		
 		except Exception as e:
-			print(f"Error tracking calculation used row: {e}")
+			print(f"❌ Error tracking calculation used row: {e}")
+			import traceback
+			traceback.print_exc()
 	
 	def track_calculation_used_field(self, calculation_name, field_name, row=None):
 		"""Track that a specific field was accessed during a calculation"""
@@ -1502,6 +1571,40 @@ class OrchestrationWithLineage:
 		)
 		
 		return [uf.used_field for uf in used_fields]
+	
+	def _track_column_value_for_django_field(self, db_row, field_name, field_value, table):
+		"""Helper method to track column values for Django model fields"""
+		try:
+			# Find or create the DatabaseField
+			fields = table.database_fields.filter(name=field_name)
+			
+			if not fields.exists():
+				field = DatabaseField.objects.create(
+					name=field_name,
+					table=table
+				)
+			else:
+				field = fields.first()
+			
+			# Create DatabaseColumnValue
+			numeric_value = None
+			string_value = None
+			
+			if field_value is not None:
+				try:
+					numeric_value = float(field_value)
+				except (ValueError, TypeError):
+					string_value = str(field_value)
+			
+			DatabaseColumnValue.objects.create(
+				value=numeric_value,
+				string_value=string_value,
+				column=field,
+				row=db_row
+			)
+			
+		except Exception as e:
+			print(f"Error tracking Django field {field_name}: {e}")
 
 	def _find_source_value_object(self, source_value):
 		"""Find the DatabaseColumnValue object for a given source value"""
@@ -1527,19 +1630,26 @@ class OrchestrationWithLineage:
 
 		return None
 
-	def track_data_processing(self, table_name, data_items):
+	def track_data_processing(self, table_name, data_items, django_model_objects=None):
 		"""Track processing of data items in a table"""
 		if not self.lineage_enabled or not self.trail or not self.metadata_trail:
 			return
 		
 		# Also track that these rows and tables are being used in calculations
 		current_calculation = getattr(self, 'current_calculation', None)
+		print(f"🔗 track_data_processing: table={table_name}, items={len(data_items)}, django_objects={len(django_model_objects) if django_model_objects else 0}, current_calculation={current_calculation}")
 		if current_calculation and hasattr(self, 'track_calculation_used_row'):
+			# Prefer Django model objects over dictionary items for tracking
+			items_to_track = django_model_objects if django_model_objects else data_items
+			
 			# Track each data item as a used row
-			for item in data_items:
+			for i, item in enumerate(items_to_track):
 				try:
+					print(f"  🔗 Attempting to track data item {i}: {type(item).__name__}")
 					self.track_calculation_used_row(current_calculation, item)
-				except:
+					print(f"  ✅ Successfully tracked data item {i}")
+				except Exception as e:
+					print(f"  ❌ Failed to track data item {i}: {e}")
 					pass  # Don't let tracking errors break the main processing
 		
 		try:
