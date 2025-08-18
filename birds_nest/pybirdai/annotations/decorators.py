@@ -58,6 +58,17 @@ def lineage(dependencies: Dict[str, Any] = None):
                     # Track the function execution
                     source_columns = list(dependencies.keys()) if isinstance(dependencies, dict) else list(dependencies)
                     
+                    # Track field usage for calculations
+                    if hasattr(orchestration, 'track_calculation_used_field'):
+                        calculation_name = getattr(orchestration, 'current_calculation', None)
+                        if calculation_name:
+                            # Track each accessed field
+                            for field_dep in source_columns:
+                                orchestration.track_calculation_used_field(calculation_name, field_dep)
+                            # Also track the current function/field being called
+                            if args and hasattr(args[0], '__class__'):
+                                orchestration.track_calculation_used_field(calculation_name, func_name, args[0] if len(args) > 0 else None)
+                    
                     # Get the function source code if not cached
                     if full_func_name not in _lineage_context['function_cache']:
                         try:
