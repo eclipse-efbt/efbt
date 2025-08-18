@@ -722,5 +722,11 @@ urlpatterns = [
         enhanced_lineage_api.get_calculation_summary,
         name="get_calculation_summary",
     ),
+    # Debug endpoint
+    path(
+        "api/trail/<int:trail_id>/debug/",
+        lambda request, trail_id: __import__('pybirdai.debug_tracking', fromlist=['create_debug_api_endpoint']).create_debug_api_endpoint()(request, trail_id),
+        name="debug_trail_data",
+    ),
 
 ]
