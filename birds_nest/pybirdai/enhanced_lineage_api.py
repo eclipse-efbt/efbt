@@ -186,16 +186,31 @@ def get_trail_filtered_lineage(request, trail_id):
                             "values": []
                         }
                         
-                        # Add column values only for used fields
+                        # Build set of used field names for this specific table
+                        used_field_names_for_table = set()
+                        for field_id in used_field_ids['DatabaseField']:
+                            try:
+                                field = DatabaseField.objects.get(id=field_id)
+                                if field.table.id == table.id:  # Field belongs to this table
+                                    used_field_names_for_table.add(field.name)
+                            except DatabaseField.DoesNotExist:
+                                pass
+                        
+                        # Add column values - show ONLY fields that were explicitly tracked as used
                         for col_value in row.column_values.all():
-                            if include_unused or col_value.column.id in used_field_ids['DatabaseField']:
+                            field_name = col_value.column.name
+                            
+                            # Show only precisely tracked fields (or all if include_unused is True)
+                            if include_unused or field_name in used_field_names_for_table:
                                 row_data['values'].append({
                                     "id": col_value.id,
                                     "value": col_value.value,
                                     "string_value": col_value.string_value,
                                     "column_id": col_value.column.id,
                                     "column_name": col_value.column.name,
-                                    "row_id": row.id
+                                    "row_id": row.id,
+                                    "was_used": field_name in used_field_names_for_table,
+                                    "precision": "exact_field_tracking"
                                 })
                         
                         pop_table_data['rows'].append(row_data)
@@ -223,6 +238,28 @@ def get_trail_filtered_lineage(request, trail_id):
                         break
             else:
                 table_has_used_rows = True
+            
+            # If this derived table has functions that were used, include it
+            # Also include if a function with the same table name was used (for data consistency)
+            if not table_has_used_rows and eval_table.derivedtablerow_set.exists():
+                # Check if any functions in this table were used
+                table_functions_used = any(
+                    func.table.id == table.id 
+                    for field_id in used_field_ids['Function']
+                    for func in [Function.objects.get(id=field_id)]
+                    if Function.objects.filter(id=field_id).exists()
+                )
+                
+                # Also check if any functions with the same table name were used
+                same_name_function_used = any(
+                    func.table.name == table.name
+                    for field_id in used_field_ids['Function']
+                    for func in [Function.objects.get(id=field_id)]
+                    if Function.objects.filter(id=field_id).exists()
+                )
+                
+                if table_functions_used or same_name_function_used:
+                    table_has_used_rows = True
             
             if table_has_used_rows:
                 # Add table definition
@@ -259,30 +296,77 @@ def get_trail_filtered_lineage(request, trail_id):
                     "rows": []
                 }
                 
+                # Build set of used field names for this specific table
+                used_field_names_for_derived_table = set()
+                for field_id in used_field_ids['Function']:
+                    try:
+                        function = Function.objects.get(id=field_id)
+                        # Match by table name instead of ID to handle data consistency issues
+                        if function.table.name == table.name:  # Function belongs to this table by name
+                            used_field_names_for_derived_table.add(function.name)
+                    except Function.DoesNotExist:
+                        pass
+                
                 # Add only used rows
                 for row in eval_table.derivedtablerow_set.all():
-                    if include_unused or row.id in used_row_ids['DerivedTableRow']:
+                    # Include row if explicitly tracked or if the table was determined to be used
+                    include_row = (include_unused or 
+                                 row.id in used_row_ids['DerivedTableRow'] or
+                                 table_has_used_rows)
+                    
+                    if include_row:
                         row_data = {
                             "id": row.id,
                             "row_identifier": row.row_identifier,
                             "populated_table_id": eval_table.id,
-                            "was_used": row.id in used_row_ids['DerivedTableRow'],
+                            "was_used": row.id in used_row_ids['DerivedTableRow'] or table_has_used_rows,
                             "evaluated_functions": []
                         }
                         
-                        # Add evaluated functions
+                        # Add evaluated functions - show ONLY precisely tracked functions
                         for eval_func in row.evaluated_functions.all():
-                            if include_unused or eval_func.function.id in used_field_ids['Function']:
+                            function_name = eval_func.function.name
+                            show_function = (include_unused or 
+                                           eval_func.function.id in used_field_ids['Function'] or
+                                           function_name in used_field_names_for_derived_table)
+                            
+                            if show_function:
                                 row_data['evaluated_functions'].append({
                                     "id": eval_func.id,
                                     "value": eval_func.value,
                                     "string_value": eval_func.string_value,
                                     "function_id": eval_func.function.id,
                                     "function_name": eval_func.function.name,
-                                    "row_id": row.id
+                                    "row_id": row.id,
+                                    "was_used": (eval_func.function.id in used_field_ids['Function'] or
+                                               function_name in used_field_names_for_derived_table),
+                                    "precision": "derived_table_function"
                                 })
                         
-                        if row_data['evaluated_functions'] or include_unused:
+                        # If no evaluated functions but the table has used functions, add placeholders 
+                        # to show that these functions were accessed even if not calculated for this row
+                        if not row_data['evaluated_functions'] and used_field_names_for_derived_table:
+                            for field_id in used_field_ids['Function']:
+                                try:
+                                    function = Function.objects.get(id=field_id)
+                                    if function.table.name == table.name:
+                                        row_data['evaluated_functions'].append({
+                                            "id": None,
+                                            "value": None,
+                                            "string_value": "Function was accessed but not calculated for this row",
+                                            "function_id": function.id,
+                                            "function_name": function.name,
+                                            "row_id": row.id,
+                                            "was_used": True,
+                                            "precision": "function_accessed_but_not_calculated"
+                                        })
+                                except Function.DoesNotExist:
+                                    pass
+                        
+                        # Include row if it has functions OR if the table itself has used functions
+                        # (even if this specific row doesn't have calculated values yet)
+                        table_has_used_functions = len(used_field_names_for_derived_table) > 0
+                        if row_data['evaluated_functions'] or include_unused or table_has_used_functions:
                             eval_table_data['rows'].append(row_data)
                 
                 if eval_table_data['rows']:  # Only add if there are rows
