@@ -1323,7 +1323,9 @@ class OrchestrationWithLineage:
 				model_name = type(row).__name__
 				
 				# Ensure we have a database table for this model
-				if model_name not in self.current_populated_tables:
+				# Check if we already have the wrong type of table stored
+				existing_table = self.current_populated_tables.get(model_name)
+				if not existing_table or not isinstance(existing_table, PopulatedDataBaseTable):
 					# Create database table
 					db_table = DatabaseTable.objects.create(name=model_name)
 					
@@ -1343,6 +1345,8 @@ class OrchestrationWithLineage:
 					
 					self.current_populated_tables[model_name] = populated_table
 					print(f"Created database table for Django model: {model_name}")
+				else:
+					populated_table = existing_table
 				
 				# Get the populated database table
 				populated_table = self.current_populated_tables[model_name]
@@ -1375,6 +1379,10 @@ class OrchestrationWithLineage:
 								self._track_column_value_for_django_field(db_row, field.name, field_value, populated_table.table)
 					
 					print(f"Created database row for Django model {model_name}")
+					
+					# DISABLED: Don't automatically track all Django model fields as used
+					# Only track fields that are actually accessed during calculations (via wrapper)
+					# self._track_django_model_fields_as_used(calculation_name, populated_table.table, row)
 				
 				row = db_row
 				
@@ -1468,6 +1476,25 @@ class OrchestrationWithLineage:
 			import traceback
 			traceback.print_exc()
 	
+	def _track_django_model_fields_as_used(self, calculation_name, database_table, django_model_instance):
+		"""Track all fields of a Django model as used fields when the model instance is tracked as a used row"""
+		try:
+			# Get all database fields for this table
+			database_fields = database_table.database_fields.all()
+			
+			# Track each database field as a used field
+			for db_field in database_fields:
+				# Check if the Django model actually has this field
+				if hasattr(django_model_instance, db_field.name):
+					try:
+						# Track this field as used
+						self.track_calculation_used_field(calculation_name, db_field.name, django_model_instance)
+						print(f"  Tracked Django model field as used: {database_table.name}.{db_field.name}")
+					except Exception as e:
+						print(f"  Failed to track Django model field {db_field.name}: {e}")
+		except Exception as e:
+			print(f"Error tracking Django model fields as used: {e}")
+
 	def track_calculation_used_field(self, calculation_name, field_name, row=None):
 		"""Track that a specific field was accessed during a calculation"""
 		if not self.lineage_enabled or not self.trail:
