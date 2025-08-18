@@ -56,6 +56,16 @@ class ExecuteDataPoint:
         klass = globals()['Cell_' + str(data_point_id)]
         datapoint = klass()
         
+        # Set calculation context early if lineage is enabled
+        if isinstance(orchestration, OrchestrationWithLineage):
+            calculation_name = datapoint.__class__.__name__
+            orchestration.current_calculation = calculation_name
+            print(f"Set calculation context: {calculation_name}")
+            
+            from pybirdai.process_steps.filter_code.automatic_tracking_wrapper import create_smart_tracking_wrapper
+            datapoint = create_smart_tracking_wrapper(datapoint, orchestration)
+            print(f"Added automatic tracking wrapper to {calculation_name}")
+        
         # Execute the datapoint
         datapoint.init()
         metric_value = str(datapoint.metric_value())
@@ -65,11 +75,27 @@ class ExecuteDataPoint:
             trail = orchestration.get_lineage_trail()
             if trail:
                 print(f"AORTA Trail created: {trail.name} (ID: {trail.id})")
-                from pybirdai.models import DatabaseTable, PopulatedDataBaseTable, DatabaseField, DatabaseRow
+                from pybirdai.models import (
+                    DatabaseTable, PopulatedDataBaseTable, DatabaseField, DatabaseRow,
+                    CalculationUsedRow, CalculationUsedField
+                )
                 print(f"  DatabaseTables: {DatabaseTable.objects.count()}")
                 print(f"  PopulatedTables: {PopulatedDataBaseTable.objects.count()}")
                 print(f"  DatabaseFields: {DatabaseField.objects.count()}")
                 print(f"  DatabaseRows: {DatabaseRow.objects.count()}")
+                
+                # Print tracking information
+                used_rows = CalculationUsedRow.objects.filter(trail=trail)
+                used_fields = CalculationUsedField.objects.filter(trail=trail)
+                print(f"  Tracked Used Rows: {used_rows.count()}")
+                print(f"  Tracked Used Fields: {used_fields.count()}")
+                
+                if used_rows.exists():
+                    calculation_names = used_rows.values_list('calculation_name', flat=True).distinct()
+                    for calc_name in calculation_names:
+                        row_count = used_rows.filter(calculation_name=calc_name).count()
+                        field_count = used_fields.filter(calculation_name=calc_name).count()
+                        print(f"    {calc_name}: {row_count} rows, {field_count} fields")
         
         del datapoint
         return metric_value

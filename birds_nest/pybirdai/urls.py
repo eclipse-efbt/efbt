@@ -7,6 +7,7 @@ from . import ancrdt_transformation_views
 
 from . import lineage_views
 from . import lineage_api
+from . import enhanced_lineage_api
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -709,6 +710,17 @@ urlpatterns = [
         "api/trail/<int:trail_id>/summary/",
         lineage_api.get_trail_lineage_summary,
         name="get_trail_lineage_summary",
+    ),
+    # Enhanced lineage API endpoints
+    path(
+        "api/trail/<int:trail_id>/filtered-lineage/",
+        enhanced_lineage_api.get_trail_filtered_lineage,
+        name="get_trail_filtered_lineage",
+    ),
+    path(
+        "api/trail/<int:trail_id>/calculation-summary/",
+        enhanced_lineage_api.get_calculation_summary,
+        name="get_calculation_summary",
     ),
 
 ]

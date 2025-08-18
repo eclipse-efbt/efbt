@@ -19,7 +19,8 @@ from pybirdai.models import (
     PopulatedDataBaseTable, EvaluatedDerivedTable, DatabaseRow,
     DerivedTableRow, DatabaseColumnValue, EvaluatedFunction,
     AortaTableReference, FunctionColumnReference, DerivedRowSourceReference,
-    EvaluatedFunctionSourceValue, TableCreationSourceTable
+    EvaluatedFunctionSourceValue, TableCreationSourceTable,
+    CalculationUsedRow, CalculationUsedField
 )
 from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
@@ -1301,6 +1302,206 @@ class OrchestrationWithLineage:
 		if obj_id in self.object_contexts:
 			return self.object_contexts[obj_id]
 		return None
+	
+	def track_calculation_used_row(self, calculation_name, row):
+		"""Track that a specific row was used in a calculation (passed filters)"""
+		if not self.lineage_enabled or not self.trail:
+			return
+		
+		try:
+			# Determine the type of row
+			if isinstance(row, DatabaseRow):
+				content_type = ContentType.objects.get_for_model(DatabaseRow)
+			elif isinstance(row, DerivedTableRow):
+				content_type = ContentType.objects.get_for_model(DerivedTableRow)
+			else:
+				# For business objects, determine the appropriate tracking strategy
+				row_class_name = type(row).__name__
+				
+				# Check if this is a business object that should be tracked as a derived table row
+				if hasattr(row, '__dict__'):
+					# This is a business object - create/find appropriate derived table
+					tracked_row = None
+					
+					# Look for or create an appropriate derived table for this object type
+					table_name = row_class_name
+					
+					# Check if we already have a derived table for this object type
+					if table_name not in self.current_populated_tables:
+						# Create derived table for this object type
+						derived_table = DerivedTable.objects.create(name=table_name)
+						
+						# Add to metadata trail
+						if self.metadata_trail:
+							AortaTableReference.objects.create(
+								metadata_trail=self.metadata_trail,
+								table_content_type='DerivedTable',
+								table_id=derived_table.id
+							)
+						
+						# Create EvaluatedDerivedTable
+						evaluated_table = EvaluatedDerivedTable.objects.create(
+							trail=self.trail,
+							table=derived_table
+						)
+						
+						self.current_populated_tables[table_name] = evaluated_table
+						print(f"Created derived table for business object type: {table_name}")
+					
+					# Get the evaluated derived table
+					evaluated_table = self.current_populated_tables[table_name]
+					
+					# Create unique identifier for this specific object instance
+					object_identifier = f"{row_class_name}_{id(row)}"
+					
+					# Check if we already have a derived row for this object
+					existing_rows = evaluated_table.derivedtablerow_set.filter(
+						row_identifier=object_identifier
+					)
+					
+					if existing_rows.exists():
+						tracked_row = existing_rows.first()
+					else:
+						# Create new derived table row for this object
+						tracked_row = DerivedTableRow.objects.create(
+							populated_table=evaluated_table,
+							row_identifier=object_identifier
+						)
+						print(f"Created derived table row for {row_class_name}")
+					
+					if tracked_row:
+						row = tracked_row
+						content_type = ContentType.objects.get_for_model(DerivedTableRow)
+					else:
+						print(f"Failed to create derived table row for {row_class_name}")
+						return
+				else:
+					print(f"Cannot track row of type {type(row)} - not a trackable object")
+					return
+			
+			# Check if this row is already tracked for this calculation
+			existing = CalculationUsedRow.objects.filter(
+				trail=self.trail,
+				calculation_name=calculation_name,
+				content_type=content_type,
+				object_id=row.id
+			).exists()
+			
+			if not existing:
+				CalculationUsedRow.objects.create(
+					trail=self.trail,
+					calculation_name=calculation_name,
+					content_type=content_type,
+					object_id=row.id
+				)
+				# print(f"Tracked used row for {calculation_name}: {row}")
+		
+		except Exception as e:
+			print(f"Error tracking calculation used row: {e}")
+	
+	def track_calculation_used_field(self, calculation_name, field_name, row=None):
+		"""Track that a specific field was accessed during a calculation"""
+		if not self.lineage_enabled or not self.trail:
+			return
+		
+		try:
+			# Find the field object
+			field = None
+			content_type = None
+			
+			# First try to find as DatabaseField
+			database_fields = DatabaseField.objects.filter(name=field_name)
+			if database_fields.exists():
+				field = database_fields.first()
+				content_type = ContentType.objects.get_for_model(DatabaseField)
+			else:
+				# Try to find as Function
+				functions = Function.objects.filter(name=field_name)
+				if functions.exists():
+					field = functions.first()
+					content_type = ContentType.objects.get_for_model(Function)
+			
+			if not field:
+				# Try to find with more context if field_name includes table reference
+				if '.' in field_name:
+					parts = field_name.split('.')
+					actual_field_name = parts[-1]
+					database_fields = DatabaseField.objects.filter(name=actual_field_name)
+					if database_fields.exists():
+						field = database_fields.first()
+						content_type = ContentType.objects.get_for_model(DatabaseField)
+					else:
+						functions = Function.objects.filter(name=actual_field_name)
+						if functions.exists():
+							field = functions.first()
+							content_type = ContentType.objects.get_for_model(Function)
+			
+			if not field:
+				print(f"Cannot find field {field_name} to track")
+				return
+			
+			# Prepare row tracking if provided
+			row_content_type = None
+			row_object_id = None
+			if row:
+				if isinstance(row, DatabaseRow):
+					row_content_type = ContentType.objects.get_for_model(DatabaseRow)
+					row_object_id = row.id
+				elif isinstance(row, DerivedTableRow):
+					row_content_type = ContentType.objects.get_for_model(DerivedTableRow)
+					row_object_id = row.id
+			
+			# Check if this field is already tracked for this calculation
+			query = CalculationUsedField.objects.filter(
+				trail=self.trail,
+				calculation_name=calculation_name,
+				content_type=content_type,
+				object_id=field.id
+			)
+			
+			if row_content_type and row_object_id:
+				query = query.filter(
+					row_content_type=row_content_type,
+					row_object_id=row_object_id
+				)
+			
+			if not query.exists():
+				CalculationUsedField.objects.create(
+					trail=self.trail,
+					calculation_name=calculation_name,
+					content_type=content_type,
+					object_id=field.id,
+					row_content_type=row_content_type,
+					row_object_id=row_object_id
+				)
+				# print(f"Tracked used field for {calculation_name}: {field_name}")
+		
+		except Exception as e:
+			print(f"Error tracking calculation used field: {e}")
+	
+	def get_calculation_used_rows(self, calculation_name):
+		"""Get all rows that were used in a specific calculation"""
+		if not self.trail:
+			return []
+		
+		used_rows = CalculationUsedRow.objects.filter(
+			trail=self.trail,
+			calculation_name=calculation_name
+		)
+		
+		return [ur.used_row for ur in used_rows]
+	
+	def get_calculation_used_fields(self, calculation_name):
+		"""Get all fields that were accessed during a specific calculation"""
+		if not self.trail:
+			return []
+		
+		used_fields = CalculationUsedField.objects.filter(
+			trail=self.trail,
+			calculation_name=calculation_name
+		)
+		
+		return [uf.used_field for uf in used_fields]
 
 	def _find_source_value_object(self, source_value):
 		"""Find the DatabaseColumnValue object for a given source value"""
@@ -1330,7 +1531,17 @@ class OrchestrationWithLineage:
 		"""Track processing of data items in a table"""
 		if not self.lineage_enabled or not self.trail or not self.metadata_trail:
 			return
-
+		
+		# Also track that these rows and tables are being used in calculations
+		current_calculation = getattr(self, 'current_calculation', None)
+		if current_calculation and hasattr(self, 'track_calculation_used_row'):
+			# Track each data item as a used row
+			for item in data_items:
+				try:
+					self.track_calculation_used_row(current_calculation, item)
+				except:
+					pass  # Don't let tracking errors break the main processing
+		
 		try:
 			# Ensure we have a populated table for this table name
 			if table_name not in self.current_populated_tables:
