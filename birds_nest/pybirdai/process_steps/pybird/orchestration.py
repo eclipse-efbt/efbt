@@ -599,6 +599,117 @@ class OrchestrationWithLineage:
 
 		return function
 
+	def track_polymorphic_function_execution(self, function_name, base_class_name, 
+											source_columns, result_column=None, 
+											wrapper_obj=None, base_obj=None):
+		"""Track the execution of a polymorphic function in AORTA"""
+		if not self.lineage_enabled or not self.trail:
+			return
+
+		# Use the wrapper class name for the table/function organization
+		# CRITICAL FIX: Extract the FULL wrapper class name, not just the first part
+		# For function_name like "F_05_01_REF_FINREP_3_0_UnionItem.GRSS_CRRYNG_AMNT"
+		# we want "F_05_01_REF_FINREP_3_0_UnionItem", not "F_05_01_REF_FINREP_3_0"
+		if '.' in function_name:
+			# Get everything before the last dot (the method name)
+			wrapper_class_name = function_name.rsplit('.', 1)[0]
+		else:
+			wrapper_class_name = 'DynamicFunctions'
+		
+		print(f"🔧 track_polymorphic_function_execution: function_name={function_name}, wrapper_class_name={wrapper_class_name}, base_class_name={base_class_name}")
+		
+		# Create more descriptive function name that includes the base class
+		polymorphic_function_name = f"{function_name}@{base_class_name}"
+
+		# Create or get derived table for the wrapper class
+		derived_table = None
+		existing_tables = None
+		if self.metadata_trail:
+			# Look for tables in the current metadata trail
+			existing_refs = AortaTableReference.objects.filter(
+				metadata_trail=self.metadata_trail,
+				table_content_type='DerivedTable'
+			)
+			for ref in existing_refs:
+				table = DerivedTable.objects.get(id=ref.table_id)
+				if table.name == wrapper_class_name:
+					existing_tables = [table]
+					break
+
+		if existing_tables:
+			derived_table = existing_tables[0]
+		else:
+			derived_table = DerivedTable.objects.create(name=wrapper_class_name)
+
+			# Add to metadata trail
+			if self.metadata_trail:
+				AortaTableReference.objects.create(
+					metadata_trail=self.metadata_trail,
+					table_content_type='DerivedTable',
+					table_id=derived_table.id
+				)
+
+			# Create EvaluatedDerivedTable
+			if self.trail:
+				evaluated_table = EvaluatedDerivedTable.objects.create(
+					trail=self.trail,
+					table=derived_table
+				)
+				self.current_populated_tables[wrapper_class_name] = evaluated_table
+
+		# Check if Function already exists for this polymorphic name and table
+		existing_functions = Function.objects.filter(
+			name=polymorphic_function_name,
+			table=derived_table
+		)
+
+		if existing_functions.exists():
+			# Reuse existing function
+			function = existing_functions.first()
+		else:
+			# Create source code that shows the polymorphic delegation
+			method_name = function_name.split('.')[-1] if '.' in function_name else function_name
+			source_code = f"def {method_name}(self) -> Any: return self.base.{method_name}()  # Polymorphic delegation to {base_class_name}"
+			
+			# Create new Function record
+			function_text = FunctionText.objects.create(
+				text=source_code,
+				language='python'
+			)
+
+			function = Function.objects.create(
+				name=polymorphic_function_name,
+				function_text=function_text,
+				table=derived_table
+			)
+			print(f"Created polymorphic function: {polymorphic_function_name}")
+
+		# Track column references for polymorphic dependencies
+		for col_ref in source_columns:
+			try:
+				# Try to resolve the actual column object
+				resolved_field = self._resolve_column_reference(col_ref)
+				if resolved_field:
+					# Check if this column reference already exists
+					content_type = ContentType.objects.get_for_model(resolved_field.__class__)
+					existing_col_refs = FunctionColumnReference.objects.filter(
+						function=function,
+						content_type=content_type,
+						object_id=resolved_field.id
+					)
+
+					if not existing_col_refs.exists():
+						# Create FunctionColumnReference
+						FunctionColumnReference.objects.create(
+							function=function,
+							content_type=content_type,
+							object_id=resolved_field.id
+						)
+			except Exception as e:
+				print(f"Could not resolve polymorphic column reference {col_ref}: {e}")
+
+		return function
+
 	def _extract_source_table_names(self, source_columns):
 		"""Extract unique table names from column dependencies"""
 		table_names = set()
@@ -1123,7 +1234,24 @@ class OrchestrationWithLineage:
 				print(f"Function {function_name} not found for value computation")
 				return
 
-			function = functions.first()
+			# CRITICAL FIX: When multiple functions exist with the same name,
+			# prefer the one that belongs to the same table as the derived row
+			function = functions.first()  # Default fallback
+			
+			# Try to find a function from the same table as the derived row
+			derived_table = derived_row.populated_table.table
+			for func in functions:
+				if func.table.id == derived_table.id:
+					function = func
+					print(f"🎯 track_value_computation: Using function {func.id} from correct table {derived_table.name}")
+					break
+			else:
+				# If no exact table match, try by table name (for data consistency)
+				for func in functions:
+					if func.table.name == derived_table.name:
+						function = func
+						print(f"🎯 track_value_computation: Using function {func.id} from table with matching name {derived_table.name}")
+						break
 
 			# Check if we already have an EvaluatedFunction for this function and row
 			existing_evaluated = EvaluatedFunction.objects.filter(
