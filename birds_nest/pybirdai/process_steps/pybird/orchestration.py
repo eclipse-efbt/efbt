@@ -1890,9 +1890,9 @@ class OrchestrationWithLineage:
 						if not attr.startswith('_') and not callable(getattr(item, attr)):
 							try:
 								value = getattr(item, attr)
-								if callable(value):
-									value = value()
-								row_data[attr] = value
+								# Only include non-callable attributes to avoid unwanted method evaluations
+								if not callable(value):
+									row_data[attr] = value
 							except:
 								pass
 				else:
