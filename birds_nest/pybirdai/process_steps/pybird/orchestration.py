@@ -1215,16 +1215,21 @@ class OrchestrationWithLineage:
 
 	def track_value_computation(self, function_name, source_values, computed_value):
 		"""Track value-level lineage"""
+		print(f"🔍 track_value_computation called: {function_name}, value={computed_value}")
+		
 		if not self.lineage_enabled or not self.trail:
+			print(f"🔍 track_value_computation: lineage disabled or no trail")
 			return
 
 		try:
 			# Get the current derived row if available
 			derived_row_id = self.current_rows.get('derived')
 			if not derived_row_id:
-				print(f"DEBUG: No derived row context for value computation: {function_name}")
-				print(f"DEBUG: Current rows context: {self.current_rows}")
+				print(f"🔍 track_value_computation: No derived row context for value computation: {function_name}")
+				print(f"🔍 track_value_computation: Current rows context: {self.current_rows}")
 				return
+			
+			print(f"🔍 track_value_computation: Using derived_row_id: {derived_row_id}")
 
 			# Check cache first
 			cache_key = f"{derived_row_id}:{function_name}"
@@ -1291,12 +1296,14 @@ class OrchestrationWithLineage:
 				except (ValueError, TypeError):
 					string_value = str(computed_value)
 
+			print(f"🔍 track_value_computation: Creating EvaluatedFunction for {function.name} (ID: {function.id}) on row {derived_row.id}")
 			evaluated_function = EvaluatedFunction.objects.create(
 				value=numeric_value,
 				string_value=string_value,
 				function=function,
 				row=derived_row
 			)
+			print(f"🔍 track_value_computation: ✅ Created EvaluatedFunction ID: {evaluated_function.id}")
 
 			# Track source values (optional - don't fail if this doesn't work)
 			for source_value in source_values:

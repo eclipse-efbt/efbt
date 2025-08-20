@@ -406,11 +406,13 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                                 # Track the value computation with the object-specific context
                                                 # CRITICAL FIX: Use polymorphic function name to match what was created in database
                                                 poly_func_name = f"{full_func_name}@{base_class_name}"
-                                                orchestration.track_value_computation(
+                                                print(f"🔍 Polymorphic: Calling track_value_computation for {poly_func_name}, value={value}, context={derived_row_id}")
+                                                result = orchestration.track_value_computation(
                                                     poly_func_name,  # Use the polymorphic function name
                                                     source_values,
                                                     value
                                                 )
+                                                print(f"🔍 Polymorphic: track_value_computation returned {result}")
                                             finally:
                                                 # Restore the original context
                                                 if original_context:
@@ -421,25 +423,53 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                             # Skip the normal track_value_computation call below
                                             return value
                                     else:
-                                        # Use the existing context for this object
-                                        original_context = orchestration.current_rows.get('derived')
-                                        orchestration.current_rows['derived'] = wrapper_obj_context
+                                        # CRITICAL: ALWAYS create evaluations in BOTH contexts for polymorphic functions
+                                        # This ensures functions appear in both UnionItem and Other_loans tables
                                         
+                                        poly_func_name = f"{full_func_name}@{base_class_name}"
+                                        original_context = orchestration.current_rows.get('derived')
+                                        
+                                        # STEP 1: Always ensure wrapper context exists and track there
+                                        wrapper_obj_context = orchestration.get_derived_context_for_object(wrapper_obj)
+                                        if not wrapper_obj_context:
+                                            wrapper_obj_context = orchestration._ensure_derived_row_context(wrapper_obj, f"{wrapper_class_name}.{func_name}")
+                                            print(f"🔍 Polymorphic: Created wrapper context for {wrapper_class_name}: {wrapper_obj_context}")
+                                        else:
+                                            print(f"🔍 Polymorphic: Using existing wrapper context: {wrapper_obj_context}")
+                                        
+                                        # Track in wrapper context (UnionItem table)
+                                        orchestration.current_rows['derived'] = wrapper_obj_context
                                         try:
-                                            # Track the value computation with the object-specific context
-                                            # CRITICAL FIX: Use polymorphic function name to match what was created in database
-                                            poly_func_name = f"{full_func_name}@{base_class_name}"
-                                            orchestration.track_value_computation(
-                                                poly_func_name,  # Use the polymorphic function name
-                                                source_values,
-                                                value
-                                            )
+                                            print(f"🔍 Polymorphic: Tracking in wrapper context (UnionItem): {poly_func_name}, value={value}")
+                                            orchestration.track_value_computation(poly_func_name, source_values, value)
+                                            print(f"🔍 Polymorphic: ✅ Successfully tracked in UnionItem context")
+                                        except Exception as e:
+                                            print(f"⚠️ Error tracking in wrapper context: {e}")
+                                        
+                                        # STEP 2: Always ensure base context exists and track there
+                                        base_obj_context = orchestration.get_derived_context_for_object(base_obj)
+                                        if not base_obj_context:
+                                            base_obj_context = orchestration._ensure_derived_row_context(base_obj, f"{base_class_name}.{func_name}")
+                                            print(f"🔍 Polymorphic: Created base context for {base_class_name}: {base_obj_context}")
+                                        else:
+                                            print(f"🔍 Polymorphic: Using existing base context: {base_obj_context}")
+                                        
+                                        # Track in base context (Other_loans table)
+                                        orchestration.current_rows['derived'] = base_obj_context
+                                        try:
+                                            print(f"🔍 Polymorphic: Tracking in base context (Other_loans): {poly_func_name}, value={value}")
+                                            orchestration.track_value_computation(poly_func_name, source_values, value)
+                                            print(f"🔍 Polymorphic: ✅ Successfully tracked in Other_loans context")
+                                        except Exception as e:
+                                            print(f"⚠️ Error tracking in base context: {e}")
                                         finally:
                                             # Restore the original context
                                             if original_context:
                                                 orchestration.current_rows['derived'] = original_context
                                             else:
                                                 orchestration.current_rows.pop('derived', None)
+                                        
+                                        print(f"🔍 Polymorphic: ✅ Completed dual-context tracking for {poly_func_name}")
                                         
                                         # Skip the normal track_value_computation call below
                                         return value

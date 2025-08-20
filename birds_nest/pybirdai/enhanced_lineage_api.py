@@ -214,11 +214,13 @@ def get_trail_filtered_lineage(request, trail_id):
                         }
                         
                         # Build set of used field names for this specific table
+                        # CRITICAL FIX: Use table name instead of ID to handle table ID mismatches
                         used_field_names_for_table = set()
                         for field_id in used_field_ids['DatabaseField']:
                             try:
                                 field = DatabaseField.objects.get(id=field_id)
-                                if field.table.id == table.id:  # Field belongs to this table
+                                # Match by table name instead of ID to handle schema recreation/migration
+                                if field.table.name == table.name:  # Field belongs to this table by name
                                     used_field_names_for_table.add(field.name)
                             except DatabaseField.DoesNotExist:
                                 pass
@@ -292,8 +294,24 @@ def get_trail_filtered_lineage(request, trail_id):
                     if Function.objects.filter(id=field_id).exists()
                 )
                 
+                # ENHANCED: Check for polymorphic functions that reference this table
+                # Format: "F_05_01_REF_FINREP_3_0_UnionItem.GRSS_CRRYNG_AMNT@Other_loans"
+                polymorphic_function_used = False
+                table_name_lower = table.name
+                for field_id in calculation_relevant_function_ids:
+                    try:
+                        func = Function.objects.get(id=field_id)
+                        # Check if this function name contains "@table_name" (polymorphic reference)
+                        if f"@{table_name_lower}" in func.name:
+                            polymorphic_function_used = True
+                            print(f"🔍 Found polymorphic function referencing {table_name_lower}: {func.name}")
+                            break
+                    except Function.DoesNotExist:
+                        pass
+                
                 # BALANCED: Include tables that have calculation-relevant functions OR will appear in evaluated_derived_tables
-                if table_functions_used or same_name_function_used or table_will_appear_in_evaluated:
+                # OR have polymorphic functions that reference them
+                if table_functions_used or same_name_function_used or table_will_appear_in_evaluated or polymorphic_function_used:
                     table_has_used_rows = True
             
             if table_has_used_rows:
@@ -416,6 +434,10 @@ def get_trail_filtered_lineage(request, trail_id):
                         # Match by table name instead of ID to handle data consistency issues
                         if function.table.name == table.name:  # Function belongs to this table by name
                             used_field_names_for_derived_table.add(function.name)
+                        # ENHANCED: Also include polymorphic functions that reference this table
+                        elif f"@{table.name}" in function.name:  # Polymorphic function references this table
+                            used_field_names_for_derived_table.add(function.name)
+                            # print(f"🔍 Including polymorphic function for {table.name}: {function.name}")
                     except Function.DoesNotExist:
                         pass
                 
@@ -438,9 +460,13 @@ def get_trail_filtered_lineage(request, trail_id):
                         # Add evaluated functions - show ONLY precisely tracked functions
                         for eval_func in row.evaluated_functions.all():
                             # IMPORTANT: Only include functions that actually belong to this table
+                            # OR polymorphic functions that reference this table
                             # This filters out dependency functions from other tables
                             # Use table name comparison instead of ID due to data consistency issues
-                            if eval_func.function.table.name != table.name:
+                            function_belongs_to_table = eval_func.function.table.name == table.name
+                            is_polymorphic_for_this_table = f"@{table.name}" in eval_func.function.name
+                            
+                            if not function_belongs_to_table and not is_polymorphic_for_this_table:
                                 continue
                                 
                             function_name = eval_func.function.name
