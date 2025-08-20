@@ -412,7 +412,20 @@ class OrchestrationWithLineage:
 						print("newObject: " + str(newObject))
 						if newObject:
 							setattr(theObject,eReference,newObject)
+							# Original CSV persistence
 							CSVConverter.persist_object_as_csv(newObject,True);
+							
+							# Enhanced lineage tracking - track each Django model object as database rows
+							if self.lineage_enabled and self.trail and hasattr(newObject, '__iter__'):
+								try:
+									# Extract Django model objects from the queryset
+									django_objects = list(newObject) if hasattr(newObject, '__iter__') else [newObject]
+									if django_objects:
+										# Track the data processing with proper Django objects for lineage
+										self.track_data_processing(table_name, django_objects, django_objects)
+										print(f"✅ Tracked {len(django_objects)} {table_name} objects for lineage")
+								except Exception as e:
+									print(f"Warning: Could not track {table_name} objects for lineage: {e}")
 
 					else:
 						newObject = OrchestrationWithLineage.createObjectFromReferenceType(eReference);
@@ -1285,17 +1298,21 @@ class OrchestrationWithLineage:
 				row=derived_row
 			)
 
-			# Track source values
+			# Track source values (optional - don't fail if this doesn't work)
 			for source_value in source_values:
 				if source_value is not None:
-					# Try to find the corresponding DatabaseColumnValue
-					source_value_obj = self._find_source_value_object(source_value)
-					if source_value_obj:
-						EvaluatedFunctionSourceValue.objects.create(
-							evaluated_function=evaluated_function,
-							content_type=ContentType.objects.get_for_model(source_value_obj.__class__),
-							object_id=source_value_obj.id
-						)
+					try:
+						# Try to find the corresponding DatabaseColumnValue
+						source_value_obj = self._find_source_value_object(source_value)
+						if source_value_obj:
+							EvaluatedFunctionSourceValue.objects.create(
+								evaluated_function=evaluated_function,
+								content_type=ContentType.objects.get_for_model(source_value_obj.__class__),
+								object_id=source_value_obj.id
+							)
+					except Exception as e:
+						# Source value tracking is optional - don't fail the main function evaluation
+						print(f"Debug: Could not create source value link for '{source_value}': {e}")
 
 			# Cache the evaluated function
 			self.evaluated_functions_cache[cache_key] = evaluated_function
@@ -1623,7 +1640,7 @@ class OrchestrationWithLineage:
 		except Exception as e:
 			print(f"Error tracking Django model fields as used: {e}")
 
-	def track_calculation_used_field(self, calculation_name, field_name, row=None):
+	def track_calculation_used_field(self, calculation_name, field_name, row=None, function_obj=None):
 		"""Track that a specific field was accessed during a calculation"""
 		if not self.lineage_enabled or not self.trail:
 			return
@@ -1633,17 +1650,23 @@ class OrchestrationWithLineage:
 			field = None
 			content_type = None
 			
-			# First try to find as DatabaseField
-			database_fields = DatabaseField.objects.filter(name=field_name)
-			if database_fields.exists():
-				field = database_fields.first()
-				content_type = ContentType.objects.get_for_model(DatabaseField)
+			# If function_obj is provided, use it directly to avoid ID mismatch issues
+			if function_obj:
+				field = function_obj
+				content_type = ContentType.objects.get_for_model(Function)
+				print(f"🔍 Using provided function object: {field.name} (ID: {field.id})")
 			else:
-				# Try to find as Function
-				functions = Function.objects.filter(name=field_name)
-				if functions.exists():
-					field = functions.first()
-					content_type = ContentType.objects.get_for_model(Function)
+				# First try to find as DatabaseField
+				database_fields = DatabaseField.objects.filter(name=field_name)
+				if database_fields.exists():
+					field = database_fields.first()
+					content_type = ContentType.objects.get_for_model(DatabaseField)
+				else:
+					# Try to find as Function
+					functions = Function.objects.filter(name=field_name)
+					if functions.exists():
+						field = functions.first()
+						content_type = ContentType.objects.get_for_model(Function)
 			
 			if not field:
 				# Try to find with more context if field_name includes table reference
@@ -1765,23 +1788,37 @@ class OrchestrationWithLineage:
 		"""Find the DatabaseColumnValue object for a given source value"""
 		try:
 			# Look for DatabaseColumnValue with matching value
-			source_row_id = self.current_rows.get('source')
+			source_row_id = self.current_rows.get('source') if hasattr(self, 'current_rows') and self.current_rows else None
 			if source_row_id:
 				source_row = DatabaseRow.objects.get(id=source_row_id)
 				column_values = source_row.column_values.filter(value=str(source_value))
 				if column_values.exists():
 					return column_values.first()
 
-			# Fallback: look across all current rows
-			for table_name, populated_table in self.current_populated_tables.items():
-				if hasattr(populated_table, 'databaserow_set'):
-					for row in populated_table.databaserow_set.all():
-						column_values = row.column_values.filter(value=str(source_value))
-						if column_values.exists():
-							return column_values.first()
+			# Fallback: look across all current rows for derived table rows (most common case for polymorphic functions)
+			if hasattr(self, 'current_populated_tables'):
+				for table_name, populated_table in self.current_populated_tables.items():
+					# Check DerivedTableRow objects instead of DatabaseRow for business objects
+					if hasattr(populated_table, 'derivedtablerow_set'):
+						for row in populated_table.derivedtablerow_set.all():
+							# Look for matching values in EvaluatedFunction records
+							evaluated_funcs = row.evaluatedfunction_set.filter(
+								string_value=str(source_value)
+							)
+							if evaluated_funcs.exists():
+								# Return a dummy object that represents the source
+								return evaluated_funcs.first()
+					
+					# Also check traditional DatabaseRow objects		
+					if hasattr(populated_table, 'databaserow_set'):
+						for row in populated_table.databaserow_set.all():
+							column_values = row.column_values.filter(value=str(source_value))
+							if column_values.exists():
+								return column_values.first()
 
 		except Exception as e:
-			print(f"Error finding source value object: {e}")
+			# Make this a debug message instead of error to reduce noise
+			print(f"Debug: Could not find source value object for '{source_value}': {e}")
 
 		return None
 
