@@ -65,8 +65,9 @@ class CSVConverter:
 			print(f"newObject: {object_list}")
 			django_model = True
 			
-			# Track Django model access through orchestration
-			CSVConverter._track_django_model_access(table_name, object_list)
+			# Note: Removed broad Django model access tracking as it pollutes lineage with unused fields
+			# Lineage is now tracked through improved @lineage decorators on actual calculations
+			# CSVConverter._track_django_model_access(table_name, object_list)
 		else:
 			object_list = CSVConverter.get_contained_objects(theObject)
 

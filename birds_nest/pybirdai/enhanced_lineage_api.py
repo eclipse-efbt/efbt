@@ -85,6 +85,33 @@ def get_trail_filtered_lineage(request, trail_id):
             elif used_field.content_type.model == 'function':
                 used_field_ids['Function'].add(used_field.object_id)
         
+        # STRICT: Only include explicitly tracked functions and their direct dependencies
+        calculation_relevant_function_ids = used_field_ids['Function'].copy()
+        calculation_relevant_function_names = set()
+        
+        if not include_unused:
+            # Add explicitly tracked function names
+            for field_id in calculation_relevant_function_ids:
+                try:
+                    func = Function.objects.get(id=field_id)
+                    calculation_relevant_function_names.add(func.name)
+                except Function.DoesNotExist:
+                    pass
+            
+            # Add direct dependencies of tracked functions
+            for field_id in calculation_relevant_function_ids:
+                deps = FunctionColumnReference.objects.filter(
+                    function_id=field_id,
+                    content_type__model='function'
+                ).values_list('object_id', flat=True)
+                
+                for dep_id in deps:
+                    try:
+                        dep_func = Function.objects.get(id=dep_id)
+                        calculation_relevant_function_names.add(dep_func.name)
+                    except Function.DoesNotExist:
+                        pass
+        
         # Initialize the lineage structure
         lineage_data = {
             "trail": {
@@ -239,9 +266,16 @@ def get_trail_filtered_lineage(request, trail_id):
             else:
                 table_has_used_rows = True
             
+            # Check if this table appears in evaluated_derived_tables (for consistency)
+            table_will_appear_in_evaluated = False
+            if eval_table.derivedtablerow_set.exists():
+                table_will_appear_in_evaluated = EvaluatedFunction.objects.filter(
+                    row__populated_table=eval_table
+                ).exists()
+            
             # If this derived table has functions that were used, include it
             # Also include if a function with the same table name was used (for data consistency)
-            if not table_has_used_rows and eval_table.derivedtablerow_set.exists():
+            if not table_has_used_rows:
                 # Check if any functions in this table were used
                 table_functions_used = any(
                     func.table.id == table.id 
@@ -250,15 +284,16 @@ def get_trail_filtered_lineage(request, trail_id):
                     if Function.objects.filter(id=field_id).exists()
                 )
                 
-                # Also check if any functions with the same table name were used
+                # Also check if any functions with the same table name were used (including dependencies)
                 same_name_function_used = any(
                     func.table.name == table.name
-                    for field_id in used_field_ids['Function']
+                    for field_id in calculation_relevant_function_ids
                     for func in [Function.objects.get(id=field_id)]
                     if Function.objects.filter(id=field_id).exists()
                 )
                 
-                if table_functions_used or same_name_function_used:
+                # BALANCED: Include tables that have calculation-relevant functions OR will appear in evaluated_derived_tables
+                if table_functions_used or same_name_function_used or table_will_appear_in_evaluated:
                     table_has_used_rows = True
             
             if table_has_used_rows:
@@ -271,19 +306,96 @@ def get_trail_filtered_lineage(request, trail_id):
                         "functions": []
                     }
                     
-                    # Add only used functions
+                    # Check if this table has any directly tracked functions
+                    table_has_tracked_functions = any(
+                        Function.objects.filter(id=fid, table_id=table.id).exists()
+                        for fid in used_field_ids['Function']
+                    )
+                    
+                    # We'll show all functions that were actually used in the calculation
+                    
+                    # First, get all function names that have evaluated values for this table
+                    evaluated_function_names = set()
+                    for row in eval_table.derivedtablerow_set.all():
+                        for eval_func in row.evaluated_functions.all():
+                            # Only include functions that match the table name pattern
+                            if eval_func.function.table.name == table.name:
+                                # Extract just the function name without table prefix
+                                func_name = eval_func.function.name
+                                if '.' in func_name:
+                                    func_name = func_name.split('.')[-1]
+                                evaluated_function_names.add(func_name)
+                    
+                    # Add functions that are used OR have evaluated values in this trail
+                    # This ensures we show functions that contributed to the calculation
                     for function in table.derived_functions.all():
-                        if include_unused or function.id in used_field_ids['Function']:
+                        # Check if function is used by ID or by name (to handle data consistency issues)
+                        is_used_by_id = function.id in used_field_ids['Function']
+                        is_used_by_name = any(
+                            Function.objects.filter(id=field_id).exists() and 
+                            Function.objects.get(id=field_id).name == function.name
+                            for field_id in used_field_ids['Function']
+                        )
+                        
+                        # Check if this function has evaluated values in this table for this trail
+                        # The relationship is: EvaluatedFunction -> row (DerivedTableRow) -> populated_table (EvaluatedDerivedTable)
+                        # Also ensure the function belongs to the correct table
+                        has_evaluated_values_by_id = EvaluatedFunction.objects.filter(
+                            function_id=function.id,
+                            function__table_id=table.id,
+                            row__populated_table=eval_table
+                        ).exists()
+                        
+                        # BALANCED: Include functions that are calculation-relevant OR have evaluated values in included tables
+                        has_evaluated_values_by_name = False
+                        
+                        # Extract function name without table prefix for comparison
+                        func_name_only = function.name
+                        if '.' in func_name_only:
+                            func_name_only = func_name_only.split('.')[-1]
+                        
+                        # Check if this function name appears in the evaluated function names
+                        if func_name_only in evaluated_function_names:
+                            has_evaluated_values_by_name = True
+                        
+                        # Check for polymorphic functions (functions with @ in the name indicating concrete class delegation)
+                        has_polymorphic_values = False
+                        if not has_evaluated_values_by_id and not has_evaluated_values_by_name:
+                            # Look for polymorphic functions that match this base function
+                            polymorphic_functions = Function.objects.filter(name__contains=f"{function.name}@")
+                            for poly_func in polymorphic_functions:
+                                # Check if the polymorphic function has evaluated values
+                                poly_evaluated = EvaluatedFunction.objects.filter(
+                                    function_id=poly_func.id,
+                                    row__populated_table__trail=trail
+                                ).exists()
+                                if poly_evaluated:
+                                    has_polymorphic_values = True
+                                    break
+                        
+                        # Also include polymorphic functions directly (functions with @ in their name)
+                        is_polymorphic_function = '@' in function.name
+                        
+                        has_evaluated_values = has_evaluated_values_by_id or has_evaluated_values_by_name or has_polymorphic_values or is_polymorphic_function
+                        
+                        if include_unused or is_used_by_id or is_used_by_name or has_evaluated_values or is_polymorphic_function:
                             function_data = {
                                 "id": function.id,
                                 "name": function.name,
                                 "table_id": table.id,
-                                "function_text_id": function.function_text.id,
+                                "function_text_id": function.function_text.id if function.function_text else None,
                                 "function_text": function.function_text.text if function.function_text else None,
                                 "function_language": function.function_text.language if function.function_text else None,
-                                "was_used": function.id in used_field_ids['Function']
+                                "was_used": is_used_by_id or is_used_by_name or has_evaluated_values or is_polymorphic_function
                             }
-                            table_data['functions'].append(function_data)
+                            
+                            # Add all functions that were actually used in the calculation
+                            # This includes:
+                            # 1. Functions directly tracked via CalculationUsedField (is_used_by_id or is_used_by_name)
+                            # 2. Functions that have evaluated values (were computed during calculation)
+                            # 3. Polymorphic functions (with @ in their name) - these are always included
+                            if is_used_by_id or is_used_by_name or has_evaluated_values or is_polymorphic_function:
+                                table_data['functions'].append(function_data)
                     
                     lineage_data['derived_tables'].append(table_data)
                 
@@ -325,6 +437,12 @@ def get_trail_filtered_lineage(request, trail_id):
                         
                         # Add evaluated functions - show ONLY precisely tracked functions
                         for eval_func in row.evaluated_functions.all():
+                            # IMPORTANT: Only include functions that actually belong to this table
+                            # This filters out dependency functions from other tables
+                            # Use table name comparison instead of ID due to data consistency issues
+                            if eval_func.function.table.name != table.name:
+                                continue
+                                
                             function_name = eval_func.function.name
                             show_function = (include_unused or 
                                            eval_func.function.id in used_field_ids['Function'] or

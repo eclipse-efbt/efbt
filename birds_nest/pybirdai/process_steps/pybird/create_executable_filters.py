@@ -96,32 +96,49 @@ class CreateExecutableFilters:
                     file.write("\t\tfor item in self." + cube_id + "s:\n")
                     file.write("\t\t\ttotal += item." + combination.combination_id.metric.name + "()\n")
                     file.write("\t\treturn total\n")
-                    file.write("\tdef calc_referenced_items(self):\n")
-                    file.write("\t\titems = self." + cube_id + "_Table." + cube_id + "s\n")
-                    file.write("\t\tfor item in items:\n")
-                    file.write("\t\t\tfilter_passed = True\n")
+                    calc_string = ''
+                    calc_lineage_string = '\t@lineage(dependencies={'
+                    calc_string +="\tdef calc_referenced_items(self):\n"
+                    calc_string +="\t\titems = self." + cube_id + "_Table." + cube_id + "s\n"
+                    calc_string +="\t\tfor item in items:\n"
+                    calc_string +="\t\t\tfilter_passed = True\n"
                     combination_item_list = []
                     try:
                         combination_item_list =  sdd_context.combination_item_dictionary[combination.combination_id.combination_id]
                     except:
                         pass
+                    item_counter = 0
                     for combination_item in combination_item_list:
                         leaf_node_members = CreateExecutableFilters.get_leaf_node_codes(self,
                                                                                       sdd_context,
                                                                                       combination_item.member_id,
                                                                                       combination_item.member_hierarchy)
-
+    
                         if len(leaf_node_members) > 0:
-                            file.write("\t\t\tif ")
+                            calc_string +="\t\t\tif "
                             for leaf_node_member in leaf_node_members:
-                                file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n")
-                            file.write("\t\t\t\tFalse:\n")
-                            file.write("\t\t\t\tpass\n")
-                            file.write("\t\t\telse:\n")
-                            file.write("\t\t\t\tfilter_passed = False\n")
+                                calc_string += "\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n"
+                            calc_string += "\t\t\t\tFalse:\n"
+                            calc_string += "\t\t\t\tpass\n"
+                            calc_string += "\t\t\telse:\n"
+                            calc_string += "\t\t\t\tfilter_passed = False\n"
+                            if item_counter > 0:
+                                calc_lineage_string += ','
+                                calc_lineage_string += '\n\t\t\t'
+                            calc_lineage_string += '"'
+                            calc_lineage_string += cube_id 
+                            calc_lineage_string += '.'
+                            calc_lineage_string += combination_item.variable_id.name 
+                            calc_lineage_string += '"'
+                            
+                            item_counter += 1
                         else:
                             print("No leaf node members for " + combination_item.variable_id.name +":" + combination_item.member_id.member_id)
 
+                    calc_lineage_string += '})\n'
+
+                    file.write(calc_lineage_string)
+                    file.write(calc_string + '\n')
                     file.write("\t\t\tif filter_passed:\n")
                     file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
                     file.write("\tdef init(self):\n")
