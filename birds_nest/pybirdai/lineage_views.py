@@ -643,6 +643,18 @@ def get_node_details(request, trail_id, node_type, node_id):
         return JsonResponse({'error': str(e)}, status=500)
 
 
+def trail_filtered_lineage_viewer(request, trail_id):
+    """View for displaying trail filtered lineage visualization"""
+    trail = get_object_or_404(Trail, pk=trail_id)
+
+    context = {
+        'trail': trail,
+        'trail_id': trail_id,
+        'lineage_type': 'filtered'
+    }
+    return render(request, 'pybirdai/lineage_viewer.html', context)
+
+
 def trail_list(request):
     """List all available trails"""
     trails = Trail.objects.all().order_by('-created_at')

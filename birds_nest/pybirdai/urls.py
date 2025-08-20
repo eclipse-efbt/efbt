@@ -692,6 +692,11 @@ urlpatterns = [
         name="trail_lineage_viewer",
     ),
     path(
+        "trails/<int:trail_id>/filtered-lineage/",
+        lineage_views.trail_filtered_lineage_viewer,
+        name="trail_filtered_lineage_viewer",
+    ),
+    path(
         "api/trail/<int:trail_id>/lineage/",
         lineage_views.get_trail_lineage_data,
         name="get_trail_lineage_data",
