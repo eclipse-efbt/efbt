@@ -66,6 +66,10 @@ class ExecuteDataPoint:
             from pybirdai.debug_tracking import add_debug_to_orchestration
             add_debug_to_orchestration(orchestration)
             
+            # Set calculation context BEFORE initialization to capture all function calls
+            orchestration.current_calculation = calculation_name
+            print(f"Set orchestration context to: {calculation_name}")
+            
             from pybirdai.process_steps.filter_code.automatic_tracking_wrapper import create_smart_tracking_wrapper
             datapoint = create_smart_tracking_wrapper(datapoint, orchestration)
             print(f"Added automatic tracking wrapper to {calculation_name}")

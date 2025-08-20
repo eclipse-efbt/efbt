@@ -146,19 +146,23 @@ def lineage(dependencies: Dict[str, Any] = None):
                         should_track = has_derived_context or is_metric_value or is_derived_method
                         
                         # Debug output (uncomment for debugging)
-                        # if func_name in ['GRSS_CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'TYP_INSTRMNT'] or is_metric_value:
-                        #     print(f"DEBUG @lineage: {full_func_name}")
-                        #     print(f"  - has_derived_context: {has_derived_context}")
-                        #     print(f"  - is_metric_value: {is_metric_value}")
-                        #     print(f"  - is_derived_method: {is_derived_method}")
-                        #     if args and hasattr(args[0], '__class__'):
-                        #         print(f"  - wrapper_class: {args[0].__class__.__name__}")
-                        #         if hasattr(args[0], 'base') and args[0].base is not None:
-                        #             print(f"  - base_class: {args[0].base.__class__.__name__}")
-                        #         if hasattr(args[0], 'unionOfLayers'):
-                        #             print(f"  - has_unionOfLayers: True")
-                        #     print(f"  - should_track: {should_track}")
-                        #     print(f"  - source_values: {source_values}")
+                        if func_name in ['GRSS_CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'TYP_INSTRMNT'] or is_metric_value:
+                            print(f"DEBUG @lineage_polymorphic: {full_func_name}")
+                            print(f"  - has_derived_context: {has_derived_context}")
+                            print(f"  - is_metric_value: {is_metric_value}")
+                            print(f"  - is_derived_method: {is_derived_method}")
+                            if args and hasattr(args[0], '__class__'):
+                                print(f"  - wrapper_class: {args[0].__class__.__name__}")
+                                if hasattr(args[0], 'base') and args[0].base is not None:
+                                    print(f"  - base_class: {args[0].base.__class__.__name__}")
+                                if hasattr(args[0], 'unionOfLayers'):
+                                    print(f"  - has_unionOfLayers: True")
+                            print(f"  - should_track: {should_track}")
+                            print(f"  - source_values: {source_values}")
+                            if hasattr(orchestration, 'current_calculation'):
+                                print(f"  - current_calculation: {getattr(orchestration, 'current_calculation', 'NONE')}")
+                            else:
+                                print(f"  - orchestration has no current_calculation attribute")
                         
                         if should_track:
                             # Get the actual object for context (use base if it's a UnionItem wrapper)
@@ -343,10 +347,10 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                         # Try to infer from wrapper object
                                         current_calc = f"Polymorphic_{wrapper_obj.__class__.__name__}"
                                     
-                                    # CRITICAL FIX: Use the created_function directly instead of searching
+                                    # CRITICAL FIX: Use the created_function object directly instead of name to avoid ID mismatch
                                     if created_function:
-                                        # Use the function that was just created/retrieved
-                                        orchestration.track_calculation_used_field(current_calc, created_function.name)
+                                        # Use the actual function object that was just created/retrieved
+                                        orchestration.track_calculation_used_field(current_calc, created_function.name, function_obj=created_function)
                                         print(f"🔍 Polymorphic: ✅ Successfully registered function {created_function.name} (ID: {created_function.id}) as used")
                                     else:
                                         # Fallback to the old logic if no created_function
