@@ -140,29 +140,13 @@ class CSVConverter:
 								referencedItemString = "None"
 							csvString = csvString + "," + str(referencedItemString)
 		else:
-			operations = [method for method in dir(theObject.__class__) if callable(
-							getattr(theObject.__class__, method)) and not method.startswith('__')]
-			for eOperation in operations:
-				if (firstItem):
-					try:
-						result = getattr(theObject, eOperation)()
-						resultString = None
-						if result:
-							resultString = str(result)
-							csvString = csvString + resultString
-							firstItem = False
-					except:
-						print("Error getting operation result for " + eOperation)
-				else:
-					try:
-						result = getattr(theObject, eOperation)()
-						resultString = None
-						if(result):
-							resultString = str(result)
-							csvString = csvString + "," + resultString
-							firstItem = False
-					except:
-						print("Error getting operation result for " + eOperation)
+			# Don't automatically call all methods - this causes unwanted function evaluations
+			# Instead, just serialize the object representation
+			if (firstItem):
+				csvString = csvString + str(theObject)
+				firstItem = False
+			else:
+				csvString = csvString + "," + str(theObject)
 
 		return csvString + "\n"
 
