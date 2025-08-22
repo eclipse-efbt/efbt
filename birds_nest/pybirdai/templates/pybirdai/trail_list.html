@@ -35,6 +35,9 @@
                             <a href="{% url 'pybirdai:trail_lineage_viewer' trail.id %}" class="btn btn-primary btn-sm">
                                 <i class="fas fa-project-diagram"></i> View Lineage
                             </a>
+                            <a href="{% url 'pybirdai:trail_filtered_lineage_viewer' trail.id %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-filter"></i> View Filtered Lineage
+                            </a>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-download"></i> JSON
@@ -50,6 +53,11 @@
                                             <i class="fas fa-database"></i> Complete Lineage JSON
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'pybirdai:get_trail_filtered_lineage' trail.id %}" target="_blank">
+                                            <i class="fas fa-filter"></i> Filtered Lineage JSON
+                                        </a>
+                                    </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item download-json-btn" href="#" 
@@ -63,6 +71,13 @@
                                            data-url="{% url 'pybirdai:get_trail_complete_lineage' trail.id %}" 
                                            data-filename="trail_{{ trail.id }}_complete.json">
                                             <i class="fas fa-download"></i> Download Complete
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item download-json-btn" href="#" 
+                                           data-url="{% url 'pybirdai:get_trail_filtered_lineage' trail.id %}" 
+                                           data-filename="trail_{{ trail.id }}_filtered.json">
+                                            <i class="fas fa-download"></i> Download Filtered
                                         </a>
                                     </li>
                                 </ul>

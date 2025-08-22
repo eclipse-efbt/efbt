@@ -235,3 +235,42 @@ class TableCreationFunctionColumn(models.Model):
     
     def __str__(self):
         return f"TableCreationFunctionColumn: {self.table_creation_function.name} -> {self.column}"
+
+# New models for tracking rows and fields used in calculations
+class CalculationUsedRow(models.Model):
+    """Track which rows were actually used in a calculation (passed filters)"""
+    trail = models.ForeignKey('Trail', related_name='calculation_used_rows', on_delete=models.CASCADE)
+    calculation_name = models.CharField(max_length=255, help_text="Name of the calculation cell (e.g., Cell_F_01_01_REF_FINREP_3_0_45749_REF)")
+    # Generic relation to handle both DatabaseRow and DerivedTableRow
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    used_row = GenericForeignKey('content_type', 'object_id')
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['trail', 'calculation_name']),
+        ]
+    
+    def __str__(self):
+        return f"CalculationUsedRow: {self.calculation_name} used {self.used_row}"
+
+class CalculationUsedField(models.Model):
+    """Track which fields were actually accessed during a calculation"""
+    trail = models.ForeignKey('Trail', related_name='calculation_used_fields', on_delete=models.CASCADE)
+    calculation_name = models.CharField(max_length=255, help_text="Name of the calculation cell")
+    # Generic relation to handle both DatabaseField and Function
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    used_field = GenericForeignKey('content_type', 'object_id')
+    # Track which row this field was accessed from (optional)
+    row_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='field_row_refs', null=True, blank=True)
+    row_object_id = models.PositiveIntegerField(null=True, blank=True)
+    row = GenericForeignKey('row_content_type', 'row_object_id')
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['trail', 'calculation_name']),
+        ]
+    
+    def __str__(self):
+        return f"CalculationUsedField: {self.calculation_name} used {self.used_field}"

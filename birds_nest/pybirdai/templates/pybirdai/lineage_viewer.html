@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Trail Lineage Viewer - {{ trail.name }}{% endblock %}
+{% block title %}{% if lineage_type == 'filtered' %}Filtered {% endif %}Trail Lineage Viewer - {{ trail.name }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -139,7 +139,7 @@
 {% block content %}
 <div id="lineage-container">
     <div id="control-bar">
-        <h4>Trail: {{ trail.name }}</h4>
+        <h4>{% if lineage_type == 'filtered' %}Filtered {% endif %}Trail: {{ trail.name }}</h4>
         <div class="controls-group">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-sm btn-outline-primary" id="zoom-in">
@@ -263,7 +263,53 @@
                 
                 <div class="mt-3">
                     <h6>JSON API Exports</h6>
-                    <div class="btn-group-vertical w-100" role="group">
+                    
+                        
+                        <div class="btn-group w-100 mb-2" role="group">
+                            <a href="{% url 'pybirdai:get_calculation_summary' trail_id=trail.id %}" 
+                               class="btn btn-sm btn-outline-warning" 
+                               target="_blank"
+                               title="Summary of calculations performed in this trail">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-warning"
+                                    onclick="downloadJSON('{% url 'pybirdai:get_calculation_summary' trail_id=trail.id %}', 'trail_{{ trail.id }}_calculation_summary.json')"
+                                    title="Download calculation summary JSON file">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-warning"
+                                    onclick="copyJSONToClipboard('{% url 'pybirdai:get_calculation_summary' trail_id=trail.id %}', this)"
+                                    title="Copy calculation summary JSON to clipboard">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #666; margin-bottom: 8px;">Calculation Summary JSON</div>
+                        <div class="btn-group-vertical w-100" role="group">
+                            {% if lineage_type == 'filtered' %}
+                            <div class="btn-group w-100 mb-2" role="group">
+                                <a href="{% url 'pybirdai:get_trail_filtered_lineage' trail_id=trail.id %}" 
+                                   class="btn btn-sm btn-outline-success" 
+                                   target="_blank"
+                                   title="Filtered lineage data including only used tables, rows, and values">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-success"
+                                        onclick="downloadJSON('{% url 'pybirdai:get_trail_filtered_lineage' trail_id=trail.id %}', 'trail_{{ trail.id }}_filtered_lineage.json')"
+                                        title="Download filtered lineage JSON file">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-success"
+                                        onclick="copyJSONToClipboard('{% url 'pybirdai:get_trail_filtered_lineage' trail_id=trail.id %}', this)"
+                                        title="Copy filtered lineage JSON to clipboard">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                        <div style="font-size: 0.75rem; color: #666; margin-bottom: 8px;">Filtered Lineage JSON</div>
+                        {% else %}
                         <div class="btn-group w-100 mb-2" role="group">
                             <a href="{% url 'pybirdai:get_trail_lineage_summary' trail_id=trail.id %}" 
                                class="btn btn-sm btn-outline-info" 
@@ -307,6 +353,7 @@
                             </button>
                         </div>
                         <div style="font-size: 0.75rem; color: #666; margin-bottom: 8px;">Complete Lineage JSON</div>
+                        {% endif %}
                     </div>
                     <small class="text-muted">
                         <i class="fas fa-info-circle"></i> 
@@ -336,7 +383,7 @@
 </div>
 
 <!-- Hidden data -->
-<div id="trail-data" data-trail-id="{{ trail_id }}" style="display: none;"></div>
+<div id="trail-data" data-trail-id="{{ trail_id }}" data-lineage-type="{{ lineage_type|default:'complete' }}" style="display: none;"></div>
 {% endblock %}
 
 {% block extra_js %}
