@@ -7,6 +7,7 @@ from . import ancrdt_transformation_views
 
 from . import lineage_views
 from . import lineage_api
+from . import enhanced_lineage_api
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -691,6 +692,11 @@ urlpatterns = [
         name="trail_lineage_viewer",
     ),
     path(
+        "trails/<int:trail_id>/filtered-lineage/",
+        lineage_views.trail_filtered_lineage_viewer,
+        name="trail_filtered_lineage_viewer",
+    ),
+    path(
         "api/trail/<int:trail_id>/lineage/",
         lineage_views.get_trail_lineage_data,
         name="get_trail_lineage_data",
@@ -709,6 +715,23 @@ urlpatterns = [
         "api/trail/<int:trail_id>/summary/",
         lineage_api.get_trail_lineage_summary,
         name="get_trail_lineage_summary",
+    ),
+    # Enhanced lineage API endpoints
+    path(
+        "api/trail/<int:trail_id>/filtered-lineage/",
+        enhanced_lineage_api.get_trail_filtered_lineage,
+        name="get_trail_filtered_lineage",
+    ),
+    path(
+        "api/trail/<int:trail_id>/calculation-summary/",
+        enhanced_lineage_api.get_calculation_summary,
+        name="get_calculation_summary",
+    ),
+    # Debug endpoint
+    path(
+        "api/trail/<int:trail_id>/debug/",
+        lambda request, trail_id: __import__('pybirdai.debug_tracking', fromlist=['create_debug_api_endpoint']).create_debug_api_endpoint()(request, trail_id),
+        name="debug_trail_data",
     ),
 
 ]
