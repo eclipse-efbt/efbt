@@ -90,7 +90,7 @@ class CreateExecutableFilters:
                     file.write("class Cell_" + combination.combination_id.combination_id + ":\n")
                     file.write("\t" + cube_id + "_Table = None\n")
                     file.write("\t" + cube_id + "s = []\n")
-                    file.write("\t@lineage(dependencies={\"" + cube_id + "s\"})\n")
+                    file.write("\t@lineage(dependencies={\"" + cube_id + "." +combination.combination_id.metric.name + "\"})\n")
                     file.write("\tdef metric_value(self):\n"  )
                     file.write("\t\ttotal = 0\n")
                     file.write("\t\tfor item in self." + cube_id + "s:\n")
