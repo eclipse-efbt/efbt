@@ -29,6 +29,7 @@
  .vscode/
 *.lock
 __pycache__/
+*.html
 uv.lock
 **/uv.lock
 
