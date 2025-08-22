@@ -835,7 +835,6 @@ def execute_data_point(request, data_point_id):
         <h3>DataPoint Execution Results</h3>
         <p><strong>DataPoint ID:</strong> {data_point_id}</p>
         <p><strong>Result:</strong> {result}</p>
-        <p><a href="/pybirdai/lineage/">View Lineage Files</a></p>
         <p><a href="/pybirdai/report-templates/">Back to the PyBIRD Reports Templates Page</a></p>
     """
     return HttpResponse(html_response)
