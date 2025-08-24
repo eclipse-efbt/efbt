@@ -70,11 +70,12 @@ class ExecuteDataPoint:
             orchestration.current_calculation = calculation_name
             print(f"Set orchestration context to: {calculation_name}")
             
+            # CRITICAL FIX: Apply wrapper BEFORE init() so calc_referenced_items is wrapped when called
             from pybirdai.process_steps.filter_code.automatic_tracking_wrapper import create_smart_tracking_wrapper
             datapoint = create_smart_tracking_wrapper(datapoint, orchestration)
             print(f"Added automatic tracking wrapper to {calculation_name}")
         
-        # Execute the datapoint
+        # Execute the datapoint (now init() will call the wrapped calc_referenced_items)
         datapoint.init()
         metric_value = str(datapoint.metric_value())
         
