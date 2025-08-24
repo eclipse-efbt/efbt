@@ -115,23 +115,26 @@ class CreateExecutableFilters:
                                                                                       combination_item.member_hierarchy)
     
                         if len(leaf_node_members) > 0:
-                            calc_string +="\t\t\tif "
-                            for leaf_node_member in leaf_node_members:
-                                calc_string += "\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n"
-                            calc_string += "\t\t\t\tFalse:\n"
-                            calc_string += "\t\t\t\tpass\n"
-                            calc_string += "\t\t\telse:\n"
-                            calc_string += "\t\t\t\tfilter_passed = False\n"
-                            if item_counter > 0:
-                                calc_lineage_string += ','
-                                calc_lineage_string += '\n\t\t\t'
-                            calc_lineage_string += '"'
-                            calc_lineage_string += cube_id 
-                            calc_lineage_string += '.'
-                            calc_lineage_string += combination_item.variable_id.name 
-                            calc_lineage_string += '"'
+                            if (len(leaf_node_members) == 1) and (str(leaf_node_members[0].code) == '0'):
+                                pass
+                            else:
+                                calc_string +="\t\t\tif "
+                                for leaf_node_member in leaf_node_members:
+                                    calc_string += "\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n"
+                                calc_string += "\t\t\t\tFalse:\n"
+                                calc_string += "\t\t\t\tpass\n"
+                                calc_string += "\t\t\telse:\n"
+                                calc_string += "\t\t\t\tfilter_passed = False\n"
+                                if item_counter > 0:
+                                    calc_lineage_string += ','
+                                    calc_lineage_string += '\n\t\t\t'
+                                calc_lineage_string += '"'
+                                calc_lineage_string += cube_id 
+                                calc_lineage_string += '.'
+                                calc_lineage_string += combination_item.variable_id.name 
+                                calc_lineage_string += '"'
                             
-                            item_counter += 1
+                                item_counter += 1
                         else:
                             print("No leaf node members for " + combination_item.variable_id.name +":" + combination_item.member_id.member_id)
 

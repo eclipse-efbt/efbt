@@ -112,6 +112,93 @@ def get_trail_filtered_lineage(request, trail_id):
                     except Function.DoesNotExist:
                         pass
         
+        # ALTERNATIVE APPROACH: Use DerivedRowSourceReference to trace backwards from F_05_01_REF_FINREP_3_0 rows
+        # This finds which UnionItem rows actually contributed to the final result
+        allowed_derived_row_ids = set(used_row_ids['DerivedTableRow'])
+        allowed_db_row_ids = set(used_row_ids['DatabaseRow'])
+        
+        print(f"Initial tracking data: {len(allowed_derived_row_ids)} DerivedTableRows, {len(allowed_db_row_ids)} DatabaseRows")
+        
+        if not include_unused and allowed_derived_row_ids:
+            try:
+                print(f"Tracing backwards from F_05_01_REF_FINREP_3_0 to find contributing UnionItem rows")
+                
+                # Find all F_05_01_REF_FINREP_3_0 rows that were tracked as used
+                f05_row_ids = []
+                for row_id in allowed_derived_row_ids:
+                    try:
+                        row = DerivedTableRow.objects.get(id=row_id)
+                        if row.populated_table.table.name == 'F_05_01_REF_FINREP_3_0':
+                            f05_row_ids.append(row_id)
+                    except DerivedTableRow.DoesNotExist:
+                        pass
+                
+                print(f"Found {len(f05_row_ids)} F_05_01_REF_FINREP_3_0 rows to trace from")
+                
+                if f05_row_ids:
+                    # Use BFS to find all rows that these F_05_01_REF_FINREP_3_0 rows depend on
+                    from collections import deque
+                    
+                    transitive_allowed_rows = set(f05_row_ids)
+                    queue = deque(f05_row_ids)
+                    backwards_tracing_worked = False
+                    
+                    while queue:
+                        current_row_id = queue.popleft()
+                        
+                        # Find all source rows for this row via DerivedRowSourceReference
+                        refs = DerivedRowSourceReference.objects.filter(derived_row_id=current_row_id)
+                        
+                        if refs.exists():
+                            backwards_tracing_worked = True
+                        
+                        for ref in refs:
+                            if ref.content_type.model == 'derivedtablerow':
+                                source_row_id = ref.object_id
+                                if source_row_id not in transitive_allowed_rows:
+                                    transitive_allowed_rows.add(source_row_id)
+                                    queue.append(source_row_id)
+                                    
+                                    # Log the relationship for debugging
+                                    try:
+                                        source_row = DerivedTableRow.objects.get(id=source_row_id)
+                                        source_table = source_row.populated_table.table.name
+                                        print(f"Traced: F_05_01_REF_FINREP_3_0 -> {source_table} row {source_row_id}")
+                                    except DerivedTableRow.DoesNotExist:
+                                        pass
+                    
+                    if backwards_tracing_worked:
+                        # Filter the allowed set to only the transitively reachable rows
+                        original_count = len(allowed_derived_row_ids)
+                        allowed_derived_row_ids &= transitive_allowed_rows
+                        removed_count = original_count - len(allowed_derived_row_ids)
+                    else:
+                        print(f"ERROR: No DerivedRowSourceReference entries found for current F_05_01_REF_FINREP_3_0 rows")
+                        print(f"Object relationship tracking failed - need to re-execute datapoint to populate relationships")
+                        removed_count = original_count - len(f05_row_ids)  # Only keep F_05_01_REF_FINREP_3_0 rows
+                        allowed_derived_row_ids = set(f05_row_ids)  # Filter to only F_05_01_REF_FINREP_3_0 rows
+                    
+                    print(f"Backwards tracing results: kept {len(allowed_derived_row_ids)}, removed {removed_count} non-contributing rows")
+                    
+                    # Log which UnionItem rows were kept
+                    unionitem_kept = 0
+                    for row_id in allowed_derived_row_ids:
+                        try:
+                            row = DerivedTableRow.objects.get(id=row_id)
+                            if row.populated_table.table.name == 'F_05_01_REF_FINREP_3_0_UnionItem':
+                                unionitem_kept += 1
+                        except DerivedTableRow.DoesNotExist:
+                            pass
+                    print(f"UnionItem rows kept after backwards tracing: {unionitem_kept}")
+                    
+                else:
+                    print(f"No F_05_01_REF_FINREP_3_0 rows found to trace from")
+                    
+            except Exception as e:
+                print(f"Error in backwards tracing: {e}")
+        
+        print(f"Final filtered sets: {len(allowed_derived_row_ids)} DerivedTableRows, {len(allowed_db_row_ids)} DatabaseRows")
+
         # Initialize the lineage structure
         lineage_data = {
             "trail": {
@@ -157,9 +244,10 @@ def get_trail_filtered_lineage(request, trail_id):
         for pop_table in populated_db_tables:
             table = pop_table.table
             
-            # Check if any rows from this table were used
+            # CRITICAL FIX: Check if any rows from this table were actually used in calculations
             table_has_used_rows = False
             if not include_unused:
+                # Only include table if it has rows that were explicitly tracked as used
                 for row in pop_table.databaserow_set.all():
                     if row.id in used_row_ids['DatabaseRow']:
                         table_has_used_rows = True
@@ -202,7 +290,7 @@ def get_trail_filtered_lineage(request, trail_id):
                     "rows": []
                 }
                 
-                # Add only used rows
+                # Add only used rows - CRITICAL FIX: Only include explicitly tracked rows
                 for row in pop_table.databaserow_set.all():
                     if include_unused or row.id in used_row_ids['DatabaseRow']:
                         row_data = {
@@ -258,9 +346,10 @@ def get_trail_filtered_lineage(request, trail_id):
         for eval_table in evaluated_tables:
             table = eval_table.table
             
-            # Check if any rows from this table were used
+            # CRITICAL FIX: Check if any rows from this table were actually used in calculations
             table_has_used_rows = False
             if not include_unused:
+                # Only include table if it has rows that were explicitly tracked as used
                 for row in eval_table.derivedtablerow_set.all():
                     if row.id in used_row_ids['DerivedTableRow']:
                         table_has_used_rows = True
@@ -275,8 +364,9 @@ def get_trail_filtered_lineage(request, trail_id):
                     row__populated_table=eval_table
                 ).exists()
             
-            # If this derived table has functions that were used, include it
-            # Also include if a function with the same table name was used (for data consistency)
+            # ENHANCED LOGIC: Also include tables that have functions used in calculations
+            # but we'll still only show the specific rows that were used
+            table_has_used_functions = False
             if not table_has_used_rows:
                 # Check if any functions in this table were used
                 table_functions_used = any(
@@ -309,12 +399,12 @@ def get_trail_filtered_lineage(request, trail_id):
                     except Function.DoesNotExist:
                         pass
                 
-                # BALANCED: Include tables that have calculation-relevant functions OR will appear in evaluated_derived_tables
-                # OR have polymorphic functions that reference them
+                # Include table definition if it has used functions (but still filter rows strictly)
                 if table_functions_used or same_name_function_used or table_will_appear_in_evaluated or polymorphic_function_used:
-                    table_has_used_rows = True
+                    table_has_used_functions = True
             
-            if table_has_used_rows:
+            # Include table if it has used rows OR used functions
+            if table_has_used_rows or table_has_used_functions:
                 # Add table definition
                 if not any(dt['id'] == table.id for dt in lineage_data['derived_tables']):
                     table_data = {
@@ -441,19 +531,19 @@ def get_trail_filtered_lineage(request, trail_id):
                     except Function.DoesNotExist:
                         pass
                 
-                # Add only used rows
+                # Add only rows that contributed to the final calculation (via backwards tracing)
                 for row in eval_table.derivedtablerow_set.all():
-                    # Include row if explicitly tracked or if the table was determined to be used
-                    include_row = (include_unused or 
-                                 row.id in used_row_ids['DerivedTableRow'] or
-                                 table_has_used_rows)
-                    
-                    if include_row:
+                     # CRITICAL FIX: Use filtered allowed_derived_row_ids from backwards tracing
+                     # This ensures only rows that transitively contribute to F_05_01_REF_FINREP_3_0 are included
+                     include_row = (include_unused or 
+                                  row.id in allowed_derived_row_ids)
+                     
+                     if include_row:
                         row_data = {
                             "id": row.id,
                             "row_identifier": row.row_identifier,
                             "populated_table_id": eval_table.id,
-                            "was_used": row.id in used_row_ids['DerivedTableRow'] or table_has_used_rows,
+                            "was_used": row.id in used_row_ids['DerivedTableRow'],
                             "evaluated_functions": []
                         }
                         
@@ -507,10 +597,9 @@ def get_trail_filtered_lineage(request, trail_id):
                                 except Function.DoesNotExist:
                                     pass
                         
-                        # Include row if it has functions OR if the table itself has used functions
-                        # (even if this specific row doesn't have calculated values yet)
-                        table_has_used_functions = len(used_field_names_for_derived_table) > 0
-                        if row_data['evaluated_functions'] or include_unused or table_has_used_functions:
+                        # CRITICAL FIX: Include row only if it has evaluated functions or is explicitly unused mode
+                        # Don't include rows just because the table has used functions - only include rows that have actual data
+                        if row_data['evaluated_functions'] or include_unused:
                             eval_table_data['rows'].append(row_data)
                 
                 if eval_table_data['rows']:  # Only add if there are rows
