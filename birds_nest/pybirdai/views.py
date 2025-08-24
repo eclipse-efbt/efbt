@@ -23,7 +23,7 @@ from .models.bird_meta_data_model import (
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
     MAINTENANCE_AGENCY,  MEMBER_HIERARCHY, DOMAIN,MEMBER_HIERARCHY_NODE,
-    SUBDOMAIN, SUBDOMAIN_ENUMERATION,FRAMEWORK
+    SUBDOMAIN, SUBDOMAIN_ENUMERATION,FRAMEWORK,MEMBER_LINK
 )
 import json
 
@@ -835,7 +835,7 @@ def execute_data_point(request, data_point_id):
         <h3>DataPoint Execution Results</h3>
         <p><strong>DataPoint ID:</strong> {data_point_id}</p>
         <p><strong>Result:</strong> {result}</p>
-        <p><a href="/pybirdai/report-templates/">Back to the PyBIRD Reports Templates Page</a></p>
+        <p><a href="/pybirdai/trails/">Go To Lineage Viewer</a></p>
     """
     return HttpResponse(html_response)
 

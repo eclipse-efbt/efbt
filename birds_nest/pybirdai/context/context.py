@@ -164,7 +164,7 @@ class Context(object):
         # Fallback to database configuration
         try:
             # Import here to avoid circular imports
-            from ..bird_meta_data_model import AutomodeConfiguration
+            from ..models.workflow_model import AutomodeConfiguration
             config = AutomodeConfiguration.get_active_configuration()
             if config:
                 return 'ldm' if config.data_model_type == 'ELDM' else 'il'

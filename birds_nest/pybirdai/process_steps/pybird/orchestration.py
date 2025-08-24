@@ -415,17 +415,17 @@ class OrchestrationWithLineage:
 							# Original CSV persistence
 							CSVConverter.persist_object_as_csv(newObject,True);
 							
-							# Enhanced lineage tracking - track each Django model object as database rows
+							# Enhanced lineage tracking - track when tables are created but distinguish from usage tracking
 							if self.lineage_enabled and self.trail and hasattr(newObject, '__iter__'):
 								try:
 									# Extract Django model objects from the queryset
 									django_objects = list(newObject) if hasattr(newObject, '__iter__') else [newObject]
 									if django_objects:
-										# Track the data processing with proper Django objects for lineage
-										self.track_data_processing(table_name, django_objects, django_objects)
-										print(f"✅ Tracked {len(django_objects)} {table_name} objects for lineage")
+										# Create table structure and register for potential tracking
+										# Only mark as used when actually accessed via automatic tracking wrapper
+										print(f"📊 Table Created: {len(django_objects)} {table_name} objects available")
 								except Exception as e:
-									print(f"Warning: Could not track {table_name} objects for lineage: {e}")
+									print(f"Warning: Could not process {table_name} objects for lineage: {e}")
 
 					else:
 						newObject = OrchestrationWithLineage.createObjectFromReferenceType(eReference);
@@ -463,10 +463,12 @@ class OrchestrationWithLineage:
 												hasattr(newObject, attr_name)):
 												attr_value = getattr(newObject, attr_name)
 												if isinstance(attr_value, list) and len(attr_value) > 0:
+													# CRITICAL FIX: DO NOT auto-track derived table data during initialization
+													# Only track when explicitly used in calculations
 													if orchestration.metadata_trail:
-														orchestration.track_data_processing(f"{table_name}_{attr_name}", attr_value)
+														print(f"📊 Found {len(attr_value)} items in {table_name}_{attr_name} (not tracking as used yet)")
 													else:
-														print(f"WARNING: Cannot track data for {table_name}_{attr_name} - no metadata_trail")
+														print(f"WARNING: Cannot process data for {table_name}_{attr_name} - no metadata_trail")
 
 								except Exception as e:
 									print(f"Could not call function called {operation}: {e}")
@@ -1595,6 +1597,14 @@ class OrchestrationWithLineage:
 						print(f"Created derived table row for {row_class_name}")
 					
 					if tracked_row:
+						# ENHANCED: Track object relationships via DerivedRowSourceReference
+						# Do this for both new AND existing rows to ensure relationships are captured
+						self._track_object_relationships(tracked_row, row)
+						
+						# ENHANCED: Also track transitively referenced objects as used
+						# This ensures that objects referenced via unionOfLayers.base etc. are also marked as used
+						self._track_transitive_used_objects(calculation_name, row)
+						
 						row = tracked_row
 						content_type = ContentType.objects.get_for_model(DerivedTableRow)
 					else:
@@ -1757,6 +1767,125 @@ class OrchestrationWithLineage:
 		
 		return [uf.used_field for uf in used_fields]
 	
+	def _track_object_relationships(self, tracked_row, business_object):
+		"""Track object relationships via DerivedRowSourceReference based on common relationship attributes"""
+		try:
+			if not isinstance(tracked_row, DerivedTableRow):
+				return
+			
+			print(f"Tracking object relationships for {type(business_object).__name__}")
+			
+			# Common relationship attributes to check
+			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT','source_row', 'parent_row']
+			
+			for attr_name in relationship_attrs:
+				if hasattr(business_object, attr_name):
+					source_obj = getattr(business_object, attr_name)
+					if source_obj:
+						# Try to find the corresponding DerivedTableRow for the source object
+						source_row = self._find_derived_row_for_object(source_obj)
+						if source_row:
+							# Create DerivedRowSourceReference
+							existing_ref = DerivedRowSourceReference.objects.filter(
+								derived_row_id=tracked_row.id,
+								content_type=ContentType.objects.get_for_model(DerivedTableRow),
+								object_id=source_row.id
+							).exists()
+							
+							if not existing_ref:
+								DerivedRowSourceReference.objects.create(
+									derived_row=tracked_row,
+									content_type=ContentType.objects.get_for_model(DerivedTableRow),
+									object_id=source_row.id
+								)
+								print(f"Created relationship: {tracked_row.populated_table.table.name} row {tracked_row.id} <- {source_row.populated_table.table.name} row {source_row.id} via {attr_name}")
+			
+			# Also check class name-based relationships (e.g. F_05_01_REF_FINREP_3_0_UnionItem -> Other_loans)
+			obj_class_name = type(business_object).__name__
+			if '_' in obj_class_name:
+				parts = obj_class_name.split('_')
+				# Look for potential source class names in the parts
+				for i in range(len(parts)):
+					potential_source_class = '_'.join(parts[i:])
+					if potential_source_class != obj_class_name:
+						# Try to find objects of this source class
+						source_obj = self._find_object_by_class_suffix(business_object, potential_source_class)
+						if source_obj:
+							source_row = self._find_derived_row_for_object(source_obj)
+							if source_row:
+								existing_ref = DerivedRowSourceReference.objects.filter(
+									derived_row_id=tracked_row.id,
+									content_type=ContentType.objects.get_for_model(DerivedTableRow),
+									object_id=source_row.id
+								).exists()
+								
+								if not existing_ref:
+									DerivedRowSourceReference.objects.create(
+										derived_row=tracked_row,
+										content_type=ContentType.objects.get_for_model(DerivedTableRow),
+										object_id=source_row.id
+									)
+									print(f"Created class-based relationship: {tracked_row.populated_table.table.name} <- {source_row.populated_table.table.name} via class hierarchy")
+		
+		except Exception as e:
+			print(f"Error tracking object relationships: {e}")
+	
+	def _find_derived_row_for_object(self, obj):
+		"""Find the DerivedTableRow that corresponds to a business object"""
+		try:
+			obj_class_name = type(obj).__name__
+			object_identifier = f"{obj_class_name}_{id(obj)}"
+			
+			# Look in current populated tables for matching row
+			for table_name, populated_table in self.current_populated_tables.items():
+				if hasattr(populated_table, 'derivedtablerow_set'):
+					matching_rows = populated_table.derivedtablerow_set.filter(
+						row_identifier=object_identifier
+					)
+					if matching_rows.exists():
+						return matching_rows.first()
+			
+			return None
+		except Exception as e:
+			print(f"Error finding derived row for object: {e}")
+			return None
+	
+	def _find_object_by_class_suffix(self, business_object, suffix):
+		"""Find a related object by class name suffix"""
+		try:
+			# This is a heuristic approach - look for attributes that might contain objects of the target class
+			for attr_name in dir(business_object):
+				if not attr_name.startswith('_') and not callable(getattr(business_object, attr_name, None)):
+					attr_value = getattr(business_object, attr_name)
+					if attr_value and hasattr(attr_value, '__class__'):
+						if type(attr_value).__name__.endswith(suffix):
+							return attr_value
+			return None
+		except Exception as e:
+			print(f"Error finding object by class suffix: {e}")
+			return None
+
+	def _track_transitive_used_objects(self, calculation_name, business_object):
+		"""Track objects that are transitively referenced by the current object as also being used"""
+		try:
+			print(f"Tracking transitive used objects for {type(business_object).__name__}")
+			
+			# Common relationship attributes that point to other business objects
+			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT', 'source_row', 'parent_row']
+			
+			for attr_name in relationship_attrs:
+				if hasattr(business_object, attr_name):
+					referenced_obj = getattr(business_object, attr_name)
+					if referenced_obj and hasattr(referenced_obj, '__class__'):
+						# This object is transitively used - track it as used as well
+						print(f"Found transitive reference: {type(business_object).__name__}.{attr_name} -> {type(referenced_obj).__name__}")
+						
+						# Recursively track this object as used (this will create its DerivedTableRow if needed)
+						self.track_calculation_used_row(calculation_name, referenced_obj)
+						
+		except Exception as e:
+			print(f"Error tracking transitive used objects: {e}")
+
 	def _track_column_value_for_django_field(self, db_row, field_name, field_value, table):
 		"""Helper method to track column values for Django model fields"""
 		try:
@@ -1837,19 +1966,10 @@ class OrchestrationWithLineage:
 		# Also track that these rows and tables are being used in calculations
 		current_calculation = getattr(self, 'current_calculation', None)
 		print(f"🔗 track_data_processing: table={table_name}, items={len(data_items)}, django_objects={len(django_model_objects) if django_model_objects else 0}, current_calculation={current_calculation}")
-		if current_calculation and hasattr(self, 'track_calculation_used_row'):
-			# Prefer Django model objects over dictionary items for tracking
-			items_to_track = django_model_objects if django_model_objects else data_items
-			
-			# Track each data item as a used row
-			for i, item in enumerate(items_to_track):
-				try:
-					print(f"  🔗 Attempting to track data item {i}: {type(item).__name__}")
-					self.track_calculation_used_row(current_calculation, item)
-					print(f"  ✅ Successfully tracked data item {i}")
-				except Exception as e:
-					print(f"  ❌ Failed to track data item {i}: {e}")
-					pass  # Don't let tracking errors break the main processing
+		# CRITICAL FIX: Do NOT auto-track all processed items here.
+		# Rows should only be marked as used when they pass a cell's calc_referenced_items filter
+		# or are explicitly tracked by targeted logic (e.g., wrapper or explicit calls).
+		# This prevents unrelated rows (e.g., Advances_that_are_not_loans) from appearing as used.
 		
 		try:
 			# Ensure we have a populated table for this table name
