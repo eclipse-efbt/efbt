@@ -19,11 +19,16 @@ import sqlite3
 import typing
 from datetime import datetime
 import glob
+import sys
+import io
 
 import logging
 from pathlib import Path
 
-import os
+# Force UTF-8 encoding for stdout on Windows to handle Unicode characters
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 # Define constants
 # Base directories
 TESTS_DIR = "tests"
@@ -142,7 +147,8 @@ class RegulatoryTemplateTestRunner:
             "--scenario", scenario
         ])
 
-        test_runs.extend(["-m", "pytest", "-v"])
+        extension = ["-m","pytest", "-v"] if not use_uv else ["pytest", "-v"]
+        test_runs.extend(extension)
         test_results_conversion.extend([PARSER_FILE_PATH])
 
         return test_generation, test_runs, test_results_conversion
@@ -234,6 +240,7 @@ class RegulatoryTemplateTestRunner:
                 print("  None - All tests passed!")
 
             print("\n" + "=" * 80 + "\n")
+
             return True
         except Exception as e:
             logger.error(f"Failed to read and print test results: {str(e)}")
@@ -371,6 +378,8 @@ class RegulatoryTemplateTestRunner:
 
         cursor.close()
         connection.close()
+        from pybirdai.utils.datapoint_test_run.generate_test_url import main
+        main()
 
     def run_tests(self, reg_tid: str="", dp_suffix: str="", dp_value: str="", use_uv: bool=False, specific_scenario: str=None):
         """

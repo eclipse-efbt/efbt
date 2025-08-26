@@ -17,7 +17,7 @@ def clean_spaces(df):
     return df
 
 
-def map_frameworks(path="target/ReportingFramework.csv"):
+def map_frameworks(path=os.path.join("target", "ReportingFramework.csv")):
     frameworks = pd.read_csv(path)
     framework_columns = [
         "MAINTENANCE_AGENCY_ID","FRAMEWORK_ID","NAME","CODE","DESCRIPTION","FRAMEWORK_TYPE","REPORTING_POPULATION","OTHER_LINKS","ORDER","FRAMEWORK_STATUS"
@@ -46,7 +46,7 @@ def map_frameworks(path="target/ReportingFramework.csv"):
     return frameworks, framework_id_mapping
 
 
-def map_domains(path="target/Domain.csv"):
+def map_domains(path=os.path.join("target", "Domain.csv")):
     domains = pd.read_csv(path)
 
     # Transform column names to UPPER_SNAKE_CASE
@@ -86,7 +86,7 @@ def map_domains(path="target/Domain.csv"):
     return domains, id_mapping
 
 
-def map_members(path="target/Member.csv", domain_id_map: dict = {}):
+def map_members(path=os.path.join("target", "Member.csv"), domain_id_map: dict = {}):
     members = pd.read_csv(path)
 
     # Transform column names to UPPER_SNAKE_CASE
@@ -124,7 +124,7 @@ def map_members(path="target/Member.csv", domain_id_map: dict = {}):
     return members, id_mapping
 
 
-def map_dimensions(path="target/Dimension.csv", domain_id_map: dict = {}):
+def map_dimensions(path=os.path.join("target", "Dimension.csv"), domain_id_map: dict = {}):
     dimensions = pd.read_csv(path)
 
     # Transform column names to UPPER_SNAKE_CASE
@@ -190,9 +190,12 @@ def load_taxonomy_version_to_table_mapping(base_path="target"):
     result = merged.set_index("TABLE_VID").to_dict()
     return result["DPM_PACKAGE_CODE"]
 
-def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
+def map_tables(path=os.path.join("target", "Table.csv"), framework_id_map: dict = {}):
     tables = pd.read_csv(path).drop(axis=1,labels=["ConceptID"])
-    tables_versions = pd.read_csv(path.replace("Table.csv","TableVersion.csv")).drop(axis=1,labels=["ConceptID"])
+    # Get directory and create proper path for TableVersion.csv
+    path_dir = os.path.dirname(path)
+    tables_versions_path = os.path.join(path_dir, "TableVersion.csv")
+    tables_versions = pd.read_csv(tables_versions_path).drop(axis=1,labels=["ConceptID"])
     tables = pd.merge(tables, tables_versions, on="TableID")
     template_to_framework_mapping = load_template_to_framework_mapping()
     table_to_taxonomy_mapping = load_taxonomy_version_to_table_mapping()
@@ -211,7 +214,9 @@ def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
         + tables["ORIGINAL_TABLE_CODE"].str.split().str.join("_")
         + "_"
         + tables["TABLE_VID"].apply(table_to_taxonomy_mapping.get)
-    )
+    ).str.replace(".","_")
+
+    tables.drop(columns=["TABLE_ID"], inplace=True)
 
     # Create ID mapping for return
     id_mapping = dict(zip(tables["TABLE_VID"], tables["NEW_TABLE_ID"]))
@@ -219,8 +224,6 @@ def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
     tables.rename(columns={
         "NEW_TABLE_ID":"TABLE_ID",
         "ORIGINAL_TABLE_LABEL":"DESCRIPTION",
-        "TABLE_ID":"MAINTENANCE_AGENCY_ID",
-        "TABLE_ID":"VERSION",
         "FROM_DATE":"VALID_FROM",
         "TO_DATE":"VALID_TO"
     },inplace=True)
@@ -242,7 +245,7 @@ def map_tables(path="target/Table.csv", framework_id_map: dict = {}):
     return tables, id_mapping
 
 
-def map_axis(path="target/Axis.csv", table_map:dict = {}):
+def map_axis(path=os.path.join("target", "Axis.csv"), table_map:dict = {}):
     orientation_id_map = {"X":"1","Y":"2","Z":"3","0":"0"}
     axes = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in axes.columns}
@@ -287,7 +290,7 @@ def map_axis(path="target/Axis.csv", table_map:dict = {}):
     return axes, id_mapping
 
 
-def map_axis_ordinate(path="target/AxisOrdinate.csv",axis_map:dict = {}):
+def map_axis_ordinate(path=os.path.join("target", "AxisOrdinate.csv"),axis_map:dict = {}):
     types = defaultdict(lambda: str, OrdinateID="int", OrdinateCode="str", AxisID="int")
     ordinates = pd.read_csv(path, dtype=types)
     column_mapping = {col: pascal_to_upper_snake(col) for col in ordinates.columns}
@@ -335,7 +338,7 @@ def map_axis_ordinate(path="target/AxisOrdinate.csv",axis_map:dict = {}):
     return ordinates, id_mapping
 
 
-def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict = {}):
+def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map:dict = {}, dp_map:dict = {}):
     cells = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in cells.columns}
     cells = cells.rename(columns=column_mapping)
@@ -345,6 +348,8 @@ def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict
 
     cells["IS_SHADED"] = cells["IS_SHADED"].astype(bool)
 
+    if not dp_map:
+        cells["DATA_POINT_VID"] = ""
     if dp_map:
         cells["DATA_POINT_VID"] = cells["DATA_POINT_VID"].astype(str)
 
@@ -362,34 +367,43 @@ def map_table_cell(path="target/TableCell.csv", table_map:dict = {}, dp_map:dict
         columns={
             "NEW_CELL_ID":"CELL_ID",
             "TABLE_VID":"TABLE_ID",
-            "DATA_POINT_VID":"COMBINATION_ID"
+            "DATA_POINT_VID":"TABLE_CELL_COMBINATION_ID"
         },inplace=True
     )
 
-
-
-
     cells["SYSTEM_DATA_CODE"] = ""
+    cells["NAME"] = cells["CELL_ID"]
 
     cells = cells.loc[
         :,
         [
-            "CELL_ID","IS_SHADED","COMBINATION_ID","TABLE_ID","SYSTEM_DATA_CODE"
+            "CELL_ID","IS_SHADED","TABLE_CELL_COMBINATION_ID","SYSTEM_DATA_CODE","NAME","TABLE_ID"
         ]
     ]
 
     return cells, id_mapping
 
 
-def map_cell_position(path="target/CellPosition.csv",cell_map:dict={},ordinate_map:dict={}):
+def map_cell_position(path=os.path.join("target", "CellPosition.csv"),cell_map:dict={},ordinate_map:dict={},start_index_after_last:bool=False):
     data = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in data.columns}
     data = data.rename(columns=column_mapping)
     data["CELL_ID"] = data["CELL_ID"].apply(cell_map.get)
     data["ORDINATE_ID"] = data["ORDINATE_ID"].apply(ordinate_map.get)
+    
+    if start_index_after_last and "ID" in data.columns and not data.empty:
+        start_idx = data["ID"].max() + 1 if pd.notnull(data["ID"].max()) else 0
+        data.reset_index(drop=True, inplace=True)
+        data["ID"] = range(start_idx, start_idx + len(data))
+    else:
+        if "ID" in data.columns:
+            data.drop(columns=["ID"], inplace=True)
+        data.reset_index(inplace=True)
+        data.rename(columns={"index": "ID"},inplace=True)
+    
     return data, {}
 
-def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={},context_data:pd.DataFrame=pd.DataFrame(),dimension_map:dict={},member_map:dict={}):
+def map_datapoint_version(path=os.path.join("target", "DataPointVersion.csv"),context_map:dict={},context_data:pd.DataFrame=pd.DataFrame(),dimension_map:dict={},member_map:dict={}):
     types = defaultdict(lambda: str, ContextID="str")
     dpv = pd.read_csv(path,dtype=types)
     column_mapping = {col: pascal_to_upper_snake(col) for col in dpv.columns}
@@ -466,7 +480,7 @@ def map_datapoint_version(path="target/DataPointVersion.csv",context_map:dict={}
 
     return (dpv,dp_items), id_mapping
 
-def map_context_definition(path="target/ContextDefinition.csv",dimension_map:dict={},member_map:dict={}):
+def map_context_definition(path=os.path.join("target", "ContextDefinition.csv"),dimension_map:dict={},member_map:dict={}):
     types = defaultdict(lambda: str, ContextID="str")
     data = pd.read_csv(path,dtype=types)
     column_mapping = {col: pascal_to_upper_snake(col) for col in data.columns}
@@ -477,7 +491,7 @@ def map_context_definition(path="target/ContextDefinition.csv",dimension_map:dic
 
     return data, {}
 
-def map_hierarchy(path="target/Hierarchy.csv",domain_id_map:dict={}):
+def map_hierarchy(path=os.path.join("target", "Hierarchy.csv"),domain_id_map:dict={}):
     hierarchies = pd.read_csv(path)
     column_mapping = {col: pascal_to_upper_snake(col) for col in hierarchies.columns}
     hierarchies = hierarchies.rename(columns=column_mapping)
@@ -510,7 +524,7 @@ def map_hierarchy(path="target/Hierarchy.csv",domain_id_map:dict={}):
     return hierarchies, id_mapping
 
 
-def map_hierarchy_node(path="target/HierarchyNode.csv", hierarchy_map:dict={}, member_map:dict={}):
+def map_hierarchy_node(path=os.path.join("target", "HierarchyNode.csv"), hierarchy_map:dict={}, member_map:dict={}):
     data = pd.read_csv(path)
     data["ParentMemberID"] = data["ParentMemberID"].fillna(0).astype(int)
     data["MemberID"] = data["MemberID"].fillna(0).astype(int)
@@ -548,14 +562,14 @@ def map_hierarchy_node(path="target/HierarchyNode.csv", hierarchy_map:dict={}, m
 
     return data, {}
 
-def traceback_restrictions(path="target/OpenMemberRestriction.csv"):
+def traceback_restrictions(path=os.path.join("target", "OpenMemberRestriction.csv")):
     restriction_df = pd.read_csv(path)
     cols = ("Restriction" + restriction_df.columns).tolist()
     cols[0] = "RestrictionID"
     restriction_df.columns = cols
     return restriction_df
 
-def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member_map:dict={}, dimension_map:dict={}, ordinate_map:dict={}, hierarchy_map:dict={}):
+def map_ordinate_categorisation(path=os.path.join("target", "OrdinateCategorisation.csv"), member_map:dict={}, dimension_map:dict={}, ordinate_map:dict={}, hierarchy_map:dict={}, start_index_after_last:bool=False):
     data = pd.read_csv(path)
     restrictions = traceback_restrictions()
     data = pd.merge(data,restrictions,on="RestrictionID"
@@ -588,10 +602,27 @@ def map_ordinate_categorisation(path="target/OrdinateCategorisation.csv", member
     data["MEMBER_HIERARCHY_VALID_FROM"] = ""
     data.loc[data.STARTING_MEMBER_ID.isna(),"IS_STARTING_MEMBER_INCLUDED"] = False
 
+    if start_index_after_last and "ID" in data.columns and not data.empty:
+        start_idx = data["ID"].max() + 1 if pd.notnull(data["ID"].max()) else 0
+        data.reset_index(drop=True, inplace=True)
+        data["ID"] = range(start_idx, start_idx + len(data))
+    else:
+        if "ID" in data.columns:
+            data.drop(columns=["ID"], inplace=True)
+        data.reset_index(inplace=True)
+        data.rename(columns={"index": "ID"},inplace=True)
+
     data = data.loc[
         :,
         [
-            "AXIS_ORDINATE_ID","VARIABLE_ID","MEMBER_ID","MEMBER_HIERARCHY_ID","MEMBER_HIERARCHY_VALID_FROM","STARTING_MEMBER_ID","IS_STARTING_MEMBER_INCLUDED"
+            "ID",
+            "MEMBER_HIERARCHY_VALID_FROM",
+            "IS_STARTING_MEMBER_INCLUDED",
+            "AXIS_ORDINATE_ID",
+            "VARIABLE_ID",
+            "MEMBER_ID",
+            "MEMBER_HIERARCHY_ID",
+            "STARTING_MEMBER_ID"
         ]
     ]
 

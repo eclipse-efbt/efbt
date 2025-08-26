@@ -1,6 +1,19 @@
 {% extends "pybirdai/workflow/base.html" %}
 
 {% block workflow_content %}
+<!-- Server Restart Overlay -->
+<div id="server-restart-overlay" style="display: none;">
+    <div class="overlay-content">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h3>Server is restarting...</h3>
+        <p>Please wait while the database setup completes.</p>
+        <p>The application will be available again shortly.</p>
+        <p class="overlay-timer">Checking server status... <span id="overlay-timer-seconds">0</span>s</p>
+    </div>
+</div>
+
 <h1>BIRD Data Processing Workflow</h1>
 
 <!-- Configuration Section -->
@@ -187,6 +200,57 @@
         <span><span class="operation-btn invalidated" style="padding: 2px 8px;">🔄</span> Invalidated</span>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    /* Server Restart Overlay Styles */
+    #server-restart-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    #server-restart-overlay .overlay-content {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        width: 90%;
+    }
+    
+    #server-restart-overlay h3 {
+        margin-top: 20px;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    #server-restart-overlay p {
+        margin-bottom: 10px;
+        color: #666;
+    }
+    
+    #server-restart-overlay .overlay-timer {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #999;
+    }
+    
+    #server-restart-overlay .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}
@@ -647,16 +711,50 @@ function pollMigrationStatus(statusDiv, btn) {
                     }
                 } else if (status.completed) {
                     // Migration completed
+                    console.log('Migration completed! Status object:', status);
+
                     if (status.success) {
                         statusDiv.style.background = '#d4edda';
                         statusDiv.style.color = '#155724';
                         const elapsedTime = Math.round(status.elapsed_time || 0);
-                        statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">✅</span>Database migrations completed successfully in ${elapsedTime}s!<br>The database is now ready for use.`;
+                        let message = `<span style="display: inline-block; margin-right: 8px;">✅</span>${status.message || 'Database migrations completed successfully'} (${elapsedTime}s)`;
 
-                        // Refresh page after success to show updated database status
-                        setTimeout(() => {
-                            location.reload();
-                        }, 3000);
+                        // Check for server restart requirement
+                        const serverRestartRequired = status.server_restart_required === true;
+                        const messageIndicatesRestart = status.message && (
+                            status.message.includes('restart required') ||
+                            status.message.includes('Server restart required') ||
+                            status.message.includes('server restart')
+                        );
+
+                        console.log('Migration restart check:', {
+                            serverRestartRequired,
+                            messageIndicatesRestart,
+                            message: status.message
+                        });
+
+                        if (serverRestartRequired || messageIndicatesRestart) {
+                            console.log('🔄 Database setup completed - server restart required detected!');
+                            message += '<br><strong>🔄 Server restart in progress...</strong>';
+                            if (status.restart_info) {
+                                message += `<br><small>${status.restart_info}</small>`;
+                            } else if (status.estimated_restart_time) {
+                                message += `<br><small>${status.estimated_restart_time}</small>`;
+                            }
+                            statusDiv.innerHTML = message;
+
+                            // Handle server restart scenario
+                            handleServerRestart(statusDiv, btn);
+                        } else {
+                            console.log('✅ Database setup completed - no server restart required');
+                            statusDiv.innerHTML = message + '<br>The database is now ready for use.';
+
+                            // Regular refresh for non-restart scenarios
+                            setTimeout(() => {
+                                console.log('Refreshing page after successful migration (no restart)');
+                                location.reload();
+                            }, 3000);
+                        }
                     } else {
                         statusDiv.style.background = '#f8d7da';
                         statusDiv.style.color = '#721c24';
@@ -675,15 +773,26 @@ function pollMigrationStatus(statusDiv, btn) {
             }
         })
         .catch(error => {
-          console.error('Migration status status polling error:', error);
+            console.error('Migration status polling error:', error);
 
-          // Refresh page on error to reset state
-          setTimeout(() => {
-              console.log('Refreshing page due to database setup polling error');
-              location.reload();
-          }, 2000);
-        }
-        );
+            // Check if this might be a server restart scenario (connection lost during polling)
+            if (error.name === 'TypeError' || error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.name === 'TimeoutError') {
+                console.log('🔄 Connection lost during migration polling - likely server restart!');
+                // Possible server restart - show appropriate message
+                statusDiv.style.background = '#e3f2fd';
+                statusDiv.style.color = '#1976d2';
+                statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>✅ Database setup completed! Connection lost - server is restarting...';
+
+                // Switch to restart detection mode
+                handleServerRestart(statusDiv, btn);
+            } else {
+                // Other error - refresh page to reset state
+                setTimeout(() => {
+                    console.log('Refreshing page due to migration polling error');
+                    location.reload();
+                }, 2000);
+            }
+        });
     }
 
     // Start polling
@@ -796,6 +905,12 @@ function pollAutomodeStatus(statusDiv, btn, targetTask) {
 function handleServerRestart(statusDiv, btn) {
     console.log('handleServerRestart() called - starting server restart detection');
 
+    // Show the overlay
+    const overlay = document.getElementById('server-restart-overlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+    }
+
     // Update UI immediately to show restart is happening
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
@@ -805,10 +920,21 @@ function handleServerRestart(statusDiv, btn) {
     btn.disabled = true;
     btn.textContent = 'Server Restarting...';
 
-    const restartPollInterval = 500; // Poll every 0.5 seconds for very fast response
+    const restartPollInterval = 5000; // Poll every 5 seconds as requested
     let restartPollCount = 0;
-    const maxRestartPolls = 120; // Maximum 1 minute (120 * 0.5 seconds)
+    const maxRestartPolls = 60; // Maximum 5 minutes (60 * 5 seconds)
     let serverWentDown = false;
+    let timerInterval = null;
+
+    // Start timer for overlay
+    let elapsedSeconds = 0;
+    timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        const timerElement = document.getElementById('overlay-timer-seconds');
+        if (timerElement) {
+            timerElement.textContent = elapsedSeconds;
+        }
+    }, 1000);
 
     function updateRestartMessage(seconds) {
         const minutes = Math.floor(seconds / 60);
@@ -824,10 +950,10 @@ function handleServerRestart(statusDiv, btn) {
 
     function checkServerStatus() {
         restartPollCount++;
-        const elapsedSeconds = Math.floor(restartPollCount * 0.5); // Updated for 0.5s polling interval
+        const pollElapsedSeconds = Math.floor(restartPollCount * 5); // Updated for 5s polling interval
 
         // Update message with elapsed time
-        updateRestartMessage(elapsedSeconds);
+        updateRestartMessage(pollElapsedSeconds);
 
         // Try to ping the server
         fetch('/pybirdai/workflow/', {
@@ -836,12 +962,23 @@ function handleServerRestart(statusDiv, btn) {
                 'X-Requested-With': 'XMLHttpRequest'
             },
             // Add timeout to detect connection issues faster
-            signal: AbortSignal.timeout(8000) // Reduced to 1 second for faster failure detection
+            signal: AbortSignal.timeout(4000) // 4 second timeout
         })
         .then(response => {
             if (response.ok) {
                 // Server is back online
                 console.log('Server restart completed - server is back online');
+                
+                // Clear timer
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                
+                // Hide overlay
+                if (overlay) {
+                    overlay.style.display = 'none';
+                }
+                
                 statusDiv.style.background = '#d4edda';
                 statusDiv.style.color = '#155724';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Server restart completed! Refreshing page to show "Setup Database" button...';
@@ -854,13 +991,19 @@ function handleServerRestart(statusDiv, btn) {
                 setTimeout(() => {
                     console.log('Refreshing page after server restart to show migration button');
                     location.reload();
-                }, 5000); // 3 second delay to ensure server is fully ready
+                }, 2000); // 2 second delay to ensure server is fully ready
             } else {
                 // Server still restarting or responding with non-200 status
                 if (restartPollCount < maxRestartPolls) {
                     setTimeout(checkServerStatus, restartPollInterval);
                 } else {
                     // Timeout
+                    if (timerInterval) {
+                        clearInterval(timerInterval);
+                    }
+                    if (overlay) {
+                        overlay.style.display = 'none';
+                    }
                     statusDiv.style.background = '#fff3cd';
                     statusDiv.style.color = '#856404';
                     statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Server restart is taking longer than expected. Please refresh the page manually.';
@@ -880,6 +1023,12 @@ function handleServerRestart(statusDiv, btn) {
                 setTimeout(checkServerStatus, restartPollInterval);
             } else {
                 // Timeout
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                if (overlay) {
+                    overlay.style.display = 'none';
+                }
                 statusDiv.style.background = '#fff3cd';
                 statusDiv.style.color = '#856404';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⚠️</span>Server restart is taking longer than expected. Please refresh the page manually or check the server console.';
@@ -889,18 +1038,24 @@ function handleServerRestart(statusDiv, btn) {
         });
     }
 
-    // Start checking server status immediately (no delay)
+    // Start checking server status after initial delay
     console.log('Starting server restart detection polling...');
-    setTimeout(checkServerStatus, 100); // Check after just 100ms
+    setTimeout(checkServerStatus, 10000); // Check after 10 seconds as requested
 
-    // Fallback: force page refresh after 45 seconds if restart detection fails
+    // Fallback: force page refresh after 5 minutes if restart detection fails
     setTimeout(() => {
         if (btn.disabled && btn.textContent.includes('Restarting')) {
             console.log('Fallback: Force refreshing page after restart timeout');
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">🔄</span>Restart taking longer than expected - refreshing page...';
             location.reload();
         }
-    }, 45000); // 45 seconds fallback
+    }, 300000); // 5 minutes fallback
 }
 
 // Clone import function

@@ -21,11 +21,8 @@ class Context(object):
     '''
     # variables to configure the behaviour
     
-    ldm_or_il = 'ldm'
-
-
     # enable_lineage_tracking will be set dynamically from configuration
-    enable_lineage_tracking = True
+    enable_lineage_tracking = False
 
     enrich_ldm_relationships = False
     use_codes = True
@@ -125,24 +122,12 @@ class Context(object):
     input_layer_name = "Input Layer 6.5"
 
     generate_etl = True
-
-
+    
+    
     def _get_configured_lineage_tracking(self):
         """Get the configured lineage tracking setting from temporary file."""
-        # First try to read from temporary configuration file
-        try:
-            import os
-            import json
-            # Use the same path as in views.py
-            temp_config_path = os.path.join('.', 'automode_config.json')
-            if os.path.exists(temp_config_path):
-                with open(temp_config_path, 'r') as f:
-                    config_data = json.load(f)
-                return config_data.get('enable_lineage_tracking', True)
-        except Exception:
-            # If temp file fails, default to True
-            pass
-        return True
+        # Use the static method for consistency
+        return Context.get_current_lineage_setting()
     
     def _get_configured_data_model_type(self):
         """Get the configured data model type from temporary file or AutomodeConfiguration."""
@@ -164,7 +149,8 @@ class Context(object):
         # Fallback to database configuration
         try:
             # Import here to avoid circular imports
-            from ..bird_meta_data_model import AutomodeConfiguration
+            from ..models.workflow_model import AutomodeConfiguration
+
             config = AutomodeConfiguration.get_active_configuration()
             if config:
                 return 'ldm' if config.data_model_type == 'ELDM' else 'il'
@@ -188,6 +174,8 @@ class Context(object):
         self._ldm_or_il = self._get_configured_data_model_type()
         # Initialize enable_lineage_tracking from configuration
         self.enable_lineage_tracking = self._get_configured_lineage_tracking()
+        # Also update the class attribute so the orchestration factory can see it
+        Context.enable_lineage_tracking = self.enable_lineage_tracking
 
         ldm_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
         ldm_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
@@ -230,12 +218,49 @@ class Context(object):
         self.module_list.modules.append(self.ldm_domains_package)
         self.module_list.modules.append(self.ldm_entities_package)
 
-        
-
-
-
-
-        
- 
-        
+    def refresh_lineage_setting(self):
+        """Refresh the lineage tracking setting from configuration files"""
+        self.enable_lineage_tracking = self._get_configured_lineage_tracking()
+        Context.enable_lineage_tracking = self.enable_lineage_tracking
+        print(f"Context: Refreshed lineage setting to: {self.enable_lineage_tracking}")
+        return self.enable_lineage_tracking
+    
+    @staticmethod
+    def get_current_lineage_setting():
+        """Static method to get the current lineage setting without creating instance"""
+        try:
+            import os
+            import json
+            
+            # Try multiple possible paths for the config file
+            possible_paths = [
+                os.path.join('.', 'automode_config.json'),  # Current directory
+                os.path.join(os.path.dirname(__file__), '..', '..', 'automode_config.json'),  # Relative to this file
+            ]
+            
+            # Try to get Django BASE_DIR if available
+            try:
+                from django.conf import settings
+                if hasattr(settings, 'BASE_DIR'):
+                    possible_paths.append(os.path.join(settings.BASE_DIR, 'automode_config.json'))
+            except:
+                pass  # Django not configured or available
+            
+            current_dir = os.getcwd()
+            print(f"Context: Current working directory: {current_dir}")
+            
+            for temp_config_path in possible_paths:
+                print(f"Context: Trying config path: {temp_config_path}")
+                if os.path.exists(temp_config_path):
+                    with open(temp_config_path, 'r') as f:
+                        config_data = json.load(f)
+                    lineage_setting = config_data.get('enable_lineage_tracking', False)
+                    print(f"Context: Found config at {temp_config_path}, lineage_tracking = {lineage_setting}")
+                    return lineage_setting
+                
+        except Exception as e:
+            print(f"Context: Static read error: {e}")
+            pass
+        print("Context: No config file found, using default: False")
+        return False
 

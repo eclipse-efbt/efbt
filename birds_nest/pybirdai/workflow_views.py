@@ -28,9 +28,8 @@ import json
 import glob
 import subprocess
 import requests
-import platform
 
-from .bird_meta_data_model import WorkflowTaskExecution, WorkflowSession
+from .models.workflow_model import WorkflowTaskExecution, WorkflowSession
 from .views import create_response_with_loading
 from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 from .entry_points.import_input_model import RunImportInputModelFromSQLDev
@@ -233,7 +232,6 @@ def _run_migrations_async():
 
         os._exit(0)
 
-
     except Exception as e:
         logger.error(f"Background migration process failed: {e}")
         _migration_status.update(
@@ -307,7 +305,7 @@ def _load_task1_completion_from_marker():
         import json
         from django.conf import settings
         from django.utils import timezone
-        from .bird_meta_data_model import WorkflowTaskExecution
+        from .models.workflow_model import WorkflowTaskExecution
 
         base_dir = getattr(
             settings,
@@ -369,7 +367,7 @@ def _run_database_setup_async():
         import json
         import os
         from django.conf import settings
-        from .bird_meta_data_model import AutomodeConfiguration
+        from .models.workflow_model import AutomodeConfiguration
         from .workflow_services import AutomodeConfigurationService
 
         # Task 1: Resource Download
@@ -568,12 +566,10 @@ def _run_automode_async(target_task, session_data):
                 self.headers = {'X-Requested-With': 'XMLHttpRequest'}
 
         # Execute tasks sequentially
-        import cProfile, pstats, io
-        from pstats import SortKey
+
 
         for task_num in range(1, target_task + 1):
-            pr = cProfile.Profile()
-            pr.enable()
+
             try:
                 _automode_status.update({
                     'current_task': task_num,
@@ -641,8 +637,6 @@ def _run_automode_async(target_task, session_data):
                     {"task": task_num, "error": str(task_error)}
                 )
 
-            pr.disable()
-            pr.dump_stats(f"cProfile_1_to_{task_num}_dump")
 
         # Update final status
         if _automode_status["task_errors"]:
@@ -824,6 +818,9 @@ def workflow_dashboard(request):
             'progress': 0,
             'session_id': session_id or 'no-database',
         })
+
+
+
 
     return render(request, 'pybirdai/workflow/dashboard.html', context)
 
@@ -1534,6 +1531,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
             'failed_tests': failed_tests,
             'grouped_results': grouped_results,
         })
+
 
 
 
@@ -3118,6 +3116,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
     )
 
 
+
 @require_http_methods(["POST"])
 def workflow_reset_session_full(request):
     """
@@ -3222,6 +3221,7 @@ def workflow_reset_session_full(request):
 def workflow_reset_session_partial(request):
     """
     Reset workflow session from task 1 onwards (partial reset).
+
     """
     logger.info("Partial workflow session reset requested (tasks 1-4) but not database reset")
 
@@ -3287,6 +3287,7 @@ def workflow_reset_session_partial(request):
                     logger.info(f"Removed temporary directory: {temp_dir}")
                 except Exception as e:
                     logger.warning(f"Failed to remove temporary directory {temp_dir}: {e}")
+
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({

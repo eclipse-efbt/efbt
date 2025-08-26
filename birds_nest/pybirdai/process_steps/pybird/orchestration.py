@@ -19,7 +19,8 @@ from pybirdai.models import (
     PopulatedDataBaseTable, EvaluatedDerivedTable, DatabaseRow,
     DerivedTableRow, DatabaseColumnValue, EvaluatedFunction,
     AortaTableReference, FunctionColumnReference, DerivedRowSourceReference,
-    EvaluatedFunctionSourceValue, TableCreationSourceTable
+    EvaluatedFunctionSourceValue, TableCreationSourceTable,
+    CalculationUsedRow, CalculationUsedField
 )
 from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
@@ -28,7 +29,7 @@ import importlib
 class OrchestrationWithLineage:
 	# Class variable to track initialized objects
 	_initialized_objects = set()
-	
+
 	# AORTA lineage tracking
 	def __init__(self):
 		self.trail = None
@@ -38,10 +39,10 @@ class OrchestrationWithLineage:
 		self.lineage_enabled = True  # Can be disabled for performance
 		self.evaluated_functions_cache = {}  # Cache to track evaluated functions per row
 		self.object_contexts = {}  # Map object id -> derived row context
-		
+
 		# Note: Do not automatically register this instance globally
 		# Global registration should be done explicitly when setting up lineage tracking
-	
+
 	def init_with_lineage(self, theObject, execution_name=None):
 		"""Initialize object with AORTA lineage tracking"""
 		# Create trail if not exists
@@ -53,14 +54,14 @@ class OrchestrationWithLineage:
 				metadata_trail=self.metadata_trail
 			)
 			print(f"Created AORTA Trail: {self.trail.name}")
-		
+
 		# Track object initialization in AORTA
 		if self.lineage_enabled:
 			self._track_object_initialization(theObject)
-		
+
 		# Perform standard initialization
 		return self.init(theObject)
-	
+
 	def _is_django_model(self, table_name):
 		"""Check if a table name corresponds to a Django model"""
 		try:
@@ -70,36 +71,36 @@ class OrchestrationWithLineage:
 		except LookupError:
 			# Not a Django model
 			return False
-	
+
 	def _track_object_initialization(self, obj):
 		"""Track object in AORTA metadata trail"""
 		if not obj:
 			return
-			
+
 		obj_class_name = obj.__class__.__name__
-		
+
 		# Check if this is a table object
 		if hasattr(obj, '__class__') and obj_class_name.endswith('_Table'):
 			# Extract meaningful table name
 			table_name = obj_class_name.replace('_Table', '')
-			
+
 			# Skip dummy objects
 			if table_name == 'Dummy':
 				return
-			
+
 			# Check if we already have a populated table for this name in the current trail
 			if table_name in self.current_populated_tables:
 				print(f"Reusing existing table for: {table_name}")
 				return
-			
+
 			# Determine if this is a Django model or a derived table
 			is_django_model = self._is_django_model(table_name)
-			
+
 			# Check for existing table with same name in this trail
 			aorta_table = None
 			populated_table = None
 			table_exists = False
-			
+
 			if self.trail:
 				if is_django_model:
 					# Look for existing DatabaseTable with same name in this trail
@@ -123,7 +124,7 @@ class OrchestrationWithLineage:
 						populated_table = existing_evaluated
 						table_exists = True
 						print(f"Found existing DerivedTable for: {table_name}")
-			
+
 			# Create new table if not found
 			if not aorta_table:
 				if is_django_model:
@@ -133,7 +134,7 @@ class OrchestrationWithLineage:
 					# Create DerivedTable for non-Django model classes
 					aorta_table = DerivedTable.objects.create(name=table_name)
 				print(f"Created new table for: {table_name}")
-			
+
 			# Add to metadata trail if not already added
 			if self.metadata_trail:
 				table_type = 'DatabaseTable' if is_django_model else 'DerivedTable'
@@ -142,14 +143,14 @@ class OrchestrationWithLineage:
 					table_content_type=table_type,
 					table_id=aorta_table.id
 				).exists()
-				
+
 				if not existing_ref:
 					AortaTableReference.objects.create(
 						metadata_trail=self.metadata_trail,
 						table_content_type=table_type,
 						table_id=aorta_table.id
 					)
-			
+
 			# Create populated/evaluated table only if we didn't find an existing one
 			if self.trail and not populated_table:
 				if is_django_model:
@@ -167,19 +168,19 @@ class OrchestrationWithLineage:
 			elif not self.trail:
 				print(f"Warning: No trail available for populated table {table_name}")
 				return
-			
+
 			# Store the populated table in our tracking dictionary
 			self.current_populated_tables[table_name] = populated_table
-			
+
 			# Track table columns/fields only if this is a new table
 			if not table_exists:
 				self._track_table_columns(obj, aorta_table)
-				
+
 				# Analyze table creation functions (calc_ methods)
 				self._analyze_table_creation_functions(obj, aorta_table)
-			
+
 			# print(f"Tracked table initialization: {table_name}")
-	
+
 	def _track_table_columns(self, table_obj, aorta_table):
 		"""Track columns/fields in a table"""
 		try:
@@ -188,7 +189,7 @@ class OrchestrationWithLineage:
 			if isinstance(aorta_table, DatabaseTable):
 				fields_to_track = []
 				table_name = aorta_table.name
-				
+
 				# For Django models, use the model's _meta.fields
 				if self._is_django_model(table_name):
 					try:
@@ -202,7 +203,7 @@ class OrchestrationWithLineage:
 				else:
 					# For non-Django tables, detect column methods from the row objects they contain
 					fields_to_track = self._detect_table_fields_from_row_type(table_obj)
-				
+
 				# Create DatabaseField instances
 				for field_name in fields_to_track:
 					db_field = DatabaseField.objects.create(
@@ -212,23 +213,23 @@ class OrchestrationWithLineage:
 					# print(f"Tracked column: {aorta_table.name}.{field_name}")
 		except Exception as e:
 			print(f"Error tracking columns for {aorta_table.name}: {e}")
-	
+
 	def _detect_table_fields_from_row_type(self, table_obj):
 		"""Detect fields by examining the row object type that this table contains"""
 		try:
 			# For derived tables, try to determine the row object type
 			table_class_name = table_obj.__class__.__name__
-			
+
 			# Pattern: F_01_01_REF_FINREP_3_0_Table contains F_01_01_REF_FINREP_3_0 objects
 			if table_class_name.endswith('_Table'):
 				row_class_name = table_class_name[:-6]  # Remove '_Table' suffix
-				
+
 				# Try to import and inspect the row class
 				try:
 					# Look for the row class in the same module
 					table_module = table_obj.__class__.__module__
 					module = __import__(table_module, fromlist=[row_class_name])
-					
+
 					if hasattr(module, row_class_name):
 						row_class = getattr(module, row_class_name)
 						# Create a temporary instance to inspect its methods
@@ -239,10 +240,10 @@ class OrchestrationWithLineage:
 							return fields
 						except Exception as e:
 							print(f"Could not instantiate {row_class_name}: {e}")
-							
+
 				except Exception as e:
 					print(f"Could not find row class {row_class_name}: {e}")
-			
+
 			# Fallback: try to detect from table attributes that might be lists of row objects
 			for attr_name in dir(table_obj):
 				if not attr_name.startswith('_'):
@@ -254,102 +255,102 @@ class OrchestrationWithLineage:
 						if fields:
 							print(f"Detected {len(fields)} fields from list attribute {attr_name}: {fields[:5]}...")
 							return fields
-			
+
 			print(f"No fields detected for non-Django table {table_class_name}")
 			return []
-			
+
 		except Exception as e:
 			print(f"Error detecting fields for table {table_obj.__class__.__name__}: {e}")
 			return []
-	
+
 	def _detect_column_methods(self, table_obj):
 		"""Detect column methods in non-Django table objects using robust approaches"""
 		import inspect
 		column_methods = set()
-		
+
 		# Get all callable methods
-		methods = [name for name in dir(table_obj) 
-				  if (not name.startswith('_') and 
+		methods = [name for name in dir(table_obj)
+				  if (not name.startswith('_') and
 					  callable(getattr(table_obj, name, None)))]
-		
+
 		for method_name in methods:
 			try:
 				method = getattr(table_obj, method_name)
-				
+
 				# Approach 1: Check for @lineage decorator (most reliable)
 				if self._has_lineage_decorator(method):
 					column_methods.add(method_name)
 					continue
-				
+
 				# Approach 2: Method signature and naming patterns
 				if self._is_likely_column_method(method, method_name):
 					column_methods.add(method_name)
-					
+
 			except Exception:
 				continue
-		
+
 		# Filter out known infrastructure methods
 		excluded_methods = {'init', 'metric_value'}
 		excluded_prefixes = {'calc_'}
-		
+
 		final_methods = []
 		for method_name in column_methods:
-			if (method_name not in excluded_methods and 
+			if (method_name not in excluded_methods and
 				not any(method_name.startswith(prefix) for prefix in excluded_prefixes)):
 				final_methods.append(method_name)
-		
+
 		print(f"Detected {len(final_methods)} column methods for non-Django table: {final_methods[:5]}...")
 		return final_methods
-	
+
 	def _has_lineage_decorator(self, method):
 		"""Check if a method has the @lineage decorator"""
 		try:
 			# Check if method has wrapper attributes indicating decoration
 			if hasattr(method, '__wrapped__'):
 				return True
-			
+
 			# Check method name or qualname for lineage wrapper signs
 			if hasattr(method, '__qualname__') and 'lineage' in str(method.__qualname__):
 				return True
-				
+
 			# Check for common decorator attributes
 			if hasattr(method, '__dict__') and any('lineage' in str(key) for key in method.__dict__):
 				return True
-				
+
 			return False
 		except:
 			return False
-	
+
 	def _is_likely_column_method(self, method, method_name):
 		"""Check if method is likely a column method based on signature and naming"""
 		try:
 			import inspect
-			
+
 			# Check method name - should be all uppercase (common column pattern)
 			if not method_name.isupper():
 				return False
-			
+
 			# Check method signature - should only have 'self' parameter
 			sig = inspect.signature(method)
 			params = list(sig.parameters.keys())
 			if len(params) != 1 or params[0] != 'self':
 				return False
-			
+
 			# Check return type annotation if present
 			if sig.return_annotation != inspect.Signature.empty:
 				valid_types = [int, str, 'int', 'str']
 				if sig.return_annotation in valid_types:
 					return True
-			
+
 			# Check docstring for enumeration mentions (common in column methods)
 			if method.__doc__ and 'enumeration' in method.__doc__.lower():
 				return True
-			
+
 			return True  # If all checks pass, likely a column method
-			
+
 		except Exception:
 			return False
-	
+
 	def init(self,theObject):
 		# Check if this object has already been initialized
 		object_id = id(theObject)
@@ -358,26 +359,26 @@ class OrchestrationWithLineage:
 			# Even if we're skipping full initialization, we still need to ensure references are set
 			self._ensure_references_set(theObject)
 			return
-		
+
 		# Mark this object as initialized
 		self.__class__._initialized_objects.add(object_id)
-		
+
 		# Check if we have lineage tracking enabled globally and this looks like a table
 		from pybirdai.annotations.decorators import _lineage_context
 		global_orchestration = _lineage_context.get('orchestration')
-		
-		if (global_orchestration and 
-			hasattr(theObject, '__class__') and 
+
+		if (global_orchestration and
+			hasattr(theObject, '__class__') and
 			theObject.__class__.__name__.endswith('_Table')):
-			
+
 			print(f"DEBUG: Using global orchestration for {theObject.__class__.__name__}")
 			print(f"  Global Trail: {global_orchestration.trail.id if global_orchestration.trail else None}")
 			print(f"  Global MetaDataTrail: {global_orchestration.metadata_trail.id if global_orchestration.metadata_trail else None}")
-			
+
 			# This is a table and we have lineage tracking - track it
 			if global_orchestration and global_orchestration.lineage_enabled:
 				global_orchestration._track_object_initialization(theObject)
-		
+
 		# Set up references for the object (use global orchestration if available)
 		if global_orchestration and global_orchestration.lineage_enabled:
 			# Use the global orchestration for reference setup to maintain lineage context
@@ -411,49 +412,64 @@ class OrchestrationWithLineage:
 						print("newObject: " + str(newObject))
 						if newObject:
 							setattr(theObject,eReference,newObject)
-							CSVConverter.persist_object_as_csv(newObject,True);						
-						
+							# Original CSV persistence
+							CSVConverter.persist_object_as_csv(newObject,True);
+							
+							# Enhanced lineage tracking - track when tables are created but distinguish from usage tracking
+							if self.lineage_enabled and self.trail and hasattr(newObject, '__iter__'):
+								try:
+									# Extract Django model objects from the queryset
+									django_objects = list(newObject) if hasattr(newObject, '__iter__') else [newObject]
+									if django_objects:
+										# Create table structure and register for potential tracking
+										# Only mark as used when actually accessed via automatic tracking wrapper
+										print(f"📊 Table Created: {len(django_objects)} {table_name} objects available")
+								except Exception as e:
+									print(f"Warning: Could not process {table_name} objects for lineage: {e}")
+
 					else:
 						newObject = OrchestrationWithLineage.createObjectFromReferenceType(eReference);
-						
+
 						operations = [method for method in dir(newObject.__class__) if callable(
 							getattr(newObject.__class__, method)) and not method.startswith('__')]
-						
+
 						for operation in operations:
 							if operation == "init":
 								try:
 									getattr(newObject, operation)()
-									
+
 									# Check if lineage tracking is enabled and track data after initialization
 									from pybirdai.annotations.decorators import _lineage_context
 									orchestration = _lineage_context.get('orchestration')
-									if (orchestration and orchestration.lineage_enabled and 
-										hasattr(newObject, '__class__') and 
+									if (orchestration and orchestration.lineage_enabled and
+										hasattr(newObject, '__class__') and
 										newObject.__class__.__name__.endswith('_Table')):
-										
+
 										# Debug: print orchestration state
 										print(f"DEBUG: Orchestration for {newObject.__class__.__name__}:")
 										print(f"  Trail: {orchestration.trail.id if orchestration.trail else None}")
 										print(f"  MetaDataTrail: {orchestration.metadata_trail.id if orchestration.metadata_trail else None}")
-										
+
 										# First track the table itself if not already tracked
 										if orchestration.metadata_trail:
 											orchestration._track_object_initialization(newObject)
 										else:
 											print(f"WARNING: No metadata_trail for {newObject.__class__.__name__}")
-										
+
 										# Track any data that was populated during initialization
 										table_name = newObject.__class__.__name__.replace('_Table', '')
 										for attr_name in dir(newObject):
-											if (not attr_name.startswith('_') and 
+											if (not attr_name.startswith('_') and
 												hasattr(newObject, attr_name)):
 												attr_value = getattr(newObject, attr_name)
 												if isinstance(attr_value, list) and len(attr_value) > 0:
+													# CRITICAL FIX: DO NOT auto-track derived table data during initialization
+													# Only track when explicitly used in calculations
 													if orchestration.metadata_trail:
-														orchestration.track_data_processing(f"{table_name}_{attr_name}", attr_value)
+														print(f"📊 Found {len(attr_value)} items in {table_name}_{attr_name} (not tracking as used yet)")
 													else:
-														print(f"WARNING: Cannot track data for {table_name}_{attr_name} - no metadata_trail")
-									
+														print(f"WARNING: Cannot process data for {table_name}_{attr_name} - no metadata_trail")
+
 								except Exception as e:
 									print(f"Could not call function called {operation}: {e}")
 
@@ -467,15 +483,15 @@ class OrchestrationWithLineage:
 		"""
 		cls._initialized_objects.clear()
 		print("Initialization tracking has been reset.")
-		
+
 	@classmethod
 	def is_initialized(cls, obj):
 		"""
 		Check if an object has been initialized.
-		
+
 		Args:
 			obj: The object to check
-			
+
 		Returns:
 			bool: True if the object has been initialized, False otherwise
 		"""
@@ -485,29 +501,29 @@ class OrchestrationWithLineage:
 	def createObjectFromReferenceType(eReference):
 		try:
 			cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
-			new_object = cls()		
-			return new_object;	
+			new_object = cls()
+			return new_object;
 		except:
 			print("Error: " + eReference)
-	
+
 	# AORTA Lineage Tracking Methods
-	
+
 	def track_function_execution(self, function_name, source_columns, result_column=None, source_code=None):
 		"""Track the execution of a function in AORTA"""
 		if not self.lineage_enabled or not self.trail:
 			return
-		
+
 		# Create or get derived table for this function
 		class_name = function_name.split('.')[0] if '.' in function_name else 'DynamicFunctions'
-		
+
 		# For individual objects, use their parent table name
 		if not class_name.endswith('_Table'):
 			parent_table_name = self._get_parent_table_name(class_name)
 			if parent_table_name and parent_table_name != class_name:
 				class_name = parent_table_name
-		
+
 		derived_table = None
-		
+
 		# Check if we already have a derived table for this class in the current trail
 		existing_tables = None
 		if self.metadata_trail:
@@ -521,12 +537,12 @@ class OrchestrationWithLineage:
 				if table.name == class_name:
 					existing_tables = [table]
 					break
-		
+
 		if existing_tables:
 			derived_table = existing_tables[0]
 		else:
 			derived_table = DerivedTable.objects.create(name=class_name)
-			
+
 			# Add to metadata trail
 			if self.metadata_trail:
 				AortaTableReference.objects.create(
@@ -534,7 +550,7 @@ class OrchestrationWithLineage:
 					table_content_type='DerivedTable',
 					table_id=derived_table.id
 				)
-			
+
 			# Create EvaluatedDerivedTable
 			if self.trail:
 				evaluated_table = EvaluatedDerivedTable.objects.create(
@@ -542,13 +558,13 @@ class OrchestrationWithLineage:
 					table=derived_table
 				)
 				self.current_populated_tables[class_name] = evaluated_table
-		
+
 		# Check if Function already exists for this name and table
 		existing_functions = Function.objects.filter(
 			name=function_name,
 			table=derived_table
 		)
-		
+
 		if existing_functions.exists():
 			# Reuse existing function
 			function = existing_functions.first()
@@ -559,17 +575,17 @@ class OrchestrationWithLineage:
 				text=source_code or function_name,
 				language='python'
 			)
-			
+
 			function = Function.objects.create(
 				name=function_name,
 				function_text=function_text,
 				table=derived_table
 			)
 			# print(f"Created new function: {function_name}")
-		
+
 		# Note: TableCreationFunction instances are now created in _analyze_table_creation_functions
 		# during table initialization, which analyzes class variables for source tables
-		
+
 		# Track column references (only for newly created functions to avoid duplicates)
 		if not existing_functions.exists():
 			for col_ref in source_columns:
@@ -584,7 +600,7 @@ class OrchestrationWithLineage:
 							content_type=content_type,
 							object_id=resolved_field.id
 						)
-						
+
 						if not existing_col_refs.exists():
 							# Create FunctionColumnReference
 							FunctionColumnReference.objects.create(
@@ -595,13 +611,124 @@ class OrchestrationWithLineage:
 							# print(f"Tracked column reference: {function_name} -> {col_ref}")
 				except Exception as e:
 					print(f"Could not resolve column reference {col_ref}: {e}")
-		
+
 		return function
-	
+
+	def track_polymorphic_function_execution(self, function_name, base_class_name, 
+											source_columns, result_column=None, 
+											wrapper_obj=None, base_obj=None):
+		"""Track the execution of a polymorphic function in AORTA"""
+		if not self.lineage_enabled or not self.trail:
+			return
+
+		# Use the wrapper class name for the table/function organization
+		# CRITICAL FIX: Extract the FULL wrapper class name, not just the first part
+		# For function_name like "F_05_01_REF_FINREP_3_0_UnionItem.GRSS_CRRYNG_AMNT"
+		# we want "F_05_01_REF_FINREP_3_0_UnionItem", not "F_05_01_REF_FINREP_3_0"
+		if '.' in function_name:
+			# Get everything before the last dot (the method name)
+			wrapper_class_name = function_name.rsplit('.', 1)[0]
+		else:
+			wrapper_class_name = 'DynamicFunctions'
+		
+		print(f"🔧 track_polymorphic_function_execution: function_name={function_name}, wrapper_class_name={wrapper_class_name}, base_class_name={base_class_name}")
+		
+		# Create more descriptive function name that includes the base class
+		polymorphic_function_name = f"{function_name}@{base_class_name}"
+
+		# Create or get derived table for the wrapper class
+		derived_table = None
+		existing_tables = None
+		if self.metadata_trail:
+			# Look for tables in the current metadata trail
+			existing_refs = AortaTableReference.objects.filter(
+				metadata_trail=self.metadata_trail,
+				table_content_type='DerivedTable'
+			)
+			for ref in existing_refs:
+				table = DerivedTable.objects.get(id=ref.table_id)
+				if table.name == wrapper_class_name:
+					existing_tables = [table]
+					break
+
+		if existing_tables:
+			derived_table = existing_tables[0]
+		else:
+			derived_table = DerivedTable.objects.create(name=wrapper_class_name)
+
+			# Add to metadata trail
+			if self.metadata_trail:
+				AortaTableReference.objects.create(
+					metadata_trail=self.metadata_trail,
+					table_content_type='DerivedTable',
+					table_id=derived_table.id
+				)
+
+			# Create EvaluatedDerivedTable
+			if self.trail:
+				evaluated_table = EvaluatedDerivedTable.objects.create(
+					trail=self.trail,
+					table=derived_table
+				)
+				self.current_populated_tables[wrapper_class_name] = evaluated_table
+
+		# Check if Function already exists for this polymorphic name and table
+		existing_functions = Function.objects.filter(
+			name=polymorphic_function_name,
+			table=derived_table
+		)
+
+		if existing_functions.exists():
+			# Reuse existing function
+			function = existing_functions.first()
+		else:
+			# Create source code that shows the polymorphic delegation
+			method_name = function_name.split('.')[-1] if '.' in function_name else function_name
+			source_code = f"def {method_name}(self) -> Any: return self.base.{method_name}()  # Polymorphic delegation to {base_class_name}"
+			
+			# Create new Function record
+			function_text = FunctionText.objects.create(
+				text=source_code,
+				language='python'
+			)
+
+			function = Function.objects.create(
+				name=polymorphic_function_name,
+				function_text=function_text,
+				table=derived_table
+			)
+			print(f"Created polymorphic function: {polymorphic_function_name}")
+
+		# Track column references for polymorphic dependencies
+		for col_ref in source_columns:
+			try:
+				# Try to resolve the actual column object
+				resolved_field = self._resolve_column_reference(col_ref)
+				if resolved_field:
+					# Check if this column reference already exists
+					content_type = ContentType.objects.get_for_model(resolved_field.__class__)
+					existing_col_refs = FunctionColumnReference.objects.filter(
+						function=function,
+						content_type=content_type,
+						object_id=resolved_field.id
+					)
+
+					if not existing_col_refs.exists():
+						# Create FunctionColumnReference
+						FunctionColumnReference.objects.create(
+							function=function,
+							content_type=content_type,
+							object_id=resolved_field.id
+						)
+			except Exception as e:
+				print(f"Could not resolve polymorphic column reference {col_ref}: {e}")
+
+		return function
+
 	def _extract_source_table_names(self, source_columns):
 		"""Extract unique table names from column dependencies"""
 		table_names = set()
-		
+
 		for col_ref in source_columns:
 			try:
 				# Column references are in format "TABLE_NAME.column_name" or nested
@@ -614,32 +741,32 @@ class OrchestrationWithLineage:
 						table_names.add(table_name)
 			except Exception as e:
 				print(f"Error extracting table name from {col_ref}: {e}")
-		
+
 		return list(table_names)
-	
+
 	def _analyze_table_creation_functions(self, table_obj, aorta_table):
 		"""Analyze calc_ methods in table classes and create TableCreationFunction instances"""
 		try:
 			class_name = table_obj.__class__.__name__
-			
+
 			# Find all calc_ methods in this class
-			calc_methods = [name for name in dir(table_obj) 
+			calc_methods = [name for name in dir(table_obj)
 						   if name.startswith('calc_') and callable(getattr(table_obj, name))]
-			
+
 			for calc_method_name in calc_methods:
 				calc_method = getattr(table_obj, calc_method_name)
 				full_function_name = f"{class_name}.{calc_method_name}"
-				
+
 				# Extract source table names from class variables ending with _Table
 				source_table_names = self._extract_source_tables_from_class_variables(table_obj)
-				
+
 				# Get function source code
 				try:
 					import inspect
 					source_code = inspect.getsource(calc_method)
 				except:
 					source_code = f"def {calc_method_name}(self): # Source code not available"
-				
+
 				# Check if this calc_ method has a @lineage decorator and extract dependencies
 				lineage_dependencies = self._extract_lineage_dependencies(calc_method)
 				lineage_column_references = []
@@ -648,12 +775,12 @@ class OrchestrationWithLineage:
 					source_code += f"\n# Lineage dependencies: {lineage_dependencies}"
 					# Extract column references from the lineage dependencies
 					lineage_column_references = self._parse_lineage_dependencies(lineage_dependencies)
-				
+
 				# Check if TableCreationFunction already exists
 				existing_table_creation_functions = TableCreationFunction.objects.filter(
 					name=full_function_name
 				)
-				
+
 				if existing_table_creation_functions.exists():
 					# Reuse existing table creation function
 					table_creation_function = existing_table_creation_functions.first()
@@ -664,14 +791,14 @@ class OrchestrationWithLineage:
 						text=source_code,
 						language='python'
 					)
-					
+
 					# Create TableCreationFunction
 					table_creation_function = TableCreationFunction.objects.create(
 						name=full_function_name,
 						function_text=function_text
 					)
 					# print(f"Created new table creation function: {full_function_name}")
-				
+
 				# Create TableCreationSourceTable entries (only for new functions)
 				if not existing_table_creation_functions.exists():
 					for source_table_name in source_table_names:
@@ -685,7 +812,7 @@ class OrchestrationWithLineage:
 								content_type=content_type,
 								object_id=source_table.id
 							)
-							
+
 							if not existing_source_refs.exists():
 								TableCreationSourceTable.objects.create(
 									table_creation_function=table_creation_function,
@@ -693,15 +820,15 @@ class OrchestrationWithLineage:
 									object_id=source_table.id
 								)
 								# print(f"Tracked table creation source: {full_function_name} -> {source_table_name}")
-					
+
 					# Create TableCreationFunctionColumn entries for lineage dependencies
 					for column_ref in lineage_column_references:
 						column_obj = column_ref['column']
 						reference_text = column_ref['reference_text']
-						
+
 						content_type = ContentType.objects.get_for_model(column_obj.__class__)
 						from pybirdai.models import TableCreationFunctionColumn
-						
+
 						# Check if this column reference already exists
 						existing_column_refs = TableCreationFunctionColumn.objects.filter(
 							table_creation_function=table_creation_function,
@@ -709,7 +836,7 @@ class OrchestrationWithLineage:
 							object_id=column_obj.id,
 							reference_text=reference_text
 						)
-						
+
 						if not existing_column_refs.exists():
 							TableCreationFunctionColumn.objects.create(
 								table_creation_function=table_creation_function,
@@ -718,75 +845,75 @@ class OrchestrationWithLineage:
 								reference_text=reference_text
 							)
 							# print(f"Tracked column reference: {full_function_name} -> {column_obj}")
-				
+
 				print(f"Created TableCreationFunction for {full_function_name} with {len(source_table_names)} source tables and {len(lineage_column_references)} column references")
-		
+
 		except Exception as e:
 			print(f"Error analyzing table creation functions for {table_obj.__class__.__name__}: {e}")
-	
+
 	def _extract_source_tables_from_class_variables(self, table_obj):
 		"""Extract source table names from class variables ending with _Table"""
 		source_table_names = set()
-		
+
 		# Get all attributes that end with _Table
 		for attr_name in dir(table_obj):
 			if attr_name.endswith('_Table') and not attr_name.startswith('_'):
 				# Remove _Table suffix to get the table name
 				table_name = attr_name.replace('_Table', '')
 				source_table_names.add(table_name)
-		
+
 		return list(source_table_names)
-	
+
 	def _extract_lineage_dependencies(self, method):
 		"""Extract dependencies from @lineage decorator if present"""
 		try:
 			import inspect
 			import re
-			
+
 			# Get the source code of the method
 			source_code = inspect.getsource(method)
-			
+
 			# Look for @lineage decorator with dependencies parameter
 			# Pattern matches: @lineage(dependencies={"base.COLUMN", "table.COLUMN"}) including multiline
 			lineage_pattern = r'@lineage\s*\(\s*dependencies\s*=\s*\{([^}]+)\}\s*\)'
 			matches = re.search(lineage_pattern, source_code, re.DOTALL)
-			
+
 			if matches:
 				# Extract the dependencies content
 				dependencies_content = matches.group(1)
-				
+
 				# Extract individual dependency strings (remove quotes and whitespace)
 				dependency_pattern = r'\"([^\"]+)\"'
 				dependency_matches = re.findall(dependency_pattern, dependencies_content)
-				
+
 				if dependency_matches:
 					dependencies_text = ', '.join(dependency_matches)
 					print(f"Extracted lineage dependencies: {dependencies_text}")
 					return dependencies_text
-			
+
 			return None
-			
+
 		except Exception as e:
 			print(f"Error extracting lineage dependencies: {e}")
 			return None
-	
+
 	def _parse_lineage_dependencies(self, lineage_dependencies_text):
 		"""Parse lineage dependencies text to extract column references"""
 		column_references = []
-		
+
 		if not lineage_dependencies_text:
 			return column_references
-		
+
 		try:
 			# Extract column references from the lineage dependencies text
 			# Look for patterns like "base.COLUMN_NAME", "table.COLUMN_NAME"
 			import re
-			
+
 			# Find all patterns that look like column references
 			# This regex looks for word.WORD patterns (table.column references)
 			pattern = r'\b(\w+)\.([A-Za-z_][A-Za-z0-9_]*)\b'
 			matches = re.findall(pattern, lineage_dependencies_text)
-			
+
 			for table_ref, column_name in matches:
 				# Try to find the actual column object
 				column_obj = self._find_column_by_name(column_name, table_ref)
@@ -803,14 +930,14 @@ class OrchestrationWithLineage:
 							'column': column_obj,
 							'reference_text': f"{table_ref}.{column_name}"
 						})
-			
+
 			print(f"Parsed {len(column_references)} column references from lineage dependencies")
 			return column_references
-			
+
 		except Exception as e:
 			print(f"Error parsing lineage dependencies: {e}")
 			return column_references
-	
+
 	def _find_column_by_name(self, column_name, table_hint=None):
 		"""Find a column (DatabaseField or Function) by name, optionally with table hint"""
 		try:
@@ -819,29 +946,29 @@ class OrchestrationWithLineage:
 			if table_hint:
 				# Filter by table name if hint provided
 				database_fields = database_fields.filter(table__name__icontains=table_hint)
-			
+
 			if database_fields.exists():
 				return database_fields.first()
-			
+
 			# Then try to find in Function
 			functions = Function.objects.filter(name=column_name)
 			if table_hint:
 				# Filter by table name if hint provided
 				functions = functions.filter(table__name__icontains=table_hint)
-			
+
 			if functions.exists():
 				return functions.first()
-			
+
 			# Fallback: try without table hint if we had one
 			if table_hint:
 				return self._find_column_by_name(column_name, None)
-			
+
 			return None
-			
+
 		except Exception as e:
 			print(f"Error finding column {column_name}: {e}")
 			return None
-	
+
 	def _find_table_by_name(self, table_name):
 		"""Find a table by name in DatabaseTable or DerivedTable"""
 		try:
@@ -849,23 +976,23 @@ class OrchestrationWithLineage:
 			database_tables = DatabaseTable.objects.filter(name=table_name)
 			if database_tables.exists():
 				return database_tables.first()
-			
+
 			# Then try DerivedTable
 			derived_tables = DerivedTable.objects.filter(name=table_name)
 			if derived_tables.exists():
 				return derived_tables.first()
-			
+
 			return None
 		except Exception as e:
 			print(f"Error finding table {table_name}: {e}")
 			return None
-	
+
 	def _resolve_column_reference(self, column_ref):
 		"""Resolve a column reference string to an actual DatabaseField object"""
 		try:
 			# Handle nested references like "base.CRRYNG_AMNT"
 			parts = column_ref.split('.')
-			
+
 			# For simple column references, look in existing tables
 			if len(parts) == 1:
 				# Look for this column in any tracked table
@@ -874,7 +1001,7 @@ class OrchestrationWithLineage:
 						fields = populated_table.table.database_fields.filter(name=parts[0])
 						if fields.exists():
 							return fields.first()
-			
+
 			# For complex references, try to resolve based on patterns
 			elif len(parts) > 1:
 				# Look for the column name in the last part
@@ -884,27 +1011,27 @@ class OrchestrationWithLineage:
 						fields = populated_table.table.database_fields.filter(name=column_name)
 						if fields.exists():
 							return fields.first()
-			
+
 		except Exception as e:
 			print(f"Error resolving column reference {column_ref}: {e}")
-		
+
 		return None
-	
+
 	def track_row_processing(self, table_name, row_data, row_identifier=None):
 		"""Track row-level lineage"""
 		if not self.lineage_enabled or not self.trail:
 			return
-		
+
 		try:
 			# Get the populated table for this table name
 			populated_table = self.current_populated_tables.get(table_name)
 			if not populated_table:
 				print(f"No populated table found for {table_name}")
 				return
-			
+
 			# Determine if this is a derived table or database table
 			is_derived_table = isinstance(populated_table, EvaluatedDerivedTable)
-			
+
 			# Check for existing row with same data to prevent duplicates
 			existing_row = None
 			if not is_derived_table and isinstance(row_data, dict):
@@ -915,7 +1042,7 @@ class OrchestrationWithLineage:
 						existing_row = existing
 						print(f"Found existing row for {table_name}, reusing instead of creating duplicate")
 						break
-			
+
 			if existing_row:
 				db_row = existing_row
 			else:
@@ -925,7 +1052,7 @@ class OrchestrationWithLineage:
 						row_identifier = f"row_{len(populated_table.derivedtablerow_set.all()) + 1}"
 					else:
 						row_identifier = f"row_{len(populated_table.databaserow_set.all()) + 1}"
-				
+
 				# Create appropriate row type
 				if is_derived_table:
 					# Create DerivedTableRow for derived tables
@@ -939,7 +1066,7 @@ class OrchestrationWithLineage:
 						populated_table=populated_table,
 						row_identifier=row_identifier
 					)
-			
+
 			# Track individual column values (only for DatabaseRow and only if this is a new row)
 			if not is_derived_table and not existing_row:
 				if isinstance(row_data, dict):
@@ -951,28 +1078,28 @@ class OrchestrationWithLineage:
 						if not attr_name.startswith('_') and not callable(getattr(row_data, attr_name)):
 							value = getattr(row_data, attr_name)
 							self._track_column_value(db_row, attr_name, value)
-			
+
 			# Store current row context for value tracking
 			self.current_rows['source'] = db_row.id
 			self.current_rows['table'] = table_name
-			
+
 			# Clear evaluated functions cache when switching to a new row
 			self.evaluated_functions_cache.clear()
-			
+
 			# print(f"Tracked row processing: {table_name} row {row_identifier}")
 			return db_row
-			
+
 		except Exception as e:
 			print(f"Error tracking row processing: {e}")
 			return None
-	
+
 	def _track_column_value(self, db_row, column_name, value):
 		"""Track individual column values"""
 		try:
 			# Find the corresponding DatabaseField
 			table = db_row.populated_table.table
 			fields = table.database_fields.filter(name=column_name)
-			
+
 			if not fields.exists():
 				# Create the field if it doesn't exist
 				field = DatabaseField.objects.create(
@@ -982,29 +1109,29 @@ class OrchestrationWithLineage:
 				print(f"Created missing column: {table.name}.{column_name}")
 			else:
 				field = fields.first()
-			
+
 			# Create DatabaseColumnValue
 			# Try to convert to float, otherwise use string_value
 			numeric_value = None
 			string_value = None
-			
+
 			if value is not None:
 				try:
 					numeric_value = float(value)
 				except (ValueError, TypeError):
 					string_value = str(value)
-			
+
 			DatabaseColumnValue.objects.create(
 				value=numeric_value,
 				string_value=string_value,
 				column=field,
 				row=db_row
 			)
-			
+
 			# print(f"Tracked column value: {table.name}.{column_name} = {value}")
 		except Exception as e:
 			print(f"Error tracking column value {column_name}: {e}")
-	
+
 	def _rows_have_same_data(self, existing_row, new_row_data):
 		"""Check if an existing DatabaseRow has the same data as new_row_data"""
 		try:
@@ -1014,54 +1141,54 @@ class OrchestrationWithLineage:
 				column_name = column_value.column.name
 				value = column_value.value if column_value.value is not None else column_value.string_value
 				existing_values[column_name] = value
-			
+
 			# Compare with new row data
 			if len(existing_values) != len(new_row_data):
 				return False
-			
+
 			for column_name, new_value in new_row_data.items():
 				existing_value = existing_values.get(column_name)
-				
+
 				# Handle numeric vs string comparison
 				if existing_value is None and new_value is None:
 					continue
 				elif existing_value is None or new_value is None:
 					return False
-				
+
 				# Try numeric comparison first
 				try:
 					if float(existing_value) == float(new_value):
 						continue
 				except (ValueError, TypeError):
 					pass
-				
+
 				# Fall back to string comparison
 				if str(existing_value) != str(new_value):
 					return False
-			
+
 			return True
-			
+
 		except Exception as e:
 			print(f"Error comparing row data: {e}")
 			return False
-	
+
 	def track_derived_row_processing(self, table_name, derived_row_data, source_row_ids=None):
 		"""Track derived/computed row processing"""
 		if not self.lineage_enabled or not self.trail:
 			return
-		
+
 		try:
 			# Get the evaluated derived table
 			evaluated_table = self.current_populated_tables.get(table_name)
 			if not evaluated_table or not isinstance(evaluated_table, EvaluatedDerivedTable):
 				print(f"No evaluated derived table found for {table_name}")
 				return
-			
+
 			# Create DerivedTableRow
 			derived_row = DerivedTableRow.objects.create(
 				populated_table=evaluated_table
 			)
-			
+
 			# Track source row references
 			if source_row_ids:
 				for source_row_id in source_row_ids:
@@ -1074,62 +1201,84 @@ class OrchestrationWithLineage:
 						)
 					except DatabaseRow.DoesNotExist:
 						print(f"Source row {source_row_id} not found")
-			
+
 			# Store current derived row context
 			self.current_rows['derived'] = derived_row.id
-			
+
 			# Clear evaluated functions cache when switching to a new derived row
 			self.evaluated_functions_cache.clear()
-			
+
 			# print(f"Tracked derived row processing: {table_name}")
 			return derived_row
-			
+
 		except Exception as e:
 			print(f"Error tracking derived row processing: {e}")
 			return None
-	
+
 	def track_value_computation(self, function_name, source_values, computed_value):
 		"""Track value-level lineage"""
-		if not self.lineage_enabled or not self.trail:
-			return
+		print(f"🔍 track_value_computation called: {function_name}, value={computed_value}")
 		
+		if not self.lineage_enabled or not self.trail:
+			print(f"🔍 track_value_computation: lineage disabled or no trail")
+			return
+
 		try:
 			# Get the current derived row if available
 			derived_row_id = self.current_rows.get('derived')
 			if not derived_row_id:
-				print(f"DEBUG: No derived row context for value computation: {function_name}")
-				print(f"DEBUG: Current rows context: {self.current_rows}")
+				print(f"🔍 track_value_computation: No derived row context for value computation: {function_name}")
+				print(f"🔍 track_value_computation: Current rows context: {self.current_rows}")
 				return
 			
+			print(f"🔍 track_value_computation: Using derived_row_id: {derived_row_id}")
+
 			# Check cache first
 			cache_key = f"{derived_row_id}:{function_name}"
 			if cache_key in self.evaluated_functions_cache:
 				# Return cached evaluated function
 				return self.evaluated_functions_cache[cache_key]
-			
+
 			# Get the derived row
 			derived_row = DerivedTableRow.objects.get(id=derived_row_id)
-			
+
 			# Find the corresponding Function object
 			function_parts = function_name.split('.')
 			class_name = function_parts[0] if len(function_parts) > 1 else 'DynamicFunctions'
 			method_name = function_parts[-1]
-			
+
 			# Look for the function by name across all Function objects
 			functions = Function.objects.filter(name=function_name)
-			
+
 			if not functions.exists():
 				print(f"Function {function_name} not found for value computation")
 				return
+
+			# CRITICAL FIX: When multiple functions exist with the same name,
+			# prefer the one that belongs to the same table as the derived row
+			function = functions.first()  # Default fallback
 			
-			function = functions.first()
-			
+			# Try to find a function from the same table as the derived row
+			derived_table = derived_row.populated_table.table
+			for func in functions:
+				if func.table.id == derived_table.id:
+					function = func
+					print(f"🎯 track_value_computation: Using function {func.id} from correct table {derived_table.name}")
+					break
+			else:
+				# If no exact table match, try by table name (for data consistency)
+				for func in functions:
+					if func.table.name == derived_table.name:
+						function = func
+						print(f"🎯 track_value_computation: Using function {func.id} from table with matching name {derived_table.name}")
+						break
+
 			# Check if we already have an EvaluatedFunction for this function and row
 			existing_evaluated = EvaluatedFunction.objects.filter(
 				function=function,
 				row=derived_row
 			).first()
-			
+
 			if existing_evaluated:
 				# We already have this function evaluated for this row
 				# Since functions are immutable, the result should be the same
@@ -1137,61 +1286,67 @@ class OrchestrationWithLineage:
 				self.evaluated_functions_cache[cache_key] = existing_evaluated
 				# print(f"Reusing existing EvaluatedFunction for {function_name} on row {derived_row_id}")
 				return existing_evaluated
-			
+
 			# Create EvaluatedFunction only if it doesn't exist
 			# Try to store as numeric value if possible
 			numeric_value = None
 			string_value = None
-			
+
 			if computed_value is not None:
 				try:
 					numeric_value = float(computed_value)
 				except (ValueError, TypeError):
 					string_value = str(computed_value)
-			
+
+			print(f"🔍 track_value_computation: Creating EvaluatedFunction for {function.name} (ID: {function.id}) on row {derived_row.id}")
 			evaluated_function = EvaluatedFunction.objects.create(
 				value=numeric_value,
 				string_value=string_value,
 				function=function,
 				row=derived_row
 			)
-			
-			# Track source values
+			print(f"🔍 track_value_computation: ✅ Created EvaluatedFunction ID: {evaluated_function.id}")
+
+			# Track source values (optional - don't fail if this doesn't work)
 			for source_value in source_values:
 				if source_value is not None:
-					# Try to find the corresponding DatabaseColumnValue
-					source_value_obj = self._find_source_value_object(source_value)
-					if source_value_obj:
-						EvaluatedFunctionSourceValue.objects.create(
-							evaluated_function=evaluated_function,
-							content_type=ContentType.objects.get_for_model(source_value_obj.__class__),
-							object_id=source_value_obj.id
-						)
-			
+					try:
+						# Try to find the corresponding DatabaseColumnValue
+						source_value_obj = self._find_source_value_object(source_value)
+						if source_value_obj:
+							EvaluatedFunctionSourceValue.objects.create(
+								evaluated_function=evaluated_function,
+								content_type=ContentType.objects.get_for_model(source_value_obj.__class__),
+								object_id=source_value_obj.id
+							)
+					except Exception as e:
+						# Source value tracking is optional - don't fail the main function evaluation
+						print(f"Debug: Could not create source value link for '{source_value}': {e}")
+
 			# Cache the evaluated function
 			self.evaluated_functions_cache[cache_key] = evaluated_function
-			
+
 			# print(f"Tracked value computation: {function_name} with {len(source_values)} source values = {computed_value}")
 			return evaluated_function
-			
+
 		except Exception as e:
 			print(f"Error tracking value computation: {e}")
 			return None
-	
+
 	def _ensure_derived_row_context(self, derived_obj, function_name):
 		"""Ensure a derived row context exists for the given derived object"""
 		if not self.lineage_enabled or not self.trail:
 			return None
-			
+
 		try:
 			# Check if we already have a context for this specific object
 			obj_id = id(derived_obj)
 			if obj_id in self.object_contexts:
 				return self.object_contexts[obj_id]
-			
+
 			# Get the class name to determine table name
 			class_name = derived_obj.__class__.__name__
-			
+
 			# Only create derived tables for *_Table classes
 			# Individual objects should be treated as rows within their parent table
 			if class_name.endswith('_Table'):
@@ -1200,7 +1355,7 @@ class OrchestrationWithLineage:
 				# For individual objects, use their class name as the table name
 				# This ensures proper isolation between different object types
 				table_name = class_name
-			
+
 			# Ensure we have an EvaluatedDerivedTable for this specific class
 			if table_name not in self.current_populated_tables:
 				# Check if a DerivedTable already exists for this name
@@ -1210,7 +1365,7 @@ class OrchestrationWithLineage:
 				else:
 					# Create a new DerivedTable
 					derived_table = DerivedTable.objects.create(name=table_name)
-				
+
 				if self.metadata_trail:
 					# Check if reference already exists
 					existing_refs = AortaTableReference.objects.filter(
@@ -1218,28 +1373,30 @@ class OrchestrationWithLineage:
 						table_content_type='DerivedTable',
 						table_id=derived_table.id
 					)
+
 					if not existing_refs.exists():
 						AortaTableReference.objects.create(
 							metadata_trail=self.metadata_trail,
 							table_content_type='DerivedTable',
 							table_id=derived_table.id
 						)
-				
+
+
 				# Create EvaluatedDerivedTable
 				evaluated_table = EvaluatedDerivedTable.objects.create(
 					trail=self.trail,
 					table=derived_table
 				)
-				
+
 				self.current_populated_tables[table_name] = evaluated_table
 				print(f"Created EvaluatedDerivedTable for {table_name}")
-			
+
 			# Get the EvaluatedDerivedTable
 			evaluated_table = self.current_populated_tables[table_name]
-			
+
 			# Create a unique identifier for this derived row based on object identity
 			row_identifier = f"{class_name}_{id(derived_obj)}"
-			
+
 			# Check if we already have a DerivedTableRow for this object
 			existing_rows = evaluated_table.derivedtablerow_set.filter(row_identifier=row_identifier)
 			if existing_rows.exists():
@@ -1252,25 +1409,25 @@ class OrchestrationWithLineage:
 				)
 				derived_row_id = derived_row.id
 				print(f"Created DerivedTableRow {derived_row_id} for {function_name}")
-			
+
 			# Store the context for this specific object
 			self.object_contexts[obj_id] = derived_row_id
 			return derived_row_id
-			
+
 		except Exception as e:
 			print(f"Error ensuring derived row context: {e}")
 			return None
-	
+
 	def _get_parent_table_name(self, class_name):
 		"""Determine the parent table name for an individual object"""
 		# Handle special cases first
 		if class_name.endswith('_UnionItem'):
 			return class_name.replace('_UnionItem', '_UnionTable').replace('_Table', '')
-		
+
 		# Direct match - if the class itself is a table
 		if class_name in self.current_populated_tables:
 			return class_name
-		
+
 		# For objects with specific report prefixes (e.g., F_05_01_REF_FINREP_3_0_Other_loans)
 		if '_' in class_name and class_name.split('_')[0].startswith('F_'):
 			# Extract the report prefix (e.g., F_05_01_REF_FINREP_3_0)
@@ -1284,15 +1441,15 @@ class OrchestrationWithLineage:
 					report_table_name = '_'.join(report_prefix_parts)
 					if report_table_name in self.current_populated_tables:
 						return report_table_name
-			
+
 			# If no exact match, return the full class name as table name
 			# This ensures F_05_01_REF_FINREP_3_0_Other_loans gets its own table
 			return class_name
-		
+
 		# For base objects (e.g., Other_loans), create their own table
 		# Don't try to match them to other tables - this was causing the mixing issue
 		return class_name
-	
+
 	def get_derived_context_for_object(self, obj):
 		"""Get the correct derived context for a specific object"""
 		obj_id = id(obj)
@@ -1300,46 +1457,531 @@ class OrchestrationWithLineage:
 			return self.object_contexts[obj_id]
 		return None
 	
+	def track_calculation_used_row(self, calculation_name, row):
+		"""Track that a specific row was used in a calculation (passed filters)"""
+		print(f"🔍 track_calculation_used_row called: {calculation_name}, {type(row).__name__}")
+		
+		if not self.lineage_enabled or not self.trail:
+			print(f"❌ Lineage tracking disabled or no trail: lineage_enabled={self.lineage_enabled}, trail={self.trail}")
+			return
+		
+		try:
+			# Determine the type of row
+			if isinstance(row, DatabaseRow):
+				content_type = ContentType.objects.get_for_model(DatabaseRow)
+			elif isinstance(row, DerivedTableRow):
+				content_type = ContentType.objects.get_for_model(DerivedTableRow)
+			# Check if this is a Django model instance (database record)
+			elif hasattr(row, '_meta') and hasattr(row._meta, 'model'):
+				# This is a Django model instance - we need to create/find the appropriate DatabaseRow
+				model_name = type(row).__name__
+				
+				# Ensure we have a database table for this model
+				# Check if we already have the wrong type of table stored
+				existing_table = self.current_populated_tables.get(model_name)
+				if not existing_table or not isinstance(existing_table, PopulatedDataBaseTable):
+					# Create database table
+					db_table = DatabaseTable.objects.create(name=model_name)
+					
+					# Add to metadata trail
+					if self.metadata_trail:
+						AortaTableReference.objects.create(
+							metadata_trail=self.metadata_trail,
+							table_content_type='DatabaseTable',
+							table_id=db_table.id
+						)
+					
+					# Create PopulatedDataBaseTable
+					populated_table = PopulatedDataBaseTable.objects.create(
+						trail=self.trail,
+						table=db_table
+					)
+					
+					self.current_populated_tables[model_name] = populated_table
+					print(f"Created database table for Django model: {model_name}")
+				else:
+					populated_table = existing_table
+				
+				# Get the populated database table
+				populated_table = self.current_populated_tables[model_name]
+				
+				# Create unique identifier for this model instance
+				if hasattr(row, 'pk') and row.pk:
+					object_identifier = f"{model_name}_{row.pk}"
+				else:
+					object_identifier = f"{model_name}_{id(row)}"
+				
+				# Check if we already have a database row for this model instance
+				existing_rows = populated_table.databaserow_set.filter(
+					row_identifier=object_identifier
+				)
+				
+				if existing_rows.exists():
+					db_row = existing_rows.first()
+				else:
+					# Create new database row for this model instance
+					db_row = DatabaseRow.objects.create(
+						populated_table=populated_table,
+						row_identifier=object_identifier
+					)
+					
+					# Create column values for the model fields
+					for field in row._meta.fields:
+						if hasattr(row, field.name):
+							field_value = getattr(row, field.name)
+							if field_value is not None:
+								self._track_column_value_for_django_field(db_row, field.name, field_value, populated_table.table)
+					
+					print(f"Created database row for Django model {model_name}")
+					
+					# DISABLED: Don't automatically track all Django model fields as used
+					# Only track fields that are actually accessed during calculations (via wrapper)
+					# self._track_django_model_fields_as_used(calculation_name, populated_table.table, row)
+				
+				row = db_row
+				
+				content_type = ContentType.objects.get_for_model(DatabaseRow)
+			else:
+				# For business objects, determine the appropriate tracking strategy
+				row_class_name = type(row).__name__
+				
+				# Check if this is a business object that should be tracked as a derived table row
+				if hasattr(row, '__dict__'):
+					# This is a business object - create/find appropriate derived table
+					tracked_row = None
+					
+					# Look for or create an appropriate derived table for this object type
+					table_name = row_class_name
+					
+					# Check if we already have a derived table for this object type
+					if table_name not in self.current_populated_tables:
+						# Create derived table for this object type
+						derived_table = DerivedTable.objects.create(name=table_name)
+						
+						# Add to metadata trail
+						if self.metadata_trail:
+							AortaTableReference.objects.create(
+								metadata_trail=self.metadata_trail,
+								table_content_type='DerivedTable',
+								table_id=derived_table.id
+							)
+						
+						# Create EvaluatedDerivedTable
+						evaluated_table = EvaluatedDerivedTable.objects.create(
+							trail=self.trail,
+							table=derived_table
+						)
+						
+						self.current_populated_tables[table_name] = evaluated_table
+						print(f"Created derived table for business object type: {table_name}")
+					
+					# Get the evaluated derived table
+					evaluated_table = self.current_populated_tables[table_name]
+					
+					# Create unique identifier for this specific object instance
+					object_identifier = f"{row_class_name}_{id(row)}"
+					
+					# Check if we already have a derived row for this object
+					existing_rows = evaluated_table.derivedtablerow_set.filter(
+						row_identifier=object_identifier
+					)
+					
+					if existing_rows.exists():
+						tracked_row = existing_rows.first()
+					else:
+						# Create new derived table row for this object
+						tracked_row = DerivedTableRow.objects.create(
+							populated_table=evaluated_table,
+							row_identifier=object_identifier
+						)
+						print(f"Created derived table row for {row_class_name}")
+					
+					if tracked_row:
+						# ENHANCED: Track object relationships via DerivedRowSourceReference
+						# Do this for both new AND existing rows to ensure relationships are captured
+						self._track_object_relationships(tracked_row, row)
+						
+						# ENHANCED: Also track transitively referenced objects as used
+						# This ensures that objects referenced via unionOfLayers.base etc. are also marked as used
+						self._track_transitive_used_objects(calculation_name, row)
+						
+						row = tracked_row
+						content_type = ContentType.objects.get_for_model(DerivedTableRow)
+					else:
+						print(f"Failed to create derived table row for {row_class_name}")
+						return
+				else:
+					print(f"Cannot track row of type {type(row)} - not a trackable object")
+					return
+			
+			# Check if this row is already tracked for this calculation
+			existing = CalculationUsedRow.objects.filter(
+				trail=self.trail,
+				calculation_name=calculation_name,
+				content_type=content_type,
+				object_id=row.id
+			).exists()
+			
+			if not existing:
+				used_row = CalculationUsedRow.objects.create(
+					trail=self.trail,
+					calculation_name=calculation_name,
+					content_type=content_type,
+					object_id=row.id
+				)
+				print(f"✅ Created CalculationUsedRow: {calculation_name} -> {type(row).__name__} (id: {row.id})")
+			else:
+				print(f"⚠️ CalculationUsedRow already exists for {calculation_name} -> {type(row).__name__}")
+		
+		except Exception as e:
+			print(f"❌ Error tracking calculation used row: {e}")
+			import traceback
+			traceback.print_exc()
+	
+	def _track_django_model_fields_as_used(self, calculation_name, database_table, django_model_instance):
+		"""Track all fields of a Django model as used fields when the model instance is tracked as a used row"""
+		try:
+			# Get all database fields for this table
+			database_fields = database_table.database_fields.all()
+			
+			# Track each database field as a used field
+			for db_field in database_fields:
+				# Check if the Django model actually has this field
+				if hasattr(django_model_instance, db_field.name):
+					try:
+						# Track this field as used
+						self.track_calculation_used_field(calculation_name, db_field.name, django_model_instance)
+						print(f"  Tracked Django model field as used: {database_table.name}.{db_field.name}")
+					except Exception as e:
+						print(f"  Failed to track Django model field {db_field.name}: {e}")
+		except Exception as e:
+			print(f"Error tracking Django model fields as used: {e}")
+
+	def track_calculation_used_field(self, calculation_name, field_name, row=None, function_obj=None):
+		"""Track that a specific field was accessed during a calculation"""
+		if not self.lineage_enabled or not self.trail:
+			return
+		
+		try:
+			# Find the field object
+			field = None
+			content_type = None
+			
+			# If function_obj is provided, use it directly to avoid ID mismatch issues
+			if function_obj:
+				field = function_obj
+				content_type = ContentType.objects.get_for_model(Function)
+				print(f"🔍 Using provided function object: {field.name} (ID: {field.id})")
+			else:
+				# First try to find as DatabaseField
+				database_fields = DatabaseField.objects.filter(name=field_name)
+				if database_fields.exists():
+					field = database_fields.first()
+					content_type = ContentType.objects.get_for_model(DatabaseField)
+				else:
+					# Try to find as Function
+					functions = Function.objects.filter(name=field_name)
+					if functions.exists():
+						field = functions.first()
+						content_type = ContentType.objects.get_for_model(Function)
+			
+			if not field:
+				# Try to find with more context if field_name includes table reference
+				if '.' in field_name:
+					parts = field_name.split('.')
+					actual_field_name = parts[-1]
+					database_fields = DatabaseField.objects.filter(name=actual_field_name)
+					if database_fields.exists():
+						field = database_fields.first()
+						content_type = ContentType.objects.get_for_model(DatabaseField)
+					else:
+						functions = Function.objects.filter(name=actual_field_name)
+						if functions.exists():
+							field = functions.first()
+							content_type = ContentType.objects.get_for_model(Function)
+			
+			if not field:
+				print(f"Cannot find field {field_name} to track")
+				return
+			
+			# Prepare row tracking if provided
+			row_content_type = None
+			row_object_id = None
+			if row:
+				if isinstance(row, DatabaseRow):
+					row_content_type = ContentType.objects.get_for_model(DatabaseRow)
+					row_object_id = row.id
+				elif isinstance(row, DerivedTableRow):
+					row_content_type = ContentType.objects.get_for_model(DerivedTableRow)
+					row_object_id = row.id
+			
+			# Check if this field is already tracked for this calculation
+			query = CalculationUsedField.objects.filter(
+				trail=self.trail,
+				calculation_name=calculation_name,
+				content_type=content_type,
+				object_id=field.id
+			)
+			
+			if row_content_type and row_object_id:
+				query = query.filter(
+					row_content_type=row_content_type,
+					row_object_id=row_object_id
+				)
+			
+			if not query.exists():
+				CalculationUsedField.objects.create(
+					trail=self.trail,
+					calculation_name=calculation_name,
+					content_type=content_type,
+					object_id=field.id,
+					row_content_type=row_content_type,
+					row_object_id=row_object_id
+				)
+				# print(f"Tracked used field for {calculation_name}: {field_name}")
+		
+		except Exception as e:
+			print(f"Error tracking calculation used field: {e}")
+	
+	def get_calculation_used_rows(self, calculation_name):
+		"""Get all rows that were used in a specific calculation"""
+		if not self.trail:
+			return []
+		
+		used_rows = CalculationUsedRow.objects.filter(
+			trail=self.trail,
+			calculation_name=calculation_name
+		)
+		
+		return [ur.used_row for ur in used_rows]
+	
+	def get_calculation_used_fields(self, calculation_name):
+		"""Get all fields that were accessed during a specific calculation"""
+		if not self.trail:
+			return []
+		
+		used_fields = CalculationUsedField.objects.filter(
+			trail=self.trail,
+			calculation_name=calculation_name
+		)
+		
+		return [uf.used_field for uf in used_fields]
+	
+	def _track_object_relationships(self, tracked_row, business_object):
+		"""Track object relationships via DerivedRowSourceReference based on common relationship attributes"""
+		try:
+			if not isinstance(tracked_row, DerivedTableRow):
+				return
+			
+			print(f"Tracking object relationships for {type(business_object).__name__}")
+			
+			# Common relationship attributes to check
+			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT','source_row', 'parent_row']
+			
+			for attr_name in relationship_attrs:
+				if hasattr(business_object, attr_name):
+					source_obj = getattr(business_object, attr_name)
+					if source_obj:
+						# Try to find the corresponding DerivedTableRow for the source object
+						source_row = self._find_derived_row_for_object(source_obj)
+						if source_row:
+							# Create DerivedRowSourceReference
+							existing_ref = DerivedRowSourceReference.objects.filter(
+								derived_row_id=tracked_row.id,
+								content_type=ContentType.objects.get_for_model(DerivedTableRow),
+								object_id=source_row.id
+							).exists()
+							
+							if not existing_ref:
+								DerivedRowSourceReference.objects.create(
+									derived_row=tracked_row,
+									content_type=ContentType.objects.get_for_model(DerivedTableRow),
+									object_id=source_row.id
+								)
+								print(f"Created relationship: {tracked_row.populated_table.table.name} row {tracked_row.id} <- {source_row.populated_table.table.name} row {source_row.id} via {attr_name}")
+			
+			# Also check class name-based relationships (e.g. F_05_01_REF_FINREP_3_0_UnionItem -> Other_loans)
+			obj_class_name = type(business_object).__name__
+			if '_' in obj_class_name:
+				parts = obj_class_name.split('_')
+				# Look for potential source class names in the parts
+				for i in range(len(parts)):
+					potential_source_class = '_'.join(parts[i:])
+					if potential_source_class != obj_class_name:
+						# Try to find objects of this source class
+						source_obj = self._find_object_by_class_suffix(business_object, potential_source_class)
+						if source_obj:
+							source_row = self._find_derived_row_for_object(source_obj)
+							if source_row:
+								existing_ref = DerivedRowSourceReference.objects.filter(
+									derived_row_id=tracked_row.id,
+									content_type=ContentType.objects.get_for_model(DerivedTableRow),
+									object_id=source_row.id
+								).exists()
+								
+								if not existing_ref:
+									DerivedRowSourceReference.objects.create(
+										derived_row=tracked_row,
+										content_type=ContentType.objects.get_for_model(DerivedTableRow),
+										object_id=source_row.id
+									)
+									print(f"Created class-based relationship: {tracked_row.populated_table.table.name} <- {source_row.populated_table.table.name} via class hierarchy")
+		
+		except Exception as e:
+			print(f"Error tracking object relationships: {e}")
+	
+	def _find_derived_row_for_object(self, obj):
+		"""Find the DerivedTableRow that corresponds to a business object"""
+		try:
+			obj_class_name = type(obj).__name__
+			object_identifier = f"{obj_class_name}_{id(obj)}"
+			
+			# Look in current populated tables for matching row
+			for table_name, populated_table in self.current_populated_tables.items():
+				if hasattr(populated_table, 'derivedtablerow_set'):
+					matching_rows = populated_table.derivedtablerow_set.filter(
+						row_identifier=object_identifier
+					)
+					if matching_rows.exists():
+						return matching_rows.first()
+			
+			return None
+		except Exception as e:
+			print(f"Error finding derived row for object: {e}")
+			return None
+	
+	def _find_object_by_class_suffix(self, business_object, suffix):
+		"""Find a related object by class name suffix"""
+		try:
+			# This is a heuristic approach - look for attributes that might contain objects of the target class
+			for attr_name in dir(business_object):
+				if not attr_name.startswith('_') and not callable(getattr(business_object, attr_name, None)):
+					attr_value = getattr(business_object, attr_name)
+					if attr_value and hasattr(attr_value, '__class__'):
+						if type(attr_value).__name__.endswith(suffix):
+							return attr_value
+			return None
+		except Exception as e:
+			print(f"Error finding object by class suffix: {e}")
+			return None
+
+	def _track_transitive_used_objects(self, calculation_name, business_object):
+		"""Track objects that are transitively referenced by the current object as also being used"""
+		try:
+			print(f"Tracking transitive used objects for {type(business_object).__name__}")
+			
+			# Common relationship attributes that point to other business objects
+			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT', 'source_row', 'parent_row']
+			
+			for attr_name in relationship_attrs:
+				if hasattr(business_object, attr_name):
+					referenced_obj = getattr(business_object, attr_name)
+					if referenced_obj and hasattr(referenced_obj, '__class__'):
+						# This object is transitively used - track it as used as well
+						print(f"Found transitive reference: {type(business_object).__name__}.{attr_name} -> {type(referenced_obj).__name__}")
+						
+						# Recursively track this object as used (this will create its DerivedTableRow if needed)
+						self.track_calculation_used_row(calculation_name, referenced_obj)
+						
+		except Exception as e:
+			print(f"Error tracking transitive used objects: {e}")
+
+	def _track_column_value_for_django_field(self, db_row, field_name, field_value, table):
+		"""Helper method to track column values for Django model fields"""
+		try:
+			# Find or create the DatabaseField
+			fields = table.database_fields.filter(name=field_name)
+			
+			if not fields.exists():
+				field = DatabaseField.objects.create(
+					name=field_name,
+					table=table
+				)
+			else:
+				field = fields.first()
+			
+			# Create DatabaseColumnValue
+			numeric_value = None
+			string_value = None
+			
+			if field_value is not None:
+				try:
+					numeric_value = float(field_value)
+				except (ValueError, TypeError):
+					string_value = str(field_value)
+			
+			DatabaseColumnValue.objects.create(
+				value=numeric_value,
+				string_value=string_value,
+				column=field,
+				row=db_row
+			)
+			
+		except Exception as e:
+			print(f"Error tracking Django field {field_name}: {e}")
+
 	def _find_source_value_object(self, source_value):
 		"""Find the DatabaseColumnValue object for a given source value"""
 		try:
 			# Look for DatabaseColumnValue with matching value
-			source_row_id = self.current_rows.get('source')
+			source_row_id = self.current_rows.get('source') if hasattr(self, 'current_rows') and self.current_rows else None
 			if source_row_id:
 				source_row = DatabaseRow.objects.get(id=source_row_id)
 				column_values = source_row.column_values.filter(value=str(source_value))
 				if column_values.exists():
 					return column_values.first()
-			
-			# Fallback: look across all current rows
-			for table_name, populated_table in self.current_populated_tables.items():
-				if hasattr(populated_table, 'databaserow_set'):
-					for row in populated_table.databaserow_set.all():
-						column_values = row.column_values.filter(value=str(source_value))
-						if column_values.exists():
-							return column_values.first()
-			
+
+			# Fallback: look across all current rows for derived table rows (most common case for polymorphic functions)
+			if hasattr(self, 'current_populated_tables'):
+				for table_name, populated_table in self.current_populated_tables.items():
+					# Check DerivedTableRow objects instead of DatabaseRow for business objects
+					if hasattr(populated_table, 'derivedtablerow_set'):
+						for row in populated_table.derivedtablerow_set.all():
+							# Look for matching values in EvaluatedFunction records
+							evaluated_funcs = row.evaluatedfunction_set.filter(
+								string_value=str(source_value)
+							)
+							if evaluated_funcs.exists():
+								# Return a dummy object that represents the source
+								return evaluated_funcs.first()
+					
+					# Also check traditional DatabaseRow objects		
+					if hasattr(populated_table, 'databaserow_set'):
+						for row in populated_table.databaserow_set.all():
+							column_values = row.column_values.filter(value=str(source_value))
+							if column_values.exists():
+								return column_values.first()
+
 		except Exception as e:
-			print(f"Error finding source value object: {e}")
-		
+			# Make this a debug message instead of error to reduce noise
+			print(f"Debug: Could not find source value object for '{source_value}': {e}")
+
 		return None
-	
-	def track_data_processing(self, table_name, data_items):
+
+	def track_data_processing(self, table_name, data_items, django_model_objects=None):
 		"""Track processing of data items in a table"""
 		if not self.lineage_enabled or not self.trail or not self.metadata_trail:
 			return
+		
+		# Also track that these rows and tables are being used in calculations
+		current_calculation = getattr(self, 'current_calculation', None)
+		print(f"🔗 track_data_processing: table={table_name}, items={len(data_items)}, django_objects={len(django_model_objects) if django_model_objects else 0}, current_calculation={current_calculation}")
+		# CRITICAL FIX: Do NOT auto-track all processed items here.
+		# Rows should only be marked as used when they pass a cell's calc_referenced_items filter
+		# or are explicitly tracked by targeted logic (e.g., wrapper or explicit calls).
+		# This prevents unrelated rows (e.g., Advances_that_are_not_loans) from appearing as used.
 		
 		try:
 			# Ensure we have a populated table for this table name
 			if table_name not in self.current_populated_tables:
 				# Determine if this is a Django model or a derived table
 				is_django_model = self._is_django_model(table_name)
-				
+
 				# Check for existing PopulatedDataBaseTable/EvaluatedDerivedTable first
 				populated_table = None
 				temp_table = None
 				table_exists = False
-				
+
 				if is_django_model:
 					# Look for existing DatabaseTable with same name in this trail
 					existing_populated = PopulatedDataBaseTable.objects.filter(
@@ -1362,7 +2004,7 @@ class OrchestrationWithLineage:
 						populated_table = existing_evaluated
 						table_exists = True
 						print(f"Found existing DerivedTable for: {table_name}")
-				
+
 				# Create new table only if not found
 				if not temp_table:
 					if is_django_model:
@@ -1371,7 +2013,7 @@ class OrchestrationWithLineage:
 					else:
 						temp_table = DerivedTable.objects.create(name=table_name)
 						table_type = 'DerivedTable'
-					
+
 					if self.metadata_trail:
 						AortaTableReference.objects.create(
 							metadata_trail=self.metadata_trail,
@@ -1380,7 +2022,7 @@ class OrchestrationWithLineage:
 						)
 					else:
 						print(f"Warning: No metadata_trail available for tracking table {table_name}")
-				
+
 				# Create populated table only if not found
 				if self.trail and not populated_table:
 					if is_django_model:
@@ -1397,11 +2039,11 @@ class OrchestrationWithLineage:
 					print(f"Warning: No trail available for PopulatedDataBaseTable {table_name}")
 					return
 				self.current_populated_tables[table_name] = populated_table
-			
+
 			# Track each data item as a row
 			for i, item in enumerate(data_items):
 				row_id = f"{table_name}_row_{i}"
-				
+
 				# Extract data from the item
 				if isinstance(item, dict):
 					# Item is already a dictionary
@@ -1412,36 +2054,36 @@ class OrchestrationWithLineage:
 						if not attr.startswith('_') and not callable(getattr(item, attr)):
 							try:
 								value = getattr(item, attr)
-								if callable(value):
-									value = value()
-								row_data[attr] = value
+								# Only include non-callable attributes to avoid unwanted method evaluations
+								if not callable(value):
+									row_data[attr] = value
 							except:
 								pass
 				else:
 					row_data = {'value': str(item)}
-				
+
 				# Track the row
 				self.track_row_processing(table_name, row_data, row_id)
-			
+
 			# print(f"Tracked data processing for {table_name}: {len(data_items)} items")
-			
+
 		except Exception as e:
 			print(f"Error tracking data processing: {e}")
-	
+
 	def get_lineage_trail(self):
 		"""Get the current lineage trail"""
 		return self.trail
-	
+
 	def export_lineage_graph(self, trail_id=None):
 		"""Export lineage as a graph structure for visualization"""
 		if trail_id:
 			trail = Trail.objects.get(id=trail_id)
 		else:
 			trail = self.trail
-		
+
 		if not trail:
 			return None
-		
+
 		# Build graph structure
 		graph = {
 			'nodes': [],
@@ -1452,7 +2094,7 @@ class OrchestrationWithLineage:
 				'created_at': trail.created_at.isoformat()
 			}
 		}
-		
+
 		# Add table nodes
 		for table_ref in trail.metadata_trail.table_references.all():
 			if table_ref.table_content_type == 'DatabaseTable':
@@ -1469,9 +2111,9 @@ class OrchestrationWithLineage:
 					'type': 'DerivedTable',
 					'name': table.name
 				})
-		
+
 		# TODO: Add edges based on function references and data flow
-		
+
 		return graph
 
 
@@ -1479,7 +2121,7 @@ class OrchestrationWithLineage:
 class OrchestrationOriginal:
 	# Class variable to track initialized objects
 	_initialized_objects = set()
-	
+
 	def init(self,theObject):
 		# Check if this object has already been initialized
 		object_id = id(theObject)
@@ -1488,10 +2130,10 @@ class OrchestrationOriginal:
 			# Even if we're skipping full initialization, we still need to ensure references are set
 			self._ensure_references_set(theObject)
 			return
-		
+
 		# Mark this object as initialized
 		OrchestrationOriginal._initialized_objects.add(object_id)
-		
+
 		# Set up references for the object
 		self._ensure_references_set(theObject)
 
@@ -1520,14 +2162,14 @@ class OrchestrationOriginal:
 						print("newObject: " + str(newObject))
 						if newObject:
 							setattr(theObject,eReference,newObject)
-							CSVConverter.persist_object_as_csv(newObject,True);						
-						
+							CSVConverter.persist_object_as_csv(newObject,True);
+
 					else:
 						newObject = OrchestrationOriginal.createObjectFromReferenceType(eReference);
-						
+
 						operations = [method for method in dir(newObject.__class__) if callable(
 							getattr(newObject.__class__, method)) and not method.startswith('__')]
-						
+
 						for operation in operations:
 							if operation == "init":
 								try:
@@ -1545,15 +2187,15 @@ class OrchestrationOriginal:
 		"""
 		cls._initialized_objects.clear()
 		print("Initialization tracking has been reset.")
-		
+
 	@classmethod
 	def is_initialized(cls, obj):
 		"""
 		Check if an object has been initialized.
-		
+
 		Args:
 			obj: The object to check
-			
+
 		Returns:
 			bool: True if the object has been initialized, False otherwise
 		"""
@@ -1563,8 +2205,8 @@ class OrchestrationOriginal:
 	def createObjectFromReferenceType(eReference):
 		try:
 			cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
-			new_object = cls()		
-			return new_object;	
+			new_object = cls()
+			return new_object;
 		except:
 			print("Error: " + eReference)
 
@@ -1576,7 +2218,7 @@ def create_orchestration():
 	based on the context configuration.
 	"""
 	from pybirdai.context.context import Context
-	
+
 	if hasattr(Context, 'enable_lineage_tracking') and Context.enable_lineage_tracking:
 		print("Using lineage-enhanced orchestrator")
 		return OrchestrationWithLineage()
@@ -1592,10 +2234,3 @@ def Orchestration():
 	This maintains backwards compatibility while allowing version selection.
 	"""
 	return create_orchestration()
-		
-		
-
-
-
-
-

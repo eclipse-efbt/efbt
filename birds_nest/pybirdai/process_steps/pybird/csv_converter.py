@@ -65,8 +65,9 @@ class CSVConverter:
 			print(f"newObject: {object_list}")
 			django_model = True
 			
-			# Track Django model access through orchestration
-			CSVConverter._track_django_model_access(table_name, object_list)
+			# Note: Removed broad Django model access tracking as it pollutes lineage with unused fields
+			# Lineage is now tracked through improved @lineage decorators on actual calculations
+			# CSVConverter._track_django_model_access(table_name, object_list)
 		else:
 			object_list = CSVConverter.get_contained_objects(theObject)
 
@@ -139,29 +140,13 @@ class CSVConverter:
 								referencedItemString = "None"
 							csvString = csvString + "," + str(referencedItemString)
 		else:
-			operations = [method for method in dir(theObject.__class__) if callable(
-							getattr(theObject.__class__, method)) and not method.startswith('__')]
-			for eOperation in operations:
-				if (firstItem):
-					try:
-						result = getattr(theObject, eOperation)()
-						resultString = None
-						if result:
-							resultString = str(result)
-							csvString = csvString + resultString
-							firstItem = False
-					except:
-						print("Error getting operation result for " + eOperation)
-				else:
-					try:
-						result = getattr(theObject, eOperation)()
-						resultString = None
-						if(result):
-							resultString = str(result)
-							csvString = csvString + "," + resultString
-							firstItem = False
-					except:
-						print("Error getting operation result for " + eOperation)
+			# Don't automatically call all methods - this causes unwanted function evaluations
+			# Instead, just serialize the object representation
+			if (firstItem):
+				csvString = csvString + str(theObject)
+				firstItem = False
+			else:
+				csvString = csvString + "," + str(theObject)
 
 		return csvString + "\n"
 
@@ -292,6 +277,7 @@ class CSVConverter:
 				if queryset.exists():
 					# Convert QuerySet to list of dictionaries for tracking
 					data_items = []
+					django_model_objects = []  # Keep track of original Django model objects
 					for obj in queryset:
 						row_data = {}
 						# Get model fields to extract data
@@ -304,11 +290,13 @@ class CSVConverter:
 								pass
 						if row_data:
 							data_items.append(row_data)
+							django_model_objects.append(obj)  # Store the original Django object
 					
 					# Track the data processing - use the original table name, not "_data" suffix
 					# This ensures Django model data is associated with PopulatedDataBaseTable, not EvaluatedDerivedTable
 					if data_items:
-						orchestration.track_data_processing(table_name, data_items)
+						# Pass both the dictionaries (for CSV) and Django objects (for tracking)
+						orchestration.track_data_processing(table_name, data_items, django_model_objects)
 			else:
 				# Original orchestrator - no lineage tracking
 				pass

@@ -342,7 +342,7 @@ def main():
 
     # print(f"Extracted {len(lineage_classes)} classes with lineage properties")
     print("Output written to derived_field_configuration.py")
-    model_file_path = f"pybirdai{os.sep}bird_data_model.py"
+    model_file_path = f"pybirdai{os.sep}models{os.sep}bird_data_model.py"
     derived_fields_file_path = (
         f"resources{os.sep}derivation_files{os.sep}derived_field_configuration.py"
     )

@@ -25,7 +25,7 @@ class CreateExecutableFilters:
         self._node_cache = {}
         self._member_list_cache = {}
         self._literal_list_cache = {}
-    
+
     def is_member_a_node(self, sdd_context, member):
         # Keep the member node caching
         if member not in self._node_cache:
@@ -36,14 +36,14 @@ class CreateExecutableFilters:
         CreateExecutableFilters.delete_generated_python_filter_files(self, context)
         CreateExecutableFilters.delete_generated_html_filter_files(self, context)
         CreateExecutableFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
-        
+
         # Initialize AORTA tracking
         orchestration = Orchestration()
         if hasattr(context, 'enable_lineage_tracking') and context.enable_lineage_tracking:
             orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             print("AORTA lineage tracking enabled for filter generation")
-        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep +  'report_cells.py', "a",  encoding='utf-8') 
-        report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  'report_templates.html', "a",  encoding='utf-8') 
+        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep +  'report_cells.py', "a",  encoding='utf-8')
+        report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  'report_templates.html', "a",  encoding='utf-8')
         report_html_file.write("{% extends 'base.html' %}\n")
         report_html_file.write("{% block content %}\n")
         report_html_file.write("<!DOCTYPE html>\n")
@@ -53,22 +53,22 @@ class CreateExecutableFilters:
         report_html_file.write("</head>\n")
         report_html_file.write("<body>\n")
         report_html_file.write("<h1>Report Templates</h1>\n")
-        report_html_file.write("<table border=\"1\">\n") 
+        report_html_file.write("<table border=\"1\">\n")
         report_html_file.write("<a href=\"{% url 'pybirdai:step_by_step_mode'%}\">Back to the PyBIRD AI Home Page</a>\n")
 
-        file.write("from pybirdai.bird_data_model import *\n")
+        file.write("from pybirdai.models.bird_data_model import *\n")
         file.write("from .output_tables import *\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         file.write("from pybirdai.annotations.decorators import lineage\n")
 
         # create a copy of combination_to_rol_cube_map which is ordered by cube_id
-        cube_ids = sorted(sdd_context.combination_to_rol_cube_map.keys())   
+        cube_ids = sorted(sdd_context.combination_to_rol_cube_map.keys())
         for cube_id in cube_ids:
             combination_list = sdd_context.combination_to_rol_cube_map[cube_id]
-            
-            report_html_file.write("<tr><td><a href=\"{% url 'pybirdai:show_report' '" + cube_id +'.html' + "'%}\">" +cube_id + "</a></td></tr>\n")   
-            filter_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  cube_id +'.html', "a",  encoding='utf-8') 
-            
+
+            report_html_file.write("<tr><td><a href=\"{% url 'pybirdai:show_report' '" + cube_id +'.html' + "'%}\">" +cube_id + "</a></td></tr>\n")
+            filter_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  cube_id +'.html', "a",  encoding='utf-8')
+
             filter_html_file.write("{% extends 'base.html' %}\n")
             filter_html_file.write("{% block content %}\n")
             filter_html_file.write("<!DOCTYPE html>\n")
@@ -80,48 +80,68 @@ class CreateExecutableFilters:
             filter_html_file.write("<h1>" + cube_id + "</h1>\n")
             filter_html_file.write("<table border=\"1\">\n")
             filter_html_file.write("<a href=\"{% url 'pybirdai:report_templates'%}\">Back to the PyBIRD Reports Templates Page</a>\n")
-            
+
 
             for combination in combination_list:
                 if combination.combination_id.metric:
                     filter_html_file.write("<tr><td><a href=\"{% url 'pybirdai:execute_data_point' '" + combination.combination_id.combination_id + "'%}\">" + cube_id + "_" + combination.combination_id.combination_id + "</a></td></tr>\n")
-                    
-                    
+
+
                     file.write("class Cell_" + combination.combination_id.combination_id + ":\n")
                     file.write("\t" + cube_id + "_Table = None\n")
                     file.write("\t" + cube_id + "s = []\n")
-                    file.write("\t@lineage(dependencies={\"" + cube_id + "s\"})\n")
+                    file.write("\t@lineage(dependencies={\"" + cube_id + "." +combination.combination_id.metric.name + "\"})\n")
                     file.write("\tdef metric_value(self):\n"  )
                     file.write("\t\ttotal = 0\n")
                     file.write("\t\tfor item in self." + cube_id + "s:\n")
                     file.write("\t\t\ttotal += item." + combination.combination_id.metric.name + "()\n")
                     file.write("\t\treturn total\n")
-                    file.write("\tdef calc_referenced_items(self):\n")
-                    file.write("\t\titems = self." + cube_id + "_Table." + cube_id + "s\n")
-                    file.write("\t\tfor item in items:\n")
-                    file.write("\t\t\tfilter_passed = True\n")
+                    calc_string = ''
+                    calc_lineage_string = '\t@lineage(dependencies={'
+                    calc_string +="\tdef calc_referenced_items(self):\n"
+                    calc_string +="\t\titems = self." + cube_id + "_Table." + cube_id + "s\n"
+                    calc_string +="\t\tfor item in items:\n"
+                    calc_string +="\t\t\tfilter_passed = True\n"
                     combination_item_list = []
                     try:
                         combination_item_list =  sdd_context.combination_item_dictionary[combination.combination_id.combination_id]
                     except:
                         pass
+                    item_counter = 0
                     for combination_item in combination_item_list:
                         leaf_node_members = CreateExecutableFilters.get_leaf_node_codes(self,
                                                                                       sdd_context,
                                                                                       combination_item.member_id,
                                                                                       combination_item.member_hierarchy)
-                        
+    
                         if len(leaf_node_members) > 0:
-                            file.write("\t\t\tif ")
-                            for leaf_node_member in leaf_node_members:
-                                file.write("\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n")
-                            file.write("\t\t\t\tFalse:\n")
-                            file.write("\t\t\t\tpass\n")
-                            file.write("\t\t\telse:\n")
-                            file.write("\t\t\t\tfilter_passed = False\n")
+                            if (len(leaf_node_members) == 1) and (str(leaf_node_members[0].code) == '0'):
+                                pass
+                            else:
+                                calc_string +="\t\t\tif "
+                                for leaf_node_member in leaf_node_members:
+                                    calc_string += "\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n"
+                                calc_string += "\t\t\t\tFalse:\n"
+                                calc_string += "\t\t\t\tpass\n"
+                                calc_string += "\t\t\telse:\n"
+                                calc_string += "\t\t\t\tfilter_passed = False\n"
+                                if item_counter > 0:
+                                    calc_lineage_string += ','
+                                    calc_lineage_string += '\n\t\t\t'
+                                calc_lineage_string += '"'
+                                calc_lineage_string += cube_id 
+                                calc_lineage_string += '.'
+                                calc_lineage_string += combination_item.variable_id.name 
+                                calc_lineage_string += '"'
+                            
+                                item_counter += 1
                         else:
                             print("No leaf node members for " + combination_item.variable_id.name +":" + combination_item.member_id.member_id)
-                        
+
+                    calc_lineage_string += '})\n'
+
+                    file.write(calc_lineage_string)
+                    file.write(calc_string + '\n')
                     file.write("\t\t\tif filter_passed:\n")
                     file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
                     file.write("\tdef init(self):\n")
@@ -129,8 +149,8 @@ class CreateExecutableFilters:
                     file.write("\t\tself." + cube_id + "s = []\n")
                     file.write("\t\tself.calc_referenced_items()\n")
                     file.write("\t\treturn None\n")
-            
-            
+
+
             filter_html_file.write("</table>\n")
             filter_html_file.write("</body>\n")
             filter_html_file.write("</html>\n")
@@ -161,14 +181,14 @@ class CreateExecutableFilters:
 
         return_list = []
         is_node = self.is_member_a_node(sdd_context, member)
-        
+
         if literal is None:
             if not is_node:
                 warning_list.append(("error", "member does not exist in input layer and is not a node", template_code, combination_id, variable_id, member.member_id, None, domain_id))
         else:
             if not is_node:
                 return_list = [literal]
-            
+
         for domain, hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
             if domain.domain_id == domain_id:
                 for hierarchy in hierarchy_list:
@@ -176,10 +196,10 @@ class CreateExecutableFilters:
                     literal_list = []
                     self.get_literal_list_considering_hierarchy(context, sdd_context, member, hierarchy_id, literal_list, framework, cube_type, input_cube_type)
                     return_list.extend(literal_list)
-                    
+
         if len(return_list) == 0:
             warning_list.append(("error", "could not find any input layer members or sub members for member", template_code, combination_id, variable_id, member.member_id, None, domain_id))
-        
+
         self._literal_list_cache[cache_key] = return_list
         return return_list.copy()
 
@@ -199,13 +219,13 @@ class CreateExecutableFilters:
                         is_node = CreateExecutableFilters.is_member_a_node(self,sdd_context,literal)
                         if not (is_node):
                             literal_list.append(literal)
-                    
+
             for item in child_members:
                 CreateExecutableFilters.get_literal_list_considering_hierarchy(self,context,sdd_context,item,hierarchy, literal_list,framework,cube_type,input_cube_type)
         except KeyError:
             pass
-        
-            
+
+
     def find_member_node(self,sdd_context,member_id,hierarchy):
         try:
             return sdd_context.member_hierarchy_node_dictionary[hierarchy + ":" + member_id.member_id]
@@ -217,19 +237,19 @@ class CreateExecutableFilters:
         sdd_context.members_that_are_nodes = set()
         sdd_context.member_plus_hierarchy_to_child_literals = {}
         sdd_context.domain_to_hierarchy_dictionary = {}
-        
+
         # Pre-process hierarchy nodes
         for node in sdd_context.member_hierarchy_node_dictionary.values():
             if node.parent_member_id and node.parent_member_id != '':
                 sdd_context.members_that_are_nodes.add(node.parent_member_id)
                 member_plus_hierarchy = f"{node.parent_member_id.member_id}:{node.member_hierarchy_id.member_hierarchy_id}"
-                
+
                 if member_plus_hierarchy not in sdd_context.member_plus_hierarchy_to_child_literals:
                     sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy] = [node.member_id]
                 else:
                     if node.member_id not in sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy]:
                         sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy].append(node.member_id)
-        
+
         # Build domain hierarchy mapping
         for hierarchy in sdd_context.member_hierarchy_dictionary.values():
             domain_id = hierarchy.domain_id
@@ -245,14 +265,14 @@ class CreateExecutableFilters:
 
         return_list = []
         is_node = self.is_member_a_node(sdd_context, member)
-        
+
         if member is None:
             self._member_list_cache[cache_key] = []
             return []
-            
+
         if not is_node:
             return_list.append(member)
-            
+
         if member:
             for domain, hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
                 if domain.domain_id == member.domain_id.domain_id:
@@ -263,7 +283,7 @@ class CreateExecutableFilters:
                         for item in temp_list:
                             if item not in return_list:  # Keep original duplicate checking
                                 return_list.append(item)
-        
+
         self._member_list_cache[cache_key] = return_list
         return return_list.copy()  # Return a copy to prevent modifications
 
@@ -290,4 +310,3 @@ class CreateExecutableFilters:
         html_dir = os.path.join(base_dir, 'results', 'generated_html')
         for file in os.listdir(html_dir):
             os.remove(os.path.join(html_dir, file))
-

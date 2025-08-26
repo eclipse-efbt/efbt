@@ -13,19 +13,22 @@
 import os
 import csv
 from django.conf import settings
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from pathlib import Path
-
+from django.db import connection, transaction
+import subprocess
+import platform
 
 class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for importing SDD csv files into an instance of the analysis model
     '''
-    def import_report_templates_from_sdd(self, sdd_context):
+    def import_report_templates_from_sdd(self, sdd_context, dpm:bool=False):
         '''
         Import SDD csv files into an instance of the analysis model
         '''
+
         ImportWebsiteToSDDModel.create_maintenance_agencies(self, sdd_context)
         ImportWebsiteToSDDModel.create_frameworks(self, sdd_context)
         ImportWebsiteToSDDModel.create_all_domains(self, sdd_context,False)
@@ -33,12 +36,17 @@ class ImportWebsiteToSDDModel(object):
         ImportWebsiteToSDDModel.create_all_variables(self, sdd_context,False)
 
         ImportWebsiteToSDDModel.create_report_tables(self, sdd_context)
-        ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
         ImportWebsiteToSDDModel.create_axis(self, sdd_context)
         ImportWebsiteToSDDModel.create_axis_ordinates(self, sdd_context)
-        ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
-        ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
+        if dpm:
+            ImportWebsiteToSDDModel.create_table_cells_csv_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_ordinate_items_csv_copy(self, sdd_context)
+            ImportWebsiteToSDDModel.create_cell_positions_csv_copy(self, sdd_context)
+        else:
+            ImportWebsiteToSDDModel.create_table_cells(self, sdd_context)
+            ImportWebsiteToSDDModel.create_ordinate_items(self, sdd_context)
+            ImportWebsiteToSDDModel.create_cell_positions(self, sdd_context)
 
 
 
@@ -156,11 +164,11 @@ class ImportWebsiteToSDDModel(object):
 
                     if include:
                         domain = DOMAIN(name=ImportWebsiteToSDDModel.replace_dots(self, domain_id))
-                        if ref:
-                            maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"SDD_DOMAIN")
+                        if maintenence_agency == "":
+                            maintenence_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,"SDD_DOMAIN")
                         else:
-                            maintenance_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
-                        domain.maintenance_agency_id = maintenance_agency
+                            maintenence_agency = ImportWebsiteToSDDModel.find_maintenance_agency_with_id(self,context,maintenence_agency)
+                        domain.maintenance_agency_id = maintenence_agency
                         domain.code = code
                         domain.description = description
                         domain.domain_id = ImportWebsiteToSDDModel.replace_dots(self, domain_id)
@@ -288,23 +296,29 @@ class ImportWebsiteToSDDModel(object):
         hierarchy_cache = {}
 
         with open(f"{context.file_directory}/technical_export/member_hierarchy_node.csv", encoding='utf-8') as csvfile:
-            next(csvfile)  # Skip header more efficiently
+            header_skipped = False
+            id_increment = 0
             for row in csv.reader(csvfile):
-                parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id]
-                member_id = row[ColumnIndexes().member_hierarchy_node_member_id]
-                hierarchy_id = row[ColumnIndexes().member_hierarchy_node_hierarchy_id]
+                if not header_skipped:
+                    header_skipped = True
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                        id_increment = 1
+                else:
+                    parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id + id_increment]
+                    member_id = row[ColumnIndexes().member_hierarchy_node_member_id + id_increment]
+                    hierarchy_id = row[ColumnIndexes().member_hierarchy_node_hierarchy_id + id_increment]
 
-                if not parent_member_id:
-                    continue
+                    if not parent_member_id:
+                        continue
 
-                if hierarchy_id not in hierarchy_cache:
-                    hierarchy_cache[hierarchy_id] = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
+                    if hierarchy_id not in hierarchy_cache:
+                        hierarchy_cache[hierarchy_id] = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
 
-                hierarchy = hierarchy_cache[hierarchy_id]
-                if hierarchy:
-                    domain = hierarchy.domain_id
-                    parent_members_child_triples.append((parent_member_id,member_id,domain))
-                    parent_members.add(parent_member_id)
+                    hierarchy = hierarchy_cache[hierarchy_id]
+                    if hierarchy:
+                        domain = hierarchy.domain_id
+                        parent_members_child_triples.append((parent_member_id,member_id,domain))
+                        parent_members.add(parent_member_id)
 
         # Process parent-child relationships in batches
         for parent_member_id, member_id, domain in parent_members_child_triples:
@@ -432,18 +446,21 @@ class ImportWebsiteToSDDModel(object):
 
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            id_increment = 0
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                        id_increment = 1
                 else:
-                    hierarchy_id = row[ColumnIndexes().member_hierarchy_node_hierarchy_id]
-                    member_id = row[ColumnIndexes().member_hierarchy_node_member_id]
-                    parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id]
-                    node_level = row[ColumnIndexes().member_hierarchy_node_level]
-                    comparator = row[ColumnIndexes().member_hierarchy_node_comparator]
-                    operator = row[ColumnIndexes().member_hierarchy_node_operator]
-                    valid_from = row[ColumnIndexes().member_hierarchy_node_valid_from]
-                    valid_to = row[ColumnIndexes().member_hierarchy_node_valid_to]
+                    hierarchy_id = row[ColumnIndexes().member_hierarchy_node_hierarchy_id + id_increment]
+                    member_id = row[ColumnIndexes().member_hierarchy_node_member_id + id_increment]
+                    parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id + id_increment]
+                    node_level = row[ColumnIndexes().member_hierarchy_node_level + id_increment]
+                    comparator = row[ColumnIndexes().member_hierarchy_node_comparator + id_increment]
+                    operator = row[ColumnIndexes().member_hierarchy_node_operator + id_increment]
+                    valid_from = row[ColumnIndexes().member_hierarchy_node_valid_from + id_increment]
+                    valid_to = row[ColumnIndexes().member_hierarchy_node_valid_to + id_increment]
 
                     hierarchy = ImportWebsiteToSDDModel.find_member_hierarchy_with_id(self,hierarchy_id,context)
                     if hierarchy is None:
@@ -597,6 +614,139 @@ class ImportWebsiteToSDDModel(object):
         if context.save_sdd_to_db and ordinates_to_create:
             AXIS_ORDINATE.objects.bulk_create(ordinates_to_create, batch_size=1000,ignore_conflicts=True)
 
+    def _create_instances_from_csv_copy(self, context, cls):
+        sdd_table_name = cls.__name__.lower()
+        table_name = f"pybirdai_{sdd_table_name}"
+
+        csv_file = context.file_directory + os.sep + "technical_export" + os.sep + f"{sdd_table_name}.csv"
+        csv_file = Path(csv_file).absolute()
+        delimiter = ","
+
+        # Check if CSV file exists
+        if not csv_file.exists():
+            raise FileNotFoundError(f"CSV file not found: {csv_file}")
+
+        try:
+
+            with connection.cursor() as cursor:
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 0;")
+                    cursor.execute(f"DELETE FROM {table_name};")
+                    cursor.execute("PRAGMA foreign_keys = 1;")
+                elif connection.vendor == 'postgresql':
+                    cursor.execute(f"TRUNCATE TABLE {table_name} CASCADE;")
+                elif connection.vendor in ['microsoft', 'mssql']:
+                    cursor.execute(f"TRUNCATE TABLE {table_name};")
+                else:
+                    cursor.execute(f"DELETE FROM {table_name};")
+
+            # Import CSV data based on database vendor
+            if connection.vendor == 'sqlite':
+                # SQLite needs to be handled outside transaction for subprocess
+                # Get database file path
+                db_file = Path(connection.settings_dict['NAME']).absolute()
+
+                # Create the SQLite commands
+                commands = [
+                    ".mode csv",
+                    f".separator '{delimiter}'",
+                    f".import --skip 1 '{csv_file}' {table_name}"
+                ]
+
+                # Join commands with newlines
+                sqlite_script = '\n'.join(commands)
+
+                sqlite_program = "sqlite3"
+                if platform.system() == 'Windows':
+                    sqlite_program += ".exe"
+
+                result = subprocess.run(
+                        [sqlite_program, str(db_file)],
+                        input=sqlite_script,
+                        text=True,
+                        capture_output=True,
+                        check=True
+                    )
+                if result.stderr:
+                    raise Exception(f"SQLite import error: {result.stderr}")
+                return result
+
+            elif connection.vendor == 'postgresql':
+                # PostgreSQL COPY command
+                with connection.cursor() as cursor:
+                    with open(csv_file, 'r', encoding='utf-8') as f:
+                        # Skip header line
+                        next(f)
+                        # Use COPY FROM STDIN
+                        cursor.copy_expert(
+                            f"COPY {table_name} FROM STDIN WITH (FORMAT CSV, DELIMITER '{delimiter}')",
+                            f
+                        )
+                return None
+
+            elif connection.vendor in ['microsoft', 'mssql']:
+                # MSSQL bulk insert - requires special handling
+                # Note: BULK INSERT requires the file to be accessible by SQL Server
+                with connection.cursor() as cursor:
+                    # Try using BULK INSERT if file is accessible
+                    try:
+                        cursor.execute(f"""
+                            BULK INSERT {table_name}
+                            FROM '{csv_file}'
+                            WITH (
+                                FORMAT = 'CSV',
+                                FIRSTROW = 2,
+                                FIELDTERMINATOR = '{delimiter}',
+                                ROWTERMINATOR = '\\n'
+                            )
+                        """)
+                    except Exception as e:
+                        # Fallback to row-by-row insert if BULK INSERT fails
+                        print(f"BULK INSERT failed: {e}. Falling back to row-by-row insert.")
+                        self._fallback_csv_import(csv_file, table_name, delimiter)
+                return None
+
+            else:
+                # Fallback for other databases
+                print(f"Database vendor '{connection.vendor}' not explicitly supported. Using fallback method.")
+                self._fallback_csv_import(csv_file, table_name, delimiter)
+                return None
+
+        except Exception as e:
+            print(f"Error importing CSV for {table_name}: {str(e)}")
+            raise
+
+    def _fallback_csv_import(self, context, cls):
+        '''
+        Fallback method for CSV import using raw SQL inserts
+        This method is database-agnostic and works with any database backend
+        '''
+        import csv
+
+        fallback_import_func = {
+            TABLE_CELL: self.create_table_cells,
+            ORDINATE_ITEM: self.create_ordinate_items,
+            CELL_POSITION: self.create_cell_positions
+            }[cls](context)
+
+        try:
+            self.fallback_import_func(context)
+        except Exception as e:
+            print(f"Error in fallback CSV import for {table_name}: {str(e)}")
+            raise
+
+    def create_table_cells_csv_copy(self, context):
+        # Ensure paths are absolute
+        self._create_instances_from_csv_copy(context, TABLE_CELL)
+
+    def create_ordinate_items_csv_copy(self, context):
+        # Ensure paths are absolute
+        self._create_instances_from_csv_copy(context, ORDINATE_ITEM)
+
+    def create_cell_positions_csv_copy(self, context):
+        # Ensure paths are absolute
+        self._create_instances_from_csv_copy(context, CELL_POSITION)
+
     def create_ordinate_items(self, context):
         '''
         Import all ordinate items from the rendering package CSV file
@@ -607,20 +757,32 @@ class ImportWebsiteToSDDModel(object):
 
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            id_increment = 0
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                        id_increment = 1
                 else:
-                    axis_ordinate_id = row[ColumnIndexes().ordinate_item_axis_ordinate_id]
-                    variable_id = row[ColumnIndexes().ordinate_item_variable_id]
-                    member_id = row[ColumnIndexes().ordinate_item_member_id]
-                    member_hierarchy_id = row[ColumnIndexes().ordinate_item_member_hierarchy_id]
-                    starting_member_id = row[ColumnIndexes().ordinate_item_starting_member_id]
-                    is_starting_member_included = row[ColumnIndexes().ordinate_item_is_starting_member_included]
+                    axis_ordinate_id = row[ColumnIndexes().ordinate_item_axis_ordinate_id + id_increment]
+                    variable_id = row[ColumnIndexes().ordinate_item_variable_id + id_increment]
+                    member_id = row[ColumnIndexes().ordinate_item_member_id + id_increment]
+                    member_hierarchy_id = row[ColumnIndexes().ordinate_item_member_hierarchy_id + id_increment]
+                    starting_member_id = row[ColumnIndexes().ordinate_item_starting_member_id + id_increment]
+                    is_starting_member_included = row[ColumnIndexes().ordinate_item_is_starting_member_included + id_increment]
+
+                    print(f"member_id: {member_id}")
+                    print(f"variable_id: {variable_id}")
+                    print(f"axis_ordinate_id: {axis_ordinate_id}")
+                    print(f"member_hierarchy_id: {member_hierarchy_id}")
+                    print(f"starting_member_id: {starting_member_id}")
+                    print(f"is_starting_member_included: {is_starting_member_included}")
 
                     ordinate_item = ORDINATE_ITEM()
                     ordinate_item.axis_ordinate_id = ImportWebsiteToSDDModel.find_axis_ordinate_with_id(
                         self, context, ImportWebsiteToSDDModel.replace_dots(self, axis_ordinate_id))
+                    
+                    print(ordinate_item.axis_ordinate_id)
                     ordinate_item.variable_id = ImportWebsiteToSDDModel.find_variable_with_id(
                         self, context, ImportWebsiteToSDDModel.replace_dots(self, variable_id))
                     ordinate_item.member_id = ImportWebsiteToSDDModel.find_member_with_id(
@@ -640,9 +802,9 @@ class ImportWebsiteToSDDModel(object):
                         context.axis_ordinate_to_ordinate_items_map[ordinate_item.axis_ordinate_id.axis_ordinate_id] = [ordinate_item]
 
         if context.save_sdd_to_db and ordinate_items_to_create:
-            ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=1000,ignore_conflicts=True)
+            ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=50000,ignore_conflicts=True)
 
-    def create_table_cells(self, context):
+    def create_table_cells(self, context, dpm:bool=False):
         '''
         Import all table cells from the rendering package CSV file
         '''
@@ -652,15 +814,18 @@ class ImportWebsiteToSDDModel(object):
 
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            id_increment = 0
             for row in filereader:
                 if not header_skipped:
-                    header_skipped = True
+                    header_skipped = True   
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                        id_increment = 1
                 else:
-                    table_cell_cell_id = row[ColumnIndexes().table_cell_cell_id]
-                    table_cell_combination_id = row[ColumnIndexes().table_cell_combination_id]
-                    table_cell_table_id = row[ColumnIndexes().table_cell_table_id]
+                    table_cell_cell_id = row[ColumnIndexes().table_cell_cell_id + id_increment]
+                    table_cell_combination_id = row[ColumnIndexes().table_cell_combination_id + id_increment]
+                    table_cell_table_id = row[ColumnIndexes().table_cell_table_id + id_increment]
 
-                    if table_cell_cell_id.endswith("_REF"):
+                    if table_cell_cell_id.endswith("_REF") or dpm:
                         table_cell = TABLE_CELL(
                             name=ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id))
                         table_cell.cell_id = ImportWebsiteToSDDModel.replace_dots(self, table_cell_cell_id)
@@ -677,24 +842,26 @@ class ImportWebsiteToSDDModel(object):
         if context.save_sdd_to_db and table_cells_to_create:
             TABLE_CELL.objects.bulk_create(table_cells_to_create, batch_size=1000,ignore_conflicts=True)
 
-    def create_cell_positions(self, context):
+    def create_cell_positions(self, context, dpm:bool = False):
         '''
         Import all cell positions from the rendering package CSV file
         '''
         file_location = context.file_directory + os.sep + "technical_export" + os.sep + "cell_position.csv"
         header_skipped = False
         cell_positions_to_create = []
-
+        id_increment = 0
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                        id_increment = 1
                 else:
-                    cell_positions_cell_id = row[ColumnIndexes().cell_positions_cell_id]
-                    cell_positions_axis_ordinate_id = row[ColumnIndexes().cell_positions_axis_ordinate_id]
+                    cell_positions_cell_id = row[ColumnIndexes().cell_positions_cell_id + id_increment]
+                    cell_positions_axis_ordinate_id = row[ColumnIndexes().cell_positions_axis_ordinate_id + id_increment]
 
-                    if cell_positions_cell_id.endswith("_REF"):
+                    if cell_positions_cell_id.endswith("_REF") or dpm:
                         cell_position = CELL_POSITION()
                         cell_position.axis_ordinate_id = ImportWebsiteToSDDModel.find_axis_ordinate_with_id(
                             self, context, ImportWebsiteToSDDModel.replace_dots(self, cell_positions_axis_ordinate_id))
@@ -751,17 +918,20 @@ class ImportWebsiteToSDDModel(object):
         missing_members = []
         missing_variables = []
         member_mapping_items_to_create = []
+        id_increment = 0
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                        id_increment = 1
                 else:
-                    member_mapping_id = row[ColumnIndexes().member_mapping_id]
-                    row_number = row[ColumnIndexes().member_mapping_row]
-                    variable_id = row[ColumnIndexes().member_mapping_variable_id]
-                    is_source = row[ColumnIndexes().member_mapping_is_source]
-                    member_id = row[ColumnIndexes().member_mapping_member_id]
+                    member_mapping_id = row[ColumnIndexes().member_mapping_id + id_increment]
+                    row_number = row[ColumnIndexes().member_mapping_row + id_increment] 
+                    variable_id = row[ColumnIndexes().member_mapping_variable_id + id_increment]
+                    is_source = row[ColumnIndexes().member_mapping_is_source + id_increment]
+                    member_id = row[ColumnIndexes().member_mapping_member_id + id_increment]
                     if not member_mapping_id.startswith("SHS_"):
                         member = ImportWebsiteToSDDModel.find_member_with_id(
                                                             self,member_id,context)
@@ -902,14 +1072,17 @@ class ImportWebsiteToSDDModel(object):
 
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            id_increment = 0
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                        id_increment = 1
                 else:
-                    mapping_to_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_mapping_id]
-                    mapping_to_cube_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_cube_mapping_id]
-                    mapping_to_cube_valid_from = row[ColumnIndexes().mapping_to_cube_valid_from]
-                    mapping_to_cube_valid_to = row[ColumnIndexes().mapping_to_cube_valid_to]
+                    mapping_to_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_mapping_id + id_increment]
+                    mapping_to_cube_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_cube_mapping_id + id_increment]
+                    mapping_to_cube_valid_from = row[ColumnIndexes().mapping_to_cube_valid_from + id_increment]
+                    mapping_to_cube_valid_to = row[ColumnIndexes().mapping_to_cube_valid_to + id_increment]
 
                     if not mapping_to_cube_mapping_id.startswith("M_SHS"):
                         mapping_to_cube = MAPPING_TO_CUBE(
@@ -968,48 +1141,54 @@ class ImportWebsiteToSDDModel(object):
         file_location = context.file_directory + os.sep + "technical_export" + os.sep + "variable_mapping_item.csv"
         missing_variables = []
         variable_mapping_items_to_create = []
-
+        id_increment = 0
         # Cache variable lookups
         variable_cache = {}
-
+        
         with open(file_location, encoding='utf-8') as csvfile:
-            rows = list(csv.reader(csvfile))[1:]  # Skip header
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            header_skipped = False
+            id_increment = 0
+            for row in filereader:
+                if not header_skipped:
+                    header_skipped = True
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                        id_increment = 1
+                else:
+                    mapping_id = row[ColumnIndexes().varaible_mapping_item_variable_mapping_id + id_increment]
+                    if mapping_id.startswith("SHS_"):
+                        continue
 
-            for row in rows:
-                mapping_id = row[ColumnIndexes().varaible_mapping_item_variable_mapping_id]
-                if mapping_id.startswith("SHS_"):
-                    continue
+                    variable_id = row[ColumnIndexes().variable_mapping_item_variable_id + id_increment]
 
-                variable_id = row[ColumnIndexes().variable_mapping_item_variable_id]
+                    # Use cached variable lookup
+                    if variable_id not in variable_cache:
+                        variable_cache[variable_id] = ImportWebsiteToSDDModel.find_variable_with_id(
+                            self, context, variable_id)
 
-                # Use cached variable lookup
-                if variable_id not in variable_cache:
-                    variable_cache[variable_id] = ImportWebsiteToSDDModel.find_variable_with_id(
-                        self, context, variable_id)
+                    variable = variable_cache[variable_id]
 
-                variable = variable_cache[variable_id]
+                    if variable is None:
+                        missing_variables.append((
+                            variable_id,
+                            mapping_id,
+                            row[ColumnIndexes().variable_mapping_item_valid_to + id_increment]
+                        ))
+                        continue
 
-                if variable is None:
-                    missing_variables.append((
-                        variable_id,
-                        mapping_id,
-                        row[ColumnIndexes().variable_mapping_item_valid_to]
-                    ))
-                    continue
+                    variable_mapping_item = VARIABLE_MAPPING_ITEM(
+                        variable_id=variable,
+                        variable_mapping_id=ImportWebsiteToSDDModel.find_variable_mapping_with_id(
+                            self, context, mapping_id),
+                        is_source=row[ColumnIndexes().variable_mapping_item_is_source + id_increment],
+                        valid_from=row[ColumnIndexes().variable_mapping_item_valid_from + id_increment],
+                        valid_to=row[ColumnIndexes().variable_mapping_item_valid_to + id_increment]
+                    )
 
-                variable_mapping_item = VARIABLE_MAPPING_ITEM(
-                    variable_id=variable,
-                    variable_mapping_id=ImportWebsiteToSDDModel.find_variable_mapping_with_id(
-                        self, context, mapping_id),
-                    is_source=row[ColumnIndexes().variable_mapping_item_is_source],
-                    valid_from=row[ColumnIndexes().variable_mapping_item_valid_from],
-                    valid_to=row[ColumnIndexes().variable_mapping_item_valid_to]
-                )
+                    variable_mapping_items_to_create.append(variable_mapping_item)
 
-                variable_mapping_items_to_create.append(variable_mapping_item)
-
-                # Build dictionary in a single operation
-                context.variable_mapping_item_dictionary.setdefault(mapping_id, []).append(variable_mapping_item)
+                    # Build dictionary in a single operation
+                    context.variable_mapping_item_dictionary.setdefault(mapping_id, []).append(variable_mapping_item)
 
         # Single bulk create with larger batch size
         if context.save_sdd_to_db and variable_mapping_items_to_create:
