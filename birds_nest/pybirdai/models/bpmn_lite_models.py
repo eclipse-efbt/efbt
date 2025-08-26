@@ -92,14 +92,14 @@ class FlowElementsContainer(BaseElement):
 
 class SequenceFlow(FlowElement):
     source_ref = models.ForeignKey(
-        "FlowNode",
+        "Task",  # Changed from "FlowNode" to concrete model
         models.SET_NULL,
         related_name="outgoing",
         blank=True,
         null=True,
     )
     target_ref = models.ForeignKey(
-        "FlowNode",
+        "Task",  # Changed from "FlowNode" to concrete model
         models.SET_NULL,
         related_name="incoming",
         blank=True,
@@ -264,7 +264,7 @@ class ActivityTag(models.Model):
     # This inherits from Tag in requirements_text.ecore
     # Will be properly defined after requirements_text_models.py is created
     activity = models.ForeignKey(
-        Activity,
+        "Task",  # Changed from Activity to concrete model
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
