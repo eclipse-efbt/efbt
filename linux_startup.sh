@@ -1,5 +1,6 @@
-@echo off
-echo Installing Python dependencies for Windows...
+#!/bin/bash
+sudo apt-get update
+sudo apt-get install mdbtools
 cd birds_nest
 pip install --upgrade pip --quiet
 python -m pip install django==5.1.3 --quiet
@@ -12,15 +13,6 @@ python -m pip install pandas --quiet
 python -m pip install numpy --quiet
 python -m pip install requests --quiet
 python -m pip install psutil --quiet
-python -m pip install mssql-django pyodbc --quiet
-echo.
-echo Starting Django development server with auto-restart...
-echo Press Ctrl+C to stop the server
-echo.
-:loop
-python manage.py runserver --noreload
-if errorlevel 1 (
-    echo Server encountered an error. Restarting in 5 seconds...
-    timeout /t 5 /nobreak > nul
-)
-goto loop
+
+# python pybirdai/utils/datapoint_test_run/run_tests.py --uv "False" --config-file "tests/configuration_file_tests.json"
+while true; do python manage.py runserver --noreload; done

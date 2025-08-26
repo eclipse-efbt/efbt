@@ -16,6 +16,12 @@ def set_lineage_orchestration(orchestration):
     _lineage_context['orchestration'] = orchestration
     if orchestration and hasattr(orchestration, 'trail'):
         _lineage_context['current_trail'] = orchestration.trail
+    else:
+        # Clear the context when orchestration is None or has no trail
+        _lineage_context['current_trail'] = None
+        _lineage_context['function_cache'] = {}  # Clear function cache too
+        if orchestration is None:
+            print("Cleared global lineage context")
 
 def lineage(dependencies: Dict[str, Any] = None):
     """
