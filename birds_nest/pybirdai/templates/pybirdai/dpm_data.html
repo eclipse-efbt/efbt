@@ -26,7 +26,7 @@
         margin: 30px auto;
         padding: 0 20px;
     }
-    
+
     .task-item {
         display: flex;
         flex-direction: column;
@@ -40,7 +40,7 @@
         color: #333;
         transition: all 0.3s ease;
     }
-    
+
     .task-item:hover {
         background: #e9ecef;
         border-color: #adb5bd;
@@ -49,56 +49,56 @@
         text-decoration: none;
         color: #333;
     }
-    
+
     .task-item img {
         width: 80px;
         height: 80px;
         object-fit: contain;
         margin-bottom: 15px;
     }
-    
+
     .task-item span {
         font-size: 14px;
         font-weight: 500;
         line-height: 1.4;
     }
-    
+
     @media (max-width: 768px) {
         .task-grid {
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
         }
-        
+
         .task-item {
             padding: 15px;
         }
-        
+
         .task-item img {
             width: 60px;
             height: 60px;
         }
-        
+
         .task-item span {
             font-size: 13px;
         }
     }
-    
+
     @media (max-width: 480px) {
         .task-grid {
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-        
+
         .task-item {
             padding: 10px;
         }
-        
+
         .task-item img {
             width: 50px;
             height: 50px;
             margin-bottom: 10px;
         }
-        
+
         .task-item span {
             font-size: 12px;
         }
@@ -116,6 +116,10 @@
     <a href="{% url 'pybirdai:import_dpm_data' %}" class="task-item">
         <img src="{% static 'images/import_bird.webp' %}" alt="Import DPM Data">
         <span>Import DPM Data</span>
+    </a>
+    <a href="{% url 'pybirdai:dpm_output_layer_creation' %}" class="task-item">
+        <img src="{% static 'images/filters.webp' %}" alt="Create Output Layers">
+        <span>Create Output Layers</span>
     </a>
 </div>
 {% endblock %}

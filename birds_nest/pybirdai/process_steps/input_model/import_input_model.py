@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 
-from pybirdai.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model import *
 from django.apps import apps
 from django.db import models
 import os
@@ -47,7 +47,10 @@ class ImportInputModel(object):
         ImportInputModel._fetch_derived_fields_from_model(context)
         ImportInputModel._create_maintenance_agency(sdd_context)
         ImportInputModel._create_primitive_domains(sdd_context)
-        ImportInputModel._create_subdomain_to_domain_map(sdd_context)
+        if hasattr(context, 'alternative_folder_for_subdomains'):
+            ImportInputModel._create_subdomain_to_domain_map(sdd_context,alternative_folder=context.alternative_folder_for_subdomains)
+        else:
+            ImportInputModel._create_subdomain_to_domain_map(sdd_context)
         ImportInputModel._process_models(sdd_context, context)
          # Load extra variables from CSV file
         from django.conf import settings
@@ -58,6 +61,7 @@ class ImportInputModel(object):
             print(f"Loaded {variables_loaded} extra variables from CSV file.")
         else:
             print("No extra variables loaded (file not found or empty).")
+
 
 
     def _create_maintenance_agency(sdd_context):
@@ -84,11 +88,17 @@ class ImportInputModel(object):
                 name="SDD_DOMAIN",
                 code="SDD_DOMAIN",
                 maintenance_agency_id="SDD_DOMAIN"
+            ),
+            MAINTENANCE_AGENCY(
+                name="ECB",
+                code="ECB",
+                maintenance_agency_id="ECB"
             )
         ]
 
         # Bulk create all agencies
         created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies, ignore_conflicts=True)
+
 
         # Update dictionary with created instances
         sdd_context.agency_dictionary.update({
@@ -110,7 +120,8 @@ class ImportInputModel(object):
                 domain_id=domain_type,
                 name=domain_type,
                 description=domain_type,
-                data_type=domain_type
+                data_type=domain_type,
+                maintenance_agency_id=sdd_context.agency_dictionary["ECB"]
             )
             domains.append(domain)
             sdd_context.domain_dictionary[domain_type] = domain
@@ -118,8 +129,9 @@ class ImportInputModel(object):
         # Bulk create all domains
         DOMAIN.objects.bulk_create(domains, ignore_conflicts=True)
 
-    def _create_subdomain_to_domain_map(sdd_context):
-        file_location = sdd_context.file_directory + os.sep + "technical_export" + os.sep + "subdomain.csv"
+    def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str=""):
+        file_location = sdd_context.file_directory + os.sep + (alternative_folder or "technical_export") + os.sep + "subdomain.csv"
+
         header_skipped = False
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -130,6 +142,8 @@ class ImportInputModel(object):
                 else:
                     domain_id = row[ColumnIndexes().subdomain_domain_id_index]
                     subdomain_id = row[ColumnIndexes().subdomain_subdomain_id_index]
+                    if subdomain_id.endswith("_domain"):
+                        subdomain_id = subdomain_id[:-7]
                     sdd_context.subdomain_to_domain_map[subdomain_id] = domain_id
 
     def _process_models(sdd_context, context):
@@ -177,7 +191,11 @@ class ImportInputModel(object):
         import ast
 
         # Read bird_data_model.py and find functions with lineage decorator
-        bird_data_model_path = os.path.join(settings.BASE_DIR, 'pybirdai/bird_data_model.py')
+        bird_data_model_path = os.path.join(
+            settings.BASE_DIR,
+            "pybirdai",
+            "models",
+            'bird_data_model.py')
 
 
         with open(bird_data_model_path, 'r', encoding='utf-8') as file:
@@ -300,6 +318,7 @@ class ImportInputModel(object):
                 logging.info("Party_role cube structure items to be created :: %s", len(cube_structure_items_to_create))
             for item in cube_structure_items_to_create:
                 item.save()
+            #CUBE_STRUCTURE_ITEM.objects.bulk_create(cube_structure_items_to_create)
 
     @staticmethod
     def _get_default_domain(field, sdd_context):
@@ -348,7 +367,8 @@ class ImportInputModel(object):
             if domain_id and domain_id not in sdd_context.domain_dictionary:
                 domain = DOMAIN(
                     domain_id=domain_id,
-                    name=domain_id
+                    name=domain_id,
+                    maintenance_agency_id=sdd_context.agency_dictionary["ECB"]
                 )
                 domains_to_create.append(domain)
                 sdd_context.domain_dictionary[domain_id] = domain
@@ -359,7 +379,8 @@ class ImportInputModel(object):
             if subdomain_id and subdomain_id not in sdd_context.subdomain_dictionary:
                 subdomain = SUBDOMAIN(
                     subdomain_id=subdomain_id,
-                    domain_id=sdd_context.domain_dictionary.get(domain_id)
+                    domain_id=sdd_context.domain_dictionary.get(domain_id),
+                    maintenance_agency_id=sdd_context.agency_dictionary["ECB"]
                 )
                 subdomains_to_create.append(subdomain)
                 sdd_context.subdomain_dictionary[subdomain_id] = subdomain

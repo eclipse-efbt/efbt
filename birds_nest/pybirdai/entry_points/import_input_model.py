@@ -37,18 +37,19 @@ class RunImportInputModelFromSQLDev(AppConfig):
         This method sets up the necessary contexts, creates reference domains
         and variables, and imports the website data into the SDD model.
         """
-        from pybirdai.bird_meta_data_model import MAINTENANCE_AGENCY
+        from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
 
         from pybirdai.process_steps.input_model.import_input_model import (
             ImportInputModel
         )
         from pybirdai.context.context import Context
+        # from pybirdai.context.context_ancrdt import Context
 
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
@@ -58,12 +59,8 @@ class RunImportInputModelFromSQLDev(AppConfig):
              sdd_context, context
         )
 
-       
+
 
 if __name__ == '__main__':
     django.setup()
     RunImportInputModelFromSQLDev('pybirdai', 'birds_nest').ready()
-
-
-      
-    

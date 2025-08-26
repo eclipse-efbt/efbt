@@ -1202,7 +1202,7 @@ class GitHubIntegrationService:
             AutomodeConfiguration: Active configuration or None if not found
         """
         try:
-            from .bird_meta_data_model import AutomodeConfiguration
+            from .models.workflow_model import AutomodeConfiguration
             return AutomodeConfiguration.objects.filter(is_active=True).first()
         except Exception as e:
             logger.error(f"Error getting automode configuration: {e}")

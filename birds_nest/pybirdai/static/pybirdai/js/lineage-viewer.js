@@ -276,23 +276,39 @@
     
     // Load lineage data
     function loadLineageData() {
-        const trailId = document.getElementById('trail-data').dataset.trailId;
+        const trailDataEl = document.getElementById('trail-data');
+        const trailId = trailDataEl.dataset.trailId;
+        const lineageType = trailDataEl.dataset.lineageType || 'complete';
         const detailLevel = document.getElementById('detail-level').value;
         const maxRows = document.getElementById('max-rows').value;
         const maxValues = document.getElementById('max-values').value;
         const hideEmpty = document.getElementById('hide-empty-tables').checked;
         
-        console.log('Loading lineage data...', { trailId, detailLevel, maxRows, maxValues, hideEmpty });
+        console.log('Loading lineage data...', { trailId, lineageType, detailLevel, maxRows, maxValues, hideEmpty });
         document.getElementById('loading-indicator').style.display = 'block';
         
-        const params = new URLSearchParams({
-            detail: detailLevel,
-            max_rows: maxRows,
-            max_values: maxValues,
-            hide_empty: hideEmpty
-        });
+        // Choose API endpoint based on lineage type
+        let apiEndpoint;
+        let params;
         
-        fetch(`/pybirdai/api/trail/${trailId}/lineage?${params}`)
+        if (lineageType === 'filtered') {
+            // Use filtered lineage API
+            apiEndpoint = `/pybirdai/api/trail/${trailId}/filtered-lineage/`;
+            params = new URLSearchParams({
+                include_unused: false  // Default to showing only used data
+            });
+        } else {
+            // Use complete lineage API
+            apiEndpoint = `/pybirdai/api/trail/${trailId}/lineage`;
+            params = new URLSearchParams({
+                detail: detailLevel,
+                max_rows: maxRows,
+                max_values: maxValues,
+                hide_empty: hideEmpty
+            });
+        }
+        
+        fetch(`${apiEndpoint}?${params}`)
             .then(response => {
                 console.log('Response received:', response.status);
                 if (!response.ok) {
@@ -309,8 +325,8 @@
                 }
                 
                 lineageData = data;
-                updateGraph();
-                updateSummary();
+                updateGraph(lineageType);
+                updateSummary(lineageType);
                 document.getElementById('loading-indicator').style.display = 'none';
             })
             .catch(error => {
@@ -321,16 +337,32 @@
     }
     
     // Update graph with new data
-    function updateGraph() {
+    function updateGraph(lineageType) {
         if (!cy || !lineageData) {
             console.log('Cannot update graph - missing cy or lineageData');
             return;
         }
         
-        console.log('Updating graph with', lineageData.nodes.length, 'nodes and', lineageData.edges.length, 'edges');
-        
         // Clear existing elements
         cy.elements().remove();
+        
+        if (lineageType === 'filtered') {
+            // Handle filtered lineage data structure
+            updateGraphFromFilteredData();
+        } else {
+            // Handle complete lineage data structure
+            updateGraphFromCompleteData();
+        }
+        
+        console.log('Graph updated, applying layout...');
+        
+        // Apply layout
+        applyLayout();
+    }
+    
+    // Update graph from complete lineage data structure
+    function updateGraphFromCompleteData() {
+        console.log('Updating graph with', lineageData.nodes.length, 'nodes and', lineageData.edges.length, 'edges');
         
         // Add nodes
         lineageData.nodes.forEach((node, index) => {
@@ -366,11 +398,117 @@
                 console.error('Error adding edge', index, edge, error);
             }
         });
+    }
+    
+    // Update graph from filtered lineage data structure
+    function updateGraphFromFilteredData() {
+        let nodeCount = 0;
+        let edgeCount = 0;
         
-        console.log('Graph updated, applying layout...');
+        console.log('Updating graph with filtered lineage data');
         
-        // Apply layout
-        applyLayout();
+        // Add database tables and their data
+        lineageData.database_tables.forEach(table => {
+            // Add table node
+            cy.add({
+                group: 'nodes',
+                data: {
+                    id: `db_table_${table.id}`,
+                    label: table.name,
+                    type: 'database_table',
+                    details: {
+                        name: table.name,
+                        table_id: table.id,
+                        field_count: table.fields.length
+                    }
+                }
+            });
+            nodeCount++;
+            
+            // Add field nodes
+            table.fields.forEach(field => {
+                cy.add({
+                    group: 'nodes',
+                    data: {
+                        id: `db_field_${field.id}`,
+                        label: field.name,
+                        type: 'database_field',
+                        details: {
+                            name: field.name,
+                            table: table.name,
+                            field_id: field.id,
+                            was_used: field.was_used
+                        }
+                    }
+                });
+                nodeCount++;
+                
+                // Add edge from table to field
+                cy.add({
+                    group: 'edges',
+                    data: {
+                        id: `edge_table_${table.id}_field_${field.id}`,
+                        source: `db_table_${table.id}`,
+                        target: `db_field_${field.id}`,
+                        type: 'has_field'
+                    }
+                });
+                edgeCount++;
+            });
+        });
+        
+        // Add derived tables and their functions
+        lineageData.derived_tables.forEach(table => {
+            // Add table node
+            cy.add({
+                group: 'nodes',
+                data: {
+                    id: `derived_table_${table.id}`,
+                    label: table.name,
+                    type: 'derived_table',
+                    details: {
+                        name: table.name,
+                        table_id: table.id,
+                        function_count: table.functions.length
+                    }
+                }
+            });
+            nodeCount++;
+            
+            // Add function nodes
+            table.functions.forEach(func => {
+                cy.add({
+                    group: 'nodes',
+                    data: {
+                        id: `function_${func.id}`,
+                        label: func.name,
+                        type: 'function',
+                        details: {
+                            name: func.name,
+                            table: table.name,
+                            function_id: func.id,
+                            was_used: func.was_used,
+                            function_text: func.function_text
+                        }
+                    }
+                });
+                nodeCount++;
+                
+                // Add edge from table to function
+                cy.add({
+                    group: 'edges',
+                    data: {
+                        id: `edge_table_${table.id}_function_${func.id}`,
+                        source: `derived_table_${table.id}`,
+                        target: `function_${func.id}`,
+                        type: 'has_function'
+                    }
+                });
+                edgeCount++;
+            });
+        });
+        
+        console.log(`Added ${nodeCount} nodes and ${edgeCount} edges from filtered data`);
     }
     
     // Apply selected layout
@@ -416,25 +554,47 @@
     }
     
     // Update summary panel
-    function updateSummary() {
-        if (!lineageData || !lineageData.summary) {
+    function updateSummary(lineageType) {
+        if (!lineageData) {
             console.log('Cannot update summary - missing data');
             return;
         }
         
-        console.log('Updating summary with:', lineageData.summary);
+        console.log('Updating summary with:', lineageData);
         
-        // Safely access nested properties
-        const tableCount = lineageData.summary.table_count || {};
-        
-        document.getElementById('db-table-count').textContent = 
-            tableCount.database || 0;
-        document.getElementById('derived-table-count').textContent = 
-            tableCount.derived || 0;
-        document.getElementById('total-nodes').textContent = 
-            lineageData.summary.total_nodes || 0;
-        document.getElementById('total-edges').textContent = 
-            lineageData.summary.total_edges || 0;
+        if (lineageType === 'filtered') {
+            // Handle filtered lineage data structure
+            const dbTableCount = lineageData.database_tables ? lineageData.database_tables.length : 0;
+            const derivedTableCount = lineageData.derived_tables ? lineageData.derived_tables.length : 0;
+            const totalCounts = lineageData.metadata && lineageData.metadata.total_counts ? lineageData.metadata.total_counts : {};
+            
+            document.getElementById('db-table-count').textContent = 
+                totalCounts.database_tables || dbTableCount;
+            document.getElementById('derived-table-count').textContent = 
+                totalCounts.derived_tables || derivedTableCount;
+            document.getElementById('total-nodes').textContent = 
+                cy ? cy.nodes().length : 0;
+            document.getElementById('total-edges').textContent = 
+                cy ? cy.edges().length : 0;
+        } else {
+            // Handle complete lineage data structure
+            if (!lineageData.summary) {
+                console.log('Cannot update summary - missing summary data');
+                return;
+            }
+            
+            // Safely access nested properties
+            const tableCount = lineageData.summary.table_count || {};
+            
+            document.getElementById('db-table-count').textContent = 
+                tableCount.database || 0;
+            document.getElementById('derived-table-count').textContent = 
+                tableCount.derived || 0;
+            document.getElementById('total-nodes').textContent = 
+                lineageData.summary.total_nodes || 0;
+            document.getElementById('total-edges').textContent = 
+                lineageData.summary.total_edges || 0;
+        }
     }
     
     // Show node details

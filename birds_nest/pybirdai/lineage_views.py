@@ -4,7 +4,7 @@ from django.views.decorators.http import require_http_methods
 from django.db.models import Prefetch
 from pybirdai.models import (
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
-    DatabaseField, Function, 
+    DatabaseField, Function,
     PopulatedDataBaseTable, EvaluatedDerivedTable,
     FunctionColumnReference, DatabaseRow, DerivedTableRow,
     DatabaseColumnValue, EvaluatedFunction,
@@ -17,6 +17,7 @@ import json
 def trail_lineage_viewer(request, trail_id):
     """Main view for displaying trail lineage visualization"""
     trail = get_object_or_404(Trail, pk=trail_id)
+
     
     context = {
         'trail': trail,
@@ -29,18 +30,21 @@ def trail_lineage_viewer(request, trail_id):
 def get_trail_lineage_data(request, trail_id):
     """API endpoint to fetch comprehensive trail lineage data including rows and values"""
     trail = get_object_or_404(Trail, pk=trail_id)
+
     
     # Check detail level
     detail_level = request.GET.get('detail', 'table')  # table, column, row, value
     max_rows_per_table = int(request.GET.get('max_rows', '5'))
     max_values_per_row = int(request.GET.get('max_values', '3'))
     hide_empty_tables = request.GET.get('hide_empty', 'false').lower() == 'true'
+
     
     # Build the lineage graph data
     nodes = []
     edges = []
     node_id_counter = 0
     node_map = {}  # Maps (type, id) to node_id for creating edges
+
     
     def get_node_id(obj_type, obj_id):
         """Get or create a node ID for an object"""
@@ -637,6 +641,18 @@ def get_node_details(request, trail_id, node_type, node_id):
         
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+def trail_filtered_lineage_viewer(request, trail_id):
+    """View for displaying trail filtered lineage visualization"""
+    trail = get_object_or_404(Trail, pk=trail_id)
+
+    context = {
+        'trail': trail,
+        'trail_id': trail_id,
+        'lineage_type': 'filtered'
+    }
+    return render(request, 'pybirdai/lineage_viewer.html', context)
 
 
 def trail_list(request):
