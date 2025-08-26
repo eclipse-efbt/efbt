@@ -29,14 +29,13 @@ class ExecuteDataPoint:
         orchestration = Orchestration()
         execution_name = f"DataPoint_{data_point_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
-        # Only set up lineage if using the lineage-enhanced orchestrator
-        if isinstance(orchestration, OrchestrationWithLineage):
+        # Only set up lineage if using the lineage-enhanced orchestrator and lineage is enabled
+        if isinstance(orchestration, OrchestrationWithLineage) and orchestration.lineage_enabled:
             # Initialize the trail and metadata without dummy objects
             orchestration.trail = None
             orchestration.metadata_trail = None
             orchestration.current_populated_tables = {}
             orchestration.current_rows = {}
-            orchestration.lineage_enabled = True
             
             # Create trail directly
             from pybirdai.models import MetaDataTrail, Trail
@@ -49,15 +48,21 @@ class ExecuteDataPoint:
             
             # Set the global lineage context
             set_lineage_orchestration(orchestration)
+        elif isinstance(orchestration, OrchestrationWithLineage):
+            print(f"Using lineage orchestrator but lineage tracking is disabled in config")
+            # Clear the global lineage context since lineage is disabled
+            set_lineage_orchestration(None)
         else:
             print(f"Using original orchestrator - lineage tracking disabled")
+            # Clear the global lineage context since we're using original orchestrator
+            set_lineage_orchestration(None)
         
         # Initialize with lineage tracking
         klass = globals()['Cell_' + str(data_point_id)]
         datapoint = klass()
         
         # Set calculation context early if lineage is enabled
-        if isinstance(orchestration, OrchestrationWithLineage):
+        if isinstance(orchestration, OrchestrationWithLineage) and orchestration.lineage_enabled:
             calculation_name = datapoint.__class__.__name__
             orchestration.current_calculation = calculation_name
             print(f"Set calculation context: {calculation_name}")
@@ -80,7 +85,7 @@ class ExecuteDataPoint:
         metric_value = str(datapoint.metric_value())
         
         # Print lineage summary
-        if isinstance(orchestration, OrchestrationWithLineage):
+        if isinstance(orchestration, OrchestrationWithLineage) and orchestration.lineage_enabled:
             trail = orchestration.get_lineage_trail()
             if trail:
                 print(f"AORTA Trail created: {trail.name} (ID: {trail.id})")
