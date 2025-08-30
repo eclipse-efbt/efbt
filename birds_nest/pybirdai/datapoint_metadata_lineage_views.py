@@ -761,11 +761,29 @@ def _get_datapoint_lineage_data(datapoint):
     )
     print(f"Found {column_copy_processes.count()} column copy processes")
     
+    # Also include transform processes from input tables to product-specific joins
+    # These have names like: Transform_PRTY_INSTTTNL_SCTR_to_Other_loans
+    transform_to_join_processes = Process.objects.filter(
+        Q(name__contains="to_Other_loans") |
+        Q(name__contains="to_Non_Negotiable_bonds") |
+        Q(name__contains="to_Advances_that_are_not_loans") |
+        Q(name__contains="to_Trade_receivables") |
+        Q(name__contains="to_On_demand_and_short_notice") |
+        Q(name__contains="to_Finance_leases") |
+        Q(name__contains="to_Reverse_repurchase_agreements") |
+        Q(name__contains="to_Credit_card_debt")
+    ).filter(
+        name__startswith="Transform_",
+        type='column_to_column'
+    )
+    print(f"Found {transform_to_join_processes.count()} transform to join processes")
+    
     # Combine all relevant processes using distinct() instead of union()
     all_relevant_processes = Process.objects.filter(
         Q(name__contains=combination_id) | 
         Q(name__contains=base_table_name) |
-        Q(id__in=column_copy_processes.values_list('id', flat=True))
+        Q(id__in=column_copy_processes.values_list('id', flat=True)) |
+        Q(id__in=transform_to_join_processes.values_list('id', flat=True))
     ).distinct()
     
     # Get all relationships for these focused processes
