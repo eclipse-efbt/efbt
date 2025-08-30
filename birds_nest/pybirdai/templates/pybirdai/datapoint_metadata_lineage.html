@@ -1,0 +1,519 @@
+{% extends "base.html" %}
+{% load static %}
+{% csrf_token %}
+
+{% block title %}Metadata Lineage - Datapoint {{ datapoint_id }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    #metadata-lineage-container {
+        height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+    
+    #header-section {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    #main-content {
+        flex: 1;
+        display: flex;
+        gap: 20px;
+        overflow: hidden;
+    }
+    
+    #graph-container {
+        flex: 2;
+        background: white;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    #side-panel {
+        flex: 1;
+        max-width: 400px;
+        background: white;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    #control-panel {
+        padding: 20px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    #detail-panel {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+    
+    .legend {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+    
+    .legend-color {
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        border: 2px solid #333;
+    }
+    
+    .legend-color.table { background-color: #4CAF50; }
+    .legend-color.column { background-color: #2196F3; }
+    .legend-color.process { background-color: #FF9800; }
+    
+    .info-card {
+        background: #f8f9fa;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        color: #212529;
+    }
+    
+    .btn-process {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+    
+    .btn-process:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+    
+    #loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+    }
+    
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .node-details h5 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #343a40;
+    }
+    
+    .node-property {
+        margin-bottom: 8px;
+        padding: 8px;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    .node-property-label {
+        font-weight: 600;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hidden form for CSRF token -->
+<form style="display: none;">
+    {% csrf_token %}
+</form>
+
+<div id="metadata-lineage-container">
+    <div id="header-section">
+        <h2>Metadata Lineage for Datapoint: {{ datapoint_id }}</h2>
+        {% if combination_id %}
+        <p class="text-muted">Combination: {{ combination_id }}</p>
+        {% endif %}
+        
+        <div class="mt-3">
+            <button id="process-lineage-btn" class="btn btn-process">
+                <i class="fas fa-cogs"></i> Process Metadata Lineage
+            </button>
+            <button id="refresh-btn" class="btn btn-secondary">
+                <i class="fas fa-sync"></i> Refresh View
+            </button>
+            <button id="export-json-btn" class="btn btn-info">
+                <i class="fas fa-download"></i> Export JSON
+            </button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color table"></div>
+                <span>Table</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color column"></div>
+                <span>Column</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color process"></div>
+                <span>Process</span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="main-content">
+        <div id="graph-container">
+            <div id="loading-overlay" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div id="cy"></div>
+        </div>
+        
+        <div id="side-panel">
+            <div id="control-panel">
+                <h4>Graph Controls</h4>
+                <button id="fit-graph-btn" class="btn btn-sm btn-outline-primary mb-2">
+                    <i class="fas fa-expand"></i> Fit to Screen
+                </button>
+                <button id="center-graph-btn" class="btn btn-sm btn-outline-primary mb-2">
+                    <i class="fas fa-crosshairs"></i> Center Graph
+                </button>
+                
+                <div class="info-card">
+                    <div class="info-label">Graph Statistics</div>
+                    <div id="graph-stats" class="info-value">
+                        <span id="node-count">0</span> nodes, 
+                        <span id="edge-count">0</span> edges
+                    </div>
+                </div>
+            </div>
+            
+            <div id="detail-panel">
+                <h4>Node Details</h4>
+                <div id="node-details-content">
+                    <p class="text-muted">Click on a node to view details</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const datapointId = "{{ datapoint_id }}";
+    let cy = null;
+    
+    // Initialize Cytoscape
+    function initCytoscape(graphData) {
+        cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: {
+                nodes: graphData.nodes.map(node => ({
+                    data: {
+                        id: node.id,
+                        label: node.label,
+                        nodeType: node.category,
+                        itemType: node.type,
+                        functionType: node.function_type,
+                        description: node.description
+                    }
+                })),
+                edges: graphData.edges.map(edge => ({
+                    data: {
+                        source: edge.source,
+                        target: edge.target,
+                        label: edge.label,
+                        edgeType: edge.type
+                    }
+                }))
+            },
+            style: [
+                {
+                    selector: 'node',
+                    style: {
+                        'label': 'data(label)',
+                        'text-valign': 'center',
+                        'text-halign': 'center',
+                        'text-wrap': 'wrap',
+                        'text-max-width': '120px',
+                        'font-size': '12px',
+                        'width': '60px',
+                        'height': '60px'
+                    }
+                },
+                {
+                    selector: 'node[nodeType="data_item"][itemType="table"]',
+                    style: {
+                        'background-color': '#4CAF50',
+                        'shape': 'rectangle'
+                    }
+                },
+                {
+                    selector: 'node[nodeType="data_item"][itemType="column"]',
+                    style: {
+                        'background-color': '#2196F3',
+                        'shape': 'ellipse'
+                    }
+                },
+                {
+                    selector: 'node[nodeType="process"]',
+                    style: {
+                        'background-color': '#FF9800',
+                        'shape': 'diamond'
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 2,
+                        'line-color': '#999',
+                        'target-arrow-color': '#999',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier',
+                        'label': 'data(label)',
+                        'font-size': '10px',
+                        'text-rotation': 'autorotate'
+                    }
+                },
+                {
+                    selector: 'edge[edgeType="consumes"]',
+                    style: {
+                        'line-color': '#f44336',
+                        'target-arrow-color': '#f44336'
+                    }
+                },
+                {
+                    selector: 'edge[edgeType="produces"]',
+                    style: {
+                        'line-color': '#4CAF50',
+                        'target-arrow-color': '#4CAF50'
+                    }
+                }
+            ],
+            layout: {
+                name: 'breadthfirst',
+                directed: true,
+                padding: 50,
+                spacingFactor: 1.5
+            }
+        });
+        
+        // Update graph statistics
+        document.getElementById('node-count').textContent = graphData.nodes.length;
+        document.getElementById('edge-count').textContent = graphData.edges.length;
+        
+        // Node click handler
+        cy.on('tap', 'node', function(evt) {
+            const node = evt.target;
+            displayNodeDetails(node.data());
+        });
+    }
+    
+    // Display node details
+    function displayNodeDetails(nodeData) {
+        let detailsHtml = '<div class="node-details">';
+        detailsHtml += `<h5>${nodeData.label}</h5>`;
+        
+        detailsHtml += '<div class="node-property">';
+        detailsHtml += `<span class="node-property-label">Type:</span> ${nodeData.nodeType}`;
+        detailsHtml += '</div>';
+        
+        if (nodeData.itemType) {
+            detailsHtml += '<div class="node-property">';
+            detailsHtml += `<span class="node-property-label">Item Type:</span> ${nodeData.itemType}`;
+            detailsHtml += '</div>';
+        }
+        
+        if (nodeData.functionType) {
+            detailsHtml += '<div class="node-property">';
+            detailsHtml += `<span class="node-property-label">Function Type:</span> ${nodeData.functionType}`;
+            detailsHtml += '</div>';
+        }
+        
+        if (nodeData.description) {
+            detailsHtml += '<div class="node-property">';
+            detailsHtml += `<span class="node-property-label">Description:</span><br>${nodeData.description}`;
+            detailsHtml += '</div>';
+        }
+        
+        detailsHtml += '</div>';
+        document.getElementById('node-details-content').innerHTML = detailsHtml;
+    }
+    
+    // Load lineage data
+    function loadLineageData() {
+        showLoading(true);
+        
+        fetch(`/pybirdai/api/datapoint/${datapointId}/metadata-lineage/graph/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.graph) {
+                    initCytoscape(data.graph);
+                } else {
+                    console.error('Failed to load lineage data:', data.error);
+                    alert('Failed to load lineage data');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading lineage data:', error);
+                alert('Error loading lineage data');
+            })
+            .finally(() => {
+                showLoading(false);
+            });
+    }
+    
+    // Process lineage
+    document.getElementById('process-lineage-btn').addEventListener('click', function() {
+        if (!confirm('Process metadata lineage for this datapoint? This may take a moment.')) {
+            return;
+        }
+        
+        const csrfToken = getCSRFToken();
+        if (!csrfToken) {
+            alert('CSRF token not found. Please refresh the page.');
+            return;
+        }
+        
+        showLoading(true);
+        
+        fetch(`/pybirdai/api/datapoint/${datapointId}/metadata-lineage/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: 'clear_existing=true'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Metadata lineage processed successfully!');
+                loadLineageData();
+            } else {
+                alert('Failed to process lineage: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error processing lineage:', error);
+            alert('Error processing lineage');
+        })
+        .finally(() => {
+            showLoading(false);
+        });
+    });
+    
+    // Refresh view
+    document.getElementById('refresh-btn').addEventListener('click', function() {
+        loadLineageData();
+    });
+    
+    // Export JSON
+    document.getElementById('export-json-btn').addEventListener('click', function() {
+        fetch(`/pybirdai/api/datapoint/${datapointId}/metadata-lineage/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.lineage) {
+                    const jsonStr = JSON.stringify(data.lineage, null, 2);
+                    const blob = new Blob([jsonStr], {type: 'application/json'});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `datapoint_${datapointId}_metadata_lineage.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            })
+            .catch(error => {
+                console.error('Error exporting JSON:', error);
+                alert('Error exporting JSON');
+            });
+    });
+    
+    // Graph controls
+    document.getElementById('fit-graph-btn').addEventListener('click', function() {
+        if (cy) {
+            cy.fit();
+        }
+    });
+    
+    document.getElementById('center-graph-btn').addEventListener('click', function() {
+        if (cy) {
+            cy.center();
+        }
+    });
+    
+    // Utility functions
+    function showLoading(show) {
+        document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none';
+    }
+    
+    function getCSRFToken() {
+        // Get CSRF token from hidden form input
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            return csrfToken.value;
+        }
+        
+        // Fallback: try to get from cookie
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, 10) === 'csrftoken=') {
+                    cookieValue = decodeURIComponent(cookie.substring(10));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Initial load
+    loadLineageData();
+});
+</script>
+{% endblock %}
