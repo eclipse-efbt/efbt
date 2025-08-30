@@ -48,9 +48,9 @@ class MetadataLineageProcessor:
         """
         print("Processing input tables...")
         
-        # Find input layer cubes
+        # Find input layer cubes (None type are typically input cubes)
         input_cubes = CUBE.objects.filter(
-            cube_type__in=['INPUT', 'BASE']
+            cube_type__isnull=True
         )
         
         for cube in input_cubes:
@@ -87,9 +87,9 @@ class MetadataLineageProcessor:
         """
         print("Processing output tables...")
         
-        # Find output layer cubes
+        # Find output layer cubes (RC type are report cubes)
         output_cubes = CUBE.objects.filter(
-            cube_type='OUTPUT'
+            cube_type='RC'
         )
         
         for cube in output_cubes:
@@ -322,7 +322,7 @@ class MetadataLineageProcessor:
                     if item.variable_id:
                         # Find which output table this variable might be in
                         # This is a simplified approach - in reality you'd need more context
-                        output_cubes = CUBE.objects.filter(cube_type='OUTPUT')
+                        output_cubes = CUBE.objects.filter(cube_type='RC')
                         for cube in output_cubes:
                             # Check if this variable exists in this cube's structure
                             if cube.cube_structure_id and CUBE_STRUCTURE_ITEM.objects.filter(
