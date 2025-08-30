@@ -742,23 +742,6 @@ urlpatterns = [
         name="execute_datapoint_with_lineage",
     ),
 
-    # Datapoint metadata lineage endpoints
-    path(
-        "datapoint/<str:datapoint_id>/metadata-lineage/",
-        datapoint_metadata_lineage_views.datapoint_metadata_lineage_viewer,
-        name="datapoint_metadata_lineage_viewer",
-    ),
-    path(
-        "api/datapoint/<str:datapoint_id>/metadata-lineage/",
-        datapoint_metadata_lineage_views.process_datapoint_metadata_lineage,
-        name="process_datapoint_metadata_lineage",
-    ),
-    path(
-        "api/datapoint/<str:datapoint_id>/metadata-lineage/graph/",
-        datapoint_metadata_lineage_views.get_datapoint_metadata_lineage_graph,
-        name="get_datapoint_metadata_lineage_graph",
-    ),
-
     # BPMN metadata lineage endpoints
     path(
         "datapoint/<str:datapoint_id>/bpmn-metadata-lineage/",
