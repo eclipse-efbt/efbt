@@ -8,7 +8,6 @@ from . import ancrdt_transformation_views
 from . import lineage_views
 from . import lineage_api
 from . import enhanced_lineage_api
-from . import datapoint_metadata_lineage_views
 from . import bpmn_metadata_lineage_views
 
 from django.views.generic import TemplateView
