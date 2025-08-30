@@ -274,3 +274,106 @@ class CalculationUsedField(models.Model):
     
     def __str__(self):
         return f"CalculationUsedField: {self.calculation_name} used {self.used_field}"
+
+
+# Metadata Lineage Models for BIRD
+
+class DataItem(models.Model):
+    """Represents both columns and tables as data items for metadata lineage"""
+    
+    TYPE_CHOICES = [
+        ('column', 'Column'),
+        ('table', 'Table'),
+    ]
+    
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    location = models.CharField(
+        max_length=500,
+        help_text="For columns: table_name.column_name format. For tables: table name only"
+    )
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ('type', 'location')
+        indexes = [
+            models.Index(fields=['type', 'location']),
+        ]
+    
+    def __str__(self):
+        return f"DataItem({self.type}): {self.location}"
+
+
+class Process(models.Model):
+    """Represents transformations or operations on data items"""
+    
+    TYPE_CHOICES = [
+        ('column_to_column', 'Column to Column'),
+        ('table_to_table', 'Table to Table'),
+        ('columns_to_table', 'Columns to Table'),
+    ]
+    
+    FUNCTION_TYPE_CHOICES = [
+        ('basic', 'Basic Transformation'),
+        ('join', 'Join Operation'),
+        ('filter', 'Filter Operation'),
+        ('aggregate_metric', 'Aggregate to Metric'),
+        ('aggregate', 'General Aggregation'),
+    ]
+    
+    name = models.CharField(max_length=500)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    function_type = models.CharField(max_length=20, choices=FUNCTION_TYPE_CHOICES)
+    description = models.TextField(blank=True, null=True)
+    source_reference = models.CharField(
+        max_length=500, 
+        blank=True, 
+        null=True,
+        help_text="Reference to source code or function that implements this process"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['type']),
+            models.Index(fields=['function_type']),
+            models.Index(fields=['name']),
+        ]
+    
+    def __str__(self):
+        return f"Process: {self.name} ({self.type} - {self.function_type})"
+
+
+class Relationship(models.Model):
+    """Links processes with data items to track lineage relationships"""
+    
+    TYPE_CHOICES = [
+        ('produces', 'Produces'),
+        ('consumes', 'Consumes'),
+    ]
+    
+    process = models.ForeignKey(
+        'Process', 
+        related_name='relationships', 
+        on_delete=models.CASCADE
+    )
+    data_item = models.ForeignKey(
+        'DataItem', 
+        related_name='relationships', 
+        on_delete=models.CASCADE
+    )
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('process', 'data_item', 'type')
+        indexes = [
+            models.Index(fields=['type']),
+            models.Index(fields=['process', 'type']),
+            models.Index(fields=['data_item', 'type']),
+        ]
+    
+    def __str__(self):
+        return f"Relationship: {self.process.name} {self.type} {self.data_item.location}"

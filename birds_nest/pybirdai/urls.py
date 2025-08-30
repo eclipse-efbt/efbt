@@ -8,6 +8,7 @@ from . import ancrdt_transformation_views
 from . import lineage_views
 from . import lineage_api
 from . import enhanced_lineage_api
+from . import datapoint_metadata_lineage_views
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -732,6 +733,29 @@ urlpatterns = [
         "api/trail/<int:trail_id>/debug/",
         lambda request, trail_id: __import__('pybirdai.debug_tracking', fromlist=['create_debug_api_endpoint']).create_debug_api_endpoint()(request, trail_id),
         name="debug_trail_data",
+    ),
+    # Execute datapoint and get filtered lineage API
+    path(
+        "api/execute-datapoint-with-lineage/<str:data_point_id>/",
+        views.execute_datapoint_with_lineage,
+        name="execute_datapoint_with_lineage",
+    ),
+
+    # Datapoint metadata lineage endpoints
+    path(
+        "datapoint/<str:datapoint_id>/metadata-lineage/",
+        datapoint_metadata_lineage_views.datapoint_metadata_lineage_viewer,
+        name="datapoint_metadata_lineage_viewer",
+    ),
+    path(
+        "api/datapoint/<str:datapoint_id>/metadata-lineage/",
+        datapoint_metadata_lineage_views.process_datapoint_metadata_lineage,
+        name="process_datapoint_metadata_lineage",
+    ),
+    path(
+        "api/datapoint/<str:datapoint_id>/metadata-lineage/graph/",
+        datapoint_metadata_lineage_views.get_datapoint_metadata_lineage_graph,
+        name="get_datapoint_metadata_lineage_graph",
     ),
 
 ]
