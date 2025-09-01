@@ -153,7 +153,7 @@ class WorkflowTaskExecution(models.Model):
     task_number = models.IntegerField(choices=TASK_CHOICES)
     subtask_name = models.CharField(max_length=100, blank=True, null=True)
     operation_type = models.CharField(max_length=20, choices=OPERATION_CHOICES)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending')
     started_at = models.DateTimeField(blank=True, null=True)
     completed_at = models.DateTimeField(blank=True, null=True)
     error_message = models.TextField(blank=True, null=True)
