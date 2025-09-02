@@ -120,10 +120,51 @@ class TransformationMetaDataDestroyer:
         TransformationMetaDataDestroyer.delete_joins_meta_data(self,context,sdd_context,framework)
 
     def delete_items_for_sqlite(self,model_clss):
+        # Define allowed table names to prevent SQL injection
+        ALLOWED_TABLES = {
+            'pybirdai_cube_link',
+            'pybirdai_cube_structure_item_link',
+            'pybirdai_cube_structure_item',
+            'pybirdai_cube_structure',
+            'pybirdai_cube',
+            'pybirdai_domain',
+            'pybirdai_variable',
+            'pybirdai_member',
+            'pybirdai_member_mapping',
+            'pybirdai_member_mapping_item',
+            'pybirdai_variable_mapping',
+            'pybirdai_variable_mapping_item',
+            'pybirdai_table_cell',
+            'pybirdai_cell_position',
+            'pybirdai_axis_ordinate',
+            'pybirdai_ordinate_item',
+            'pybirdai_mapping_definition',
+            'pybirdai_mapping_to_cube',
+            'pybirdai_table',
+            'pybirdai_axis',
+            'pybirdai_axis_ordinate',
+            'pybirdai_subdomain',
+            'pybirdai_subdomain_enumeration',
+            'pybirdai_facet_collection',
+            'pybirdai_maintenance_agency',
+            'pybirdai_framework',
+            'pybirdai_member_hierarchy',
+            'pybirdai_member_hierarchy_node',
+            'pybirdai_combination',
+            'pybirdai_combination_item',
+            'pybirdai_cube_to_combination'
+        }
+        
         with connection.cursor() as cursor:
             cursor.execute("PRAGMA foreign_keys = 0;")
             for model_cls in model_clss:
-                cursor.execute(f"DELETE FROM pybirdai_{model_cls.__name__.lower()};")
+                table_name = f"pybirdai_{model_cls.__name__.lower()}"
+                if table_name in ALLOWED_TABLES:
+                    # Use parameterized query - note: table names can't be parameterized in SQLite,
+                    # but we validate against whitelist above
+                    cursor.execute(f"DELETE FROM {table_name};")
+                else:
+                    print(f"Warning: Table '{table_name}' not in allowed list, skipping deletion")
             cursor.execute("PRAGMA foreign_keys = 1;")
 
     def delete_bird_metadata_database(self, context: Any, sdd_context: Any, framework: str) -> None:
