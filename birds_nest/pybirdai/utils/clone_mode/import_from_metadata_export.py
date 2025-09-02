@@ -1201,6 +1201,11 @@ class CSVDataImporter:
         logger.info(f"Table {table_name} has {existing_count} existing records before import")
         if existing_count > 0:
             # Use raw SQL for more efficient clearing and proper foreign key handling
+            # Validate table_name against allowed tables before using in raw SQL to prevent SQL injection
+            allowed_tables = set(self.model_map.keys())  # Model map should use canonical table names
+            # SQLite can have table names with/without "pybirdai_" prefix
+            if table_name not in allowed_tables:
+                raise Exception(f"Blocked potentially unsafe table_name: {table_name}")
             with connection.cursor() as cursor:
                 # Disable foreign key constraints for SQLite during clearing
                 if connection.vendor == 'sqlite':
@@ -1211,7 +1216,7 @@ class CSVDataImporter:
                 
                 # For SQLite, also reset the auto-increment counter if it exists
                 if connection.vendor == 'sqlite':
-                    cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
+                    cursor.execute("DELETE FROM sqlite_sequence WHERE name=?;", [table_name])
                     cursor.execute("PRAGMA foreign_keys = 1;")
                 
             logger.info(f"Cleared {existing_count} existing records from {table_name}")
