@@ -3183,7 +3183,7 @@ def edit_member_link(request):
 
     except Exception as e:
         logger.error(f"Error editing member link: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': str(e)})
+        return JsonResponse({'success': False, 'error': 'An internal error has occurred.'})
 
 def download_member_link_template(request):
     """View function for downloading member link template."""
