@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -35,7 +35,7 @@ class JoinsMetaDataCreator:
             framework (str): The framework being used (e.g., "FINREP_REF").
         """
         self.add_reports(context, sdd_context, framework)
-    
+
     def add_reports(self, context: Any, sdd_context: Any, framework: str) -> None:
         """
         Add reports based on the given context and framework.
@@ -57,10 +57,10 @@ class JoinsMetaDataCreator:
                 generated_output_layer = self.find_output_layer_cube(
                     sdd_context, report_template, framework)
                 if generated_output_layer:
-                    self.add_join_for_products_il(context, sdd_context, 
+                    self.add_join_for_products_il(context, sdd_context,
                                          generated_output_layer, framework)
 
-    def create_ldm_entity_to_linked_entities_map(self, context: Any, 
+    def create_ldm_entity_to_linked_entities_map(self, context: Any,
                                                  sdd_context: Any) -> None:
         """
         Create a mapping of LDM entities to their linked entities.
@@ -69,7 +69,7 @@ class JoinsMetaDataCreator:
             context (Any): The context object containing necessary data.
             sdd_context (Any): The SDD context object.
         """
-        output_file = os.path.join(context.output_directory, "csv", 
+        output_file = os.path.join(context.output_directory, "csv",
                                    "ldm_entity_related_entities.csv")
         with open(output_file, "w", encoding='utf-8') as f:
             f.write("ldm_entity,related_entities\n")
@@ -85,8 +85,8 @@ class JoinsMetaDataCreator:
                     context.ldm_entity_to_linked_tables_map[model.__name__] = \
                         related_entities_string
 
-    def add_join_for_products_il(self, context: Any, sdd_context: Any, 
-                           generated_output_layer: Any, 
+    def add_join_for_products_il(self, context: Any, sdd_context: Any,
+                           generated_output_layer: Any,
                            framework: str) -> None:
         """
         Add join for products for the input layer.
@@ -98,23 +98,23 @@ class JoinsMetaDataCreator:
             framework (str): The framework being used (e.g., "FINREP_REF").
         """
         tables_for_main_category_map = (
-            context.tables_for_main_category_map_finrep 
-            if framework == "FINREP_REF" 
+            context.tables_for_main_category_map_finrep
+            if framework == "FINREP_REF"
             else context.tables_for_main_category_map_ae
         )
         join_for_products_to_linked_tables_map = (
-            context.join_for_products_to_linked_tables_map_finrep 
-            if framework == "FINREP_REF" 
+            context.join_for_products_to_linked_tables_map_finrep
+            if framework == "FINREP_REF"
             else context.join_for_products_to_linked_tables_map_ae
         )
         table_and_part_tuple_map = (
-            context.table_and_part_tuple_map_finrep 
-            if framework == "FINREP_REF" 
+            context.table_and_part_tuple_map_finrep
+            if framework == "FINREP_REF"
             else context.table_and_part_tuple_map_ae
         )
         cube_links_to_create = []  # New list to collect CUBE_LINK objects
         cube_structure_item_links_to_create = []  # New list for CUBE_STRUCTURE_ITEM_LINK objects
-        
+
         try:
             report_template = generated_output_layer.name
             main_categories = context.report_to_main_category_map[report_template]
@@ -127,13 +127,13 @@ class JoinsMetaDataCreator:
                         )
                         join_for_products = table_and_part_tuple_map[mc]
 
-                        for join_for_product in join_for_products:                            
+                        for join_for_product in join_for_products:
                             print(f"join_for_product:{join_for_product}")
                             print(inputLayerTable)
                             input_entity_list = [inputLayerTable]
                             linked_tables = join_for_products_to_linked_tables_map[join_for_product]
                             linked_tables_list = linked_tables.split(":")
-                            if (inputLayerTable and 
+                            if (inputLayerTable and
                                 inputLayerTable.cube_structure_id not in linked_tables_list):
                                 linked_tables_list.append(inputLayerTable.cube_structure_id)
                             extra_tables = []
@@ -201,12 +201,12 @@ class JoinsMetaDataCreator:
                                             sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id].append(cube_link)
                                         except KeyError:
                                             sdd_context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
-                                        
 
-                                        
+
+
                                         num_of_cube_link_items = self.add_field_to_field_lineage_to_rules_for_join_for_product(
-                                            context, sdd_context, generated_output_layer, 
-                                            input_entity, mc, report_template, 
+                                            context, sdd_context, generated_output_layer,
+                                            input_entity, mc, report_template,
                                             framework, cube_link, cube_structure_item_links_to_create
                                         )
 
@@ -214,7 +214,7 @@ class JoinsMetaDataCreator:
                                             if num_of_cube_link_items > 0:
                                                 cube_links_to_create.append(cube_link)
 
-                                
+
                 except KeyError:
                     print(f"no tables for main category:{mc}")
         except KeyError:
@@ -223,7 +223,7 @@ class JoinsMetaDataCreator:
         # Bulk create all collected CUBE_LINK objects
         if context.save_derived_sdd_items and cube_links_to_create:
             CUBE_LINK.objects.bulk_create(cube_links_to_create, batch_size=1000)
-            
+
         # Bulk create all collected CUBE_STRUCTURE_ITEM_LINK objects
         for item in cube_structure_item_links_to_create:
             print(item.foreign_cube_variable_code.variable_id)
@@ -236,7 +236,7 @@ class JoinsMetaDataCreator:
     def add_field_to_field_lineage_to_rules_for_join_for_product(
             self, context: Any, sdd_context: Any,
             output_entity: Any, input_entity: Any,
-            category: str, report_template: str, 
+            category: str, report_template: str,
             framework: str, cube_link: Any,
             cube_structure_item_links_to_create: List) -> None:
         """
@@ -255,7 +255,7 @@ class JoinsMetaDataCreator:
         num_of_cube_link_items = 0
         for output_item in sdd_context.bird_cube_structure_item_dictionary[
                 output_entity.cube_id + '_cube_structure']:
-            if self.valid_operation(context, output_item, framework, 
+            if self.valid_operation(context, output_item, framework,
                                     category, report_template):
                 input_columns = self.find_variables_with_same_domain_then_name(
                     sdd_context, output_item, input_entity)
@@ -269,18 +269,18 @@ class JoinsMetaDataCreator:
                             f"{csil.foreign_cube_variable_code.variable_id.variable_id}"
                         )
                         csil.primary_cube_variable_code = input_column
-                        if not(csil.primary_cube_variable_code.variable_id is None):                            
+                        if not(csil.primary_cube_variable_code.variable_id is None):
                             csil.cube_structure_item_link_id += (
                             f":{csil.primary_cube_variable_code.variable_id.variable_id}"
                         )
-                        csil.cube_link_id = cube_link  
+                        csil.cube_link_id = cube_link
                         sdd_context.cube_structure_item_links_dictionary[csil.cube_structure_item_link_id] = csil
-                        
+
                         try:
                             sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(csil)
                         except KeyError:
                             sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id] = [csil]
-                            
+
                         if context.save_derived_sdd_items:
                             cube_structure_item_links_to_create.append(csil)
                             num_of_cube_link_items = num_of_cube_link_items + 1
@@ -344,7 +344,7 @@ class JoinsMetaDataCreator:
         related_variables = []
         target_domain = output_item.variable_id.domain_id
 
-        if target_domain and  not ((target_domain.domain_id == "String") or (target_domain.domain_id == "Date") or (target_domain.domain_id == "Integer") or (target_domain.domain_id == "Boolean") or (target_domain.domain_id == "Float")     ):            
+        if target_domain and  not ((target_domain.domain_id == "String") or (target_domain.domain_id == "Date") or (target_domain.domain_id == "Integer") or (target_domain.domain_id == "Boolean") or (target_domain.domain_id == "Float")     ):
             if input_entity:
                 field_list = []
                 try:

@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -59,18 +59,18 @@ class RunCreateFilters(AppConfig):
         )
 
         base_dir = settings.BASE_DIR
-        
+
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
         #ImportDatabaseToSDDModel().import_sdd(sdd_context)
 
-        
+
         CreateOutputLayers().create_filters(
             context, sdd_context, "FINREP_REF", "3.0"
         )
@@ -81,6 +81,3 @@ class RunCreateFilters(AppConfig):
 def ready(self):
         # This method is still needed for Django's AppConfig
         pass
-
-
-

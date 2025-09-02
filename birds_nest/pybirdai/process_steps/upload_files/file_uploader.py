@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -98,23 +98,23 @@ class FileUploader:
     def upload_sqldev_eil_files(self, sdd_context, request=None):
         """
         Handle the upload of SQLDeveloper EIL files.
-        
+
         Args:
             sdd_context: The context for the upload
             request: The Django HTTP request object containing the files
-            
+
         Returns:
             dict: Status of the upload operation
         """
         print("Uploading SQLDeveloper EIL files")
 
-        
+
         if not request or not request.FILES:
             return {
                 'status': 'error',
                 'message': 'No files were uploaded'
             }
-            
+
         uploaded_files = []
         resource_directory = sdd_context.file_directory
         eil_directory = os.path.join(resource_directory, 'il')
@@ -124,44 +124,53 @@ class FileUploader:
 
         for file in request.FILES.getlist('eil_files'):
             try:
+
+                # You might want to add file validation here
+                # For example, check file extension, size, etc.
+
+                # Handle the file upload
+                # Example: save to a specific directory
                 # Secure file upload with validation
                 file_info = self._save_file(file, eil_directory)
+
                 uploaded_files.append({
                     'original_name': file_info['original_name'],
                     'safe_name': file_info['safe_name'], 
                     'path': file_info['path'],
                     'size': file_info['size']
                 })
+
                 
             except ValueError as e:
                 return {
                     'status': 'error',
                     'message': f'Security error uploading file {file.name}: {str(e)}'
                 }
+
             except Exception as e:
                 return {
                     'status': 'error',
                     'message': f'Error uploading file {file.name}: {str(e)}'
                 }
-        
+
         return {
             'status': 'success',
             'files': uploaded_files
         }
-        
+
     def upload_sqldev_eldm_files(self, sdd_context, request=None):
         """
         Handle the upload of SQLDeveloper ELDM files.
         """
         print("Uploading SQLDeveloper ELDM files")
 
-        
+
         if not request or not request.FILES:
             return {
                 'status': 'error',
                 'message': 'No files were uploaded'
             }
-            
+
         uploaded_files = []
         resource_directory = sdd_context.file_directory
         eldm_directory = os.path.join(resource_directory, 'ldm')
@@ -171,44 +180,52 @@ class FileUploader:
 
         for file in request.FILES.getlist('eldm_files'):
             try:
-                # Secure file upload with validation
+
+                # You might want to add file validation here
+                # For example, check file extension, size, etc.
+
+                # Handle the file upload
+                # Example: save to a specific directory
+
                 file_info = self._save_file(file, eldm_directory)
+
                 uploaded_files.append({
                     'original_name': file_info['original_name'],
                     'safe_name': file_info['safe_name'], 
                     'path': file_info['path'],
                     'size': file_info['size']
                 })
-                
+   
             except ValueError as e:
                 return {
                     'status': 'error',
                     'message': f'Security error uploading file {file.name}: {str(e)}'
                 }
+
             except Exception as e:
                 return {
                     'status': 'error',
                     'message': f'Error uploading file {file.name}: {str(e)}'
                 }
-        
+
         return {
             'status': 'success',
             'files': uploaded_files
         }
-        
+
     def upload_technical_export_files(self, sdd_context, request=None):
         """
         Handle the upload of Technical Export files.
         """
         print("Uploading Technical Export files")
 
-        
+
         if not request or not request.FILES:
             return {
                 'status': 'error',
                 'message': 'No files were uploaded'
             }
-            
+
         uploaded_files = []
         resource_directory = sdd_context.file_directory
         technical_export_directory = os.path.join(resource_directory, 'technical_export')
@@ -219,44 +236,52 @@ class FileUploader:
 
         for file in request.FILES.getlist('technical_export_files'):
             try:
-                # Secure file upload with validation
+
+                # You might want to add file validation here
+                # For example, check file extension, size, etc.
+
+                # Handle the file upload
+                # Example: save to a specific directory
+
                 file_info = self._save_file(file, technical_export_directory)
+
                 uploaded_files.append({
                     'original_name': file_info['original_name'],
                     'safe_name': file_info['safe_name'], 
                     'path': file_info['path'],
                     'size': file_info['size']
                 })
-                
+    
             except ValueError as e:
                 return {
                     'status': 'error',
                     'message': f'Security error uploading file {file.name}: {str(e)}'
                 }
+
             except Exception as e:
                 return {
                     'status': 'error',
                     'message': f'Error uploading file {file.name}: {str(e)}'
                 }
-        
+
         return {
             'status': 'success',
             'files': uploaded_files
         }
-        
+
     def upload_joins_configuration(self, sdd_context, request=None):
         """
         Handle the upload of Joins Configuration files.
         """
         print("Uploading Joins Configuration files")
 
-        
+
         if not request or not request.FILES:
             return {
                 'status': 'error',
                 'message': 'No files were uploaded'
             }
-            
+
         uploaded_files = []
         resource_directory = sdd_context.file_directory
         joins_configuration_directory = os.path.join(resource_directory, 'joins_configuration')
@@ -267,33 +292,44 @@ class FileUploader:
 
         for file in request.FILES.getlist('joins_configuration_files'):
             try:
-                # Secure file upload with validation
+
+                # You might want to add file validation here
+                # For example, check file extension, size, etc.
+
+                # Handle the file upload
+                # Example: save to a specific directory
+
+
                 file_info = self._save_file(file, joins_configuration_directory)
+
                 uploaded_files.append({
                     'original_name': file_info['original_name'],
                     'safe_name': file_info['safe_name'], 
                     'path': file_info['path'],
                     'size': file_info['size']
                 })
+
                 
             except ValueError as e:
                 return {
                     'status': 'error',
                     'message': f'Security error uploading file {file.name}: {str(e)}'
                 }
+
             except Exception as e:
                 return {
                     'status': 'error',
                     'message': f'Error uploading file {file.name}: {str(e)}'
                 }
-        
+
         return {
             'status': 'success',
             'files': uploaded_files
         }
-    
+
     def _save_file(self, file, directory):
         """
+
         Secure method to save the uploaded file with path traversal protection.
         
         Args:
@@ -303,6 +339,7 @@ class FileUploader:
         Returns:
             dict: Result with safe filename and status
         """
+
         # Validate file size
         if not self._validate_file_size(file):
             raise ValueError(f"File size ({file.size} bytes) exceeds maximum allowed size ({self.MAX_FILE_SIZE} bytes)")
@@ -346,3 +383,4 @@ class FileUploader:
             }
         except IOError as e:
             raise ValueError(f"Failed to save file: {str(e)}")
+
