@@ -193,7 +193,7 @@ def get_datapoint_bpmn_metadata_lineage_graph(request, datapoint_id):
         
         return JsonResponse({
             'success': False,
-            'error': str(e),
+            'error': "An internal server error occurred.",
             'datapoint_id': datapoint_id
         }, status=500)
 
