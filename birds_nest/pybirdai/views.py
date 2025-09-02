@@ -1118,11 +1118,40 @@ def list_lineage_files(request):
     return render(request, 'pybirdai/lineage_files.html', {'csv_files': csv_files})
 
 def view_csv_file(request, filename):
+    """
+    Secure CSV file viewer with path traversal protection.
+    """
+    # Sanitize filename to prevent path traversal attacks
+    safe_filename = os.path.basename(filename)  # Remove any directory components
+    
+    # Remove path traversal sequences and dangerous characters
+    safe_filename = safe_filename.replace('..', '').replace('/', '').replace('\\', '')
+    
+    # Validate filename format (only alphanumeric, hyphens, underscores, and dots)
+    if not re.match(r'^[a-zA-Z0-9._-]+$', safe_filename):
+        messages.error(request, 'Invalid filename format')
+        return redirect('pybirdai:list_lineage_files')
+    
+    # Ensure file has .csv extension
+    if not safe_filename.lower().endswith('.csv'):
+        messages.error(request, 'Invalid file type - only CSV files are allowed')
+        return redirect('pybirdai:list_lineage_files')
+    
+    # Construct the safe file path
+    lineage_dir = Path(settings.BASE_DIR) / 'results' / 'lineage'
+    file_path = lineage_dir / safe_filename
+    
+    # Verify the resolved path is still within the allowed directory
+    try:
+        if not file_path.resolve().is_relative_to(lineage_dir.resolve()):
+            messages.error(request, 'Access denied - path traversal detected')
+            return redirect('pybirdai:list_lineage_files')
+    except (OSError, ValueError):
+        messages.error(request, 'Invalid file path')
+        return redirect('pybirdai:list_lineage_files')
 
-    file_path = Path(settings.BASE_DIR) / 'results' / 'lineage' / filename
-
-    if not file_path.exists() or not filename.endswith('.csv'):
-        messages.error(request, 'File not found or invalid file type')
+    if not file_path.exists():
+        messages.error(request, 'File not found')
         return redirect('pybirdai:list_lineage_files')
 
     try:
@@ -1142,7 +1171,7 @@ def view_csv_file(request, filename):
         num_columns = len(headers)
 
         context = {
-            'filename': filename,
+            'filename': safe_filename,  # Use sanitized filename
             'headers': headers,
             'page_obj': page_obj,
             'total_rows': total_rows,
