@@ -2738,7 +2738,7 @@ def return_cubelink_visualisation(request):
     if request.method == 'GET':
         cube_id = request.GET.get('cube_id', '')
         join_identifier = request.GET.get('join_identifier', '').replace("+"," ")
-        in_md = eval(request.GET.get('in_md', "false").capitalize())
+        in_md = request.GET.get('in_md', "false").lower() == 'true'
         logger.debug(f"Visualization params - cube_id: {cube_id}, join_identifier: {join_identifier}, in_md: {in_md}")
 
         if cube_id:
