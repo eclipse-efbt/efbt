@@ -124,7 +124,7 @@ def process_datapoint_bpmn_metadata_lineage(request, datapoint_id):
         
         return JsonResponse({
             'success': False,
-            'error': str(e),
+            'error': "An internal error has occurred.",
             'datapoint_id': datapoint_id
         }, status=500)
 
