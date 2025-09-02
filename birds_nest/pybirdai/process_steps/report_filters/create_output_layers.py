@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -28,11 +28,11 @@ class CreateOutputLayers:
         in_scope_reports = self._get_in_scope_reports(
             file_location, framework, version
         )
-        
+
         # Lists to collect objects for bulk creation
         cubes_to_create = []
         structures_to_create = []
-        
+
         for destination_cube in sdd_context.mapping_to_cube_dictionary.keys():
             if destination_cube.replace('.', '_') in in_scope_reports:
                 cube, structure = self.create_output_layer_for_cube_mapping(
@@ -41,7 +41,7 @@ class CreateOutputLayers:
                 if cube and structure:  # Only add if objects were created
                     cubes_to_create.append(cube)
                     structures_to_create.append(structure)
-        
+
         # Bulk create if saving is enabled
         if context.save_derived_sdd_items and cubes_to_create:
             CUBE_STRUCTURE.objects.bulk_create(structures_to_create)
@@ -90,20 +90,20 @@ class CreateOutputLayers:
         Returns the created cube and structure instead of saving them.
         """
         output_layer_cube, output_layer_cube_structure = self._create_cube_and_structure(destination_cube)
-        
+
         structures_and_cubes = {
             'structure': (sdd_context.bird_cube_structure_dictionary, output_layer_cube_structure),
             'cube': (sdd_context.bird_cube_dictionary, output_layer_cube),
             'FINREP_REF': (sdd_context.finrep_output_cubes, output_layer_cube),
             'AE_REF': (sdd_context.ae_output_cubes, output_layer_cube)
         }
-        
+
         structures_and_cubes['structure'][0][output_layer_cube_structure.name] = output_layer_cube_structure
         structures_and_cubes['cube'][0][output_layer_cube.name] = output_layer_cube
-        
+
         if framework in structures_and_cubes:
             structures_and_cubes[framework][0][output_layer_cube.name] = output_layer_cube
-        
+
         return output_layer_cube, output_layer_cube_structure
 
     def _create_cube_and_structure(self, destination_cube):
@@ -117,18 +117,18 @@ class CreateOutputLayers:
             tuple: A tuple containing the created CUBE and CUBE_STRUCTURE objects.
         """
         cube_name = self._generate_cube_name(destination_cube)
-        
+
         output_layer_cube = CUBE()
         output_layer_cube.cube_id = cube_name
         output_layer_cube.name = cube_name
-        output_layer_cube.cube_type = 'RC'    
+        output_layer_cube.cube_type = 'RC'
 
         output_layer_cube_structure = CUBE_STRUCTURE()
         output_layer_cube_structure.cube_structure_id = f"{cube_name}_cube_structure"
         output_layer_cube_structure.name = f"{cube_name}_cube_structure"
-        
+
         output_layer_cube.cube_structure_id = output_layer_cube_structure
-        
+
         return output_layer_cube, output_layer_cube_structure
 
     def _generate_cube_name(self, destination_cube):

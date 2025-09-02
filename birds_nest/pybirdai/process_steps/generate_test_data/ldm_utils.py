@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2020 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -125,7 +125,7 @@ class Utils(object):
     def number_of_relationships_to_this_class(cls, source_class, target_class):
         '''
         Checks how many relationships there are between 2 classes
-        It is possible that one class might have 2 different relationships 
+        It is possible that one class might have 2 different relationships
         to the same class.
         '''
         features = source_class.eStructuralFeatures
@@ -141,7 +141,7 @@ class Utils(object):
 
     @classmethod
     def make_valid_id_for_literal(cls, input_string):
-        ''' 
+        '''
         Tranlate text to be a valid id, without special characters, and following
         the rules for valid id's in regdna
         '''
@@ -177,10 +177,10 @@ class Utils(object):
         if return_string == "op":
             return_string = "_op"
         return return_string
-    
+
     @classmethod
     def make_valid_id(cls, input_string):
-        ''' 
+        '''
         Tranlate text to be a valid id, without special characters, and following
         the rules for valid id's in regdna
         '''
@@ -288,7 +288,7 @@ class Utils(object):
         return context.e_string
 
     @classmethod
-    def find_enum(cls, enum_name, enum_map):        
+    def find_enum(cls, enum_name, enum_map):
         '''
         returns the enum for a reference output layer
         '''
@@ -312,9 +312,9 @@ class Utils(object):
         if new_adapted_value == "s_p_":
             return_val = "s_p_dup" + str(counter)
         return return_val
-    
+
     @classmethod
-    def get_annotation_with_source(cls,element, source):       
+    def get_annotation_with_source(cls,element, source):
         '''
         returns the annotation with the source
         '''
@@ -325,9 +325,9 @@ class Utils(object):
                     return_annotation = annotation
 
         return return_annotation
-    
+
     @classmethod
-    def get_annotation_directive(cls,package, name):      
+    def get_annotation_directive(cls,package, name):
         '''
         returns the annotation directive with the name
         '''
@@ -335,9 +335,4 @@ class Utils(object):
         for annotation_directive in package.annotationDirectives:
             if annotation_directive.name == name:
                 return_annotation_directive = annotation_directive
-        return return_annotation_directive        
-       
-
-        
-
-        
+        return return_annotation_directive
