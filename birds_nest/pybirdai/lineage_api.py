@@ -314,12 +314,12 @@ def get_trail_complete_lineage(request, trail_id):
         return JsonResponse(lineage_data, json_dumps_params={'indent': 2})
         
     except Exception as e:
-        import traceback
-        error_details = traceback.format_exc()
-        print(f"Error in get_trail_complete_lineage: {error_details}")
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error in get_trail_complete_lineage for trail {trail_id}: {str(e)}", exc_info=True)
         
         return JsonResponse({
-            'error': str(e),
+            'error': 'Complete lineage extraction failed',
             'trail_id': trail_id,
             'trail_name': trail.name,
             'error_type': 'complete_lineage_extraction_failed'
