@@ -29,4 +29,3 @@
  .vscode/
 *.lock
 __pycache__/
-*.html
