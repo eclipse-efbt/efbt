@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -20,7 +20,7 @@ class SDDContext(object):
     # variables to configure the behaviour
 
     use_codes = True
-    
+
     # the directory where we get our input files
     file_directory = ""
     # the directory where we save our outputs.
@@ -46,7 +46,7 @@ class SDDContext(object):
     combination_item_dictionary = {}
     combination_to_rol_cube_map = {}
 
-    
+
     axis_ordinate_dictionary= {}
     table_cell_dictionary= {}
     table_to_table_cell_dictionary= {}
@@ -76,7 +76,7 @@ class SDDContext(object):
     table_to_combination_dictionary = {}
 
 
-    
+
      # For the reference output layers we record a map between members ids
     # andtheir containing domains
     member_id_to_domain_map = {}
@@ -84,7 +84,7 @@ class SDDContext(object):
     # For the reference output layers we record a map between members ids
     # and their codes
     member_id_to_member_code_map = {}
-    
+
     variable_set_to_variable_map = {}
 
     axis_ordinate_to_ordinate_items_map = {}
