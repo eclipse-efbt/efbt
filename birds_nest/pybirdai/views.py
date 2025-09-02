@@ -4850,19 +4850,12 @@ def execute_datapoint_with_lineage(request, data_point_id):
         
     except Exception as e:
         logger.error(f"Error executing datapoint with lineage: {str(e)}", exc_info=True)
-        error_message = str(e)
         
-        # Check for common permission issues
-        if "readonly database" in error_message.lower():
-            error_message = (
-                f"Database is read-only. This is likely due to file permission issues. "
-                f"Please ensure the Django process has write permissions to the database directory. "
-                f"Original error: {error_message}"
-            )
+        # Optionally, provide a generic hint about possible file permissions if relevant
+        hint = 'Check file permissions on the birds_nest directory if running locally.'
         
         return JsonResponse({
             'success': False,
-            'error': error_message,
-            'error_type': type(e).__name__,
-            'hint': 'Check file permissions on /home/neil/development/efbt_dev_aug18/efbt/birds_nest directory'
+            'error': "An internal error has occurred.",
+            'hint': hint
         }, status=500)
