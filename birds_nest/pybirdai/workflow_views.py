@@ -3304,15 +3304,14 @@ def workflow_reset_session_partial(request):
             return redirect('pybirdai:workflow_dashboard')
 
     except Exception as e:
-        logger.error(f"Error during partial workflow session reset: {e}")
+        logger.error(f"Error during partial workflow session reset: {e}", exc_info=True)
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'success': False,
-                'message': 'Failed to reset partial workflow session',
-                'error': str(e)
+                'message': 'Failed to reset partial workflow session'
             }, status=500)
         else:
-            messages.error(request, f'Failed to reset partial workflow session: {str(e)}')
+            messages.error(request, 'Failed to reset partial workflow session.')
             return redirect('pybirdai:workflow_dashboard')
 
 
