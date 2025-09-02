@@ -81,14 +81,23 @@ def process_datapoint_bpmn_metadata_lineage(request, datapoint_id):
                 lineage_data = _get_datapoint_bpmn_lineage_data(datapoint)
             
             # Export results to JSON
+            # Sanitize datapoint_id to only contain safe characters (e.g. UUID, slug, or int)
+            import re
+            safe_datapoint_id = re.sub(r'[^a-zA-Z0-9_\-]', '_', str(datapoint_id))
+            base_output_dir = os.path.join(base_dir, 'results', 'bpmn_metadata_lineage')
+            # Build the filename using sanitized id
             output_path = os.path.join(
-                base_dir, 'results', 'bpmn_metadata_lineage', 
-                f'datapoint_{datapoint_id}_bpmn_lineage.json'
+                base_output_dir,
+                f'datapoint_{safe_datapoint_id}_bpmn_lineage.json'
             )
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            # Normalize and check output_path is within base_output_dir
+            norm_output_path = os.path.normpath(output_path)
+            if not norm_output_path.startswith(os.path.abspath(base_output_dir) + os.sep):
+                raise Exception("Invalid datapoint id/path detected.")
+            os.makedirs(os.path.dirname(norm_output_path), exist_ok=True)
             
             # Save to file
-            with open(output_path, 'w') as f:
+            with open(norm_output_path, 'w') as f:
                 json.dump(lineage_data, f, indent=2)
             
             return JsonResponse({
