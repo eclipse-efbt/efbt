@@ -23,7 +23,8 @@ import itertools
 from datetime import datetime
 from pathlib import Path
 
-# Django setup for standalone testing
+# Allowed table name pattern: letters, digits, underscores only
+import re
 class DjangoSetup:
     @staticmethod
     def setup():
@@ -61,10 +62,22 @@ class CSVDataImporter:
         self.column_mappings = {}
         self.results_dir = results_dir
         self.id_mappings = {}  # Track ID mappings for models with auto-generated IDs
+        # Define allowed table names to prevent SQL injection
+        self.allowed_table_names = set()
         self._build_model_map()
         self._build_column_mappings()
         self._ensure_results_directory()
         logger.info("CSVDataImporter initialized")
+        
+    def _is_safe_table_name(self, table_name):
+        """Validate table name against whitelist and pattern"""
+        if not table_name:
+            return False
+        # Check if table name matches expected pattern (letters, digits, underscores only)
+        if not re.match(r'^[a-zA-Z][a-zA-Z0-9_]*$', table_name):
+            return False
+        # Check against whitelist of allowed table names
+        return table_name in self.allowed_table_names
 
     def _ensure_results_directory(self):
         """Ensure the results directory exists"""
@@ -112,6 +125,8 @@ class CSVDataImporter:
         for name, obj in inspect.getmembers(bird_meta_data_model):
             if inspect.isclass(obj) and issubclass(obj, models.Model) and obj != models.Model:
                 self.model_map[obj._meta.db_table] = obj
+                # Add table name to allowed list for SQL injection protection
+                self.allowed_table_names.add(obj._meta.db_table)
                 model_count += 1
                 logger.debug(f"Added model {name} -> table {obj._meta.db_table}")
 
@@ -629,7 +644,10 @@ class CSVDataImporter:
         Auto-generates sequential indices for models using Django's auto-generated primary keys.
         """
         logger.info(f"Starting bulk SQLite3 import for {table_name}")
-        
+        # Validate table name strictly before any SQL execution
+        if not self._is_safe_table_name(table_name) or table_name not in self.model_map:
+            logger.error(f"Unsafe or unknown table name detected: {table_name}")
+            raise Exception(f"Unsafe or unknown table name detected: {table_name}")
         # Parse CSV content
         headers, rows = self._parse_csv_content(csv_content)
         
@@ -686,13 +704,19 @@ class CSVDataImporter:
         
         try:
             # Clear existing data first
+            # Validate table name to prevent SQL injection
+            if not self._is_safe_table_name(table_name):
+                raise ValueError(f"Unsafe table name detected: {table_name}")
+                
             with connection.cursor() as cursor:
                 if connection.vendor == 'sqlite':
                     cursor.execute("PRAGMA foreign_keys = 0;")
                 
+                # Table name validated above
                 cursor.execute(f"DELETE FROM {table_name};")
                 
                 if connection.vendor == 'sqlite':
+                    # Table name validated above
                     cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
                     cursor.execute("PRAGMA foreign_keys = 1;")
             
@@ -724,6 +748,11 @@ class CSVDataImporter:
             
             # Verify import success
             with connection.cursor() as cursor:
+                # Table name already validated above, but double-check for safety
+                if not self._is_safe_table_name(table_name) or table_name not in self.model_map:
+                    logger.error(f"Unsafe or unknown table name detected (count): {table_name}")
+                    raise Exception(f"Unsafe or unknown table name detected (count): {table_name}")
+                # Table name validated above
                 cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
                 imported_count = cursor.fetchone()[0]
             
@@ -796,12 +825,19 @@ class CSVDataImporter:
         
         # Process FK resolution in batches to avoid memory issues
         batch_size = 1000
+        
+        # Validate table name to prevent SQL injection
+        if not self._is_safe_table_name(table_name):
+            raise ValueError(f"Unsafe table name detected in FK resolution: {table_name}")
+            
         with connection.cursor() as cursor:
+            # Table name validated above
             cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
             total_records = cursor.fetchone()[0]
             
             for offset in range(0, total_records, batch_size):
                 # Get batch of records with string FK values
+                # Table name validated above, column names come from model field definitions
                 cursor.execute(f"SELECT id, {', '.join(csv_to_fk_mapping.values())} FROM {table_name} LIMIT {batch_size} OFFSET {offset}")
                 records = cursor.fetchall()
                 
@@ -845,8 +881,10 @@ class CSVDataImporter:
                 # Execute batch updates
                 for record_id, fk_updates in updates:
                     if fk_updates:
+                        # Field names come from model field definitions, so they're safe
                         set_clause = ', '.join([f"{field} = ?" for field in fk_updates.keys()])
                         values = list(fk_updates.values()) + [record_id]
+                        # Table name validated above
                         cursor.execute(f"UPDATE {table_name} SET {set_clause} WHERE id = ?", values)
                 
                 logger.debug(f"Processed FK resolution for batch {offset}-{offset + len(records)} of {total_records}")
@@ -1030,7 +1068,12 @@ class CSVDataImporter:
 
         # Write detailed debug info to a separate file
         debug_file = f"debug_import_{csv_filename.replace('.csv', '')}.txt"
-        debug_path = os.path.join(self.results_dir, debug_file)
+        debug_path = os.path.normpath(os.path.join(self.results_dir, debug_file))
+        # Verify that the debug_path is within the results_dir (no path traversal allowed)
+        results_dir_norm = os.path.normpath(self.results_dir)
+        if not debug_path.startswith(results_dir_norm):
+            logger.error(f"Attempted debug file write outside results directory: {debug_path}")
+            raise Exception("Unsafe debug file path detected!")
         
         table_name = self._get_table_name_from_csv_filename(csv_filename)
         logger.info(f"Mapped CSV file '{csv_filename}' to table '{table_name}'")
@@ -1142,6 +1185,7 @@ class CSVDataImporter:
         
         # Write detailed debug info to file
         try:
+            # 'debug_path' is now validated to stay within 'self.results_dir'
             with open(debug_path, 'w') as f:
                 f.write(f"=== DEBUG: Import of {csv_filename} ===\n")
                 f.write(f"CSV filename: {csv_filename}\n")
@@ -1213,6 +1257,13 @@ class CSVDataImporter:
         logger.info(f"Table {table_name} has {existing_count} existing records before import")
         if existing_count > 0:
             # Use raw SQL for more efficient clearing and proper foreign key handling
+            # Validate table_name against allowed tables before using in raw SQL to prevent SQL injection
+            allowed_tables = set(self.model_map.keys())  # Model map should use canonical table names
+            # SQLite can have table names with/without "pybirdai_" prefix
+            if table_name not in allowed_tables:
+                raise Exception(f"Blocked potentially unsafe table_name: {table_name}")
+            if not self._is_safe_table_name(table_name):
+                raise Exception(f"Unsafe table name (violates allowed character rules): {table_name}")
             with connection.cursor() as cursor:
                 # Disable foreign key constraints for SQLite during clearing
                 if connection.vendor == 'sqlite':
@@ -1223,7 +1274,7 @@ class CSVDataImporter:
                 
                 # For SQLite, also reset the auto-increment counter if it exists
                 if connection.vendor == 'sqlite':
-                    cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
+                    cursor.execute("DELETE FROM sqlite_sequence WHERE name=?;", [table_name])
                     cursor.execute("PRAGMA foreign_keys = 1;")
                 
             logger.info(f"Cleared {existing_count} existing records from {table_name}")
@@ -1878,6 +1929,11 @@ class CSVDataImporter:
         logger.info(f"Completed ordered CSV strings import. Processed {len(results)} files")
         return results
 
+
+    def _is_safe_table_name(self, table_name):
+        """Return True if table_name contains only allowed characters and matches expected pattern."""
+        # Only letters, digits, and underscores permitted
+        return bool(re.fullmatch(r'[A-Za-z0-9_]+', table_name))
 
 def import_bird_data_from_csv_export(path_or_content, use_fast_import=False):
     """

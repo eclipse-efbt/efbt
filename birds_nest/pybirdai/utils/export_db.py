@@ -117,7 +117,11 @@ def _export_database_to_csv_logic():
                 # Get data with escaped column names and ordered by primary key
                 with connection.cursor() as cursor:
                     escaped_headers = [f'"{h}"' if h == 'order' else h for h in db_headers]
-                    # Get primary key column name
+                    # Get primary key column name - validate table name against our whitelist
+                    if table_name not in valid_table_names:
+                        continue
+                    # Use parameterized query for table info - note: SQLite PRAGMA doesn't support parameters
+                    # but we validate table_name against valid_table_names whitelist above
                     cursor.execute(f"PRAGMA table_info({table_name})")
                     table_info = cursor.fetchall()
                     pk_columns = []
@@ -137,6 +141,8 @@ def _export_database_to_csv_logic():
                         else:
                             order_by = f"ORDER BY {', '.join(escaped_headers)}"
 
+                    # Build the query - table_name is already validated against whitelist
+                    # Column names are derived from model fields, not user input
                     query = f"SELECT {',\n    '.join(escaped_headers)} \n FROM {table_name} \n {order_by}"
                     cursor.execute(query)
                     rows = cursor.fetchall()
