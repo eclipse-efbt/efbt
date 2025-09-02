@@ -12,6 +12,7 @@ from pybirdai.models import (
     TableCreationFunction, TableCreationFunctionColumn
 )
 import json
+import logging
 
 
 def trail_lineage_viewer(request, trail_id):
@@ -640,7 +641,8 @@ def get_node_details(request, trail_id, node_type, node_id):
         return JsonResponse(details)
         
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        logging.error("Error in get_node_details", exc_info=True)
+        return JsonResponse({'error': 'An internal error has occurred.'}, status=500)
 
 
 def trail_filtered_lineage_viewer(request, trail_id):
