@@ -11,7 +11,8 @@ import itertools
 from datetime import datetime
 from pathlib import Path
 
-# Django setup for standalone testing
+# Allowed table name pattern: letters, digits, underscores only
+import re
 class DjangoSetup:
     @staticmethod
     def setup():
@@ -1212,6 +1213,8 @@ class CSVDataImporter:
             # SQLite can have table names with/without "pybirdai_" prefix
             if table_name not in allowed_tables:
                 raise Exception(f"Blocked potentially unsafe table_name: {table_name}")
+            if not self._is_safe_table_name(table_name):
+                raise Exception(f"Unsafe table name (violates allowed character rules): {table_name}")
             with connection.cursor() as cursor:
                 # Disable foreign key constraints for SQLite during clearing
                 if connection.vendor == 'sqlite':
@@ -1877,6 +1880,11 @@ class CSVDataImporter:
         logger.info(f"Completed ordered CSV strings import. Processed {len(results)} files")
         return results
 
+
+    def _is_safe_table_name(self, table_name):
+        """Return True if table_name contains only allowed characters and matches expected pattern."""
+        # Only letters, digits, and underscores permitted
+        return bool(re.fullmatch(r'[A-Za-z0-9_]+', table_name))
 
 def import_bird_data_from_csv_export(path_or_content, use_fast_import=False):
     """
