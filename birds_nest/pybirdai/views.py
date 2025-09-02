@@ -545,7 +545,8 @@ def create_variable_mapping_item(request):
 
             messages.success(request, 'Variable Mapping Item created successfully.')
         except Exception as e:
-            messages.error(request, f'Error creating Variable Mapping Item: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, "Variable Mapping Item creation")
 
     return redirect('pybirdai:edit_variable_mapping_items')
 
@@ -934,8 +935,9 @@ def delete_cube_link(request, cube_link_id):
         messages.success(request, 'CUBE_LINK deleted successfully.')
         return JsonResponse({'status': 'success'})
     except Exception as e:
-        messages.error(request, f'Error deleting CUBE_LINK: {str(e)}')
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, "CUBE_LINK deletion")
+        return SecureErrorHandler.secure_json_response(e, "CUBE_LINK deletion", request)
 
 @require_http_methods(["POST"])
 def bulk_delete_cube_structure_item_links(request):
@@ -1182,7 +1184,9 @@ def view_csv_file(request, filename):
         return render(request, 'pybirdai/view_csv.html', context)
 
     except Exception as e:
-        messages.error(request, f'Error reading file: {str(e)}')
+        from .utils.secure_error_handling import FileOperationErrorHandler
+        error_data = FileOperationErrorHandler.handle_file_error(e, "CSV file reading", safe_filename, request)
+        messages.error(request, error_data['message'])
         return redirect('pybirdai:list_lineage_files')
 
 def create_response_with_loading(request, task_title, success_message, return_url, return_link_text):
@@ -1300,8 +1304,8 @@ def create_response_with_loading(request, task_title, success_message, return_ur
         try:
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            traceback.print_exc()
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            from .utils.secure_error_handling import SecureErrorHandler
+            return SecureErrorHandler.secure_json_response(e, "task execution", request)
 
     return HttpResponse(html_response)
 
@@ -2176,7 +2180,8 @@ def import_members_from_csv(request):
             return JsonResponse({'message': 'Import successful', 'count': len(members_to_create)})
 
         except Exception as e:
-            return HttpResponseBadRequest(str(e))
+            from .utils.secure_error_handling import SecureErrorHandler
+            return SecureErrorHandler.secure_http_response(e, "CSV member import", request)
 
 def import_variables_from_csv(request):
     if request.method == 'GET':
@@ -2233,7 +2238,8 @@ def import_variables_from_csv(request):
             return JsonResponse({'message': 'Import successful', 'count': len(variables_to_create)})
 
         except Exception as e:
-            return HttpResponseBadRequest(str(e))
+            from .utils.secure_error_handling import SecureErrorHandler
+            return SecureErrorHandler.secure_http_response(e, "CSV variable import", request)
 
 def run_create_executable_filters_from_db(request):
     if request.GET.get('execute') == 'true':

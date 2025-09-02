@@ -54,6 +54,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'pybirdai.middleware.security_middleware.SecurityHeadersMiddleware',
+    'pybirdai.middleware.security_middleware.RequestLoggingMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'pybirdai.middleware.security_middleware.SecurityErrorMiddleware',
 ]
 
 ROOT_URLCONF = 'birds_nest.urls'
@@ -144,3 +147,61 @@ CSRF_TRUSTED_ORIGINS = ["https://localhost:8000"]
 
 DATA_UPLOAD_MAX_NUMBER_FILES = 1000
 DATA_UPLOAD_MAX_MEMORY_SIZE = 262144000
+
+# Security Settings
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Logging Configuration for Security
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'security': {
+            'format': 'SECURITY {levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'security_file': {
+            'class': 'logging.FileHandler',
+            'filename': 'security.log',
+            'formatter': 'security',
+        },
+        'error_file': {
+            'class': 'logging.FileHandler',
+            'filename': 'error.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'error_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'pybirdai.middleware.security_middleware': {
+            'handlers': ['console', 'security_file'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'pybirdai.utils.secure_error_handling': {
+            'handlers': ['console', 'error_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'pybirdai': {
+            'handlers': ['console', 'error_file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
