@@ -814,7 +814,8 @@ def create_mapping_definition(request):
 
             messages.success(request, 'Mapping Definition created successfully.')
         except Exception as e:
-            messages.error(request, f'Error creating Mapping Definition: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, 'Mapping Definition creation')
 
     return redirect('pybirdai:edit_mapping_definitions')
 
@@ -828,7 +829,8 @@ def delete_item(request, model, id_field, redirect_view, decoded_id=None):
         item.delete()
         messages.success(request, f'{model.__name__} deleted successfully.')
     except Exception as e:
-        messages.error(request, f'Error deleting {model.__name__}: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, f'{model.__name__} deletion')
     return redirect(f'pybirdai:{redirect_view}')
 
 def delete_variable_mapping(request, variable_mapping_id):
@@ -865,7 +867,8 @@ def delete_variable_mapping_item(request):
             item.delete()
             messages.success(request, 'Variable Mapping Item deleted successfully.')
         except Exception as e:
-            messages.error(request, f'Error deleting Variable Mapping Item: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, 'Variable Mapping Item deletion')
 
     return redirect('pybirdai:edit_variable_mapping_items')
 
@@ -895,7 +898,8 @@ def delete_member_mapping_item(request, item_id):
             item.delete()
             messages.success(request, 'Member Mapping Item deleted successfully.')
         except Exception as e:
-            messages.error(request, f'Error deleting MEMBER_MAPPING_ITEM: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, 'MEMBER_MAPPING_ITEM deletion')
 
     return redirect('pybirdai:edit_member_mapping_items')
 
@@ -1003,7 +1007,8 @@ def bulk_delete_cube_structure_item_links(request):
         logger.info(f"Bulk deletion process completed successfully. {deleted_count} link(s) deleted.")
     except Exception as e:
         logger.error(f'Error during bulk deletion: {str(e)}', exc_info=True)
-        messages.error(request, f'Error during bulk deletion: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, 'bulk deletion')
 
     # Redirect back to the duplicate list page, resetting filters
     logger.info("Redirecting back to the duplicate primary member ID list page.")
@@ -1057,7 +1062,8 @@ def delete_cube_structure_item_link_dupl(request, cube_structure_item_link_id):
 
         messages.success(request, 'Link deleted successfully.')
     except Exception as e:
-        messages.error(request, f'Error deleting link: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, 'cube structure item link deletion')
 
     # Check the referer to determine which page to redirect back to
     referer = request.META.get('HTTP_REFERER', '')
@@ -1099,7 +1105,8 @@ def delete_mapping_to_cube(request, mapping_to_cube_id):
 
         messages.success(request, 'MAPPING_TO_CUBE deleted successfully.')
     except Exception as e:
-        messages.error(request, f'Error deleting MAPPING_TO_CUBE: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, 'MAPPING_TO_CUBE deletion')
     return redirect('pybirdai:edit_mapping_to_cubes')
 
 def delete_mapping_definition(request, mapping_id):
@@ -1580,7 +1587,8 @@ def delete_combination(request, combination_id):
         combination.delete()
         messages.success(request, 'COMBINATION deleted successfully.')
     except Exception as e:
-        messages.error(request, f'Error deleting COMBINATION: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, 'COMBINATION deletion')
     return redirect('pybirdai:combinations')
 
 def delete_combination_item(request, item_id):
@@ -1603,7 +1611,8 @@ def delete_combination_item(request, item_id):
         item.delete()
         messages.success(request, 'COMBINATION_ITEM deleted successfully.')
     except Exception as e:
-        messages.error(request, f'Error deleting COMBINATION_ITEM: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, 'COMBINATION_ITEM deletion')
     return redirect('pybirdai:combination_items')
 
 class DuplicatePrimaryMemberIdListView(ListView):
@@ -1820,7 +1829,8 @@ def delete_cube_structure_item_link(request, cube_structure_item_link_id):
 
         messages.success(request, 'Link deleted successfully.')
     except Exception as e:
-        messages.error(request, f'Error deleting link: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, 'cube structure item link deletion')
 
     # Check the referer to determine which page to redirect back to
     referer = request.META.get('HTTP_REFERER', '')
@@ -1871,7 +1881,8 @@ def add_cube_structure_item_link(request):
 
         messages.success(request, 'New cube structure item link created successfully.')
     except Exception as e:
-        messages.error(request, f'Error creating link: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, 'cube structure item link creation')
 
     return redirect('pybirdai:edit_cube_structure_item_links')
 
@@ -1915,7 +1926,8 @@ def add_cube_link(request):
 
         messages.success(request, 'New cube link created successfully.')
     except Exception as e:
-        messages.error(request, f'Error creating cube link: {str(e)}')
+        from .utils.secure_error_handling import SecureErrorHandler
+        SecureErrorHandler.secure_message(request, e, 'cube link creation')
 
     return redirect('pybirdai:edit_cube_links')
 
@@ -1934,7 +1946,8 @@ def create_variable_mapping(request):
             variable_mapping.save()
             messages.success(request, 'Variable mapping created successfully.')
         except Exception as e:
-            messages.error(request, f'Error creating variable mapping: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, 'variable mapping creation')
     return redirect('pybirdai:edit_variable_mappings')
 
 def create_member_mapping(request):
@@ -1954,7 +1967,8 @@ def create_member_mapping(request):
 
             messages.success(request, 'Member Mapping created successfully.')
         except Exception as e:
-            messages.error(request, f'Error creating Member Mapping: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, 'member mapping creation')
 
     return redirect('pybirdai:edit_member_mappings')
 
@@ -1991,7 +2005,8 @@ def add_member_mapping_item(request):
 
             messages.success(request, 'Member Mapping Item created successfully.')
         except Exception as e:
-            messages.error(request, f'Error creating Member Mapping Item: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, 'member mapping item creation')
 
     return redirect('pybirdai:edit_member_mapping_items')
 
@@ -2025,7 +2040,8 @@ def create_mapping_to_cube(request):
                     mapping_to_cube.cube_mapping_id] = [mapping_to_cube]
             messages.success(request, 'New mapping to cube created successfully.')
         except Exception as e:
-            messages.error(request, f'Error creating mapping to cube: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, 'mapping to cube creation')
 
     return redirect('pybirdai:edit_mapping_to_cubes')
 
@@ -2105,7 +2121,8 @@ def convert_ldm_to_sdd_hierarchies(request):
             RunConvertLDMToSDDHierarchies.run_convert_hierarchies()
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            from .utils.secure_error_handling import SecureErrorHandler
+            return SecureErrorHandler.secure_json_response(e, 'LDM to SDD hierarchy conversion', request)
 
     return create_response_with_loading(
         request,
@@ -2295,8 +2312,9 @@ def run_create_python_transformations_from_db(request):
             return JsonResponse({'status': 'success'})
 
         except Exception as e:
+            from .utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Python transformations generation failed: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            return SecureErrorHandler.secure_json_response(e, 'Python transformations generation', request)
 
     return create_response_with_loading(
         request,
@@ -2521,8 +2539,9 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
         return JsonResponse({'status': 'success'})
 
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error adding variable: {str(e)}", exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return SecureErrorHandler.secure_json_response(e, 'variable addition', request)
 
 def edit_mapping_endpoint(request: Any) -> JsonResponse:
     """Endpoint for editing mappings.
@@ -2611,8 +2630,9 @@ def edit_mapping_endpoint(request: Any) -> JsonResponse:
         return JsonResponse({'status': 'success'})
 
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error updating mapping: {str(e)}", exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return SecureErrorHandler.secure_json_response(e, 'mapping update', request)
 
 def get_domain_members(request, variable_id:str=""):
     """Get domain members for a variable.
@@ -2827,8 +2847,10 @@ def delete_mapping_row(request):
 
         return JsonResponse({'success': True})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error deleting mapping row: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': str(e)})
+        error_data = SecureErrorHandler.handle_exception(e, 'mapping row deletion', request)
+        return JsonResponse({'success': False, 'error': error_data['message']})
 
 def duplicate_mapping(request):
     """View function for duplicating an existing mapping."""
@@ -2931,8 +2953,10 @@ def duplicate_mapping(request):
         logger.info(f"Successfully duplicated mapping {source_mapping_id} to {new_mapping.mapping_id}")
         return JsonResponse({'success': True})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error duplicating mapping: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': str(e)})
+        error_data = SecureErrorHandler.handle_exception(e, 'mapping duplication', request)
+        return JsonResponse({'success': False, 'error': error_data['message']})
 
 def update_mapping_row(request):
     """View function for updating a mapping row."""
@@ -3030,8 +3054,10 @@ def update_mapping_row(request):
         logger.info(f"Successfully updated row {row_index} in mapping {mapping_id}")
         return JsonResponse({'success': True})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error updating mapping row: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': str(e)})
+        error_data = SecureErrorHandler.handle_exception(e, 'mapping row update', request)
+        return JsonResponse({'success': False, 'error': error_data['message']})
 
 def test_report_view(request):
     """
@@ -3159,8 +3185,10 @@ def add_member_link(request):
         return redirect(request.META.get('HTTP_REFERER'))
 
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error creating member link: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': str(e)})
+        error_data = SecureErrorHandler.handle_exception(e, 'member link creation', request)
+        return JsonResponse({'success': False, 'error': error_data['message']})
 
 def delete_member_link(request):
     """View function for deleting a member link."""
@@ -3187,8 +3215,10 @@ def delete_member_link(request):
         return redirect(request.META.get('HTTP_REFERER'))
 
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error deleting member link: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': str(e)})
+        error_data = SecureErrorHandler.handle_exception(e, 'member link deletion', request)
+        return JsonResponse({'success': False, 'error': error_data['message']})
 
 def edit_member_link(request):
     """View function for editing a member link."""
@@ -3264,8 +3294,10 @@ def download_member_link_template(request):
         return response
 
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error generating template: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': str(e)})
+        error_data = SecureErrorHandler.handle_exception(e, 'template generation', request)
+        return JsonResponse({'success': False, 'error': error_data['message']})
 
 def upload_member_link_template(request):
     """View function for uploading filled member link template."""
@@ -3331,14 +3363,18 @@ def upload_member_link_template(request):
 
             except Exception as e:
                 logger.error(f"Error processing row: {str(e)}", exc_info=True)
-                return JsonResponse({'success': False, 'error': f'Error processing row: {str(e)}'})
+                from .utils.secure_error_handling import SecureErrorHandler
+                error_data = SecureErrorHandler.handle_exception(e, 'template row processing', request)
+                return JsonResponse({'success': False, 'error': error_data['message']})
 
         logger.info("Successfully processed uploaded template")
         return JsonResponse({'success': True})
 
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error processing upload: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': str(e)})
+        error_data = SecureErrorHandler.handle_exception(e, 'template upload processing', request)
+        return JsonResponse({'success': False, 'error': error_data['message']})
 
 def import_ancrdt_model(request):
     """View function to import ANCRDT model"""
@@ -3347,7 +3383,8 @@ def import_ancrdt_model(request):
             RunANCRDTImport.run_import()
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            from .utils.secure_error_handling import SecureErrorHandler
+            return SecureErrorHandler.secure_json_response(e, 'ANCRDT model import', request)
 
     return create_response_with_loading(
         request,
@@ -3713,8 +3750,9 @@ def add_member_to_hierarchy(request):
         logger.error(f"Member {member_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Member not found'})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error adding member to hierarchy: {str(e)}", exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return SecureErrorHandler.secure_json_response(e, 'member hierarchy addition', request)
 
 def delete_member_from_hierarchy(request):
     """
@@ -3780,8 +3818,9 @@ def delete_member_from_hierarchy(request):
         logger.error(f"Hierarchy node {node_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Hierarchy node not found'})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error deleting member from hierarchy: {str(e)}", exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return SecureErrorHandler.secure_json_response(e, 'member hierarchy deletion', request)
 
 def edit_hierarchy_node(request):
     """
@@ -3836,8 +3875,9 @@ def edit_hierarchy_node(request):
         logger.error(f"Member {member_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Member not found'})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error editing hierarchy node: {str(e)}", exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return SecureErrorHandler.secure_json_response(e, 'hierarchy node editing', request)
 
 def get_members_by_domain(request, domain_id):
     """
@@ -3873,8 +3913,9 @@ def get_members_by_domain(request, domain_id):
         logger.error(f"Domain {domain_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Domain not found'})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting members by domain: {str(e)}", exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return SecureErrorHandler.secure_json_response(e, 'domain members retrieval', request)
 
 def get_subdomain_enumerations(request, subdomain_id):
     """
@@ -3910,8 +3951,9 @@ def get_subdomain_enumerations(request, subdomain_id):
         logger.error(f"Subdomain {subdomain_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Subdomain not found'})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting subdomain enumerations: {str(e)}", exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)})
+        return SecureErrorHandler.secure_json_response(e, 'subdomain enumerations retrieval', request)
 
 def automode_create_database(request):
     if request.GET.get('execute') == 'true':
@@ -3931,8 +3973,9 @@ def automode_create_database(request):
                 ]
             })
         except Exception as e:
+            from .utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Automode database setup failed: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            return SecureErrorHandler.secure_json_response(e, 'automode database setup', request)
 
     return create_response_with_loading_extended(
         request,
@@ -3995,8 +4038,9 @@ def test_automode_components(request):
             })
 
         except Exception as e:
+            from .utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Test failed: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            return SecureErrorHandler.secure_json_response(e, 'test execution', request)
 
     return create_response_with_loading_extended(
         request,
@@ -4049,8 +4093,9 @@ def run_fetch_curated_resources(request):
             })
 
         except Exception as e:
+            from .utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Test failed: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            return SecureErrorHandler.secure_json_response(e, 'test execution', request)
 
     return create_response_with_loading_extended(
         request,
@@ -4105,8 +4150,10 @@ def get_hierarchy_json(request, hierarchy_id):
         hierarchy_data = integration.get_hierarchy_by_id(hierarchy_id)
         return JsonResponse(hierarchy_data)
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting hierarchy JSON for {hierarchy_id}: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+        error_data = SecureErrorHandler.handle_exception(e, 'hierarchy JSON retrieval', request)
+        return JsonResponse({'error': error_data['message']}, status=500)
 
 
 def save_hierarchy_json(request):
@@ -4134,8 +4181,10 @@ def save_hierarchy_json(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error saving hierarchy: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+        error_data = SecureErrorHandler.handle_exception(e, 'hierarchy saving', request)
+        return JsonResponse({'error': error_data['message']}, status=500)
 
 
 def get_domain_members_json(request, domain_id):
@@ -4149,8 +4198,10 @@ def get_domain_members_json(request, domain_id):
         members = integration.get_domain_members(domain_id)
         return JsonResponse({'members': members})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting domain members for {domain_id}: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+        error_data = SecureErrorHandler.handle_exception(e, 'domain members retrieval', request)
+        return JsonResponse({'error': error_data['message']}, status=500)
 
 
 def get_available_hierarchies_json(request):
@@ -4164,8 +4215,10 @@ def get_available_hierarchies_json(request):
         hierarchies = integration.get_available_hierarchies()
         return JsonResponse({'hierarchies': hierarchies})
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting available hierarchies: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+        error_data = SecureErrorHandler.handle_exception(e, 'available hierarchies retrieval', request)
+        return JsonResponse({'error': error_data['message']}, status=500)
 
 
 def create_hierarchy_from_visualization(request):
@@ -4219,8 +4272,10 @@ def create_hierarchy_from_visualization(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     except Exception as e:
+        from .utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error creating hierarchy: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+        error_data = SecureErrorHandler.handle_exception(e, 'hierarchy creation', request)
+        return JsonResponse({'error': error_data['message']}, status=500)
 
 
 def automode_configure(request):

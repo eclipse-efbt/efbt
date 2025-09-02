@@ -239,7 +239,7 @@ def _run_migrations_async():
                 "running": False,
                 "completed": True,
                 "success": False,
-                "error": str(e),
+                "error": "Database migration error occurred",
                 "message": "Database migrations failed",
                 "completed_at": time.time(),
             }
@@ -521,7 +521,7 @@ def _run_database_setup_async():
                 "running": False,
                 "completed": True,
                 "success": False,
-                "error": str(e),
+                "error": "Database setup error occurred",
                 "message": f"Database setup failed at Task {_database_setup_status.get('current_task', '?')}",
                 "completed_at": time.time(),
             }
@@ -669,7 +669,7 @@ def _run_automode_async(target_task, session_data):
                 "running": False,
                 "completed": True,
                 "success": False,
-                "error": str(e),
+                "error": "Automode execution error occurred",
                 "message": f"Automode failed at Task {_automode_status.get('current_task', '?')}",
                 "completed_at": time.time(),
             }
@@ -1596,7 +1596,7 @@ def workflow_task_substep(request, task_number, substep_name):
         logger.error(f"Error executing substep {substep_name} for task {task_number}: {e}")
         return JsonResponse({
             'success': False,
-            'message': f'Failed to execute substep: {str(e)}'
+            'message': 'Failed to execute substep. Please check system logs for details.'
         }, status=500)
 
 
@@ -1626,7 +1626,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
             logger.error(f"Database creation substep failed: {e}")
             return JsonResponse({
                 'success': False,
-                'message': str(e)
+                'message': 'Operation failed. Please check system logs for details.'
             }, status=500)
 
     elif substep_name == 'continue':
@@ -1652,7 +1652,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
             logger.error(f"Migration substep failed: {e}")
             return JsonResponse({
                 'success': False,
-                'message': str(e)
+                'message': 'Operation failed. Please check system logs for details.'
             }, status=500)
 
     else:
@@ -2042,7 +2042,7 @@ def workflow_task_substep(request, task_number, substep_name):
         logger.error(f"Error executing substep {substep_name} for task {task_number}: {e}")
         return JsonResponse({
             'success': False,
-            'message': f'Failed to execute substep: {str(e)}'
+            'message': 'Failed to execute substep. Please check system logs for details.'
         }, status=500)
 
 
@@ -2072,7 +2072,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
             logger.error(f"Database creation substep failed: {e}")
             return JsonResponse({
                 'success': False,
-                'message': str(e)
+                'message': 'Operation failed. Please check system logs for details.'
             }, status=500)
 
     elif substep_name == 'continue':
@@ -2098,7 +2098,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
             logger.error(f"Migration substep failed: {e}")
             return JsonResponse({
                 'success': False,
-                'message': str(e)
+                'message': 'Operation failed. Please check system logs for details.'
             }, status=500)
 
     else:
@@ -2622,7 +2622,7 @@ def workflow_save_config(request):
 
     except Exception as e:
         logger.error(f"Error saving workflow configuration: {str(e)}")
-        return JsonResponse({"success": False, "error": str(e)}, status=500)
+        return JsonResponse({"success": False, "error": "Download preparation failed. Please check system logs."}, status=500)
 
 
 @require_http_methods(["POST"])
@@ -3213,7 +3213,8 @@ def workflow_reset_session_full(request):
                 'error': str(e)
             }, status=500)
         else:
-            messages.error(request, f'Failed to reset full workflow session: {str(e)}')
+            from .utils.secure_error_handling import SecureErrorHandler
+            SecureErrorHandler.secure_message(request, e, 'workflow session reset')
             return redirect('pybirdai:workflow_dashboard')
 
 
