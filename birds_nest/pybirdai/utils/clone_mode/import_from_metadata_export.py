@@ -1018,7 +1018,12 @@ class CSVDataImporter:
 
         # Write detailed debug info to a separate file
         debug_file = f"debug_import_{csv_filename.replace('.csv', '')}.txt"
-        debug_path = os.path.join(self.results_dir, debug_file)
+        debug_path = os.path.normpath(os.path.join(self.results_dir, debug_file))
+        # Verify that the debug_path is within the results_dir (no path traversal allowed)
+        results_dir_norm = os.path.normpath(self.results_dir)
+        if not debug_path.startswith(results_dir_norm):
+            logger.error(f"Attempted debug file write outside results directory: {debug_path}")
+            raise Exception("Unsafe debug file path detected!")
         
         table_name = self._get_table_name_from_csv_filename(csv_filename)
         logger.info(f"Mapped CSV file '{csv_filename}' to table '{table_name}'")
@@ -1130,6 +1135,7 @@ class CSVDataImporter:
         
         # Write detailed debug info to file
         try:
+            # 'debug_path' is now validated to stay within 'self.results_dir'
             with open(debug_path, 'w') as f:
                 f.write(f"=== DEBUG: Import of {csv_filename} ===\n")
                 f.write(f"CSV filename: {csv_filename}\n")
