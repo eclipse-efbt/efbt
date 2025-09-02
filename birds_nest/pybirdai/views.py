@@ -109,6 +109,7 @@ def serialize_datetime(obj):
 
 
 from typing import Dict, List, Set, Tuple, Any, Optional
+from django.utils.html import escape
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -1156,6 +1157,11 @@ def view_csv_file(request, filename):
         return redirect('pybirdai:list_lineage_files')
 
 def create_response_with_loading(request, task_title, success_message, return_url, return_link_text):
+    # Escape all user-influenced arguments before insertion into HTML
+    safe_task_title = escape(task_title)
+    safe_success_message = escape(success_message)
+    safe_return_url = escape(return_url)
+    safe_return_link_text = escape(return_link_text)
     html_response = f"""
         <!DOCTYPE html>
         <html>
@@ -1219,10 +1225,8 @@ def create_response_with_loading(request, task_title, success_message, return_ur
                     <div class="loading-spinner"></div>
                     <div class="loading-message">Please wait while the task completes...</div>
                 </div>
-                <div id="success-message">
-                    <p>{success_message}</p>
-                    <p>Go back to <a href="{return_url}">{return_link_text}</a></p>
-                </div>
+            </div>
+            <script>
             </div>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {{
@@ -1254,6 +1258,8 @@ def create_response_with_loading(request, task_title, success_message, return_ur
                         }});
                     }}, 100); // Small delay to ensure loading screen is visible
                 }});
+            </script>
+        </body>
             </script>
         </body>
         </html>
