@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -301,7 +301,7 @@ class ImportWebsiteToSDDModel(object):
             for row in csv.reader(csvfile):
                 if not header_skipped:
                     header_skipped = True
-                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported
                         id_increment = 1
                 else:
                     parent_member_id = row[ColumnIndexes().member_hierarchy_node_parent_member_id + id_increment]
@@ -450,7 +450,7 @@ class ImportWebsiteToSDDModel(object):
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
-                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported
                         id_increment = 1
                 else:
                     hierarchy_id = row[ColumnIndexes().member_hierarchy_node_hierarchy_id + id_increment]
@@ -775,7 +775,7 @@ class ImportWebsiteToSDDModel(object):
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
-                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported
                         id_increment = 1
                 else:
                     axis_ordinate_id = row[ColumnIndexes().ordinate_item_axis_ordinate_id + id_increment]
@@ -795,7 +795,7 @@ class ImportWebsiteToSDDModel(object):
                     ordinate_item = ORDINATE_ITEM()
                     ordinate_item.axis_ordinate_id = ImportWebsiteToSDDModel.find_axis_ordinate_with_id(
                         self, context, ImportWebsiteToSDDModel.replace_dots(self, axis_ordinate_id))
-                    
+
                     print(ordinate_item.axis_ordinate_id)
                     ordinate_item.variable_id = ImportWebsiteToSDDModel.find_variable_with_id(
                         self, context, ImportWebsiteToSDDModel.replace_dots(self, variable_id))
@@ -831,8 +831,8 @@ class ImportWebsiteToSDDModel(object):
             id_increment = 0
             for row in filereader:
                 if not header_skipped:
-                    header_skipped = True   
-                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                    header_skipped = True
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported
                         id_increment = 1
                 else:
                     table_cell_cell_id = row[ColumnIndexes().table_cell_cell_id + id_increment]
@@ -869,7 +869,7 @@ class ImportWebsiteToSDDModel(object):
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
-                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported
                         id_increment = 1
                 else:
                     cell_positions_cell_id = row[ColumnIndexes().cell_positions_cell_id + id_increment]
@@ -938,11 +938,11 @@ class ImportWebsiteToSDDModel(object):
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
-                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported
                         id_increment = 1
                 else:
                     member_mapping_id = row[ColumnIndexes().member_mapping_id + id_increment]
-                    row_number = row[ColumnIndexes().member_mapping_row + id_increment] 
+                    row_number = row[ColumnIndexes().member_mapping_row + id_increment]
                     variable_id = row[ColumnIndexes().member_mapping_variable_id + id_increment]
                     is_source = row[ColumnIndexes().member_mapping_is_source + id_increment]
                     member_id = row[ColumnIndexes().member_mapping_member_id + id_increment]
@@ -1090,7 +1090,7 @@ class ImportWebsiteToSDDModel(object):
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
-                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported
                         id_increment = 1
                 else:
                     mapping_to_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_mapping_id + id_increment]
@@ -1158,7 +1158,7 @@ class ImportWebsiteToSDDModel(object):
         id_increment = 0
         # Cache variable lookups
         variable_cache = {}
-        
+
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             header_skipped = False
@@ -1166,7 +1166,7 @@ class ImportWebsiteToSDDModel(object):
             for row in filereader:
                 if not header_skipped:
                     header_skipped = True
-                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported 
+                    if row[0].upper() == 'ID': #sometimes exported data without a  primary key has an ID field added at the time of export, exported data is re-imported
                         id_increment = 1
                 else:
                     mapping_id = row[ColumnIndexes().varaible_mapping_item_variable_mapping_id + id_increment]

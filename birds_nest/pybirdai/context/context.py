@@ -1,4 +1,4 @@
-# coding=UTF-8#
+# coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
 # This program and the accompanying materials
 # are made available under the terms of the Eclipse Public License 2.0
@@ -20,7 +20,7 @@ class Context(object):
     Documentation for Context
     '''
     # variables to configure the behaviour
-    
+
     # enable_lineage_tracking will be set dynamically from configuration
     enable_lineage_tracking = False
 
@@ -44,22 +44,22 @@ class Context(object):
         name='ldm_domains',
         nsURI='http://www.eclipse.org/bird/ldm_domains',
         nsPrefix='ldm_domains')
-   
+
     ldm_entities_package = ELPackage(
         name='ldm_entities',
         nsURI='http://www.eclipse.org/bird/ldm_entities',
         nsPrefix='ldm_entities')
-    
+
     il_domains_package = ELPackage(
         name='il_domains',
         nsURI='http://www.eclipse.org/bird/il_domains',
         nsPrefix='ldm_domains')
-   
+
     il_tables_package = ELPackage(
         name='il_entities',
         nsURI='http://www.eclipse.org/bird/il_entities',
         nsPrefix='il_entities')
-    
+
 
     skip_reference_data_in_ldm = True
     reports_dictionary = {}
@@ -88,7 +88,7 @@ class Context(object):
 
     join_for_products_to_main_category_map_finrep = {}
     join_for_products_to_main_category_map_ae = {}
-    
+
     tables_for_main_category_map_finrep = {}
     tables_for_main_category_map_ae = {}
 
@@ -104,10 +104,10 @@ class Context(object):
     ldm_entity_to_linked_tables_map = {}
     report_to_main_category_map = {}
     enum_map = {}
-    
+
     arc_to_source_map = {}
     arc_name_to_arc_class_map = {}
-    
+
     arc_target_to_arc_map = {}
 
     enums_used = []
@@ -122,13 +122,13 @@ class Context(object):
     input_layer_name = "Input Layer 6.5"
 
     generate_etl = True
-    
-    
+
+
     def _get_configured_lineage_tracking(self):
         """Get the configured lineage tracking setting from temporary file."""
         # Use the static method for consistency
         return Context.get_current_lineage_setting()
-    
+
     def _get_configured_data_model_type(self):
         """Get the configured data model type from temporary file or AutomodeConfiguration."""
         # First try to read from temporary configuration file
@@ -145,7 +145,7 @@ class Context(object):
         except Exception:
             # If temp file fails, try database
             pass
-        
+
         # Fallback to database configuration
         try:
             # Import here to avoid circular imports
@@ -158,12 +158,12 @@ class Context(object):
             # If no configuration exists or there's an error, default to 'ldm'
             pass
         return 'ldm'
-    
+
     @property
     def ldm_or_il(self):
         """Get the current data model type (ldm or il)."""
         return self._ldm_or_il
-    
+
     @ldm_or_il.setter
     def ldm_or_il(self, value):
         """Set the data model type (ldm or il)."""
@@ -193,7 +193,7 @@ class Context(object):
         long_name_directive_il_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
         il_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
 
-       
+
         self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(ldm_dependency_annotation_directive)
         self.ldm_entities_package.annotationDirectives.append(ldm_entity_hierarchy_annotation_directive)
@@ -224,20 +224,20 @@ class Context(object):
         Context.enable_lineage_tracking = self.enable_lineage_tracking
         print(f"Context: Refreshed lineage setting to: {self.enable_lineage_tracking}")
         return self.enable_lineage_tracking
-    
+
     @staticmethod
     def get_current_lineage_setting():
         """Static method to get the current lineage setting without creating instance"""
         try:
             import os
             import json
-            
+
             # Try multiple possible paths for the config file
             possible_paths = [
                 os.path.join('.', 'automode_config.json'),  # Current directory
                 os.path.join(os.path.dirname(__file__), '..', '..', 'automode_config.json'),  # Relative to this file
             ]
-            
+
             # Try to get Django BASE_DIR if available
             try:
                 from django.conf import settings
@@ -245,10 +245,10 @@ class Context(object):
                     possible_paths.append(os.path.join(settings.BASE_DIR, 'automode_config.json'))
             except:
                 pass  # Django not configured or available
-            
+
             current_dir = os.getcwd()
             print(f"Context: Current working directory: {current_dir}")
-            
+
             for temp_config_path in possible_paths:
                 print(f"Context: Trying config path: {temp_config_path}")
                 if os.path.exists(temp_config_path):
@@ -257,10 +257,9 @@ class Context(object):
                     lineage_setting = config_data.get('enable_lineage_tracking', False)
                     print(f"Context: Found config at {temp_config_path}, lineage_tracking = {lineage_setting}")
                     return lineage_setting
-                
+
         except Exception as e:
             print(f"Context: Static read error: {e}")
             pass
         print("Context: No config file found, using default: False")
         return False
-
