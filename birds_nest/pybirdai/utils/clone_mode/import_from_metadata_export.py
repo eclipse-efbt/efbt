@@ -618,7 +618,10 @@ class CSVDataImporter:
         Auto-generates sequential indices for models using Django's auto-generated primary keys.
         """
         logger.info(f"Starting bulk SQLite3 import for {table_name}")
-        
+        # Validate table name strictly before any SQL execution
+        if not self._is_safe_table_name(table_name) or table_name not in self.model_map:
+            logger.error(f"Unsafe or unknown table name detected: {table_name}")
+            raise Exception(f"Unsafe or unknown table name detected: {table_name}")
         # Parse CSV content
         headers, rows = self._parse_csv_content(csv_content)
         
@@ -713,6 +716,10 @@ class CSVDataImporter:
             
             # Verify import success
             with connection.cursor() as cursor:
+                # Validate table name right before executing SQL
+                if not self._is_safe_table_name(table_name) or table_name not in self.model_map:
+                    logger.error(f"Unsafe or unknown table name detected (count): {table_name}")
+                    raise Exception(f"Unsafe or unknown table name detected (count): {table_name}")
                 cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
                 imported_count = cursor.fetchone()[0]
             
