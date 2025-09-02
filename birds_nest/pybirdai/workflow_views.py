@@ -2356,7 +2356,7 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
         logger.error(f"Task 3 substep {substep_name} failed: {e}")
         return JsonResponse({
             'success': False,
-            'message': str(e)
+            'message': 'An internal error has occurred.'
         }, status=500)
 
 
