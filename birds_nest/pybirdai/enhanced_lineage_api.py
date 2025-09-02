@@ -18,6 +18,7 @@ from pybirdai.models import (
 )
 import json
 from datetime import datetime
+import logging
 
 
 def serialize_datetime(obj):
@@ -670,8 +671,9 @@ def get_trail_filtered_lineage(request, trail_id):
         return JsonResponse(lineage_data, json_dumps_params={'default': serialize_datetime})
     
     except Exception as e:
+        logging.exception(f"Exception in get_trail_filtered_lineage for trail_id={trail_id}")
         return JsonResponse({
-            "error": str(e),
+            "error": "An internal error occurred.",
             "trail_id": trail_id
         }, status=500)
 
