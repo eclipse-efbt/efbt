@@ -13,6 +13,7 @@
 
 import subprocess
 import os
+import os.path
 import json
 import argparse
 import sqlite3
@@ -24,6 +25,10 @@ import io
 
 import logging
 from pathlib import Path
+
+
+# Define safe directory for configuration files
+SAFE_CONFIG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
 # Force UTF-8 encoding for stdout on Windows to handle Unicode characters
 if sys.platform == 'win32':
@@ -318,6 +323,24 @@ class RegulatoryTemplateTestRunner:
 
         logger.debug(f"Finished scenario: {scenario_path} from {reg_tid} at datapoint {dp_suffix}")
 
+    
+
+    def get_safe_config_path(self, user_config_path: str) -> str:
+        """
+        Validates and constructs a safe absolute path for a config file.
+        Returns safe config path if valid; raises ValueError if unsafe.
+        """
+        # If user_config_path is absolute, join with SAFE_CONFIG_DIR to prevent absolute escapes
+        joined_path = os.path.join(SAFE_CONFIG_DIR, os.path.basename(user_config_path))
+
+        # If input contains subdirs, preserve under SAFE_CONFIG_DIR, normalize path
+        normalized_path = os.path.normpath(os.path.join(SAFE_CONFIG_DIR, user_config_path))
+        abs_normalized_path = os.path.abspath(normalized_path)
+        # Ensure containment
+        if not abs_normalized_path.startswith(SAFE_CONFIG_DIR):
+            raise ValueError(f"Invalid config path: {user_config_path}. Access denied.")
+        return abs_normalized_path
+
     def load_config_file(self, config_path: str) -> dict:
         """
         Load test configuration from a JSON file.
@@ -329,12 +352,13 @@ class RegulatoryTemplateTestRunner:
             Configuration dictionary or None if failed
         """
         try:
-            with open(config_path, 'r') as f:
+            safe_path = self.get_safe_config_path(config_path)
+            with open(safe_path, 'r') as f:
                 return json.load(f)
         except Exception as e:
             logger.error(f"Failed to load config file: {str(e)}")
             return None
-
+        
     def run_tests_from_config(self, config_path: str, use_uv: bool=False):
         """
         Run tests based on a configuration file.
@@ -343,6 +367,8 @@ class RegulatoryTemplateTestRunner:
             config_path: Path to config file
             use_uv: Whether to use UV as backend
         """
+  
+    
         config = self.load_config_file(config_path)
         if not config:
             logger.error("Invalid or missing configuration file.")
