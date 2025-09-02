@@ -50,10 +50,22 @@ class CSVDataImporter:
         self.column_mappings = {}
         self.results_dir = results_dir
         self.id_mappings = {}  # Track ID mappings for models with auto-generated IDs
+        # Define allowed table names to prevent SQL injection
+        self.allowed_table_names = set()
         self._build_model_map()
         self._build_column_mappings()
         self._ensure_results_directory()
         logger.info("CSVDataImporter initialized")
+        
+    def _is_safe_table_name(self, table_name):
+        """Validate table name against whitelist and pattern"""
+        if not table_name:
+            return False
+        # Check if table name matches expected pattern (letters, digits, underscores only)
+        if not re.match(r'^[a-zA-Z][a-zA-Z0-9_]*$', table_name):
+            return False
+        # Check against whitelist of allowed table names
+        return table_name in self.allowed_table_names
 
     def _ensure_results_directory(self):
         """Ensure the results directory exists"""
@@ -101,6 +113,8 @@ class CSVDataImporter:
         for name, obj in inspect.getmembers(bird_meta_data_model):
             if inspect.isclass(obj) and issubclass(obj, models.Model) and obj != models.Model:
                 self.model_map[obj._meta.db_table] = obj
+                # Add table name to allowed list for SQL injection protection
+                self.allowed_table_names.add(obj._meta.db_table)
                 model_count += 1
                 logger.debug(f"Added model {name} -> table {obj._meta.db_table}")
 
@@ -678,13 +692,19 @@ class CSVDataImporter:
         
         try:
             # Clear existing data first
+            # Validate table name to prevent SQL injection
+            if not self._is_safe_table_name(table_name):
+                raise ValueError(f"Unsafe table name detected: {table_name}")
+                
             with connection.cursor() as cursor:
                 if connection.vendor == 'sqlite':
                     cursor.execute("PRAGMA foreign_keys = 0;")
                 
+                # Table name validated above
                 cursor.execute(f"DELETE FROM {table_name};")
                 
                 if connection.vendor == 'sqlite':
+                    # Table name validated above
                     cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
                     cursor.execute("PRAGMA foreign_keys = 1;")
             
@@ -716,10 +736,11 @@ class CSVDataImporter:
             
             # Verify import success
             with connection.cursor() as cursor:
-                # Validate table name right before executing SQL
+                # Table name already validated above, but double-check for safety
                 if not self._is_safe_table_name(table_name) or table_name not in self.model_map:
                     logger.error(f"Unsafe or unknown table name detected (count): {table_name}")
                     raise Exception(f"Unsafe or unknown table name detected (count): {table_name}")
+                # Table name validated above
                 cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
                 imported_count = cursor.fetchone()[0]
             
@@ -792,12 +813,19 @@ class CSVDataImporter:
         
         # Process FK resolution in batches to avoid memory issues
         batch_size = 1000
+        
+        # Validate table name to prevent SQL injection
+        if not self._is_safe_table_name(table_name):
+            raise ValueError(f"Unsafe table name detected in FK resolution: {table_name}")
+            
         with connection.cursor() as cursor:
+            # Table name validated above
             cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
             total_records = cursor.fetchone()[0]
             
             for offset in range(0, total_records, batch_size):
                 # Get batch of records with string FK values
+                # Table name validated above, column names come from model field definitions
                 cursor.execute(f"SELECT id, {', '.join(csv_to_fk_mapping.values())} FROM {table_name} LIMIT {batch_size} OFFSET {offset}")
                 records = cursor.fetchall()
                 
@@ -841,8 +869,10 @@ class CSVDataImporter:
                 # Execute batch updates
                 for record_id, fk_updates in updates:
                     if fk_updates:
+                        # Field names come from model field definitions, so they're safe
                         set_clause = ', '.join([f"{field} = ?" for field in fk_updates.keys()])
                         values = list(fk_updates.values()) + [record_id]
+                        # Table name validated above
                         cursor.execute(f"UPDATE {table_name} SET {set_clause} WHERE id = ?", values)
                 
                 logger.debug(f"Processed FK resolution for batch {offset}-{offset + len(records)} of {total_records}")

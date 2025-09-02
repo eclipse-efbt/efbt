@@ -628,16 +628,30 @@ class ImportWebsiteToSDDModel(object):
 
         try:
 
+            # Define allowed table names to prevent SQL injection
+            ALLOWED_TABLES = {
+                'pybirdai_table_cell',
+                'pybirdai_ordinate_item', 
+                'pybirdai_cell_position'
+            }
+            
+            if table_name not in ALLOWED_TABLES:
+                raise ValueError(f"Table '{table_name}' not allowed for deletion")
+            
             with connection.cursor() as cursor:
                 if connection.vendor == 'sqlite':
                     cursor.execute("PRAGMA foreign_keys = 0;")
+                    # Table name is validated against whitelist above
                     cursor.execute(f"DELETE FROM {table_name};")
                     cursor.execute("PRAGMA foreign_keys = 1;")
                 elif connection.vendor == 'postgresql':
+                    # Table name is validated against whitelist above
                     cursor.execute(f"TRUNCATE TABLE {table_name} CASCADE;")
                 elif connection.vendor in ['microsoft', 'mssql']:
+                    # Table name is validated against whitelist above
                     cursor.execute(f"TRUNCATE TABLE {table_name};")
                 else:
+                    # Table name is validated against whitelist above
                     cursor.execute(f"DELETE FROM {table_name};")
 
             # Import CSV data based on database vendor
