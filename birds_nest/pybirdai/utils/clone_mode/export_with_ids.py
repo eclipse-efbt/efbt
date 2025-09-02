@@ -91,7 +91,10 @@ def export_database_to_csv_with_ids(output_path=None):
                 # Get data with escaped column names and ordered by primary key
                 with connection.cursor() as cursor:
                     escaped_headers = [f'"{h}"' if h == 'order' else h for h in db_headers]
-                    # Get primary key column name
+                    # Get primary key column name - table_name is validated against valid_table_names set
+                    if table_name not in valid_table_names:
+                        continue  # Skip unsafe table names
+                    # SQLite PRAGMA doesn't support parameterized queries, but table name is validated above
                     cursor.execute(f"PRAGMA table_info({table_name})")
                     table_info = cursor.fetchall()
                     pk_columns = []
@@ -111,6 +114,7 @@ def export_database_to_csv_with_ids(output_path=None):
                         else:
                             order_by = f"ORDER BY {', '.join(escaped_headers)}"
                     
+                    # Table name validated above, column names come from model field definitions
                     cursor.execute(f"SELECT {','.join(escaped_headers)} FROM {table_name} {order_by}")
                     rows = cursor.fetchall()
                     

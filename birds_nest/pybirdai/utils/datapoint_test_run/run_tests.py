@@ -28,7 +28,7 @@ from pathlib import Path
 
 
 # Define safe directory for configuration files
-SAFE_CONFIG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'configs'))
+SAFE_CONFIG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
 # Force UTF-8 encoding for stdout on Windows to handle Unicode characters
 if sys.platform == 'win32':
@@ -323,22 +323,7 @@ class RegulatoryTemplateTestRunner:
 
         logger.debug(f"Finished scenario: {scenario_path} from {reg_tid} at datapoint {dp_suffix}")
 
-    def load_config_file(self, config_path: str) -> dict:
-        """
-        Load test configuration from a JSON file.
-
-        Args:
-            config_path: Path to config file
-
-        Returns:
-            Configuration dictionary or None if failed
-        """
-        try:
-            with open(config_path, 'r') as f:
-                return json.load(f)
-        except Exception as e:
-            logger.error(f"Failed to load config file: {str(e)}")
-            return None
+    
 
     def get_safe_config_path(self, user_config_path: str) -> str:
         """
@@ -373,6 +358,8 @@ class RegulatoryTemplateTestRunner:
         except Exception as e:
             logger.error(f"Failed to load config file: {str(e)}")
             return None
+        
+    def run_tests_from_config(self, config_path: str, use_uv: bool=False):
         """
         Run tests based on a configuration file.
 
@@ -380,6 +367,8 @@ class RegulatoryTemplateTestRunner:
             config_path: Path to config file
             use_uv: Whether to use UV as backend
         """
+  
+    
         config = self.load_config_file(config_path)
         if not config:
             logger.error("Invalid or missing configuration file.")

@@ -147,6 +147,6 @@ def create_debug_api_endpoint():
             return JsonResponse(debug_info)
             
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            return JsonResponse({"error": "Debug data retrieval failed. Please check system logs."}, status=500)
     
     return debug_trail_data

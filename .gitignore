@@ -32,3 +32,9 @@ birds_nest/automode_config.json
 .*marker
 **/tests/configuration_file_tests.json
 **/tmp
+
+# Environment variables - keep secrets secure
+.env
+**/.env
+.env.local
+.env.production
