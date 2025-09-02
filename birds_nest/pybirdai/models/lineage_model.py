@@ -274,3 +274,5 @@ class CalculationUsedField(models.Model):
     
     def __str__(self):
         return f"CalculationUsedField: {self.calculation_name} used {self.used_field}"
+
+
