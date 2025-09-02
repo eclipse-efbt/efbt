@@ -4728,7 +4728,7 @@ def automode_status(request):
         logger.error(f"Error getting automode status: {str(e)}")
         return JsonResponse({
             'success': False,
-            'error': f'Error getting status: {str(e)}'
+            'error': 'An internal error occurred while getting status.'
         })
 
 def prepare_dpm_data(request):
