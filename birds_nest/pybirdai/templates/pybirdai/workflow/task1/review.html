@@ -17,7 +17,7 @@
 
 {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
-<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}">Task 3: SMCubes Core Creation</a>
+<a href="{% url 'pybirdai:workflow_task' task_number=1 operation='do' %}">Task 1: SMCubes Core Creation</a>
 <span class="breadcrumb-separator">›</span>
 <span>Review</span>
 {% endblock %}
@@ -56,7 +56,7 @@
                     <li>Parse LDM/EIL model files</li>
                     <li>Generate variables and domains</li>
                     <li>Create cube structures</li>
-                    
+
                 </ul>
                 {% if execution_data.input_model_imported %}
                 <span class="status-badge completed">
@@ -93,7 +93,7 @@
             <div class="step-content">
                 <h3>Hierarchy Import</h3>
                 <p>Convert and import LDM/EIL hierarchical structures</p>
-                <ul>                    
+                <ul>
                     <li>Import hierarchy data</li>
                 </ul>
                 {% if execution_data.hierarchy_analysis_imported %}
@@ -113,7 +113,7 @@
                 <p>Create semantic mappings and integration structures</p>
                 <ul>
                     <li>Process semantic mappings</li>
-                    
+
                     <li>Validate mappings</li>
                 </ul>
                 {% if execution_data.semantic_integrations_processed %}
