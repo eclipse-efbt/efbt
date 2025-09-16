@@ -20,6 +20,7 @@ from .context.context import Context
 import traceback
 
 logger = logging.getLogger(__name__)
+logger.level = logging.DEBUG
 
 
 class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
@@ -32,7 +33,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         if normalized_url.endswith('.git'):
             normalized_url = normalized_url[:-4]
 
-        super().__init__(normalized_url)
+        super().__init__(repository_url)
         self.token = token
 
     def _get_authenticated_headers(self):
@@ -726,7 +727,7 @@ class AutomodeConfigurationService:
         try:
             logger.info("Fetching REF_FINREP report template HTML files from GitHub...")
             from .utils.github_file_fetcher import GitHubFileFetcher
-            fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
+            fetcher = GitHubFileFetcher(config.technical_export_github_url)
             results['report_templates'] = fetcher.fetch_report_template_htmls()
             logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates")
         except Exception as e:
