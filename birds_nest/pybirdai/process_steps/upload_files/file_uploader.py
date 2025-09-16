@@ -20,77 +20,77 @@ class FileUploader:
     """
     A class for secure file upload handling with path traversal protection.
     """
-    
+
     # Define allowed file extensions for security
     ALLOWED_EXTENSIONS = {
         '.csv', '.xml', '.xsd', '.txt', '.json', '.dmd'
     }
-    
+
     # Maximum file size (50MB)
     MAX_FILE_SIZE = 50 * 1024 * 1024
-    
+
     def _sanitize_filename(self, filename):
         """
         Sanitize filename to prevent path traversal attacks.
-        
+
         Args:
             filename: Original filename from user input
-            
+
         Returns:
             Safe filename or None if invalid
         """
         if not filename:
             return None
-            
+
         # Get just the filename part (remove any path components)
         safe_name = os.path.basename(filename)
-        
+
         # Remove path traversal sequences
         safe_name = safe_name.replace('..', '').replace('/', '').replace('\\', '')
-        
+
         # Remove or replace dangerous characters
         safe_name = re.sub(r'[<>:"|?*\x00-\x1f]', '', safe_name)
-        
+
         # Ensure filename is not empty and has reasonable length
         if not safe_name or len(safe_name) > 255:
             return None
-            
+
         # Check file extension
         _, ext = os.path.splitext(safe_name.lower())
         if ext not in self.ALLOWED_EXTENSIONS:
             return None
-            
+
         return safe_name
-    
+
     def _validate_file_size(self, file):
         """
         Validate file size to prevent DoS attacks.
-        
+
         Args:
             file: Django UploadedFile object
-            
+
         Returns:
             bool: True if file size is acceptable
         """
         return file.size <= self.MAX_FILE_SIZE
-    
+
     def _ensure_safe_directory(self, directory):
         """
         Ensure directory is safe and within expected bounds.
-        
+
         Args:
             directory: Target directory path
-            
+
         Returns:
             Absolute path if safe, None if unsafe
         """
         try:
             # Get absolute path
             abs_directory = os.path.abspath(directory)
-            
+
             # Ensure the directory exists
             os.makedirs(abs_directory, exist_ok=True)
-            
+
             return abs_directory
         except (OSError, ValueError):
             return None
@@ -212,10 +212,7 @@ class FileUploader:
                     'status': 'error',
                     'message': f'Security error uploading file {file.name}: {str(e)}'
                 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 07358bcc (security check #1656)
             except Exception as e:
                 return {
                     'status': 'error',
@@ -257,7 +254,7 @@ class FileUploader:
                     'path': file_info['path'],
                     'size': file_info['size']
                 })
-   
+
             except ValueError as e:
                 return {
                     'status': 'error',
@@ -311,7 +308,7 @@ class FileUploader:
                     'path': file_info['path'],
                     'size': file_info['size']
                 })
-    
+
             except ValueError as e:
                 return {
                     'status': 'error',
@@ -366,10 +363,6 @@ class FileUploader:
                     'size': file_info['size']
                 })
 
-<<<<<<< HEAD
-                
-=======
->>>>>>> 07358bcc (security check #1656)
             except ValueError as e:
                 return {
                     'status': 'error',
@@ -391,7 +384,7 @@ class FileUploader:
         Secure method to save the uploaded file with path traversal protection.
 
         Secure method to save the uploaded file with path traversal protection.
-        
+
         Args:
             file: Django UploadedFile object
             directory: Target directory path
@@ -424,17 +417,17 @@ class FileUploader:
         # Validate file size
         if not self._validate_file_size(file):
             raise ValueError(f"File size ({file.size} bytes) exceeds maximum allowed size ({self.MAX_FILE_SIZE} bytes)")
-        
+
         # Sanitize filename to prevent path traversal
         safe_filename = self._sanitize_filename(file.name)
         if not safe_filename:
             raise ValueError(f"Invalid or unsafe filename: {file.name}")
-        
+
         # Ensure directory is safe
         safe_directory = self._ensure_safe_directory(directory)
         if not safe_directory:
             raise ValueError(f"Invalid or unsafe directory: {directory}")
-        
+
         # Generate unique filename if file already exists
         original_name = safe_filename
         counter = 1
@@ -442,7 +435,7 @@ class FileUploader:
             name, ext = os.path.splitext(original_name)
             safe_filename = f"{name}_{counter}{ext}"
             counter += 1
-        
+
         # Create the full file path
         file_path = os.path.join(safe_directory, safe_filename)
 
