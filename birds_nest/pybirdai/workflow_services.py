@@ -20,7 +20,10 @@ from .context.context import Context
 import traceback
 
 logger = logging.getLogger(__name__)
+logger.level = logging.DEBUG
 
+
+DEFAULT_GITHUB_BRANCH = "main"
 
 class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
     """Enhanced GitHub file fetcher that supports configurable repositories and specific file types."""
@@ -32,7 +35,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         if normalized_url.endswith('.git'):
             normalized_url = normalized_url[:-4]
 
-        super().__init__(normalized_url)
+        super().__init__(repository_url)
         self.token = token
 
     def _get_authenticated_headers(self):
@@ -726,7 +729,7 @@ class AutomodeConfigurationService:
         try:
             logger.info("Fetching REF_FINREP report template HTML files from GitHub...")
             from .utils.github_file_fetcher import GitHubFileFetcher
-            fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
+            fetcher = GitHubFileFetcher(config.technical_export_github_url)
             results['report_templates'] = fetcher.fetch_report_template_htmls()
             logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates")
         except Exception as e:
@@ -779,7 +782,7 @@ class AutomodeConfigurationService:
             logger.error(f"Error fetching from BIRD website: {e}")
             raise
 
-    def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
+    def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_EIL", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from .utils.clone_repo_service import CloneRepoService
         """Fetch technical export files from GitHub repository."""
         logger.info(f"Fetching technical export files from GitHub: {github_url} (branch: {branch})")
@@ -1194,19 +1197,17 @@ class GitHubIntegrationService:
             logger.error(f"Error parsing GitHub URL {repository_url}: {e}")
             return None, None
 
-    def get_automode_config(self):
+    def get_github_url_from_automode_config(self):
         """
         Get the active automode configuration from the database.
 
         Returns:
             AutomodeConfiguration: Active configuration or None if not found
         """
-        try:
-            from .models.workflow_model import AutomodeConfiguration
-            return AutomodeConfiguration.objects.filter(is_active=True).first()
-        except Exception as e:
-            logger.error(f"Error getting automode configuration: {e}")
-            return None
+        import json
+        with open("automode_config.json", "r") as f:
+            config = json.load(f)
+            return config["technical_export_github_url"]
 
     def create_branch(self, owner: str, repo: str, branch_name: str, base_branch: str = 'main'):
         """
@@ -1252,7 +1253,7 @@ class GitHubIntegrationService:
             logger.error(f"Error creating branch {branch_name}: {e}")
             return False
 
-    def fork_repository(self, source_owner: str, source_repo: str, organization: str = None):
+    def fork_repository(self, source_owner: str, source_repo: str, organization: str = ""):
         """
         Fork a repository to the authenticated user's account or organization.
 
@@ -1267,6 +1268,7 @@ class GitHubIntegrationService:
         try:
             # Check if fork already exists
             fork_owner = organization if organization else self._get_authenticated_user()
+            logger.debug(f"fork owner: {fork_owner}")
             if not fork_owner:
                 logger.error("Could not determine fork owner")
                 return False, None
@@ -1275,6 +1277,7 @@ class GitHubIntegrationService:
 
             check_url = f"https://api.github.com/repos/{fork_owner}/{source_repo}"
             check_response = requests.get(check_url, headers=self._get_headers())
+            logger.debug(f"check_url: {check_url}")
             try:
                 import json
                 is_fork = json.loads(check_response.text).get("fork",False)
@@ -1287,6 +1290,7 @@ class GitHubIntegrationService:
 
             # Create the fork
             fork_url = f"https://api.github.com/repos/{source_owner}/{source_repo}/forks"
+            logger.debug(f"fork_url: {fork_url}")
             data = {}
             if organization:
                 data['organization'] = organization
@@ -1294,6 +1298,7 @@ class GitHubIntegrationService:
             response = requests.post(fork_url, headers=self._get_headers(), json=data)
 
             if response.status_code in [202, 201]:
+                logger.debug(f"fork creation response.status_code: {response.status_code}")
                 fork_data = response.json()
                 logger.info(f"Successfully created fork: {fork_data['full_name']}")
                 os.makedirs(os.path.dirname(f"{fork_data['full_name']}.json"), exist_ok=True)
@@ -1631,7 +1636,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
             head_owner=fork_owner
         )
 
-    def export_and_push_to_github(self, branch_name: str = None, repository_url: str = None):
+    def export_and_push_to_github(self, branch_name: str = "", repository_url: str = ""):
         """
         Complete workflow: export database to CSV and push to GitHub with PR.
 
@@ -1658,11 +1663,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
         try:
             # Get repository URL from automode config if not provided
             if not repository_url:
-                config = self.get_automode_config()
-                if config and config.technical_export_github_url:
-                    repository_url = config.technical_export_github_url
-                else:
-                    repository_url = 'https://github.com/regcommunity/FreeBIRD'
+                repository_url = self.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD'
 
             # Parse GitHub URL
             owner, repo = self._parse_github_url(repository_url)
@@ -1689,8 +1690,8 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 results['branch_created'] = True
                 logger.info(f"Branch {branch_name} created successfully")
             else:
-                traceback.print_exc()
-                results['error'] = f"Failed to create branch {branch_name}"
+
+                results['error'] = f"Failed to create branch {branch_name} :: "+traceback.format_exc()
                 return results
 
             # Step 3: Push CSV files
@@ -1724,12 +1725,12 @@ This export was generated automatically by PyBIRD AI's database export functiona
         return results
 
     def fork_and_create_pr_workflow(self, source_repository_url: str,
-                                   target_repository_url: str = None,
-                                   organization: str = None,
-                                   branch_name: str = None,
-                                   csv_directory: str = None,
-                                   pr_title: str = None,
-                                   pr_body: str = None,
+                                   target_repository_url: str = "",
+                                   organization: str = "",
+                                   branch_name: str = "",
+                                   csv_directory: str = "",
+                                   pr_title: str = "",
+                                   pr_body: str = "",
                                    target_branch: str = 'main'):
         """
         Complete workflow: Fork repo, create branch, push changes, create PR.
@@ -1859,8 +1860,24 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 results['pr_url'] = pr_url
                 logger.info(f"Pull request created: {pr_url}")
             else:
-                results['error'] = "Failed to create pull request"
-                return results
+                logger.info(f"Pull request not created, target branch most likely not available. Creating PR on main for : {pr_url}")
+                pr_success, pr_url = self.create_cross_fork_pull_request(
+                    source_owner=target_owner,
+                    source_repo=target_repo,
+                    fork_repo=head_repo,
+                    fork_owner=fork_owner,
+                    branch_name=branch_name,
+                    base_branch=DEFAULT_GITHUB_BRANCH,
+                    title=pr_title,
+                    body=pr_body
+                )
+                if pr_success:
+                    results['pr_created'] = True
+                    results['pr_url'] = pr_url
+                    logger.info(f"Pull request created: {pr_url}")
+                else:
+                    results['error'] = "Failed to create pull request"
+                    return results
 
             results['success'] = True
             logger.info("Fork and PR workflow completed successfully")
