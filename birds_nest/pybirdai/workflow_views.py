@@ -3327,7 +3327,7 @@ def export_database_to_github(request):
         # Get form data
         github_token = request.POST.get('github_token', '').strip()
         repository_url = request.POST.get('repository_url', '').strip()
-        organization = request.POST.get('organization', '').strip() or None
+        organization = request.POST.get('organization', '').strip() or ""
         target_branch = request.POST.get('target_branch', 'develop').strip()
         use_fork_workflow = request.POST.get('use_fork_workflow') == 'on'
 
@@ -3350,11 +3350,7 @@ def export_database_to_github(request):
 
         # Determine repository URL (use automode config if not provided)
         if not repository_url:
-            config = github_service.get_automode_config()
-            if config and config.technical_export_github_url:
-                repository_url = config.technical_export_github_url
-            else:
-                repository_url = 'https://github.com/regcommunity/FreeBIRD'
+            repository_url = github_service.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD'
 
         if use_fork_workflow:
             # Use new fork workflow (default behavior)

@@ -482,7 +482,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
     ):
         """Update the admin.py file with model registrations, avoiding duplicates."""
         import glob
-        
+
         registered_models = set()
         models_dir = os.path.join(os.path.dirname(pybirdai_admin_path), "models")
 
@@ -494,15 +494,15 @@ class RunAutomodeDatabaseSetup(AppConfig):
             for model_file_path in glob.glob(os.path.join(models_dir, "*.py")):
                 if model_file_path.endswith("__init__.py"):
                     continue
-                    
+
                 model_filename = os.path.basename(model_file_path)
                 model_module_name = model_filename[:-3]  # Remove .py extension
-                
+
                 try:
                     with open(model_file_path, "r") as f_read:
                         file_content = f_read.read()
                         tree = ast.parse(file_content)
-                        
+
                         # Find all class definitions in the file
                         for node in ast.walk(tree):
                             if isinstance(node, ast.ClassDef) and node.name not in [
@@ -510,14 +510,14 @@ class RunAutomodeDatabaseSetup(AppConfig):
                             ]:
                                 # Check if this is an abstract model
                                 is_abstract = self._is_abstract_model(node, file_content)
-                                
+
                                 if not is_abstract and node.name not in registered_models:
                                     f_write.write(
                                         f"from .models.{model_module_name} import {node.name}\n"
                                     )
                                     f_write.write(f"admin.site.register({node.name})\n")
                                     registered_models.add(node.name)
-                                    
+
                 except Exception as e:
                     logger.warning(f"Error processing model file {model_file_path}: {e}")
                     continue
@@ -525,18 +525,18 @@ class RunAutomodeDatabaseSetup(AppConfig):
     def _is_abstract_model(self, class_node, file_content):
         """Check if a Django model class is abstract by examining its Meta class."""
         for node in class_node.body:
-            if (isinstance(node, ast.ClassDef) and 
+            if (isinstance(node, ast.ClassDef) and
                 node.name == "Meta"):
                 # Check if Meta class contains abstract = True
                 for meta_node in node.body:
                     if (isinstance(meta_node, ast.Assign) and
-                        any(isinstance(target, ast.Name) and target.id == "abstract" 
+                        any(isinstance(target, ast.Name) and target.id == "abstract"
                             for target in meta_node.targets)):
                         # Check if the value is True
-                        if (isinstance(meta_node.value, ast.Constant) and 
+                        if (isinstance(meta_node.value, ast.Constant) and
                             meta_node.value.value is True):
                             return True
-                        elif (isinstance(meta_node.value, ast.NameConstant) and 
+                        elif (isinstance(meta_node.value, ast.NameConstant) and
                               meta_node.value.value is True):  # Python < 3.8 compatibility
                             return True
         return False
@@ -643,27 +643,11 @@ class RunAutomodeDatabaseSetup(AppConfig):
         original_dir = os.getcwd()  # Ensure this is always set
         start_time = time.time()
 
-        def is_file_locked(filepath):
-            for proc in psutil.process_iter(['pid', 'open_files']):
-                try:
-                    if any(f.path == filepath for f in proc.info['open_files'] or []):
-                        return True
-                except Exception:
-                    continue
-            return False
-
         try:
             db_file = "db.sqlite3"
             if os.path.exists(db_file):
-                try:
-                    if is_file_locked(os.path.abspath(db_file)):
-                        logger.warning(f"Database file {db_file} is locked by another process. Please stop all Django/related processes and try again.")
-                        #raise RuntimeError(f"Database file {db_file} is locked. Please stop all Django/related processes (such as the development server) and try again.")
-                    os.chmod(db_file, 0o666)
-                    os.remove(db_file)
-                except Exception as e:
-                    logger.warning(f"Error removing database file {db_file}: {e}")
-
+                os.chmod(db_file, 0o666)
+                os.remove(db_file)
 
             venv_path, _, python_executable = self._get_python_exc()
 
@@ -680,7 +664,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Run makemigrations with proper Windows handling
             makemig_cmd = [python_executable, "manage.py", "makemigrations", "pybirdai"]
             logger.info(f"Running command: {' '.join(makemig_cmd)}")
-            
+
             makemig_result = subprocess.run(
                 makemig_cmd,
                 capture_output=True,
@@ -708,7 +692,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
             migrate_start = time.time()
 
-            return_code_preconfigured_migration, migrate_result = self._fetch_preconfigured_database(python_executable)
+            return_code_preconfigured_migration, migrate_result = True, None
 
             if return_code_preconfigured_migration:
                 logger.info("PreconfiguredDatabaseFetcher failed, running manual process")
@@ -717,7 +701,6 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 db_file = "db.sqlite3"
                 if os.path.exists(db_file):
                     try:
-
                         if is_file_locked(os.path.abspath(db_file)):
                             logger.warning(f"Database file {db_file} is locked by another process. Please stop all Django/related processes and try again.")
                             raise RuntimeError(f"Database file {db_file} is locked. Please stop all Django/related processes (such as the development server) and try again.")
@@ -730,7 +713,7 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 # Run migrate
                 migrate_cmd = [python_executable, "manage.py", "migrate"]
                 logger.info(f"Running migrate command: {' '.join(migrate_cmd)}")
-                
+
                 migrate_result = subprocess.run(
                     migrate_cmd,
                     capture_output=True,
