@@ -131,25 +131,25 @@
 {% endblock %}
 
 {% block content %}
-<h1 style="text-align: center;">ANCRDT Transformation Process</h1>
+<h1 style="text-align: center;">Dataset Transformation Process</h1>
 
 <div class="process-description">
-    <h2>About ANCRDT Transformation</h2>
+    <h2>About the dataset transformation process</h2>
     <p>
-        The ANCRDT (Anacredit) transformation process converts regulatory data models into executable
-        transformations for ANACREDIT reporting. This four-step process fetches CSV data from the ECB website,
-        imports ANCRDT data, creates join metadata, and generates executable Python code for data transformations.
+        The dataset transformation process converts regulatory data models into executable
+        transformations for supervisory reporting. This four-step process fetches CSV data from the ECB website,
+        imports metadata from the chosen framework, creates join metadata, and generates executable Python code for data transformations.
     </p>
 </div>
 
 <div class="task-grid">
     <a href="{% url 'pybirdai:ancrdt_fetch_csv' %}" class="task-item">
         <img src="{% static 'images/import_data_model_artefacts.webp' %}" alt="Fetch ANCRDT CSV">
-        <span>Step 0: Fetch ANCRDT CSV</span>
+        <span>Step 0: Fetch Metadata CSV</span>
     </a>
     <a href="{% url 'pybirdai:ancrdt_import' %}" class="task-item">
         <img src="{% static 'images/import_bird.webp' %}" alt="Import ANCRDT Data">
-        <span>Step 1: Import ANCRDT Data</span>
+        <span>Step 1: Import Metadata</span>
     </a>
     <a href="{% url 'pybirdai:ancrdt_create_joins_metadata' %}" class="task-item">
         <img src="{% static 'images/joins_configuration.webp' %}" alt="Create Joins Metadata">

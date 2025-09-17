@@ -1663,7 +1663,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
         try:
             # Get repository URL from automode config if not provided
             if not repository_url:
-                repository_url = self.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD'
+                repository_url = self.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_EIL'
 
             # Parse GitHub URL
             owner, repo = self._parse_github_url(repository_url)
