@@ -70,21 +70,20 @@ def process_sql_file(file_path: str):
     for line in data:
         if not line.strip(): continue
         try:
-            match line:
-                case _ if "UPDATE" in line:
-                    # Handle UPDATE statements by setting values to NULL
-                    result_data.append(re.sub(
-                       r"(?==).*(?>WHERE)",
-                       "=NULL WHERE",
-                       line
-                   ).replace("\n\n","\n"))
-                    logger.debug("Processed UPDATE statement")
-                case _ if "INSERT INTO" in line:
-                    # Convert INSERT statements to DELETE statements
-                    result_data.append(convert_into_info(line))
-                    logger.debug("Processed INSERT statement")
-                case _:
-                    pass
+            if "UPDATE" in line:
+                # Handle UPDATE statements by setting values to NULL
+                result_data.append(re.sub(
+                   r"(?==).*(?>WHERE)",
+                   "=NULL WHERE",
+                   line
+               ).replace("\n\n","\n"))
+                logger.debug("Processed UPDATE statement")
+            elif "INSERT INTO" in line:
+                # Convert INSERT statements to DELETE statements
+                result_data.append(convert_into_info(line))
+                logger.debug("Processed INSERT statement")
+            else:
+                pass
         except Exception as e:
             logger.error(f"Error processing line: {line}")
             logger.error(f"Error details: {str(e)}")

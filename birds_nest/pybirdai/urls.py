@@ -22,6 +22,7 @@ from . import lineage_views
 from . import lineage_api
 from . import enhanced_lineage_api
 from . import bpmn_metadata_lineage_views
+from . import fixture_views
 
 from django.views.generic import TemplateView
 from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -769,6 +770,68 @@ urlpatterns = [
         "api/datapoint/<str:datapoint_id>/bpmn-metadata-lineage/graph/",
         bpmn_metadata_lineage_views.get_datapoint_bpmn_metadata_lineage_graph,
         name="get_datapoint_bpmn_metadata_lineage_graph",
+    ),
+
+    # Test Fixture Generator endpoints
+    path(
+        "fixture-generator/",
+        fixture_views.fixture_generator_dashboard,
+        name="fixture_generator_dashboard",
+    ),
+    path(
+        "fixture-generator/api/templates/",
+        fixture_views.get_available_templates,
+        name="get_available_templates",
+    ),
+    path(
+        "fixture-generator/api/tests/current/",
+        fixture_views.get_current_tests,
+        name="get_current_tests",
+    ),
+    path(
+        "fixture-generator/api/cells/<str:template_id>/",
+        fixture_views.get_template_cells,
+        name="get_template_cells",
+    ),
+    path(
+        "fixture-generator/api/analyze-cell/",
+        fixture_views.analyze_cell,
+        name="analyze_cell",
+    ),
+    path(
+        "fixture-generator/generate/",
+        fixture_views.generate_fixtures,
+        name="generate_fixtures",
+    ),
+    path(
+        "fixture-generator/edit/<str:template_id>/<str:cell_suffix>/<str:scenario>/",
+        fixture_views.edit_sql_fixtures,
+        name="edit_sql_fixtures",
+    ),
+    path(
+        "fixture-generator/api/save-sql/",
+        fixture_views.save_sql_fixtures,
+        name="save_sql_fixtures",
+    ),
+    path(
+        "fixture-generator/api/regenerate-deletes/",
+        fixture_views.regenerate_delete_fixtures,
+        name="regenerate_delete_fixtures",
+    ),
+    path(
+        "fixture-generator/api/search-fixtures/",
+        fixture_views.search_fixtures,
+        name="search_fixtures",
+    ),
+    path(
+        "fixture-generator/api/delete-fixtures/",
+        fixture_views.delete_fixtures,
+        name="delete_fixtures",
+    ),
+    path(
+        "fixture-generator/create-pr/",
+        fixture_views.create_github_pr,
+        name="create_fixture_github_pr",
     ),
 
 ]

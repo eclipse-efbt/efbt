@@ -1,0 +1,607 @@
+<!--
+# Copyright (c) 2025 Arfa Digital Consulting
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Benjamin Arfa - initial API and implementation
+#
+-->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit SQL Fixtures - {{ template_id }}_{{ cell_suffix }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+<style>
+    .editor-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .editor-header {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px 8px 0 0;
+        padding: 15px 20px;
+        margin-bottom: 0;
+    }
+
+    .editor-title {
+        color: #495057;
+        font-size: 1.3em;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .editor-subtitle {
+        color: #6c757d;
+        font-size: 0.9em;
+        margin: 5px 0 0 0;
+    }
+
+    .editor-content {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        padding: 0;
+    }
+
+    .editor-tabs {
+        display: flex;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .editor-tab {
+        padding: 12px 20px;
+        background: none;
+        border: none;
+        border-right: 1px solid #dee2e6;
+        cursor: pointer;
+        font-weight: 500;
+        color: #6c757d;
+        transition: all 0.2s;
+    }
+
+    .editor-tab.active {
+        background: #fff;
+        color: #495057;
+        border-bottom: 2px solid #007bff;
+    }
+
+    .editor-tab:hover {
+        background: #e9ecef;
+    }
+
+    .editor-pane {
+        display: none;
+        position: relative;
+    }
+
+    .editor-pane.active {
+        display: block;
+    }
+
+    .CodeMirror {
+        height: 500px;
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 14px;
+        border: none;
+        border-radius: 0;
+    }
+
+    .editor-toolbar {
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .toolbar-left {
+        display: flex;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .toolbar-right {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 5px;
+    }
+
+    .status-indicator {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        font-weight: 600;
+    }
+
+    .status-saved {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-unsaved {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-error {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .info-panel {
+        background: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .info-panel h6 {
+        color: #0056b3;
+        margin: 0 0 10px 0;
+        font-weight: 600;
+    }
+
+    .info-panel ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .info-panel li {
+        color: #004085;
+        margin-bottom: 5px;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: #6c757d;
+    }
+
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .loading-spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .alert {
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .editor-container {
+            padding: 10px;
+        }
+
+        .toolbar-left, .toolbar-right {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .editor-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .CodeMirror {
+            height: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="editor-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'pybirdai:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'pybirdai:fixture_generator_dashboard' %}">Fixture Generator</a></li>
+            <li class="breadcrumb-item active">{{ template_id }}_{{ cell_suffix }}_{{ scenario }}</li>
+        </ol>
+    </nav>
+
+    <!-- Info Panel -->
+    <div class="info-panel">
+        <h6><i class="fas fa-info-circle"></i> SQL Fixture Editor</h6>
+        <ul>
+            <li><strong>Template:</strong> {{ template_id }}</li>
+            <li><strong>Cell:</strong> {{ cell_suffix }}</li>
+            <li><strong>Scenario:</strong> {{ scenario }}</li>
+            <li><strong>Fixture Path:</strong> {{ fixture_path }}</li>
+        </ul>
+    </div>
+
+    <!-- Editor Container -->
+    <div class="editor-header">
+        <h2 class="editor-title">
+            <i class="fas fa-database"></i>
+            SQL Fixture Editor
+        </h2>
+        <p class="editor-subtitle">
+            Edit SQL insert statements and regenerate corresponding delete statements
+        </p>
+    </div>
+
+    <div class="editor-content">
+        <!-- Tabs -->
+        <div class="editor-tabs">
+            <button class="editor-tab active" data-tab="inserts">
+                <i class="fas fa-plus-circle"></i> SQL Inserts
+            </button>
+            <button class="editor-tab" data-tab="deletes">
+                <i class="fas fa-minus-circle"></i> SQL Deletes (Read-only)
+            </button>
+        </div>
+
+        <!-- Insert Editor -->
+        <div class="editor-pane active" id="insertsPane">
+            <div class="loading-overlay" id="insertsLoading">
+                <div>
+                    <div class="loading-spinner"></div>
+                    <div class="mt-2">Loading...</div>
+                </div>
+            </div>
+            <textarea id="insertsEditor">{{ sql_inserts_content }}</textarea>
+        </div>
+
+        <!-- Deletes Editor -->
+        <div class="editor-pane" id="deletesPane">
+            <div class="loading-overlay" id="deletesLoading">
+                <div>
+                    <div class="loading-spinner"></div>
+                    <div class="mt-2">Regenerating...</div>
+                </div>
+            </div>
+            <textarea id="deletesEditor" readonly>{{ sql_deletes_content }}</textarea>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="editor-toolbar">
+            <div class="toolbar-left">
+                <div class="btn-group">
+                    <button id="saveBtn" class="btn btn-success">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button id="revertBtn" class="btn btn-outline-secondary">
+                        <i class="fas fa-undo"></i> Revert
+                    </button>
+                </div>
+
+                <button id="regenerateDeletesBtn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Regenerate Deletes
+                </button>
+
+                <button id="formatSQLBtn" class="btn btn-outline-info">
+                    <i class="fas fa-code"></i> Format SQL
+                </button>
+            </div>
+
+            <div class="toolbar-right">
+                <span id="statusIndicator" class="status-indicator status-saved">
+                    <i class="fas fa-check"></i> Saved
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alert container -->
+<div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 2000; max-width: 400px;"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/sql/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
+
+<script>
+class SQLFixtureEditor {
+    constructor() {
+        this.templateId = '{{ template_id }}';
+        this.cellSuffix = '{{ cell_suffix }}';
+        this.scenario = '{{ scenario }}';
+        this.originalContent = '';
+        this.hasUnsavedChanges = false;
+        this.init();
+    }
+
+    init() {
+        this.initializeEditors();
+        this.bindEvents();
+        this.updateStatus('saved');
+    }
+
+    initializeEditors() {
+        // SQL Inserts Editor
+        this.insertsEditor = CodeMirror.fromTextArea(document.getElementById('insertsEditor'), {
+            mode: 'text/x-sql',
+            theme: 'default',
+            lineNumbers: true,
+            matchBrackets: true,
+            styleActiveLine: true,
+            indentUnit: 4,
+            lineWrapping: true
+        });
+
+        // SQL Deletes Editor (Read-only)
+        this.deletesEditor = CodeMirror.fromTextArea(document.getElementById('deletesEditor'), {
+            mode: 'text/x-sql',
+            theme: 'default',
+            lineNumbers: true,
+            matchBrackets: true,
+            styleActiveLine: true,
+            indentUnit: 4,
+            lineWrapping: true,
+            readOnly: true
+        });
+
+        // Store original content
+        this.originalContent = this.insertsEditor.getValue();
+
+        // Track changes
+        this.insertsEditor.on('change', () => {
+            this.onContentChange();
+        });
+    }
+
+    bindEvents() {
+        // Tab switching
+        document.querySelectorAll('.editor-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+        });
+
+        // Toolbar buttons
+        document.getElementById('saveBtn').addEventListener('click', () => this.saveChanges());
+        document.getElementById('revertBtn').addEventListener('click', () => this.revertChanges());
+        document.getElementById('regenerateDeletesBtn').addEventListener('click', () => this.regenerateDeletes());
+        document.getElementById('formatSQLBtn').addEventListener('click', () => this.formatSQL());
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 's') {
+                    e.preventDefault();
+                    this.saveChanges();
+                } else if (e.key === 'z') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        this.insertsEditor.redo();
+                    } else {
+                        this.insertsEditor.undo();
+                    }
+                }
+            }
+        });
+
+        // Warn before leaving with unsaved changes
+        window.addEventListener('beforeunload', (e) => {
+            if (this.hasUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                return e.returnValue;
+            }
+        });
+    }
+
+    switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.editor-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+        // Update editor panes
+        document.querySelectorAll('.editor-pane').forEach(pane => {
+            pane.classList.remove('active');
+        });
+        document.getElementById(`${tabName}Pane`).classList.add('active');
+
+        // Refresh editors when switching tabs
+        setTimeout(() => {
+            if (tabName === 'inserts') {
+                this.insertsEditor.refresh();
+            } else if (tabName === 'deletes') {
+                this.deletesEditor.refresh();
+            }
+        }, 100);
+    }
+
+    onContentChange() {
+        this.hasUnsavedChanges = this.insertsEditor.getValue() !== this.originalContent;
+        this.updateStatus(this.hasUnsavedChanges ? 'unsaved' : 'saved');
+    }
+
+    updateStatus(status) {
+        const indicator = document.getElementById('statusIndicator');
+        indicator.className = `status-indicator status-${status}`;
+
+        switch (status) {
+            case 'saved':
+                indicator.innerHTML = '<i class="fas fa-check"></i> Saved';
+                break;
+            case 'unsaved':
+                indicator.innerHTML = '<i class="fas fa-edit"></i> Unsaved Changes';
+                break;
+            case 'saving':
+                indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                break;
+            case 'error':
+                indicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                break;
+        }
+    }
+
+    async saveChanges() {
+        if (!this.hasUnsavedChanges) {
+            this.showAlert('No changes to save', 'info');
+            return;
+        }
+
+        this.updateStatus('saving');
+
+        try {
+            const response = await fetch('/fixture-generator/api/save-sql/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    template_id: this.templateId,
+                    cell_suffix: this.cellSuffix,
+                    scenario: this.scenario,
+                    sql_content: this.insertsEditor.getValue()
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.originalContent = this.insertsEditor.getValue();
+                this.hasUnsavedChanges = false;
+                this.updateStatus('saved');
+                this.showAlert('Changes saved successfully', 'success');
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            this.updateStatus('error');
+            this.showAlert(`Error saving changes: ${error.message}`, 'error');
+        }
+    }
+
+    revertChanges() {
+        if (!this.hasUnsavedChanges) {
+            this.showAlert('No changes to revert', 'info');
+            return;
+        }
+
+        if (confirm('Are you sure you want to revert all changes?')) {
+            this.insertsEditor.setValue(this.originalContent);
+            this.hasUnsavedChanges = false;
+            this.updateStatus('saved');
+            this.showAlert('Changes reverted', 'info');
+        }
+    }
+
+    async regenerateDeletes() {
+        document.getElementById('deletesLoading').style.display = 'flex';
+
+        try {
+            const response = await fetch('/fixture-generator/api/regenerate-deletes/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    template_id: this.templateId,
+                    cell_suffix: this.cellSuffix,
+                    scenario: this.scenario
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.deletesEditor.setValue(data.delete_content);
+                this.showAlert('Delete fixtures regenerated successfully', 'success');
+            } else {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            this.showAlert(`Error regenerating deletes: ${error.message}`, 'error');
+        } finally {
+            document.getElementById('deletesLoading').style.display = 'none';
+        }
+    }
+
+    formatSQL() {
+        const content = this.insertsEditor.getValue();
+
+        // Basic SQL formatting
+        const formatted = content
+            .replace(/;\s*/g, ';\n\n')  // Add line breaks after semicolons
+            .replace(/INSERT\s+INTO/gi, 'INSERT INTO')  // Normalize INSERT statements
+            .replace(/VALUES\s*\(/gi, 'VALUES (')  // Normalize VALUES
+            .replace(/\),\s*\(/g, '),\n(')  // Format multiple value rows
+            .replace(/\s+/g, ' ')  // Normalize whitespace
+            .trim();
+
+        this.insertsEditor.setValue(formatted);
+        this.showAlert('SQL formatted', 'info');
+    }
+
+    showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type === 'error' ? 'danger' : type === 'info' ? 'info' : 'success'} alert-dismissible fade show`;
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        alertContainer.appendChild(alert);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 5000);
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new SQLFixtureEditor();
+});
+</script>
+{% endblock %}

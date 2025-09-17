@@ -1,0 +1,2877 @@
+<!--
+# Copyright (c) 2025 Arfa Digital Consulting
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Benjamin Arfa - initial API and implementation
+#
+-->
+
+{% extends 'base.html' %} {% load static %} {% block title %}Test Fixture
+Generator{% endblock %} {% block extra_css %}
+<style>
+    .fixture-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .section-card {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        color: #495057;
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title i {
+        margin-right: 10px;
+        color: #007bff;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+    }
+
+    .cell-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .cell-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+
+    .cell-item input[type="checkbox"] {
+        margin-right: 8px;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .progress-section {
+        display: none;
+        margin-top: 20px;
+    }
+
+    .log-output {
+        background: #212529;
+        color: #fff;
+        font-family: "Courier New", monospace;
+        font-size: 0.85em;
+        padding: 15px;
+        border-radius: 4px;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+    }
+
+    .results-section {
+        display: none;
+        margin-top: 20px;
+    }
+
+    .result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .result-item:last-child {
+        border-bottom: none;
+    }
+
+    .result-status {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        font-weight: 600;
+    }
+
+    .status-success {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-error {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .test-template-card {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 12px;
+        margin-bottom: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .test-template-card:hover {
+        background: #e9ecef;
+        border-color: #adb5bd;
+    }
+
+    .test-template-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .test-template-name {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .test-count-badge {
+        background: #007bff;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+    }
+
+    .test-cells-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .test-cell-pill {
+        background: #28a745;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 0.75em;
+        font-weight: 500;
+    }
+
+    .cell-item.has-test {
+        background: rgba(40, 167, 69, 0.7);
+        border-color: #28a745;
+        position: relative;
+        color: #ffffff;
+        font-weight: 600;
+        opacity: 0.8;
+    }
+
+    .cell-item.has-test input[type="checkbox"] {
+        accent-color: #28a745;
+    }
+
+    .cell-item.has-test span {
+        text-decoration: line-through;
+        text-decoration-color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .cell-item.has-test::after {
+        content: "TESTED";
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        background: #155724;
+        color: white;
+        font-size: 0.6em;
+        font-weight: bold;
+        padding: 1px 4px;
+        border-radius: 3px;
+        opacity: 0.9;
+    }
+
+    .cell-item.has-test:hover {
+        background: rgba(40, 167, 69, 0.8);
+        cursor: not-allowed;
+    }
+
+    .cell-item.clickable {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .cell-item.clickable:hover {
+        background: #e9ecef;
+        transform: translateY(-1px);
+    }
+
+    .loading-spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .alert-info {
+        background: #d1ecf1;
+        border: 1px solid #b6d4db;
+        color: #0c5460;
+    }
+
+    .alert-success {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+
+    .search-filters-container {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-filters-container .form-control,
+    .search-filters-container .form-select {
+        min-width: 150px;
+        flex: 1;
+    }
+
+    .search-filters-container .btn {
+        white-space: nowrap;
+    }
+
+    .filter-results-info {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-left: auto;
+    }
+
+    .fixture-management-section {
+        border-top: 3px solid #007bff;
+    }
+
+    .fixture-management-tabs {
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 20px;
+    }
+
+    .fixture-management-tabs .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #495057;
+        font-weight: 500;
+    }
+
+    .fixture-management-tabs .nav-link.active {
+        border-bottom-color: #007bff;
+        background: none;
+        color: #007bff;
+    }
+
+    .fixtures-table {
+        font-size: 0.9em;
+    }
+
+    .fixtures-table .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .fixture-status-badge {
+        font-size: 0.75em;
+        padding: 0.25em 0.5em;
+    }
+
+    /* GitHub Integration Section */
+    .github-integration-section {
+        border-top: 3px solid #28a745;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .github-integration-section .section-title {
+        color: #28a745;
+    }
+
+    /* Floating Action Button */
+    .github-fab {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: #28a745;
+        border: none;
+        border-radius: 50%;
+        color: white;
+        font-size: 1.5em;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .github-fab:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+
+    .github-fab:active {
+        transform: translateY(0);
+    }
+
+    .github-fab.pulse {
+        animation: fabPulse 2s infinite;
+    }
+
+    @keyframes fabPulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* GitHub Integration Form */
+    .github-form-section {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+        border: 1px solid #dee2e6;
+    }
+
+    .github-form-section.highlighted {
+        border-color: #28a745;
+        box-shadow: 0 0 20px rgba(40, 167, 69, 0.2);
+        animation: highlightPulse 1s ease-out;
+    }
+
+    @keyframes highlightPulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.02);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Pagination Styles */
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0;
+        padding: 15px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+    }
+
+    .pagination-info {
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+
+    .pagination-nav .pagination {
+        margin: 0;
+    }
+
+    .pagination-nav .page-link {
+        color: #007bff;
+        border: 1px solid #dee2e6;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .pagination-nav .page-link:hover {
+        background-color: #e9ecef;
+        border-color: #adb5bd;
+    }
+
+    .pagination-nav .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .pagination-nav .page-item.disabled .page-link {
+        color: #6c757d;
+        background-color: white;
+        border-color: #dee2e6;
+        cursor: not-allowed;
+    }
+
+    .bulk-operations-panel {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+    }
+
+    .bulk-operations-panel .btn-group {
+        gap: 5px;
+    }
+
+    /* Responsive pagination */
+    @media (max-width: 768px) {
+        .pagination-container {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .pagination-nav .pagination {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pagination-nav .page-link {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %} {% block content %}
+{% csrf_token %}
+<div class="fixture-container">
+    <h1>
+        <i class="fas fa-vial" style="color: #007bff; margin-right: 10px"></i>
+        Tests Generator Dashboard
+    </h1>
+
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        Generate test fixtures for FINREP regulatory templates. Select templates
+        and cells to create SQL fixtures with configurable scenarios.
+    </div>
+
+    <!-- Template Selection -->
+    <div class="section-card">
+        <div class="section-title">
+            <i class="fas fa-layer-group"></i>
+            Template Selection
+        </div>
+
+        <div class="form-group">
+            <label for="templateSelect">Regulatory Template:</label>
+            <select id="templateSelect" class="form-select">
+                <option value="">Select a template...</option>
+            </select>
+        </div>
+
+        <button id="loadTemplatesBtn" class="btn btn-outline-primary">
+            <i class="fas fa-sync-alt"></i> Load Templates
+        </button>
+    </div>
+
+    <!-- Cell Selection -->
+    <div class="section-card" id="cellSelectionSection" style="display: none">
+        <div class="section-title">
+            <i class="fas fa-th-large"></i>
+            Cell Selection
+            <span id="cellCount" class="badge bg-secondary ms-2">0 cells</span>
+        </div>
+
+        <!-- Search and Filter Component -->
+        <div class="search-filters-container">
+            <input
+                type="text"
+                id="cellSearch"
+                class="form-control"
+                placeholder="Search cells by suffix or ID..."
+            />
+            <select id="scenarioFilter" class="form-select">
+                <option value="">All Scenarios</option>
+            </select>
+            <select id="testStatusFilter" class="form-select">
+                <option value="">All Cells</option>
+                <option value="tested">Tested Only</option>
+                <option value="untested">Untested Only</option>
+            </select>
+            <button id="clearFilters" class="btn btn-outline-secondary">
+                <i class="fas fa-times"></i> Clear
+            </button>
+            <div class="filter-results-info">
+                <span id="filteredCellCount">0</span> of
+                <span id="totalCellCount">0</span> cells shown
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <button
+                    id="selectAllCellsBtn"
+                    class="btn btn-sm btn-outline-primary"
+                >
+                    Select All Visible
+                </button>
+                <button
+                    id="selectNoneCellsBtn"
+                    class="btn btn-sm btn-outline-secondary"
+                >
+                    Select None
+                </button>
+                <button
+                    id="selectUntestedBtn"
+                    class="btn btn-sm btn-outline-success"
+                >
+                    Select Untested
+                </button>
+            </div>
+            <div><span id="selectedCellCount">0</span> selected</div>
+        </div>
+
+        <div id="cellGrid" class="cell-grid">
+            <!-- Cells will be populated here -->
+        </div>
+    </div>
+
+    <!-- Configuration -->
+    <div class="section-card" id="configurationSection" style="display: none">
+        <div class="section-title">
+            <i class="fas fa-cog"></i>
+            Configuration
+        </div>
+
+        <div class="form-group">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label mb-0">
+                    <i class="fas fa-list"></i> Test Scenarios & Expected Values:
+                </label>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" id="addScenarioBtn" class="btn btn-outline-success" title="Add new scenario">
+                        <i class="fas fa-plus"></i> Add Scenario
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="csvDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-file-csv"></i> CSV Import
+                        </button>
+                        <div class="dropdown-menu p-3" style="min-width: 300px;">
+                            <h6 class="dropdown-header">Import Scenarios from CSV</h6>
+                            <div class="mb-2">
+                                <input type="file" id="csvFileInput" class="form-control form-control-sm" accept=".csv" />
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <strong>Format:</strong> scenario_name,expected_value<br>
+                                    <strong>Example:</strong><br>
+                                    base,83491250<br>
+                                    stress_test,95000000
+                                </small>
+                            </div>
+                            <button type="button" id="importCsvBtn" class="btn btn-primary btn-sm">
+                                <i class="fas fa-upload"></i> Import CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="scenarioValuePairs">
+                <!-- Scenario rows will be dynamically generated here -->
+                <div class="scenario-row d-flex gap-2 mb-2 align-items-center">
+                    <input
+                        type="text"
+                        class="form-control scenario-input"
+                        placeholder="Scenario name (e.g., loan_and_guarantee_scenario_1)"
+                        value="base"
+                        required
+                    />
+                    <input
+                        type="number"
+                        class="form-control value-input"
+                        placeholder="Expected value"
+                        value="83491250"
+                        required
+                    />
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm remove-scenario-btn"
+                        onclick="this.parentElement.remove(); window.fixtureGenerator.updateScenarioValidation();"
+                        title="Remove this scenario"
+                        style="display: none;"
+                    >
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mt-2">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i> At least one scenario is required. Each scenario will generate separate test fixtures.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    id="batchMode"
+                    class="form-check-input"
+                />
+                <label for="batchMode" class="form-check-label">
+                    Batch Mode (generate all selected cells at once)
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    id="databasePrefill"
+                    class="form-check-input"
+                />
+                <label for="databasePrefill" class="form-check-label">
+                    Prefill from Database (use existing data as template)
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="section-card" id="actionsSection" style="display: none">
+        <div class="section-title">
+            <i class="fas fa-play"></i>
+            Actions
+        </div>
+
+        <div class="btn-group">
+            <button id="analyzeBtn" class="btn btn-info">
+                <i class="fas fa-search"></i> Analyze Selected Cells
+            </button>
+            <button id="generateBtn" class="btn btn-success">
+                <i class="fas fa-magic"></i> Generate Fixtures
+            </button>
+            <button
+                id="viewResultsBtn"
+                class="btn btn-primary"
+                style="display: none"
+            >
+                <i class="fas fa-eye"></i> View Generated Fixtures
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="section-card progress-section" id="progressSection">
+        <div class="section-title">
+            <div class="loading-spinner"></div>
+            Progress
+        </div>
+        <div class="progress mb-3">
+            <div
+                id="progressBar"
+                class="progress-bar"
+                role="progressbar"
+                style="width: 0%"
+            ></div>
+        </div>
+        <div id="progressLog" class="log-output"></div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="section-card results-section" id="resultsSection">
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>
+            Generation Results
+        </div>
+        <div id="resultsContent">
+            <!-- Results will be populated here -->
+        </div>
+    </div>
+
+    <!-- Fixture Management Section -->
+    <div
+        class="section-card fixture-management-section"
+        id="fixtureManagementSection"
+    >
+        <div class="section-title">
+            <i class="fas fa-cogs"></i>
+            Fixture Management - Browse Existing Fixtures
+        </div>
+
+        <!-- Advanced Search for Existing Fixtures -->
+        <div class="search-filters-container">
+            <input
+                type="text"
+                id="fixtureSearch"
+                class="form-control"
+                placeholder="Search by template, cell, or scenario..."
+            />
+            <select id="fixtureTemplateFilter" class="form-select">
+                <option value="">All Templates</option>
+            </select>
+            <select id="fixtureScenarioFilter" class="form-select">
+                <option value="">All Scenarios</option>
+            </select>
+            <button id="searchFixturesBtn" class="btn btn-primary">
+                <i class="fas fa-search"></i> Search
+            </button>
+            <button id="clearFixtureFilters" class="btn btn-outline-secondary">
+                <i class="fas fa-times"></i> Clear
+            </button>
+            <div class="filter-results-info">
+                <span id="fixtureResultCount">0</span> fixtures found
+            </div>
+        </div>
+
+        <!-- Bulk Operations Panel -->
+        <div
+            id="bulkOperationsPanel"
+            class="bulk-operations-panel"
+            style="display: none"
+        >
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>Bulk Operations:</strong>
+                <span id="selectedFixtureCount">0</span> fixtures selected
+            </div>
+
+            <div class="btn-group">
+                <button id="bulkEditBtn" class="btn btn-info btn-sm">
+                    <i class="fas fa-edit"></i> Bulk Edit SQL
+                </button>
+                <button id="bulkDeleteBtn" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i> Delete Selected
+                </button>
+                <button id="bulkCloneBtn" class="btn btn-success btn-sm">
+                    <i class="fas fa-copy"></i> Clone to New Scenario
+                </button>
+                <button id="bulkExportBtn" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-download"></i> Export SQL
+                </button>
+            </div>
+        </div>
+
+        <!-- Fixture Results Table -->
+        <div class="table-responsive">
+            <table
+                class="table table-striped fixtures-table"
+                id="fixturesTable"
+            >
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAllFixtures" />
+                        </th>
+                        <th>Template</th>
+                        <th>Cell</th>
+                        <th>Scenario</th>
+                        <th>Test Status</th>
+                        <th>Last Modified</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="fixturesTableBody">
+                    <!-- Fixture rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- No Results Message -->
+        <div
+            id="noFixturesMessage"
+            class="alert alert-info"
+            style="display: none"
+        >
+            <i class="fas fa-info-circle"></i>
+            No fixtures found matching your search criteria. Try adjusting your
+            filters or generate some new fixtures.
+        </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-container">
+        <div class="pagination-info">
+            <span id="paginationInfo">Showing 0-0 of 0 results</span>
+        </div>
+        <nav class="pagination-nav">
+            <ul
+                class="pagination pagination-sm justify-content-center"
+                id="paginationControls"
+            >
+                <!-- Pagination buttons will be populated here -->
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Bulk Operations Panel -->
+    <div
+        id="bulkOperationsPanel"
+        class="bulk-operations-panel"
+        style="display: none"
+    >
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Bulk Operations:</strong>
+            <span id="selectedFixtureCount">0</span> fixtures selected
+        </div>
+
+        <div class="btn-group">
+            <button id="bulkEditBtn" class="btn btn-info btn-sm">
+                <i class="fas fa-edit"></i> Bulk Edit SQL
+            </button>
+            <button id="bulkDeleteBtn" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i> Delete Selected
+            </button>
+            <button id="bulkCloneBtn" class="btn btn-success btn-sm">
+                <i class="fas fa-copy"></i> Clone to New Scenario
+            </button>
+            <button id="bulkExportBtn" class="btn btn-secondary btn-sm">
+                <i class="fas fa-download"></i> Export SQL
+            </button>
+        </div>
+    </div>
+
+
+<!-- GitHub Integration Section -->
+    <div
+        class="section-card github-integration-section"
+        id="githubIntegrationSection"
+    >
+        <div class="section-title">
+            <i class="fab fa-github"></i>
+            GitHub Integration
+            <span class="badge bg-success ms-2">Create Pull Request</span>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Fork Workflow:</strong> This will fork the repository, create a
+            branch, push your fixtures, and create a pull request automatically.
+        </div>
+
+        <div class="github-form-section" id="githubFormSection">
+            <!-- GitHub Configuration -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fab fa-github"></i> GitHub Configuration
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="githubTokenInline"
+                                    >GitHub Token:
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="password"
+                                    id="githubTokenInline"
+                                    class="form-control"
+                                    placeholder="ghp_xxxxxxxxxxxx"
+                                    required
+                                />
+                                <small class="text-muted">
+                                    Create at
+                                    <a
+                                        href="https://github.com/settings/tokens"
+                                        target="_blank"
+                                        >github.com/settings/tokens</a
+                                    >
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="repositoryUrlInline"
+                                    >Repository URL:</label
+                                >
+                                <input
+                                    type="text"
+                                    id="repositoryUrlInline"
+                                    class="form-control"
+                                    value="https://github.com/regcommunity/FreeBIRD_EIL"
+                                    placeholder="https://github.com/owner/repo"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="targetBranchInline"
+                                    >Target Branch:</label
+                                >
+                                <input
+                                    type="text"
+                                    id="targetBranchInline"
+                                    class="form-control"
+                                    value="develop"
+                                    placeholder="develop"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="organizationInline"
+                                    >Organization (optional):</label
+                                >
+                                <input
+                                    type="text"
+                                    id="organizationInline"
+                                    class="form-control"
+                                    placeholder="Your GitHub organization"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pull Request Details -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-code-branch"></i> Pull Request Details
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label for="prTitleInline"
+                            >PR Title: <span class="text-danger">*</span></label
+                        >
+                        <input
+                            type="text"
+                            id="prTitleInline"
+                            class="form-control"
+                            value="Add new test fixtures for regulatory templates"
+                            required
+                        />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="prDescriptionInline">PR Description:</label>
+                        <textarea
+                            id="prDescriptionInline"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Describe the fixtures being added..."
+                        ></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="prBranchInline">Branch Name:</label>
+                        <input
+                            type="text"
+                            id="prBranchInline"
+                            class="form-control"
+                            value=""
+                            placeholder="Will be auto-generated"
+                        />
+                        <small class="text-muted"
+                            >Leave empty for auto-generation</small
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-4 text-center">
+                <button
+                    type="button"
+                    id="createPRBtnInline"
+                    class="btn btn-success btn-lg"
+                >
+                    <i class="fab fa-github"></i> Create Pull Request
+                </button>
+                <button
+                    type="button"
+                    id="resetPRFormBtn"
+                    class="btn btn-outline-secondary btn-lg ms-2"
+                >
+                    <i class="fas fa-undo"></i> Reset Form
+                </button>
+            </div>
+
+            <!-- Progress indicator -->
+            <div id="prProgressInline" style="display: none" class="mt-3">
+                <div class="d-flex align-items-center justify-content-center">
+                    <div
+                        class="spinner-border spinner-border-sm me-2"
+                        role="status"
+                    ></div>
+                    <span id="prProgressTextInline">Creating pull request...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="githubFab" class="github-fab" title="Go to GitHub Integration">
+        <i class="fab fa-github"></i>
+    </button>
+</div>
+
+
+{% endblock %} {% block extra_js %}
+<script>
+    class FixtureGenerator {
+        constructor() {
+            this.selectedCells = new Set();
+            this.templates = [];
+            this.currentTemplate = null;
+            this.generatedFixtures = [];
+            this.currentTests = {};
+            this.cellTestStatus = {};
+            this.allCells = [];
+            this.filteredCells = [];
+            this.availableScenarios = new Set();
+            this.selectedFixtures = new Set();
+
+            // Pagination state
+            this.currentPage = 1;
+            this.itemsPerPage = 10;
+            this.totalPages = 1;
+            this.allFixtures = [];
+            this.filteredFixtures = [];
+
+            this.init();
+        }
+
+        /**
+         * Sort cells by numeric value extracted from cell suffix or ID
+         * @param {Array} cells - Array of cells (objects with suffix property or strings)
+         * @param {Function} keyFunc - Optional function to extract cell ID
+         * @returns {Array} Sorted array of cells
+         */
+        sortCells(cells, keyFunc = null) {
+            const extractNumericId = (cellId) => {
+                try {
+                    // Remove _REF suffix if present and convert to number
+                    const numericPart = cellId.replace("_REF", "");
+                    return parseInt(numericPart, 10);
+                } catch (e) {
+                    // If conversion fails, return large number to sort at end
+                    return 999999;
+                }
+            };
+
+            const getCellKey = (cell) => {
+                let cellId;
+                if (keyFunc) {
+                    cellId = keyFunc(cell);
+                } else if (typeof cell === "string") {
+                    cellId = cell;
+                } else if (cell.suffix) {
+                    cellId = cell.suffix;
+                } else if (cell.cell_suffix) {
+                    cellId = cell.cell_suffix;
+                } else {
+                    cellId = String(cell);
+                }
+                return extractNumericId(cellId);
+            };
+
+            return [...cells].sort((a, b) => getCellKey(a) - getCellKey(b));
+        }
+
+        init() {
+            this.bindEvents();
+            this.loadTemplates();
+            this.loadCurrentTests();
+            this.searchFixtures(); // Load existing fixtures on init
+            this.initializeScenarioManager(); // Initialize scenario management
+        }
+
+        initializeScenarioManager() {
+            // Initialize scenario validation for existing rows
+            const container = document.getElementById("scenarioValuePairs");
+            if (container) {
+                // If container is empty, add a default scenario row
+                if (container.children.length === 0) {
+                    this.addScenarioRow();
+                } else {
+                    // Update validation for existing rows
+                    this.updateScenarioValidation();
+                }
+            }
+        }
+
+        bindEvents() {
+            // Existing events
+            document
+                .getElementById("loadTemplatesBtn")
+                .addEventListener("click", () => this.loadTemplates());
+            document
+                .getElementById("templateSelect")
+                .addEventListener("change", (e) =>
+                    this.onTemplateSelect(e.target.value),
+                );
+            document
+                .getElementById("selectAllCellsBtn")
+                .addEventListener("click", () => this.selectAllCells());
+            document
+                .getElementById("selectNoneCellsBtn")
+                .addEventListener("click", () => this.selectNoneCells());
+            document
+                .getElementById("selectUntestedBtn")
+                .addEventListener("click", () => this.selectUntestedCells());
+            document
+                .getElementById("analyzeBtn")
+                .addEventListener("click", () => this.analyzeCells());
+            document
+                .getElementById("generateBtn")
+                .addEventListener("click", () => this.generateFixtures());
+
+            // Scenario management events
+            document
+                .getElementById("addScenarioBtn")
+                .addEventListener("click", () => this.addScenarioRow());
+            document
+                .getElementById("importCsvBtn")
+                .addEventListener("click", () => this.importScenariosFromCsv());
+
+            // Filter events
+            document
+                .getElementById("cellSearch")
+                .addEventListener("input", () => this.filterCells());
+            document
+                .getElementById("scenarioFilter")
+                .addEventListener("change", () => this.filterCells());
+            document
+                .getElementById("testStatusFilter")
+                .addEventListener("change", () => this.filterCells());
+            document
+                .getElementById("clearFilters")
+                .addEventListener("click", () => this.clearFilters());
+
+            // Fixture management events
+            document
+                .getElementById("searchFixturesBtn")
+                .addEventListener("click", () => this.searchFixtures());
+            document
+                .getElementById("clearFixtureFilters")
+                .addEventListener("click", () => this.clearFixtureFilters());
+            document
+                .getElementById("selectAllFixtures")
+                .addEventListener("change", (e) =>
+                    this.selectAllFixtures(e.target.checked),
+                );
+
+            // Pagination events will be bound dynamically when pagination controls are created
+
+            // Bulk operation events
+            document
+                .getElementById("bulkDeleteBtn")
+                .addEventListener("click", () => this.bulkDeleteFixtures());
+
+            // GitHub Integration events
+            document
+                .getElementById("githubFab")
+                .addEventListener("click", () => this.scrollToGitHubSection());
+            document
+                .getElementById("createPRBtnInline")
+                .addEventListener("click", () => this.submitPRInline());
+            document
+                .getElementById("resetPRFormBtn")
+                .addEventListener("click", () => this.resetPRForm());
+        }
+
+        async loadTemplates() {
+            try {
+                this.showLoading("Loading templates...");
+                const response = await fetch(
+                    "{% url 'pybirdai:get_available_templates' %}",
+                );
+                const data = await response.json();
+
+                if (data.success) {
+                    this.templates = data.templates;
+                    this.populateTemplateSelect();
+                    this.hideLoading();
+                    this.showMessage(
+                        "Templates loaded successfully",
+                        "success",
+                    );
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                this.hideLoading();
+                this.showMessage(
+                    `Error loading templates: ${error.message}`,
+                    "danger",
+                );
+            }
+        }
+
+        async loadCurrentTests() {
+            try {
+                const response = await fetch(
+                    "{% url 'pybirdai:get_current_tests' %}",
+                );
+                const data = await response.json();
+
+                if (data.success) {
+                    this.currentTests = data.tests;
+                    this.displayCurrentTests(data);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                this.showMessage(
+                    `Error loading current tests: ${error.message}`,
+                    "danger",
+                );
+            }
+        }
+
+        displayCurrentTests(data) {
+            const grid = document.getElementById("testTemplatesGrid");
+            const summary = data.summary;
+
+            // Update summary
+            document.getElementById("testSuiteCount").textContent =
+                `${summary.total} tests`;
+            document.getElementById("testSummary").innerHTML = `
+            <small>
+                <i class="fas fa-layer-group"></i> ${Object.keys(summary.templates).length} templates |
+                <i class="fas fa-vial"></i> ${summary.total} total tests
+            </small>
+        `;
+
+            // Clear and populate grid
+            grid.innerHTML = "";
+
+            if (Object.keys(summary.templates).length === 0) {
+                grid.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        No tests found. Generate some fixtures to get started!
+                    </div>
+                </div>
+            `;
+                return;
+            }
+
+            Object.entries(summary.templates).forEach(
+                ([templateId, templateData]) => {
+                    const col = document.createElement("div");
+                    col.className = "col-md-6 col-lg-4";
+
+                    const card = document.createElement("div");
+                    card.className = "test-template-card";
+
+                    const header = document.createElement("div");
+                    header.className = "test-template-header";
+
+                    const name = document.createElement("div");
+                    name.className = "test-template-name";
+                    name.textContent = templateId;
+
+                    const badge = document.createElement("span");
+                    badge.className = "test-count-badge";
+                    badge.textContent = `${templateData.count} tests`;
+
+                    header.appendChild(name);
+                    header.appendChild(badge);
+
+                    const cellsGrid = document.createElement("div");
+                    cellsGrid.className = "test-cells-grid";
+
+                    templateData.cells.forEach((cellSuffix) => {
+                        const pill = document.createElement("span");
+                        pill.className = "test-cell-pill";
+                        pill.textContent = cellSuffix;
+                        pill.title = `Cell ${cellSuffix} has tests`;
+                        cellsGrid.appendChild(pill);
+                    });
+
+                    card.appendChild(header);
+                    card.appendChild(cellsGrid);
+                    col.appendChild(card);
+                    grid.appendChild(col);
+                },
+            );
+        }
+
+        populateTemplateSelect() {
+            const select = document.getElementById("templateSelect");
+            select.innerHTML = '<option value="">Select a template...</option>';
+
+            this.templates.forEach((template) => {
+                const option = document.createElement("option");
+                option.value = template.id;
+                option.textContent = `${template.name} (${template.cell_count} cells)`;
+                option.title = template.description;
+                select.appendChild(option);
+            });
+        }
+
+        async onTemplateSelect(templateId) {
+            if (!templateId) {
+                document.getElementById("cellSelectionSection").style.display =
+                    "none";
+                document.getElementById("configurationSection").style.display =
+                    "none";
+                document.getElementById("actionsSection").style.display =
+                    "none";
+                return;
+            } else if (templateId && templateId != "") {
+                try {
+                    console.log(templateId);
+                    this.showLoading("Loading cells...");
+                    const response = await fetch(
+                        "{% url 'pybirdai:get_template_cells' templateId %}",
+                    );
+                    const data = await response.json();
+
+                    if (data.success) {
+                        this.currentTemplate = templateId;
+                        this.cellTestStatus = data.test_status || {};
+                        this.populateCellGrid(data.cells);
+                        this.hideLoading();
+
+                        document.getElementById(
+                            "cellSelectionSection",
+                        ).style.display = "block";
+                        document.getElementById(
+                            "configurationSection",
+                        ).style.display = "block";
+                        document.getElementById(
+                            "actionsSection",
+                        ).style.display = "block";
+                    } else {
+                        throw new Error(data.error);
+                    }
+                } catch (error) {
+                    this.hideLoading();
+                    this.showMessage(
+                        `Error loading cells: ${error.message}`,
+                        "danger",
+                    );
+                }
+            } else if (templateId && templateId != "") {
+                this.showMessage(
+                    `Error loading cells: ${error.message}`,
+                    "danger",
+                );
+            }
+        }
+
+        populateCellGrid(cells) {
+            // Sort cells numerically before storing
+            this.allCells = this.sortCells(cells);
+            this.populateScenarioFilter();
+            this.filterCells(); // Apply initial filtering
+        }
+
+        populateScenarioFilter() {
+            const scenarioFilter = document.getElementById("scenarioFilter");
+            scenarioFilter.innerHTML =
+                '<option value="">All Scenarios</option>';
+
+            // Collect all unique scenarios from test status
+            this.availableScenarios.clear();
+            Object.values(this.cellTestStatus).forEach((scenarios) => {
+                scenarios.forEach((scenario) =>
+                    this.availableScenarios.add(scenario),
+                );
+            });
+
+            this.availableScenarios.forEach((scenario) => {
+                const option = document.createElement("option");
+                option.value = scenario;
+                option.textContent = scenario;
+                scenarioFilter.appendChild(option);
+            });
+        }
+
+        filterCells() {
+            const searchTerm = document
+                .getElementById("cellSearch")
+                .value.toLowerCase();
+            const scenarioFilter =
+                document.getElementById("scenarioFilter").value;
+            const testStatusFilter =
+                document.getElementById("testStatusFilter").value;
+
+            this.filteredCells = this.allCells.filter((cell) => {
+                // Search term filter
+                const matchesSearch =
+                    !searchTerm ||
+                    cell.suffix.toLowerCase().includes(searchTerm) ||
+                    cell.name.toLowerCase().includes(searchTerm) ||
+                    (cell.description &&
+                        cell.description.toLowerCase().includes(searchTerm));
+
+                // Scenario filter
+                const hasTest =
+                    this.cellTestStatus[cell.suffix] &&
+                    this.cellTestStatus[cell.suffix].length > 0;
+                const cellScenarios = hasTest
+                    ? this.cellTestStatus[cell.suffix]
+                    : [];
+                const matchesScenario =
+                    !scenarioFilter || cellScenarios.includes(scenarioFilter);
+
+                // Test status filter
+                let matchesTestStatus = true;
+                if (testStatusFilter === "tested") {
+                    matchesTestStatus = hasTest;
+                } else if (testStatusFilter === "untested") {
+                    matchesTestStatus = !hasTest;
+                }
+
+                return matchesSearch && matchesScenario && matchesTestStatus;
+            });
+
+            // Ensure filtered results remain sorted
+            this.filteredCells = this.sortCells(this.filteredCells);
+
+            this.renderFilteredCells();
+            this.updateFilterInfo();
+        }
+
+        renderFilteredCells() {
+            const grid = document.getElementById("cellGrid");
+            grid.innerHTML = "";
+
+            this.filteredCells.forEach((cell) => {
+                const cellItem = document.createElement("div");
+                const hasTest =
+                    this.cellTestStatus[cell.suffix] &&
+                    this.cellTestStatus[cell.suffix].length > 0;
+                cellItem.className = hasTest
+                    ? "cell-item has-test clickable"
+                    : "cell-item clickable";
+                cellItem.setAttribute("data-cell-suffix", cell.suffix);
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.value = cell.suffix;
+                checkbox.addEventListener("change", () =>
+                    this.onCellSelect(cell.suffix, checkbox.checked),
+                );
+
+                // Disable checkbox for cells with existing tests
+                if (hasTest) {
+                    checkbox.disabled = true;
+                    checkbox.title =
+                        "This cell already has tests. Use the Fixture Management section to edit existing fixtures.";
+                }
+
+                const label = document.createElement("span");
+                label.textContent = cell.suffix;
+
+                let titleText = cell.description || "";
+                if (hasTest) {
+                    const scenarios =
+                        this.cellTestStatus[cell.suffix].join(", ");
+                    titleText += titleText
+                        ? ` | Existing tests: ${scenarios}`
+                        : `Existing tests: ${scenarios}`;
+                }
+                if (titleText) {
+                    label.title = titleText;
+                }
+
+                // Make entire cell clickable (except for cells with existing tests)
+                if (!hasTest) {
+                    cellItem.addEventListener("click", (e) => {
+                        if (e.target !== checkbox) {
+                            checkbox.checked = !checkbox.checked;
+                            this.onCellSelect(cell.suffix, checkbox.checked);
+                        }
+                    });
+                }
+
+                cellItem.appendChild(checkbox);
+                cellItem.appendChild(label);
+                grid.appendChild(cellItem);
+            });
+
+            this.updateSelectedCount();
+        }
+
+        updateFilterInfo() {
+            document.getElementById("filteredCellCount").textContent =
+                this.filteredCells.length;
+            document.getElementById("totalCellCount").textContent =
+                this.allCells.length;
+            document.getElementById("cellCount").textContent =
+                `${this.allCells.length} cells (${this.filteredCells.length} shown)`;
+        }
+
+        clearFilters() {
+            document.getElementById("cellSearch").value = "";
+            document.getElementById("scenarioFilter").value = "";
+            document.getElementById("testStatusFilter").value = "";
+            this.filterCells();
+        }
+
+        onCellSelect(cellSuffix, selected) {
+            if (selected) {
+                this.selectedCells.add(cellSuffix);
+            } else {
+                this.selectedCells.delete(cellSuffix);
+            }
+            this.updateSelectedCount();
+        }
+
+        selectAllCells() {
+            const checkboxes = document.querySelectorAll(
+                '#cellGrid input[type="checkbox"]:not(:disabled)',
+            );
+            checkboxes.forEach((cb) => {
+                cb.checked = true;
+                this.selectedCells.add(cb.value);
+            });
+            this.updateSelectedCount();
+        }
+
+        selectNoneCells() {
+            const checkboxes = document.querySelectorAll(
+                '#cellGrid input[type="checkbox"]',
+            );
+            checkboxes.forEach((cb) => {
+                cb.checked = false;
+                this.selectedCells.delete(cb.value);
+            });
+            this.updateSelectedCount();
+        }
+
+        selectUntestedCells() {
+            this.selectNoneCells(); // Clear current selection first
+
+            const untestedCells = this.filteredCells.filter((cell) => {
+                const hasTest =
+                    this.cellTestStatus[cell.suffix] &&
+                    this.cellTestStatus[cell.suffix].length > 0;
+                return !hasTest;
+            });
+
+            untestedCells.forEach((cell) => {
+                const checkbox = document.querySelector(
+                    `#cellGrid input[value="${cell.suffix}"]`,
+                );
+                if (checkbox && !checkbox.disabled) {
+                    checkbox.checked = true;
+                    this.selectedCells.add(cell.suffix);
+                }
+            });
+
+            this.updateSelectedCount();
+        }
+
+        updateSelectedCount() {
+            document.getElementById("selectedCellCount").textContent =
+                this.selectedCells.size;
+        }
+
+        async analyzeCells() {
+            if (this.selectedCells.size === 0) {
+                this.showMessage(
+                    "Please select at least one cell to analyze",
+                    "danger",
+                );
+                return;
+            }
+
+            // For now, just show a message. Could expand to show detailed analysis
+            this.showMessage(
+                `Ready to analyze ${this.selectedCells.size} cells from ${this.currentTemplate}`,
+                "info",
+            );
+        }
+
+        async generateFixtures() {
+            if (this.selectedCells.size === 0) {
+                this.showMessage(
+                    "Please select at least one cell to generate",
+                    "danger",
+                );
+                return;
+            }
+
+            // Collect multiple scenarios from the dynamic UI
+            const container = document.getElementById("scenarioValuePairs");
+            if (!container) {
+                this.showMessage("Scenario container not found", "danger");
+                return;
+            }
+
+            const scenarioRows = container.querySelectorAll(".scenario-row");
+            const scenarios = [];
+
+            for (const row of scenarioRows) {
+                const scenarioInput = row.querySelector(".scenario-input");
+                const valueInput = row.querySelector(".value-input");
+
+                if (!scenarioInput || !valueInput) {
+                    console.warn("Missing input elements in scenario row");
+                    continue;
+                }
+
+                const scenario = scenarioInput.value.trim();
+                const value = parseInt(valueInput.value) || 83491250;
+
+                if (!scenario) {
+                    this.showMessage("Please provide a name for all scenarios", "danger");
+                    return;
+                }
+
+                scenarios.push({
+                    name: scenario,
+                    value: value
+                });
+            }
+
+            if (scenarios.length === 0) {
+                this.showMessage("Please add at least one scenario", "danger");
+                return;
+            }
+            const batchMode = document.getElementById("batchMode").checked;
+            const databasePrefill =
+                document.getElementById("databasePrefill").checked;
+
+            try {
+                this.showProgress();
+                this.updateProgress(0, "Starting fixture generation...");
+
+                const response = await fetch(
+                    "{% url 'pybirdai:generate_fixtures' %}",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            template_id: this.currentTemplate,
+                            cells: Array.from(this.selectedCells),
+                            scenarios: scenarios,
+                            batch_mode: batchMode,
+                            database_prefill: databasePrefill,
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.updateProgress(100, "Generation complete!");
+                    this.generatedFixtures = data.results;
+                    this.hideProgress();
+
+                    // Show congratulations alert instead of detailed results
+                    const congratsMsg = `🎉 Congratulations! You successfully generated ${data.generated_count} fixtures. <a href="#" onclick="window.fixtureGenerator.scrollToGitHubSection(true); return false;" class="alert-link">Create GitHub Pull Request →</a>`;
+                    this.showMessage(congratsMsg, "success");
+
+                    // Automatically refresh the fixture search to show newly generated fixtures
+                    this.searchFixtures();
+
+                    // Add pulse effect to FAB to draw attention
+                    setTimeout(() => {
+                        const fab = document.getElementById("githubFab");
+                        fab.classList.add("pulse");
+                        setTimeout(() => fab.classList.remove("pulse"), 3000);
+                    }, 1000);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                this.hideProgress();
+                this.showMessage(
+                    `Error generating fixtures: ${error.message}`,
+                    "danger",
+                );
+            }
+        }
+
+        showResults(data) {
+            const resultsContent = document.getElementById("resultsContent");
+            resultsContent.innerHTML = "";
+
+            data.results.forEach((result) => {
+                const resultItem = document.createElement("div");
+                resultItem.className = "result-item";
+
+                const info = document.createElement("div");
+                info.innerHTML = `
+                <strong>${result.cell_suffix}</strong><br>
+                <small class="text-muted">${result.fixture_path}</small>
+            `;
+
+                const status = document.createElement("div");
+                status.className = `result-status status-${result.status}`;
+                status.textContent = result.status;
+
+                const actions = document.createElement("div");
+                actions.innerHTML = `
+                <a href="./edit/${this.currentTemplate}/${result.cell_suffix}/${document.getElementById("scenarioName").value}/"
+                   class="btn btn-sm btn-outline-primary" target="_blank">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            `;
+
+                resultItem.appendChild(info);
+                resultItem.appendChild(actions);
+                resultItem.appendChild(status);
+                resultsContent.appendChild(resultItem);
+            });
+
+            // Show errors if any
+            if (data.errors && data.errors.length > 0) {
+                const errorSection = document.createElement("div");
+                errorSection.className = "alert alert-danger mt-3";
+                errorSection.innerHTML = `
+                <strong>Errors:</strong><br>
+                ${data.errors.join("<br>")}
+            `;
+                resultsContent.appendChild(errorSection);
+            }
+
+            document.getElementById("resultsSection").style.display = "block";
+        }
+
+        showPRModal() {
+            if (this.generatedFixtures.length === 0) {
+                this.showMessage("No fixtures to create PR for", "danger");
+                return;
+            }
+
+            // Auto-generate PR description
+            // Extract scenarios and cells from generated fixtures
+            const scenarios = Array.from(new Set(this.generatedFixtures.map(f => f.scenario)));
+            const cells = Array.from(new Set(this.generatedFixtures.map(f => f.cell_suffix)));
+
+            const description = `Generated test fixtures for ${this.currentTemplate} template:
+
+Scenarios: ${scenarios.join(", ")}
+Cells: ${cells.join(", ")}
+Total fixtures: ${this.generatedFixtures.length}
+
+This PR adds SQL test fixtures that can be used for regulatory reporting validation.`;
+
+            document.getElementById("prDescription").value = description;
+            // Copy values to inline form
+            document.getElementById("prDescriptionInline").value = description;
+
+            // Create branch name with first scenario or 'multi' if multiple
+            const branchScenario = scenarios.length === 1 ? scenarios[0] : 'multi-scenarios';
+            document.getElementById("prBranchInline").value =
+                `fixture-${this.currentTemplate.toLowerCase()}-${branchScenario}-${Date.now()}`;
+
+            // Scroll to GitHub section and highlight it
+            this.scrollToGitHubSection(true);
+        }
+
+        // GitHub Integration Methods
+        scrollToGitHubSection(highlight = false) {
+            const githubSection = document.getElementById(
+                "githubIntegrationSection",
+            );
+            const githubForm = document.getElementById("githubFormSection");
+
+            // Smooth scroll to the section
+            githubSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+
+            // Add pulse effect to FAB
+            const fab = document.getElementById("githubFab");
+            fab.classList.add("pulse");
+            setTimeout(() => fab.classList.remove("pulse"), 2000);
+
+            // Highlight the form if requested
+            if (highlight) {
+                setTimeout(() => {
+                    githubForm.classList.add("highlighted");
+                    setTimeout(
+                        () => githubForm.classList.remove("highlighted"),
+                        1000,
+                    );
+                }, 800);
+            }
+        }
+
+        resetPRForm() {
+            // Reset all form fields to defaults
+            document.getElementById("githubTokenInline").value = "";
+            document.getElementById("repositoryUrlInline").value =
+                "https://github.com/regcommunity/FreeBIRD_EIL";
+            document.getElementById("targetBranchInline").value = "develop";
+            document.getElementById("organizationInline").value = "";
+            document.getElementById("prTitleInline").value =
+                "Add new test fixtures for regulatory templates";
+            document.getElementById("prDescriptionInline").value = "";
+            document.getElementById("prBranchInline").value = "";
+
+            // Hide progress indicator
+            document.getElementById("prProgressInline").style.display = "none";
+
+            this.showMessage("GitHub PR form reset to defaults", "info");
+        }
+
+        async submitPRInline() {
+            const title = document.getElementById("prTitleInline").value.trim();
+            const description = document
+                .getElementById("prDescriptionInline")
+                .value.trim();
+            const branch = document
+                .getElementById("prBranchInline")
+                .value.trim();
+            const githubToken = document
+                .getElementById("githubTokenInline")
+                .value.trim();
+            const repositoryUrl = document
+                .getElementById("repositoryUrlInline")
+                .value.trim();
+            const targetBranch = document
+                .getElementById("targetBranchInline")
+                .value.trim();
+            const organization = document
+                .getElementById("organizationInline")
+                .value.trim();
+
+            // Validation
+            if (!title) {
+                this.showMessage("PR title is required", "danger");
+                document.getElementById("prTitleInline").focus();
+                return;
+            }
+
+            if (!githubToken) {
+                this.showMessage("GitHub token is required", "danger");
+                document.getElementById("githubTokenInline").focus();
+                return;
+            }
+
+            if (!repositoryUrl) {
+                this.showMessage("Repository URL is required", "danger");
+                document.getElementById("repositoryUrlInline").focus();
+                return;
+            }
+
+            if (this.generatedFixtures.length === 0) {
+                this.showMessage(
+                    "No fixtures available to create PR. Please generate some fixtures first.",
+                    "warning",
+                );
+                return;
+            }
+
+            // Show progress
+            document.getElementById("prProgressInline").style.display = "block";
+            document.getElementById("createPRBtnInline").disabled = true;
+            document.getElementById("prProgressTextInline").textContent =
+                "Creating pull request...";
+
+            try {
+                const fixtures = this.generatedFixtures.map((f) => ({
+                    template_id: this.currentTemplate,
+                    cell_suffix: f.cell_suffix,
+                    scenario:
+                        document.getElementById("scenarioName").value || "base",
+                }));
+
+                const response = await fetch(
+                    "{% url 'pybirdai:create_fixture_github_pr' %}",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            fixtures: fixtures,
+                            pr_title: title,
+                            pr_description: description,
+                            branch_name: branch || undefined,
+                            github_token: githubToken,
+                            repository_url: repositoryUrl,
+                            target_branch: targetBranch || "develop",
+                            organization: organization || undefined,
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const successMessage = `
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle"></i> Pull Request Created Successfully!</h6>
+                        <p><strong>PR URL:</strong> <a href="${data.pr_url}" target="_blank">${data.pr_url}</a></p>
+                        <p><strong>Branch:</strong> ${data.branch_name}</p>
+                        <p><strong>Files Changed:</strong> ${data.files_changed}</p>
+                        <p><strong>Repository:</strong> ${data.repository}</p>
+                    </div>
+                `;
+
+                    document.getElementById("prProgressInline").innerHTML =
+                        successMessage;
+                    this.showMessage(
+                        "Pull request created successfully!",
+                        "success",
+                    );
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                document.getElementById("prProgressInline").style.display =
+                    "none";
+                this.showMessage(
+                    `Error creating PR: ${error.message}`,
+                    "danger",
+                );
+            } finally {
+                document.getElementById("createPRBtnInline").disabled = false;
+            }
+        }
+
+        async submitPR() {
+            const title = document.getElementById("prTitle").value.trim();
+            const description = document
+                .getElementById("prDescription")
+                .value.trim();
+            const branch = document.getElementById("prBranch").value.trim();
+            const githubToken = document
+                .getElementById("githubToken")
+                .value.trim();
+            const repositoryUrl = document
+                .getElementById("repositoryUrl")
+                .value.trim();
+            const targetBranch = document
+                .getElementById("targetBranch")
+                .value.trim();
+            const organization = document
+                .getElementById("organization")
+                .value.trim();
+
+            // Validation
+            if (!title) {
+                this.showMessage("PR title is required", "danger");
+                return;
+            }
+
+            if (!githubToken) {
+                this.showMessage("GitHub token is required", "danger");
+                return;
+            }
+
+            if (!repositoryUrl) {
+                this.showMessage("Repository URL is required", "danger");
+                return;
+            }
+
+            // Show progress
+            document.getElementById("prProgress").style.display = "block";
+            document.getElementById("submitPRBtn").disabled = true;
+            document.getElementById("prProgressText").textContent =
+                "Creating pull request...";
+
+            try {
+                const fixtures = this.generatedFixtures.map((f) => ({
+                    template_id: this.currentTemplate,
+                    cell_suffix: f.cell_suffix,
+                    scenario:
+                        document.getElementById("scenarioName").value || "base",
+                }));
+
+                const response = await fetch(
+                    "{% url 'pybirdai:create_fixture_github_pr' %}",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            fixtures: fixtures,
+                            pr_title: title,
+                            pr_description: description,
+                            branch_name: branch || undefined,
+                            github_token: githubToken,
+                            repository_url: repositoryUrl,
+                            target_branch: targetBranch || "develop",
+                            organization: organization || undefined,
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const successMessage = `
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle"></i> Pull Request Created Successfully!</h6>
+                        <p><strong>PR URL:</strong> <a href="${data.pr_url}" target="_blank">${data.pr_url}</a></p>
+                        <p><strong>Branch:</strong> ${data.branch_name}</p>
+                        <p><strong>Files Changed:</strong> ${data.files_changed}</p>
+                        <p><strong>Repository:</strong> ${data.repository}</p>
+                    </div>
+                `;
+
+                    document.getElementById("prProgress").innerHTML =
+                        successMessage;
+
+                    // Auto-close modal after 5 seconds
+                    setTimeout(() => {
+                        bootstrap.Modal.getInstance(
+                            document.getElementById("prModal"),
+                        ).hide();
+                    }, 5000);
+
+                    this.showMessage(
+                        "Pull request created successfully! Check the modal for details.",
+                        "success",
+                    );
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                document.getElementById("prProgress").style.display = "none";
+                this.showMessage(
+                    `Error creating PR: ${error.message}`,
+                    "danger",
+                );
+            } finally {
+                document.getElementById("submitPRBtn").disabled = false;
+            }
+        }
+
+        showProgress() {
+            document.getElementById("progressSection").style.display = "block";
+            document
+                .getElementById("progressSection")
+                .scrollIntoView({ behavior: "smooth" });
+        }
+
+        hideProgress() {
+            document.getElementById("progressSection").style.display = "none";
+        }
+
+        updateProgress(percent, message) {
+            document.getElementById("progressBar").style.width = `${percent}%`;
+            const log = document.getElementById("progressLog");
+            log.textContent += `${new Date().toLocaleTimeString()}: ${message}\n`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        showLoading(message) {
+            this.updateProgress(50, message);
+            this.showProgress();
+        }
+
+        hideLoading() {
+            this.hideProgress();
+        }
+
+        showMessage(message, type) {
+            // Remove existing alerts
+            const existingAlerts = document.querySelectorAll(
+                ".fixture-container .alert:not(.alert-info)",
+            );
+            existingAlerts.forEach((alert) => alert.remove());
+
+            const alert = document.createElement("div");
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `<i class="fas fa-${type === "success" ? "check" : type === "danger" ? "exclamation-triangle" : "info"}-circle"></i> ${message}`;
+
+            const container = document.querySelector(".fixture-container");
+            container.insertBefore(alert, container.children[1]);
+
+            // Auto-hide success messages
+            if (type === "success") {
+                setTimeout(() => alert.remove(), 5000);
+            }
+        }
+
+        // Fixture Management Methods
+        async searchFixtures() {
+            const searchTerm = document.getElementById("fixtureSearch").value;
+            const templateFilter = document.getElementById(
+                "fixtureTemplateFilter",
+            ).value;
+            const scenarioFilter = document.getElementById(
+                "fixtureScenarioFilter",
+            ).value;
+
+            // Debug logging for search operation
+            console.log('searchFixtures called with:', {
+                searchTerm,
+                templateFilter,
+                scenarioFilter
+            });
+
+            try {
+                const params = new URLSearchParams();
+                if (searchTerm) params.append("search", searchTerm);
+                if (templateFilter) params.append("template", templateFilter);
+                if (scenarioFilter) params.append("scenario", scenarioFilter);
+
+                const response = await fetch(
+                    `{% url 'pybirdai:search_fixtures' %}?${params}`,
+                );
+                const data = await response.json();
+
+                if (data.success) {
+                    // Reset to first page when new search is performed
+                    this.currentPage = 1;
+                    this.displayFixtureResults(data);
+                    // Preserve current filter selections when repopulating filters
+                    this.populateFixtureFilters(data.templates, data.scenarios, templateFilter, scenarioFilter);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                this.showMessage(
+                    `Error searching fixtures: ${error.message}`,
+                    "danger",
+                );
+            }
+        }
+
+        displayFixtureResults(data) {
+            // Store all fixtures and apply pagination
+            this.allFixtures = data.fixtures || [];
+            this.filteredFixtures = [...this.allFixtures];
+            this.totalPages = Math.ceil(
+                this.filteredFixtures.length / this.itemsPerPage,
+            );
+
+            // Reset to first page if current page is out of bounds
+            if (this.currentPage > this.totalPages && this.totalPages > 0) {
+                this.currentPage = 1;
+            }
+
+            this.renderFixturePage();
+            this.renderPaginationControls();
+        }
+
+        renderFixturePage() {
+            const tbody = document.getElementById("fixturesTableBody");
+            const noResultsMsg = document.getElementById("noFixturesMessage");
+            const resultCount = document.getElementById("fixtureResultCount");
+
+            tbody.innerHTML = "";
+            resultCount.textContent = this.filteredFixtures.length;
+
+            if (this.filteredFixtures.length === 0) {
+                noResultsMsg.style.display = "block";
+                this.updatePaginationInfo();
+                return;
+            }
+
+            noResultsMsg.style.display = "none";
+
+            // Calculate pagination bounds
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = Math.min(
+                startIndex + this.itemsPerPage,
+                this.filteredFixtures.length,
+            );
+            const pageFixtures = this.filteredFixtures.slice(
+                startIndex,
+                endIndex,
+            );
+
+            pageFixtures.forEach((fixture) => {
+                const row = document.createElement("tr");
+
+                const statusBadgeClass =
+                    {
+                        configured: "bg-success",
+                        not_configured: "bg-warning",
+                        unknown: "bg-secondary",
+                    }[fixture.test_status] || "bg-secondary";
+
+                const statusText =
+                    {
+                        configured: "Test Configured",
+                        not_configured: "No Test",
+                        unknown: "Unknown",
+                    }[fixture.test_status] || "Unknown";
+
+                const lastModified = new Date(
+                    fixture.last_modified,
+                ).toLocaleDateString();
+                const fileSize = (fixture.file_size / 1024).toFixed(1) + " KB";
+
+                row.innerHTML = `
+                <td><input type="checkbox" value="${fixture.template_id}_${fixture.cell_suffix}_${fixture.scenario}"
+                     data-template-id="${fixture.template_id}"
+                     data-cell-suffix="${fixture.cell_suffix}"
+                     data-scenario="${fixture.scenario}"></td>
+                <td><code>${fixture.template_id}</code></td>
+                <td><code>${fixture.cell_suffix}</code></td>
+                <td><span class="badge bg-info">${fixture.scenario}</span></td>
+                <td><span class="badge fixture-status-badge ${statusBadgeClass}">${statusText}</span></td>
+                <td><small>${lastModified} (${fileSize})</small></td>
+                <td>
+                    <div class="btn-group-sm">
+                        <a href="./edit/${fixture.template_id}/${fixture.cell_suffix}/${fixture.scenario}/"
+                           class="btn btn-sm btn-outline-primary" target="_blank" title="Edit SQL">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-outline-success"
+                                onclick="window.fixtureGenerator.cloneFixture('${fixture.template_id}', '${fixture.cell_suffix}', '${fixture.scenario}')"
+                                title="Clone to new scenario">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="window.fixtureGenerator.deleteFixture('${fixture.template_id}', '${fixture.cell_suffix}', '${fixture.scenario}')"
+                                title="Delete fixture">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+
+                tbody.appendChild(row);
+
+                // Add event listener for checkbox
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener("change", (e) => {
+                    if (e.target.checked) {
+                        this.selectedFixtures.add(e.target.value);
+                    } else {
+                        this.selectedFixtures.delete(e.target.value);
+                    }
+                    this.updateFixtureSelection();
+                });
+            });
+
+            this.updatePaginationInfo();
+        }
+
+        renderPaginationControls() {
+            const paginationControls =
+                document.getElementById("paginationControls");
+            paginationControls.innerHTML = "";
+
+            if (this.totalPages <= 1) {
+                return; // No pagination needed
+            }
+
+            // Previous button
+            const prevItem = document.createElement("li");
+            prevItem.className = `page-item ${this.currentPage === 1 ? "disabled" : ""}`;
+            prevItem.innerHTML = `<a class="page-link" href="#" data-page="${this.currentPage - 1}">‹ Previous</a>`;
+            paginationControls.appendChild(prevItem);
+
+            // Calculate page range to display
+            const maxVisiblePages = 5;
+            let startPage = Math.max(
+                1,
+                this.currentPage - Math.floor(maxVisiblePages / 2),
+            );
+            let endPage = Math.min(
+                this.totalPages,
+                startPage + maxVisiblePages - 1,
+            );
+
+            // Adjust start if we're near the end
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // First page + ellipsis if needed
+            if (startPage > 1) {
+                const firstItem = document.createElement("li");
+                firstItem.className = "page-item";
+                firstItem.innerHTML = `<a class="page-link" href="#" data-page="1">1</a>`;
+                paginationControls.appendChild(firstItem);
+
+                if (startPage > 2) {
+                    const ellipsisItem = document.createElement("li");
+                    ellipsisItem.className = "page-item disabled";
+                    ellipsisItem.innerHTML = `<span class="page-link">...</span>`;
+                    paginationControls.appendChild(ellipsisItem);
+                }
+            }
+
+            // Page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement("li");
+                pageItem.className = `page-item ${i === this.currentPage ? "active" : ""}`;
+                pageItem.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                paginationControls.appendChild(pageItem);
+            }
+
+            // Ellipsis + last page if needed
+            if (endPage < this.totalPages) {
+                if (endPage < this.totalPages - 1) {
+                    const ellipsisItem = document.createElement("li");
+                    ellipsisItem.className = "page-item disabled";
+                    ellipsisItem.innerHTML = `<span class="page-link">...</span>`;
+                    paginationControls.appendChild(ellipsisItem);
+                }
+
+                const lastItem = document.createElement("li");
+                lastItem.className = "page-item";
+                lastItem.innerHTML = `<a class="page-link" href="#" data-page="${this.totalPages}">${this.totalPages}</a>`;
+                paginationControls.appendChild(lastItem);
+            }
+
+            // Next button
+            const nextItem = document.createElement("li");
+            nextItem.className = `page-item ${this.currentPage === this.totalPages ? "disabled" : ""}`;
+            nextItem.innerHTML = `<a class="page-link" href="#" data-page="${this.currentPage + 1}">Next ›</a>`;
+            paginationControls.appendChild(nextItem);
+
+            // Add click handlers
+            paginationControls.addEventListener("click", (e) => {
+                e.preventDefault();
+                if (
+                    e.target.classList.contains("page-link") &&
+                    e.target.dataset.page
+                ) {
+                    const newPage = parseInt(e.target.dataset.page);
+                    if (
+                        newPage !== this.currentPage &&
+                        newPage >= 1 &&
+                        newPage <= this.totalPages
+                    ) {
+                        this.currentPage = newPage;
+                        this.renderFixturePage();
+                        this.renderPaginationControls();
+                    }
+                }
+            });
+        }
+
+        updatePaginationInfo() {
+            const paginationInfo = document.getElementById("paginationInfo");
+            if (this.filteredFixtures.length === 0) {
+                paginationInfo.textContent = "Showing 0-0 of 0 results";
+                return;
+            }
+
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
+            const endIndex = Math.min(
+                this.currentPage * this.itemsPerPage,
+                this.filteredFixtures.length,
+            );
+            paginationInfo.textContent = `Showing ${startIndex}-${endIndex} of ${this.filteredFixtures.length} results`;
+        }
+
+        populateFixtureFilters(templates, scenarios, preserveTemplate = undefined, preserveScenario = undefined) {
+            const templateFilter = document.getElementById(
+                "fixtureTemplateFilter",
+            );
+            const scenarioFilterFixture = document.getElementById(
+                "fixtureScenarioFilter",
+            );
+
+            // Capture current values if preserve values not explicitly provided
+            // Use strict undefined check to properly handle empty strings
+            const currentTemplate = preserveTemplate !== undefined ? preserveTemplate : templateFilter.value;
+            const currentScenario = preserveScenario !== undefined ? preserveScenario : scenarioFilterFixture.value;
+
+            // Debug logging to trace values
+            console.log('populateFixtureFilters called with:', {
+                preserveTemplate,
+                preserveScenario,
+                currentTemplate,
+                currentScenario,
+                availableTemplates: templates,
+                availableScenarios: scenarios
+            });
+
+            // Populate template filter
+            templateFilter.innerHTML =
+                '<option value="">All Templates</option>';
+            templates.forEach((template) => {
+                const option = document.createElement("option");
+                option.value = template;
+                option.textContent = template;
+                templateFilter.appendChild(option);
+            });
+
+            // Populate scenario filter
+            scenarioFilterFixture.innerHTML =
+                '<option value="">All Scenarios</option>';
+            scenarios.forEach((scenario) => {
+                const option = document.createElement("option");
+                option.value = scenario;
+                option.textContent = scenario;
+                scenarioFilterFixture.appendChild(option);
+            });
+
+            // Restore previously selected values (with validation and fallback)
+            // Only restore if the value exists in the new options, otherwise fallback to default
+            this.setFilterValue(templateFilter, currentTemplate, templates, 'template');
+            this.setFilterValue(scenarioFilterFixture, currentScenario, scenarios, 'scenario');
+        }
+
+        setFilterValue(filterElement, desiredValue, availableOptions, filterType) {
+            // Determine the target value to set
+            let targetValue = '';
+            if (desiredValue && availableOptions.includes(desiredValue)) {
+                targetValue = desiredValue;
+            }
+
+            console.log(`Setting ${filterType} filter:`, {
+                desiredValue,
+                targetValue,
+                availableOptions,
+                elementId: filterElement.id
+            });
+
+            // Primary method: Set value directly
+            filterElement.value = targetValue;
+
+            // Verification: Check if value was set correctly
+            if (filterElement.value !== targetValue) {
+                console.warn(`Direct value assignment failed for ${filterType}, trying fallback method`);
+
+                // Fallback method: Find and select the option element
+                const targetOption = Array.from(filterElement.options).find(option => option.value === targetValue);
+                if (targetOption) {
+                    targetOption.selected = true;
+                    console.log(`Fallback method succeeded for ${filterType}`);
+                } else {
+                    console.error(`Both methods failed for ${filterType}. Available options:`,
+                        Array.from(filterElement.options).map(opt => opt.value));
+                }
+            } else {
+                console.log(`Successfully set ${filterType} filter to "${targetValue}"`);
+            }
+
+            // Final verification
+            setTimeout(() => {
+                if (filterElement.value !== targetValue) {
+                    console.error(`Filter ${filterType} value verification failed. Expected: "${targetValue}", Actual: "${filterElement.value}"`);
+                }
+            }, 0);
+        }
+
+        async cloneFixture(templateId, cellSuffix, scenario) {
+            const newScenario = prompt(
+                `Clone ${templateId}_${cellSuffix}_${scenario} to new scenario:`,
+                `${scenario}_copy`,
+            );
+            if (newScenario && newScenario !== scenario) {
+                // TODO: Implement fixture cloning endpoint
+                this.showMessage(
+                    `Cloning fixture to scenario "${newScenario}" - functionality to be implemented`,
+                    "info",
+                );
+            }
+        }
+
+        async deleteFixture(templateId, cellSuffix, scenario) {
+            const fixtureKey = `${templateId}_${cellSuffix}_${scenario}`;
+
+            if (!confirm(`Are you sure you want to delete fixture ${fixtureKey}?\n\nThis will permanently delete:\n- Scenario folder and SQL files\n- Test script file\n- Configuration entries\n\nThis action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    "{% url 'pybirdai:delete_fixtures' %}",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": this.getCSRFToken()
+                        },
+                        body: JSON.stringify({
+                            fixtures: [
+                                {
+                                    template_id: templateId,
+                                    cell_suffix: cellSuffix,
+                                    scenario: scenario
+                                }
+                            ]
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.showMessage(
+                        `Successfully deleted fixture ${fixtureKey}`,
+                        "success",
+                    );
+                    // Refresh the fixture list
+                    this.searchFixtures();
+                } else {
+                    throw new Error(data.error || "Unknown error occurred");
+                }
+            } catch (error) {
+                this.showMessage(
+                    `Error deleting fixture: ${error.message}`,
+                    "danger",
+                );
+            }
+        }
+
+        async bulkDeleteFixtures() {
+            if (this.selectedFixtures.size === 0) {
+                this.showMessage("No fixtures selected for deletion", "warning");
+                return;
+            }
+
+            const fixtureCount = this.selectedFixtures.size;
+            const fixtureList = Array.from(this.selectedFixtures).join(", ");
+
+            if (!confirm(`Are you sure you want to delete ${fixtureCount} fixtures?\n\nFixtures to delete:\n${fixtureList}\n\nThis will permanently delete:\n- All scenario folders and SQL files\n- All corresponding test script files\n- All configuration entries\n\nThis action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                // Get fixtures using the tracked selected fixtures and find corresponding checkboxes for data attributes
+                const fixtures = [];
+                for (const fixtureKey of this.selectedFixtures) {
+                    const checkbox = document.querySelector(`#fixturesTableBody input[type="checkbox"][value="${fixtureKey}"]`);
+                    if (checkbox) {
+                        fixtures.push({
+                            template_id: checkbox.getAttribute('data-template-id'),
+                            cell_suffix: checkbox.getAttribute('data-cell-suffix'),
+                            scenario: checkbox.getAttribute('data-scenario')
+                        });
+                    }
+                }
+
+                const response = await fetch(
+                    "{% url 'pybirdai:delete_fixtures' %}",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": this.getCSRFToken()
+                        },
+                        body: JSON.stringify({
+                            fixtures: fixtures
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const successCount = data.deleted_count || fixtureCount;
+                    this.showMessage(
+                        `Successfully deleted ${successCount} fixtures`,
+                        "success",
+                    );
+
+                    // Clear selection and refresh the fixture list
+                    this.selectedFixtures.clear();
+                    this.updateFixtureSelection();
+                    this.searchFixtures();
+                } else {
+                    throw new Error(data.error || "Unknown error occurred");
+                }
+            } catch (error) {
+                this.showMessage(
+                    `Error deleting fixtures: ${error.message}`,
+                    "danger",
+                );
+            }
+        }
+
+        getCSRFToken() {
+            // Get CSRF token from Django's template token, meta tag, or cookie
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value ||
+                            document.querySelector('meta[name=csrf-token]')?.getAttribute('content') ||
+                            this.getCookie('csrftoken');
+            return csrfToken;
+        }
+
+        getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        clearFixtureFilters() {
+            console.log('clearFixtureFilters called');
+            document.getElementById("fixtureSearch").value = "";
+            document.getElementById("fixtureTemplateFilter").value = "";
+            document.getElementById("fixtureScenarioFilter").value = "";
+            this.currentPage = 1; // Reset to first page when clearing filters
+            this.searchFixtures();
+        }
+
+        selectAllFixtures(checked) {
+            const checkboxes = document.querySelectorAll(
+                '#fixturesTableBody input[type="checkbox"]',
+            );
+            checkboxes.forEach((cb) => {
+                cb.checked = checked;
+                if (checked) {
+                    this.selectedFixtures.add(cb.value);
+                } else {
+                    this.selectedFixtures.delete(cb.value);
+                }
+            });
+            this.updateFixtureSelection();
+        }
+
+        updateFixtureSelection() {
+            document.getElementById("selectedFixtureCount").textContent =
+                this.selectedFixtures.size;
+            const bulkPanel = document.getElementById("bulkOperationsPanel");
+            if (this.selectedFixtures.size > 0) {
+                bulkPanel.style.display = "block";
+            } else {
+                bulkPanel.style.display = "none";
+            }
+        }
+
+        // Scenario Management Methods
+        addScenarioRow() {
+            const container = document.getElementById("scenarioValuePairs");
+            if (!container) {
+                console.warn("scenarioValuePairs container not found");
+                return;
+            }
+
+            const rowCount = container.children.length;
+
+            const scenarioRow = document.createElement("div");
+            scenarioRow.className = "scenario-row d-flex gap-2 mb-2 align-items-center";
+
+            scenarioRow.innerHTML = `
+                <input
+                    type="text"
+                    class="form-control scenario-input"
+                    placeholder="Scenario name (e.g., loan_and_guarantee_scenario_1)"
+                    required
+                />
+                <input
+                    type="number"
+                    class="form-control value-input"
+                    placeholder="Expected value"
+                    value="83491250"
+                    required
+                />
+                <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm remove-scenario-btn"
+                    onclick="this.parentElement.remove(); window.fixtureGenerator.updateScenarioValidation();"
+                    title="Remove this scenario"
+                    ${rowCount === 0 ? 'style="display: none;"' : ''}
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            container.appendChild(scenarioRow);
+            this.updateScenarioValidation();
+        }
+
+        updateScenarioValidation() {
+            const container = document.getElementById("scenarioValuePairs");
+            if (!container) {
+                console.warn("scenarioValuePairs container not found");
+                return;
+            }
+
+            const rows = container.querySelectorAll(".scenario-row");
+
+            // Show/hide remove buttons - first row should not have remove button if it's the only one
+            rows.forEach((row, index) => {
+                const removeBtn = row.querySelector(".remove-scenario-btn");
+                if (!removeBtn) return; // Skip if remove button not found
+
+                if (rows.length === 1) {
+                    removeBtn.style.display = "none";
+                } else {
+                    removeBtn.style.display = "inline-block";
+                }
+            });
+
+            // Update generate button state
+            const generateBtn = document.getElementById("generateBtn");
+            if (generateBtn) {
+                if (rows.length === 0) {
+                    generateBtn.disabled = true;
+                    generateBtn.title = "At least one scenario is required";
+                } else {
+                    generateBtn.disabled = false;
+                    generateBtn.title = "";
+                }
+            }
+        }
+
+        async importScenariosFromCsv() {
+            const fileInput = document.getElementById("csvFileInput");
+            const file = fileInput.files[0];
+
+            if (!file) {
+                this.showMessage("Please select a CSV file to import", "warning");
+                return;
+            }
+
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                this.showMessage("Please select a valid CSV file", "danger");
+                return;
+            }
+
+            try {
+                const text = await file.text();
+                const lines = text.split('\n').filter(line => line.trim());
+
+                if (lines.length === 0) {
+                    this.showMessage("The CSV file appears to be empty", "warning");
+                    return;
+                }
+
+                // Clear existing scenarios
+                const container = document.getElementById("scenarioValuePairs");
+                if (!container) {
+                    this.showMessage("Scenario container not found", "danger");
+                    return;
+                }
+                container.innerHTML = '';
+
+                let imported = 0;
+                let errors = [];
+
+                // Process each line (expecting format: scenario_name,expected_value)
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line === '') continue;
+
+                    // Skip header row if it contains 'scenario' and 'value'
+                    if (i === 0 && line.toLowerCase().includes('scenario') && line.toLowerCase().includes('value')) {
+                        continue;
+                    }
+
+                    const parts = line.split(',');
+                    if (parts.length !== 2) {
+                        errors.push(`Line ${i + 1}: Expected 2 columns (scenario,value), got ${parts.length}`);
+                        continue;
+                    }
+
+                    const scenario = parts[0].trim();
+                    const value = parts[1].trim();
+
+                    if (!scenario || !value) {
+                        errors.push(`Line ${i + 1}: Empty scenario or value`);
+                        continue;
+                    }
+
+                    // Validate the value is a number
+                    if (isNaN(parseInt(value))) {
+                        errors.push(`Line ${i + 1}: Invalid number value "${value}"`);
+                        continue;
+                    }
+
+                    // Add the scenario row
+                    this.addScenarioRow();
+                    const newRow = container.lastElementChild;
+                    newRow.querySelector('.scenario-input').value = scenario;
+                    newRow.querySelector('.value-input').value = parseInt(value);
+                    imported++;
+                }
+
+                // If no scenarios were imported, add a default one
+                if (imported === 0) {
+                    this.addScenarioRow();
+                }
+
+                // Show results
+                let message = `Successfully imported ${imported} scenario(s)`;
+                if (errors.length > 0) {
+                    message += `. ${errors.length} error(s): ${errors.slice(0, 3).join('; ')}`;
+                    if (errors.length > 3) {
+                        message += ` and ${errors.length - 3} more...`;
+                    }
+                }
+
+                this.showMessage(message, errors.length > 0 ? "warning" : "success");
+
+                // Clear the file input
+                fileInput.value = '';
+
+            } catch (error) {
+                console.error('Error importing CSV:', error);
+                this.showMessage(`Error reading CSV file: ${error.message}`, "danger");
+            }
+        }
+    }
+
+    // Initialize when page loads
+    document.addEventListener("DOMContentLoaded", () => {
+        window.fixtureGenerator = new FixtureGenerator();
+    });
+</script>
+{% endblock %}

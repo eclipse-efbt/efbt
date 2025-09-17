@@ -1525,6 +1525,160 @@ class GitHubIntegrationService:
             traceback.print_exc()
             return False
 
+    def push_test_fixtures(self, owner: str, repo: str, branch_name: str, test_directory: str):
+        """
+        Push test fixture files to a GitHub repository branch using bulk upload (single commit).
+
+        Args:
+            owner (str): Repository owner
+            repo (str): Repository name
+            branch_name (str): Branch to push to
+            test_directory (str): Local directory containing test files
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            import base64
+            import glob
+            from pathlib import Path
+
+            # Find all test-related files
+            test_files = []
+            test_path = Path(test_directory)
+
+            # Include Python test files, SQL fixtures, JSON config, and __init__.py files
+            for pattern in ['**/*.py', '**/*.sql', '**/*.json', '**/__init__.py']:
+                test_files.extend(glob.glob(str(test_path / pattern), recursive=True))
+
+            if not test_files:
+                logger.warning(f"No test files to push found in directory: {test_directory}")
+                return False
+
+            logger.info(f"Found {len(test_files)} test files to push using bulk upload")
+
+            # Step 1: Get the current commit SHA for the branch
+            logger.info(f"Getting current commit SHA for branch {branch_name}")
+            ref_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{branch_name}"
+            ref_response = requests.get(ref_url, headers=self._get_headers())
+
+            if ref_response.status_code != 200:
+                logger.error(f"Failed to get branch reference: {ref_response.status_code} - {ref_response.text}")
+                return False
+
+            current_commit_sha = ref_response.json()['object']['sha']
+            logger.info(f"Current commit SHA: {current_commit_sha}")
+
+            # Step 2: Get the base tree SHA from the current commit
+            commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits/{current_commit_sha}"
+            commit_response = requests.get(commit_url, headers=self._get_headers())
+
+            if commit_response.status_code != 200:
+                logger.error(f"Failed to get commit details: {commit_response.status_code} - {commit_response.text}")
+                return False
+
+            base_tree_sha = commit_response.json()['tree']['sha']
+            logger.info(f"Base tree SHA: {base_tree_sha}")
+
+            # Step 3: Create blobs for all test files
+            logger.info("Creating blobs for test files...")
+            blobs = []
+
+            for test_file in test_files:
+                file_path = Path(test_file)
+
+                # Calculate relative path from test_directory to maintain structure
+                try:
+                    relative_path = file_path.relative_to(test_path)
+                    remote_path = str(relative_path).replace('\\', '/')
+                except ValueError:
+                    # File is not under test_directory, skip it
+                    logger.warning(f"Skipping file outside test directory: {test_file}")
+                    continue
+
+                # Read and encode file content
+                with open(test_file, 'rb') as f:
+                    content = f.read()
+
+                # Create blob
+                blob_url = f"https://api.github.com/repos/{owner}/{repo}/git/blobs"
+                blob_data = {
+                    'content': base64.b64encode(content).decode('utf-8'),
+                    'encoding': 'base64'
+                }
+
+                blob_response = requests.post(blob_url, headers=self._get_headers(), json=blob_data)
+
+                if blob_response.status_code != 201:
+                    logger.error(f"Failed to create blob for {remote_path}: {blob_response.status_code} - {blob_response.text}")
+                    return False
+
+                blob_sha = blob_response.json()['sha']
+
+                blobs.append({
+                    'path': remote_path,
+                    'mode': '100644',
+                    'type': 'blob',
+                    'sha': blob_sha
+                })
+
+                logger.info(f"Created blob for {remote_path}: {blob_sha}")
+
+            # Step 4: Create tree with all blobs
+            logger.info("Creating tree with all test file blobs...")
+            tree_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees"
+            tree_data = {
+                'tree': blobs,
+                'base_tree': base_tree_sha
+            }
+
+            tree_response = requests.post(tree_url, headers=self._get_headers(), json=tree_data)
+
+            if tree_response.status_code != 201:
+                logger.error(f"Failed to create tree: {tree_response.status_code} - {tree_response.text}")
+                return False
+
+            tree_sha = tree_response.json()['sha']
+            logger.info(f"Created tree: {tree_sha}")
+
+            # Step 5: Create commit with the tree
+            logger.info("Creating commit...")
+            commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits"
+            commit_data = {
+                'tree': tree_sha,
+                'message': f'Add regulatory test fixtures via PyBIRD AI Test Generator\n\n- {len(test_files)} test files added\n- Includes Python tests, SQL fixtures, and configuration\n- Generated automatically by PyBIRD AI',
+                'parents': [current_commit_sha]
+            }
+
+            commit_response = requests.post(commit_url, headers=self._get_headers(), json=commit_data)
+
+            if commit_response.status_code != 201:
+                logger.error(f"Failed to create commit: {commit_response.status_code} - {commit_response.text}")
+                return False
+
+            new_commit_sha = commit_response.json()['sha']
+            logger.info(f"Created commit: {new_commit_sha}")
+
+            # Step 6: Update branch reference to point to new commit
+            logger.info(f"Updating branch {branch_name} to point to new commit...")
+            update_ref_data = {
+                'sha': new_commit_sha
+            }
+
+            update_response = requests.patch(ref_url, headers=self._get_headers(), json=update_ref_data)
+
+            if update_response.status_code != 200:
+                logger.error(f"Failed to update branch reference: {update_response.status_code} - {update_response.text}")
+                return False
+
+            logger.info(f"Successfully pushed {len(test_files)} test files in a single commit")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error pushing test files: {e}")
+            traceback.print_exc()
+            return False
+
     def create_pull_request(self, owner: str, repo: str, branch_name: str, fork_repo: str= None, base_branch: str = 'main',
                           title: str = None, body: str = None, head_owner: str = None):
         """
@@ -1886,5 +2040,204 @@ This export was generated automatically by PyBIRD AI's database export functiona
             traceback.print_exc()
             results['error'] = f"Unexpected error: {str(e)}"
             logger.error(f"Error in fork_and_create_pr_workflow: {e}")
+
+        return results
+
+    def fork_and_create_test_pr_workflow(self, source_repository_url: str,
+                                        target_repository_url: str = "",
+                                        organization: str = "",
+                                        branch_name: str = "",
+                                        test_directory: str = "",
+                                        pr_title: str = "",
+                                        pr_body: str = "",
+                                        target_branch: str = 'main',
+                                        custom_branch_name: str = ""):
+        """
+        Complete workflow for test fixtures: Fork repo, create branch, push test files, create PR.
+
+        Args:
+            source_repository_url (str): Source GitHub repository to fork from
+            target_repository_url (str, optional): Target repository for PR (defaults to source)
+            organization (str, optional): Organization to fork to (if None, forks to user)
+            branch_name (str, optional): Branch name for changes
+            test_directory (str, optional): Directory with test files to push
+            pr_title (str, optional): Pull request title
+            pr_body (str, optional): Pull request body
+            target_branch (str): Target branch for PR (default: 'main')
+            custom_branch_name (str, optional): Custom branch name override
+
+        Returns:
+            dict: Results of the operation
+        """
+        from datetime import datetime
+
+        results = {
+            'success': False,
+            'fork_created': False,
+            'fork_data': None,
+            'branch_created': False,
+            'files_pushed': False,
+            'pr_created': False,
+            'pr_url': None,
+            'branch_name': '',
+            'error': None
+        }
+
+        try:
+            # Parse source repository URL
+            source_owner, source_repo = self._parse_github_url(source_repository_url)
+            if not source_owner or not source_repo:
+                results['error'] = f"Invalid source repository URL: {source_repository_url}"
+                return results
+
+            # Use source as target if not specified
+            if not target_repository_url:
+                target_repository_url = source_repository_url
+
+            target_owner, target_repo = self._parse_github_url(target_repository_url)
+            if not target_owner or not target_repo:
+                results['error'] = f"Invalid target repository URL: {target_repository_url}"
+                return results
+
+            # Generate branch name if not provided
+            if custom_branch_name:
+                branch_name = custom_branch_name
+            elif not branch_name:
+                timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+                branch_name = f"test-fixtures-{timestamp}"
+
+            results['branch_name'] = branch_name
+
+            logger.info(f"Starting test fixtures fork and PR workflow from {source_owner}/{source_repo}")
+
+            # Step 1: Fork the repository
+            logger.info(f"Forking repository {source_owner}/{source_repo}...")
+            fork_success, fork_data = self.fork_repository(source_owner, source_repo, organization)
+            if not fork_success:
+                results['error'] = "Failed to fork repository"
+                return results
+
+            results['fork_created'] = True
+            results['fork_data'] = fork_data
+
+            # Get fork owner
+            fork_owner = fork_data['owner']['login']
+            head_repo = fork_data['name']
+            logger.info(f"Fork created/found: {fork_owner}/{head_repo}")
+
+            # Step 2: Wait for fork to be ready
+            if not self.wait_for_fork_completion(fork_owner, head_repo):
+                results['error'] = "Fork did not become ready in time"
+                return results
+
+            # Step 3: Create branch in fork
+            logger.info(f"Creating branch {branch_name} in fork...")
+            if self.create_branch(fork_owner, head_repo, branch_name):
+                results['branch_created'] = True
+                logger.info(f"Branch {branch_name} created successfully")
+            else:
+                results['error'] = f"Failed to create branch {branch_name}"
+                return results
+
+            # Step 4: Push test files if directory provided
+            if test_directory:
+                logger.info("Pushing test files to fork...")
+                if self.push_test_fixtures(fork_owner, head_repo, branch_name, test_directory):
+                    results['files_pushed'] = True
+                    logger.info("Test files pushed successfully")
+                else:
+                    results['error'] = "Failed to push test files"
+                    return results
+
+            # Step 5: Create pull request
+            logger.info(f"Creating pull request to {target_owner}/{target_repo}:{target_branch}")
+
+            # Default PR title if not provided
+            if not pr_title:
+                pr_title = f"PyBIRD AI Test Fixtures - Regulatory Test Suite - {datetime.now().strftime('%Y-%m-%d')}"
+
+            # Default PR body if not provided
+            if not pr_body:
+                pr_body = f"""## PyBIRD AI Test Fixture Suite
+
+This pull request contains **regulatory test fixtures** generated automatically by PyBIRD AI's Test Fixture Generator.
+
+### ⚠️ Content Type: Test Fixtures
+This PR contains **test files**, not database exports. It includes:
+
+- **Python test files** (`.py`) for regulatory template testing
+- **SQL fixture files** (`.sql`) with test data setup and teardown
+- **Test configuration** (`configuration_file_tests.json`) for test execution
+- **Package structure** (`__init__.py`) for proper test discovery
+
+### Details:
+- **Source**: {source_owner}/{source_repo}
+- **Fork**: {fork_owner}/{head_repo}
+- **Branch**: {branch_name}
+- **Target**: {target_owner}/{target_repo}:{target_branch}
+- **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+### Test Execution:
+These fixtures can be executed using the PyBIRD AI test runner:
+
+```bash
+python pybirdai/utils/run_tests.py --uv "False" --config-file "tests/configuration_file_tests.json"
+```
+
+### File Structure:
+```
+tests/
+├── test_cell_{{template}}_{{cell}}_{{scenario}}.py
+├── fixtures/templates/{{template}}/{{cell}}/{{scenario}}/
+│   ├── sql_inserts.sql
+│   ├── sql_deletes.sql
+│   └── __init__.py
+└── configuration_file_tests.json
+```
+
+🧪 **Generated by PyBIRD AI Test Fixture Generator** 🧪"""
+
+            pr_success, pr_url = self.create_cross_fork_pull_request(
+                source_owner=target_owner,
+                source_repo=target_repo,
+                fork_repo=head_repo,
+                fork_owner=fork_owner,
+                branch_name=branch_name,
+                base_branch=target_branch,
+                title=pr_title,
+                body=pr_body
+            )
+
+            if pr_success:
+                results['pr_created'] = True
+                results['pr_url'] = pr_url
+                logger.info(f"Pull request created: {pr_url}")
+            else:
+                logger.info(f"Pull request not created on {target_branch}, trying main branch...")
+                pr_success, pr_url = self.create_cross_fork_pull_request(
+                    source_owner=target_owner,
+                    source_repo=target_repo,
+                    fork_repo=head_repo,
+                    fork_owner=fork_owner,
+                    branch_name=branch_name,
+                    base_branch=DEFAULT_GITHUB_BRANCH,
+                    title=pr_title,
+                    body=pr_body
+                )
+                if pr_success:
+                    results['pr_created'] = True
+                    results['pr_url'] = pr_url
+                    logger.info(f"Pull request created on main branch: {pr_url}")
+                else:
+                    results['error'] = "Failed to create pull request"
+                    return results
+
+            results['success'] = True
+            logger.info("Test fixtures fork and PR workflow completed successfully")
+
+        except Exception as e:
+            traceback.print_exc()
+            results['error'] = f"Unexpected error: {str(e)}"
+            logger.error(f"Error in fork_and_create_test_pr_workflow: {e}")
 
         return results
