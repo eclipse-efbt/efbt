@@ -17,7 +17,7 @@ Created on 22 Jan 2022
 @author: Neil
 '''
 
-import unidecode
+import unicodedata
 
 from pybirdai.regdna import ELReference
 
@@ -174,7 +174,7 @@ class Utils(object):
         We replace letters with acutes , graves, and circumflexes, with the basic letter.
         So for example "a acute" is replaced with "a"
         '''
-        return unidecode.unidecode(the_input_string)
+        return unicodedata.normalize('NFD', the_input_string).encode('ascii', 'ignore').decode('ascii')
 
 
     @classmethod
