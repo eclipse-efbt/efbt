@@ -30,6 +30,7 @@ EXTRACTED_DB_PATH = f"dpm_database{os.sep}dpm_database.accdb"
 class DPMImporterService:
 
     def __init__(self, output_directory:str = f"export_debug{os.sep}"):
+
         logger.info(f"Initializing DPMImporterService with output directory: {output_directory}")
         self.link_db = None
         self.output_directory = f"{output_directory}{os.sep}technical_export{os.sep}"
@@ -37,176 +38,214 @@ class DPMImporterService:
 
         if os.path.exists(self.output_directory):
             logger.info(f"Removing existing output directory: {self.output_directory}")
+
         shutil.rmtree(self.output_directory, ignore_errors=True)
 
         logger.info(f"Creating output directory: {self.output_directory}")
         os.makedirs(self.output_directory, exist_ok=True)
+        self.logger.info(f"Output directory created: {self.output_directory}")
 
     def fetch_link_for_database_download(self):
-        logger.info("Starting to fetch DPM database download link")
-        self.link_db = DEFAULT_DB_VERSION
-        logger.debug(f"Default database version: {DEFAULT_DB_VERSION}")
+
+        main_page = "https://www.eba.europa.eu/risk-and-data-analysis/reporting-frameworks/dpm-data-dictionary"
+        self.logger.info(f"Fetching DPM database link from: {main_page}")
 
         try:
-            from bs4 import BeautifulSoup
-            main_page = "https://www.eba.europa.eu/risk-and-data-analysis/reporting-frameworks/dpm-data-dictionary"
-            logger.info(f"Fetching main page: {main_page}")
-
             response = requests.get(main_page)
-            logger.debug(f"Response status code: {response.status_code}")
-            soup = BeautifulSoup(response.text)
-            a_links = soup.find_all("a")
-            logger.info(f"Found {len(a_links)} links on the page")
-            if a_links:
-                logger.debug(f"First link found: {a_links[0].get('href', 'No href')}")
+            response.raise_for_status()
+            self.logger.debug(f"Successfully fetched page, status code: {response.status_code}")
+        except requests.RequestException as e:
+            self.logger.error(f"Failed to fetch DPM page: {e}")
+            raise
 
-            def is_right_link(a_el: any) -> bool:
-                return "https://www.eba.europa.eu/sites/default/files" in a_el.get("href","") \
-                and "/dpm_database_v" in a_el.get("href","") \
-                and ".zip" in a_el.get("href","")
+        soup = BeautifulSoup(response.text)
+        a_links = soup.find_all("a")
+        self.logger.debug(f"Found {len(a_links)} links on the page")
 
-            for i, a_el in enumerate(a_links):
-                if a_el and is_right_link(a_el):
-                    self.link_db = a_el.get("href",DEFAULT_DB_VERSION)
-                    logger.info(f"Found DPM database link at position {i}: {self.link_db}")
-                    break
-            else:
-                logger.warning("No matching DPM database link found, using default")
-        except ImportError as e:
-            logger.warning(f"BeautifulSoup not available: {e}. Using default database link")
-        except Exception as e:
-            logger.error(f"Error fetching database link: {e}. Using default database link")
+        def is_right_link(a_el: any) -> bool:
+            return "https://www.eba.europa.eu/sites/default/files" in a_el.get("href","") \
+            and "/dpm_database_v" in a_el.get("href","") \
+            and ".zip" in a_el.get("href","")
+
+        for a_el in a_links:
+            if a_el and is_right_link(a_el):
+                self.link_db = a_el.get("href",DEFAULT_DB_VERSION)
+                self.logger.info(f"Found DPM database link: {self.link_db}")
+                break
+
+        if not self.link_db:
+            self.link_db = DEFAULT_DB_VERSION
+            self.logger.warning(f"No DPM database link found, using default: {DEFAULT_DB_VERSION}")
 
     def download_dpm_database(self):
-        logger.info(f"Starting DPM database download from: {self.link_db}")
-        logger.info(f"Downloading to: {DEFAULT_DB_LOCAL_PATH}")
+        self.logger.info(f"Starting download of DPM database from: {self.link_db}")
+
 
         try:
             response = requests.get(self.link_db)
             response.raise_for_status()
+            db_data = response.content
 
-            with open(DEFAULT_DB_LOCAL_PATH, "wb") as f:
-                db_data = response.content
+            file_size_mb = len(db_data) / (1024 * 1024)
+            self.logger.info(f"Downloaded {file_size_mb:.2f} MB")
+
+            with open("dpm_database.zip","wb") as f:
                 f.write(db_data)
-                logger.info(f"Successfully downloaded {len(db_data)} bytes to {DEFAULT_DB_LOCAL_PATH}")
+
+            self.logger.info("DPM database successfully downloaded and saved as dpm_database.zip")
         except requests.RequestException as e:
-            logger.error(f"Failed to download DPM database: {e}")
+            self.logger.error(f"Failed to download DPM database: {e}")
+            raise
+        except IOError as e:
+            self.logger.error(f"Failed to write DPM database file: {e}")
             raise
 
     def extract_dpm_database(self):
-        logger.info(f"Starting extraction of {DEFAULT_DB_LOCAL_PATH}")
+        self.logger.info("Starting extraction of DPM database")
 
-        with zipfile.ZipFile(DEFAULT_DB_LOCAL_PATH, 'r') as zip_ref:
-            logger.info("Extracting zip file to dpm_database directory")
-            zip_ref.extractall("dpm_database")
+        try:
+            with zipfile.ZipFile("dpm_database.zip", 'r') as zip_ref:
+                self.logger.debug("Extracting zip file to dpm_database directory")
+                zip_ref.extractall("dpm_database")
 
-            extracted_files = os.listdir("dpm_database")
-            logger.info(f"Extracted {len(extracted_files)} file(s): {extracted_files}")
+                extracted_files = os.listdir("dpm_database")
+                self.logger.debug(f"Extracted files: {extracted_files}")
 
-            if len(extracted_files) > 1:
-                logger.error(f"Expected 1 file but found {len(extracted_files)} files in zip")
-                raise Exception("More than one file in the zip")
+                if len(extracted_files) > 1:
+                    self.logger.error(f"Expected single file but found {len(extracted_files)} files in zip")
+                    raise Exception("More than one file in the zip")
 
-            for file in extracted_files:
-                if file.endswith(".accdb"):
-                    old_path = os.path.join("dpm_database", file)
-                    new_path = os.path.join("dpm_database", "dpm_database.accdb")
-                    logger.info(f"Moving {old_path} to {new_path}")
-                    shutil.move(old_path, new_path)
+                for file in extracted_files:
+                    if file.endswith(".accdb"):
+                        source = os.path.join("dpm_database", file)
+                        target = os.path.join("dpm_database", "dpm_database.accdb")
+                        self.logger.info(f"Renaming {file} to dpm_database.accdb")
+                        shutil.move(source, target)
 
-        command = f"{SCRIPT_RUNNER}{SCRIPT_PATH} {EXTRACTED_DB_PATH}"
-        logger.info(f"Running extraction script: {command}")
-        result = os.system(command)
-        logger.info(f"Script execution completed with return code: {result}")
+            script_cmd = f"{SCRIPT_RUNNER}{SCRIPT_PATH} {EXTRACTED_DB_PATH}"
+            self.logger.info(f"Executing script: {script_cmd}")
+            result = os.system(script_cmd)
+
+            if result == 0:
+                self.logger.info("Script executed successfully")
+            else:
+                self.logger.warning(f"Script execution returned non-zero exit code: {result}")
+
+        except zipfile.BadZipFile as e:
+            self.logger.error(f"Invalid zip file: {e}")
+            raise
+        except Exception as e:
+            self.logger.error(f"Failed to extract DPM database: {e}")
+            raise
 
     def run_application(self,extract_cleanup:bool=False,download_cleanup:bool=False,with_extract:bool=True):
-        logger.info(f"Starting DPM application run with parameters: extract_cleanup={extract_cleanup}, download_cleanup={download_cleanup}, with_extract={with_extract}")
+        self.logger.info(f"Starting DPM application run with parameters: extract_cleanup={extract_cleanup}, download_cleanup={download_cleanup}, with_extract={with_extract}")
 
         if with_extract:
             if os.path.exists("dpm_database"):
-                logger.info("Removing existing dpm_database directory")
+                self.logger.debug("Cleaning up existing dpm_database directory")
+
                 shutil.rmtree("dpm_database")
 
             if not os.path.exists(DEFAULT_DB_LOCAL_PATH):
-                logger.info(f"{DEFAULT_DB_LOCAL_PATH} not found, will download")
+
+                self.logger.info("DPM database not found locally, downloading...")
                 self.fetch_link_for_database_download()
                 self.download_dpm_database()
             else:
-                logger.info(f"Using existing database file: {DEFAULT_DB_LOCAL_PATH}")
+                self.logger.info(f"Using existing DPM database file: {DEFAULT_DB_LOCAL_PATH}")
 
             self.extract_dpm_database()
-        else:
-            logger.info("Skipping extraction phase")
 
-        logger.info("Starting CSV mapping phase")
+        self.logger.info("Starting CSV mapping to SDD exchange format")
         self.map_csvs_to_sdd_exchange_format()
 
         if extract_cleanup:
-            logger.info("Cleaning up extracted database directory")
+            self.logger.debug("Cleaning up extracted dpm_database directory")
+
             shutil.rmtree("dpm_database")
+
         if download_cleanup:
-            logger.info("Cleaning up downloaded files")
+            self.logger.debug("Cleaning up download artifacts")
             if os.path.exists("target"):
                 shutil.rmtree("target")
-            if os.path.exists(DEFAULT_DB_LOCAL_PATH):
-                os.remove(DEFAULT_DB_LOCAL_PATH)
+            if os.path.exists("dpm_database.zip"):
+                os.remove("dpm_database.zip")
 
-        logger.info("DPM application run completed")
+        self.logger.info("DPM application run completed successfully")
+
 
     def write_csv_maintenance_agency(self):
         """
         Core Package
         """
         output_file = f"{self.output_directory}maintenance_agency.csv"
-        logger.debug(f"Writing maintenance agency CSV to: {output_file}")
 
-        with open(output_file, "w") as f:
-            f.write("""MAINTENANCE_AGENCY_ID,CODE,NAME,DESCRIPTION
+        self.logger.debug(f"Writing maintenance agency CSV to: {output_file}")
+
+        try:
+            with open(output_file,"w") as f:
+                f.write("""MAINTENANCE_AGENCY_ID,CODE,NAME,DESCRIPTION
 EBA,EBA,European Banking Authority,European Banking Authority""")
+            self.logger.debug("Maintenance agency CSV written successfully")
+        except IOError as e:
+            self.logger.error(f"Failed to write maintenance agency CSV: {e}")
+            raise
 
         logger.info(f"Created maintenance agency file: {output_file}")
 
     def map_csvs_to_sdd_exchange_format(self):
-        logger.info("Starting CSV to SDD exchange format mapping")
 
-        import pybirdai.process_steps.dpm_integration.mapping_functions as new_maps
-        logger.debug("Imported mapping functions module")
+        self.logger.info("Starting CSV to SDD exchange format mapping")
+
+        try:
+            import pybirdai.process_steps.dpm_integration.mapping_functions as new_maps
+        except ImportError as e:
+            self.logger.error(f"Failed to import mapping functions: {e}")
+            raise
+
 
         """
         Core Package
         """
         logger.info("Processing Core Package")
         self.write_csv_maintenance_agency()
-        logger.info("Mapping Framework entities")
-        _, framework_map = new_maps.map_frameworks() # frameworks
-        output_file = f"{self.output_directory}framework.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} Framework entities to {output_file}")
-        logger.info("Mapping Domain entities")
-        _, domain_map = new_maps.map_domains() # domains
-        output_file = f"{self.output_directory}domain.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} Domain entities to {output_file}")
-        logger.info("Mapping Member entities")
-        _, member_map = new_maps.map_members(domain_id_map=domain_map) # members
-        output_file = f"{self.output_directory}member.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} Member entities to {output_file}")
-        logger.info("Mapping Dimension/Variable entities")
-        _, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map) # to enumerated variables
-        output_file = f"{self.output_directory}variable.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} Variable entities to {output_file}")
-        logger.info("Mapping Member Hierarchy entities")
-        _, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
-        output_file = f"{self.output_directory}member_hierarchy.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} Hierarchy entities to {output_file}")
-        logger.info("Mapping Hierarchy Node entities")
-        _, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
-        output_file = f"{self.output_directory}member_hierarchy_node.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} HierarchyNode entities to {output_file}")
+        self.logger.info("Created Maintenance Agency File")
+
+        try:
+            self.logger.debug("Mapping framework entities...")
+            _, framework_map = new_maps.map_frameworks() # frameworks
+            _.to_csv(f"{self.output_directory}framework.csv",index=False)
+            self.logger.info(f"Mapped Framework Entities - {len(_)} records")
+
+            self.logger.debug("Mapping domain entities...")
+            _, domain_map = new_maps.map_domains() # domains
+            _.to_csv(f"{self.output_directory}domain.csv",index=False)
+            self.logger.info(f"Mapped Domain Entities - {len(_)} records")
+
+            self.logger.debug("Mapping member entities...")
+            _, member_map = new_maps.map_members(domain_id_map=domain_map) # members
+            _.to_csv(f"{self.output_directory}member.csv",index=False)
+            self.logger.info(f"Mapped Members Entities - {len(_)} records")
+
+            self.logger.debug("Mapping dimension entities...")
+            _, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map) # to enumerated variables
+            _.to_csv(f"{self.output_directory}variable.csv",index=False)
+            self.logger.info(f"Mapped Variables Entities - {len(_)} records")
+
+            self.logger.debug("Mapping hierarchy entities...")
+            _, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
+            _.to_csv(f"{self.output_directory}member_hierarchy.csv",index=False)
+            self.logger.info(f"Mapped Hierarchy Entities - {len(_)} records")
+
+            self.logger.debug("Mapping hierarchy node entities...")
+            _, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
+            _.to_csv(f"{self.output_directory}member_hierarchy_node.csv",index=False)
+            self.logger.info(f"Mapped HierarchyNode Entities - {len(_)} records")
+        except Exception as e:
+            self.logger.error(f"Failed during mapping process: {e}")
+            raise
+
 
         """
         Data Definition Package
@@ -222,41 +261,58 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         """
         Rendering Package
         """
-        logger.info("Processing Rendering Package")
-        logger.info("Mapping Table entities")
-        _, table_map = new_maps.map_tables(framework_id_map=framework_map)
-        output_file = f"{self.output_directory}table.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} Table entities to {output_file}")
-        logger.info("Mapping Axis entities")
-        _, axis_map = new_maps.map_axis(table_map=table_map)
-        output_file = f"{self.output_directory}axis.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} Axis entities to {output_file}")
-        logger.info("Mapping Axis Ordinate entities")
-        _, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
-        output_file = f"{self.output_directory}axis_ordinate.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} AxisOrdinate entities to {output_file}")
-        logger.info("Mapping Table Cell entities")
-        _, cell_map = new_maps.map_table_cell(table_map=table_map)
-        output_file = f"{self.output_directory}table_cell.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} TableCell entities to {output_file}")
-        logger.info("Mapping Cell Position entities")
-        _, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map,start_index_after_last=False)
-        output_file = f"{self.output_directory}cell_position.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} CellPosition entities to {output_file}")
-        logger.info("Mapping Ordinate Item entities")
-        _, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map,start_index_after_last=False)
-        output_file = f"{self.output_directory}ordinate_item.csv"
-        _.to_csv(output_file, index=False)
-        logger.info(f"Mapped {len(_)} OrdinateItem entities to {output_file}")
 
-        logger.info("CSV to SDD exchange format mapping completed")
+        self.logger.info("Starting Rendering Package mapping")
+
+        try:
+            self.logger.debug("Mapping table entities...")
+            _, table_map = new_maps.map_tables(framework_id_map=framework_map)
+            _.to_csv(f"{self.output_directory}table.csv",index=False)
+            self.logger.info(f"Mapped Table Entities - {len(_)} records")
+
+            self.logger.debug("Mapping axis entities...")
+            _, axis_map = new_maps.map_axis(table_map=table_map)
+            _.to_csv(f"{self.output_directory}axis.csv",index=False)
+            self.logger.info(f"Mapped Axis Entities - {len(_)} records")
+
+            self.logger.debug("Mapping axis ordinate entities...")
+            _, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
+            _.to_csv(f"{self.output_directory}axis_ordinate.csv",index=False)
+            self.logger.info(f"Mapped AxisOrdinates Entities - {len(_)} records")
+
+            self.logger.debug("Mapping table cell entities...")
+            _, cell_map = new_maps.map_table_cell(table_map=table_map)
+            _.to_csv(f"{self.output_directory}table_cell.csv",index=False)
+            self.logger.info(f"Mapped TableCell Entities - {len(_)} records")
+
+            self.logger.debug("Mapping cell position entities...")
+            _, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map,start_index_after_last=False)
+            _.to_csv(f"{self.output_directory}cell_position.csv",index=False)
+            self.logger.info(f"Mapped CellPositions Entities - {len(_)} records")
+
+            self.logger.debug("Mapping ordinate categorisation entities...")
+            _, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map,start_index_after_last=False)
+            _.to_csv(f"{self.output_directory}ordinate_item.csv",index=False)
+            self.logger.info(f"Mapped OrdinateItems Entities - {len(_)} records")
+
+            self.logger.info("Successfully completed all CSV to SDD mappings")
+        except Exception as e:
+            self.logger.error(f"Failed during rendering package mapping: {e}")
+            raise
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    logger.info("Starting DPM Integration Service as main")
-    DPMImporterService().run_application()
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+
+    logger = logging.getLogger(__name__)
+    logger.info("Starting DPM Importer Service as main module")
+
+    try:
+        DPMImporterService().run_application()
+        logger.info("DPM Importer Service completed successfully")
+    except Exception as e:
+        logger.error(f"DPM Importer Service failed: {e}")
+        raise
+
