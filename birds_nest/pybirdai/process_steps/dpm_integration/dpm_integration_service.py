@@ -11,12 +11,13 @@
 #    Benjamin Arfa - initial API and implementation
 #
 import requests
-from bs4 import BeautifulSoup
 import os
 import zipfile
 import shutil
 import platform
 import logging
+
+logger = logging.getLogger(__name__)
 
 FILES_ROOT = "https://www.eba.europa.eu/sites/default/files"
 DEFAULT_DB_VERSION = f"{FILES_ROOT}/2024-12/330f4dba-be0d-4cdd-b0ed-b5a6b1fbc049/dpm_database_v4_0_20241218.zip"
@@ -29,18 +30,23 @@ EXTRACTED_DB_PATH = f"dpm_database{os.sep}dpm_database.accdb"
 class DPMImporterService:
 
     def __init__(self, output_directory:str = f"export_debug{os.sep}"):
-        self.logger = logging.getLogger(__name__)
-        self.logger.info(f"Initializing DPMImporterService with output directory: {output_directory}")
 
+        logger.info(f"Initializing DPMImporterService with output directory: {output_directory}")
         self.link_db = None
         self.output_directory = f"{output_directory}{os.sep}technical_export{os.sep}"
+        logger.debug(f"Setting output directory to: {self.output_directory}")
 
-        self.logger.debug(f"Cleaning up output directory: {self.output_directory}")
+        if os.path.exists(self.output_directory):
+            logger.info(f"Removing existing output directory: {self.output_directory}")
+
         shutil.rmtree(self.output_directory, ignore_errors=True)
+
+        logger.info(f"Creating output directory: {self.output_directory}")
         os.makedirs(self.output_directory, exist_ok=True)
         self.logger.info(f"Output directory created: {self.output_directory}")
 
     def fetch_link_for_database_download(self):
+
         main_page = "https://www.eba.europa.eu/risk-and-data-analysis/reporting-frameworks/dpm-data-dictionary"
         self.logger.info(f"Fetching DPM database link from: {main_page}")
 
@@ -73,6 +79,7 @@ class DPMImporterService:
 
     def download_dpm_database(self):
         self.logger.info(f"Starting download of DPM database from: {self.link_db}")
+
 
         try:
             response = requests.get(self.link_db)
@@ -137,10 +144,11 @@ class DPMImporterService:
         if with_extract:
             if os.path.exists("dpm_database"):
                 self.logger.debug("Cleaning up existing dpm_database directory")
+
                 shutil.rmtree("dpm_database")
 
-        if with_extract:
             if not os.path.exists(DEFAULT_DB_LOCAL_PATH):
+
                 self.logger.info("DPM database not found locally, downloading...")
                 self.fetch_link_for_database_download()
                 self.download_dpm_database()
@@ -154,6 +162,7 @@ class DPMImporterService:
 
         if extract_cleanup:
             self.logger.debug("Cleaning up extracted dpm_database directory")
+
             shutil.rmtree("dpm_database")
 
         if download_cleanup:
@@ -165,11 +174,13 @@ class DPMImporterService:
 
         self.logger.info("DPM application run completed successfully")
 
+
     def write_csv_maintenance_agency(self):
         """
         Core Package
         """
         output_file = f"{self.output_directory}maintenance_agency.csv"
+
         self.logger.debug(f"Writing maintenance agency CSV to: {output_file}")
 
         try:
@@ -181,7 +192,10 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
             self.logger.error(f"Failed to write maintenance agency CSV: {e}")
             raise
 
+        logger.info(f"Created maintenance agency file: {output_file}")
+
     def map_csvs_to_sdd_exchange_format(self):
+
         self.logger.info("Starting CSV to SDD exchange format mapping")
 
         try:
@@ -190,10 +204,11 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
             self.logger.error(f"Failed to import mapping functions: {e}")
             raise
 
+
         """
         Core Package
         """
-
+        logger.info("Processing Core Package")
         self.write_csv_maintenance_agency()
         self.logger.info("Created Maintenance Agency File")
 
@@ -231,20 +246,22 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
             self.logger.error(f"Failed during mapping process: {e}")
             raise
 
+
         """
         Data Definition Package
         """
-
+        logger.info("Data Definition Package mapping skipped (commented out)")
         # context_data, context_map = new_maps.map_context_definition(dimension_map=dimension_map,member_map=member_map) # to combination_items (need to improve EBA_ATY and subdomain generation)
 
         # (combination, combination_item), dpv_map = new_maps.map_datapoint_version(context_map=context_map,context_data=context_data,dimension_map=dimension_map,member_map=member_map) # to combinations and items
         # combination.to_csv(f"{self.output_directory}combination.csv",index=False)
         # combination_item.to_csv(f"{self.output_directory}combination_item.csv",index=False)
-        # logging.info("Mapped Combination(and Items) Entities")
+        # logger.info("Mapped Combination(and Items) Entities")
 
         """
         Rendering Package
         """
+
         self.logger.info("Starting Rendering Package mapping")
 
         try:
@@ -298,3 +315,4 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(f"DPM Importer Service failed: {e}")
         raise
+
