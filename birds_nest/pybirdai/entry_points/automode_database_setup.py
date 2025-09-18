@@ -700,15 +700,8 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
                 db_file = "db.sqlite3"
                 if os.path.exists(db_file):
-                    try:
-                        if is_file_locked(os.path.abspath(db_file)):
-                            logger.warning(f"Database file {db_file} is locked by another process. Please stop all Django/related processes and try again.")
-                            raise RuntimeError(f"Database file {db_file} is locked. Please stop all Django/related processes (such as the development server) and try again.")
-                        os.chmod(db_file, 0o666)
-                        os.remove(db_file)
-                    except Exception as e:
-                        logger.warning(f"Error removing database file {db_file}: {e}")
-
+                    os.chmod(db_file, 0o666)
+                    os.remove(db_file)
 
                 # Run migrate
                 migrate_cmd = [python_executable, "manage.py", "migrate"]

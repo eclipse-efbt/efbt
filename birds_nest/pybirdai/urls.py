@@ -170,14 +170,14 @@ urlpatterns = [
     path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
     path("prepare_dpm_data/", views.prepare_dpm_data, name="prepare_dpm_data"),
     path("dpm_output_layer_creation/", views.dpm_output_layer_creation, name="dpm_output_layer_creation"),
-    
+
     # ANCRDT Transformation URLs
-    path("ancrdt/", ancrdt_transformation_views.ancrdt_dashboard, name="ancrdt_dashboard"),
+    path("dataset/", ancrdt_transformation_views.ancrdt_dashboard, name="ancrdt_dashboard"),
     path("ancrdt/fetch-csv/", ancrdt_transformation_views.ancrdt_fetch_csv, name="ancrdt_fetch_csv"),
     path("ancrdt/import/", ancrdt_transformation_views.ancrdt_import, name="ancrdt_import"),
     path("ancrdt/create-joins-metadata/", ancrdt_transformation_views.ancrdt_create_joins_metadata, name="ancrdt_create_joins_metadata"),
     path("ancrdt/create-executable-joins/", ancrdt_transformation_views.ancrdt_create_executable_joins, name="ancrdt_create_executable_joins"),
-    
+
     path(
         "run_import_semantic_integrations_from_website/",
         views.run_import_semantic_integrations_from_website,
