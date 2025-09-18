@@ -12,7 +12,6 @@ dependencies = [
     "pytest-xdist==3.6.1",
     "ruff==0.9.7",
     "pandas",
-    "numpy",
     "requests",
     "psutil",
 ]
