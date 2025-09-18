@@ -10,7 +10,6 @@ python -m pip install pyecore==0.15.1 --quiet
 python -m pip install pytest==8.3.4 --quiet
 python -m pip install pytest-xdist==3.6.1 --quiet
 python -m pip install ruff==0.9.7 --quiet
-python -m pip install unidecode==1.3.8 --quiet
 python -m pip install pandas --quiet
 python -m pip install numpy --quiet
 python -m pip install requests --quiet

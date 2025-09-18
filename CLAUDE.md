@@ -25,7 +25,6 @@ python -m pip install pyecore==0.15.1
 python -m pip install pytest==8.3.4
 python -m pip install pytest-xdist==3.6.1
 python -m pip install ruff==0.9.7
-python -m pip install unidecode==1.3.8
 ```
 
 **Run Django development server:**
