@@ -16,7 +16,7 @@ import django
 from django.db import models
 from django.conf import settings
 import sys
-import numpy as np
+
 import logging
 
 # Configure logging
