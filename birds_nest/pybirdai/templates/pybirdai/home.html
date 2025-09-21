@@ -26,7 +26,7 @@
         margin: 30px auto;
         padding: 0 20px;
     }
-    
+
     .task-item {
         display: flex;
         flex-direction: column;
@@ -40,7 +40,7 @@
         color: #333;
         transition: all 0.3s ease;
     }
-    
+
     .task-item:hover {
         background: #e9ecef;
         border-color: #adb5bd;
@@ -49,56 +49,56 @@
         text-decoration: none;
         color: #333;
     }
-    
+
     .task-item img {
         width: 80px;
         height: 80px;
         object-fit: contain;
         margin-bottom: 15px;
     }
-    
+
     .task-item span {
         font-size: 14px;
         font-weight: 500;
         line-height: 1.4;
     }
-    
+
     @media (max-width: 768px) {
         .task-grid {
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
         }
-        
+
         .task-item {
             padding: 15px;
         }
-        
+
         .task-item img {
             width: 60px;
             height: 60px;
         }
-        
+
         .task-item span {
             font-size: 13px;
         }
     }
-    
+
     @media (max-width: 480px) {
         .task-grid {
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-        
+
         .task-item {
             padding: 10px;
         }
-        
+
         .task-item img {
             width: 50px;
             height: 50px;
             margin-bottom: 10px;
         }
-        
+
         .task-item span {
             font-size: 12px;
         }
@@ -116,7 +116,7 @@
     <a href="{% url 'pybirdai:report_templates' %}" class="task-item">
         <img src="{% static 'images/report_templates.webp' %}" alt="Concept icon">
         <span>View Populated Templates</span>
-    </a>        
+    </a>
     <a href="{% url 'pybirdai:test_report_view' %}" class="task-item">
         <img
             src="{% static 'images/report_checklist.webp' %}"
@@ -141,9 +141,9 @@
     <a href="{% url 'pybirdai:ancrdt_dashboard' %}" class="task-item">
         <img
             src="{% static 'images/transformation.webp' %}"
-            alt="ANCRDT Transformation"
+            alt="Dataset Transformation"
         />
-        <span>ANCRDT Transformation</span>
+        <span>Dataset Transformation</span>
     </a>
 </div>
 
