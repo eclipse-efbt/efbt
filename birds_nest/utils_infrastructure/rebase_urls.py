@@ -23,4 +23,4 @@ for elt in tree.body[-1].value.elts:
 tree.body[-1].value = ast.List(new_elts)
 with open("../pybirdai/urls.py","w") as f:
     f.write(ast.unparse(tree))
-os.system("uv run ruff format ../pybirdai/urls.py")
+os.system("uv run black ../pybirdai/urls.py")
