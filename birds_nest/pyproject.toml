@@ -13,12 +13,43 @@ dependencies = [
     "requests",
     "psutil",
     "numpy>=2.3.3",
+    "black==24.4.2",
+    "pylint==3.1.0",
 ]
-[tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "B"]
 
-# 2. Avoid enforcing line-length violations (`E501`)
-ignore = ["E501","E402","B905"]
+[tool.black]
+line-length = 120
+target-version = ["py313"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.git
+  | \.venv
+  | \.eggs
+  | \.tox
+  | \.mypy_cache
+  | \.pytest_cache
+  | __pycache__
+  | build
+  | dist
+)/
+'''
 
-# 3. Avoid trying to fix flake8-bugbear (`B`) violations.
-unfixable = ["B"]
+[tool.pylint.main]
+max-line-length = 120
+disable = [
+    "C0103",  # invalid-name
+    "C0111",  # missing-docstring
+    "R0903",  # too-few-public-methods
+    "R0913",  # too-many-arguments
+    "W0613",  # unused-argument
+    "E1101",  # no-member (often false positives with Django)
+    "C0301",  # line-too-long (handled by black)
+]
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.messages_control]
+extension-pkg-whitelist = ["numpy", "django"]
