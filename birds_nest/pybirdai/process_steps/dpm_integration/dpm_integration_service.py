@@ -19,6 +19,8 @@ import logging
 import numpy as np
 import csv
 
+logger = logging.getLogger(__name__)
+
 FILES_ROOT = "https://www.eba.europa.eu/sites/default/files"
 DEFAULT_DB_VERSION = f"{FILES_ROOT}/2024-12/330f4dba-be0d-4cdd-b0ed-b5a6b1fbc049/dpm_database_v4_0_20241218.zip"
 DEFAULT_DB_LOCAL_PATH = "dpm_database.zip"
@@ -67,10 +69,20 @@ def save_numpy_array_to_csv(array, filepath, index=False):
 class DPMImporterService:
 
     def __init__(self, output_directory:str = f"export_debug{os.sep}"):
+
+        logger.info(f"Initializing DPMImporterService with output directory: {output_directory}")
         self.link_db = None
         self.output_directory = f"{output_directory}{os.sep}technical_export{os.sep}"
+        logger.debug(f"Setting output directory to: {self.output_directory}")
+
+        if os.path.exists(self.output_directory):
+            logger.info(f"Removing existing output directory: {self.output_directory}")
+
         shutil.rmtree(self.output_directory, ignore_errors=True)
+
+        logger.info(f"Creating output directory: {self.output_directory}")
         os.makedirs(self.output_directory, exist_ok=True)
+        self.logger.info(f"Output directory created: {self.output_directory}")
 
     def fetch_link_for_database_download(self):
         try:
@@ -96,57 +108,137 @@ class DPMImporterService:
                 self.link_db = DEFAULT_DB_VERSION
 
     def download_dpm_database(self):
-        with open("dpm_database.zip","wb") as f:
-            db_data = requests.get(self.link_db).content
-            f.write(db_data)
+        self.logger.info(f"Starting download of DPM database from: {self.link_db}")
+
+
+        try:
+            response = requests.get(self.link_db)
+            response.raise_for_status()
+            db_data = response.content
+
+            file_size_mb = len(db_data) / (1024 * 1024)
+            self.logger.info(f"Downloaded {file_size_mb:.2f} MB")
+
+            with open("dpm_database.zip","wb") as f:
+                f.write(db_data)
+
+            self.logger.info("DPM database successfully downloaded and saved as dpm_database.zip")
+        except requests.RequestException as e:
+            self.logger.error(f"Failed to download DPM database: {e}")
+            raise
+        except IOError as e:
+            self.logger.error(f"Failed to write DPM database file: {e}")
+            raise
 
     def extract_dpm_database(self):
-        with zipfile.ZipFile("dpm_database.zip", 'r') as zip_ref:
-            zip_ref.extractall("dpm_database")
+        self.logger.info("Starting extraction of DPM database")
 
-            if len(os.listdir("dpm_database")) > 1:
-                raise Exception("More than one file in the zip")
+        try:
+            with zipfile.ZipFile("dpm_database.zip", 'r') as zip_ref:
+                self.logger.debug("Extracting zip file to dpm_database directory")
+                zip_ref.extractall("dpm_database")
 
-            for file in os.listdir("dpm_database"):
-                if file.endswith(".accdb"):
-                    shutil.move(os.path.join("dpm_database", file), os.path.join("dpm_database", "dpm_database.accdb"))
+                extracted_files = os.listdir("dpm_database")
+                self.logger.debug(f"Extracted files: {extracted_files}")
 
-        os.system(f"{SCRIPT_RUNNER}{SCRIPT_PATH} {EXTRACTED_DB_PATH}")
+                if len(extracted_files) > 1:
+                    self.logger.error(f"Expected single file but found {len(extracted_files)} files in zip")
+                    raise Exception("More than one file in the zip")
+
+                for file in extracted_files:
+                    if file.endswith(".accdb"):
+                        source = os.path.join("dpm_database", file)
+                        target = os.path.join("dpm_database", "dpm_database.accdb")
+                        self.logger.info(f"Renaming {file} to dpm_database.accdb")
+                        shutil.move(source, target)
+
+            script_cmd = f"{SCRIPT_RUNNER}{SCRIPT_PATH} {EXTRACTED_DB_PATH}"
+            self.logger.info(f"Executing script: {script_cmd}")
+            result = os.system(script_cmd)
+
+            if result == 0:
+                self.logger.info("Script executed successfully")
+            else:
+                self.logger.warning(f"Script execution returned non-zero exit code: {result}")
+
+        except zipfile.BadZipFile as e:
+            self.logger.error(f"Invalid zip file: {e}")
+            raise
+        except Exception as e:
+            self.logger.error(f"Failed to extract DPM database: {e}")
+            raise
 
     def run_application(self,extract_cleanup:bool=False,download_cleanup:bool=False,with_extract:bool=True):
-        if with_extract:
-            if os.path.exists("dpm_database"):
-                shutil.rmtree("dpm_database")
+        self.logger.info(f"Starting DPM application run with parameters: extract_cleanup={extract_cleanup}, download_cleanup={download_cleanup}, with_extract={with_extract}")
 
         if with_extract:
+            if os.path.exists("dpm_database"):
+                self.logger.debug("Cleaning up existing dpm_database directory")
+
+                shutil.rmtree("dpm_database")
+
             if not os.path.exists(DEFAULT_DB_LOCAL_PATH):
+
+                self.logger.info("DPM database not found locally, downloading...")
                 self.fetch_link_for_database_download()
                 self.download_dpm_database()
+            else:
+                self.logger.info(f"Using existing DPM database file: {DEFAULT_DB_LOCAL_PATH}")
+
             self.extract_dpm_database()
-        logging.info("Starting Mapping")
+
+        self.logger.info("Starting CSV mapping to SDD exchange format")
         self.map_csvs_to_sdd_exchange_format()
 
         if extract_cleanup:
+            self.logger.debug("Cleaning up extracted dpm_database directory")
+
             shutil.rmtree("dpm_database")
+
         if download_cleanup:
-            shutil.rmtree("target")
-            os.remove("dpm_database.zip")
+            self.logger.debug("Cleaning up download artifacts")
+            if os.path.exists("target"):
+                shutil.rmtree("target")
+            if os.path.exists("dpm_database.zip"):
+                os.remove("dpm_database.zip")
+
+        self.logger.info("DPM application run completed successfully")
+
 
     def write_csv_maintenance_agency(self):
         """
         Core Package
         """
+        output_file = f"{self.output_directory}maintenance_agency.csv"
 
-        with open(f"{self.output_directory}maintenance_agency.csv","w") as f:
-            f.write("""MAINTENANCE_AGENCY_ID,CODE,NAME,DESCRIPTION
+        self.logger.debug(f"Writing maintenance agency CSV to: {output_file}")
+
+        try:
+            with open(output_file,"w") as f:
+                f.write("""MAINTENANCE_AGENCY_ID,CODE,NAME,DESCRIPTION
 EBA,EBA,European Banking Authority,European Banking Authority""")
+            self.logger.debug("Maintenance agency CSV written successfully")
+        except IOError as e:
+            self.logger.error(f"Failed to write maintenance agency CSV: {e}")
+            raise
+
+        logger.info(f"Created maintenance agency file: {output_file}")
 
     def map_csvs_to_sdd_exchange_format(self):
-        import pybirdai.process_steps.dpm_integration.mapping_functions as new_maps
+
+        self.logger.info("Starting CSV to SDD exchange format mapping")
+
+        try:
+            import pybirdai.process_steps.dpm_integration.mapping_functions as new_maps
+        except ImportError as e:
+            self.logger.error(f"Failed to import mapping functions: {e}")
+            raise
+
+
         """
         Core Package
         """
-
+        logger.info("Processing Core Package")
         self.write_csv_maintenance_agency()
         logging.info("Created Maintenance Agency File")
 
@@ -174,10 +266,11 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         save_numpy_array_to_csv(hierarchy_node_array, f"{self.output_directory}member_hierarchy_node.csv", index=False)
         logging.info("Mapped HierarchyNode Entities")
 
+
         """
         Data Definition Package
         """
-
+        logger.info("Data Definition Package mapping skipped (commented out)")
         # context_data, context_map = new_maps.map_context_definition(dimension_map=dimension_map,member_map=member_map) # to combination_items (need to improve EBA_ATY and subdomain generation)
 
         # (combination, combination_item), dpv_map = new_maps.map_datapoint_version(context_map=context_map,context_data=context_data,dimension_map=dimension_map,member_map=member_map) # to combinations and items
@@ -185,9 +278,11 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         # save_numpy_array_to_csv(combination_item, f"{self.output_directory}combination_item.csv", index=False)
         # logging.info("Mapped Combination(and Items) Entities")
 
+
         """
         Rendering Package
         """
+
         tables_array, table_map = new_maps.map_tables(framework_id_map=framework_map)
         save_numpy_array_to_csv(tables_array, f"{self.output_directory}table.csv", index=False)
         logging.info("Mapped Table Entities")
@@ -213,4 +308,18 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         logging.info("Mapped OrdinateItems Entities")
 
 if __name__ == "__main__":
-    DPMImporterService().run_application()
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+
+    logger = logging.getLogger(__name__)
+    logger.info("Starting DPM Importer Service as main module")
+
+    try:
+        DPMImporterService().run_application()
+        logger.info("DPM Importer Service completed successfully")
+    except Exception as e:
+        logger.error(f"DPM Importer Service failed: {e}")
+        raise
+
