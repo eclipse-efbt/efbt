@@ -244,6 +244,8 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
         source_dir = os.path.join(".", "resources", "generated_python")
         target_dir = os.path.join(".", "pybirdai", "process_steps", "filter_code")
+        shutil.copy(os.path.join(".", "resources", "generated_python", "automatic_tracking_wrapper.py"), target_dir)
+
 
         try:
             if not os.path.exists(source_dir):
