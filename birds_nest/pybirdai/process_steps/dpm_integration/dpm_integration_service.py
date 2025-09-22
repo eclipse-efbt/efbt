@@ -70,17 +70,18 @@ class DPMImporterService:
 
     def __init__(self, output_directory:str = f"export_debug{os.sep}"):
 
-        logger.info(f"Initializing DPMImporterService with output directory: {output_directory}")
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.info(f"Initializing DPMImporterService with output directory: {output_directory}")
         self.link_db = None
         self.output_directory = f"{output_directory}{os.sep}technical_export{os.sep}"
-        logger.debug(f"Setting output directory to: {self.output_directory}")
+        self.logger.debug(f"Setting output directory to: {self.output_directory}")
 
         if os.path.exists(self.output_directory):
-            logger.info(f"Removing existing output directory: {self.output_directory}")
+            self.logger.info(f"Removing existing output directory: {self.output_directory}")
 
         shutil.rmtree(self.output_directory, ignore_errors=True)
 
-        logger.info(f"Creating output directory: {self.output_directory}")
+        self.logger.info(f"Creating output directory: {self.output_directory}")
         os.makedirs(self.output_directory, exist_ok=True)
         self.logger.info(f"Output directory created: {self.output_directory}")
 
