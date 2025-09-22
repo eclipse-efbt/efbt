@@ -96,9 +96,9 @@ class CloneRepoService:
 
         # Delete all target directories from REPO_MAPPING to enable clean setup
         for source_folder, target_mappings in REPO_MAPPING.items():
+            if source_folder == f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code":
+                continue
             for target_folder, filter_func in target_mappings.items():
-                if source_folder == f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code":
-                    continue
                 if os.path.exists(target_folder):
                     logger.info(f"Removing existing target directory: {target_folder}")
                     shutil.copy(
