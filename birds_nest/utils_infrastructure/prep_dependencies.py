@@ -1,6 +1,6 @@
 import re
 
-with open('../requirements.txt', 'r') as f:
+with open('requirements.txt', 'r') as f:
     with open('new_req.txt', "w") as f_w:
         for line in f:
             line = line.strip()
