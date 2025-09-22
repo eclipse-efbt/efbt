@@ -15,6 +15,7 @@ dependencies = [
     "numpy>=2.3.3",
     "black==24.4.2",
     "pylint==3.1.0",
+    "click==8.2.1",
 ]
 
 [tool.black]
