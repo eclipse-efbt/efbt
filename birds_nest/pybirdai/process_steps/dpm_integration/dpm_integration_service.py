@@ -16,6 +16,8 @@ import zipfile
 import shutil
 import platform
 import logging
+import numpy as np
+import csv
 
 logger = logging.getLogger(__name__)
 
@@ -27,55 +29,84 @@ PROCESS_FILE_END = ".bat" if platform.system() == "Windows" else ".sh"
 SCRIPT_PATH = f"pybirdai{os.sep}process_steps{os.sep}dpm_integration{os.sep}process{PROCESS_FILE_END}"
 EXTRACTED_DB_PATH = f"dpm_database{os.sep}dpm_database.accdb"
 
+def save_numpy_array_to_csv(array, filepath, index=False):
+    """Save numpy structured array to CSV file"""
+    if len(array) == 0:
+        # Write empty file with headers only
+        with open(filepath, 'w', newline='', encoding='utf-8') as f:
+            if hasattr(array, 'dtype') and array.dtype.names:
+                writer = csv.writer(f)
+                writer.writerow(array.dtype.names)
+        return
+
+    with open(filepath, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+
+        # Write header
+        writer.writerow(array.dtype.names)
+
+        # Write data rows
+        for row in array:
+            row_data = []
+            for field in array.dtype.names:
+                val = row[field]
+                # Convert numpy types to Python types for proper CSV writing
+                if isinstance(val, (np.bool_, bool)):
+                    row_data.append(str(val))
+                elif isinstance(val, (np.integer, int)):
+                    row_data.append(str(val))
+                elif isinstance(val, (np.floating, float)):
+                    # Check for NaN
+                    if np.isnan(val):
+                        row_data.append('')
+                    else:
+                        row_data.append(str(val))
+                else:
+                    # String or other types
+                    row_data.append(str(val))
+            writer.writerow(row_data)
+
 class DPMImporterService:
 
     def __init__(self, output_directory:str = f"export_debug{os.sep}"):
 
-        logger.info(f"Initializing DPMImporterService with output directory: {output_directory}")
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.info(f"Initializing DPMImporterService with output directory: {output_directory}")
         self.link_db = None
         self.output_directory = f"{output_directory}{os.sep}technical_export{os.sep}"
-        logger.debug(f"Setting output directory to: {self.output_directory}")
+        self.logger.debug(f"Setting output directory to: {self.output_directory}")
 
         if os.path.exists(self.output_directory):
-            logger.info(f"Removing existing output directory: {self.output_directory}")
+            self.logger.info(f"Removing existing output directory: {self.output_directory}")
 
         shutil.rmtree(self.output_directory, ignore_errors=True)
 
-        logger.info(f"Creating output directory: {self.output_directory}")
+        self.logger.info(f"Creating output directory: {self.output_directory}")
         os.makedirs(self.output_directory, exist_ok=True)
         self.logger.info(f"Output directory created: {self.output_directory}")
 
     def fetch_link_for_database_download(self):
-
-        main_page = "https://www.eba.europa.eu/risk-and-data-analysis/reporting-frameworks/dpm-data-dictionary"
-        self.logger.info(f"Fetching DPM database link from: {main_page}")
-
         try:
-            response = requests.get(main_page)
-            response.raise_for_status()
-            self.logger.debug(f"Successfully fetched page, status code: {response.status_code}")
-        except requests.RequestException as e:
-            self.logger.error(f"Failed to fetch DPM page: {e}")
-            raise
+            from bs4 import BeautifulSoup
+            main_page = "https://www.eba.europa.eu/risk-and-data-analysis/reporting-frameworks/dpm-data-dictionary"
+            soup = BeautifulSoup(requests.get(main_page).text)
+            a_links = soup.find_all("a")
+            print(a_links[0]["href"])
 
-        soup = BeautifulSoup(response.text)
-        a_links = soup.find_all("a")
-        self.logger.debug(f"Found {len(a_links)} links on the page")
+            def is_right_link(a_el: any) -> bool:
+                return "https://www.eba.europa.eu/sites/default/files" in a_el.get("href","") \
+                and "/dpm_database_v" in a_el.get("href","") \
+                and ".zip" in a_el.get("href","")
 
-        def is_right_link(a_el: any) -> bool:
-            return "https://www.eba.europa.eu/sites/default/files" in a_el.get("href","") \
-            and "/dpm_database_v" in a_el.get("href","") \
-            and ".zip" in a_el.get("href","")
-
-        for a_el in a_links:
-            if a_el and is_right_link(a_el):
-                self.link_db = a_el.get("href",DEFAULT_DB_VERSION)
-                self.logger.info(f"Found DPM database link: {self.link_db}")
-                break
-
-        if not self.link_db:
-            self.link_db = DEFAULT_DB_VERSION
-            self.logger.warning(f"No DPM database link found, using default: {DEFAULT_DB_VERSION}")
+            for a_el in a_links:
+                if a_el and is_right_link(a_el):
+                    self.link_db = a_el.get("href",DEFAULT_DB_VERSION)
+                    break
+        except Exception as e:
+            pass
+        finally:
+            if not self.link_db:
+                self.link_db = DEFAULT_DB_VERSION
 
     def download_dpm_database(self):
         self.logger.info(f"Starting download of DPM database from: {self.link_db}")
@@ -210,41 +241,31 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         """
         logger.info("Processing Core Package")
         self.write_csv_maintenance_agency()
-        self.logger.info("Created Maintenance Agency File")
+        logging.info("Created Maintenance Agency File")
 
-        try:
-            self.logger.debug("Mapping framework entities...")
-            _, framework_map = new_maps.map_frameworks() # frameworks
-            _.to_csv(f"{self.output_directory}framework.csv",index=False)
-            self.logger.info(f"Mapped Framework Entities - {len(_)} records")
+        frameworks_array, framework_map = new_maps.map_frameworks() # frameworks
+        save_numpy_array_to_csv(frameworks_array, f"{self.output_directory}framework.csv", index=False)
+        logging.info("Mapped Framework Entities")
 
-            self.logger.debug("Mapping domain entities...")
-            _, domain_map = new_maps.map_domains() # domains
-            _.to_csv(f"{self.output_directory}domain.csv",index=False)
-            self.logger.info(f"Mapped Domain Entities - {len(_)} records")
+        domains_array, domain_map = new_maps.map_domains() # domains
+        save_numpy_array_to_csv(domains_array, f"{self.output_directory}domain.csv", index=False)
+        logging.info("Mapped Domain Entities")
 
-            self.logger.debug("Mapping member entities...")
-            _, member_map = new_maps.map_members(domain_id_map=domain_map) # members
-            _.to_csv(f"{self.output_directory}member.csv",index=False)
-            self.logger.info(f"Mapped Members Entities - {len(_)} records")
+        members_array, member_map = new_maps.map_members(domain_id_map=domain_map) # members
+        save_numpy_array_to_csv(members_array, f"{self.output_directory}member.csv", index=False)
+        logging.info("Mapped Members Entities")
 
-            self.logger.debug("Mapping dimension entities...")
-            _, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map) # to enumerated variables
-            _.to_csv(f"{self.output_directory}variable.csv",index=False)
-            self.logger.info(f"Mapped Variables Entities - {len(_)} records")
+        dimensions_array, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map) # to enumerated variables
+        save_numpy_array_to_csv(dimensions_array, f"{self.output_directory}variable.csv", index=False)
+        logging.info("Mapped Variables Entities")
 
-            self.logger.debug("Mapping hierarchy entities...")
-            _, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
-            _.to_csv(f"{self.output_directory}member_hierarchy.csv",index=False)
-            self.logger.info(f"Mapped Hierarchy Entities - {len(_)} records")
+        hierarchy_array, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
+        save_numpy_array_to_csv(hierarchy_array, f"{self.output_directory}member_hierarchy.csv", index=False)
+        logging.info("Mapped Hierarchy Entities")
 
-            self.logger.debug("Mapping hierarchy node entities...")
-            _, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
-            _.to_csv(f"{self.output_directory}member_hierarchy_node.csv",index=False)
-            self.logger.info(f"Mapped HierarchyNode Entities - {len(_)} records")
-        except Exception as e:
-            self.logger.error(f"Failed during mapping process: {e}")
-            raise
+        hierarchy_node_array, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
+        save_numpy_array_to_csv(hierarchy_node_array, f"{self.output_directory}member_hierarchy_node.csv", index=False)
+        logging.info("Mapped HierarchyNode Entities")
 
 
         """
@@ -254,51 +275,38 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         # context_data, context_map = new_maps.map_context_definition(dimension_map=dimension_map,member_map=member_map) # to combination_items (need to improve EBA_ATY and subdomain generation)
 
         # (combination, combination_item), dpv_map = new_maps.map_datapoint_version(context_map=context_map,context_data=context_data,dimension_map=dimension_map,member_map=member_map) # to combinations and items
-        # combination.to_csv(f"{self.output_directory}combination.csv",index=False)
-        # combination_item.to_csv(f"{self.output_directory}combination_item.csv",index=False)
-        # logger.info("Mapped Combination(and Items) Entities")
+        # save_numpy_array_to_csv(combination, f"{self.output_directory}combination.csv", index=False)
+        # save_numpy_array_to_csv(combination_item, f"{self.output_directory}combination_item.csv", index=False)
+        # logging.info("Mapped Combination(and Items) Entities")
+
 
         """
         Rendering Package
         """
 
-        self.logger.info("Starting Rendering Package mapping")
+        tables_array, table_map = new_maps.map_tables(framework_id_map=framework_map)
+        save_numpy_array_to_csv(tables_array, f"{self.output_directory}table.csv", index=False)
+        logging.info("Mapped Table Entities")
 
-        try:
-            self.logger.debug("Mapping table entities...")
-            _, table_map = new_maps.map_tables(framework_id_map=framework_map)
-            _.to_csv(f"{self.output_directory}table.csv",index=False)
-            self.logger.info(f"Mapped Table Entities - {len(_)} records")
+        axes_array, axis_map = new_maps.map_axis(table_map=table_map)
+        save_numpy_array_to_csv(axes_array, f"{self.output_directory}axis.csv", index=False)
+        logging.info("Mapped Axis Entities")
 
-            self.logger.debug("Mapping axis entities...")
-            _, axis_map = new_maps.map_axis(table_map=table_map)
-            _.to_csv(f"{self.output_directory}axis.csv",index=False)
-            self.logger.info(f"Mapped Axis Entities - {len(_)} records")
+        ordinates_array, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
+        save_numpy_array_to_csv(ordinates_array, f"{self.output_directory}axis_ordinate.csv", index=False)
+        logging.info("Mapped AxisOrdinates Entities")
 
-            self.logger.debug("Mapping axis ordinate entities...")
-            _, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
-            _.to_csv(f"{self.output_directory}axis_ordinate.csv",index=False)
-            self.logger.info(f"Mapped AxisOrdinates Entities - {len(_)} records")
+        cells_array, cell_map = new_maps.map_table_cell(table_map=table_map)
+        save_numpy_array_to_csv(cells_array, f"{self.output_directory}table_cell.csv", index=False)
+        logging.info("Mapped TableCell Entities")
 
-            self.logger.debug("Mapping table cell entities...")
-            _, cell_map = new_maps.map_table_cell(table_map=table_map)
-            _.to_csv(f"{self.output_directory}table_cell.csv",index=False)
-            self.logger.info(f"Mapped TableCell Entities - {len(_)} records")
+        cell_positions_array, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map,start_index_after_last=False)
+        save_numpy_array_to_csv(cell_positions_array, f"{self.output_directory}cell_position.csv", index=False)
+        logging.info("Mapped CellPositions Entities")
 
-            self.logger.debug("Mapping cell position entities...")
-            _, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map,start_index_after_last=False)
-            _.to_csv(f"{self.output_directory}cell_position.csv",index=False)
-            self.logger.info(f"Mapped CellPositions Entities - {len(_)} records")
-
-            self.logger.debug("Mapping ordinate categorisation entities...")
-            _, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map,start_index_after_last=False)
-            _.to_csv(f"{self.output_directory}ordinate_item.csv",index=False)
-            self.logger.info(f"Mapped OrdinateItems Entities - {len(_)} records")
-
-            self.logger.info("Successfully completed all CSV to SDD mappings")
-        except Exception as e:
-            self.logger.error(f"Failed during rendering package mapping: {e}")
-            raise
+        ordinate_items_array, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map,start_index_after_last=False)
+        save_numpy_array_to_csv(ordinate_items_array, f"{self.output_directory}ordinate_item.csv", index=False)
+        logging.info("Mapped OrdinateItems Entities")
 
 if __name__ == "__main__":
     logging.basicConfig(
