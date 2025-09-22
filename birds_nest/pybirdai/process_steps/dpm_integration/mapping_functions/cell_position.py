@@ -14,7 +14,7 @@
 import os
 from .utils import (
     read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    rename_fields, pascal_to_upper_snake
+    rename_fields, pascal_to_upper_snake, select_fields
 )
 
 
@@ -54,5 +54,21 @@ def map_cell_position(path=os.path.join("target", "CellPosition.csv"), cell_map:
             data = drop_fields(data, "ID")
         ids = list(range(len(data)))
         data = add_field(data, "ID", ids, dtype='i8')
+
+    data = rename_fields(data, {"ORDINATE_ID": "AXIS_ORDINATE_ID"})
+
+    # Reorder columns to: ID, CELL_ID, AXIS_ORDINATE_ID
+    desired_column_order = ["ID", "CELL_ID", "AXIS_ORDINATE_ID"]
+
+    # Only include columns that actually exist in the data
+    available_columns = [col for col in desired_column_order if col in data.dtype.names]
+
+    # Add any remaining columns that aren't in the desired order
+    remaining_columns = [col for col in data.dtype.names if col not in available_columns]
+    final_column_order = available_columns + remaining_columns
+
+    # Reorder the data
+    if len(data) > 0:
+        data = select_fields(data, final_column_order)
 
     return data, {}
