@@ -3,19 +3,24 @@
 # Check licenses for Python dependencies using Eclipse Dash
 # Usage: ./check_licenses.sh
 
+# Load environment variables
+if [ -f ".env" ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 echo "=== Python Dependency License Check ==="
 echo "Analyzing dependencies from requirements.txt..."
 echo
 
 # Count total dependencies
-TOTAL_DEPS=$(grep -c "^[^#]" ../requirements.txt 2>/dev/null || echo 0)
+TOTAL_DEPS=$(grep -c "^[^#]" requirements.txt 2>/dev/null || echo 0)
 echo "Total dependencies found: $TOTAL_DEPS"
 echo
 
 # Parse requirements.txt and format for Eclipse Dash
-python3 prep_dependencies.py
-java -jar org.eclipse.dash.licenses-1.1.1-20250909.055027-577.jar new_req.txt -summary DEPENDENCIES - "$@" 2>/dev/null
-java -jar org.eclipse.dash.licenses-1.1.1-20250909.055027-577.jar new_req.txt -review -repo https://github.com/eclipse-efbt/efbt -token cYz2vt_f9AHEyM4C1r5Q -project technology.efbt
+python3 utils_infrastructure/prep_dependencies.py
+java -jar utils_infrastructure/org.eclipse.dash.licenses-1.1.1-20250909.055027-577.jar new_req.txt -summary DEPENDENCIES - "$@" 2>/dev/null
+java -jar utils_infrastructure/org.eclipse.dash.licenses-1.1.1-20250909.055027-577.jar new_req.txt -review -repo https://github.com/eclipse-efbt/efbt -token "${ECLIPSE_DASH_TOKEN}" -project technology.efbt
 
 
 echo
