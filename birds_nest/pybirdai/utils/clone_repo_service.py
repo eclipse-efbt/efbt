@@ -126,6 +126,8 @@ class CloneRepoService:
         """Create all target directories from REPO_MAPPING beforehand."""
         logger.info("Creating all target directories beforehand")
         for source_folder, target_mappings in REPO_MAPPING.items():
+            if source_folder == f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code":
+                continue
             for target_folder, filter_func in target_mappings.items():
                 self._ensure_directory_exists(target_folder)
                 logger.info(f"Created target directory: {target_folder}")
