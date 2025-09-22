@@ -101,10 +101,6 @@ class CloneRepoService:
             for target_folder, filter_func in target_mappings.items():
                 if os.path.exists(target_folder):
                     logger.info(f"Removing existing target directory: {target_folder}")
-                    shutil.copy(
-                        os.path.join(".", "pybirdai", "process_steps", "filter_code", "automatic_tracking_wrapper.py"),
-                        os.path.join(".", "resources", "generated_python")
-                    )
                     shutil.rmtree(target_folder)
 
         # Create all target directories beforehand
