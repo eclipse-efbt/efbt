@@ -22,6 +22,8 @@ from datetime import datetime
 import glob
 import sys
 import io
+import django
+from django.conf import settings
 
 import logging
 from pathlib import Path
@@ -51,7 +53,6 @@ PARSER_FILE_PATH = os.path.join(PYBIRDAI_DIR, UTILS_DIR, "parser_for_tests.py")
 
 # SQL file names
 SQL_INSERT_FILE_NAME = "sql_inserts.sql"
-SQL_DELETE_FILE_NAME = "sql_deletes.sql"
 
 # Define argument defaults as constants
 DEFAULT_UV = "True"
@@ -87,6 +88,9 @@ class RegulatoryTemplateTestRunner:
 
     def __init__(self, parser_: bool = True):
         """Initialize the test runner with command line arguments."""
+        # Set up Django if not already configured
+        self._setup_django()
+
         # Set up command line argument parsing
         self.args = FakeArgs()
         if parser_:
@@ -105,6 +109,12 @@ class RegulatoryTemplateTestRunner:
                         help='Specific scenario to run (if not all scenarios)')
 
             self.args = self.parser.parse_args()
+
+    def _setup_django(self):
+        """Ensure Django is properly configured for ORM operations."""
+        if not settings.configured:
+            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'birds_nest.settings')
+            django.setup()
 
     def get_file_paths(self, reg_tid: str, dp_suffix: str) -> tuple:
         """
@@ -158,7 +168,7 @@ class RegulatoryTemplateTestRunner:
 
         return test_generation, test_runs, test_results_conversion
 
-    def load_sql_fixture(self, connection: sqlite3.Connection, cursor: sqlite3.Cursor, file_path: str, is_delete: bool=False) -> bool:
+    def load_sql_fixture(self, connection: sqlite3.Connection, cursor: sqlite3.Cursor, file_path: str) -> bool:
         """
         Load SQL fixtures from file.
 
@@ -166,7 +176,6 @@ class RegulatoryTemplateTestRunner:
             connection: SQLite connection
             cursor: SQLite cursor
             file_path: Path to SQL file
-            is_delete: Whether this is a delete operation
 
         Returns:
             Boolean indicating success
@@ -178,9 +187,37 @@ class RegulatoryTemplateTestRunner:
             connection.commit()
             return True
         except Exception as e:
-            action_type = "deleting" if is_delete else "inserting"
-            logger.error(f"Error {action_type} SQL fixtures: {str(e)}")
+            logger.error(f"Error loading SQL fixtures: {str(e)}")
             connection.rollback()
+            return False
+
+    def cleanup_bird_data_with_orm(self) -> bool:
+        """
+        Clean up BIRD data tables using Django ORM with conditional deletion.
+
+        Returns:
+            Boolean indicating success
+        """
+        try:
+            # Import the database cleanup service
+            from pybirdai.utils.database_cleanup_service import DatabaseCleanupService
+
+            logger.info("Starting BIRD data cleanup using Django ORM")
+            cleanup_service = DatabaseCleanupService()
+
+            # Perform the cleanup (only if tables are not empty)
+            deletion_results = cleanup_service.cleanup_bird_data_tables(force=False)
+
+            total_deleted = sum(count for count in deletion_results.values() if count > 0)
+            if total_deleted > 0:
+                logger.info(f"Successfully deleted {total_deleted} records from BIRD data tables")
+            else:
+                logger.info("No records needed to be deleted (tables were already empty)")
+
+            return True
+
+        except Exception as e:
+            logger.error(f"Error during Django ORM cleanup: {str(e)}")
             return False
 
     def execute_test_process(self, commands: typing.List[str], output_path=None) -> bool:
@@ -271,13 +308,15 @@ class RegulatoryTemplateTestRunner:
         txt_path_stub, json_path_stub = self.get_file_paths(reg_tid, dp_suffix)
 
         logger.debug(f"Starting scenario: {scenario_path} from {reg_tid} at datapoint {dp_suffix}")
-        logger.debug(f"Loading fixture SQL files for scenario: {scenario_path}")
+        logger.debug(f"Setting up data for scenario: {scenario_path}")
 
-        # Load SQL fixtures
-        delete_path = f"{test_data_sql_path}{SQL_DELETE_FILE_NAME}"
+        # Clean up existing data using Django ORM
+        if not self.cleanup_bird_data_with_orm():
+            logger.error("Django ORM cleanup failed - test cannot proceed safely")
+            return
+
+        # Load test data from SQL insert files
         insert_path = f"{test_data_sql_path}{SQL_INSERT_FILE_NAME}"
-
-        self.load_sql_fixture(connection, cursor, delete_path, is_delete=True)
         self.load_sql_fixture(connection, cursor, insert_path)
 
         # Prepare commands

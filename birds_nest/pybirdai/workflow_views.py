@@ -398,6 +398,8 @@ def _run_database_setup_async():
             ),
             config_files_source=config_data.get("config_files_source", "MANUAL"),
             config_files_github_url=config_data.get("config_files_github_url", ""),
+            test_suite_source=config_data.get("test_suite_source", "MANUAL"),
+            test_suite_github_url=config_data.get("test_suite_github_url", ""),
             when_to_stop=config_data.get("when_to_stop", "RESOURCE_DOWNLOAD"),
         )
         # Add github_branch as a dynamic attribute since it's not in the model
@@ -694,6 +696,8 @@ def workflow_dashboard(request):
               "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
               "config_files_source": "GITHUB",
               "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+              "test_suite_source": "MANUAL",
+              "test_suite_github_url": "",
               "github_branch": "main",
               "when_to_stop": "RESOURCE_DOWNLOAD",
               "enable_lineage_tracking": true
@@ -774,6 +778,8 @@ def workflow_dashboard(request):
             "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
+            "test_suite_source": "MANUAL",
+            "test_suite_github_url": "",
             "github_branch": "main",
             "when_to_stop": "RESOURCE_DOWNLOAD",
             "enable_lineage_tracking": True,
@@ -2568,6 +2574,8 @@ def workflow_save_config(request):
             ),
             "config_files_source": request.POST.get("config_files_source", "MANUAL"),
             "config_files_github_url": request.POST.get("config_files_github_url", ""),
+            "test_suite_source": request.POST.get("test_suite_source", "MANUAL"),
+            "test_suite_github_url": request.POST.get("test_suite_github_url", ""),
             "github_branch": request.POST.get("github_branch", "main"),
             "when_to_stop": "RESOURCE_DOWNLOAD",  # Default for workflow
             "enable_lineage_tracking": request.POST.get("enable_lineage_tracking") == "true",

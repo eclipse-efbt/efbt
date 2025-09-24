@@ -708,6 +708,7 @@ class AutomodeConfigurationService:
         results = {
             'technical_export': 0,
             'config_files': 0,
+            'test_suite': 0,
             'generated_python': 0,
             'filter_code': 0,
             'test_fixtures': 0,
@@ -724,6 +725,11 @@ class AutomodeConfigurationService:
         elif config.technical_export_source == 'GITHUB':
             branch = getattr(config, 'github_branch', 'main')
             results['technical_export'] = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
+
+        # Fetch test suite files if configured
+        if hasattr(config, 'test_suite_source') and config.test_suite_source == 'GITHUB':
+            branch = getattr(config, 'github_branch', 'main')
+            results['test_suite'] = self._fetch_test_suite_from_github(config.test_suite_github_url, github_token, force_refresh, branch)
 
         # Fetch REF_FINREP report template HTML files
         try:
@@ -798,6 +804,40 @@ class AutomodeConfigurationService:
 
         except Exception as e:
             logger.error(f"Error fetching from GitHub repository: {e}")
+            raise
+
+    def _fetch_test_suite_from_github(self, github_url: str, token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
+        """Fetch test suite files from GitHub repository."""
+        logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")
+
+        try:
+            from .utils.clone_repo_service import CloneRepoService, TEST_SUITE_REPO_MAPPING
+
+            repo_name = github_url.split("/")[-1] + "_test_suite"  # Distinguish from main content repo
+            fetcher = CloneRepoService(token)
+
+            # Create a specialized mapping for test suite files
+            original_mapping = fetcher.__class__.REPO_MAPPING if hasattr(fetcher.__class__, 'REPO_MAPPING') else {}
+
+            # Use the comprehensive test suite mapping for better organization
+            test_suite_mapping = TEST_SUITE_REPO_MAPPING
+
+            # Temporarily override mapping for test suite fetching
+            fetcher.__class__.REPO_MAPPING = test_suite_mapping
+
+            try:
+                fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
+                fetcher.setup_files(repo_name)       # Organize files according to test suite mapping
+                fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
+            finally:
+                # Restore original mapping
+                fetcher.__class__.REPO_MAPPING = original_mapping
+
+            logger.info(f"Successfully fetched test suite from {github_url}")
+            return 1
+
+        except Exception as e:
+            logger.error(f"Error fetching test suite from GitHub repository: {e}")
             raise
 
     def _check_manual_technical_export_files(self) -> int:

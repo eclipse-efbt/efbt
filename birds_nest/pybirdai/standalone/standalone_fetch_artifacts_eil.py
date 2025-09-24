@@ -59,6 +59,8 @@ if __name__ == "__main__":
           "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
           "config_files_source": "GITHUB",
           "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+          "test_suite_source": "GITHUB",
+          "test_suite_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
           "github_branch": "main",
           "when_to_stop": "RESOURCE_DOWNLOAD",
           "enable_lineage_tracking": False
