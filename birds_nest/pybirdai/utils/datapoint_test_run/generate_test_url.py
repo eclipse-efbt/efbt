@@ -17,20 +17,45 @@ import os
 import gzip
 from urllib.parse import urlencode
 
+def find_test_results_directories():
+    """Find all test results directories (both legacy and suite-based)"""
+    result_paths = []
+
+    # Check legacy location
+    legacy_path = os.path.join("tests", "test_results", "json")
+    if os.path.exists(legacy_path):
+        result_paths.append(legacy_path)
+
+    # Check for test suites in tests/ directory
+    tests_dir = "tests"
+    if os.path.exists(tests_dir):
+        for item in os.listdir(tests_dir):
+            suite_path = os.path.join(tests_dir, item, "tests", "test_results", "json")
+            if os.path.exists(suite_path):
+                result_paths.append(suite_path)
+
+    return result_paths
+
 def main():
 
-    # Get all JSON files
-    PATH = os.path.join("tests","test_results","json")
-    json_files = [f for f in os.listdir(PATH) if f.endswith('.json') and f.startswith('2025')]
-    json_files.sort()
+    # Find all test results directories
+    paths = find_test_results_directories()
+
+    # Get all JSON files from all paths
+    all_json_files = []
+    for PATH in paths:
+        json_files = [os.path.join(PATH, f) for f in os.listdir(PATH) if f.endswith('.json') and f.startswith('2025')]
+        all_json_files.extend(json_files)
+
+    all_json_files.sort()
 
     # Collect all test data
     all_tests = []
     common_platform_info = None
     common_paths = None
 
-    for filename in json_files:
-        with open(os.path.join(PATH,filename), 'r') as f:
+    for json_file_path in all_json_files:
+        with open(json_file_path, 'r') as f:
             data = json.load(f)
 
         # Extract common data from first file

@@ -22,11 +22,51 @@ from datetime import datetime
 import glob
 import sys
 import io
-import django
-from django.conf import settings
 
 import logging
 from pathlib import Path
+
+# Add the Django project root to Python path for imports
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+# Import database cleanup service
+try:
+    from ...utils.database_cleanup_service import DatabaseCleanupService
+except ImportError:
+    # Fallback import path
+    try:
+        import sys
+        sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+        from utils.database_cleanup_service import DatabaseCleanupService
+    except ImportError:
+        DatabaseCleanupService = None
+        logging.warning("DatabaseCleanupService not available - will fall back to SQL files")
+
+# Import test suite git service
+try:
+    from ...utils.test_suite_git_service import TestSuiteGitService
+except ImportError:
+    # Fallback import paths
+    try:
+        sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+        from utils.test_suite_git_service import TestSuiteGitService
+    except ImportError:
+        try:
+            # Try direct import from pybirdai.utils
+            from pybirdai.utils.test_suite_git_service import TestSuiteGitService
+        except ImportError:
+            try:
+                # Add the project root to path and try absolute import
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                project_root = os.path.join(current_dir, '..', '..', '..')
+                if project_root not in sys.path:
+                    sys.path.insert(0, project_root)
+                from pybirdai.utils.test_suite_git_service import TestSuiteGitService
+            except ImportError:
+                TestSuiteGitService = None
+                logging.warning("TestSuiteGitService not available - git-based test fetching disabled")
 
 
 # Define safe directory for configuration files
@@ -88,9 +128,6 @@ class RegulatoryTemplateTestRunner:
 
     def __init__(self, parser_: bool = True):
         """Initialize the test runner with command line arguments."""
-        # Set up Django if not already configured
-        self._setup_django()
-
         # Set up command line argument parsing
         self.args = FakeArgs()
         if parser_:
@@ -107,22 +144,21 @@ class RegulatoryTemplateTestRunner:
                         help='JSON configuration file for multiple tests')
             self.parser.add_argument('--scenario', type=str,
                         help='Specific scenario to run (if not all scenarios)')
+            self.parser.add_argument('--fetch-tests', action='store_true',
+                        help='Auto-fetch missing test suites via git clone')
+            self.parser.add_argument('--test-repo', type=str,
+                        help='Git repository URL to fetch test suite from')
 
             self.args = self.parser.parse_args()
 
-    def _setup_django(self):
-        """Ensure Django is properly configured for ORM operations."""
-        if not settings.configured:
-            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'birds_nest.settings')
-            django.setup()
-
-    def get_file_paths(self, reg_tid: str, dp_suffix: str) -> tuple:
+    def get_file_paths(self, reg_tid: str, dp_suffix: str, test_config: dict = None) -> tuple:
         """
         Generate file paths for test results.
 
         Args:
             reg_tid: Regulatory template ID
             dp_suffix: Datapoint suffix
+            test_config: Test configuration dict (may contain _suite metadata)
 
         Returns:
             Tuple containing paths for text and JSON output files
@@ -130,11 +166,23 @@ class RegulatoryTemplateTestRunner:
         cell_class = f"Cell_{reg_tid}_{dp_suffix}"
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         result_filename = f"{timestamp}__test_results_{cell_class.lower()}"
-        txt_path = os.path.join(TEST_RESULTS_TXT_FOLDER, result_filename)
-        json_path = os.path.join(TEST_RESULTS_JSON_FOLDER, result_filename)
+
+        # Get suite-aware results paths
+        txt_results_folder, json_results_folder = self.get_test_results_path(test_config)
+
+        txt_path = os.path.join(txt_results_folder, result_filename)
+        json_path = os.path.join(json_results_folder, result_filename)
         return txt_path, json_path
 
-    def setup_subprocess_commands(self, use_uv: bool, scenario: str, dp_value: str, reg_tid: str, dp_suffix: str) -> tuple:
+    def get_suite_test_dir(self, test_config: dict = None) -> str:
+        """Get the test directory for the current test suite."""
+        if test_config and '_suite' in test_config:
+            suite_name = test_config['_suite']
+            return f"tests{os.sep}{suite_name}{os.sep}tests{os.sep}code"
+        else:
+            return TESTS_DIR
+
+    def setup_subprocess_commands(self, use_uv: bool, scenario: str, dp_value: str, reg_tid: str, dp_suffix: str, test_config: dict = None) -> tuple:
         """
         Configure subprocess commands for test execution.
 
@@ -144,6 +192,7 @@ class RegulatoryTemplateTestRunner:
             dp_value: Datapoint value to test
             reg_tid: Regulatory template ID
             dp_suffix: Datapoint suffix
+            test_config: Test configuration dict (may contain _suite metadata)
 
         Returns:
             Tuple of command lists for test generation, running, and results conversion
@@ -154,13 +203,20 @@ class RegulatoryTemplateTestRunner:
         test_runs = subprocess_list.copy()
         test_results_conversion = subprocess_list.copy()
 
-        test_generation.extend([
+        # Add test suite awareness to generator if needed
+        generator_args = [
             GENERATOR_FILE_PATH,
             "--dp-value", str(dp_value),
             "--reg-tid", reg_tid,
             "--dp-suffix", dp_suffix,
             "--scenario", scenario
-        ])
+        ]
+
+        # Add suite info to generator if available
+        if test_config and '_suite' in test_config:
+            generator_args.extend(["--test-suite", test_config['_suite']])
+
+        test_generation.extend(generator_args)
 
         extension = ["-m","pytest", "-v"] if not use_uv else ["pytest", "-v"]
         test_runs.extend(extension)
@@ -168,7 +224,7 @@ class RegulatoryTemplateTestRunner:
 
         return test_generation, test_runs, test_results_conversion
 
-    def load_sql_fixture(self, connection: sqlite3.Connection, cursor: sqlite3.Cursor, file_path: str) -> bool:
+    def load_sql_fixture(self, connection: sqlite3.Connection, cursor: sqlite3.Cursor, file_path: str, is_delete: bool=False) -> bool:
         """
         Load SQL fixtures from file.
 
@@ -176,6 +232,7 @@ class RegulatoryTemplateTestRunner:
             connection: SQLite connection
             cursor: SQLite cursor
             file_path: Path to SQL file
+            is_delete: Whether this is a delete operation
 
         Returns:
             Boolean indicating success
@@ -187,37 +244,9 @@ class RegulatoryTemplateTestRunner:
             connection.commit()
             return True
         except Exception as e:
-            logger.error(f"Error loading SQL fixtures: {str(e)}")
+            action_type = "deleting" if is_delete else "inserting"
+            logger.error(f"Error {action_type} SQL fixtures: {str(e)}")
             connection.rollback()
-            return False
-
-    def cleanup_bird_data_with_orm(self) -> bool:
-        """
-        Clean up BIRD data tables using Django ORM with conditional deletion.
-
-        Returns:
-            Boolean indicating success
-        """
-        try:
-            # Import the database cleanup service
-            from pybirdai.utils.database_cleanup_service import DatabaseCleanupService
-
-            logger.info("Starting BIRD data cleanup using Django ORM")
-            cleanup_service = DatabaseCleanupService()
-
-            # Perform the cleanup (only if tables are not empty)
-            deletion_results = cleanup_service.cleanup_bird_data_tables(force=False)
-
-            total_deleted = sum(count for count in deletion_results.values() if count > 0)
-            if total_deleted > 0:
-                logger.info(f"Successfully deleted {total_deleted} records from BIRD data tables")
-            else:
-                logger.info("No records needed to be deleted (tables were already empty)")
-
-            return True
-
-        except Exception as e:
-            logger.error(f"Error during Django ORM cleanup: {str(e)}")
             return False
 
     def execute_test_process(self, commands: typing.List[str], output_path=None) -> bool:
@@ -288,8 +317,57 @@ class RegulatoryTemplateTestRunner:
             logger.error(f"Failed to read and print test results: {str(e)}")
             return False
 
+    def get_test_fixture_path(self, reg_tid: str, dp_suffix: str, test_config: dict = None) -> str:
+        """
+        Resolve fixture path based on test suite metadata.
+
+        Args:
+            reg_tid: Regulatory template ID
+            dp_suffix: Datapoint suffix
+            test_config: Test configuration dict (may contain _suite metadata)
+
+        Returns:
+            Path to test fixtures directory
+        """
+        if test_config and '_suite' in test_config:
+            suite_name = test_config['_suite']
+            logger.debug(f"Using test suite: {suite_name}")
+
+            # Use tests/{suite_name}/ for test suites
+            tests_path = f"tests{os.sep}{suite_name}{os.sep}tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}"
+            logger.debug(f"Test fixture path: {tests_path}")
+            return tests_path
+        else:
+            # Legacy path for tests without suite metadata
+            path = f"tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}"
+            logger.debug(f"Legacy fixture path: {path}")
+            return path
+
+    def get_test_results_path(self, test_config: dict = None) -> tuple:
+        """
+        Resolve test results paths based on test suite metadata.
+
+        Args:
+            test_config: Test configuration dict (may contain _suite metadata)
+
+        Returns:
+            Tuple of (txt_folder_path, json_folder_path)
+        """
+        if test_config and '_suite' in test_config:
+            suite_name = test_config['_suite']
+
+            # Use tests/{suite_name}/ for test suites
+            tests_base_dir = f"tests{os.sep}{suite_name}{os.sep}tests{os.sep}test_results"
+            txt_folder = f"{tests_base_dir}{os.sep}txt"
+            json_folder = f"{tests_base_dir}{os.sep}json"
+        else:
+            txt_folder = TEST_RESULTS_TXT_FOLDER
+            json_folder = TEST_RESULTS_JSON_FOLDER
+
+        return txt_folder, json_folder
+
     def process_scenario(self, connection: sqlite3.Connection, cursor: sqlite3.Cursor,
-                        scenario_path: str, reg_tid: str, dp_suffix: str, dp_value: str, use_uv: bool):
+                        scenario_path: str, reg_tid: str, dp_suffix: str, dp_value: str, use_uv: bool, test_config: dict = None):
         """
         Process a single test scenario.
 
@@ -301,32 +379,46 @@ class RegulatoryTemplateTestRunner:
             dp_suffix: Datapoint suffix
             dp_value: Datapoint value
             use_uv: Whether to use UV as backend
+            test_config: Test configuration dict (may contain _suite metadata)
         """
-        # Set up paths
-        test_data_scenario_path = f"tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}"
+        # Set up paths with suite-aware resolution
+        test_data_scenario_path = self.get_test_fixture_path(reg_tid, dp_suffix, test_config)
         test_data_sql_path = f"{test_data_scenario_path}{os.sep}{scenario_path}{os.sep}"
-        txt_path_stub, json_path_stub = self.get_file_paths(reg_tid, dp_suffix)
+        txt_path_stub, json_path_stub = self.get_file_paths(reg_tid, dp_suffix, test_config)
 
         logger.debug(f"Starting scenario: {scenario_path} from {reg_tid} at datapoint {dp_suffix}")
-        logger.debug(f"Setting up data for scenario: {scenario_path}")
+        logger.debug(f"Loading fixture SQL files for scenario: {scenario_path}")
 
-        # Clean up existing data using Django ORM
-        if not self.cleanup_bird_data_with_orm():
-            logger.error("Django ORM cleanup failed - test cannot proceed safely")
+        # Load SQL fixtures
+        insert_path = f"{test_data_sql_path}{SQL_INSERT_FILE_NAME}"
+
+        # Use database cleanup service for data cleanup
+        if DatabaseCleanupService is not None:
+            try:
+                logger.info("Using database cleanup service for data cleanup")
+                cleanup_service = DatabaseCleanupService()
+                cleanup_service.cleanup_bird_data_tables()
+                logger.info("Database cleanup completed successfully")
+            except Exception as e:
+                logger.error(f"Database cleanup service failed: {e}")
+                return
+        else:
+            logger.error("Database cleanup service not available - cannot proceed with test")
             return
 
-        # Load test data from SQL insert files
-        insert_path = f"{test_data_sql_path}{SQL_INSERT_FILE_NAME}"
         self.load_sql_fixture(connection, cursor, insert_path)
 
         # Prepare commands
         test_generation, test_runs, test_results_conversion = self.setup_subprocess_commands(
-            use_uv, scenario_path, dp_value, reg_tid, dp_suffix
+            use_uv, scenario_path, dp_value, reg_tid, dp_suffix, test_config
         )
 
+        # Get suite-aware results paths
+        txt_results_folder, json_results_folder = self.get_test_results_path(test_config)
+
         # Ensure directories exist
-        os.makedirs(TEST_RESULTS_TXT_FOLDER, exist_ok=True)
-        os.makedirs(TEST_RESULTS_JSON_FOLDER, exist_ok=True)
+        os.makedirs(txt_results_folder, exist_ok=True)
+        os.makedirs(json_results_folder, exist_ok=True)
 
         # Run test generator
         logger.debug("Starting test generator...")
@@ -337,7 +429,10 @@ class RegulatoryTemplateTestRunner:
         # Run tests
         logger.debug("Running pytest...")
         txt_output_path = f"{txt_path_stub}__{scenario_path}.txt"
-        test_path = os.path.join(TESTS_DIR,
+
+        # Get suite-aware test directory
+        suite_test_dir = self.get_suite_test_dir(test_config)
+        test_path = os.path.join(suite_test_dir,
             f"test_cell_{reg_tid}_{dp_suffix}__{scenario_path}.py".lower())
         if not self.execute_test_process(test_runs+[test_path], txt_output_path):
             return
@@ -380,6 +475,37 @@ class RegulatoryTemplateTestRunner:
             raise ValueError(f"Invalid config path: {user_config_path}. Access denied.")
         return abs_normalized_path
 
+    def detect_test_suite_from_path(self, config_path: str) -> str:
+        """
+        Auto-detect test suite name from configuration file path.
+
+        Args:
+            config_path: Path to config file
+
+        Returns:
+            Test suite name if detected, None otherwise
+        """
+        import re
+
+        # Normalize path separators for consistent matching
+        normalized_path = config_path.replace('\\', '/')
+
+        # Pattern 1: tests/{suite_name}/configuration_file_tests.json
+        match = re.search(r'tests/([^/]+)/.*\.json$', normalized_path)
+        if match:
+            suite_name = match.group(1)
+            # Skip if it's just "tests" directory (legacy structure)
+            if suite_name not in ('fixtures', 'test_results', 'code'):
+                return suite_name
+
+        # Pattern 2: test_suites/{suite_name}/configuration_file_tests.json
+        match = re.search(r'test_suites/([^/]+)/.*\.json$', normalized_path)
+        if match:
+            suite_name = match.group(1)
+            return suite_name
+
+        return None
+
     def load_config_file(self, config_path: str) -> dict:
         """
         Load test configuration from a JSON file.
@@ -393,11 +519,68 @@ class RegulatoryTemplateTestRunner:
         try:
             safe_path = self.get_safe_config_path(config_path)
             with open(safe_path, 'r') as f:
-                return json.load(f)
+                config = json.load(f)
+
+            # Auto-detect test suite if not explicitly specified
+            detected_suite = self.detect_test_suite_from_path(config_path)
+            if detected_suite:
+                logger.info(f"Auto-detected test suite: {detected_suite}")
+                # Add _suite to each test configuration if not present
+                for test_config in config.get('tests', []):
+                    if '_suite' not in test_config:
+                        test_config['_suite'] = detected_suite
+
+            return config
         except Exception as e:
             logger.error(f"Failed to load config file: {str(e)}")
             return None
         
+    def fetch_missing_test_suites(self, config: dict):
+        """
+        Fetch missing test suites via git clone if enabled.
+
+        Args:
+            config: Test configuration dictionary
+        """
+        if not TestSuiteGitService:
+            logger.warning("TestSuiteGitService not available")
+            return
+
+        if not (self.args.fetch_tests or self.args.test_repo):
+            return
+
+        git_service = TestSuiteGitService()
+
+        # Handle direct repository URL
+        if self.args.test_repo:
+            logger.info(f"Fetching test suite from repository: {self.args.test_repo}")
+            git_service.fetch_test_suite(self.args.test_repo)
+            return
+
+        # Auto-fetch missing suites from test configurations
+        if self.args.fetch_tests:
+            missing_suites = set()
+
+            for test_config in config.get('tests', []):
+                suite_name = test_config.get('_suite')
+                if suite_name:
+                    suite_path = os.path.join("tests", suite_name)
+                    if not os.path.exists(suite_path):
+                        missing_suites.add(suite_name)
+                        logger.info(f"Detected missing test suite: {suite_name}")
+
+                # Check for git URL in test config
+                git_url = test_config.get('_git_url')
+                if git_url:
+                    logger.info(f"Fetching test suite from configuration URL: {git_url}")
+                    git_service.fetch_test_suite(git_url, suite_name)
+
+            # Try to fetch from registry
+            for suite_name in missing_suites:
+                logger.info(f"Attempting to fetch missing suite '{suite_name}' from registry")
+                if not git_service.fetch_from_registry(suite_name):
+                    logger.warning(f"Could not fetch suite '{suite_name}' - please provide --test-repo or register the repository")
+
     def run_tests_from_config(self, config_path: str, use_uv: bool=False):
         """
         Run tests based on a configuration file.
@@ -406,12 +589,15 @@ class RegulatoryTemplateTestRunner:
             config_path: Path to config file
             use_uv: Whether to use UV as backend
         """
-  
-    
+
+
         config = self.load_config_file(config_path)
         if not config:
             logger.error("Invalid or missing configuration file.")
             return
+
+        # Fetch missing test suites if requested
+        self.fetch_missing_test_suites(config)
 
         connection = sqlite3.connect("db.sqlite3")
         cursor = connection.cursor()
@@ -429,15 +615,15 @@ class RegulatoryTemplateTestRunner:
 
             if scenario:
                 # Run specific scenario
-                self.process_scenario(connection, cursor, scenario, reg_tid, dp_suffix, str(dp_value), use_uv)
+                self.process_scenario(connection, cursor, scenario, reg_tid, dp_suffix, str(dp_value), use_uv, test_config)
             else:
                 # Run all scenarios for this template/datapoint
-                test_data_scenario_path = f"tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}{os.sep}"
+                test_data_scenario_path = self.get_test_fixture_path(reg_tid, dp_suffix, test_config)
                 try:
                     for scenario_path in os.listdir(test_data_scenario_path):
                         if ".py" in scenario_path:
                             continue
-                        self.process_scenario(connection, cursor, scenario_path, reg_tid, dp_suffix, str(dp_value), use_uv)
+                        self.process_scenario(connection, cursor, scenario_path, reg_tid, dp_suffix, str(dp_value), use_uv, test_config)
                 except Exception as e:
                     logger.error(f"Error processing scenarios: {str(e)}")
 
@@ -470,7 +656,8 @@ class RegulatoryTemplateTestRunner:
                 reg_tid,
                 dp_suffix,
                 dp_value,
-                use_uv
+                use_uv,
+                None  # No test config for direct calls
             )
         else:
             for scenario_path in os.listdir(test_data_scenario_path):
@@ -484,7 +671,8 @@ class RegulatoryTemplateTestRunner:
                     reg_tid,
                     dp_suffix,
                     dp_value,
-                    use_uv
+                    use_uv,
+                    None  # No test config for direct calls
                 )
         cursor.close()
         connection.close()
@@ -516,3 +704,8 @@ class RegulatoryTemplateTestRunner:
                 eval(self.args.uv),
                 self.args.scenario
             )
+
+
+if __name__ == "__main__":
+    runner = RegulatoryTemplateTestRunner(parser_=True)
+    runner.main()
