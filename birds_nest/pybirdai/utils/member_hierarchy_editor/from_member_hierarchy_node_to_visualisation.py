@@ -10,11 +10,12 @@
 # Contributors:
 #    Benjamin Arfa - initial API and implementation
 #
-import pandas as pd
 import json
+import csv
 from dataclasses import dataclass
 from typing import List, Dict, Tuple, Optional
 import math
+from collections import defaultdict
 
 BOX_WIDTH = 300
 BOX_HEIGHT = 120
@@ -107,30 +108,31 @@ class MemberHierarchyIntegration:
     Integration class to convert member hierarchy CSV data into visualization JSON format
     """
 
-    def __init__(self, members_df: pd.DataFrame, hierarchies_df: pd.DataFrame,
-                 hierarchy_nodes_df: pd.DataFrame):
-        self.members_df = members_df
-        self.hierarchies_df = hierarchies_df
-        self.hierarchy_nodes_df = hierarchy_nodes_df
+    def __init__(self, members_data: List[Dict], hierarchies_data: List[Dict],
+                 hierarchy_nodes_data: List[Dict]):
+        self.members_data = members_data
+        self.hierarchies_data = hierarchies_data
+        self.hierarchy_nodes_data = hierarchy_nodes_data
 
     def get_hierarchy_by_id(self, hierarchy_id: str) -> Dict:
         """
         Convert a specific member hierarchy to visualization format
         """
         # Filter nodes for this hierarchy
-        hierarchy_nodes = self.hierarchy_nodes_df[
-            self.hierarchy_nodes_df['MEMBER_HIERARCHY_ID'] == hierarchy_id
-        ].copy()
+        hierarchy_nodes = [
+            node for node in self.hierarchy_nodes_data
+            if node['MEMBER_HIERARCHY_ID'] == hierarchy_id
+        ]
 
-        if hierarchy_nodes.empty:
+        if not hierarchy_nodes:
             return {"boxes": [], "arrows": [], "nextId": 1}
 
         # Get hierarchy info
-        hierarchy_info = self.hierarchies_df[
-            self.hierarchies_df['MEMBER_HIERARCHY_ID'] == hierarchy_id
-        ].iloc[0] if not self.hierarchies_df[
-            self.hierarchies_df['MEMBER_HIERARCHY_ID'] == hierarchy_id
-        ].empty else None
+        hierarchy_info = None
+        for hierarchy in self.hierarchies_data:
+            if hierarchy['MEMBER_HIERARCHY_ID'] == hierarchy_id:
+                hierarchy_info = hierarchy
+                break
 
         # Create nodes
         nodes = []
@@ -143,23 +145,28 @@ class MemberHierarchyIntegration:
         start_y = 200
 
         # Group nodes by level for positioning
-        levels = hierarchy_nodes.groupby('LEVEL')
+        levels = defaultdict(list)
+        for node in hierarchy_nodes:
+            level = int(node['LEVEL']) if node['LEVEL'] else 1
+            levels[level].append(node)
 
-        for level, level_nodes in levels:
-            level_nodes = level_nodes.sort_values('MEMBER_ID')
+        for level, level_nodes in levels.items():
+            # Sort nodes by MEMBER_ID
+            level_nodes.sort(key=lambda x: x['MEMBER_ID'])
             nodes_in_level = len(level_nodes)
 
-            for i, (_, node_row) in enumerate(level_nodes.iterrows()):
+            for i, node_row in enumerate(level_nodes):
                 # Get member information
-                member_info = self.members_df[
-                    self.members_df['MEMBER_ID'] == node_row['MEMBER_ID']
-                ]
+                member_info = None
+                for member in self.members_data:
+                    if member['MEMBER_ID'] == node_row['MEMBER_ID']:
+                        member_info = member
+                        break
 
-                if not member_info.empty:
-                    member = member_info.iloc[0]
-                    name = member['NAME']
-                    description = member['DESCRIPTION'] if isinstance(member['DESCRIPTION'], str) else name
-                    code = member['CODE']
+                if member_info:
+                    name = member_info['NAME']
+                    description = member_info['DESCRIPTION'] if isinstance(member_info['DESCRIPTION'], str) else name
+                    code = member_info['CODE']
                 else:
                     name = node_row['MEMBER_ID']
                     description = "No description available"
@@ -183,7 +190,7 @@ class MemberHierarchyIntegration:
                 nodes.append(node)
 
                 # Create arrow if there's a parent
-                if pd.notna(node_row['PARENT_MEMBER_ID']):
+                if node_row['PARENT_MEMBER_ID'] is not None and node_row['PARENT_MEMBER_ID'] != '':
                     arrow = HierarchyArrowDTO(
                         from_=node_row['MEMBER_ID'],  # parent points to child
                         to_=node_row['PARENT_MEMBER_ID']
@@ -197,6 +204,14 @@ class MemberHierarchyIntegration:
         # Calculate next available ID
         next_id = len(boxes) + 1
 
+        # Create allowed_members dictionary
+        allowed_members = {}
+        if hierarchy_info is not None:
+            domain_id = hierarchy_info['DOMAIN_ID']
+            for member in self.members_data:
+                if member['DOMAIN_ID'] == domain_id:
+                    allowed_members[member['MEMBER_ID']] = member['NAME']
+
         return {
             "boxes": boxes,
             "arrows": arrow_dicts,
@@ -206,7 +221,7 @@ class MemberHierarchyIntegration:
                 "name": hierarchy_info['NAME'] if hierarchy_info is not None else hierarchy_id,
                 "description": hierarchy_info['DESCRIPTION'] if hierarchy_info is not None else "",
                 "domain": hierarchy_info['DOMAIN_ID'] if hierarchy_info is not None else "",
-                "allowed_members": self.members_df[self.members_df['DOMAIN_ID'] == hierarchy_info['DOMAIN_ID']].set_index("MEMBER_ID")["NAME"].to_dict() if hierarchy_info is not None else ""
+                "allowed_members": allowed_members
             }
         }
 
@@ -215,7 +230,7 @@ class MemberHierarchyIntegration:
         Get all hierarchies as a dictionary
         """
         all_hierarchies = {}
-        hierarchy_ids = self.hierarchy_nodes_df['MEMBER_HIERARCHY_ID'].unique()
+        hierarchy_ids = list(set(node['MEMBER_HIERARCHY_ID'] for node in self.hierarchy_nodes_data))
 
         for hierarchy_id in hierarchy_ids:
             all_hierarchies[hierarchy_id] = self.get_hierarchy_by_id(hierarchy_id)
@@ -226,9 +241,11 @@ class MemberHierarchyIntegration:
         """
         Get all hierarchies for a specific domain
         """
-        domain_hierarchies = self.hierarchies_df[
-            self.hierarchies_df['DOMAIN_ID'] == domain_id
-        ]['MEMBER_HIERARCHY_ID'].tolist()
+        domain_hierarchies = [
+            hierarchy['MEMBER_HIERARCHY_ID']
+            for hierarchy in self.hierarchies_data
+            if hierarchy['DOMAIN_ID'] == domain_id
+        ]
 
         result = {}
         for hierarchy_id in domain_hierarchies:
@@ -244,11 +261,20 @@ class MemberHierarchyIntegration:
         with open(output_path, 'w') as f:
             json.dump(hierarchy_data, f, indent=2)
 
-    def get_available_hierarchies(self) -> pd.DataFrame:
+    def get_available_hierarchies(self) -> List[Dict]:
         """
         Get a summary of all available hierarchies
         """
-        return self.hierarchies_df[['MEMBER_HIERARCHY_ID', 'NAME', 'DOMAIN_ID', 'DESCRIPTION', 'IS_MAIN_HIERARCHY']]
+        return [
+            {
+                'MEMBER_HIERARCHY_ID': hierarchy['MEMBER_HIERARCHY_ID'],
+                'NAME': hierarchy['NAME'],
+                'DOMAIN_ID': hierarchy['DOMAIN_ID'],
+                'DESCRIPTION': hierarchy['DESCRIPTION'],
+                'IS_MAIN_HIERARCHY': hierarchy.get('IS_MAIN_HIERARCHY', '')
+            }
+            for hierarchy in self.hierarchies_data
+        ]
 
 
 # Convenience functions for easy usage
@@ -256,9 +282,18 @@ def load_member_hierarchy_data(entities_path: str = "entities/") -> MemberHierar
     """
     Load member hierarchy data from CSV files and return integration object
     """
-    members = pd.read_csv(f"{entities_path}member.csv")
-    member_hierarchies = pd.read_csv(f"{entities_path}member_hierarchy.csv")
-    member_hierarchy_nodes = pd.read_csv(f"{entities_path}member_hierarchy_node.csv")
+    def read_csv_as_dict_list(filepath: str) -> List[Dict]:
+        """Read CSV file and return as list of dictionaries"""
+        data = []
+        with open(filepath, 'r', newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                data.append(row)
+        return data
+
+    members = read_csv_as_dict_list(f"{entities_path}member.csv")
+    member_hierarchies = read_csv_as_dict_list(f"{entities_path}member_hierarchy.csv")
+    member_hierarchy_nodes = read_csv_as_dict_list(f"{entities_path}member_hierarchy_node.csv")
 
     return MemberHierarchyIntegration(members, member_hierarchies, member_hierarchy_nodes)
 
@@ -273,7 +308,7 @@ def generate_hierarchy_json(hierarchy_id: str, output_path: str = "hierarchy.jso
     print(f"Generated hierarchy JSON for {hierarchy_id} at {output_path}")
 
 
-def list_available_hierarchies(entities_path: str = "entities/") -> pd.DataFrame:
+def list_available_hierarchies(entities_path: str = "entities/") -> List[Dict]:
     """
     List all available hierarchies
     """

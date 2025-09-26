@@ -21,7 +21,7 @@
 {% block content %}
 <div class="container">
     <h1>Export Database to CSV Files</h1>
-    <a href="{% url 'pybirdai:bird_diffs_and_corrections'%}" >Back to BIRD Export Diffs and Corrections</a> <br><br>
+    <a href="{% url 'pybirdai:workflow_dashboard'%}" >Back to the workflow dashboard</a> <br><br>
 
     <p>Click the button below to export all database tables to CSV files. Each table will be exported to a separate CSV file, and all files will be bundled in a zip archive.</p>
 
@@ -309,7 +309,7 @@ document.getElementById('githubExportForm').addEventListener('submit', function(
             document.getElementById('githubSuccessMessage').style.display = 'block';
 
             let detailsHtml = '<ul>';
-            
+
             // Show fork workflow specific details
             if (data.fork_created) {
                 detailsHtml += `<li><strong>Status:</strong> Fork workflow completed successfully</li>`;
@@ -319,7 +319,7 @@ document.getElementById('githubExportForm').addEventListener('submit', function(
             } else if (data.branch_created) {
                 detailsHtml += `<li><strong>Status:</strong> Direct push workflow completed</li>`;
             }
-            
+
             if (data.branch_created) {
                 detailsHtml += `<li><strong>Branch:</strong> Created successfully</li>`;
             }
@@ -329,7 +329,7 @@ document.getElementById('githubExportForm').addEventListener('submit', function(
             if (data.pull_request_url) {
                 detailsHtml += `<li><strong>Pull Request:</strong> <a href="${data.pull_request_url}" target="_blank">${data.pull_request_url}</a></li>`;
             }
-            
+
             detailsHtml += `<li><strong>Message:</strong> ${data.message}</li>`;
             detailsHtml += '</ul>';
 
