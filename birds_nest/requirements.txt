@@ -5,7 +5,7 @@ certifi==2025.8.3
 charset-normalizer==3.4.3
 click==8.2.1
 dill==0.4.0
-django==5.1.3
+django==5.1.12
 execnet==2.1.1
 future-fstrings==1.2.0
 idna==3.10
