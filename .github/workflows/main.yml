@@ -179,48 +179,20 @@ jobs:
           windows-x64-uv-
           windows-uv-
 
-    - name: Run Formatter
+    - name: Run Code Quality Checks (Black & Pylint)
       shell: pwsh
-      # using https://docs.astral.sh/ruff/formatter/ as a format checker for the code
+      # Check formatting with Black and run Pylint linting
       continue-on-error: true
       run: |
         cd birds_nest
-        $OUTPUT_FILE = "ruff_check_results.txt"
-        
-        "Running ruff checks on PyBIRD AI codebase..." | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8
-        "Generated on: $(Get-Date)" | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-        "=========================================" | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-        "" | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-        
-        # Function to run ruff check and capture output
-        function Run-RuffCheck {
-            param($path)
-            "Checking: $path" | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-            "-------------------" | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-            try {
-                uv run ruff check $path 2>&1 | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-            } catch {
-                $_.Exception.Message | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-            }
-            "" | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-        }
-        
-        # Run all the ruff checks
-        Run-RuffCheck "pybirdai/utils/"
-        Run-RuffCheck "pybirdai/entry_points/"
-        Run-RuffCheck "pybirdai/process_steps/"
-        
-        "=========================================" | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-        "End of ruff check results" | Out-File -FilePath $OUTPUT_FILE -Encoding UTF8 -Append
-        
-        Write-Host "Ruff checks completed. Results saved to: $OUTPUT_FILE"
+        ./utils_infrastructure/run_code_quality_checks.ps1
 
-    - name: Upload Ruff Check Results (Windows)
+    - name: Upload Code Quality Results (Windows)
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: ruff-check-results-windows
-        path: birds_nest/ruff_check_results.txt
+        name: code-quality-results-windows
+        path: birds_nest/code_quality_results.txt
 
     - name: Cache status report
       shell: pwsh
@@ -339,19 +311,19 @@ jobs:
         fi
         uv sync
 
-    - name: Run Formatter
-      # using https://docs.astral.sh/ruff/formatter/ as a format checker for the code
+    - name: Run Code Quality Checks (Black & Pylint)
+      # Check formatting with Black and run Pylint linting
       continue-on-error: true
       run: |
         cd birds_nest
-        ./run_ruff_checks.sh
+        ./utils_infrastructure/run_code_quality_checks.sh
 
-    - name: Upload Ruff Check Results (Unix)
+    - name: Upload Code Quality Results (Unix)
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: ruff-check-results-unix
-        path: birds_nest/ruff_check_results.txt
+        name: code-quality-results-unix
+        path: birds_nest/code_quality_results.txt
 
     - name: Run Core Feature Setup
       run: |

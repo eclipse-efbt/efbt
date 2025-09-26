@@ -1132,24 +1132,24 @@ def view_csv_file(request, filename):
     """
     # Sanitize filename to prevent path traversal attacks
     safe_filename = os.path.basename(filename)  # Remove any directory components
-    
+
     # Remove path traversal sequences and dangerous characters
     safe_filename = safe_filename.replace('..', '').replace('/', '').replace('\\', '')
-    
+
     # Validate filename format (only alphanumeric, hyphens, underscores, and dots)
     if not re.match(r'^[a-zA-Z0-9._-]+$', safe_filename):
         messages.error(request, 'Invalid filename format')
         return redirect('pybirdai:list_lineage_files')
-    
+
     # Ensure file has .csv extension
     if not safe_filename.lower().endswith('.csv'):
         messages.error(request, 'Invalid file type - only CSV files are allowed')
         return redirect('pybirdai:list_lineage_files')
-    
+
     # Construct the safe file path
     lineage_dir = Path(settings.BASE_DIR) / 'results' / 'lineage'
     file_path = lineage_dir / safe_filename
-    
+
     # Verify the resolved path is still within the allowed directory
     try:
         if not file_path.resolve().is_relative_to(lineage_dir.resolve()):
@@ -1265,15 +1265,17 @@ def create_response_with_loading(request, task_title, success_message, return_ur
                     <div class="loading-spinner"></div>
                     <div class="loading-message">Please wait while the task completes...</div>
                 </div>
-            </div>
-            <script>
+                <div id="success-message">
+                    <p>{success_message}</p>
+                    <p>Go back to <a href="{return_url}">{return_link_text}</a></p>
+                </div>
             </div>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {{
                     // Show loading immediately
                     document.getElementById('loading-overlay').style.display = 'flex';
                     document.getElementById('success-message').style.display = 'none';
-
+ 
                     // Start the task execution after a small delay to ensure loading is visible
                     setTimeout(() => {{
                         fetch(window.location.href + '?execute=true', {{
@@ -1298,8 +1300,6 @@ def create_response_with_loading(request, task_title, success_message, return_ur
                         }});
                     }}, 100); // Small delay to ensure loading screen is visible
                 }});
-            </script>
-        </body>
             </script>
         </body>
         </html>
@@ -2342,7 +2342,7 @@ def return_semantic_integration_menu(request: Any, mapping_id: str = "") -> Any:
     mtcs = MAPPING_TO_CUBE.objects.all()
     logger.debug(f"Found {len(mtcs)} MAPPING_TO_CUBE records")
     maps = [mtc.cube_mapping_id for mtc in mtcs if 'M_F_01_01_REF_FINREP 3_0' == mtc.cube_mapping_id]
-    
+
     mapping_definitions = MAPPING_DEFINITION.objects.all()
     results = build_mapping_results(mapping_definitions)
     context = {"mapping_data": {k: v for k, v in results.items() if v["has_member_mapping"]}}
@@ -4890,7 +4890,7 @@ def execute_datapoint_with_lineage(request, data_point_id):
     """
     API endpoint that executes a datapoint and returns the filtered lineage as JSON.
     This combines datapoint execution with filtered lineage retrieval in a single call.
-    
+
     Returns:
     - Execution result
     - Trail ID
@@ -4901,34 +4901,34 @@ def execute_datapoint_with_lineage(request, data_point_id):
         from .entry_points.execute_datapoint import RunExecuteDataPoint
         app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
         result = app_config.run_execute_data_point(data_point_id)
-        
+
         # Get the latest trail created by this execution
         from .models import Trail
         latest_trail = Trail.objects.filter(
             name__startswith=f"DataPoint_{data_point_id}_"
         ).order_by('-id').first()
-        
+
         if not latest_trail:
             return JsonResponse({
                 'success': False,
                 'error': 'No trail found for the executed datapoint'
             }, status=404)
-        
+
         # Get the filtered lineage for this trail
         from .enhanced_lineage_api import get_trail_filtered_lineage
-        
+
         # Create a mock request for the lineage API
         class MockRequest:
             def __init__(self):
                 self.GET = {'include_unused': 'false'}
                 self.method = 'GET'
-        
+
         mock_request = MockRequest()
         lineage_response = get_trail_filtered_lineage(mock_request, latest_trail.id)
-        
+
         # Parse the lineage response
         lineage_data = json.loads(lineage_response.content)
-        
+
         # Construct the final response
         response_data = {
             'success': True,
@@ -4941,15 +4941,15 @@ def execute_datapoint_with_lineage(request, data_point_id):
             },
             'filtered_lineage': lineage_data
         }
-        
+
         return JsonResponse(response_data, json_dumps_params={'default': serialize_datetime})
-        
+
     except Exception as e:
         logger.error(f"Error executing datapoint with lineage: {str(e)}", exc_info=True)
-        
+
         # Optionally, provide a generic hint about possible file permissions if relevant
         hint = 'Check file permissions on the birds_nest directory if running locally.'
-        
+
         return JsonResponse({
             'success': False,
             'error': "An internal error has occurred.",

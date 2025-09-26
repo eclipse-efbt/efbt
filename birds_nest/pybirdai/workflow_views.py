@@ -691,9 +691,9 @@ def workflow_dashboard(request):
               "data_model_type": "ELDM",
               "clone_mode": "false",
               "technical_export_source": "GITHUB",
-              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
+              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
               "config_files_source": "GITHUB",
-              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD",
+              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
               "github_branch": "main",
               "when_to_stop": "RESOURCE_DOWNLOAD",
               "enable_lineage_tracking": true
@@ -771,7 +771,7 @@ def workflow_dashboard(request):
             "data_model_type": "ELDM",
             "clone_mode": "false",
             "technical_export_source": "BIRD_WEBSITE",
-            "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
+            "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
             "github_branch": "main",
@@ -3327,7 +3327,7 @@ def export_database_to_github(request):
         # Get form data
         github_token = request.POST.get('github_token', '').strip()
         repository_url = request.POST.get('repository_url', '').strip()
-        organization = request.POST.get('organization', '').strip() or None
+        organization = request.POST.get('organization', '').strip() or ""
         target_branch = request.POST.get('target_branch', 'develop').strip()
         use_fork_workflow = request.POST.get('use_fork_workflow') == 'on'
 
@@ -3350,11 +3350,7 @@ def export_database_to_github(request):
 
         # Determine repository URL (use automode config if not provided)
         if not repository_url:
-            config = github_service.get_automode_config()
-            if config and config.technical_export_github_url:
-                repository_url = config.technical_export_github_url
-            else:
-                repository_url = 'https://github.com/regcommunity/FreeBIRD'
+            repository_url = github_service.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_EIL'
 
         if use_fork_workflow:
             # Use new fork workflow (default behavior)
