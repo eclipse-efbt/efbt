@@ -167,10 +167,6 @@ LOGGING = {
         },
     },
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
         'security_file': {
             'class': 'logging.FileHandler',
             'filename': 'security.log',
@@ -184,22 +180,22 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'error_file'],
+            'handlers': ['error_file'],
             'level': 'INFO',
             'propagate': True,
         },
         'pybirdai.middleware.security_middleware': {
-            'handlers': ['console', 'security_file'],
+            'handlers': ['security_file'],
             'level': 'WARNING',
             'propagate': False,
         },
         'pybirdai.utils.secure_error_handling': {
-            'handlers': ['console', 'error_file'],
+            'handlers': ['error_file'],
             'level': 'ERROR',
             'propagate': False,
         },
         'pybirdai': {
-            'handlers': ['console', 'error_file'],
+            'handlers': ['error_file'],
             'level': 'ERROR',
             'propagate': True,
         },

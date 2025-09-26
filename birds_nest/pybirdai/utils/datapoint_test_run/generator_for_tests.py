@@ -18,6 +18,11 @@ import argparse
 import logging
 from pathlib import Path
 
+# Add the Django project root to Python path for imports
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
 def return_logger(__file_name__:str):
     return logging.getLogger(__file_name__)
 
@@ -105,6 +110,8 @@ class TestCodeGenerator:
                           help='Suffix for datapoint and cell IDs (default: 152589_REF)')
         parser.add_argument('--scenario', type=str, default="base",
                           help='Scenario name (default: base)')
+        parser.add_argument('--test-suite', type=str,
+                          help='Test suite name (if specified, generates tests in suite directory)')
 
         return parser.parse_args()
 
@@ -122,7 +129,130 @@ class TestCodeGenerator:
         module = ast.Module(
             body=[
                 ast.Import(names=[ast.alias(name='os', asname=None)]),
+                ast.Import(names=[ast.alias(name='sys', asname=None)]),
                 ast.Import(names=[ast.alias(name='logging', asname=None)]),
+                # Add project root to Python path (go up 5 levels from test file to birds_nest)
+                ast.Assign(
+                    targets=[ast.Name(id='PROJECT_ROOT', ctx=ast.Store())],
+                    value=ast.Call(
+                        func=ast.Attribute(
+                            value=ast.Attribute(
+                                value=ast.Name(id='os', ctx=ast.Load()),
+                                attr='path',
+                                ctx=ast.Load()
+                            ),
+                            attr='dirname',
+                            ctx=ast.Load()
+                        ),
+                        args=[
+                            ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Attribute(
+                                        value=ast.Name(id='os', ctx=ast.Load()),
+                                        attr='path',
+                                        ctx=ast.Load()
+                                    ),
+                                    attr='dirname',
+                                    ctx=ast.Load()
+                                ),
+                                args=[
+                                    ast.Call(
+                                        func=ast.Attribute(
+                                            value=ast.Attribute(
+                                                value=ast.Name(id='os', ctx=ast.Load()),
+                                                attr='path',
+                                                ctx=ast.Load()
+                                            ),
+                                            attr='dirname',
+                                            ctx=ast.Load()
+                                        ),
+                                        args=[
+                                            ast.Call(
+                                                func=ast.Attribute(
+                                                    value=ast.Attribute(
+                                                        value=ast.Name(id='os', ctx=ast.Load()),
+                                                        attr='path',
+                                                        ctx=ast.Load()
+                                                    ),
+                                                    attr='dirname',
+                                                    ctx=ast.Load()
+                                                ),
+                                                args=[
+                                                    ast.Call(
+                                                        func=ast.Attribute(
+                                                            value=ast.Attribute(
+                                                                value=ast.Name(id='os', ctx=ast.Load()),
+                                                                attr='path',
+                                                                ctx=ast.Load()
+                                                            ),
+                                                            attr='dirname',
+                                                            ctx=ast.Load()
+                                                        ),
+                                                        args=[
+                                                            ast.Call(
+                                                                func=ast.Attribute(
+                                                                    value=ast.Attribute(
+                                                                        value=ast.Name(id='os', ctx=ast.Load()),
+                                                                        attr='path',
+                                                                        ctx=ast.Load()
+                                                                    ),
+                                                                    attr='abspath',
+                                                                    ctx=ast.Load()
+                                                                ),
+                                                                args=[ast.Name(id='__file__', ctx=ast.Load())],
+                                                                keywords=[]
+                                                            )
+                                                        ],
+                                                        keywords=[]
+                                                    )
+                                                ],
+                                                keywords=[]
+                                            )
+                                        ],
+                                        keywords=[]
+                                    )
+                                ],
+                                keywords=[]
+                            )
+                        ],
+                        keywords=[]
+                    )
+                ),
+                # Add to sys.path if not already present
+                ast.If(
+                    test=ast.Compare(
+                        left=ast.Name(id='PROJECT_ROOT', ctx=ast.Load()),
+                        ops=[ast.NotIn()],
+                        comparators=[
+                            ast.Attribute(
+                                value=ast.Name(id='sys', ctx=ast.Load()),
+                                attr='path',
+                                ctx=ast.Load()
+                            )
+                        ]
+                    ),
+                    body=[
+                        ast.Expr(
+                            value=ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Attribute(
+                                        value=ast.Name(id='sys', ctx=ast.Load()),
+                                        attr='path',
+                                        ctx=ast.Load()
+                                    ),
+                                    attr='insert',
+                                    ctx=ast.Load()
+                                ),
+                                args=[
+                                    ast.Constant(value=0),
+                                    ast.Name(id='PROJECT_ROOT', ctx=ast.Load())
+                                ],
+                                keywords=[]
+                            )
+                        )
+                    ],
+                    orelse=[]
+                ),
                 ast.Assign(
                     targets=[
                         ast.Subscript(
@@ -164,11 +294,6 @@ class TestCodeGenerator:
                 ast.ImportFrom(
                     module='pybirdai.process_steps.pybird.execute_datapoint',
                     names=[ast.alias(name='ExecuteDataPoint', asname=None)],
-                    level=0
-                ),
-                ast.ImportFrom(
-                    module='pybirdai.process_steps.filter_code.report_cells',
-                    names=[ast.alias(name=cell_class, asname=None)],
                     level=0
                 )
             ],
@@ -452,8 +577,18 @@ class TestCodeGenerator:
         #test_code_additional = cls.create_additional_test_functions(cell_class, regulatory_template_id)
         #logger.debug("Generated additional test functions")
 
+        # Determine output directory based on test suite
+        if args.test_suite:
+            # Use test suite specific directory
+            test_dir = os.path.join('tests', args.test_suite, 'tests', 'code')
+            os.makedirs(test_dir, exist_ok=True)
+            logger.info(f"Using test suite directory: {test_dir}")
+        else:
+            # Use legacy tests directory
+            test_dir = 'tests'
+
         # Save generated code
-        output_file = os.path.join('tests', f'test_{cell_class.lower()}__{scenario_name}.py')
+        output_file = os.path.join(test_dir, f'test_{cell_class.lower()}__{scenario_name}.py')
         cls.save_generated_code(output_file, import_code, test_code, logger)
 
 

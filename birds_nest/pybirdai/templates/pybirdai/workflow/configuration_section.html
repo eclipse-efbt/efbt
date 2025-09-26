@@ -76,7 +76,7 @@
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">Technical Export Source</label>
                     <div>
                         <label style="display: block; margin-bottom: 5px;">
-                            <input type="radio" name="technical_export_source" value="BIRD_WEBSITE" 
+                            <input type="radio" name="technical_export_source" value="BIRD_WEBSITE"
                                    {% if config.technical_export_source == 'BIRD_WEBSITE' %}checked{% endif %}
                                    onchange="updateWorkflowConfigVisibility()">
                             BIRD ECB Website
@@ -89,21 +89,50 @@
                         </label>
                     </div>
                 </div>
+
+                <!-- Test Suite Source -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Test Suite Source</label>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px;">
+                            <input type="radio" name="test_suite_source" value="MANUAL"
+                                   {% if config.test_suite_source == 'MANUAL' or not config.test_suite_source %}checked{% endif %}
+                                   onchange="updateWorkflowConfigVisibility()">
+                            Manual Upload
+                        </label>
+                        <label style="display: block; margin-bottom: 5px;">
+                            <input type="radio" name="test_suite_source" value="GITHUB"
+                                   {% if config.test_suite_source == 'GITHUB' %}checked{% endif %}
+                                   onchange="updateWorkflowConfigVisibility()">
+                            GitHub Repository
+                        </label>
+                    </div>
+                    <small style="color: #666;">Source for test suite files and test configurations</small>
+                </div>
             </div>
             
             <!-- Right Column -->
             <div>
-                <!-- Single GitHub Repository for both sources -->
-                <div class="form-group" id="github-repo-group" style="margin-bottom: 20px; display: none;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Repository URL</label>
-                    <input type="url" name="github_url" id="github_url" class="form-control" 
+                <!-- BIRD Content Repository (Technical Export + Configuration Files) -->
+                <div class="form-group" id="bird-content-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">BIRD Content Repository URL</label>
+                    <input type="url" name="technical_export_github_url" id="technical_export_github_url" class="form-control"
                            placeholder="https://github.com/username/repository"
                            value="{{ config.technical_export_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
                            style="width: 100%; padding: 8px;">
-                    <small style="color: #666;">Repository containing both technical export and configuration files</small>
-                    <!-- Hidden fields to duplicate the value for backend compatibility -->
-                    <input type="hidden" name="technical_export_github_url" id="technical_export_github_url_hidden">
+                    <small style="color: #666;">Repository containing technical export files, LDM files, and configuration files</small>
+                    <!-- Hidden field for backend compatibility with config files -->
                     <input type="hidden" name="config_files_github_url" id="config_files_github_url_hidden">
+                </div>
+
+                <!-- Test Suite Repository -->
+                <div class="form-group" id="test-suite-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Test Suite Repository URL</label>
+                    <input type="url" name="test_suite_github_url" id="test_suite_github_url" class="form-control"
+                           placeholder="https://github.com/username/repository"
+                           value="{{ config.test_suite_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
+                           style="width: 100%; padding: 8px;">
+                    <small style="color: #666;">Repository containing test configurations and test data</small>
                 </div>
                 
                 <!-- GitHub Branch Selection -->
@@ -195,18 +224,25 @@ function toggleConfigSection() {
 function updateWorkflowConfigVisibility() {
     const techExportGithubSelected = document.querySelector('input[name="technical_export_source"]:checked').value === 'GITHUB';
     const configFilesGithubSelected = document.querySelector('input[name="config_files_source"]:checked').value === 'GITHUB';
-    const anyGithubSelected = techExportGithubSelected || configFilesGithubSelected;
-    
-    // Show single GitHub repo field if either source is GitHub
-    document.getElementById('github-repo-group').style.display = anyGithubSelected ? 'block' : 'none';
+    const testSuiteGithubSelected = document.querySelector('input[name="test_suite_source"]:checked').value === 'GITHUB';
+
+    const birdContentGithubSelected = techExportGithubSelected || configFilesGithubSelected;
+    const anyGithubSelected = birdContentGithubSelected || testSuiteGithubSelected;
+
+    // Show BIRD Content repository field if technical export or config files use GitHub
+    document.getElementById('bird-content-repo-group').style.display = birdContentGithubSelected ? 'block' : 'none';
+
+    // Show Test Suite repository field if test suite uses GitHub
+    document.getElementById('test-suite-repo-group').style.display = testSuiteGithubSelected ? 'block' : 'none';
+
+    // Show common GitHub fields (branch, token) if any GitHub source is selected
     document.getElementById('github-branch-group').style.display = anyGithubSelected ? 'block' : 'none';
     document.getElementById('github-token-group').style.display = anyGithubSelected ? 'block' : 'none';
-    
-    // Update hidden fields when GitHub URL changes
-    const githubUrlInput = document.getElementById('github_url');
-    if (githubUrlInput) {
-        githubUrlInput.addEventListener('input', function() {
-            document.getElementById('technical_export_github_url_hidden').value = this.value;
+
+    // Update hidden field for config files to use same URL as technical export (for backward compatibility)
+    const techExportUrlInput = document.getElementById('technical_export_github_url');
+    if (techExportUrlInput) {
+        techExportUrlInput.addEventListener('input', function() {
             document.getElementById('config_files_github_url_hidden').value = this.value;
         });
     }
@@ -219,11 +255,13 @@ document.addEventListener('DOMContentLoaded', function() {
     content.style.maxHeight = content.scrollHeight + 'px'; // Start expanded
     
     updateWorkflowConfigVisibility();
-    
-    // Sync GitHub URL with hidden fields on load
-    const githubUrl = document.getElementById('github_url').value;
-    document.getElementById('technical_export_github_url_hidden').value = githubUrl;
-    document.getElementById('config_files_github_url_hidden').value = githubUrl;
+
+    // Sync GitHub URLs with hidden fields on load
+    const techExportUrl = document.getElementById('technical_export_github_url').value;
+    const configFilesHidden = document.getElementById('config_files_github_url_hidden');
+    if (configFilesHidden && techExportUrl) {
+        configFilesHidden.value = techExportUrl;
+    }
     
     // Handle form submission
     document.getElementById('workflow-config-form').addEventListener('submit', function(e) {
@@ -232,9 +270,11 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Configuration form submitted via AJAX'); // Debug log
         
         // Ensure hidden fields are synced before submission
-        const githubUrl = document.getElementById('github_url').value;
-        document.getElementById('technical_export_github_url_hidden').value = githubUrl;
-        document.getElementById('config_files_github_url_hidden').value = githubUrl;
+        const techExportUrl = document.getElementById('technical_export_github_url').value;
+        const configFilesHidden = document.getElementById('config_files_github_url_hidden');
+        if (configFilesHidden && techExportUrl) {
+            configFilesHidden.value = techExportUrl;
+        }
         
         const formData = new FormData(this);
         const statusDiv = document.getElementById('workflow-config-status');

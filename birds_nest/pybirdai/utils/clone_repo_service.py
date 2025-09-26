@@ -20,12 +20,8 @@ import time
 
 # Set up logging configuration to write to both file and console
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('clone_repo_setup.log'),
-        logging.StreamHandler()
-    ]
 )
 logger = logging.getLogger(__name__)
 
@@ -84,25 +80,54 @@ class CloneRepoService:
     Handles downloading, extracting, organizing files, cleanup operations, and supports authentication.
     """
 
-    def __init__(self, token: str = None):
+    def __init__(self, token: str = None, test:bool=False):
         """
         Initialize the service by cleaning up existing target directories and setting up authentication.
 
         Args:
             token (str): Optional GitHub token for private repository access
         """
-        self.token = token
+        self.token = token or self._load_github_token_from_env()
         self.headers = self._get_authenticated_headers()
 
         # Delete all target directories from REPO_MAPPING to enable clean setup
-        for source_folder, target_mappings in REPO_MAPPING.items():
-            for target_folder, filter_func in target_mappings.items():
-                if os.path.exists(target_folder):
-                    logger.info(f"Removing existing target directory: {target_folder}")
-                    shutil.rmtree(target_folder)
+        if not test:
+            for source_folder, target_mappings in REPO_MAPPING.items():
+                for target_folder, filter_func in target_mappings.items():
+                    if os.path.exists(target_folder):
+                        logger.info(f"Removing existing target directory: {target_folder}")
+                        shutil.rmtree(target_folder)
+        else:
+            shutil.rmtree("tests")
 
         # Create all target directories beforehand
         self._create_all_target_directories()
+
+    def cleanup_test_suite_directories(self):
+        """Clean up test suite directories from TEST_SUITE_REPO_MAPPING."""
+        logger.info("Cleaning up test suite directories")
+        for source_folder, target_mappings in TEST_SUITE_REPO_MAPPING.items():
+            for target_folder, filter_func in target_mappings.items():
+                if os.path.exists(target_folder):
+                    if os.path.isfile(target_folder):
+                        logger.info(f"Removing existing test suite file: {target_folder}")
+                        os.unlink(target_folder)
+                    elif os.path.isdir(target_folder):
+                        logger.info(f"Removing existing test suite directory: {target_folder}")
+                        shutil.rmtree(target_folder)
+
+    def _load_github_token_from_env(self):
+        """Load GitHub token from .env file if it exists."""
+        try:
+            env_path = os.path.join(os.getcwd(), '.env')
+            if os.path.exists(env_path):
+                with open(env_path, 'r') as f:
+                    for line in f:
+                        if line.startswith('GITHUB_TOKEN='):
+                            return line.split('=', 1)[1].strip()
+        except Exception as e:
+            logger.warning(f"Could not load GitHub token from .env: {e}")
+        return None
 
     def _get_authenticated_headers(self):
         """Get headers with authentication if token is provided."""
@@ -125,6 +150,43 @@ class CloneRepoService:
             for target_folder, filter_func in target_mappings.items():
                 self._ensure_directory_exists(target_folder)
                 logger.info(f"Created target directory: {target_folder}")
+
+    def _create_test_suite_target_directories(self):
+        """Create all test suite target directories from TEST_SUITE_REPO_MAPPING."""
+        logger.info("Creating test suite target directories")
+        for source_folder, target_mappings in TEST_SUITE_REPO_MAPPING.items():
+            for target_folder, filter_func in target_mappings.items():
+                self._ensure_directory_exists(target_folder)
+                logger.info(f"Created test suite target directory: {target_folder}")
+
+    def _ensure_required_resources(self):
+        """Ensure required resource directories exist, creating empty ones if needed."""
+        required_resources = [
+            f"resources{os.sep}il",
+            f"resources{os.sep}ldm",
+            f"resources{os.sep}technical_export",
+            f"resources{os.sep}admin",
+            f"resources{os.sep}bird",
+            f"resources{os.sep}joins_configuration",
+            f"resources{os.sep}extra_variables",
+            f"resources{os.sep}derivation_files",
+            f"results{os.sep}generated_python_filters",
+            f"results{os.sep}generated_python_joins"
+        ]
+
+        for resource_dir in required_resources:
+            if not os.path.exists(resource_dir):
+                self._ensure_directory_exists(resource_dir)
+                logger.info(f"Created required resource directory: {resource_dir}")
+
+                # Create placeholder files for critical resources
+                if resource_dir.endswith("il"):
+                    # Create placeholder DM_Tables.csv if it doesn't exist
+                    placeholder_file = os.path.join(resource_dir, "DM_Tables.csv")
+                    if not os.path.exists(placeholder_file):
+                        with open(placeholder_file, 'w') as f:
+                            f.write("# Placeholder file - replace with actual DM_Tables.csv\n")
+                        logger.info(f"Created placeholder file: {placeholder_file}")
 
     def _clear_directory(self, path):
         """Clear all files from a directory if it exists."""
@@ -189,6 +251,105 @@ class CloneRepoService:
         end_time = time.time()
         logger.info(f"Clone repo completed in {end_time - start_time:.2f} seconds")
 
+    def clone_test_suite_simple(self, base_url: str, suite_name: str = None, branch: str = "main"):
+        """
+        Download and extract a test suite repository to tests/<suite-name>/ directory structure.
+        This is a simplified method that properly handles the directory structure for test suites.
+
+        Args:
+            base_url (str): The base URL of the GitHub test suite repository
+            suite_name (str): Name for the suite directory (defaults to repo name)
+            branch (str): The branch to clone
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        start_time = time.time()
+
+        # Extract repository name from URL if suite_name not provided
+        if not suite_name:
+            repo_name = base_url.rstrip('/').split('/')[-1]
+            if repo_name.endswith('.git'):
+                repo_name = repo_name[:-4]
+            suite_name = repo_name
+            logger.info(f"Extracted repository name: {repo_name}, Base URL: {base_url}")
+
+        final_destination = f"tests{os.sep}{suite_name}"
+        temp_destination = f"temp_test_suite_{suite_name}"
+
+        logger.info(f"Starting test suite clone from {base_url} to {final_destination}")
+
+        try:
+            # Construct the ZIP download URL for the specified branch
+            repo_url = f"{base_url}/archive/refs/heads/{branch}.zip"
+            logger.info(f"Downloading test suite repository from {repo_url}")
+
+            # Download the repository ZIP file with authentication if available
+            response = requests.get(repo_url, headers=self.headers)
+
+            if response.status_code != 200:
+                logger.error(f"Failed to clone test suite repository: {response.status_code}")
+                if response.status_code == 401:
+                    logger.error("Authentication failed - check your GitHub token")
+                elif response.status_code == 404:
+                    logger.error("Test suite repository not found - check the URL")
+                return False
+
+            # Create temporary directory for extraction
+            os.makedirs(temp_destination, exist_ok=True)
+
+            # Save the ZIP file temporarily
+            zip_path = f"{temp_destination}{os.sep}test_suite_repo.zip"
+            with open(zip_path, "wb") as f:
+                f.write(response.content)
+
+            # Extract the ZIP file contents
+            with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                zip_ref.extractall(temp_destination)
+
+            # Clean up the temporary ZIP file
+            os.remove(zip_path)
+            logger.info("Test suite repository extraction completed")
+
+            # Find the extracted folder (typically repo-name-main or repo-name-master)
+            extracted_folder = None
+            for item in os.listdir(temp_destination):
+                item_path = os.path.join(temp_destination, item)
+                if os.path.isdir(item_path):
+                    extracted_folder = item_path
+                    break
+
+            if not extracted_folder:
+                logger.error("Could not find extracted test suite repository folder")
+                shutil.rmtree(temp_destination)
+                return False
+
+            # Remove existing destination if it exists
+            if os.path.exists(final_destination):
+                logger.info(f"Removing existing test suite at {final_destination}")
+                shutil.rmtree(final_destination)
+
+            # Ensure tests directory exists
+            os.makedirs("tests", exist_ok=True)
+
+            # Move the extracted folder to the final destination
+            shutil.move(extracted_folder, final_destination)
+            logger.info(f"Test suite moved to {final_destination}")
+
+            # Clean up temporary directory
+            shutil.rmtree(temp_destination)
+
+            end_time = time.time()
+            logger.info(f"Test suite clone completed successfully in {end_time - start_time:.2f} seconds")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error during test suite clone: {e}")
+            # Clean up on error
+            if os.path.exists(temp_destination):
+                shutil.rmtree(temp_destination)
+            return False
+
     def setup_files(self, destination_path: str = "FreeBIRD"):
         """
         Organize and copy files from the extracted repository according to REPO_MAPPING configuration.
@@ -199,13 +360,22 @@ class CloneRepoService:
         start_time = time.time()
         logger.info(f"Starting file setup from {destination_path}")
 
-        # Find the extracted folder (typically FreeBIRD-main)
+        # Find the extracted folder (typically repo-name-main or repo-name-master)
         extracted_folder = None
         for item in os.listdir(destination_path):
             item_path = os.path.join(destination_path, item)
-            if os.path.isdir(item_path) and item.startswith("FreeBIRD"):
+            if os.path.isdir(item_path) and (item.endswith("-main") or item.endswith("-master") or item.endswith("-develop")):
                 extracted_folder = item_path
                 break
+
+        # If no standard branch suffix found, take the first directory
+        if not extracted_folder:
+            for item in os.listdir(destination_path):
+                item_path = os.path.join(destination_path, item)
+                if os.path.isdir(item_path):
+                    extracted_folder = item_path
+                    logger.info(f"Using directory without standard branch suffix: {item}")
+                    break
 
         # Validate that we found the extracted repository folder
         if not extracted_folder:
@@ -215,15 +385,21 @@ class CloneRepoService:
 
         logger.info(f"Found extracted folder: {extracted_folder}")
 
+        # Ensure all required resource directories exist
+        self._ensure_required_resources()
 
         # Process each mapping in REPO_MAPPING
         for source_folder, target_mappings in REPO_MAPPING.items():
             source_path = os.path.join(extracted_folder, source_folder)
             logger.debug(f"Processing source folder: {source_path}")
 
-            # Skip if source folder doesn't exist
+            # Skip if source folder doesn't exist but create target directories anyway
             if not os.path.exists(source_path):
                 logger.warning(f"Source path does not exist: {source_path}")
+                # Still create target directories for missing sources
+                for target_folder, filter_func in target_mappings.items():
+                    self._ensure_directory_exists(target_folder)
+                    logger.info(f"Created empty target directory for missing source: {target_folder}")
                 continue
 
             # Special handling for database export files that need filtering
@@ -254,11 +430,90 @@ class CloneRepoService:
             target_folder = list(REPO_MAPPING[source_folder].keys())[0]
             if os.path.exists(target_folder):
                 shutil.rmtree(target_folder)
+
             source_folder = f"{extracted_folder}{os.sep}{source_folder}"
+
             shutil.copytree(source_folder, target_folder)
 
         end_time = time.time()
         logger.info(f"File setup completed in {end_time - start_time:.2f} seconds")
+
+    def setup_test_suite_files(self, destination_path: str = "TestSuite"):
+        """
+        Organize and copy files from the extracted test suite repository according to TEST_SUITE_REPO_MAPPING.
+
+        Args:
+            destination_path (str): Path where the test suite repository was extracted
+        """
+        start_time = time.time()
+        logger.info(f"Starting test suite file setup from {destination_path}")
+
+        # Find the extracted folder (typically repo-name-main or repo-name-master)
+        extracted_folder = None
+        for item in os.listdir(destination_path):
+            item_path = os.path.join(destination_path, item)
+            if os.path.isdir(item_path) and (item.endswith("-main") or item.endswith("-master") or item.endswith("-develop")):
+                extracted_folder = item_path
+                break
+
+        # If no standard branch suffix found, take the first directory
+        if not extracted_folder:
+            for item in os.listdir(destination_path):
+                item_path = os.path.join(destination_path, item)
+                if os.path.isdir(item_path):
+                    extracted_folder = item_path
+                    logger.info(f"Using test suite directory without standard branch suffix: {item}")
+                    break
+
+        # Validate that we found the extracted repository folder
+        if not extracted_folder:
+            logger.error("Could not find extracted test suite repository folder")
+            print("Could not find extracted test suite repository folder")
+            return
+
+        logger.info(f"Found extracted test suite folder: {extracted_folder}")
+
+        # Create test suite target directories
+        self._create_test_suite_target_directories()
+
+        # Process each mapping in TEST_SUITE_REPO_MAPPING
+        for source_folder, target_mappings in TEST_SUITE_REPO_MAPPING.items():
+            source_path = os.path.join(extracted_folder, source_folder)
+            logger.debug(f"Processing test suite source folder: {source_path}")
+
+            # Skip if source folder doesn't exist
+            if not os.path.exists(source_path):
+                logger.warning(f"Test suite source path does not exist: {source_path}")
+                continue
+
+            # Process each file in the source directory for filtering
+            for target_folder, filter_func in target_mappings.items():
+                if os.path.isdir(source_path):
+                    # Handle directory copying with filtering
+                    for file_name in os.listdir(source_path):
+                        if filter_func(file_name):
+                            source_file = os.path.join(source_path, file_name)
+                            target_file = os.path.join(target_folder, file_name)
+                            logger.debug(f"Copying test suite file {source_file} to {target_file}")
+
+                            # Handle both files and directories
+                            if os.path.isfile(source_file):
+                                shutil.copy2(source_file, target_file)
+                                logger.debug(f"Test suite file copied: {file_name}")
+                            elif os.path.isdir(source_file):
+                                # Remove existing directory if it exists
+                                if os.path.exists(target_file):
+                                    shutil.rmtree(target_file)
+                                shutil.copytree(source_file, target_file)
+                                logger.debug(f"Test suite directory copied: {file_name}")
+                else:
+                    # Handle single file copying
+                    if filter_func(os.path.basename(source_path)):
+                        shutil.copy2(source_path, target_folder)
+                        logger.debug(f"Single test suite file copied: {source_path}")
+
+        end_time = time.time()
+        logger.info(f"Test suite file setup completed in {end_time - start_time:.2f} seconds")
 
     def remove_fetched_files(self, destination_path: str = "FreeBIRD"):
         """
@@ -272,6 +527,20 @@ class CloneRepoService:
         shutil.rmtree(destination_path)
         end_time = time.time()
         logger.info(f"Fetched files removed in {end_time - start_time:.2f} seconds")
+
+    def remove_test_suite_files(self, destination_path: str = "TestSuite"):
+        """
+        Clean up by removing the downloaded test suite repository files after setup is complete.
+
+        Args:
+            destination_path (str): Path of the downloaded test suite repository to remove
+        """
+        start_time = time.time()
+        logger.info(f"Removing test suite files from {destination_path}")
+        if os.path.exists(destination_path):
+            shutil.rmtree(destination_path)
+        end_time = time.time()
+        logger.info(f"Test suite files removed in {end_time - start_time:.2f} seconds")
 
 def main():
     """

@@ -398,6 +398,8 @@ def _run_database_setup_async():
             ),
             config_files_source=config_data.get("config_files_source", "MANUAL"),
             config_files_github_url=config_data.get("config_files_github_url", ""),
+            test_suite_source=config_data.get("test_suite_source", "MANUAL"),
+            test_suite_github_url=config_data.get("test_suite_github_url", ""),
             when_to_stop=config_data.get("when_to_stop", "RESOURCE_DOWNLOAD"),
         )
         # Add github_branch as a dynamic attribute since it's not in the model
@@ -694,6 +696,8 @@ def workflow_dashboard(request):
               "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
               "config_files_source": "GITHUB",
               "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+              "test_suite_source": "MANUAL",
+              "test_suite_github_url": "",
               "github_branch": "main",
               "when_to_stop": "RESOURCE_DOWNLOAD",
               "enable_lineage_tracking": true
@@ -774,6 +778,8 @@ def workflow_dashboard(request):
             "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
+            "test_suite_source": "MANUAL",
+            "test_suite_github_url": "",
             "github_branch": "main",
             "when_to_stop": "RESOURCE_DOWNLOAD",
             "enable_lineage_tracking": True,
@@ -1387,22 +1393,41 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
                     execution_data['steps_completed'].append('Test suite execution started')
 
                     # Create test runner instance
-                    test_runner = RegulatoryTemplateTestRunner(False)
-                    config_file = 'tests/configuration_file_tests.json'
+                    from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
-                    logger.info(f"Running tests from config file: {config_file}")
-                    # Override the arguments to match our desired configuration
-                    test_runner.args.uv = "False"
-                    test_runner.args.config_file = config_file
-                    test_runner.args.dp_value = None
-                    test_runner.args.reg_tid = None
-                    test_runner.args.dp_suffix = None
-                    test_runner.args.scenario = None
+                    # Create test runner instance
+                    test_runner = RegulatoryTemplateTestRunner()
 
-                    # Execute the test runner with config file
-                    test_runner.main()
+                    import os
+
+                    tests_folder = os.listdir("tests")
+                    config_files = list()
+                    results = dict()
+                    for folder in tests_folder:
+
+                        config_file = f'tests{os.sep}{folder}{os.sep}configuration_file_tests.json'
+                        config_files.append(config_file)
+                        test_runner.args.uv = "True"
+                        test_runner.args.config_file = config_file
+                        test_runner.args.dp_value = None
+                        test_runner.args.reg_tid = None
+                        test_runner.args.dp_suffix = None
+                        test_runner.args.scenario = None
+
+                        # Execute tests
+                        test_runner.main()
+
+                        if folder not in results:
+                            results[folder] = {
+                                'tests_executed': False,
+                                'test_results': {}
+                            }
+
+                        results[folder]['tests_executed'] = True
+                        results[folder]['test_results'] = {'status': 'completed', 'config_file': 'tests/configuration_file_tests.json'}
+
                     execution_data['test_mode'] = 'config_file'
-                    execution_data['config_file'] = config_file
+                    execution_data['config_file'] = str(config_files)
                     execution_data['tests_executed'] = True
                     execution_data['steps_completed'].append('Configuration file tests completed')
 
@@ -1931,19 +1956,35 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
             logger.info("Executing run tests substep...")
 
             # Create test runner instance
-            test_runner = RegulatoryTemplateTestRunner(False)
+            test_runner = RegulatoryTemplateTestRunner()
 
-            # Configure test runner
-            config_file = request.POST.get('config_file', 'tests/configuration_file_tests.json')
-            test_runner.args.uv = "False"
-            test_runner.args.config_file = config_file
-            test_runner.args.dp_value = None
-            test_runner.args.reg_tid = None
-            test_runner.args.dp_suffix = None
-            test_runner.args.scenario = None
+            import os
 
-            # Execute tests
-            test_runner.main()
+            tests_folder = os.listdir("tests")
+            config_files = list()
+            results = dict()
+            for folder in tests_folder:
+
+                config_file = f'tests{os.sep}{folder}{os.sep}configuration_file_tests.json'
+                config_files.append(config_file)
+                test_runner.args.uv = "True"
+                test_runner.args.config_file = config_file
+                test_runner.args.dp_value = None
+                test_runner.args.reg_tid = None
+                test_runner.args.dp_suffix = None
+                test_runner.args.scenario = None
+
+                # Execute tests
+                test_runner.main()
+
+                if folder not in results:
+                    results[folder] = {
+                        'tests_executed': False,
+                        'test_results': {}
+                    }
+
+                results[folder]['tests_executed'] = True
+                results[folder]['test_results'] = {'status': 'completed', 'config_file': 'tests/configuration_file_tests.json'}
 
             execution_data['tests_executed'] = True
             execution_data['steps_completed'].append('Test suite execution')
@@ -2379,17 +2420,33 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
             # Create test runner instance
             test_runner = RegulatoryTemplateTestRunner(False)
 
-            # Configure test runner
-            config_file = request.POST.get('config_file', 'tests/configuration_file_tests.json')
-            test_runner.args.uv = "False"
-            test_runner.args.config_file = config_file
-            test_runner.args.dp_value = None
-            test_runner.args.reg_tid = None
-            test_runner.args.dp_suffix = None
-            test_runner.args.scenario = None
+            import os
 
-            # Execute tests
-            test_runner.main()
+            tests_folder = os.listdir("tests")
+            config_files = list()
+            results = dict()
+            for folder in tests_folder:
+
+                config_file = f'tests{os.sep}{folder}{os.sep}configuration_file_tests.json'
+                config_files.append(config_file)
+                test_runner.args.uv = "True"
+                test_runner.args.config_file = config_file
+                test_runner.args.dp_value = None
+                test_runner.args.reg_tid = None
+                test_runner.args.dp_suffix = None
+                test_runner.args.scenario = None
+
+                # Execute tests
+                test_runner.main()
+
+                if folder not in results:
+                    results[folder] = {
+                        'tests_executed': False,
+                        'test_results': {}
+                    }
+
+                results[folder]['tests_executed'] = True
+                results[folder]['test_results'] = {'status': 'completed', 'config_file': 'tests/configuration_file_tests.json'}
 
             execution_data['tests_executed'] = True
             execution_data['steps_completed'].append('Test suite execution')
@@ -2568,6 +2625,8 @@ def workflow_save_config(request):
             ),
             "config_files_source": request.POST.get("config_files_source", "MANUAL"),
             "config_files_github_url": request.POST.get("config_files_github_url", ""),
+            "test_suite_source": request.POST.get("test_suite_source", "MANUAL"),
+            "test_suite_github_url": request.POST.get("test_suite_github_url", ""),
             "github_branch": request.POST.get("github_branch", "main"),
             "when_to_stop": "RESOURCE_DOWNLOAD",  # Default for workflow
             "enable_lineage_tracking": request.POST.get("enable_lineage_tracking") == "true",

@@ -30,6 +30,11 @@ class AutomodeConfiguration(models.Model):
         ('MANUAL', 'Manual Upload'),
         ('GITHUB', 'GitHub Repository'),
     ]
+
+    TEST_SUITE_SOURCE_CHOICES = [
+        ('MANUAL', 'Manual Upload'),
+        ('GITHUB', 'GitHub Repository'),
+    ]
     
     WHEN_TO_STOP_CHOICES = [
         ('RESOURCE_DOWNLOAD', 'Stop after resource download and move to step by step mode'),
@@ -71,6 +76,19 @@ class AutomodeConfiguration(models.Model):
         null=True,
         help_text='GitHub repository URL for configuration files (when GitHub source is selected)'
     )
+
+    test_suite_source = models.CharField(
+        max_length=20,
+        choices=TEST_SUITE_SOURCE_CHOICES,
+        default='MANUAL',
+        help_text='Source for test suite files and configurations'
+    )
+
+    test_suite_github_url = models.URLField(
+        blank=True,
+        null=True,
+        help_text='GitHub repository URL for test suite files (when GitHub source is selected)'
+    )
     
     when_to_stop = models.CharField(
         max_length=20,
@@ -110,6 +128,11 @@ class AutomodeConfiguration(models.Model):
         if self.config_files_source == 'GITHUB' and not self.config_files_github_url:
             raise ValidationError({
                 'config_files_github_url': 'GitHub URL is required when GitHub is selected as config files source.'
+            })
+
+        if self.test_suite_source == 'GITHUB' and not self.test_suite_github_url:
+            raise ValidationError({
+                'test_suite_github_url': 'GitHub URL is required when GitHub is selected as test suite source.'
             })
     
     @classmethod

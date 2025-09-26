@@ -57,13 +57,18 @@ if __name__ == "__main__":
     test_runner = RegulatoryTemplateTestRunner(False)
 
     # Configure test runner
-    config_file = f'tests{os.sep}configuration_file_tests.json'
-    test_runner.args.uv = "True"
-    test_runner.args.config_file = config_file
-    test_runner.args.dp_value = None
-    test_runner.args.reg_tid = None
-    test_runner.args.dp_suffix = None
-    test_runner.args.scenario = None
+    import os
 
-    # Execute tests
-    test_runner.main()
+    tests_folder = os.listdir("tests")
+    for folder in tests_folder:
+
+        config_file = f'tests{os.sep}{folder}{os.sep}configuration_file_tests.json'
+        test_runner.args.uv = "True"
+        test_runner.args.config_file = config_file
+        test_runner.args.dp_value = None
+        test_runner.args.reg_tid = None
+        test_runner.args.dp_suffix = None
+        test_runner.args.scenario = None
+
+        # Execute tests
+        test_runner.main()
