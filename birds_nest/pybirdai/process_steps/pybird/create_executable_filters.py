@@ -86,7 +86,9 @@ class CreateExecutableFilters:
             orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             print("AORTA lineage tracking enabled for filter generation")
         
-        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep + 'report_cells.py', "a", encoding='utf-8')
+        # Generate report_cells.py in the correct location where it's imported from
+        report_cells_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'filter_code', 'report_cells.py')
+        file = open(report_cells_path, "w", encoding='utf-8')  # Use 'w' to overwrite existing file
         report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep + 'report_templates.html', "a", encoding='utf-8')
         
         # Write HTML headers
@@ -113,7 +115,7 @@ class CreateExecutableFilters:
         for cube_id in sdd_context.combination_to_rol_cube_map.keys():
             logic_files.add(f"{cube_id}_logic")
         
-        file.write("\n# Import product-specific classes\n")
+        file.write("\n# Import product-specific classes from filter_code directory\n")
         for logic_file in sorted(logic_files):
             file.write(f"from .{logic_file} import *\n")
         
@@ -159,10 +161,18 @@ class CreateExecutableFilters:
                     
                     file.write("\t" + cube_id + "s = []\n")
                     
-                    # Write metric_value method
-                    file.write("\t@lineage(dependencies={\"" + cube_id + "." + combination.combination_id.metric.name + "\"})\n")
+                    # Write metric_value method with correct lineage dependencies
+                    metric_lineage_deps = []
+                    for product_class in product_classes:
+                        # Extract product name from class name (e.g., Other_loans from F_01_01_REF_FINREP_3_0_Other_loans_Table)
+                        product_name = product_class.replace(cube_id + "_", "").replace("_Table", "")
+                        metric_lineage_deps.append(f"{product_name}.{combination.combination_id.metric.name}")
+                    
+                    lineage_string = ", ".join([f'"{dep}"' for dep in metric_lineage_deps])
+                    file.write(f"\t@lineage(dependencies={{{lineage_string}}})\n")
                     file.write("\tdef metric_value(self):\n")
                     file.write("\t\ttotal = 0\n")
+                    file.write("\t\t# Sum from filtered items collected in calc_referenced_items\n")
                     file.write("\t\tfor item in self." + cube_id + "s:\n")
                     file.write("\t\t\ttotal += item." + combination.combination_id.metric.name + "()\n")
                     file.write("\t\treturn total\n")
@@ -178,11 +188,9 @@ class CreateExecutableFilters:
                     except:
                         pass
                     
-                    # Build lineage dependencies
-                    item_counter = 0
+                    # Build lineage dependencies for product-specific classes
+                    calc_lineage_deps = []
                     for combination_item in combination_item_list:
-                        # Include TYP_INSTRMNT in lineage dependencies for completeness
-                            
                         leaf_node_members = CreateExecutableFilters.get_leaf_node_codes(self,
                                                                                       sdd_context,
                                                                                       combination_item.member_id,
@@ -190,16 +198,15 @@ class CreateExecutableFilters:
                         
                         if len(leaf_node_members) > 0:
                             if not ((len(leaf_node_members) == 1) and (str(leaf_node_members[0].code) == '0')):
-                                if item_counter > 0:
-                                    calc_lineage_string += ','
-                                    calc_lineage_string += '\n\t\t\t'
-                                calc_lineage_string += '"'
-                                calc_lineage_string += cube_id 
-                                calc_lineage_string += '.'
-                                calc_lineage_string += combination_item.variable_id.name 
-                                calc_lineage_string += '"'
-                                item_counter += 1
+                                # Add dependency for each product class
+                                for product_class in product_classes:
+                                    product_name = product_class.replace(cube_id + "_", "").replace("_Table", "")
+                                    dep = f"{product_name}.{combination_item.variable_id.name}"
+                                    if dep not in calc_lineage_deps:
+                                        calc_lineage_deps.append(dep)
                     
+                    if calc_lineage_deps:
+                        calc_lineage_string += '"' + '", "'.join(calc_lineage_deps) + '"'
                     calc_lineage_string += '})\n'
                     
                     # Build the calc method
@@ -233,7 +240,7 @@ class CreateExecutableFilters:
                     file.write(calc_lineage_string)
                     file.write(calc_string + '\n')
                     
-                    # Write init method
+                    # Write init method - let orchestration handle initialization
                     file.write("\tdef init(self):\n")
                     file.write("\t\tOrchestration().init(self)\n")
                     file.write("\t\tself." + cube_id + "s = []\n")

@@ -37,7 +37,7 @@ class CreatePythonTransformations:
         file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  'ancrdt_output_tables.py', "a",  encoding='utf-8')
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         file.write("from datetime import datetime\n")
-        file.write("from pybirdai.annotations.decorators import lineage\n")
+        file.write("from pybirdai.annotations.decorators import lineage, track_table_init\n")
         cube_link_to_foreign_cube_map__ = {
             rolc_id:cube_links
             for rolc_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items()
@@ -105,7 +105,7 @@ class CreatePythonTransformations:
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
             file.write("from datetime import datetime\n")
-            file.write("from pybirdai.annotations.decorators import lineage\n")
+            file.write("from pybirdai.annotations.decorators import lineage, track_table_init\n")
 
             file.write("\nclass " + rolc_id + "_UnionItem:\n")
             file.write("\tbase = None #" + rolc_id + "_Base\n")
