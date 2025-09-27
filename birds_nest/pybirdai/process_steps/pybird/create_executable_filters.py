@@ -15,6 +15,7 @@ from django.conf import settings
 from pybirdai.process_steps.pybird.orchestration import Orchestration
 from pybirdai.models import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction
 from datetime import datetime
+from pybirdai.process_steps.pybird.typ_instrmnt_mapping import TypInstrmntMapper
 
 import os
 
@@ -25,25 +26,70 @@ class CreateExecutableFilters:
         self._node_cache = {}
         self._member_list_cache = {}
         self._literal_list_cache = {}
+        # Initialize TYP_INSTRMNT mapper
+        self.typ_mapper = TypInstrmntMapper()
 
     def is_member_a_node(self, sdd_context, member):
         # Keep the member node caching
         if member not in self._node_cache:
             self._node_cache[member] = member in sdd_context.members_that_are_nodes
         return self._node_cache[member]
+    
+    def get_typ_instrmnt_values_for_combination(self, sdd_context, combination):
+        """Extract TYP_INSTRMNT values from combination items"""
+        typ_instrmnt_values = []
+        combination_item_list = []
+        
+        try:
+            combination_item_list = sdd_context.combination_item_dictionary[combination.combination_id.combination_id]
+        except:
+            pass
+        
+        for combination_item in combination_item_list:
+            # Check if this is a TYP_INSTRMNT variable
+            if combination_item.variable_id.name == 'TYP_INSTRMNT':
+                # Get the original member value before leaf node expansion
+                original_member = combination_item.member_id
+                if original_member:
+                    typ_instrmnt_values.append(original_member.member_id)
+        
+        return typ_instrmnt_values
+    
+    def get_product_classes_for_combination(self, sdd_context, combination, cube_id):
+        """Get product-specific class names based on TYP_INSTRMNT values"""
+        typ_instrmnt_values = self.get_typ_instrmnt_values_for_combination(sdd_context, combination)
+        product_classes = []
+        
+        for typ_value in typ_instrmnt_values:
+            # Get slice names from mapping
+            slice_names = self.typ_mapper.get_slices_for_typ_instrmnt(typ_value)
+            
+            for slice_name in slice_names:
+                # Format as class name
+                class_name = self.typ_mapper.format_slice_name_for_class(slice_name, cube_id)
+                if class_name not in product_classes:
+                    product_classes.append(class_name)
+        
+        if not product_classes:
+            print(f"WARNING: No TYP_INSTRMNT found for combination {combination.combination_id.combination_id}")
+        
+        return product_classes
 
-    def create_executable_filters(self,context, sdd_context):
+    def create_executable_filters(self, context, sdd_context):
         CreateExecutableFilters.delete_generated_python_filter_files(self, context)
         CreateExecutableFilters.delete_generated_html_filter_files(self, context)
-        CreateExecutableFilters.prepare_node_dictionaries_and_lists(self,sdd_context)
+        CreateExecutableFilters.prepare_node_dictionaries_and_lists(self, sdd_context)
 
         # Initialize AORTA tracking
         orchestration = Orchestration()
         if hasattr(context, 'enable_lineage_tracking') and context.enable_lineage_tracking:
             orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             print("AORTA lineage tracking enabled for filter generation")
-        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep +  'report_cells.py', "a",  encoding='utf-8')
-        report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  'report_templates.html', "a",  encoding='utf-8')
+        
+        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep + 'report_cells.py', "a", encoding='utf-8')
+        report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep + 'report_templates.html', "a", encoding='utf-8')
+        
+        # Write HTML headers
         report_html_file.write("{% extends 'base.html' %}\n")
         report_html_file.write("{% block content %}\n")
         report_html_file.write("<!DOCTYPE html>\n")
@@ -56,19 +102,32 @@ class CreateExecutableFilters:
         report_html_file.write("<table border=\"1\">\n")
         report_html_file.write("<a href=\"{% url 'pybirdai:step_by_step_mode'%}\">Back to the PyBIRD AI Home Page</a>\n")
 
+        # Write Python imports
         file.write("from pybirdai.models.bird_data_model import *\n")
-        file.write("from .output_tables import *\n")
+        file.write("# Note: output_tables.py no longer needed - using direct product-specific classes\n")
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         file.write("from pybirdai.annotations.decorators import lineage\n")
+        
+        # Import all logic files that contain product-specific classes
+        logic_files = set()
+        for cube_id in sdd_context.combination_to_rol_cube_map.keys():
+            logic_files.add(f"{cube_id}_logic")
+        
+        file.write("\n# Import product-specific classes\n")
+        for logic_file in sorted(logic_files):
+            file.write(f"from .{logic_file} import *\n")
+        
+        file.write("\n")
 
-        # create a copy of combination_to_rol_cube_map which is ordered by cube_id
+        # Create a copy of combination_to_rol_cube_map which is ordered by cube_id
         cube_ids = sorted(sdd_context.combination_to_rol_cube_map.keys())
         for cube_id in cube_ids:
             combination_list = sdd_context.combination_to_rol_cube_map[cube_id]
 
-            report_html_file.write("<tr><td><a href=\"{% url 'pybirdai:show_report' '" + cube_id +'.html' + "'%}\">" +cube_id + "</a></td></tr>\n")
-            filter_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep +  cube_id +'.html', "a",  encoding='utf-8')
+            report_html_file.write("<tr><td><a href=\"{% url 'pybirdai:show_report' '" + cube_id + '.html' + "'%}\">" + cube_id + "</a></td></tr>\n")
+            filter_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep + cube_id + '.html', "a", encoding='utf-8')
 
+            # Write filter HTML header
             filter_html_file.write("{% extends 'base.html' %}\n")
             filter_html_file.write("{% block content %}\n")
             filter_html_file.write("<!DOCTYPE html>\n")
@@ -81,50 +140,56 @@ class CreateExecutableFilters:
             filter_html_file.write("<table border=\"1\">\n")
             filter_html_file.write("<a href=\"{% url 'pybirdai:report_templates'%}\">Back to the PyBIRD Reports Templates Page</a>\n")
 
-
             for combination in combination_list:
                 if combination.combination_id.metric:
-                    filter_html_file.write("<tr><td><a href=\"{% url 'pybirdai:execute_data_point' '" + combination.combination_id.combination_id + "'%}\">" + cube_id + "_" + combination.combination_id.combination_id + "</a></td></tr>\n")
-
-
+                    filter_html_file.write("<tr><td><a href=\"{% url 'pybirdai:execute_data_point' '" + 
+                                         combination.combination_id.combination_id + "'%}\">" + 
+                                         cube_id + "_" + combination.combination_id.combination_id + 
+                                         "</a></td></tr>\n")
+                    
+                    # Get product-specific classes for this combination
+                    product_classes = self.get_product_classes_for_combination(sdd_context, combination, cube_id)
+                    
+                    # Generate the class
                     file.write("class Cell_" + combination.combination_id.combination_id + ":\n")
-                    file.write("\t" + cube_id + "_Table = None\n")
+                    
+                    # Create attributes for each product-specific class
+                    for product_class in product_classes:
+                        file.write("\t" + product_class + " = None\n")
+                    
                     file.write("\t" + cube_id + "s = []\n")
-                    file.write("\t@lineage(dependencies={\"" + cube_id + "." +combination.combination_id.metric.name + "\"})\n")
-                    file.write("\tdef metric_value(self):\n"  )
+                    
+                    # Write metric_value method
+                    file.write("\t@lineage(dependencies={\"" + cube_id + "." + combination.combination_id.metric.name + "\"})\n")
+                    file.write("\tdef metric_value(self):\n")
                     file.write("\t\ttotal = 0\n")
                     file.write("\t\tfor item in self." + cube_id + "s:\n")
                     file.write("\t\t\ttotal += item." + combination.combination_id.metric.name + "()\n")
                     file.write("\t\treturn total\n")
+                    
+                    # Build calc_referenced_items method
                     calc_string = ''
                     calc_lineage_string = '\t@lineage(dependencies={'
-                    calc_string +="\tdef calc_referenced_items(self):\n"
-                    calc_string +="\t\titems = self." + cube_id + "_Table." + cube_id + "s\n"
-                    calc_string +="\t\tfor item in items:\n"
-                    calc_string +="\t\t\tfilter_passed = True\n"
+                    
+                    # Get combination items for filtering
                     combination_item_list = []
                     try:
-                        combination_item_list =  sdd_context.combination_item_dictionary[combination.combination_id.combination_id]
+                        combination_item_list = sdd_context.combination_item_dictionary[combination.combination_id.combination_id]
                     except:
                         pass
+                    
+                    # Build lineage dependencies
                     item_counter = 0
                     for combination_item in combination_item_list:
+                        # Include TYP_INSTRMNT in lineage dependencies for completeness
+                            
                         leaf_node_members = CreateExecutableFilters.get_leaf_node_codes(self,
                                                                                       sdd_context,
                                                                                       combination_item.member_id,
                                                                                       combination_item.member_hierarchy)
-    
+                        
                         if len(leaf_node_members) > 0:
-                            if (len(leaf_node_members) == 1) and (str(leaf_node_members[0].code) == '0'):
-                                pass
-                            else:
-                                calc_string +="\t\t\tif "
-                                for leaf_node_member in leaf_node_members:
-                                    calc_string += "\t\t\t\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n"
-                                calc_string += "\t\t\t\tFalse:\n"
-                                calc_string += "\t\t\t\tpass\n"
-                                calc_string += "\t\t\telse:\n"
-                                calc_string += "\t\t\t\tfilter_passed = False\n"
+                            if not ((len(leaf_node_members) == 1) and (str(leaf_node_members[0].code) == '0')):
                                 if item_counter > 0:
                                     calc_lineage_string += ','
                                     calc_lineage_string += '\n\t\t\t'
@@ -133,24 +198,49 @@ class CreateExecutableFilters:
                                 calc_lineage_string += '.'
                                 calc_lineage_string += combination_item.variable_id.name 
                                 calc_lineage_string += '"'
-                            
                                 item_counter += 1
-                        else:
-                            print("No leaf node members for " + combination_item.variable_id.name +":" + combination_item.member_id.member_id)
-
+                    
                     calc_lineage_string += '})\n'
-
+                    
+                    # Build the calc method
+                    calc_string += "\tdef calc_referenced_items(self):\n"
+                    
+                    if not product_classes:
+                        # No product classes found - this shouldn't happen
+                        calc_string += "\t\t# ERROR: No TYP_INSTRMNT found for this combination\n"
+                        calc_string += "\t\tpass\n"
+                    else:
+                        # Direct filtering on product-specific classes
+                        calc_string += "\t\t# Filter directly on product-specific classes\n"
+                        
+                        for idx, product_class in enumerate(product_classes):
+                            # Extract the product name from class name
+                            product_name = product_class.replace(cube_id + "_", "").replace("_Table", "") + "s"
+                            
+                            calc_string += f"\t\t# Process {product_class}\n"
+                            calc_string += f"\t\tif self.{product_class} is not None:\n"
+                            calc_string += f"\t\t\titems = self.{product_class}.{product_name}\n"
+                            calc_string += f"\t\t\tfor item in items:\n"
+                            calc_string += f"\t\t\t\tfilter_passed = True\n"
+                            
+                            # Apply filters (including TYP_INSTRMNT for completeness)
+                            calc_string += self._generate_filter_logic(combination_item_list, sdd_context, "\t\t\t\t")
+                            
+                            calc_string += f"\t\t\t\tif filter_passed:\n"
+                            calc_string += f"\t\t\t\t\tself.{cube_id}s.append(item)\n"
+                    
+                    # Write the complete method
                     file.write(calc_lineage_string)
                     file.write(calc_string + '\n')
-                    file.write("\t\t\tif filter_passed:\n")
-                    file.write("\t\t\t\tself." + cube_id + "s.append(item)\n")
+                    
+                    # Write init method
                     file.write("\tdef init(self):\n")
                     file.write("\t\tOrchestration().init(self)\n")
                     file.write("\t\tself." + cube_id + "s = []\n")
                     file.write("\t\tself.calc_referenced_items()\n")
-                    file.write("\t\treturn None\n")
+                    file.write("\t\treturn None\n\n")
 
-
+            # Close HTML files
             filter_html_file.write("</table>\n")
             filter_html_file.write("</body>\n")
             filter_html_file.write("</html>\n")
@@ -158,6 +248,8 @@ class CreateExecutableFilters:
             filter_html_file.write("</body>\n")
             filter_html_file.write("</html>\n")
             filter_html_file.write("{% endblock %}\n")
+            
+        # Close report HTML file
         report_html_file.write("</table>\n")
         report_html_file.write("</body>\n")
         report_html_file.write("</html>\n")
@@ -166,6 +258,33 @@ class CreateExecutableFilters:
         report_html_file.write("</html>\n")
         report_html_file.write("{% endblock %}\n")
 
+    def _generate_filter_logic(self, combination_item_list, sdd_context, indent):
+        """Generate filter logic for combination items (including TYP_INSTRMNT for completeness)"""
+        filter_string = ""
+        
+        for combination_item in combination_item_list:
+            # Include TYP_INSTRMNT filter even though it's redundant with product class selection
+                
+            leaf_node_members = CreateExecutableFilters.get_leaf_node_codes(self,
+                                                                          sdd_context,
+                                                                          combination_item.member_id,
+                                                                          combination_item.member_hierarchy)
+            
+            if len(leaf_node_members) > 0:
+                if (len(leaf_node_members) == 1) and (str(leaf_node_members[0].code) == '0'):
+                    pass
+                else:
+                    filter_string += indent + "if "
+                    for leaf_node_member in leaf_node_members:
+                        filter_string += indent + "\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n"
+                    filter_string += indent + "\tFalse:\n"
+                    filter_string += indent + "\tpass\n"
+                    filter_string += indent + "else:\n"
+                    filter_string += indent + "\tfilter_passed = False\n"
+            else:
+                print("No leaf node members for " + combination_item.variable_id.name + ":" + combination_item.member_id.member_id)
+        
+        return filter_string
 
     def get_leaf_node_codes(self, sdd_context, member, member_hierarchy):
         return_list = []
