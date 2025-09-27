@@ -140,6 +140,8 @@ class ReportCellFilter:
 4. ✅ Eliminated generation of `output_tables.py` and all union-related classes
 5. ✅ Updated filter generation to include `TYP_INSTRMNT` filters for completeness
 6. ✅ Verified implementation with comprehensive test suite
+7. ✅ Fixed lineage decorators to reference product-specific classes instead of output layers
+8. ✅ Fixed metric_value function to work correctly with filtered items from product-specific classes
 
 ## Final Architecture
 
@@ -149,3 +151,4 @@ The system now:
 - Includes redundant `TYP_INSTRMNT` filters for completeness and consistency
 - Eliminates all union table overhead and intermediary wrapper classes
 - Assumes all report cells have `TYP_INSTRMNT` values (no fallback needed)
+- **Generates correct lineage dependencies** pointing to actual product classes (e.g., `Other_loans.CRRYNG_AMNT`) instead of output layers (e.g., `F_01_01_REF_FINREP_3_0.CRRYNG_AMNT`)

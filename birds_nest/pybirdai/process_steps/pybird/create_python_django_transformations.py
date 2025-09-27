@@ -107,7 +107,7 @@ class CreatePythonTransformations:
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
             file.write("from datetime import datetime\n")
-            file.write("from pybirdai.annotations.decorators import lineage\n")
+            file.write("from pybirdai.annotations.decorators import lineage, track_table_init\n")
 
             # Skip UnionItem generation - no longer needed with direct product filtering
             # file.write("\nclass " + report_id + "_UnionItem:\n")
@@ -224,4 +224,7 @@ class CreatePythonTransformations:
         base_dir = settings.BASE_DIR
         python_dir = os.path.join(base_dir, 'results',  'generated_python_joins')
         for file in os.listdir(python_dir):
-            os.remove(os.path.join(python_dir, file))
+            file_path = os.path.join(python_dir, file)
+            # Skip directories like __pycache__
+            if os.path.isfile(file_path):
+                os.remove(file_path)
