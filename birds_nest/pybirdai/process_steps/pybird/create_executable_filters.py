@@ -86,9 +86,7 @@ class CreateExecutableFilters:
             orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             print("AORTA lineage tracking enabled for filter generation")
         
-        # Generate report_cells.py in the correct location where it's imported from
-        report_cells_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'filter_code', 'report_cells.py')
-        file = open(report_cells_path, "w", encoding='utf-8')  # Use 'w' to overwrite existing file
+        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep + 'report_cells.py', "a", encoding='utf-8')
         report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep + 'report_templates.html', "a", encoding='utf-8')
         
         # Write HTML headers
