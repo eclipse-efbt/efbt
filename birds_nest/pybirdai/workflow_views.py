@@ -55,6 +55,7 @@ from .entry_points import (
 from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 import traceback
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 def refresh_complete_status(task:int=3,all:bool=True):
 
@@ -1971,7 +1972,7 @@ def _discover_test_suites() -> list:
             continue
 
         # Check for suite_manifest.yaml
-        manifest_path = os.path.join(item_path, "suite_manifest.yaml")
+        manifest_path = os.path.join(item_path, "suite_manifest.json") or os.path.join(item_path, "suite_manifest.yaml")
         if os.path.exists(manifest_path):
             test_suites.append(item)
             logger.info(f"Discovered test suite: {item}")
@@ -2469,7 +2470,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
 
         if substep_name == 'run_tests':
             logger.info("Executing run tests substep...")
-
+            
             # Discover all test suites
             test_suites = _discover_test_suites()
 
