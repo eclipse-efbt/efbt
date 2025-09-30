@@ -390,7 +390,7 @@ def _run_database_setup_async():
 
         # Create config object
         config = AutomodeConfiguration(
-            data_model_type=config_data.get("data_model_type", "ELDM"),
+            data_model_type=config_data.get("data_model_type", "EIL"),
             technical_export_source=config_data.get(
                 "technical_export_source", "BIRD_WEBSITE"
             ),
@@ -691,10 +691,10 @@ def workflow_dashboard(request):
         messages.error(request, "Automode configuration file not found")
         with open("automode_config.json", "w") as f:
             f.write("""{
-              "data_model_type": "ELDM",
+              "data_model_type": "EIL",
               "clone_mode": "false",
               "technical_export_source": "GITHUB",
-              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
               "config_files_source": "GITHUB",
               "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
               "test_suite_source": "MANUAL",
@@ -773,10 +773,10 @@ def workflow_dashboard(request):
         logger.error(f"Error loading configuration: {e}")
         # Use defaults if config cannot be loaded
         config = {
-            "data_model_type": "ELDM",
+            "data_model_type": "EIL",
             "clone_mode": "false",
             "technical_export_source": "BIRD_WEBSITE",
-            "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+            "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
             "test_suite_source": "MANUAL",
@@ -1252,7 +1252,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                 if request.POST.get('generate_filter_code') or run_all:
                     logger.info("Generating executable filter Python code...")
                     execution_data['current_phase'] = 'filters'
-                    RunCreateExecutableFilters.run_create_executable_filters()
+                    RunCreateExecutableFilters.run_create_executable_filters_from_db()
                     execution_data['filter_code_generated'] = True
                     execution_data['steps_completed'].append('Executable filter code generation')
 
@@ -1275,7 +1275,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                 if request.POST.get("generate_filter_code") or run_all:
                     logger.info("Generating executable filter Python code...")
                     execution_data["current_phase"] = "filters"
-                    RunCreateExecutableFilters.run_create_executable_filters()
+                    RunCreateExecutableFilters.run_create_executable_filters_from_db()
                     execution_data["filter_code_generated"] = True
                     execution_data["steps_completed"].append(
                         "Executable filter code generation"
@@ -1286,7 +1286,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                 if request.POST.get("generate_join_code") or run_all:
                     logger.info("Join code generation (using filter infrastructure)...")
                     execution_data["current_phase"] = "joins"
-                    RunCreateExecutableJoins.create_python_joins()  # Correct method name
+                    RunCreateExecutableJoins.create_python_joins_from_db()  # Correct method name
                     execution_data['join_code_generated'] = True
                     execution_data['steps_completed'].append('Join code infrastructure ready')
 
@@ -1894,14 +1894,14 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
 
         if substep_name == 'generate_filter_code':
             logger.info("Executing generate filter code substep...")
-            RunCreateExecutableFilters.run_create_executable_filters()
+            RunCreateExecutableFilters.run_create_executable_filters_from_db()
             execution_data['filter_code_generated'] = True
             execution_data['steps_completed'].append('Executable filter code generation')
             success_message = 'Filter code generated successfully'
 
         elif substep_name == 'generate_join_code':
             logger.info("Executing generate join code substep...")
-            RunCreateExecutableJoins.create_python_joins()
+            RunCreateExecutableJoins.create_python_joins_from_db()
             execution_data['join_code_generated'] = True
             execution_data['steps_completed'].append('Join code generation')
             success_message = 'Join code generated successfully'
@@ -2394,14 +2394,14 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
 
         if substep_name == 'generate_filter_code':
             logger.info("Executing generate filter code substep...")
-            RunCreateExecutableFilters.run_create_executable_filters()
+            RunCreateExecutableFilters.run_create_executable_filters_from_db()
             execution_data['filter_code_generated'] = True
             execution_data['steps_completed'].append('Executable filter code generation')
             success_message = 'Filter code generated successfully'
 
         elif substep_name == 'generate_join_code':
             logger.info("Executing generate join code substep...")
-            RunCreateExecutableJoins.create_python_joins()
+            RunCreateExecutableJoins.create_python_joins_from_db()
             execution_data['join_code_generated'] = True
             execution_data['steps_completed'].append('Join code generation')
             success_message = 'Join code generated successfully'
@@ -2672,7 +2672,7 @@ def workflow_save_config(request):
     try:
         # Get configuration data from request
         config_data = {
-            "data_model_type": request.POST.get("data_model_type", "ELDM"),
+            "data_model_type": request.POST.get("data_model_type", "EIL"),
             "clone_mode": request.POST.get("clone_mode", "false"),
             "technical_export_source": request.POST.get(
                 "technical_export_source", "BIRD_WEBSITE"
@@ -3466,7 +3466,7 @@ def export_database_to_github(request):
 
         # Determine repository URL (use automode config if not provided)
         if not repository_url:
-            repository_url = github_service.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_EIL'
+            repository_url = github_service.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_IL'
 
         if use_fork_workflow:
             # Use new fork workflow (default behavior)
