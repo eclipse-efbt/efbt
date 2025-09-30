@@ -1920,6 +1920,38 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
         }, status=500)
 
 
+def _discover_test_suites() -> list:
+    """
+    Discover test suites in the tests/ directory.
+    Looks for directories containing suite_manifest.yaml files.
+
+    Returns:
+        List of test suite directory names
+    """
+    test_suites = []
+    tests_dir = "tests"
+
+    if not os.path.exists(tests_dir):
+        logger.warning(f"Tests directory not found: {tests_dir}")
+        return test_suites
+
+    # Scan for directories with suite_manifest.yaml
+    for item in os.listdir(tests_dir):
+        item_path = os.path.join(tests_dir, item)
+
+        # Check if it's a directory
+        if not os.path.isdir(item_path):
+            continue
+
+        # Check for suite_manifest.yaml
+        manifest_path = os.path.join(item_path, "suite_manifest.yaml")
+        if os.path.exists(manifest_path):
+            test_suites.append(item)
+            logger.info(f"Discovered test suite: {item}")
+
+    return test_suites
+
+
 def _execute_task4_substep(request, substep_name, task_execution, workflow_session):
     """Execute individual substeps for Task 4: Test Suite Execution"""
 
@@ -1928,32 +1960,58 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
-            'steps_completed': []
+            'steps_completed': [],
+            'suites_run': []
         }
         if 'steps_completed' not in execution_data:
             execution_data['steps_completed'] = []
+        if 'suites_run' not in execution_data:
+            execution_data['suites_run'] = []
 
         if substep_name == 'run_tests':
             logger.info("Executing run tests substep...")
 
-            # Create test runner instance
-            test_runner = RegulatoryTemplateTestRunner(False)
+            # Discover all test suites
+            test_suites = _discover_test_suites()
 
-            # Configure test runner
-            config_file = request.POST.get('config_file', 'tests/configuration_file_tests.json')
-            test_runner.args.uv = "False"
-            test_runner.args.config_file = config_file
-            test_runner.args.dp_value = None
-            test_runner.args.reg_tid = None
-            test_runner.args.dp_suffix = None
-            test_runner.args.scenario = None
+            if not test_suites:
+                logger.warning("No test suites found in tests/ directory")
+                execution_data['steps_completed'].append('Test suite execution (no suites found)')
+                success_message = 'No test suites found to execute'
+            else:
+                logger.info(f"Found {len(test_suites)} test suite(s): {', '.join(test_suites)}")
 
-            # Execute tests
-            test_runner.main()
+                # Run tests for each suite
+                for suite_name in test_suites:
+                    logger.info(f"Running tests for suite: {suite_name}")
 
-            execution_data['tests_executed'] = True
-            execution_data['steps_completed'].append('Test suite execution')
-            success_message = 'Tests executed successfully'
+                    try:
+                        # Create test runner instance
+                        test_runner = RegulatoryTemplateTestRunner(False)
+
+                        # Configure test runner for this suite
+                        config_file = f'tests/{suite_name}/configuration_file_tests.json'
+                        test_runner.args.uv = "False"
+                        test_runner.args.config_file = config_file
+                        test_runner.args.dp_value = None
+                        test_runner.args.reg_tid = None
+                        test_runner.args.dp_suffix = None
+                        test_runner.args.scenario = None
+
+                        # Execute tests
+                        logger.info(f"Executing tests for suite: {suite_name}")
+                        test_runner.main()
+
+                        execution_data['suites_run'].append(suite_name)
+                        logger.info(f"Successfully executed tests for suite: {suite_name}")
+
+                    except Exception as suite_error:
+                        logger.error(f"Error running tests for suite '{suite_name}': {str(suite_error)}")
+                        execution_data['steps_completed'].append(f'Test suite execution error for {suite_name}: {str(suite_error)}')
+
+                execution_data['tests_executed'] = True
+                execution_data['steps_completed'].append(f'Test suite execution completed for {len(execution_data["suites_run"])} suite(s)')
+                success_message = f'Tests executed successfully for {len(execution_data["suites_run"])} suite(s): {", ".join(execution_data["suites_run"])}'
 
         else:
             return JsonResponse({
@@ -2374,32 +2432,58 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
-            'steps_completed': []
+            'steps_completed': [],
+            'suites_run': []
         }
         if 'steps_completed' not in execution_data:
             execution_data['steps_completed'] = []
+        if 'suites_run' not in execution_data:
+            execution_data['suites_run'] = []
 
         if substep_name == 'run_tests':
             logger.info("Executing run tests substep...")
 
-            # Create test runner instance
-            test_runner = RegulatoryTemplateTestRunner(False)
+            # Discover all test suites
+            test_suites = _discover_test_suites()
 
-            # Configure test runner
-            config_file = request.POST.get('config_file', 'tests/configuration_file_tests.json')
-            test_runner.args.uv = "False"
-            test_runner.args.config_file = config_file
-            test_runner.args.dp_value = None
-            test_runner.args.reg_tid = None
-            test_runner.args.dp_suffix = None
-            test_runner.args.scenario = None
+            if not test_suites:
+                logger.warning("No test suites found in tests/ directory")
+                execution_data['steps_completed'].append('Test suite execution (no suites found)')
+                success_message = 'No test suites found to execute'
+            else:
+                logger.info(f"Found {len(test_suites)} test suite(s): {', '.join(test_suites)}")
 
-            # Execute tests
-            test_runner.main()
+                # Run tests for each suite
+                for suite_name in test_suites:
+                    logger.info(f"Running tests for suite: {suite_name}")
 
-            execution_data['tests_executed'] = True
-            execution_data['steps_completed'].append('Test suite execution')
-            success_message = 'Tests executed successfully'
+                    try:
+                        # Create test runner instance
+                        test_runner = RegulatoryTemplateTestRunner(False)
+
+                        # Configure test runner for this suite
+                        config_file = f'tests/{suite_name}/configuration_file_tests.json'
+                        test_runner.args.uv = "False"
+                        test_runner.args.config_file = config_file
+                        test_runner.args.dp_value = None
+                        test_runner.args.reg_tid = None
+                        test_runner.args.dp_suffix = None
+                        test_runner.args.scenario = None
+
+                        # Execute tests
+                        logger.info(f"Executing tests for suite: {suite_name}")
+                        test_runner.main()
+
+                        execution_data['suites_run'].append(suite_name)
+                        logger.info(f"Successfully executed tests for suite: {suite_name}")
+
+                    except Exception as suite_error:
+                        logger.error(f"Error running tests for suite '{suite_name}': {str(suite_error)}")
+                        execution_data['steps_completed'].append(f'Test suite execution error for {suite_name}: {str(suite_error)}')
+
+                execution_data['tests_executed'] = True
+                execution_data['steps_completed'].append(f'Test suite execution completed for {len(execution_data["suites_run"])} suite(s)')
+                success_message = f'Tests executed successfully for {len(execution_data["suites_run"])} suite(s): {", ".join(execution_data["suites_run"])}'
 
         else:
             return JsonResponse({
