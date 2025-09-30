@@ -162,6 +162,8 @@ class AutomodeConfigurationForm(forms.ModelForm):
             'technical_export_github_url',
             'config_files_source',
             'config_files_github_url',
+            'test_suite_source',
+            'test_suite_github_url',
             'when_to_stop'
         ]
         widgets = {
@@ -187,6 +189,15 @@ class AutomodeConfigurationForm(forms.ModelForm):
                 'placeholder': 'https://github.com/username/repository',
                 'style': 'display: none;'
             }),
+            'test_suite_source': forms.RadioSelect(attrs={
+                'class': 'form-radio',
+                'onchange': 'updateFormVisibility()'
+            }),
+            'test_suite_github_url': forms.URLInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'https://github.com/username/repository',
+                'style': 'display: none;'
+            }),
             'when_to_stop': forms.RadioSelect(attrs={
                 'class': 'form-radio'
             }),
@@ -199,6 +210,7 @@ class AutomodeConfigurationForm(forms.ModelForm):
         if not self.instance.pk:
             self.fields['technical_export_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD'
             self.fields['config_files_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD'
+            self.fields['test_suite_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD'
 
         # Add CSS classes and help text
         for field_name, field in self.fields.items():
@@ -220,6 +232,12 @@ class AutomodeConfigurationForm(forms.ModelForm):
 
         self.fields['config_files_github_url'].label = 'Configuration Files GitHub URL'
         self.fields['config_files_github_url'].help_text = 'GitHub repository URL for configuration files'
+
+        self.fields['test_suite_source'].label = 'Test Suite Source'
+        self.fields['test_suite_source'].help_text = 'Choose where to fetch test suite files from'
+
+        self.fields['test_suite_github_url'].label = 'Test Suite GitHub URL'
+        self.fields['test_suite_github_url'].help_text = 'GitHub repository URL for test suite files'
 
         self.fields['github_token'].label = 'GitHub Personal Access Token'
         self.fields['github_token'].help_text = 'Optional token for accessing private repositories. Create at github.com/settings/tokens'
@@ -245,6 +263,20 @@ class AutomodeConfigurationForm(forms.ModelForm):
         """Validate configuration files GitHub URL."""
         url = self.cleaned_data.get('config_files_github_url')
         source = self.cleaned_data.get('config_files_source')
+
+        if source == 'GITHUB':
+            if not url:
+                raise ValidationError('GitHub URL is required when GitHub is selected as source.')
+
+            if not self._is_valid_github_url(url):
+                raise ValidationError('Please enter a valid GitHub repository URL.')
+
+        return url
+
+    def clean_test_suite_github_url(self):
+        """Validate test suite GitHub URL."""
+        url = self.cleaned_data.get('test_suite_github_url')
+        source = self.cleaned_data.get('test_suite_source')
 
         if source == 'GITHUB':
             if not url:
