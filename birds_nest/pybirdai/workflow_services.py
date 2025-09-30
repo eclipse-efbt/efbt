@@ -708,6 +708,7 @@ class AutomodeConfigurationService:
         results = {
             'technical_export': 0,
             'config_files': 0,
+            'test_suite': 0,
             'generated_python': 0,
             'filter_code': 0,
             'test_fixtures': 0,
@@ -724,6 +725,10 @@ class AutomodeConfigurationService:
         elif config.technical_export_source == 'GITHUB':
             branch = getattr(config, 'github_branch', 'main')
             results['technical_export'] = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
+
+        if hasattr(config, 'test_suite_source') and config.test_suite_source == 'GITHUB':
+            branch = getattr(config, 'github_branch', 'main')
+            results['test_suite'] = self._fetch_test_suite_from_github(config.test_suite_github_url, github_token, force_refresh, branch)
 
         # Fetch REF_FINREP report template HTML files
         try:
@@ -798,6 +803,24 @@ class AutomodeConfigurationService:
 
         except Exception as e:
             logger.error(f"Error fetching from GitHub repository: {e}")
+            raise
+
+    def _fetch_test_suite_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_EIL", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
+        from .utils.clone_repo_service import CloneRepoService
+        """Fetch test suite files from GitHub repository."""
+        logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")
+
+        try:
+            repo_name = github_url.split("/")[-1]
+            fetcher = CloneRepoService(token)
+            fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
+            fetcher.setup_test_suite_files(repo_name)                # Organize test suite files
+            fetcher.remove_fetched_files(repo_name)                  # Clean up downloaded files
+
+            return 1
+
+        except Exception as e:
+            logger.error(f"Error fetching test suite from GitHub repository: {e}")
             raise
 
     def _check_manual_technical_export_files(self) -> int:
