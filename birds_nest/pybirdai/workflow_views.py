@@ -1392,25 +1392,52 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
                     logger.info("Starting test suite execution...")
                     execution_data['steps_completed'].append('Test suite execution started')
 
-                    # Create test runner instance
-                    test_runner = RegulatoryTemplateTestRunner(False)
-                    config_file = 'tests/configuration_file_tests.json'
+                    # Auto-discover test suites in tests/ directory
+                    tests_dir = 'tests'
+                    test_suites = []
 
-                    logger.info(f"Running tests from config file: {config_file}")
-                    # Override the arguments to match our desired configuration
-                    test_runner.args.uv = "False"
-                    test_runner.args.config_file = config_file
-                    test_runner.args.dp_value = None
-                    test_runner.args.reg_tid = None
-                    test_runner.args.dp_suffix = None
-                    test_runner.args.scenario = None
+                    if os.path.exists(tests_dir):
+                        for entry in os.listdir(tests_dir):
+                            suite_path = os.path.join(tests_dir, entry)
+                            # Check if this is a directory and contains a configuration file
+                            if os.path.isdir(suite_path):
+                                config_file_path = os.path.join(suite_path, 'configuration_file_tests.json')
+                                if os.path.exists(config_file_path):
+                                    test_suites.append({
+                                        'name': entry,
+                                        'config_path': config_file_path
+                                    })
+                                    logger.info(f"Discovered test suite: {entry}")
 
-                    # Execute the test runner with config file
-                    test_runner.main()
+                    if not test_suites:
+                        logger.error("No test suites found in tests/ directory")
+                        raise Exception("No test suites found in tests/ directory")
+
+                    # Run tests for each discovered suite
+                    for suite in test_suites:
+                        logger.info(f"Running test suite: {suite['name']}")
+
+                        # Create test runner instance for this suite
+                        test_runner = RegulatoryTemplateTestRunner(False)
+
+                        # Configure test runner
+                        test_runner.args.uv = "False"
+                        test_runner.args.config_file = suite['config_path']
+                        test_runner.args.dp_value = None
+                        test_runner.args.reg_tid = None
+                        test_runner.args.dp_suffix = None
+                        test_runner.args.scenario = None
+                        test_runner.args.suite_name = suite['name']
+
+                        # Execute tests
+                        logger.info(f"Executing tests from config: {suite['config_path']}")
+                        test_runner.main()
+                        logger.info(f"Completed test suite: {suite['name']}")
+
                     execution_data['test_mode'] = 'config_file'
-                    execution_data['config_file'] = config_file
+                    execution_data['test_suites'] = [s['name'] for s in test_suites]
                     execution_data['tests_executed'] = True
-                    execution_data['steps_completed'].append('Configuration file tests completed')
+                    execution_data['steps_completed'].append(f'Configuration file tests completed for {len(test_suites)} suite(s)')
 
                 # Generate test reports
                 if request.POST.get('generate_reports') or run_all:
