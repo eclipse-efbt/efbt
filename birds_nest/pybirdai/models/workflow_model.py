@@ -16,8 +16,9 @@ from django.utils import timezone
 
 class AutomodeConfiguration(models.Model):
     DATA_MODEL_CHOICES = [
-        ('ELDM', 'ELDM (Logical Data Model)'),
         ('EIL', 'EIL (Input Layer)'),
+        ('ELDM', 'ELDM (Logical Data Model)'),
+        
     ]
     
     TECHNICAL_EXPORT_SOURCE_CHOICES = [
@@ -42,7 +43,7 @@ class AutomodeConfiguration(models.Model):
     data_model_type = models.CharField(
         max_length=10,
         choices=DATA_MODEL_CHOICES,
-        default='ELDM',
+        default='EIL',
         help_text='Select whether to use ELDM or EIL data model'
     )
     
