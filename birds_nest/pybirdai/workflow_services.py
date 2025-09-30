@@ -1127,10 +1127,41 @@ class AutomodeConfigurationService:
         return results
 
 
+    def _discover_test_suites(self) -> list:
+        """
+        Discover test suites in the tests/ directory.
+        Looks for directories containing suite_manifest.yaml files.
+
+        Returns:
+            List of test suite directory names
+        """
+        test_suites = []
+        tests_dir = "tests"
+
+        if not os.path.exists(tests_dir):
+            logger.warning(f"Tests directory not found: {tests_dir}")
+            return test_suites
+
+        # Scan for directories with suite_manifest.yaml
+        for item in os.listdir(tests_dir):
+            item_path = os.path.join(tests_dir, item)
+
+            # Check if it's a directory
+            if not os.path.isdir(item_path):
+                continue
+
+            # Check for suite_manifest.yaml
+            manifest_path = os.path.join(item_path, "suite_manifest.yaml")
+            if os.path.exists(manifest_path):
+                test_suites.append(item)
+                logger.info(f"Discovered test suite: {item}")
+
+        return test_suites
+
     def _run_tests_suite(self):
         """
-        Run the test suite using the RegulatoryTemplateTestRunner.
-        This executes tests similar to: python pybirdai/utils/run_tests.py --uv "False" --config-file "tests/configuration_file_tests.json"
+        Run all test suites found in the tests/ directory.
+        Discovers test suites by looking for suite_manifest.yaml files.
 
         Returns:
             dict: Results of the test execution
@@ -1140,32 +1171,55 @@ class AutomodeConfigurationService:
         results = {
             'tests_executed': False,
             'test_results': {},
+            'suites_run': [],
             'errors': []
         }
 
         try:
-            # Import the test runner
+            # Discover all test suites in tests/ directory
+            test_suites = self._discover_test_suites()
+
+            if not test_suites:
+                logger.warning("No test suites found in tests/ directory")
+                results['errors'].append("No test suites found")
+                return results
+
+            logger.info(f"Found {len(test_suites)} test suite(s): {', '.join(test_suites)}")
+
+            # Import test runner
             from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
-            # Create test runner instance
-            test_runner = RegulatoryTemplateTestRunner()
+            # Run tests for each suite
+            for suite_name in test_suites:
+                logger.info(f"Running tests for suite: {suite_name}")
 
-            # Override the arguments to match our desired configuration
-            test_runner.args.uv = "False"
-            test_runner.args.config_file = "tests/configuration_file_tests.json"
-            test_runner.args.dp_value = None
-            test_runner.args.reg_tid = None
-            test_runner.args.dp_suffix = None
-            test_runner.args.scenario = None
+                try:
+                    # Create test runner instance
+                    test_runner = RegulatoryTemplateTestRunner()
 
-            # Execute the test runner
-            logger.info("Executing test runner with config file: tests/configuration_file_tests.json")
-            test_runner.main()
+                    # Set configuration for this suite
+                    config_file = f"tests/{suite_name}/configuration_file_tests.json"
+                    test_runner.args.uv = "False"
+                    test_runner.args.config_file = config_file
+                    test_runner.args.dp_value = None
+                    test_runner.args.reg_tid = None
+                    test_runner.args.dp_suffix = None
+                    test_runner.args.scenario = None
 
-            results['tests_executed'] = True
-            results['test_results'] = {'status': 'completed', 'config_file': 'tests/configuration_file_tests.json'}
+                    # Execute tests
+                    logger.info(f"Executing test runner for {suite_name} with config: {config_file}")
+                    test_runner.main()
 
-            logger.info("Test suite execution completed successfully")
+                    results['suites_run'].append(suite_name)
+                    results['test_results'][suite_name] = {'status': 'completed', 'config_file': config_file}
+
+                except Exception as suite_error:
+                    error_msg = f"Error running tests for suite '{suite_name}': {str(suite_error)}"
+                    logger.error(error_msg)
+                    results['errors'].append(error_msg)
+
+            results['tests_executed'] = len(results['suites_run']) > 0
+            logger.info(f"Test suite execution completed. Suites run: {len(results['suites_run'])}")
 
         except Exception as e:
             error_msg = f"Error during test suite execution: {str(e)}"
