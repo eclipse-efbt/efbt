@@ -53,7 +53,7 @@ if __name__ == "__main__":
     from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 
     logger.info("Executing generate filter code substep...")
-    RunCreateExecutableFilters.run_create_executable_filters()
+    RunCreateExecutableFilters.run_create_executable_filters_from_db()
 
     logger.info("Executing generate join code substep...")
-    RunCreateExecutableJoins.create_python_joins()
+    RunCreateExecutableJoins.create_python_joins_from_db()

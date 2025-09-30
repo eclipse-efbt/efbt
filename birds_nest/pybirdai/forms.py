@@ -44,7 +44,7 @@ class AutomodeConfigurationSessionForm(forms.Form):
 
     data_model_type = forms.ChoiceField(
         choices=DATA_MODEL_CHOICES,
-        initial='ELDM',
+        initial='EIL',
         widget=forms.RadioSelect(),
         help_text='Select whether to use ELDM or EIL data model'
     )
@@ -58,7 +58,7 @@ class AutomodeConfigurationSessionForm(forms.Form):
 
     technical_export_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD',
+        initial='https://github.com/regcommunity/FreeBIRD_IL',
         help_text='GitHub repository URL for technical export files (when GitHub source is selected)'
     )
 
@@ -71,7 +71,7 @@ class AutomodeConfigurationSessionForm(forms.Form):
 
     config_files_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD',
+        initial='https://github.com/regcommunity/FreeBIRD_IL',
         help_text='GitHub repository URL for configuration files (when GitHub source is selected)'
     )
 
@@ -208,9 +208,8 @@ class AutomodeConfigurationForm(forms.ModelForm):
 
         # Set default GitHub URLs if not provided
         if not self.instance.pk:
-            self.fields['technical_export_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD'
-            self.fields['config_files_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD'
-            self.fields['test_suite_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD'
+            self.fields['technical_export_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD_IL'
+            self.fields['config_files_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD_IL'
 
         # Add CSS classes and help text
         for field_name, field in self.fields.items():
@@ -364,7 +363,7 @@ class ResourceDownloadForm(forms.Form):
 
     configuration_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD',
+        initial='https://github.com/regcommunity/FreeBIRD_IL',
         widget=forms.URLInput(attrs={'class': 'form-control'}),
         label='Configuration GitHub URL',
         help_text='GitHub repository URL for configuration files'

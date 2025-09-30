@@ -127,14 +127,14 @@
                     Data Model Type
                 </label>
                 <div style="margin-left: 15px;">
-                    <div style="margin-bottom: 8px;">
-                        <input type="radio" name="data_model_type" value="ELDM" id="data_model_eldm" checked onchange="updateFormVisibility()">
-                        <label for="data_model_eldm" style="margin-left: 8px;">ELDM (Logical Data Model)</label>
-                    </div>
                     <div>
                         <input type="radio" name="data_model_type" value="EIL" id="data_model_eil" onchange="updateFormVisibility()">
                         <label for="data_model_eil" style="margin-left: 8px;">EIL (Input Layer)</label>
                     </div>
+                    <div style="margin-bottom: 8px;">
+                        <input type="radio" name="data_model_type" value="ELDM" id="data_model_eldm" checked onchange="updateFormVisibility()">
+                        <label for="data_model_eldm" style="margin-left: 8px;">ELDM (Logical Data Model)</label>
+                    </div>                    
                 </div>
                 <small style="color: #666; font-style: italic;">Choose the database model type for BIRD data processing</small>
             </div>
@@ -160,7 +160,7 @@
                     <div id="tech_export_github_url_container" style="display: none; margin-left: 20px; margin-top: 10px;">
                         <input type="url" name="technical_export_github_url" id="tech_export_github_url" 
                                placeholder="https://github.com/username/repository" 
-                               value="https://github.com/regcommunity/FreeBIRD"
+                               value="https://github.com/regcommunity/FreeBIRD_IL"
                                style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                     </div>
                 </div>
@@ -184,7 +184,7 @@
                     <div id="config_files_github_url_container" style="display: none; margin-left: 20px; margin-top: 10px;">
                         <input type="url" name="config_files_github_url" id="config_files_github_url" 
                                placeholder="https://github.com/username/repository" 
-                               value="https://github.com/regcommunity/FreeBIRD"
+                               value="https://github.com/regcommunity/FreeBIRD_IL"
                                style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                     </div>
                 </div>

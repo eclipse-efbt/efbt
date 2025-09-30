@@ -56,8 +56,9 @@ if __name__ == "__main__":
           "data_model_type": "EIL",
           "clone_mode": "false",
           "technical_export_source": "GITHUB",
-          "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+          "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
           "config_files_source": "GITHUB",
+
           "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
           "test_suite_source": "GITHUB",
           "test_suite_github_url": "https://github.com/BIRD-Software-Solutions/bird-default-test-suite",
