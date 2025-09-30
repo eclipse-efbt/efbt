@@ -1151,7 +1151,7 @@ class AutomodeConfigurationService:
                 continue
 
             # Check for suite_manifest.yaml
-            manifest_path = os.path.join(item_path, "suite_manifest.yaml")
+            manifest_path = os.path.join(item_path, "suite_manifest.json") or os.path.join(item_path, "suite_manifest.yaml")
             if os.path.exists(manifest_path):
                 test_suites.append(item)
                 logger.info(f"Discovered test suite: {item}")
