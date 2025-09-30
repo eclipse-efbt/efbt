@@ -56,9 +56,9 @@ if __name__ == "__main__":
           "data_model_type": "EIL",
           "clone_mode": "false",
           "technical_export_source": "GITHUB",
-          "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+          "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
           "config_files_source": "GITHUB",
-          "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+          "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
           "github_branch": "main",
           "when_to_stop": "RESOURCE_DOWNLOAD",
           "enable_lineage_tracking": False
