@@ -1959,10 +1959,6 @@ def _discover_test_suites() -> list:
     test_suites = []
     tests_dir = "tests"
 
-    if not os.path.exists(tests_dir):
-        logger.warning(f"Tests directory not found: {tests_dir}")
-        return test_suites
-
     # Scan for directories with suite_manifest.yaml
     for item in os.listdir(tests_dir):
         item_path = os.path.join(tests_dir, item)
@@ -1972,8 +1968,8 @@ def _discover_test_suites() -> list:
             continue
 
         # Check for suite_manifest.yaml
-        manifest_path = os.path.join(item_path, "suite_manifest.json") or os.path.join(item_path, "suite_manifest.yaml")
-        if os.path.exists(manifest_path):
+        manifest_bool = os.path.exists(os.path.join(item_path, "suite_manifest.json")) or os.path.exists(os.path.join(item_path, "suite_manifest.yaml"))
+        if manifest_bool:
             test_suites.append(item)
             logger.info(f"Discovered test suite: {item}")
 
@@ -2470,7 +2466,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
 
         if substep_name == 'run_tests':
             logger.info("Executing run tests substep...")
-            
+
             # Discover all test suites
             test_suites = _discover_test_suites()
 
