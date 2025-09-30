@@ -1245,7 +1245,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                 if request.POST.get('generate_filter_code') or run_all:
                     logger.info("Generating executable filter Python code...")
                     execution_data['current_phase'] = 'filters'
-                    RunCreateExecutableFilters.run_create_executable_filters()
+                    RunCreateExecutableFilters.run_create_executable_filters_from_db()
                     execution_data['filter_code_generated'] = True
                     execution_data['steps_completed'].append('Executable filter code generation')
 
@@ -1268,7 +1268,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                 if request.POST.get("generate_filter_code") or run_all:
                     logger.info("Generating executable filter Python code...")
                     execution_data["current_phase"] = "filters"
-                    RunCreateExecutableFilters.run_create_executable_filters()
+                    RunCreateExecutableFilters.run_create_executable_filters_from_db()
                     execution_data["filter_code_generated"] = True
                     execution_data["steps_completed"].append(
                         "Executable filter code generation"
@@ -1279,7 +1279,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                 if request.POST.get("generate_join_code") or run_all:
                     logger.info("Join code generation (using filter infrastructure)...")
                     execution_data["current_phase"] = "joins"
-                    RunCreateExecutableJoins.create_python_joins()  # Correct method name
+                    RunCreateExecutableJoins.create_python_joins_from_db()  # Correct method name
                     execution_data['join_code_generated'] = True
                     execution_data['steps_completed'].append('Join code infrastructure ready')
 
@@ -1860,14 +1860,14 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
 
         if substep_name == 'generate_filter_code':
             logger.info("Executing generate filter code substep...")
-            RunCreateExecutableFilters.run_create_executable_filters()
+            RunCreateExecutableFilters.run_create_executable_filters_from_db()
             execution_data['filter_code_generated'] = True
             execution_data['steps_completed'].append('Executable filter code generation')
             success_message = 'Filter code generated successfully'
 
         elif substep_name == 'generate_join_code':
             logger.info("Executing generate join code substep...")
-            RunCreateExecutableJoins.create_python_joins()
+            RunCreateExecutableJoins.create_python_joins_from_db()
             execution_data['join_code_generated'] = True
             execution_data['steps_completed'].append('Join code generation')
             success_message = 'Join code generated successfully'
@@ -2306,14 +2306,14 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
 
         if substep_name == 'generate_filter_code':
             logger.info("Executing generate filter code substep...")
-            RunCreateExecutableFilters.run_create_executable_filters()
+            RunCreateExecutableFilters.run_create_executable_filters_from_db()
             execution_data['filter_code_generated'] = True
             execution_data['steps_completed'].append('Executable filter code generation')
             success_message = 'Filter code generated successfully'
 
         elif substep_name == 'generate_join_code':
             logger.info("Executing generate join code substep...")
-            RunCreateExecutableJoins.create_python_joins()
+            RunCreateExecutableJoins.create_python_joins_from_db()
             execution_data['join_code_generated'] = True
             execution_data['steps_completed'].append('Join code generation')
             success_message = 'Join code generated successfully'
