@@ -1,6 +1,6 @@
 #!/bin/bash
-sudo apt-get update
-sudo apt-get install mdbtools
+sudo apt-get update -y
+sudo apt-get install mdbtools -y
 cd birds_nest
 pip install --upgrade pip --quiet
 python -m pip install django==5.1.3 --quiet

@@ -21,13 +21,13 @@
             <span id="config-toggle-icon">▼</span> <span id="config-toggle-text">Hide</span>
         </button>
     </div>
-    
+
     <div id="config-content" style="transition: max-height 0.3s ease-in-out; overflow: hidden;">
         <p style="color: #666; font-size: 14px; margin-top: 15px;">Configure data sources and preferences. Configuration is saved to a file and persists across database recreations.</p>
-    
+
     <form id="workflow-config-form" method="post" action="{% url 'pybirdai:workflow_save_config' %}">
         {% csrf_token %}
-        
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <!-- Left Column -->
             <div>
@@ -39,8 +39,8 @@
                         <option value="EIL" {% if config.data_model_type == 'EIL' %}selected{% endif %}>EIL (Input Layer)</option>
                     </select>
                 </div>
-                
-               
+
+
                 <!-- Enable Lineage Tracking -->
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">
@@ -50,7 +50,7 @@
                     </label>
                     <small style="color: #666;">Enable lineage tracking for transformation and filter generation</small>
                 </div>
-                
+
                 <!-- Configuration Files Source -->
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">Configuration Files Source</label>
@@ -70,13 +70,13 @@
                     </div>
                     <small style="color: #666;">Source for configuration files (ldm, extra_variables, joins_configuration)</small>
                 </div>
-                
+
                 <!-- Technical Export Source -->
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">Technical Export Source</label>
                     <div>
                         <label style="display: block; margin-bottom: 5px;">
-                            <input type="radio" name="technical_export_source" value="BIRD_WEBSITE" 
+                            <input type="radio" name="technical_export_source" value="BIRD_WEBSITE"
                                    {% if config.technical_export_source == 'BIRD_WEBSITE' %}checked{% endif %}
                                    onchange="updateWorkflowConfigVisibility()">
                             BIRD ECB Website
@@ -90,54 +90,90 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Right Column -->
             <div>
-                <!-- Single GitHub Repository for both sources -->
-                <div class="form-group" id="github-repo-group" style="margin-bottom: 20px; display: none;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Repository URL</label>
-                    <input type="url" name="github_url" id="github_url" class="form-control" 
+                <!-- BIRD Content Repository -->
+                <div class="form-group" id="technical-export-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">BIRD Content Repository URL</label>
+                    <input type="url" name="technical_export_github_url" id="technical_export_github_url" class="form-control"
                            placeholder="https://github.com/username/repository"
                            value="{{ config.technical_export_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
                            style="width: 100%; padding: 8px;">
-                    <small style="color: #666;">Repository containing both technical export and configuration files</small>
-                    <!-- Hidden fields to duplicate the value for backend compatibility -->
-                    <input type="hidden" name="technical_export_github_url" id="technical_export_github_url_hidden">
-                    <input type="hidden" name="config_files_github_url" id="config_files_github_url_hidden">
+                    <small style="color: #666;">Repository containing technical export files and BIRD content</small>
                 </div>
-                
+
+                <!-- Test Suite Repository -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Test Suite Source</label>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px;">
+                            <input type="radio" name="test_suite_source" value="MANUAL"
+                                   {% if config.test_suite_source == 'MANUAL' or not config.test_suite_source %}checked{% endif %}
+                                   onchange="updateWorkflowConfigVisibility()">
+                            Manual Upload
+                        </label>
+                        <label style="display: block; margin-bottom: 5px;">
+                            <input type="radio" name="test_suite_source" value="GITHUB"
+                                   {% if config.test_suite_source == 'GITHUB' %}checked{% endif %}
+                                   onchange="updateWorkflowConfigVisibility()">
+                            GitHub Repository
+                        </label>
+                    </div>
+                    <small style="color: #666;">Source for test suite files</small>
+                </div>
+
+                <div class="form-group" id="test-suite-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Test Suite Repository URL</label>
+                    <input type="url" name="test_suite_github_url" id="test_suite_github_url" class="form-control"
+                           placeholder="https://github.com/username/test-suite-repository"
+                           value="{{ config.test_suite_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
+                           style="width: 100%; padding: 8px;">
+                    <small style="color: #666;">Repository containing test suite files</small>
+                </div>
+
+                <!-- Configuration Files Repository (keep existing) -->
+                <div class="form-group" id="config-files-repo-group" style="margin-bottom: 20px; display: none;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Configuration Files Repository URL</label>
+                    <input type="url" name="config_files_github_url" id="config_files_github_url" class="form-control"
+                           placeholder="https://github.com/username/repository"
+                           value="{{ config.config_files_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
+                           style="width: 100%; padding: 8px;">
+                    <small style="color: #666;">Repository containing configuration files (joins, extra variables)</small>
+                </div>
+
                 <!-- GitHub Branch Selection -->
                 <div class="form-group" id="github-branch-group" style="margin-bottom: 20px; display: none;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Branch</label>
-                    <input type="text" name="github_branch" id="github_branch" class="form-control" 
+                    <input type="text" name="github_branch" id="github_branch" class="form-control"
                            placeholder="main"
                            value="{{ config.github_branch|default:'main' }}"
                            style="width: 100%; padding: 8px;">
                     <small style="color: #666;">Branch to pull files from (default: main)</small>
                 </div>
-                
+
                 <!-- GitHub Token -->
-                <div class="form-group" id="github-token-group" style="margin-bottom: 20px; display: none;">
+                <div class="form-group" id="github-token-group" style="margin-bottom: 20px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">GitHub Personal Access Token</label>
                     <input type="password" name="github_token" class="form-control"
                            placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (optional for private repos)"
                            value="{{ github_token|default:'' }}"
                            style="width: 100%; padding: 8px;">
                     <small style="color: #666;">
-                        Required only for private repositories. 
+                        Required only for private repositories.
                         <a href="https://github.com/settings/tokens" target="_blank" style="color: #3498db;">Create token here</a>
                         with 'repo' permissions.
                     </small>
                 </div>
             </div>
         </div>
-        
+
         <!-- Save Button -->
         <div style="text-align: right; margin-top: 20px;">
             <button type="submit" class="btn btn-primary">Save Configuration</button>
         </div>
     </form>
-    
+
     <!-- Configuration Status Message -->
     <div id="workflow-config-status" style="display: none; margin-top: 15px; padding: 10px; border-radius: 5px;"></div>
     </div><!-- End of config-content -->
@@ -176,17 +212,18 @@
 
 <script>
 // Toggle configuration section visibility
+
 function toggleConfigSection() {
     const content = document.getElementById('config-content');
     const icon = document.getElementById('config-toggle-icon');
     const text = document.getElementById('config-toggle-text');
-    
-    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+
+    if (content.style.maxHeight && content.style.maxHeight !== '0px' && content.style.maxHeight !== 'none') {
         content.style.maxHeight = '0px';
         icon.textContent = '▶';
         text.textContent = 'Show';
     } else {
-        content.style.maxHeight = content.scrollHeight + 'px';
+        content.style.maxHeight = 'none';
         icon.textContent = '▼';
         text.textContent = 'Hide';
     }
@@ -195,65 +232,56 @@ function toggleConfigSection() {
 function updateWorkflowConfigVisibility() {
     const techExportGithubSelected = document.querySelector('input[name="technical_export_source"]:checked').value === 'GITHUB';
     const configFilesGithubSelected = document.querySelector('input[name="config_files_source"]:checked').value === 'GITHUB';
-    const anyGithubSelected = techExportGithubSelected || configFilesGithubSelected;
-    
-    // Show single GitHub repo field if either source is GitHub
-    document.getElementById('github-repo-group').style.display = anyGithubSelected ? 'block' : 'none';
+    const testSuiteGithubSelected = document.querySelector('input[name="test_suite_source"]:checked').value === 'GITHUB';
+
+    // Show individual repository fields based on their respective source selections
+    document.getElementById('technical-export-repo-group').style.display = techExportGithubSelected ? 'block' : 'none';
+    document.getElementById('config-files-repo-group').style.display = configFilesGithubSelected ? 'block' : 'none';
+    document.getElementById('test-suite-repo-group').style.display = testSuiteGithubSelected ? 'block' : 'none';
+
+    // Show GitHub branch field if any GitHub source is selected
+    const anyGithubSelected = techExportGithubSelected || configFilesGithubSelected || testSuiteGithubSelected;
     document.getElementById('github-branch-group').style.display = anyGithubSelected ? 'block' : 'none';
-    document.getElementById('github-token-group').style.display = anyGithubSelected ? 'block' : 'none';
-    
-    // Update hidden fields when GitHub URL changes
-    const githubUrlInput = document.getElementById('github_url');
-    if (githubUrlInput) {
-        githubUrlInput.addEventListener('input', function() {
-            document.getElementById('technical_export_github_url_hidden').value = this.value;
-            document.getElementById('config_files_github_url_hidden').value = this.value;
-        });
-    }
+    // GitHub token field is always visible
 }
 
 // Initialize visibility on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Set initial collapsed state
-    const content = document.getElementById('config-content');
-    content.style.maxHeight = content.scrollHeight + 'px'; // Start expanded
-    
+    // First update visibility to ensure all fields are shown/hidden correctly
     updateWorkflowConfigVisibility();
-    
-    // Sync GitHub URL with hidden fields on load
-    const githubUrl = document.getElementById('github_url').value;
-    document.getElementById('technical_export_github_url_hidden').value = githubUrl;
-    document.getElementById('config_files_github_url_hidden').value = githubUrl;
-    
+
+    // Use setTimeout to ensure DOM is fully rendered before calculating height
+    setTimeout(function() {
+        const content = document.getElementById('config-content');
+        // Add extra padding to maxHeight to accommodate all fields (use 2000px or scrollHeight + 200px, whichever is larger)
+        const calculatedHeight = Math.max(content.scrollHeight + 200, 2000);
+        content.style.maxHeight = calculatedHeight + 'px'; // Start expanded with generous height
+    }, 10);
+
     // Handle form submission
     document.getElementById('workflow-config-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         console.log('Configuration form submitted via AJAX'); // Debug log
-        
-        // Ensure hidden fields are synced before submission
-        const githubUrl = document.getElementById('github_url').value;
-        document.getElementById('technical_export_github_url_hidden').value = githubUrl;
-        document.getElementById('config_files_github_url_hidden').value = githubUrl;
-        
+
         const formData = new FormData(this);
         const statusDiv = document.getElementById('workflow-config-status');
         const submitBtn = this.querySelector('button[type="submit"]');
-        
+
         // Show loading state
         statusDiv.style.display = 'block';
         statusDiv.style.background = '#e3f2fd';
         statusDiv.style.color = '#1976d2';
         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Saving configuration...';
-        
+
         // Disable submit button
         const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = 'Saving...';
-        
+
         // Show loading modal
         showConfigModal('loading', 'Saving Configuration', 'Please wait while we save your configuration settings...');
-        
+
         fetch(this.action, {
             method: 'POST',
             body: formData,
@@ -276,10 +304,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusDiv.style.background = '#d4edda';
                 statusDiv.style.color = '#155724';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Configuration saved successfully! Refreshing page...';
-                
+
                 // Show success modal
                 showConfigModal('success', 'Configuration Saved!', 'Your configuration has been saved successfully. The page will refresh in a moment to apply the changes.');
-                
+
                 // Refresh page after successful save to update UI elements that depend on marker file
                 setTimeout(() => {
                     console.log('Refreshing page after configuration save');
@@ -289,10 +317,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusDiv.style.background = '#f8d7da';
                 statusDiv.style.color = '#721c24';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + (data.error || 'Failed to save configuration');
-                
+
                 // Show error modal
                 showConfigModal('error', 'Configuration Error', data.error || 'Failed to save configuration. Please try again or check your settings.');
-                
+
                 // Hide error status after 5 seconds
                 setTimeout(() => {
                     statusDiv.style.display = 'none';
@@ -305,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statusDiv.style.background = '#f8d7da';
             statusDiv.style.color = '#721c24';
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
-            
+
             // Show error modal
             showConfigModal('error', 'Connection Error', 'Unable to save configuration due to a connection error. Please check your internet connection and try again.');
         })
@@ -323,10 +351,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalContent = document.getElementById('config-modal-content');
         const modalContentFallback = document.getElementById('config-modal-content-fallback');
         const modalTitle = document.getElementById('configFeedbackModalLabel');
-    
+
         // Update title
         if (modalTitle) modalTitle.textContent = title;
-    
+
         let icon, color, bgColor;
         switch(type) {
             case 'loading':
@@ -349,18 +377,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 color = '#1976d2';
                 bgColor = '#e3f2fd';
         }
-    
+
         const content = `
             <div style="background: ${bgColor}; color: ${color}; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
                 <div style="font-size: 48px; margin-bottom: 15px;">${icon}</div>
                 <div style="font-size: 16px; font-weight: 500;">${message}</div>
             </div>
         `;
-    
+
         // Update content for both modal versions
         if (modalContent) modalContent.innerHTML = content;
         if (modalContentFallback) modalContentFallback.innerHTML = content;
-    
+
         // Show modal - try Bootstrap first, fallback to custom overlay
         if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
             const bootstrapModal = new bootstrap.Modal(modal);
@@ -369,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Fallback for environments without Bootstrap
             overlay.style.display = 'block';
         }
-    
+
         // Auto-close success and error modals after 4 seconds (but not loading)
         if (type !== 'loading') {
             setTimeout(() => {
@@ -381,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeConfigModal() {
         const modal = document.getElementById('config-feedback-modal');
         const overlay = document.getElementById('config-modal-overlay');
-    
+
         // Hide Bootstrap modal if available
         if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
             const bootstrapModal = bootstrap.Modal.getInstance(modal);
@@ -389,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 bootstrapModal.hide();
             }
         }
-    
+
         // Hide fallback overlay
         overlay.style.display = 'none';
     }

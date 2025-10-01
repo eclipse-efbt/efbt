@@ -105,6 +105,8 @@ class TestCodeGenerator:
                           help='Suffix for datapoint and cell IDs (default: 152589_REF)')
         parser.add_argument('--scenario', type=str, default="base",
                           help='Scenario name (default: base)')
+        parser.add_argument('--suite-name', type=str, default="basic_test_suite",
+                          help='Test suite name (default: basic_test_suite)')
 
         return parser.parse_args()
 
@@ -412,6 +414,9 @@ class TestCodeGenerator:
             test_code (str): Test functions code.
             logger (logging.Logger): Logger instance for logging debug messages.
         """
+        # Ensure the output directory exists
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
         with open(output_file, 'w') as f:
             f.write(import_code)
             f.write('\n\n')
@@ -439,6 +444,7 @@ class TestCodeGenerator:
         datapoint_id = f"{args.reg_tid}_{args.dp_suffix}"
         cell_class = f"Cell_{args.reg_tid}_{args.dp_suffix}"
         scenario_name = args.scenario
+        suite_name = args.suite_name
 
         logger.debug(f"Generating test code for cell class: {cell_class}")
 
@@ -452,8 +458,8 @@ class TestCodeGenerator:
         #test_code_additional = cls.create_additional_test_functions(cell_class, regulatory_template_id)
         #logger.debug("Generated additional test functions")
 
-        # Save generated code
-        output_file = os.path.join('tests', f'test_{cell_class.lower()}__{scenario_name}.py')
+        # Save generated code to suite structure
+        output_file = os.path.join('tests', suite_name, 'tests', 'code', f'test_{cell_class.lower()}__{scenario_name}.py')
         cls.save_generated_code(output_file, import_code, test_code, logger)
 
 

@@ -19,10 +19,31 @@ from urllib.parse import urlencode
 
 def main():
 
-    # Get all JSON files
-    PATH = os.path.join("tests","test_results","json")
-    json_files = [f for f in os.listdir(PATH) if f.endswith('.json') and f.startswith('2025')]
-    json_files.sort()
+    # Get all JSON files from suite structure
+    # Default to basic_test_suite if no specific suite is found
+    DEFAULT_SUITE_NAME = "basic_test_suite"
+    PATH = os.path.join("tests", DEFAULT_SUITE_NAME, "tests", "test_results", "json")
+
+    # Check if path exists, if not, try to find other suites
+    if not os.path.exists(PATH):
+        tests_dir = "tests"
+        if os.path.exists(tests_dir):
+            # Find the first suite directory that has test results
+            for item in os.listdir(tests_dir):
+                suite_path = os.path.join(tests_dir, item, "tests", "test_results", "json")
+                if os.path.exists(suite_path):
+                    PATH = suite_path
+                    break
+
+        # If still no path found, create the default path structure
+        if not os.path.exists(PATH):
+            os.makedirs(PATH, exist_ok=True)
+            print(f"Created directory: {PATH}")
+
+    json_files = []
+    if os.path.exists(PATH):
+        json_files = [f for f in os.listdir(PATH) if f.endswith('.json') and f.startswith('2025')]
+        json_files.sort()
 
     # Collect all test data
     all_tests = []
