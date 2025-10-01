@@ -708,6 +708,7 @@ class AutomodeConfigurationService:
         results = {
             'technical_export': 0,
             'config_files': 0,
+            'test_suite': 0,
             'generated_python': 0,
             'filter_code': 0,
             'test_fixtures': 0,
@@ -724,6 +725,10 @@ class AutomodeConfigurationService:
         elif config.technical_export_source == 'GITHUB':
             branch = getattr(config, 'github_branch', 'main')
             results['technical_export'] = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
+
+        if hasattr(config, 'test_suite_source') and config.test_suite_source == 'GITHUB':
+            branch = getattr(config, 'github_branch', 'main')
+            results['test_suite'] = self._fetch_test_suite_from_github(config.test_suite_github_url, github_token, force_refresh, branch)
 
         # Fetch REF_FINREP report template HTML files
         try:
@@ -798,6 +803,24 @@ class AutomodeConfigurationService:
 
         except Exception as e:
             logger.error(f"Error fetching from GitHub repository: {e}")
+            raise
+
+    def _fetch_test_suite_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_EIL", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
+        from .utils.clone_repo_service import CloneRepoService
+        """Fetch test suite files from GitHub repository."""
+        logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")
+
+        try:
+            repo_name = github_url.split("/")[-1]
+            fetcher = CloneRepoService(token)
+            fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
+            fetcher.setup_test_suite_files(repo_name)                # Organize test suite files
+            fetcher.remove_fetched_files(repo_name)                  # Clean up downloaded files
+
+            return 1
+
+        except Exception as e:
+            logger.error(f"Error fetching test suite from GitHub repository: {e}")
             raise
 
     def _check_manual_technical_export_files(self) -> int:
@@ -1104,10 +1127,37 @@ class AutomodeConfigurationService:
         return results
 
 
+    def _discover_test_suites(self) -> list:
+        """
+        Discover test suites in the tests/ directory.
+        Looks for directories containing suite_manifest.yaml files.
+
+        Returns:
+            List of test suite directory names
+        """
+        test_suites = []
+        tests_dir = "tests"
+
+        # Scan for directories with suite_manifest.yaml
+        for item in os.listdir(tests_dir):
+            item_path = os.path.join(tests_dir, item)
+
+            # Check if it's a directory
+            if not os.path.isdir(item_path):
+                continue
+
+            # Check for suite_manifest.yaml
+            manifest_bool = os.path.exists(os.path.join(item_path, "suite_manifest.json")) or os.path.exists(os.path.join(item_path, "suite_manifest.yaml"))
+            if manifest_bool:
+                test_suites.append(item)
+                logger.info(f"Discovered test suite: {item}")
+
+        return test_suites
+
     def _run_tests_suite(self):
         """
-        Run the test suite using the RegulatoryTemplateTestRunner.
-        This executes tests similar to: python pybirdai/utils/run_tests.py --uv "False" --config-file "tests/configuration_file_tests.json"
+        Run all test suites found in the tests/ directory.
+        Discovers test suites by looking for suite_manifest.yaml files.
 
         Returns:
             dict: Results of the test execution
@@ -1117,32 +1167,55 @@ class AutomodeConfigurationService:
         results = {
             'tests_executed': False,
             'test_results': {},
+            'suites_run': [],
             'errors': []
         }
 
         try:
-            # Import the test runner
+            # Discover all test suites in tests/ directory
+            test_suites = self._discover_test_suites()
+
+            if not test_suites:
+                logger.warning("No test suites found in tests/ directory")
+                results['errors'].append("No test suites found")
+                return results
+
+            logger.info(f"Found {len(test_suites)} test suite(s): {', '.join(test_suites)}")
+
+            # Import test runner
             from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
-            # Create test runner instance
-            test_runner = RegulatoryTemplateTestRunner()
+            # Run tests for each suite
+            for suite_name in test_suites:
+                logger.info(f"Running tests for suite: {suite_name}")
 
-            # Override the arguments to match our desired configuration
-            test_runner.args.uv = "False"
-            test_runner.args.config_file = "tests/configuration_file_tests.json"
-            test_runner.args.dp_value = None
-            test_runner.args.reg_tid = None
-            test_runner.args.dp_suffix = None
-            test_runner.args.scenario = None
+                try:
+                    # Create test runner instance
+                    test_runner = RegulatoryTemplateTestRunner()
 
-            # Execute the test runner
-            logger.info("Executing test runner with config file: tests/configuration_file_tests.json")
-            test_runner.main()
+                    # Set configuration for this suite
+                    config_file = f"tests/{suite_name}/configuration_file_tests.json"
+                    test_runner.args.uv = "False"
+                    test_runner.args.config_file = config_file
+                    test_runner.args.dp_value = None
+                    test_runner.args.reg_tid = None
+                    test_runner.args.dp_suffix = None
+                    test_runner.args.scenario = None
 
-            results['tests_executed'] = True
-            results['test_results'] = {'status': 'completed', 'config_file': 'tests/configuration_file_tests.json'}
+                    # Execute tests
+                    logger.info(f"Executing test runner for {suite_name} with config: {config_file}")
+                    test_runner.main()
 
-            logger.info("Test suite execution completed successfully")
+                    results['suites_run'].append(suite_name)
+                    results['test_results'][suite_name] = {'status': 'completed', 'config_file': config_file}
+
+                except Exception as suite_error:
+                    error_msg = f"Error running tests for suite '{suite_name}': {str(suite_error)}"
+                    logger.error(error_msg)
+                    results['errors'].append(error_msg)
+
+            results['tests_executed'] = len(results['suites_run']) > 0
+            logger.info(f"Test suite execution completed. Suites run: {len(results['suites_run'])}")
 
         except Exception as e:
             error_msg = f"Error during test suite execution: {str(e)}"
