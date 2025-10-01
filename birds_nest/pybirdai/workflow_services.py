@@ -805,7 +805,7 @@ class AutomodeConfigurationService:
             logger.error(f"Error fetching from GitHub repository: {e}")
             raise
 
-    def _fetch_test_suite_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_EIL", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
+    def _fetch_test_suite_from_github(self, github_url: str = "https://github.com/regcommunity/bird-default-test-suite", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from .utils.clone_repo_service import CloneRepoService
         """Fetch test suite files from GitHub repository."""
         logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")

@@ -708,9 +708,9 @@ def workflow_dashboard(request):
               "technical_export_source": "GITHUB",
               "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
               "config_files_source": "GITHUB",
-              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
               "test_suite_source": "MANUAL",
-              "test_suite_github_url": "https://github.com/regcommunity/FreeBIRD_EIL",
+              "test_suite_github_url": " https://github.com/regcommunity/bird-default-test-suite",
               "github_branch": "main",
               "when_to_stop": "RESOURCE_DOWNLOAD",
               "enable_lineage_tracking": true
