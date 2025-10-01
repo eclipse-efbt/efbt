@@ -1994,18 +1994,25 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
     try:
         from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
-        # Get or initialize execution data
+        # Get or initialize execution data with complete structure
         execution_data = task_execution.execution_data or {
+            'test_mode': 'test_suite',
             'steps_completed': [],
-            'suites_run': []
+            'test_suites': [],
+            'tests_executed': False
         }
         if 'steps_completed' not in execution_data:
             execution_data['steps_completed'] = []
-        if 'suites_run' not in execution_data:
-            execution_data['suites_run'] = []
+        if 'test_suites' not in execution_data:
+            execution_data['test_suites'] = []
+        if 'test_mode' not in execution_data:
+            execution_data['test_mode'] = 'test_suite'
 
         if substep_name == 'run_tests':
             logger.info("Executing run tests substep...")
+
+            # Track start time for execution time calculation
+            start_time = timezone.now()
 
             # Discover all test suites
             test_suites = _discover_test_suites()
@@ -2016,6 +2023,9 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
                 success_message = 'No test suites found to execute'
             else:
                 logger.info(f"Found {len(test_suites)} test suite(s): {', '.join(test_suites)}")
+
+                # Clear previous test_suites to avoid duplicates
+                execution_data['test_suites'] = []
 
                 # Run tests for each suite
                 for suite_name in test_suites:
@@ -2038,7 +2048,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
                         logger.info(f"Executing tests for suite: {suite_name}")
                         test_runner.main()
 
-                        execution_data['suites_run'].append(suite_name)
+                        execution_data['test_suites'].append(suite_name)
                         logger.info(f"Successfully executed tests for suite: {suite_name}")
 
                     except Exception as suite_error:
@@ -2046,8 +2056,22 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
                         execution_data['steps_completed'].append(f'Test suite execution error for {suite_name}: {str(suite_error)}')
 
                 execution_data['tests_executed'] = True
-                execution_data['steps_completed'].append(f'Test suite execution completed for {len(execution_data["suites_run"])} suite(s)')
-                success_message = f'Tests executed successfully for {len(execution_data["suites_run"])} suite(s): {", ".join(execution_data["suites_run"])}'
+
+                # Remove duplicate completion messages and add a clean one
+                execution_data['steps_completed'] = [
+                    step for step in execution_data.get('steps_completed', [])
+                    if not step.startswith('Test suite execution completed')
+                ]
+                execution_data['steps_completed'].append(
+                    f'Test suite execution completed for {len(execution_data["test_suites"])} suite(s): {", ".join(execution_data["test_suites"])}'
+                )
+
+                # Calculate execution time
+                end_time = timezone.now()
+                execution_time = end_time - start_time
+                execution_data['execution_time'] = str(execution_time).split('.')[0]
+
+                success_message = f'Tests executed successfully for {len(execution_data["test_suites"])} suite(s): {", ".join(execution_data["test_suites"])}'
 
         else:
             return JsonResponse({
@@ -2466,18 +2490,25 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
     try:
         from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
-        # Get or initialize execution data
+        # Get or initialize execution data with complete structure
         execution_data = task_execution.execution_data or {
+            'test_mode': 'test_suite',
             'steps_completed': [],
-            'suites_run': []
+            'test_suites': [],
+            'tests_executed': False
         }
         if 'steps_completed' not in execution_data:
             execution_data['steps_completed'] = []
-        if 'suites_run' not in execution_data:
-            execution_data['suites_run'] = []
+        if 'test_suites' not in execution_data:
+            execution_data['test_suites'] = []
+        if 'test_mode' not in execution_data:
+            execution_data['test_mode'] = 'test_suite'
 
         if substep_name == 'run_tests':
             logger.info("Executing run tests substep...")
+
+            # Track start time for execution time calculation
+            start_time = timezone.now()
 
             # Discover all test suites
             test_suites = _discover_test_suites()
@@ -2488,6 +2519,9 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
                 success_message = 'No test suites found to execute'
             else:
                 logger.info(f"Found {len(test_suites)} test suite(s): {', '.join(test_suites)}")
+
+                # Clear previous test_suites to avoid duplicates
+                execution_data['test_suites'] = []
 
                 # Run tests for each suite
                 for suite_name in test_suites:
@@ -2510,7 +2544,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
                         logger.info(f"Executing tests for suite: {suite_name}")
                         test_runner.main()
 
-                        execution_data['suites_run'].append(suite_name)
+                        execution_data['test_suites'].append(suite_name)
                         logger.info(f"Successfully executed tests for suite: {suite_name}")
 
                     except Exception as suite_error:
@@ -2518,8 +2552,22 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
                         execution_data['steps_completed'].append(f'Test suite execution error for {suite_name}: {str(suite_error)}')
 
                 execution_data['tests_executed'] = True
-                execution_data['steps_completed'].append(f'Test suite execution completed for {len(execution_data["suites_run"])} suite(s)')
-                success_message = f'Tests executed successfully for {len(execution_data["suites_run"])} suite(s): {", ".join(execution_data["suites_run"])}'
+
+                # Remove duplicate completion messages and add a clean one
+                execution_data['steps_completed'] = [
+                    step for step in execution_data.get('steps_completed', [])
+                    if not step.startswith('Test suite execution completed')
+                ]
+                execution_data['steps_completed'].append(
+                    f'Test suite execution completed for {len(execution_data["test_suites"])} suite(s): {", ".join(execution_data["test_suites"])}'
+                )
+
+                # Calculate execution time
+                end_time = timezone.now()
+                execution_time = end_time - start_time
+                execution_data['execution_time'] = str(execution_time).split('.')[0]
+
+                success_message = f'Tests executed successfully for {len(execution_data["test_suites"])} suite(s): {", ".join(execution_data["test_suites"])}'
 
         else:
             return JsonResponse({
