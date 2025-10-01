@@ -97,34 +97,46 @@ def refresh_complete_status(task:int=3,all:bool=True):
 
 
 def load_test_results():
-    """Load and parse test results from JSON files"""
+    """Load and parse test results from JSON files across all test suites"""
     test_results = []
     # Use Django's BASE_DIR to construct the full path
     base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
-    json_files_path = os.path.join(base_dir, 'tests', 'test_results', 'json', '*.json')
-
-    logger.info(f"Looking for test results in: {json_files_path}")
 
     try:
-        json_files = glob.glob(json_files_path)
-        logger.info(f"Found {len(json_files)} JSON files: {json_files}")
+        # Discover all test suites
+        test_suites = _discover_test_suites()
 
-        for json_file in json_files:
-            try:
-                logger.debug(f"Loading test result file: {json_file}")
-                with open(json_file, 'r', encoding='utf-8') as f:
-                    result_data = json.load(f)
-                    # Add filename for reference
-                    result_data['filename'] = os.path.basename(json_file)
-                    test_results.append(result_data)
-                    logger.debug(f"Successfully loaded {json_file}")
-            except (json.JSONDecodeError, IOError) as e:
-                logger.error(f"Error loading test result file {json_file}: {e}")
-                continue
+        if not test_suites:
+            logger.warning("No test suites found")
+            return test_results
+
+        logger.info(f"Discovered {len(test_suites)} test suite(s): {', '.join(test_suites)}")
+
+        # Load test results from each suite
+        for suite_name in test_suites:
+            json_files_path = os.path.join(base_dir, 'tests', suite_name, 'tests', 'test_results', 'json', '*.json')
+            logger.info(f"Looking for test results in suite '{suite_name}': {json_files_path}")
+
+            json_files = glob.glob(json_files_path)
+            logger.info(f"Found {len(json_files)} JSON file(s) in suite '{suite_name}'")
+
+            for json_file in json_files:
+                try:
+                    logger.debug(f"Loading test result file: {json_file}")
+                    with open(json_file, 'r', encoding='utf-8') as f:
+                        result_data = json.load(f)
+                        # Add filename and suite name for reference
+                        result_data['filename'] = os.path.basename(json_file)
+                        result_data['suite_name'] = suite_name
+                        test_results.append(result_data)
+                        logger.debug(f"Successfully loaded {json_file}")
+                except (json.JSONDecodeError, IOError) as e:
+                    logger.error(f"Error loading test result file {json_file}: {e}")
+                    continue
 
         # Sort by timestamp (newest first)
         test_results.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
-        logger.info(f"Loaded {len(test_results)} test results successfully")
+        logger.info(f"Loaded {len(test_results)} test result(s) successfully from {len(test_suites)} suite(s)")
 
     except Exception as e:
         logger.error(f"Error loading test results: {e}")
