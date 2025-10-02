@@ -717,17 +717,20 @@ class AutomodeConfigurationService:
         }
 
         if config.config_files_source == 'GITHUB':
-            branch = getattr(config, 'github_branch', 'main')
+            # Config files use the same branch as BIRD content
+            branch = getattr(config, 'bird_content_branch', getattr(config, 'github_branch', 'main'))
             results['config_files'] = self._fetch_from_github(config.config_files_github_url, github_token, force_refresh, branch)
 
         if config.technical_export_source == 'BIRD_WEBSITE':
             results['technical_export'] = self._fetch_from_bird_website(force_refresh)
         elif config.technical_export_source == 'GITHUB':
-            branch = getattr(config, 'github_branch', 'main')
+            # Use bird_content_branch for BIRD content repository
+            branch = getattr(config, 'bird_content_branch', getattr(config, 'github_branch', 'main'))
             results['technical_export'] = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
 
         if hasattr(config, 'test_suite_source') and config.test_suite_source == 'GITHUB':
-            branch = getattr(config, 'github_branch', 'main')
+            # Use test_suite_branch for test suite repository
+            branch = getattr(config, 'test_suite_branch', getattr(config, 'github_branch', 'main'))
             results['test_suite'] = self._fetch_test_suite_from_github(config.test_suite_github_url, github_token, force_refresh, branch)
 
         # Fetch REF_FINREP report template HTML files
