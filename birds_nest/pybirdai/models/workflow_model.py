@@ -68,8 +68,8 @@ class AutomodeConfiguration(models.Model):
     config_files_source = models.CharField(
         max_length=20,
         choices=CONFIG_FILES_SOURCE_CHOICES,
-        default='MANUAL',
-        help_text='Source for configuration files (joins, extra variables)'
+        default='GITHUB',
+        help_text='Source for configuration files (joins, extra variables) - always uses BIRD Content Repository'
     )
     
     config_files_github_url = models.URLField(
@@ -81,14 +81,28 @@ class AutomodeConfiguration(models.Model):
     test_suite_source = models.CharField(
         max_length=20,
         choices=TEST_SUITE_SOURCE_CHOICES,
-        default='MANUAL',
-        help_text='Source for test suite files'
+        default='GITHUB',
+        help_text='Source for test suite files - always uses GitHub repository'
     )
 
     test_suite_github_url = models.URLField(
         blank=True,
         null=True,
         help_text='GitHub repository URL for test suite files (when GitHub source is selected)'
+    )
+
+    bird_content_branch = models.CharField(
+        max_length=100,
+        blank=True,
+        default='main',
+        help_text='Branch name for BIRD content repository (default: main)'
+    )
+
+    test_suite_branch = models.CharField(
+        max_length=100,
+        blank=True,
+        default='main',
+        help_text='Branch name for test suite repository (default: main)'
     )
 
     when_to_stop = models.CharField(
