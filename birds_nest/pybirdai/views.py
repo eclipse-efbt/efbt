@@ -4334,14 +4334,19 @@ def automode_configure(request):
                         })
 
                 # Store configuration in a temporary file instead of database/session
+                technical_export_github_url = form.cleaned_data.get('technical_export_github_url', '')
+                bird_content_branch = request.POST.get('bird_content_branch', 'main')
                 config_data = {
                     'data_model_type': form.cleaned_data['data_model_type'],
                     'technical_export_source': form.cleaned_data['technical_export_source'],
-                    'technical_export_github_url': form.cleaned_data.get('technical_export_github_url', ''),
-                    'config_files_source': form.cleaned_data['config_files_source'],
-                    'config_files_github_url': form.cleaned_data.get('config_files_github_url', ''),
+                    'technical_export_github_url': technical_export_github_url,
+                    'config_files_source': 'GITHUB',  # Always use GitHub
+                    'config_files_github_url': technical_export_github_url,  # Always use same URL as BIRD Content Repository
                     'when_to_stop': form.cleaned_data['when_to_stop'],
                     'enable_lineage_tracking': form.cleaned_data.get('enable_lineage_tracking', True),
+                    'bird_content_branch': bird_content_branch,
+                    'test_suite_branch': 'main',  # Default branch for test suite (when implemented in automode)
+                    'github_branch': bird_content_branch,  # Keep for backwards compatibility
                 }
 
                 # Store GitHub token (temporarily, for execution)

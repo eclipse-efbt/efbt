@@ -411,7 +411,7 @@ def _run_database_setup_async():
             ),
             config_files_source=config_data.get("config_files_source", "MANUAL"),
             config_files_github_url=config_data.get("config_files_github_url", ""),
-            test_suite_source=config_data.get("test_suite_source", "MANUAL"),
+            test_suite_source=config_data.get("test_suite_source", "GITHUB"),
             test_suite_github_url=config_data.get("test_suite_github_url", ""),
             when_to_stop=config_data.get("when_to_stop", "RESOURCE_DOWNLOAD"),
         )
@@ -709,7 +709,7 @@ def workflow_dashboard(request):
               "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
               "config_files_source": "GITHUB",
               "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
-              "test_suite_source": "MANUAL",
+              "test_suite_source": "GITHUB",
               "test_suite_github_url": " https://github.com/regcommunity/bird-default-test-suite",
               "github_branch": "main",
               "when_to_stop": "RESOURCE_DOWNLOAD",
@@ -791,7 +791,7 @@ def workflow_dashboard(request):
             "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
-            "test_suite_source": "MANUAL",
+            "test_suite_source": "GITHUB",
             "test_suite_github_url": "",
             "github_branch": "main",
             "when_to_stop": "RESOURCE_DOWNLOAD",
@@ -2731,20 +2731,22 @@ def workflow_save_config(request):
 
     try:
         # Get configuration data from request
+        technical_export_github_url = request.POST.get("technical_export_github_url", "")
+
         config_data = {
             "data_model_type": request.POST.get("data_model_type", "EIL"),
             "clone_mode": request.POST.get("clone_mode", "false"),
             "technical_export_source": request.POST.get(
                 "technical_export_source", "BIRD_WEBSITE"
             ),
-            "technical_export_github_url": request.POST.get(
-                "technical_export_github_url", ""
-            ),
-            "config_files_source": request.POST.get("config_files_source", "MANUAL"),
-            "config_files_github_url": request.POST.get("config_files_github_url", ""),
-            "test_suite_source": request.POST.get("test_suite_source", "MANUAL"),
+            "technical_export_github_url": technical_export_github_url,
+            "config_files_source": "GITHUB",  # Always use GitHub
+            "config_files_github_url": technical_export_github_url,  # Always use same URL as BIRD Content Repository
+            "test_suite_source": "GITHUB",  # Always use GitHub
             "test_suite_github_url": request.POST.get("test_suite_github_url", ""),
-            "github_branch": request.POST.get("github_branch", "main"),
+            "bird_content_branch": request.POST.get("bird_content_branch", "main"),
+            "test_suite_branch": request.POST.get("test_suite_branch", "main"),
+            "github_branch": request.POST.get("bird_content_branch", "main"),  # Keep for backwards compatibility
             "when_to_stop": "RESOURCE_DOWNLOAD",  # Default for workflow
             "enable_lineage_tracking": request.POST.get("enable_lineage_tracking") == "true",
         }
