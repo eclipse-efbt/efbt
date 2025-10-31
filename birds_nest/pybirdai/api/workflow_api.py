@@ -14,9 +14,9 @@ import os
 import logging
 import requests
 from django.core.exceptions import ValidationError
-from .utils.github_file_fetcher import GitHubFileFetcher
-from .utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
-from .context.context import Context
+from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
+from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+from pybirdai.context.context import Context
 import traceback
 
 logger = logging.getLogger(__name__)
@@ -736,7 +736,7 @@ class AutomodeConfigurationService:
         # Fetch REF_FINREP report template HTML files
         try:
             logger.info("Fetching REF_FINREP report template HTML files from GitHub...")
-            from .utils.github_file_fetcher import GitHubFileFetcher
+            from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
             fetcher = GitHubFileFetcher(config.technical_export_github_url)
             results['report_templates'] = fetcher.fetch_report_template_htmls()
             logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates")
@@ -791,7 +791,7 @@ class AutomodeConfigurationService:
             raise
 
     def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_IL", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
-        from .utils.clone_repo_service import CloneRepoService
+        from pybirdai.utils.clone_repo_service import CloneRepoService
         """Fetch technical export files from GitHub repository."""
         logger.info(f"Fetching technical export files from GitHub: {github_url} (branch: {branch})")
 
@@ -809,7 +809,7 @@ class AutomodeConfigurationService:
             raise
 
     def _fetch_test_suite_from_github(self, github_url: str = "https://github.com/regcommunity/bird-default-test-suite", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
-        from .utils.clone_repo_service import CloneRepoService
+        from pybirdai.utils.clone_repo_service import CloneRepoService
         """Fetch test suite files from GitHub repository."""
         logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")
 
@@ -940,7 +940,7 @@ class AutomodeConfigurationService:
 
         try:
             # Call the core full setup logic from views.py
-            from . import views
+            from ..views import core_views as views
             views.execute_full_setup_core()
 
             results['database_setup'] = True
@@ -1110,7 +1110,7 @@ class AutomodeConfigurationService:
 
         try:
             # Import the automode database setup module
-            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
 
             # Run the automode database setup
             logger.info("Executing automode database setup...")
@@ -1186,7 +1186,7 @@ class AutomodeConfigurationService:
             logger.info(f"Found {len(test_suites)} test suite(s): {', '.join(test_suites)}")
 
             # Import test runner
-            from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+            from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
             # Run tests for each suite
             for suite_name in test_suites:

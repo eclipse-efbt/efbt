@@ -29,15 +29,15 @@ import glob
 import subprocess
 import requests
 
-from .models.workflow_model import WorkflowTaskExecution, WorkflowSession
-from .views import create_response_with_loading
-from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
-from .entry_points.import_input_model import RunImportInputModelFromSQLDev
-from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
-from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
-from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
-from .workflow_services import AutomodeConfigurationService
-from .forms import (
+from pybirdai.models.workflow_model import WorkflowTaskExecution, WorkflowSession, DPMProcessExecution, AnaCreditProcessExecution
+from .core_views import create_response_with_loading
+from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
+from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+from pybirdai.entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
+from pybirdai.entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
+from ..api.workflow_api import AutomodeConfigurationService
+from ..forms import (
     AutomodeConfigurationSessionForm,
     ResourceDownloadForm,
     SMCubesCoreForm,
@@ -45,14 +45,17 @@ from .forms import (
     PythonRulesForm,
     FullExecutionForm,
 )
-from .entry_points import (
+from pybirdai.entry_points import (
     automode_database_setup,
     create_filters,
+    import_dpm_data,
+    dpm_output_layer_creation,
+    ancrdt_transformation,
     create_joins_metadata,
     execute_datapoint,
 )
 # Import the test runner
-from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 import traceback
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -222,7 +225,7 @@ def _run_migrations_async():
         # Run the actual migration - this should ONLY run Django migrations, no file operations
 
 
-        from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+        from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
         app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest', token=_in_memory_github_token)
 
         logger.info("About to call run_migrations_after_restart() - this should NOT download or delete any files")
@@ -318,7 +321,7 @@ def _load_task1_completion_from_marker():
         import json
         from django.conf import settings
         from django.utils import timezone
-        from .models.workflow_model import WorkflowTaskExecution
+        from pybirdai.models.workflow_model import WorkflowTaskExecution
 
         base_dir = getattr(
             settings,
@@ -380,8 +383,8 @@ def _run_database_setup_async():
         import json
         import os
         from django.conf import settings
-        from .models.workflow_model import AutomodeConfiguration
-        from .workflow_services import AutomodeConfigurationService
+        from pybirdai.models.workflow_model import AutomodeConfiguration
+        from pybirdai.api.workflow_api import AutomodeConfigurationService
 
         # Task 1: Resource Download
         _database_setup_status['message'] = 'Running Task 1: Resource Download...'
@@ -438,7 +441,7 @@ def _run_database_setup_async():
             'message': 'Running  Artfacts Retrieval...'
         })
 
-        from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+        from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
         app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
 
         # This creates models and runs migrations
@@ -496,7 +499,7 @@ def _run_database_setup_async():
                 "Now triggering post-setup operations that will cause Django restart..."
             )
             try:
-                from .entry_points.automode_database_setup import (
+                from pybirdai.entry_points.automode_database_setup import (
                     RunAutomodeDatabaseSetup,
                 )
 
@@ -691,6 +694,163 @@ def _run_automode_async(target_task, session_data):
         )
 
 
+def get_dpm_task_grid(session):
+    """Get DPM process status grid"""
+    if not session:
+        return []
+
+    dpm_steps = [
+        (1, 'Prepare DPM Data'),
+        (2, 'Import DPM Data'),
+        (3, 'Create Output Layers'),
+    ]
+
+    grid = []
+    for step_number, step_name in dpm_steps:
+        try:
+            execution = DPMProcessExecution.objects.get(
+                session=session,
+                step_number=step_number
+            )
+            status = execution.status
+        except DPMProcessExecution.DoesNotExist:
+            # Create default pending entry
+            execution = DPMProcessExecution.objects.create(
+                session=session,
+                step_number=step_number,
+                step_name=step_name,
+                status='pending'
+            )
+            status = 'pending'
+
+        grid.append({
+            'step_number': step_number,
+            'step_name': step_name,
+            'status': status,
+            'started_at': execution.started_at if execution else None,
+            'completed_at': execution.completed_at if execution else None,
+        })
+
+    return grid
+
+
+def get_ancrdt_task_grid(session):
+    """Get AnaCredit process status grid"""
+    if not session:
+        return []
+
+    ancrdt_steps = [
+        (0, 'Fetch Metadata CSV'),
+        (1, 'Import Metadata'),
+        (2, 'Create Joins Metadata'),
+        (3, 'Create Executable Joins'),
+    ]
+
+    grid = []
+    for step_number, step_name in ancrdt_steps:
+        try:
+            execution = AnaCreditProcessExecution.objects.get(
+                session=session,
+                step_number=step_number
+            )
+            status = execution.status
+        except AnaCreditProcessExecution.DoesNotExist:
+            # Create default pending entry
+            execution = AnaCreditProcessExecution.objects.create(
+                session=session,
+                step_number=step_number,
+                step_name=step_name,
+                status='pending'
+            )
+            status = 'pending'
+
+        grid.append({
+            'step_number': step_number,
+            'step_name': step_name,
+            'status': status,
+            'started_at': execution.started_at if execution else None,
+            'completed_at': execution.completed_at if execution else None,
+        })
+
+    return grid
+
+
+def get_workflow_progress_summary(session):
+    """Get progress summary for all workflows"""
+    if not session:
+        return {
+            'main': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+            'dpm': {'completed': 0, 'total': 3, 'active': False, 'current': 0},
+            'ancrdt': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+        }
+
+    # Main workflow progress
+    main_completed = WorkflowTaskExecution.objects.filter(
+        operation_type='do',
+        status='completed'
+    ).count()
+    main_active = WorkflowTaskExecution.objects.filter(
+        operation_type='do',
+        status='running'
+    ).exists()
+    main_current = WorkflowTaskExecution.objects.filter(
+        operation_type='do',
+        status='running'
+    ).first()
+    main_current_num = main_current.task_number if main_current else 0
+
+    # DPM workflow progress
+    dpm_completed = DPMProcessExecution.objects.filter(
+        session=session,
+        status='completed'
+    ).count()
+    dpm_active = DPMProcessExecution.objects.filter(
+        session=session,
+        status='running'
+    ).exists()
+    dpm_current = DPMProcessExecution.objects.filter(
+        session=session,
+        status='running'
+    ).first()
+    dpm_current_num = dpm_current.step_number if dpm_current else 0
+
+    # AnaCredit workflow progress
+    ancrdt_completed = AnaCreditProcessExecution.objects.filter(
+        session=session,
+        status='completed'
+    ).count()
+    ancrdt_active = AnaCreditProcessExecution.objects.filter(
+        session=session,
+        status='running'
+    ).exists()
+    ancrdt_current = AnaCreditProcessExecution.objects.filter(
+        session=session,
+        status='running'
+    ).first()
+    ancrdt_current_num = ancrdt_current.step_number if ancrdt_current else 0
+
+    return {
+        'main': {
+            'completed': main_completed,
+            'total': 4,
+            'active': main_active,
+            'current': main_current_num,
+        },
+        'dpm': {
+            'completed': dpm_completed,
+            'total': 3,
+            'active': dpm_active,
+            'current': dpm_current_num,
+        },
+        'ancrdt': {
+            'completed': ancrdt_completed,
+            'total': 4,
+            'active': ancrdt_active,
+            'current': ancrdt_current_num,
+        },
+    }
+
+
 def workflow_dashboard(request):
     """Main dashboard showing all tasks and their status"""
     import json
@@ -818,6 +978,9 @@ def workflow_dashboard(request):
                     "workflow_session": workflow_session,
                     "task_grid": workflow_session.get_task_status_grid(),
                     "progress": workflow_session.get_progress_percentage(),
+                    "dpm_task_grid": get_dpm_task_grid(workflow_session),
+                    "ancrdt_task_grid": get_ancrdt_task_grid(workflow_session),
+                    "workflow_summaries": get_workflow_progress_summary(workflow_session),
                 }
             )
 
@@ -828,6 +991,13 @@ def workflow_dashboard(request):
                 'task_grid': [],
                 'progress': 0,
                 'session_id': session_id or 'no-database',
+                'dpm_task_grid': [],
+                'ancrdt_task_grid': [],
+                'workflow_summaries': {
+                    'main': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+                    'dpm': {'completed': 0, 'total': 3, 'active': False, 'current': 0},
+                    'ancrdt': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+                },
             })
     else:
         # Provide default data when no database is available
@@ -836,6 +1006,13 @@ def workflow_dashboard(request):
             'task_grid': [],
             'progress': 0,
             'session_id': session_id or 'no-database',
+            'dpm_task_grid': [],
+            'ancrdt_task_grid': [],
+            'workflow_summaries': {
+                'main': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+                'dpm': {'completed': 0, 'total': 3, 'active': False, 'current': 0},
+                'ancrdt': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+            },
         })
 
 
@@ -946,12 +1123,12 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
 
             try:
                 # Import real entry point modules (with correct class names)
-                from .entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
-                from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
-                from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
-                from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
-                from .entry_points.import_input_model import RunImportInputModelFromSQLDev
-                from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+                from pybirdai.entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
+                from pybirdai.entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
+                from pybirdai.entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
+                from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+                from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
+                from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 
                 execution_data = {
                     "database_deleted": False,
@@ -1115,8 +1292,8 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
 
             try:
                 # Import real entry point classes (using the correct class names)
-                from .entry_points.create_filters import RunCreateFilters
-                from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
+                from pybirdai.entry_points.create_filters import RunCreateFilters
+                from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
 
                 execution_data = {
                     "current_step": "filters",
@@ -1243,8 +1420,8 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
 
             try:
                 # Import real Python code generation entry points
-                from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
-                from .entry_points.create_executable_joins import RunCreateExecutableJoins
+                from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
+                from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 
                 execution_data = {
                     'current_phase': 'filters',
@@ -1651,7 +1828,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
 
     if substep_name == 'start':
         try:
-            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
             app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
             results = app_config.run_automode_database_setup()
 
@@ -1677,7 +1854,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
 
     elif substep_name == 'continue':
         try:
-            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
             app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
             app_config.run_post_setup_operations()
 
@@ -1713,12 +1890,12 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
 
     try:
         # Import necessary modules
-        from .entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
-        from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
-        from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
-        from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
-        from .entry_points.import_input_model import RunImportInputModelFromSQLDev
-        from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+        from pybirdai.entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
+        from pybirdai.entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
+        from pybirdai.entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
+        from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+        from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
+        from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
@@ -1820,8 +1997,8 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
     """Execute individual substeps for Task 2: SMCubes Transformation Rules"""
 
     try:
-        from .entry_points.create_filters import RunCreateFilters
-        from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
+        from pybirdai.entry_points.create_filters import RunCreateFilters
+        from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
@@ -1892,8 +2069,8 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
     """Execute individual substeps for Task 3: Python Transformation Rules"""
 
     try:
-        from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
-        from .entry_points.create_executable_joins import RunCreateExecutableJoins
+        from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
+        from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
@@ -1992,7 +2169,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
     """Execute individual substeps for Task 4: Test Suite Execution"""
 
     try:
-        from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+        from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
         # Get or initialize execution data with complete structure
         execution_data = task_execution.execution_data or {
@@ -2175,7 +2352,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
 
     if substep_name == 'start':
         try:
-            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
             app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
             results = app_config.run_automode_database_setup()
 
@@ -2201,7 +2378,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
 
     elif substep_name == 'continue':
         try:
-            from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
             app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
             app_config.run_post_setup_operations()
 
@@ -2237,12 +2414,12 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
 
     try:
         # Import necessary modules
-        from .entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
-        from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
-        from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
-        from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
-        from .entry_points.import_input_model import RunImportInputModelFromSQLDev
-        from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+        from pybirdai.entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
+        from pybirdai.entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
+        from pybirdai.entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
+        from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+        from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
+        from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
@@ -2344,8 +2521,8 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
     """Execute individual substeps for Task 2: SMCubes Transformation Rules"""
 
     try:
-        from .entry_points.create_filters import RunCreateFilters
-        from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
+        from pybirdai.entry_points.create_filters import RunCreateFilters
+        from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
@@ -2416,8 +2593,8 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
     """Execute individual substeps for Task 3: Python Transformation Rules"""
 
     try:
-        from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
-        from .entry_points.create_executable_joins import RunCreateExecutableJoins
+        from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
+        from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
@@ -2488,7 +2665,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
     """Execute individual substeps for Task 4: Test Suite Execution"""
 
     try:
-        from .utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+        from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
         # Get or initialize execution data with complete structure
         execution_data = task_execution.execution_data or {
@@ -3391,7 +3568,7 @@ def workflow_reset_session_full(request):
                 'error': str(e)
             }, status=500)
         else:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'workflow session reset')
             return redirect('pybirdai:workflow_dashboard')
 
@@ -3517,7 +3694,7 @@ def export_database_to_github(request):
             return JsonResponse({'success': False, 'error': 'Repository URL must be a valid GitHub URL (https://github.com/...)'})
 
         # Import the GitHub integration service
-        from .workflow_services import GitHubIntegrationService
+        from pybirdai.api.workflow_api import GitHubIntegrationService
 
         # Create service instance
         github_service = GitHubIntegrationService(github_token)
@@ -3598,3 +3775,470 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
             'success': False,
             'error': f'Error during GitHub export: {str(e)}'
         })
+
+
+# DPM and AnaCredit Execution Endpoints
+
+@require_http_methods(["POST"])
+def execute_dpm_step(request, step_number):
+    """Execute a DPM process step"""
+    logger = logging.getLogger(__name__)
+
+    try:
+        # Get workflow session
+        session_id = request.session.get('workflow_session_id')
+        if not session_id:
+            return JsonResponse({
+                'success': False,
+                'error': 'No active workflow session found'
+            })
+
+        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+
+        # Get or create DPM execution record
+        dpm_execution, created = DPMProcessExecution.objects.get_or_create(
+            session=workflow_session,
+            step_number=step_number,
+            defaults={
+                'step_name': dict(DPMProcessExecution.STEP_CHOICES).get(step_number, f'Step {step_number}'),
+                'status': 'pending'
+            }
+        )
+
+        # Mark as running
+        dpm_execution.start_execution()
+
+        # Execute the appropriate entry point based on step number
+        try:
+            if step_number == 1:
+                # Prepare DPM Data - Map DPM metadata to SDD format
+                from pybirdai.entry_points.import_dpm_data import RunImportDPMData
+                RunImportDPMData.run_import(import_=False)
+
+            elif step_number == 2:
+                # Import DPM Data - Import report templates into database
+                from pybirdai.entry_points.import_dpm_data import RunImportDPMData
+                RunImportDPMData.run_import(import_=True)
+
+            elif step_number == 3:
+                # Create Output Layers from DPM tables
+                from pybirdai.entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
+
+                # Get optional parameters from request
+                framework = request.POST.get('framework', '')
+                version = request.POST.get('version', '')
+                table_code = request.POST.get('table_code', '')
+                table_codes = request.POST.get('table_codes', '')
+
+                logger.info(f"Running output layer creation with params: framework={framework}, version={version}, table_code={table_code}, table_codes={table_codes}")
+
+                # Call run_creation with parameters
+                result = RunDPMOutputLayerCreation.run_creation(
+                    framework=framework,
+                    version=version,
+                    table_code=table_code,
+                    table_codes=table_codes
+                )
+
+                # Log results for multi-table processing
+                if table_codes and isinstance(result, dict):
+                    logger.info(f"Output layer creation result: {result.get('status')} - Processed: {len(result.get('processed', []))}, Errors: {len(result.get('errors', []))}")
+
+                    # Check if there were errors
+                    if result.get('status') == 'error' or (result.get('errors') and not result.get('processed')):
+                        # All tables failed
+                        error_details = result.get('errors', [])
+                        error_msg = f"Failed to process {len(error_details)} table(s). "
+                        if error_details:
+                            first_error = error_details[0].get('error', 'Unknown error')
+                            error_msg += f"First error: {first_error}"
+                        elif result.get('message'):
+                            error_msg = result.get('message')
+
+                        logger.error(f"Output layer creation failed: {error_msg}")
+                        dpm_execution.handle_error(error_msg)
+                        return JsonResponse({
+                            'success': False,
+                            'status': 'failed',
+                            'error': error_msg,
+                            'details': error_details
+                        })
+
+                    elif result.get('status') == 'partial':
+                        # Some tables succeeded, some failed
+                        processed_count = len(result.get('processed', []))
+                        error_count = len(result.get('errors', []))
+
+                        logger.warning(f"Partial success: {processed_count} processed, {error_count} failed")
+                        dpm_execution.complete_execution({
+                            'completed_at': timezone.now().isoformat(),
+                            'processed': processed_count,
+                            'errors': error_count,
+                            'details': result.get('errors', [])
+                        })
+
+                        return JsonResponse({
+                            'success': True,
+                            'status': 'partial',
+                            'message': f'Processed {processed_count} table(s) successfully, {error_count} failed',
+                            'details': {
+                                'processed': processed_count,
+                                'errors': error_count,
+                                'error_list': result.get('errors', [])
+                            }
+                        })
+
+            else:
+                raise ValueError(f'Invalid DPM step number: {step_number}')
+
+            # Mark as completed (only if no errors or not multi-table)
+            dpm_execution.complete_execution({
+                'completed_at': timezone.now().isoformat()
+            })
+
+            return JsonResponse({
+                'success': True,
+                'status': 'completed',
+                'message': f'DPM Step {step_number} completed successfully'
+            })
+
+        except Exception as e:
+            logger.error(f"DPM Step {step_number} execution failed: {e}")
+            dpm_execution.handle_error(str(e))
+            return JsonResponse({
+                'success': False,
+                'error': str(e),
+                'status': 'failed'
+            })
+
+    except Exception as e:
+        logger.error(f"Error executing DPM step: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+
+@require_http_methods(["GET"])
+def get_dpm_status(request):
+    """Get DPM execution status"""
+    try:
+        session_id = request.session.get('workflow_session_id')
+        if not session_id:
+            return JsonResponse({
+                'success': False,
+                'error': 'No active workflow session found'
+            })
+
+        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+        dpm_grid = get_dpm_task_grid(workflow_session)
+
+        return JsonResponse({
+            'success': True,
+            'dpm_status': dpm_grid
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+
+@require_http_methods(["GET"])
+def get_output_layer_options(request):
+    """Get available frameworks and tables for output layer generation"""
+    try:
+        from pybirdai.models.bird_meta_data_model import FRAMEWORK, TABLE
+
+        # Get distinct frameworks
+        frameworks = FRAMEWORK.objects.values('code', 'name').distinct().order_by('code')
+        framework_list = [
+            {'code': f['code'], 'name': f['name'] or f['code']}
+            for f in frameworks if f['code']
+        ]
+
+        # Get distinct tables with their codes and versions
+        tables = TABLE.objects.values('code', 'version').distinct().order_by('code', 'version')
+        table_list = [
+            {'code': t['code'], 'version': t['version'] or ''}
+            for t in tables if t['code']
+        ]
+
+        # Get distinct table codes (without version)
+        table_codes = TABLE.objects.values_list('code', flat=True).distinct().order_by('code')
+        table_code_list = [code for code in table_codes if code]
+
+        return JsonResponse({
+            'success': True,
+            'frameworks': framework_list,
+            'tables': table_list,
+            'table_codes': table_code_list
+        })
+
+    except Exception as e:
+        logger.error(f"Error getting output layer options: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+
+@require_http_methods(["POST"])
+def execute_ancrdt_step(request, step_number):
+    """Execute an AnaCredit process step"""
+    logger = logging.getLogger(__name__)
+
+    try:
+        # Get workflow session
+        session_id = request.session.get('workflow_session_id')
+        if not session_id:
+            return JsonResponse({
+                'success': False,
+                'error': 'No active workflow session found'
+            })
+
+        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+
+        # Get or create AnaCredit execution record
+        ancrdt_execution, created = AnaCreditProcessExecution.objects.get_or_create(
+            session=workflow_session,
+            step_number=step_number,
+            defaults={
+                'step_name': dict(AnaCreditProcessExecution.STEP_CHOICES).get(step_number, f'Step {step_number}'),
+                'status': 'pending'
+            }
+        )
+
+        # Mark as running
+        ancrdt_execution.start_execution()
+
+        # Execute the appropriate entry point based on step number
+        try:
+            if step_number == 0:
+                # Fetch Metadata CSV
+                from pybirdai.entry_points.ancrdt_transformation import RunANCRDTTransformation
+                RunANCRDTTransformation.run_step_0_fetch_ancrdt_csv()
+
+            elif step_number == 1:
+                # Import Metadata
+                from pybirdai.entry_points.ancrdt_transformation import RunANCRDTTransformation
+                RunANCRDTTransformation.run_step_1_import()
+
+            elif step_number == 2:
+                # Create Joins Metadata
+                from pybirdai.entry_points.ancrdt_transformation import RunANCRDTTransformation
+                RunANCRDTTransformation.run_step_2_joins_metadata()
+
+            elif step_number == 3:
+                # Create Executable Joins
+                from pybirdai.entry_points.ancrdt_transformation import RunANCRDTTransformation
+                RunANCRDTTransformation.run_step_3_executable_joins()
+
+            else:
+                raise ValueError(f'Invalid AnaCredit step number: {step_number}')
+
+            # Mark as completed
+            ancrdt_execution.complete_execution({
+                'completed_at': timezone.now().isoformat()
+            })
+
+            return JsonResponse({
+                'success': True,
+                'status': 'completed',
+                'message': f'AnaCredit Step {step_number} completed successfully'
+            })
+
+        except Exception as e:
+            logger.error(f"AnaCredit Step {step_number} execution failed: {e}")
+            ancrdt_execution.handle_error(str(e))
+            return JsonResponse({
+                'success': False,
+                'error': str(e),
+                'status': 'failed'
+            })
+
+    except Exception as e:
+        logger.error(f"Error executing AnaCredit step: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+
+@require_http_methods(["GET"])
+def get_ancrdt_status(request):
+    """Get AnaCredit execution status"""
+    try:
+        session_id = request.session.get('workflow_session_id')
+        if not session_id:
+            return JsonResponse({
+                'success': False,
+                'error': 'No active workflow session found'
+            })
+
+        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+        ancrdt_grid = get_ancrdt_task_grid(workflow_session)
+
+        return JsonResponse({
+            'success': True,
+            'ancrdt_status': ancrdt_grid
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+
+# Review Pages for DPM and AnaCredit
+
+def workflow_dpm_review(request, step_number):
+    """Review page for DPM step execution results"""
+    logger = logging.getLogger(__name__)
+
+    try:
+        # Get workflow session
+        session_id = request.session.get('workflow_session_id')
+        if not session_id:
+            messages.error(request, 'No active workflow session found')
+            return redirect('pybirdai:workflow_dashboard')
+
+        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+
+        # Get DPM execution record
+        try:
+            dpm_execution = DPMProcessExecution.objects.get(
+                session=workflow_session,
+                step_number=step_number
+            )
+        except DPMProcessExecution.DoesNotExist:
+            messages.warning(request, f'DPM Step {step_number} has not been executed yet')
+            return redirect('pybirdai:workflow_dashboard')
+
+        # Gather generated files based on step number
+        import glob
+        generated_files = []
+
+        if step_number == 1:
+            # Prepare DPM Data - check for CSV files in results/technical_export/
+            csv_pattern = "results/technical_export/*.csv"
+            generated_files = glob.glob(csv_pattern)
+        elif step_number == 2:
+            # Import DPM Data - check database records
+            from .bird_meta_data_model import FRAMEWORK, DOMAIN, MEMBER
+            generated_files = [
+                f"Frameworks: {FRAMEWORK.objects.count()} records",
+                f"Domains: {DOMAIN.objects.count()} records",
+                f"Members: {MEMBER.objects.count()} records",
+            ]
+        elif step_number == 3:
+            # Create Output Layers - check for cubes
+            from .bird_meta_data_model import CUBE, COMBINATION
+            generated_files = [
+                f"Cubes: {CUBE.objects.count()} records",
+                f"Combinations: {COMBINATION.objects.count()} records",
+            ]
+
+        # Calculate duration if available
+        duration = None
+        if dpm_execution.started_at and dpm_execution.completed_at:
+            duration = dpm_execution.completed_at - dpm_execution.started_at
+
+        context = {
+            'step_number': step_number,
+            'step_name': dpm_execution.step_name,
+            'execution': dpm_execution,
+            'status': dpm_execution.status,
+            'started_at': dpm_execution.started_at,
+            'completed_at': dpm_execution.completed_at,
+            'duration': duration,
+            'error_message': dpm_execution.error_message,
+            'execution_data': dpm_execution.execution_data,
+            'generated_files': generated_files,
+            'workflow_type': 'dpm',
+        }
+
+        return render(request, 'pybirdai/workflow/dpm_review.html', context)
+
+    except Exception as e:
+        logger.error(f"Error in DPM review page: {e}")
+        messages.error(request, f'Error loading review page: {str(e)}')
+        return redirect('pybirdai:workflow_dashboard')
+
+
+def workflow_ancrdt_review(request, step_number):
+    """Review page for AnaCredit step execution results"""
+    logger = logging.getLogger(__name__)
+
+    try:
+        # Get workflow session
+        session_id = request.session.get('workflow_session_id')
+        if not session_id:
+            messages.error(request, 'No active workflow session found')
+            return redirect('pybirdai:workflow_dashboard')
+
+        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+
+        # Get AnaCredit execution record
+        try:
+            ancrdt_execution = AnaCreditProcessExecution.objects.get(
+                session=workflow_session,
+                step_number=step_number
+            )
+        except AnaCreditProcessExecution.DoesNotExist:
+            messages.warning(request, f'AnaCredit Step {step_number} has not been executed yet')
+            return redirect('pybirdai:workflow_dashboard')
+
+        # Gather generated files based on step number
+        import glob
+        generated_files = []
+
+        if step_number == 0:
+            # Fetch Metadata CSV - check for CSV files in results/ancrdt_csv/
+            csv_pattern = "results/ancrdt_csv/*.csv"
+            generated_files = glob.glob(csv_pattern)
+        elif step_number == 1:
+            # Import Metadata - check database records
+            from .bird_meta_data_model import CUBE, CUBE_STRUCTURE
+            generated_files = [
+                f"Cubes: {CUBE.objects.filter(framework_id__framework_id__icontains='ANCRDT').count()} records",
+                f"Cube Structures: {CUBE_STRUCTURE.objects.count()} records",
+            ]
+        elif step_number == 2:
+            # Create Joins Metadata - check for cube links
+            from .bird_meta_data_model import CUBE_LINK
+            generated_files = [
+                f"Cube Links: {CUBE_LINK.objects.count()} records",
+            ]
+        elif step_number == 3:
+            # Create Executable Joins - check for generated Python files
+            py_pattern = "results/generated_python_joins/*.py"
+            generated_files = glob.glob(py_pattern)
+
+        # Calculate duration if available
+        duration = None
+        if ancrdt_execution.started_at and ancrdt_execution.completed_at:
+            duration = ancrdt_execution.completed_at - ancrdt_execution.started_at
+
+        context = {
+            'step_number': step_number,
+            'step_name': ancrdt_execution.step_name,
+            'execution': ancrdt_execution,
+            'status': ancrdt_execution.status,
+            'started_at': ancrdt_execution.started_at,
+            'completed_at': ancrdt_execution.completed_at,
+            'duration': duration,
+            'error_message': ancrdt_execution.error_message,
+            'execution_data': ancrdt_execution.execution_data,
+            'generated_files': generated_files,
+            'workflow_type': 'ancrdt',
+        }
+
+        return render(request, 'pybirdai/workflow/ancrdt_review.html', context)
+
+    except Exception as e:
+        logger.error(f"Error in AnaCredit review page: {e}")
+        messages.error(request, f'Error loading review page: {str(e)}')
+        return redirect('pybirdai:workflow_dashboard')

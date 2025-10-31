@@ -35,3 +35,12 @@ uv.lock
 pybirdai/admin.py
 pybirdai/bird_data_model.py
 **/tmp
+**/mcp/**
+dpm_database.accdb
+dpm_database.zip
+**/target/
+**/tests/
+**/filter_code/*_logic.py
+**/templates/**/*_REF_*
+pybirdai/admin.py
+pybirdai/models/bird_data_model.py

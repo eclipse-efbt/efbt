@@ -14,17 +14,11 @@
 
 from django.shortcuts import render
 from django.http import JsonResponse
-from .views import create_response_with_loading
-from .entry_points.ancrdt_transformation import RunANCRDTTransformation
+from .core_views import create_response_with_loading
+from pybirdai.entry_points.ancrdt_transformation import RunANCRDTTransformation
 import logging
 
 logger = logging.getLogger(__name__)
-
-
-def ancrdt_dashboard(request):
-    """Main dashboard for ANCRDT transformation process"""
-    return render(request, 'pybirdai/ancrdt_dashboard.html')
-
 
 def ancrdt_fetch_csv(request):
     """Step 0: Fetch ANCRDT CSV data from ECB website with loading spinner"""

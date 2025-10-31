@@ -49,7 +49,7 @@ class DjangoSetup:
 
 if __name__ == "__main__":
     DjangoSetup.configure_django()
-    from pybirdai import workflow_views
+    from pybirdai.views import workflow_views
     import json
     with open("automode_config.json","w") as f:
         json.dump({

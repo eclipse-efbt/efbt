@@ -14,7 +14,7 @@
 import json
 import logging
 from typing import Dict, List, Set, Tuple, Any, Optional
-from ..models.bird_meta_data_model import (
+from pybirdai.models.bird_meta_data_model import (
     MEMBER,
     MEMBER_MAPPING_ITEM,
     MAPPING_DEFINITION,

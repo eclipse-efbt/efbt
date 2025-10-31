@@ -1,0 +1,236 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>AnaCredit Process Review - Step {{ step_number }}</h1>
+    <h2>{{ step_name }}</h2>
+
+    <!-- Status Badge -->
+    <div style="margin: 20px 0;">
+        <span class="operation-btn {{ status }}" style="padding: 10px 20px; font-size: 16px; cursor: default;">
+            {% if status == 'completed' %}
+                ✓ Completed
+            {% elif status == 'running' %}
+                ⏳ Running
+            {% elif status == 'failed' %}
+                ✗ Failed
+            {% elif status == 'pending' %}
+                ⏸️ Pending
+            {% else %}
+                {{ status|title }}
+            {% endif %}
+        </span>
+    </div>
+
+    <!-- Execution Timeline -->
+    <div class="review-section">
+        <h3>Execution Timeline</h3>
+        <table class="review-table">
+            <tr>
+                <th>Status:</th>
+                <td>{{ status|title }}</td>
+            </tr>
+            {% if started_at %}
+            <tr>
+                <th>Started At:</th>
+                <td>{{ started_at|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+            {% endif %}
+            {% if completed_at %}
+            <tr>
+                <th>Completed At:</th>
+                <td>{{ completed_at|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+            {% endif %}
+            {% if duration %}
+            <tr>
+                <th>Duration:</th>
+                <td>{{ duration }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <!-- Generated Files/Artifacts -->
+    {% if generated_files %}
+    <div class="review-section">
+        <h3>Generated Files & Artifacts</h3>
+        <ul class="file-list">
+            {% for file in generated_files %}
+            <li>{{ file }}</li>
+            {% endfor %}
+        </ul>
+        <p><small>Total: {{ generated_files|length }} item{{ generated_files|length|pluralize }}</small></p>
+    </div>
+    {% endif %}
+
+    <!-- Execution Logs -->
+    {% if execution_data %}
+    <div class="review-section">
+        <h3>Execution Details</h3>
+        <div class="log-container">
+            <pre>{{ execution_data|pprint }}</pre>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Error Messages -->
+    {% if error_message %}
+    <div class="review-section error-section">
+        <h3>Error Details</h3>
+        <div class="error-message">
+            {{ error_message }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div style="margin-top: 30px;">
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+        {% if status == 'failed' %}
+        <button onclick="executeANCRDTStep({{ step_number }})" class="btn btn-warning">Retry Execution</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .review-section {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .review-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .review-table {
+        width: 100%;
+        max-width: 600px;
+        border-collapse: collapse;
+    }
+
+    .review-table th {
+        text-align: left;
+        padding: 8px;
+        width: 150px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .review-table td {
+        padding: 8px;
+        color: #333;
+    }
+
+    .file-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .file-list li {
+        padding: 8px;
+        margin: 5px 0;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+    }
+
+    .log-container {
+        background: #2d2d2d;
+        color: #f8f8f8;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .log-container pre {
+        margin: 0;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .error-section {
+        background: #fff3cd;
+        border-color: #ffeaa7;
+    }
+
+    .error-message {
+        background: white;
+        padding: 15px;
+        border-radius: 4px;
+        border-left: 4px solid #dc3545;
+        color: #721c24;
+        font-family: 'Courier New', monospace;
+        white-space: pre-wrap;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-right: 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .btn-warning:hover {
+        background: #e0a800;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function executeANCRDTStep(stepNumber) {
+    if (confirm('Are you sure you want to retry this step?')) {
+        window.location.href = '{% url "pybirdai:workflow_dashboard" %}';
+        // The actual execution will be triggered from the dashboard
+    }
+}
+</script>
+{% endblock %}

@@ -41,6 +41,15 @@
                 <button onclick="duplicateMapping()" class="table-control-btn" style="padding: 10px 16px; background-color: #2E7D32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500; align-self: flex-start;">Duplicate Mapping</button>
             </div>
             <div class="button-group" style="display: flex; gap: 10px; border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
+                <a href="{% url 'pybirdai:export_mapping_template' %}" class="table-control-btn" style="padding: 10px 16px; background-color: #757575; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500; text-decoration: none; display: inline-block;" title="Download empty CSV template with examples">Download Template</a>
+                {% if selected_mapping %}
+                <a href="{% url 'pybirdai:export_mapping_data' selected_mapping %}" class="table-control-btn" style="padding: 10px 16px; background-color: #1976D2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500; text-decoration: none; display: inline-block;" title="Export current mapping to CSV">Export to CSV</a>
+                {% else %}
+                <button onclick="alert('Please select a mapping first')" class="table-control-btn" style="padding: 10px 16px; background-color: #999; color: white; border: none; border-radius: 4px; cursor: not-allowed; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;" title="Select a mapping to export">Export to CSV</button>
+                {% endif %}
+                <button onclick="openImportModal()" class="table-control-btn" style="padding: 10px 16px; background-color: #388E3C; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;" title="Import mapping from CSV file">Import from CSV</button>
+            </div>
+            <div class="button-group" style="display: flex; gap: 10px; border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
                 <button onclick="addTargetVariable()" class="table-control-btn" style="padding: 10px 16px; background-color: #E65100; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Add Target Variable</button>
                 <button onclick="addSourceVariable()" class="table-control-btn" style="padding: 10px 16px; background-color: #0277BD; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Add Source Variable</button>
             </div>
@@ -150,6 +159,80 @@
                 <div class="form-buttons" style="width: 100%; padding: 20px; border-top: 1px solid #ddd; margin-top: auto;">
                     <button type="button" onclick="closeTargetVariableModal()" class="cancel-button" style="padding: 12px 24px; margin-right: 15px;">Cancel</button>
                     <button type="submit" class="submit-button" style="padding: 12px 24px;">Add Target Variable</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Mapping Modal -->
+    <div id="importMappingModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <h2 style="margin-bottom: 30px; font-size: 28px;">Import Mapping from CSV</h2>
+            <form id="importMappingForm" style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- File Upload Section -->
+                <div class="form-group">
+                    <label for="csvFileInput" style="display: block; margin-bottom: 10px; font-weight: 500;">CSV File:</label>
+                    <input type="file" id="csvFileInput" name="csvFile" accept=".csv" required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                    <small style="color: #666; display: block; margin-top: 5px;">Upload a CSV file with mapping data</small>
+                </div>
+
+                <!-- Validation Button -->
+                <button type="button" onclick="validateImportFile()" class="btn" style="padding: 10px 16px; background-color: #1976D2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; align-self: flex-start;">Validate File</button>
+
+                <!-- Validation Results -->
+                <div id="importValidationResults" style="display: none;"></div>
+
+                <!-- Mapping Details Section (shown after validation) -->
+                <div id="importDetailsSection" style="display: none;">
+                    <div class="form-group">
+                        <label for="importMappingName" style="display: block; margin-bottom: 10px; font-weight: 500;">Mapping Name: *</label>
+                        <input type="text" id="importMappingName" name="mapping_name" required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="importMappingCode" style="display: block; margin-bottom: 10px; font-weight: 500;">Mapping Code: *</label>
+                        <input type="text" id="importMappingCode" name="mapping_code" required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="importMappingType" style="display: block; margin-bottom: 10px; font-weight: 500;">Mapping Type:</label>
+                        <select id="importMappingType" name="mapping_type" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                            <option value="">Select type (optional)</option>
+                            <option value="ONE_TO_ONE">ONE_TO_ONE</option>
+                            <option value="ONE_TO_MANY">ONE_TO_MANY</option>
+                            <option value="MANY_TO_ONE">MANY_TO_ONE</option>
+                            <option value="MANY_TO_MANY">MANY_TO_MANY</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="importCubeIds" style="display: block; margin-bottom: 10px; font-weight: 500;">Associated Cubes:</label>
+                        <select id="importCubeIds" name="cube_ids" multiple style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; height: 120px;">
+                            {% for cube in cubes %}
+                                <option value="{{ cube.cube_id }}">{{ cube.name }} ({{ cube.code }})</option>
+                            {% endfor %}
+                        </select>
+                        <small style="color: #666; display: block; margin-top: 5px;">Hold Ctrl/Cmd to select multiple cubes</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="importOverwrite" name="overwrite" value="true">
+                            <span>Overwrite existing mapping if code already exists</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="form-buttons" style="display: flex; gap: 10px; padding-top: 20px; border-top: 1px solid #ddd;">
+                    <button type="button" onclick="closeImportModal()" class="cancel-button" style="padding: 12px 24px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                    <button type="button" onclick="submitImport()" id="submitImportBtn" class="submit-button" style="padding: 12px 24px; background-color: #2E7D32; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">Import Mapping</button>
+                </div>
+
+                <!-- Loading Indicator -->
+                <div id="importLoadingIndicator" style="display: none; text-align: center; padding: 20px;">
+                    <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #2E7D32; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                    <p style="margin-top: 10px; color: #666;">Processing...</p>
                 </div>
             </form>
         </div>
@@ -570,6 +653,179 @@ function duplicateMapping() {
     .catch(error => {
         console.error('Error:', error);
         alert('An error occurred while duplicating the mapping.');
+    });
+}
+
+// Import Modal Functions
+let importParsedData = null;
+
+function openImportModal() {
+    document.getElementById('importMappingModal').style.display = 'block';
+}
+
+function closeImportModal() {
+    document.getElementById('importMappingModal').style.display = 'none';
+    document.getElementById('importMappingForm').reset();
+    document.getElementById('importValidationResults').style.display = 'none';
+    document.getElementById('importValidationResults').innerHTML = '';
+    document.getElementById('importDetailsSection').style.display = 'none';
+    document.getElementById('submitImportBtn').style.display = 'none';
+    importParsedData = null;
+}
+
+function validateImportFile() {
+    const fileInput = document.getElementById('csvFileInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert('Please select a CSV file');
+        return;
+    }
+
+    // Show loading
+    document.getElementById('importLoadingIndicator').style.display = 'block';
+    document.getElementById('importValidationResults').style.display = 'none';
+
+    // Create FormData
+    const formData = new FormData();
+    formData.append('csvFile', file);
+
+    // Get CSRF token
+    const csrftoken = getCookie('csrftoken');
+
+    // Submit for validation
+    fetch('/pybirdai/import-mapping-from-csv/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('importLoadingIndicator').style.display = 'none';
+
+        if (data.success) {
+            // Store parsed data
+            importParsedData = data.parsed_data;
+
+            // Show success message
+            let html = '<div style="padding: 15px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">';
+            html += '<strong>✓ Validation Successful!</strong><br>';
+            html += `Found ${data.row_count} mapping rows.`;
+
+            if (data.validation_report.warnings && data.validation_report.warnings.length > 0) {
+                html += '<br><br><strong>Warnings:</strong><ul style="margin: 5px 0 0 20px;">';
+                data.validation_report.warnings.forEach(warn => {
+                    html += `<li>${warn}</li>`;
+                });
+                html += '</ul>';
+            }
+            html += '</div>';
+
+            document.getElementById('importValidationResults').innerHTML = html;
+            document.getElementById('importValidationResults').style.display = 'block';
+
+            // Show details section
+            document.getElementById('importDetailsSection').style.display = 'block';
+            document.getElementById('submitImportBtn').style.display = 'block';
+
+        } else {
+            // Show errors
+            let html = '<div style="padding: 15px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;">';
+            html += '<strong>Validation Errors:</strong><ul style="margin: 5px 0 0 20px;">';
+            data.errors.forEach(err => {
+                html += `<li>${err}</li>`;
+            });
+            html += '</ul>';
+
+            if (data.warnings && data.warnings.length > 0) {
+                html += '<br><strong>Warnings:</strong><ul style="margin: 5px 0 0 20px;">';
+                data.warnings.forEach(warn => {
+                    html += `<li>${warn}</li>`;
+                });
+                html += '</ul>';
+            }
+            html += '</div>';
+
+            document.getElementById('importValidationResults').innerHTML = html;
+            document.getElementById('importValidationResults').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        document.getElementById('importLoadingIndicator').style.display = 'none';
+        document.getElementById('importValidationResults').innerHTML =
+            '<div style="padding: 15px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;">' +
+            '<strong>Error:</strong> ' + error.message + '</div>';
+        document.getElementById('importValidationResults').style.display = 'block';
+    });
+}
+
+function submitImport() {
+    const mappingName = document.getElementById('importMappingName').value.trim();
+    const mappingCode = document.getElementById('importMappingCode').value.trim();
+
+    if (!mappingName || !mappingCode) {
+        alert('Please fill in Mapping Name and Mapping Code');
+        return;
+    }
+
+    if (!importParsedData) {
+        alert('Please validate the file first');
+        return;
+    }
+
+    // Show loading
+    document.getElementById('importLoadingIndicator').style.display = 'block';
+    document.getElementById('submitImportBtn').disabled = true;
+
+    // Get form data
+    const mappingType = document.getElementById('importMappingType').value;
+    const cubeIds = Array.from(document.getElementById('importCubeIds').selectedOptions).map(opt => opt.value);
+    const overwrite = document.getElementById('importOverwrite').checked;
+
+    // Create FormData
+    const formData = new FormData();
+    formData.append('mapping_name', mappingName);
+    formData.append('mapping_code', mappingCode);
+    formData.append('mapping_type', mappingType);
+    formData.append('algorithm', '');
+    formData.append('maintenance_agency_id', '');
+    formData.append('overwrite', overwrite ? 'true' : 'false');
+    formData.append('parsed_data', JSON.stringify(importParsedData));
+    cubeIds.forEach(id => formData.append('cube_ids', id));
+
+    // Get CSRF token
+    const csrftoken = getCookie('csrftoken');
+
+    // Submit import
+    fetch('/pybirdai/import-mapping-from-csv/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('importLoadingIndicator').style.display = 'none';
+        document.getElementById('submitImportBtn').disabled = false;
+
+        if (data.success) {
+            alert('Mapping imported successfully!');
+            closeImportModal();
+            // Reload page to show new mapping
+            window.location.reload();
+        } else {
+            alert('Error importing mapping: ' + data.error);
+        }
+    })
+    .catch(error => {
+        document.getElementById('importLoadingIndicator').style.display = 'none';
+        document.getElementById('submitImportBtn').disabled = false;
+        alert('Error: ' + error.message);
     });
 }
 
@@ -1102,6 +1358,12 @@ tr[data-row].selected {
 tr[data-row]:hover {
     background-color: #FFFFD9;
     cursor: pointer;
+}
+
+/* Spin animation for loading indicator */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 </style>
 {% endblock %}

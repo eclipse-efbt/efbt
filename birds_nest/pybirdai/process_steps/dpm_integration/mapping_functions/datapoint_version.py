@@ -14,7 +14,7 @@
 import os
 import numpy as np
 from collections import defaultdict
-from .utils import (
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
     read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
     select_fields, rename_fields, pascal_to_upper_snake, merge_arrays, clean_spaces
 )

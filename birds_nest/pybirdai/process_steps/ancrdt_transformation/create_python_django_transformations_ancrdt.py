@@ -101,7 +101,7 @@ class CreatePythonTransformations:
 
         for rolc_id, cube_links in cube_link_to_foreign_cube_map__.items():
             file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  rolc_id + '_logic.py', "a",  encoding='utf-8')
-            file.write("from pybirdai.bird_data_model import *\n")
+            file.write("from pybirdai.models.bird_data_model import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
             file.write("from datetime import datetime\n")

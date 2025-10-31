@@ -18,7 +18,7 @@ from django.db import transaction, connection
 from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
-from .models.bird_meta_data_model import (
+from pybirdai.models.bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MAPPING_TO_CUBE, MAPPING_DEFINITION,
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER,
@@ -29,55 +29,55 @@ import json
 
 import os
 import csv
-from .models import bird_meta_data_model
-from .entry_points.import_input_model import RunImportInputModelFromSQLDev
+from pybirdai.models import bird_meta_data_model
+from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
 
-from .entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
-from .entry_points.import_dpm_data import RunImportDPMData
-from .entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
-from .entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
-from .entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
-from .entry_points.create_filters import RunCreateFilters
-from .entry_points.create_joins_metadata import RunCreateJoinsMetadata
-from .entry_points.delete_joins_metadata import RunDeleteJoinsMetadata
-from .entry_points.delete_semantic_integrations import RunDeleteSemanticIntegrations
-from .entry_points.delete_output_concepts import RunDeleteOutputConcepts
-from .utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
-from .entry_points.import_export_mapping_join_metadata import RunExporterJoins, RunImporterJoins,RunMappingJoinsEIL_LDM
+from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+from pybirdai.entry_points.import_dpm_data import RunImportDPMData
+from pybirdai.entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
+from pybirdai.entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
+from pybirdai.entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
+from pybirdai.entry_points.create_filters import RunCreateFilters
+from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
+from pybirdai.entry_points.delete_joins_metadata import RunDeleteJoinsMetadata
+from pybirdai.entry_points.delete_semantic_integrations import RunDeleteSemanticIntegrations
+from pybirdai.entry_points.delete_output_concepts import RunDeleteOutputConcepts
+from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+from pybirdai.entry_points.import_export_mapping_join_metadata import RunExporterJoins, RunImporterJoins,RunMappingJoinsEIL_LDM
 
 
 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
-from .entry_points.create_executable_joins import RunCreateExecutableJoins
-from .entry_points.run_create_executable_filters import RunCreateExecutableFilters
-from .entry_points.execute_datapoint import RunExecuteDataPoint
-from .entry_points.upload_sqldev_eil_files import UploadSQLDevEILFiles
-from .entry_points.upload_sqldev_eldm_files import UploadSQLDevELDMFiles
-from .entry_points.upload_technical_export_files import UploadTechnicalExportFiles
-from .entry_points.create_django_models import RunCreateDjangoModels
-from .entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
-from .process_steps.ancrdt_transformation.create_executable_joins_ancrdt import RunCreateExecutableJoins
-from .process_steps.ancrdt_transformation.ancrdt_importer import RunANCRDTImport
-from .process_steps.ancrdt_transformation.create_joins_meta_data_ancrdt import JoinsMetaDataCreatorANCRDT
+from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
+from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
+from pybirdai.entry_points.execute_datapoint import RunExecuteDataPoint
+from pybirdai.entry_points.upload_sqldev_eil_files import UploadSQLDevEILFiles
+from pybirdai.entry_points.upload_sqldev_eldm_files import UploadSQLDevELDMFiles
+from pybirdai.entry_points.upload_technical_export_files import UploadTechnicalExportFiles
+from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
+from pybirdai.entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
+from ..process_steps.ancrdt_transformation.create_executable_joins_ancrdt import RunCreateExecutableJoins
+from ..process_steps.ancrdt_transformation.ancrdt_importer import RunANCRDTImport
+from ..process_steps.ancrdt_transformation.create_joins_meta_data_ancrdt import JoinsMetaDataCreatorANCRDT
 
 import os
 import csv
 from pathlib import Path
-from .process_steps.upload_files.file_uploader import FileUploader
-from .entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
-from .entry_points.upload_joins_configuration import UploadJoinsConfiguration
+from ..process_steps.upload_files.file_uploader import FileUploader
+from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+from pybirdai.entry_points.upload_joins_configuration import UploadJoinsConfiguration
 from django.template.loader import render_to_string
 from django.db.models import Count, F
 from django.views.generic import ListView
 from django.urls import reverse
-from .context.sdd_context_django import SDDContext
+from pybirdai.context.sdd_context_django import SDDContext
 from urllib.parse import unquote
 import logging
 import zipfile
-from .context.csv_column_index_context import ColumnIndexes
+from pybirdai.context.csv_column_index_context import ColumnIndexes
 from django.apps import apps
 from django.db import models
 import inspect
-from .utils.mapping_library import (
+from pybirdai.utils.mapping_library import (
     build_mapping_results,
     add_variable_to_mapping,
     create_or_update_member,
@@ -90,12 +90,12 @@ from .utils.mapping_library import (
     cascade_member_mapping_changes,
     process_mapping_chain
 )
-from .utils.utils_views import ensure_results_directory,process_test_results_files
+from pybirdai.utils.utils_views import ensure_results_directory,process_test_results_files
 import time
 from datetime import datetime
 from django.views.decorators.clickjacking import xframe_options_exempt
 import traceback
-from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
 
 def serialize_datetime(obj):
     """JSON serializer for datetime objects"""
@@ -439,14 +439,8 @@ def upload_joins_configuration(request):
         return HttpResponse(html_response)
 
 # Basic views
-def index(request):
-    return HttpResponse("Hello, world. You're at the pybirdai index.")
-
 def home_view(request):
     return render(request, 'pybirdai/home.html')
-
-def dpm_data_view(request):
-    return render(request, 'pybirdai/dpm_data.html')
 
 def automode_view(request):
     return render(request, 'pybirdai/automode.html')
@@ -545,7 +539,7 @@ def create_variable_mapping_item(request):
 
             messages.success(request, 'Variable Mapping Item created successfully.')
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, "Variable Mapping Item creation")
 
     return redirect('pybirdai:edit_variable_mapping_items')
@@ -814,7 +808,7 @@ def create_mapping_definition(request):
 
             messages.success(request, 'Mapping Definition created successfully.')
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'Mapping Definition creation')
 
     return redirect('pybirdai:edit_mapping_definitions')
@@ -829,7 +823,7 @@ def delete_item(request, model, id_field, redirect_view, decoded_id=None):
         item.delete()
         messages.success(request, f'{model.__name__} deleted successfully.')
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, f'{model.__name__} deletion')
     return redirect(f'pybirdai:{redirect_view}')
 
@@ -867,7 +861,7 @@ def delete_variable_mapping_item(request):
             item.delete()
             messages.success(request, 'Variable Mapping Item deleted successfully.')
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'Variable Mapping Item deletion')
 
     return redirect('pybirdai:edit_variable_mapping_items')
@@ -898,7 +892,7 @@ def delete_member_mapping_item(request, item_id):
             item.delete()
             messages.success(request, 'Member Mapping Item deleted successfully.')
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'MEMBER_MAPPING_ITEM deletion')
 
     return redirect('pybirdai:edit_member_mapping_items')
@@ -939,7 +933,7 @@ def delete_cube_link(request, cube_link_id):
         messages.success(request, 'CUBE_LINK deleted successfully.')
         return JsonResponse({'status': 'success'})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, "CUBE_LINK deletion")
         return SecureErrorHandler.secure_json_response(e, "CUBE_LINK deletion", request)
 
@@ -1007,7 +1001,7 @@ def bulk_delete_cube_structure_item_links(request):
         logger.info(f"Bulk deletion process completed successfully. {deleted_count} link(s) deleted.")
     except Exception as e:
         logger.error(f'Error during bulk deletion: {str(e)}', exc_info=True)
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'bulk deletion')
 
     # Redirect back to the duplicate list page, resetting filters
@@ -1062,7 +1056,7 @@ def delete_cube_structure_item_link_dupl(request, cube_structure_item_link_id):
 
         messages.success(request, 'Link deleted successfully.')
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'cube structure item link deletion')
 
     # Check the referer to determine which page to redirect back to
@@ -1105,12 +1099,167 @@ def delete_mapping_to_cube(request, mapping_to_cube_id):
 
         messages.success(request, 'MAPPING_TO_CUBE deleted successfully.')
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'MAPPING_TO_CUBE deletion')
     return redirect('pybirdai:edit_mapping_to_cubes')
 
 def delete_mapping_definition(request, mapping_id):
     return delete_item(request, MAPPING_DEFINITION, 'mapping_id', 'edit_mapping_definitions')
+
+
+def export_mapping_template(request):
+    """
+    Export an empty mapping template CSV with example data.
+    Allows users to download a template they can fill out to create new mappings.
+    """
+    try:
+        from pybirdai.entry_points.template_mapping_definition import RunExportMappingTemplate
+
+        # Generate CSV content
+        csv_content = RunExportMappingTemplate.run_export_mapping_template()
+
+        # Create HTTP response with CSV content
+        response = HttpResponse(csv_content, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="mapping_template_example.csv"'
+
+        return response
+
+    except Exception as e:
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        return SecureErrorHandler.secure_http_response(e, "Export mapping template", request)
+
+
+def export_mapping_data(request, mapping_id):
+    """
+    Export an existing mapping definition to business-friendly CSV format.
+    Allows users to download, edit, and re-import mapping data.
+    """
+    try:
+        from pybirdai.entry_points.template_mapping_definition import RunExportMappingData
+        from datetime import datetime
+
+        # Generate CSV content
+        csv_content = RunExportMappingData.run_export_mapping_data(mapping_id)
+
+        # Get mapping code for filename
+        try:
+            mapping_def = MAPPING_DEFINITION.objects.get(mapping_id=mapping_id)
+            mapping_code = mapping_def.code or mapping_id
+        except MAPPING_DEFINITION.DoesNotExist:
+            mapping_code = mapping_id
+
+        # Create filename with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"mapping_{mapping_code}_{timestamp}.csv"
+
+        # Create HTTP response with CSV content
+        response = HttpResponse(csv_content, content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        return response
+
+    except Exception as e:
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        return SecureErrorHandler.secure_http_response(e, "Export mapping data", request)
+
+
+def import_mapping_from_csv(request):
+    """
+    Import mapping data from CSV file.
+    GET: Display upload form
+    POST: Process uploaded CSV file and show import form with metadata fields
+    """
+    if request.method == 'GET':
+        # Get all cubes for the cube selection dropdown
+        cubes = CUBE.objects.all().order_by('name')
+        agencies = MAINTENANCE_AGENCY.objects.all().order_by('maintenance_agency_id')
+
+        return render(request, 'pybirdai/import_mapping_from_csv.html', {
+            'cubes': cubes,
+            'agencies': agencies
+        })
+
+    elif request.method == 'POST':
+        try:
+            from pybirdai.entry_points.template_mapping_definition import RunImportMappingData
+
+            # Check if this is file upload or final import submission
+            if 'csvFile' in request.FILES:
+                # Step 1: Parse and validate CSV file
+                csv_file = request.FILES['csvFile']
+
+                if not csv_file.name.endswith('.csv'):
+                    return HttpResponseBadRequest('File must be a CSV')
+
+                # Parse CSV
+                parsed_data = RunImportMappingData.run_parse_mapping_csv(csv_file)
+
+                # Validate data
+                validation_report = RunImportMappingData.run_validate_mapping_csv(parsed_data)
+
+                # If validation fails, return errors
+                if not validation_report['is_valid']:
+                    return JsonResponse({
+                        'success': False,
+                        'errors': validation_report['errors'],
+                        'warnings': validation_report['warnings']
+                    })
+
+                # Return parsed data and validation results for preview
+                return JsonResponse({
+                    'success': True,
+                    'parsed_data': parsed_data,
+                    'validation_report': validation_report,
+                    'row_count': len(parsed_data['rows'])
+                })
+
+            else:
+                # Step 2: Final import submission
+                # Get form data
+                mapping_name = request.POST.get('mapping_name', '').strip()
+                mapping_code = request.POST.get('mapping_code', '').strip()
+                mapping_type = request.POST.get('mapping_type', '').strip()
+                algorithm = request.POST.get('algorithm', '').strip()
+                cube_ids = request.POST.getlist('cube_ids')
+                maintenance_agency_id = request.POST.get('maintenance_agency_id', '').strip()
+                overwrite = request.POST.get('overwrite') == 'true'
+                parsed_data_json = request.POST.get('parsed_data')
+
+                # Validate required fields
+                if not mapping_name:
+                    return JsonResponse({'success': False, 'error': 'Mapping name is required'})
+                if not mapping_code:
+                    return JsonResponse({'success': False, 'error': 'Mapping code is required'})
+                if not parsed_data_json:
+                    return JsonResponse({'success': False, 'error': 'No CSV data found. Please upload file again.'})
+
+                # Parse the JSON data
+                parsed_data = json.loads(parsed_data_json)
+
+                # Import data
+                mapping_id = RunImportMappingData.run_import_mapping_data(
+                    parsed_data=parsed_data,
+                    mapping_name=mapping_name,
+                    mapping_code=mapping_code,
+                    mapping_type=mapping_type,
+                    algorithm=algorithm,
+                    cube_ids=cube_ids,
+                    maintenance_agency_id=maintenance_agency_id,
+                    overwrite=overwrite
+                )
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f'Mapping "{mapping_name}" imported successfully',
+                    'mapping_id': mapping_id,
+                    'redirect_url': '/pybirdai/edit-mapping-definitions/'
+                })
+
+        except Exception as e:
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
+            error_msg = str(e)
+            return JsonResponse({'success': False, 'error': error_msg})
+
 
 def delete_cube(request, cube_id):
     from urllib.parse import unquote
@@ -1191,7 +1340,7 @@ def view_csv_file(request, filename):
         return render(request, 'pybirdai/view_csv.html', context)
 
     except Exception as e:
-        from .utils.secure_error_handling import FileOperationErrorHandler
+        from pybirdai.utils.secure_error_handling import FileOperationErrorHandler
         error_data = FileOperationErrorHandler.handle_file_error(e, "CSV file reading", safe_filename, request)
         messages.error(request, error_data['message'])
         return redirect('pybirdai:list_lineage_files')
@@ -1311,7 +1460,7 @@ def create_response_with_loading(request, task_title, success_message, return_ur
         try:
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             return SecureErrorHandler.secure_json_response(e, "task execution", request)
 
     return HttpResponse(html_response)
@@ -1587,7 +1736,7 @@ def delete_combination(request, combination_id):
         combination.delete()
         messages.success(request, 'COMBINATION deleted successfully.')
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'COMBINATION deletion')
     return redirect('pybirdai:combinations')
 
@@ -1611,7 +1760,7 @@ def delete_combination_item(request, item_id):
         item.delete()
         messages.success(request, 'COMBINATION_ITEM deleted successfully.')
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'COMBINATION_ITEM deletion')
     return redirect('pybirdai:combination_items')
 
@@ -1829,7 +1978,7 @@ def delete_cube_structure_item_link(request, cube_structure_item_link_id):
 
         messages.success(request, 'Link deleted successfully.')
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'cube structure item link deletion')
 
     # Check the referer to determine which page to redirect back to
@@ -1881,7 +2030,7 @@ def add_cube_structure_item_link(request):
 
         messages.success(request, 'New cube structure item link created successfully.')
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'cube structure item link creation')
 
     return redirect('pybirdai:edit_cube_structure_item_links')
@@ -1926,7 +2075,7 @@ def add_cube_link(request):
 
         messages.success(request, 'New cube link created successfully.')
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'cube link creation')
 
     return redirect('pybirdai:edit_cube_links')
@@ -1946,7 +2095,7 @@ def create_variable_mapping(request):
             variable_mapping.save()
             messages.success(request, 'Variable mapping created successfully.')
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'variable mapping creation')
     return redirect('pybirdai:edit_variable_mappings')
 
@@ -1967,7 +2116,7 @@ def create_member_mapping(request):
 
             messages.success(request, 'Member Mapping created successfully.')
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'member mapping creation')
 
     return redirect('pybirdai:edit_member_mappings')
@@ -2005,7 +2154,7 @@ def add_member_mapping_item(request):
 
             messages.success(request, 'Member Mapping Item created successfully.')
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'member mapping item creation')
 
     return redirect('pybirdai:edit_member_mapping_items')
@@ -2040,7 +2189,7 @@ def create_mapping_to_cube(request):
                     mapping_to_cube.cube_mapping_id] = [mapping_to_cube]
             messages.success(request, 'New mapping to cube created successfully.')
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'mapping to cube creation')
 
     return redirect('pybirdai:edit_mapping_to_cubes')
@@ -2121,7 +2270,7 @@ def convert_ldm_to_sdd_hierarchies(request):
             RunConvertLDMToSDDHierarchies.run_convert_hierarchies()
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             return SecureErrorHandler.secure_json_response(e, 'LDM to SDD hierarchy conversion', request)
 
     return create_response_with_loading(
@@ -2197,7 +2346,7 @@ def import_members_from_csv(request):
             return JsonResponse({'message': 'Import successful', 'count': len(members_to_create)})
 
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             return SecureErrorHandler.secure_http_response(e, "CSV member import", request)
 
 def import_variables_from_csv(request):
@@ -2255,7 +2404,7 @@ def import_variables_from_csv(request):
             return JsonResponse({'message': 'Import successful', 'count': len(variables_to_create)})
 
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             return SecureErrorHandler.secure_http_response(e, "CSV variable import", request)
 
 def run_create_executable_filters_from_db(request):
@@ -2312,7 +2461,7 @@ def run_create_python_transformations_from_db(request):
             return JsonResponse({'status': 'success'})
 
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Python transformations generation failed: {str(e)}")
             return SecureErrorHandler.secure_json_response(e, 'Python transformations generation', request)
 
@@ -2362,6 +2511,7 @@ def return_semantic_integration_menu(request: Any, mapping_id: str = "") -> Any:
     # Add to context for template access
     context["reference_variables"] = reference_variables
     context["source_variables"] = source_variables
+    context["cubes"] = CUBE.objects.all().order_by('name')
 
     if selected_mapping:
         logger.info(f"Processing selected mapping: {selected_mapping}")
@@ -2539,7 +2689,7 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
         return JsonResponse({'status': 'success'})
 
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error adding variable: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'variable addition', request)
 
@@ -2630,7 +2780,7 @@ def edit_mapping_endpoint(request: Any) -> JsonResponse:
         return JsonResponse({'status': 'success'})
 
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error updating mapping: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'mapping update', request)
 
@@ -2847,7 +2997,7 @@ def delete_mapping_row(request):
 
         return JsonResponse({'success': True})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error deleting mapping row: {str(e)}", exc_info=True)
         error_data = SecureErrorHandler.handle_exception(e, 'mapping row deletion', request)
         return JsonResponse({'success': False, 'error': error_data['message']})
@@ -2953,7 +3103,7 @@ def duplicate_mapping(request):
         logger.info(f"Successfully duplicated mapping {source_mapping_id} to {new_mapping.mapping_id}")
         return JsonResponse({'success': True})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error duplicating mapping: {str(e)}", exc_info=True)
         error_data = SecureErrorHandler.handle_exception(e, 'mapping duplication', request)
         return JsonResponse({'success': False, 'error': error_data['message']})
@@ -3054,7 +3204,7 @@ def update_mapping_row(request):
         logger.info(f"Successfully updated row {row_index} in mapping {mapping_id}")
         return JsonResponse({'success': True})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error updating mapping row: {str(e)}", exc_info=True)
         error_data = SecureErrorHandler.handle_exception(e, 'mapping row update', request)
         return JsonResponse({'success': False, 'error': error_data['message']})
@@ -3070,422 +3220,6 @@ def test_report_view(request):
         'templates': list(templates.values())
     }
     return render(request, 'pybirdai/test_report_view.html', context)
-
-def edit_member_links_page(request):
-    if request.method != 'GET':
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
-    # Get all cube structure item links
-    cube_structure_item_links = CUBE_STRUCTURE_ITEM_LINK.objects.all().order_by('cube_structure_item_link_id')
-
-
-
-    # Prepare for filtering
-    selected_link_id = request.GET.get('csi_link_id', '')
-
-    # Prepare domain members data
-    domain_members_domain = {}
-    foreign_members_domain = []
-    primary_members_domain = []
-    member_links = []
-    link = None
-    if selected_link_id:
-        # Todo()! fix the table view
-        link = CUBE_STRUCTURE_ITEM_LINK.objects.get(cube_structure_item_link_id=selected_link_id)
-        foreign_variable_id = link.foreign_cube_variable_code.variable_id.variable_id
-
-        if link.foreign_cube_variable_code.member_id:
-            foreign_members_domain = [link.foreign_cube_variable_code.member]
-        elif link.foreign_cube_variable_code.variable_id:
-            foreign_members_domain = MEMBER.objects.all().filter(
-                subdomain_enumeration__subdomain_id = link.foreign_cube_variable_code.subdomain_id
-            )
-            # primary_members_domain = MEMBER.objects.filter(domain_id=link.foreign_cube_variable_code.variable_id.domain_id)
-            if not foreign_members_domain:
-                logging.info(f"No members found for foreign domain {foreign_variable_id}")
-        else:
-            logging.info(f"Skipping link {link.cube_structure_item_link_id} as it has no member or subdomain ID for foreign variable")
-
-        primary_variable_id = link.primary_cube_variable_code.variable_id.variable_id
-        if link.primary_cube_variable_code.member_id:
-            primary_members_domain = [link.primary_cube_variable_code.member_id]
-        elif link.primary_cube_variable_code.variable_id:
-            primary_members_domain = MEMBER.objects.all().filter(
-                subdomain_enumeration__subdomain_id = link.primary_cube_variable_code.subdomain_id
-            )
-            # primary_members_domain = MEMBER.objects.filter(domain_id=link.primary_cube_variable_code.variable_id.domain_id)
-            if not primary_members_domain:
-                logging.info(f"No members found for primary domain {primary_variable_id}")
-        else:
-            logging.info(f"Skipping link {link.cube_structure_item_link_id} as it has no member or subdomain ID for primary variable")
-
-        # Get existing member links
-        member_links = MEMBER_LINK.objects.filter(cube_structure_item_link_id=link).select_related(
-            'cube_structure_item_link_id',
-            'primary_member_id',
-            'foreign_member_id'
-        ).order_by('cube_structure_item_link_id')
-
-        logging.info(f"Processed link {link.cube_structure_item_link_id} successfully")
-
-    context = {
-        'cube_structure_item_links': [el.cube_structure_item_link_id for el in cube_structure_item_links],
-        "foreign_variable": link.foreign_cube_variable_code if link else None,
-        "primary_variable": link.primary_cube_variable_code if link else None,
-        'member_links': member_links,
-        'selected_link_id': selected_link_id,
-        "foreign_members":foreign_members_domain,
-        "primary_members":primary_members_domain,
-        'domain_members_domain': domain_members_domain
-    }
-
-    return render(request, 'pybirdai/edit_member_links.html', context)
-
-def add_member_link(request):
-    """View function for adding a member link."""
-    logger.info("Handling add member link request")
-    if request.method != 'POST':
-        logger.warning("Invalid request method for add_member_link")
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
-    try:
-
-        decoded_body = urllib.parse.unquote_plus(request.body.decode())
-        print(decoded_body)
-        data = {}
-        for item in decoded_body.split('&'):
-            key, value = item.split('=')
-            data[key] = value
-
-        csi_link_id = data.get('cube_structure_item_link_id')
-        primary_member_id = data.get('primary_member_id')
-        foreign_member_id = data.get('foreign_member_id')
-        valid_from = data.get('valid_from')
-        valid_to = data.get('valid_to')
-        is_linked = json.loads(data.get('is_linked',"false"))
-
-        print(csi_link_id)
-        logger.debug(f"Looking up CSI link: {csi_link_id}")
-        csi_link = CUBE_STRUCTURE_ITEM_LINK.objects.get(cube_structure_item_link_id=csi_link_id)
-        logger.debug(f"Looking up primary member: {primary_member_id}")
-        primary_member = MEMBER.objects.get(member_id=primary_member_id)
-        logger.debug(f"Looking up foreign member: {foreign_member_id}")
-        foreign_member = MEMBER.objects.get(member_id=foreign_member_id)
-
-        member_link = MEMBER_LINK.objects.create(
-            cube_structure_item_link_id=csi_link,
-            primary_member_id=primary_member,
-            foreign_member_id=foreign_member,
-            valid_from=valid_from if valid_from else None,
-            valid_to=valid_to if valid_to else None,
-            is_linked=is_linked if is_linked else False
-        )
-        logger.info(f"Successfully created member link with ID: {member_link.id}")
-
-        return redirect(request.META.get('HTTP_REFERER'))
-
-    except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
-        logger.error(f"Error creating member link: {str(e)}", exc_info=True)
-        error_data = SecureErrorHandler.handle_exception(e, 'member link creation', request)
-        return JsonResponse({'success': False, 'error': error_data['message']})
-
-def delete_member_link(request):
-    """View function for deleting a member link."""
-    logger.info("Handling delete member link request")
-    if request.method != 'POST':
-        logger.warning("Invalid request method for delete_member_link")
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
-    try:
-        decoded_body = urllib.parse.unquote_plus(request.body.decode())
-        print(decoded_body)
-        data = {}
-        for item in decoded_body.split('&'):
-            key, value = item.split('=')
-            data[key] = value
-
-        member_link_id = data.get('member_link_id')
-        logger.debug(f"Attempting to delete member link with ID: {member_link_id}")
-
-        member_link = MEMBER_LINK.objects.get(id=member_link_id)
-        member_link.delete()
-        logger.info(f"Successfully deleted member link with ID: {member_link_id}")
-
-        return redirect(request.META.get('HTTP_REFERER'))
-
-    except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
-        logger.error(f"Error deleting member link: {str(e)}", exc_info=True)
-        error_data = SecureErrorHandler.handle_exception(e, 'member link deletion', request)
-        return JsonResponse({'success': False, 'error': error_data['message']})
-
-def edit_member_link(request):
-    """View function for editing a member link."""
-    logger.info("Handling edit member link request")
-    if request.method != 'POST':
-        logger.warning("Invalid request method for edit_member_link")
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
-    try:
-        data = json.loads(request.body.decode('utf-8'))
-        logger.debug(f"Received data for member link edit: {data}")
-        member_link_id = data.get('member_link_id',"")
-        primary_member_id = data.get('primary_member_id',"")
-        foreign_member_id = data.get('foreign_member_id',"")
-
-        logger.debug(f"Looking up member link with ID: {member_link_id}")
-        member_link = MEMBER_LINK.objects.get(id=member_link_id)
-
-        if primary_member_id:
-            logger.debug(f"Updating primary member to: {primary_member_id}")
-            primary_member = MEMBER.objects.get(member_id=primary_member_id)
-            member_link.primary_member_id = primary_member
-
-        if foreign_member_id:
-            logger.debug(f"Updating foreign member to: {foreign_member_id}")
-            foreign_member = MEMBER.objects.get(member_id=foreign_member_id)
-            member_link.foreign_member_id = foreign_member
-
-        member_link.save()
-        logger.info(f"Successfully updated member link with ID: {member_link_id}")
-
-        return JsonResponse({'success': True, 'redirect_url': request.META.get('HTTP_REFERER')})
-
-    except Exception as e:
-        logger.error(f"Error editing member link: {str(e)}", exc_info=True)
-        return JsonResponse({'success': False, 'error': 'An internal error has occurred.'})
-
-def download_member_link_template(request):
-    """View function for downloading member link template."""
-    logger.info("Handling download member link template request")
-    if request.method != 'GET':
-        logger.warning("Invalid request method for download_member_link_template")
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
-    try:
-        csi_link_id = request.GET.get('csi_link_id')
-        logger.debug(f"Downloading template for CSI link: {csi_link_id}")
-
-        # Create CSV content with header row
-        headers = ['Primary Member ID', 'Foreign Member ID', 'Valid From', 'Valid To', 'Is Linked']
-        csv_content = [','.join(headers)]
-
-        # Create CSV content with data
-        if csi_link_id:
-            csi_link = CUBE_STRUCTURE_ITEM_LINK.objects.get(cube_structure_item_link_id=csi_link_id)
-            member_links = MEMBER_LINK.objects.filter(cube_structure_item_link_id=csi_link)
-
-            for link in member_links:
-                csv_content.append(','.join([
-                    link.primary_member_id.member_id if link.primary_member_id else '',
-                    link.foreign_member_id.member_id if link.foreign_member_id else '',
-                    link.valid_from.strftime('%d/%m/%y') if link.valid_from else '',
-                    link.valid_to.strftime('%d/%m/%y') if link.valid_to else '',
-                    'TRUE' if link.is_linked else 'FALSE'
-                ]))
-
-        # Create response with CSV file
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=member_links_template.csv'
-        response.write('\n'.join(csv_content))
-
-        logger.info("Successfully generated member link template")
-        return response
-
-    except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
-        logger.error(f"Error generating template: {str(e)}", exc_info=True)
-        error_data = SecureErrorHandler.handle_exception(e, 'template generation', request)
-        return JsonResponse({'success': False, 'error': error_data['message']})
-
-def upload_member_link_template(request):
-    """View function for uploading filled member link template."""
-    logger.info("Handling upload member link template request")
-    if request.method != 'POST':
-        logger.warning("Invalid request method for upload_member_link_template")
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
-    try:
-        uploaded_file = request.FILES.get('file')
-        csi_link_id = request.POST.get('csi_link_id')
-        logger.debug(f"Processing template upload for CSI link: {csi_link_id}")
-
-        if not uploaded_file:
-            logger.warning("No file uploaded")
-            return JsonResponse({'success': False, 'error': 'No file uploaded'})
-
-        if not uploaded_file.name.endswith('.csv'):
-            logger.warning("Invalid file format")
-            return JsonResponse({'success': False, 'error': 'Invalid file format - must be .csv'})
-
-        # Read CSV file
-        decoded_file = uploaded_file.read().decode('utf-8').splitlines()
-        csv_reader = csv.DictReader(decoded_file)
-
-        # Process each row
-        for row in csv_reader:
-            if not any(row.values()):  # Skip empty rows
-                continue
-
-            member_link_data = {
-                'csi_link_id': csi_link_id,
-                'primary_member_id': row['Primary Member ID'],
-                'foreign_member_id': row['Foreign Member ID'],
-                'valid_from': row['Valid From'],
-                'valid_to': row['Valid To'],
-                'is_linked': row['Is Linked']
-            }
-
-            try:
-                # Add member link
-                csi_link = CUBE_STRUCTURE_ITEM_LINK.objects.get(cube_structure_item_link_id=csi_link_id)
-                primary_member = MEMBER.objects.get(member_id=member_link_data['primary_member_id'])
-                foreign_member = MEMBER.objects.get(member_id=member_link_data['foreign_member_id'])
-
-                # Check if member link already exists
-                existing_link = MEMBER_LINK.objects.filter(
-                    cube_structure_item_link_id=csi_link,
-                    primary_member_id=primary_member,
-                    foreign_member_id=foreign_member
-                ).exists()
-
-                if not existing_link:
-                    MEMBER_LINK.objects.create(
-                        cube_structure_item_link_id=csi_link,
-                        primary_member_id=primary_member,
-                        foreign_member_id=foreign_member,
-                        valid_from=datetime.strptime(member_link_data['valid_from'], '%d/%m/%y').strftime('%Y-%m-%d') if member_link_data['valid_from'] else None,
-                        valid_to=datetime.strptime(member_link_data['valid_to'], '%d/%m/%y').strftime('%Y-%m-%d') if member_link_data['valid_to'] else None,
-                        is_linked=True if (member_link_data['is_linked'] == "TRUE") else False
-                    )
-                    logger.debug(f"Created member link for primary member {primary_member.member_id}")
-
-            except Exception as e:
-                logger.error(f"Error processing row: {str(e)}", exc_info=True)
-                from .utils.secure_error_handling import SecureErrorHandler
-                error_data = SecureErrorHandler.handle_exception(e, 'template row processing', request)
-                return JsonResponse({'success': False, 'error': error_data['message']})
-
-        logger.info("Successfully processed uploaded template")
-        return JsonResponse({'success': True})
-
-    except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
-        logger.error(f"Error processing upload: {str(e)}", exc_info=True)
-        error_data = SecureErrorHandler.handle_exception(e, 'template upload processing', request)
-        return JsonResponse({'success': False, 'error': error_data['message']})
-
-def import_ancrdt_model(request):
-    """View function to import ANCRDT model"""
-    if request.GET.get('execute') == 'true':
-        try:
-            RunANCRDTImport.run_import()
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
-            return SecureErrorHandler.secure_json_response(e, 'ANCRDT model import', request)
-
-    return create_response_with_loading(
-        request,
-        'Importing ANCRDT Model (approx 2-3 minutes on a fast desktop, dont press the back button on this web page)',
-        'Successfully imported ANCRDT model',
-        '/pybirdai/bird_diffs_and_corrections',
-        'BIRD Export Diffs and Corrections'
-    )
-
-def create_joins_meta_data_ancrdt(request):
-    """View function to create joins meta data ANCRDT"""
-    if request.GET.get('execute') == 'true':
-        creator = JoinsMetaDataCreatorANCRDT()
-        result = creator.generate_joins_meta_data()
-
-    return create_response_with_loading(
-        request,
-        'Creating Joins Meta Data ANCRDT',
-        'Successfully created joins meta data ANCRDT',
-        '/pybirdai/ancrdt_executable_joins',
-        'Create Executable Joins ANCRDT'
-    )
-
-def create_executable_joins_ancrdt(request):
-    """View function to create executable joins ANCRDT"""
-    if request.GET.get('execute') == 'true':
-        RunCreateExecutableJoins.create_python_joins_from_db()
-
-    return create_response_with_loading(
-        request,
-        'Creating Executable Joins ANCRDT',
-        'Successfully created executable joins ANCRDT',
-        '/pybirdai/next_step',
-        'Proceed to Next Step'
-    )
-
-def anacredit_transformation_results_endpoint(request):
-    if request.method != 'GET':
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-    if request.GET.get('execute') == 'true':
-        client = BirdEcbWebsiteClient()
-        output_dir = client.request_and_save(
-            tree_root_ids="ANCRDT",
-            tree_root_type="FRAMEWORK",
-            output_dir="resources/technical_export",
-            format_type="csv",
-            include_mapping_content=False,
-            include_rendering_content=False,
-            include_transformation_content=False,
-            only_currently_valid_metadata=False
-        )
-        RunANCRDTImport.run_import()
-        JoinsMetaDataCreatorANCRDT().generate_joins_meta_data()
-        RunCreateExecutableJoins.create_python_joins_from_db()
-
-    return create_response_with_loading(
-        request,
-        'Fetching ANCRDT data, create join metadata and create executable joins',
-        'Successfully went through all the steps of the ANCRDT transformation rules creation',
-        '/pybirdai/',
-        'Proceed to Homepage'
-    )
-
-def fetch_ancrdt_data(request):
-    output_dir = ""
-    if request.method != 'GET':
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
-    if request.GET.get('execute') == 'true':
-        client = BirdEcbWebsiteClient()
-        output_dir = client.request_and_save(
-            tree_root_ids="ANCRDT",
-            tree_root_type="FRAMEWORK",
-            output_dir="resources/technical_export",
-            format_type="csv",
-            include_mapping_content=False,
-            include_rendering_content=False,
-            include_transformation_content=False,
-            only_currently_valid_metadata=False
-        )
-
-    return create_response_with_loading(
-        request,
-        'Fetching ANCRDT data from the BIRD Website',
-        f'Successfully fetched the ANCRDT data from the BIRD Website, data is in {output_dir}',
-        '/pybirdai/',
-        'Proceed to Homepage'
-    )
-
-@require_http_methods(["GET", "POST"])
-def edit_view_file(request):
-    context = {}
-    if request.method == 'POST':
-        # Get the uploaded file
-        if "file_path" in request.FILES:
-            print(request.FILES['file_path'].name)
-            context = {
-                "file_content" : request.FILES['file_path'].read().decode(),
-                "file_name" : request.FILES['file_path'].name
-            }
-
-    return render(request, 'utils/edit_view_file.html',context=context)
 
 def load_variables_from_csv_file(csv_file_path):
     """
@@ -3656,7 +3390,7 @@ def member_hierarchy_editor(request, hierarchy_id=None):
     Returns:
         Rendered template response with hierarchy data
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     logger.info(f"Rendering member hierarchy editor page for hierarchy_id: {hierarchy_id}")
 
@@ -3750,7 +3484,7 @@ def add_member_to_hierarchy(request):
         logger.error(f"Member {member_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Member not found'})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error adding member to hierarchy: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'member hierarchy addition', request)
 
@@ -3818,7 +3552,7 @@ def delete_member_from_hierarchy(request):
         logger.error(f"Hierarchy node {node_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Hierarchy node not found'})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error deleting member from hierarchy: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'member hierarchy deletion', request)
 
@@ -3875,7 +3609,7 @@ def edit_hierarchy_node(request):
         logger.error(f"Member {member_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Member not found'})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error editing hierarchy node: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'hierarchy node editing', request)
 
@@ -3913,7 +3647,7 @@ def get_members_by_domain(request, domain_id):
         logger.error(f"Domain {domain_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Domain not found'})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting members by domain: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'domain members retrieval', request)
 
@@ -3951,7 +3685,7 @@ def get_subdomain_enumerations(request, subdomain_id):
         logger.error(f"Subdomain {subdomain_id} not found")
         return JsonResponse({'status': 'error', 'message': 'Subdomain not found'})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting subdomain enumerations: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'subdomain enumerations retrieval', request)
 
@@ -3973,7 +3707,7 @@ def automode_create_database(request):
                 ]
             })
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Automode database setup failed: {str(e)}")
             return SecureErrorHandler.secure_json_response(e, 'automode database setup', request)
 
@@ -4038,7 +3772,7 @@ def test_automode_components(request):
             })
 
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Test failed: {str(e)}")
             return SecureErrorHandler.secure_json_response(e, 'test execution', request)
 
@@ -4093,7 +3827,7 @@ def run_fetch_curated_resources(request):
             })
 
         except Exception as e:
-            from .utils.secure_error_handling import SecureErrorHandler
+            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Test failed: {str(e)}")
             return SecureErrorHandler.secure_json_response(e, 'test execution', request)
 
@@ -4110,7 +3844,7 @@ def import_bird_data_from_csv_export(request):
     """
     Django endpoint for importing metadata from CSV files.
     """
-    from .utils.clone_mode import import_from_metadata_export
+    from pybirdai.utils.clone_mode import import_from_metadata_export
 
     if request.method == 'GET':
         return render(request, 'pybirdai/import_database.html')
@@ -4143,14 +3877,14 @@ def get_hierarchy_json(request, hierarchy_id):
     """
     API endpoint to get hierarchy data in JSON format for the visual editor
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     try:
         integration = get_hierarchy_integration()
         hierarchy_data = integration.get_hierarchy_by_id(hierarchy_id)
         return JsonResponse(hierarchy_data)
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting hierarchy JSON for {hierarchy_id}: {str(e)}")
         error_data = SecureErrorHandler.handle_exception(e, 'hierarchy JSON retrieval', request)
         return JsonResponse({'error': error_data['message']}, status=500)
@@ -4160,7 +3894,7 @@ def save_hierarchy_json(request):
     """
     API endpoint to save hierarchy data from the visual editor
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     if request.method != 'POST':
         return JsonResponse({'error': 'POST method required'}, status=405)
@@ -4181,7 +3915,7 @@ def save_hierarchy_json(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error saving hierarchy: {str(e)}")
         error_data = SecureErrorHandler.handle_exception(e, 'hierarchy saving', request)
         return JsonResponse({'error': error_data['message']}, status=500)
@@ -4191,14 +3925,14 @@ def get_domain_members_json(request, domain_id):
     """
     API endpoint to get all members for a domain in JSON format
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     try:
         integration = get_hierarchy_integration()
         members = integration.get_domain_members(domain_id)
         return JsonResponse({'members': members})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting domain members for {domain_id}: {str(e)}")
         error_data = SecureErrorHandler.handle_exception(e, 'domain members retrieval', request)
         return JsonResponse({'error': error_data['message']}, status=500)
@@ -4208,14 +3942,14 @@ def get_available_hierarchies_json(request):
     """
     API endpoint to get all available hierarchies in JSON format
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     try:
         integration = get_hierarchy_integration()
         hierarchies = integration.get_available_hierarchies()
         return JsonResponse({'hierarchies': hierarchies})
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error getting available hierarchies: {str(e)}")
         error_data = SecureErrorHandler.handle_exception(e, 'available hierarchies retrieval', request)
         return JsonResponse({'error': error_data['message']}, status=500)
@@ -4225,7 +3959,7 @@ def create_hierarchy_from_visualization(request):
     """
     API endpoint to create a new hierarchy from visualization data
     """
-    from .utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     if request.method != 'POST':
         return JsonResponse({'error': 'POST method required'}, status=405)
@@ -4272,7 +4006,7 @@ def create_hierarchy_from_visualization(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     except Exception as e:
-        from .utils.secure_error_handling import SecureErrorHandler
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error creating hierarchy: {str(e)}")
         error_data = SecureErrorHandler.handle_exception(e, 'hierarchy creation', request)
         return JsonResponse({'error': error_data['message']}, status=500)
@@ -4285,7 +4019,7 @@ def automode_configure(request):
 
     try:
         from .forms import AutomodeConfigurationSessionForm
-        from .workflow_services import AutomodeConfigurationService
+        from pybirdai.api.workflow_api import AutomodeConfigurationService
     except Exception as e:
         logger.error(f"Error importing modules in automode_configure: {str(e)}")
         return JsonResponse({
@@ -4431,8 +4165,8 @@ def automode_configure(request):
 
 def automode_execute(request):
     """Execute automode setup with current configuration."""
-    from .workflow_services import AutomodeConfigurationService
-    from .entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+    from pybirdai.api.workflow_api import AutomodeConfigurationService
+    from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
     import logging
 
     logger = logging.getLogger(__name__)
@@ -4540,7 +4274,7 @@ def automode_continue_post_restart(request):
         })
 
     try:
-        from .workflow_services import AutomodeConfigurationService
+        from pybirdai.api.workflow_api import AutomodeConfigurationService
         from .forms import AutomodeConfigurationSessionForm
     except Exception as e:
         logger.error(f"Error importing modules in automode_continue_post_restart: {str(e)}")
@@ -4903,7 +4637,7 @@ def execute_datapoint_with_lineage(request, data_point_id):
     """
     try:
         # Execute the datapoint
-        from .entry_points.execute_datapoint import RunExecuteDataPoint
+        from pybirdai.entry_points.execute_datapoint import RunExecuteDataPoint
         app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
         result = app_config.run_execute_data_point(data_point_id)
 

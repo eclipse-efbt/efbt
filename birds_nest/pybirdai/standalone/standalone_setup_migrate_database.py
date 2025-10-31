@@ -49,5 +49,5 @@ class DjangoSetup:
 
 if __name__ == "__main__":
     DjangoSetup.configure_django()
-    from pybirdai import workflow_views
+    from pybirdai.views import workflow_views
     workflow_views._run_migrations_async()

@@ -32,6 +32,8 @@ birds_nest/automode_config.json
 .*marker
 **/tests/configuration_file_tests.json
 **/tmp
+birds_nest/pybirdai/admin.py
+birds_nest/pybirdai/models/bird_data_model.py
 
 # Environment variables - keep secrets secure
 .env

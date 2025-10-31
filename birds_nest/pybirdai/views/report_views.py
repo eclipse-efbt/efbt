@@ -65,18 +65,8 @@ def review_filters(request):
 def review_import_hierarchies(request):
     return render(request, 'pybirdai/review_import_hierarchies.html')
 
-def review_report_templates(request):
-    return render(request, 'pybirdai/review_report_templates.html')
-
 def review_join_meta_data(request):
     return render(request, 'pybirdai/review_join_meta_data.html')
-
-def executable_transformations(request):
-    return render(request, 'pybirdai/executable_transformations.html')
-
-def input_model(request):
-    return render(request, 'pybirdai/input_model.html')
-
 
 def create_database_manual_steps(request):
     return render(request, 'pybirdai/create_database_manual_steps.html')
@@ -87,24 +77,11 @@ def create_bird_database(request):
 def populate_bird_metadata_database(request):
     return render(request, 'pybirdai/populate_bird_metadata_database.html')
 
-def import_report_template_instructions(request):
-    return render(request, 'pybirdai/import_report_template_instructions.html')
-
 def import_data_model_artefacts(request):
     return render(request, 'pybirdai/import_data_model_artefacts.html')
 
 def import_sqldev_eil_files(request):
     return render(request, 'pybirdai/import_sqldev_eil_files.html')
-
-def import_sqldev_eldm_files(request):
-    return render(request, 'pybirdai/import_sqldev_eldm_files.html')
-
-def import_bird_eil_datamodel(request):
-    return render(request, 'pybirdai/import_bird_eil_datamodel.html')
-
-def import_bird_eldm_datamodel(request):
-    return render(request, 'pybirdai/import_bird_eldm_datamodel.html')
-
 
 def create_transformation_rules_in_python(request):
     return render(request, 'pybirdai/create_transformation_rules_in_python.html')

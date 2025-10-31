@@ -149,7 +149,7 @@ class Context(object):
         # Fallback to database configuration
         try:
             # Import here to avoid circular imports
-            from ..models.workflow_model import AutomodeConfiguration
+            from pybirdai.models.workflow_model import AutomodeConfiguration
 
             config = AutomodeConfiguration.get_active_configuration()
             if config:

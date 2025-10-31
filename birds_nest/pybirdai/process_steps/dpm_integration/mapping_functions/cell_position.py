@@ -12,7 +12,7 @@
 #
 
 import os
-from .utils import (
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
     read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
     rename_fields, pascal_to_upper_snake, select_fields
 )

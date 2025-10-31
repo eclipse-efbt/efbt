@@ -20,7 +20,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 from django.db import transaction
 from uuid import uuid4
-from pybirdai.views import load_variables_from_csv_file
+from pybirdai.views.core_views import load_variables_from_csv_file
 import logging
 from django.conf import settings
 import copy

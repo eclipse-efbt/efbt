@@ -1,0 +1,487 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Arfa Digital Consulting
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Benjamin Arfa - initial API and implementation
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Import Mapping from CSV{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Import Mapping from CSV File</h1>
+    <a href="{% url 'pybirdai:edit_mapping_definitions' %}">Back to Mapping Definitions</a> |
+    <a href="{% url 'pybirdai:export_mapping_template' %}">Download Empty Template</a>
+    <br><br>
+
+    <p>Upload a CSV file containing mapping data in business-friendly format. The file will be validated before import.</p>
+
+    <!-- Step 1: File Upload -->
+    <div id="step1" class="import-step">
+        <h2>Step 1: Upload CSV File</h2>
+        <form method="post" id="uploadForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="csvFile">Select CSV File:</label>
+                <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="uploadButton">Upload and Validate</button>
+        </form>
+    </div>
+
+    <!-- Step 2: Metadata Form (hidden initially) -->
+    <div id="step2" class="import-step" style="display: none;">
+        <h2>Step 2: Configure Mapping Details</h2>
+        <form method="post" id="importForm">
+            {% csrf_token %}
+            <input type="hidden" id="parsedData" name="parsed_data">
+
+            <div class="form-group">
+                <label for="mappingName">Mapping Name: *</label>
+                <input type="text" class="form-control" id="mappingName" name="mapping_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mappingCode">Mapping Code: *</label>
+                <input type="text" class="form-control" id="mappingCode" name="mapping_code" required>
+                <small id="codeExists" class="form-text" style="display: none; color: red;">
+                    A mapping with this code already exists. Check "Overwrite" below to replace it.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="mappingType">Mapping Type:</label>
+                <select class="form-control" id="mappingType" name="mapping_type">
+                    <option value="">Select type (optional)</option>
+                    <option value="ONE_TO_ONE">ONE_TO_ONE</option>
+                    <option value="ONE_TO_MANY">ONE_TO_MANY</option>
+                    <option value="MANY_TO_ONE">MANY_TO_ONE</option>
+                    <option value="MANY_TO_MANY">MANY_TO_MANY</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="algorithm">Algorithm:</label>
+                <textarea class="form-control" id="algorithm" name="algorithm" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="maintenanceAgency">Maintenance Agency:</label>
+                <select class="form-control" id="maintenanceAgency" name="maintenance_agency_id">
+                    <option value="">Select agency (optional)</option>
+                    {% for agency in agencies %}
+                        <option value="{{ agency.maintenance_agency_id }}">{{ agency.maintenance_agency_id }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cubeIds">Associated Cubes:</label>
+                <select class="form-control" id="cubeIds" name="cube_ids" multiple size="5">
+                    {% for cube in cubes %}
+                        <option value="{{ cube.cube_id }}">{{ cube.name }} ({{ cube.code }})</option>
+                    {% endfor %}
+                </select>
+                <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple cubes</small>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="overwrite" name="overwrite" value="true">
+                    <label class="form-check-label" for="overwrite">
+                        Overwrite existing mapping if code already exists
+                    </label>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-secondary" id="backButton">Back to File Upload</button>
+            <button type="submit" class="btn btn-primary" id="importButton">Import Mapping</button>
+        </form>
+
+        <!-- Validation Results -->
+        <div id="validationResults" style="margin-top: 20px;"></div>
+
+        <!-- Preview Table -->
+        <div id="previewSection" style="margin-top: 20px; display: none;">
+            <h3>Data Preview (first 10 rows)</h3>
+            <div style="overflow-x: auto;">
+                <table class="table table-sm table-bordered" id="previewTable">
+                    <thead id="previewHeader"></thead>
+                    <tbody id="previewBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <p id="loadingText">Processing...</p>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" style="display: none;" class="alert alert-success">
+        <p id="successText"></p>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" style="display: none;" class="alert alert-danger">
+        <p id="errorText"></p>
+    </div>
+
+    <div class="mt-4">
+        <h3>CSV File Format Requirements:</h3>
+        <ul>
+            <li>The file must be in CSV format with UTF-8 encoding</li>
+            <li>Column headers must follow the pattern:
+                <ul>
+                    <li><code>SOURCE_VARIABLE_1</code>, <code>SOURCE_VARIABLE_2</code>, ... for source variables</li>
+                    <li><code>TARGET_VARIABLE_1</code>, <code>TARGET_VARIABLE_2</code>, ... for target variables</li>
+                    <li><code>SOURCE_MEMBER_1</code>, <code>SOURCE_MEMBER_2</code>, ... for source members</li>
+                    <li><code>TARGET_MEMBER_1</code>, <code>TARGET_MEMBER_2</code>, ... for target members</li>
+                    <li><code>MEMBER_HIERARCHY</code>, <code>VALID_FROM</code>, <code>VALID_TO</code> (optional)</li>
+                </ul>
+            </li>
+            <li>Each row represents one complete mapping rule</li>
+            <li>All variable and member IDs must exist in the database</li>
+            <li>Dates should be in YYYY-MM-DD format</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control, .form-control-file {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    .mt-4 {
+        margin-top: 2rem;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .alert {
+        padding: 15px;
+        margin: 20px 0;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-warning {
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+    }
+
+    #loadingIndicator {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+        border-collapse: collapse;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #dee2e6;
+        padding: 0.5rem;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+    }
+
+    .table-sm th,
+    .table-sm td {
+        padding: 0.3rem;
+        font-size: 0.875rem;
+    }
+</style>
+
+<script>
+let parsedMappingData = null;
+
+// Step 1: File Upload
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById('csvFile');
+    if (!fileInput.files.length) {
+        alert('Please select a CSV file');
+        return;
+    }
+
+    // Show loading indicator
+    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('loadingText').textContent = 'Parsing and validating CSV...';
+    document.getElementById('uploadButton').disabled = true;
+    document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+
+    // Submit the form
+    const formData = new FormData(this);
+
+    fetch(this.action || window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Store parsed data
+            parsedMappingData = data.parsed_data;
+
+            // Show validation results
+            showValidationResults(data.validation_report);
+
+            // Show preview
+            showPreview(data.parsed_data);
+
+            // Move to step 2
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+
+            // Store parsed data in hidden field
+            document.getElementById('parsedData').value = JSON.stringify(data.parsed_data);
+        } else {
+            // Show errors
+            let errorHtml = '<div class="alert alert-danger"><h4>Validation Errors:</h4><ul>';
+            data.errors.forEach(err => {
+                errorHtml += '<li>' + err + '</li>';
+            });
+            errorHtml += '</ul></div>';
+
+            if (data.warnings && data.warnings.length > 0) {
+                errorHtml += '<div class="alert alert-warning"><h4>Warnings:</h4><ul>';
+                data.warnings.forEach(warn => {
+                    errorHtml += '<li>' + warn + '</li>';
+                });
+                errorHtml += '</ul></div>';
+            }
+
+            document.getElementById('errorText').innerHTML = errorHtml;
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        document.getElementById('errorText').textContent = 'Error: ' + error.message;
+        document.getElementById('errorMessage').style.display = 'block';
+    })
+    .finally(() => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('uploadButton').disabled = false;
+    });
+});
+
+// Step 2: Import Form
+document.getElementById('importForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Show loading indicator
+    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('loadingText').textContent = 'Importing mapping data...';
+    document.getElementById('importButton').disabled = true;
+    document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+
+    // Submit the form
+    const formData = new FormData(this);
+
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            document.getElementById('successText').textContent = data.message;
+            document.getElementById('successMessage').style.display = 'block';
+
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = data.redirect_url;
+            }, 2000);
+        } else {
+            document.getElementById('errorText').textContent = data.error;
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        document.getElementById('errorText').textContent = 'Error: ' + error.message;
+        document.getElementById('errorMessage').style.display = 'block';
+    })
+    .finally(() => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('importButton').disabled = false;
+    });
+});
+
+// Back button
+document.getElementById('backButton').addEventListener('click', function() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('csvFile').value = '';
+    document.getElementById('validationResults').innerHTML = '';
+    document.getElementById('previewSection').style.display = 'none';
+});
+
+// Show validation results
+function showValidationResults(report) {
+    let html = '';
+
+    if (report.warnings && report.warnings.length > 0) {
+        html += '<div class="alert alert-warning"><h4>Warnings:</h4><ul>';
+        report.warnings.forEach(warn => {
+            html += '<li>' + warn + '</li>';
+        });
+        html += '</ul></div>';
+    }
+
+    if (report.is_valid) {
+        html += '<div class="alert alert-success">✓ Validation passed! All variables and members exist in the database.</div>';
+    }
+
+    document.getElementById('validationResults').innerHTML = html;
+}
+
+// Show preview table
+function showPreview(parsedData) {
+    const rows = parsedData.rows.slice(0, 10); // First 10 rows
+
+    if (rows.length === 0) {
+        return;
+    }
+
+    // Build header
+    let headerHtml = '<tr>';
+    headerHtml += '<th>Row</th>';
+    headerHtml += '<th>Source Variables</th>';
+    headerHtml += '<th>Target Variables</th>';
+    headerHtml += '<th>Source Members</th>';
+    headerHtml += '<th>Target Members</th>';
+    headerHtml += '<th>Dates</th>';
+    headerHtml += '</tr>';
+    document.getElementById('previewHeader').innerHTML = headerHtml;
+
+    // Build body
+    let bodyHtml = '';
+    rows.forEach(row => {
+        bodyHtml += '<tr>';
+        bodyHtml += '<td>' + row.row_number + '</td>';
+        bodyHtml += '<td>' + (row.source_variables || []).join(', ') + '</td>';
+        bodyHtml += '<td>' + (row.target_variables || []).join(', ') + '</td>';
+        bodyHtml += '<td>' + (row.source_members || []).join(', ') + '</td>';
+        bodyHtml += '<td>' + (row.target_members || []).join(', ') + '</td>';
+        bodyHtml += '<td>' + (row.valid_from || '') + ' - ' + (row.valid_to || '') + '</td>';
+        bodyHtml += '</tr>';
+    });
+    document.getElementById('previewBody').innerHTML = bodyHtml;
+
+    document.getElementById('previewSection').style.display = 'block';
+}
+
+// Check if mapping code exists
+document.getElementById('mappingCode').addEventListener('blur', function() {
+    const code = this.value.trim();
+    if (code) {
+        // Here you could add an AJAX call to check if the code exists
+        // For now, we'll just show/hide the warning based on user checking the overwrite box
+    }
+});
+</script>
+{% endblock %}

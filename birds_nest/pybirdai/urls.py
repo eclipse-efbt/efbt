@@ -1,20 +1,19 @@
 from django.urls import path
-from . import views
-from . import report_views
-from . import aorta_views
-from . import workflow_views
-from . import ancrdt_transformation_views
-from . import lineage_views
-from . import lineage_api
-from . import enhanced_lineage_api
-from . import bpmn_metadata_lineage_views
+from .views import core_views as views
+from .views import report_views
+from .views import aorta_views
+from .views import workflow_views
+from .views import ancrdt_transformation_views
+from .views import lineage_views
+from .api import lineage_api
+from .api import enhanced_lineage_api
+from .views import bpmn_metadata_lineage_views
 from django.views.generic import TemplateView
-from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
+from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
 app_name = "pybirdai"
 urlpatterns = [
     path("", views.home_view, name="home"),
-    path("dpm-data/", views.dpm_data_view, name="dpm_data"),
     path("automode/", views.automode_view, name="automode"),
     path("automode/create-database/", views.automode_create_database, name="automode_create_database"),
     path("automode/test-components/", views.test_automode_components, name="test_automode_components"),
@@ -39,7 +38,6 @@ urlpatterns = [
     ),
     path("review-filters/", report_views.review_filters, name="review_filters"),
     path("review-import-hierarchies/", report_views.review_import_hierarchies, name="review_import_hierarchies"),
-    path("review-report-templates/", report_views.review_report_templates, name="review_report_templates"),
     path("edit-member-mappings/", views.edit_member_mappings, name="edit_member_mappings"),
     path("delete-member-mapping/<str:member_mapping_id>/", views.delete_member_mapping, name="delete_member_mapping"),
     path("edit-member-mapping-items/", views.edit_member_mapping_items, name="edit_member_mapping_items"),
@@ -67,6 +65,9 @@ urlpatterns = [
     path(
         "delete-mapping-definition/<str:mapping_id>/", views.delete_mapping_definition, name="delete_mapping_definition"
     ),
+    path("export-mapping-template/", views.export_mapping_template, name="export_mapping_template"),
+    path("export-mapping-data/<str:mapping_id>/", views.export_mapping_data, name="export_mapping_data"),
+    path("import-mapping-from-csv/", views.import_mapping_from_csv, name="import_mapping_from_csv"),
     path("delete-cube/<str:cube_id>/", views.delete_cube, name="delete_cube"),
     path("import_report_templates/", views.import_report_templates, name="import_report_templates"),
     path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
@@ -75,7 +76,6 @@ urlpatterns = [
 
 
     # ANCRDT Transformation URLs
-    path("dataset/", ancrdt_transformation_views.ancrdt_dashboard, name="ancrdt_dashboard"),
     path("ancrdt/fetch-csv/", ancrdt_transformation_views.ancrdt_fetch_csv, name="ancrdt_fetch_csv"),
     path("ancrdt/import/", ancrdt_transformation_views.ancrdt_import, name="ancrdt_import"),
     path("ancrdt/create-joins-metadata/", ancrdt_transformation_views.ancrdt_create_joins_metadata, name="ancrdt_create_joins_metadata"),
@@ -100,8 +100,6 @@ urlpatterns = [
     path("run-delete-output-concepts/", views.run_delete_output_concepts, name="run_delete_output_concepts"),
     path("run_create_joins_meta_data/", views.run_create_joins_meta_data, name="run_create_joins_meta_data"),
     path("run-create-python-transformations/", views.run_create_python_joins, name="run_create_python_joins"),
-    path("executable-transformations/", report_views.executable_transformations, name="executable_transformations"),
-    path("create-input-structures/", report_views.input_model, name="input_model"),
     path(
         "create-transformation-rules-in-python/",
         report_views.create_transformation_rules_in_python,
@@ -138,9 +136,6 @@ urlpatterns = [
     path("create-bird-database/", report_views.create_bird_database, name="create_bird_database"),
     path("import-data-model-artefacts/", report_views.import_data_model_artefacts, name="import_data_model_artefacts"),
     path("import-sqldev-eil-files/", report_views.import_sqldev_eil_files, name="import_sqldev_eil_files"),
-    path("import-sqldev-eldm-files/", report_views.import_sqldev_eldm_files, name="import_sqldev_eldm_files"),
-    path("import-bird-eil-datamodel/", report_views.import_bird_eil_datamodel, name="import_bird_eil_datamodel"),
-    path("import-bird-eldm-datamodel/", report_views.import_bird_eldm_datamodel, name="import_bird_eldm_datamodel"),
     path("create-django-models/", views.create_django_models, name="create_django_models"),
     path(
         "create-database-manual-steps/", report_views.create_database_manual_steps, name="create_database_manual_steps"
@@ -149,11 +144,6 @@ urlpatterns = [
         "populate-bird-metadata-database/",
         report_views.populate_bird_metadata_database,
         name="populate_bird_metadata_database",
-    ),
-    path(
-        "import-report-template-instructions/",
-        report_views.import_report_template_instructions,
-        name="import_report_template_instructions",
     ),
     path(
         "delete-existing-contents-of-bird-metadata-database/",
@@ -307,6 +297,15 @@ urlpatterns = [
     path("workflow/save-config/", workflow_views.workflow_save_config, name="workflow_save_config"),
     path("workflow/task/<int:task_number>/status/", workflow_views.workflow_task_status, name="workflow_task_status"),
     path("workflow/clone-import/", workflow_views.workflow_clone_import, name="workflow_clone_import"),
+    # DPM execution endpoints
+    path("workflow/dpm/execute/<int:step_number>/", workflow_views.execute_dpm_step, name="workflow_execute_dpm_step"),
+    path("workflow/dpm/status/", workflow_views.get_dpm_status, name="workflow_dpm_status"),
+    path("workflow/dpm/output-layer-options/", workflow_views.get_output_layer_options, name="workflow_dpm_output_layer_options"),
+    path("workflow/dpm/review/<int:step_number>/", workflow_views.workflow_dpm_review, name="workflow_dpm_review"),
+    # AnaCredit execution endpoints
+    path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
+    path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
+    path("workflow/ancrdt/review/<int:step_number>/", workflow_views.workflow_ancrdt_review, name="workflow_ancrdt_review"),
     path("api/aorta/trails/", aorta_views.AortaTrailListView.as_view(), name="aorta-trail-list"),
     path("api/aorta/trails/<int:trail_id>/", aorta_views.AortaTrailDetailView.as_view(), name="aorta-trail-detail"),
     path(
