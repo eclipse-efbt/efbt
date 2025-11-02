@@ -1,7 +1,7 @@
 *.pyc
 *.sqlite3
-birds_nest/results/*/
-birds_nest/resources/*/
+birds_nest/results/
+birds_nest/resources/
 **/pybirdai/templates/pybirdai/.*REF_FINREP.*
 *.sql
 !birds_nest/pybirdai/templates/pybirdai/create_transformation_rules_in_smcubes.html
@@ -32,7 +32,10 @@ birds_nest/automode_config.json
 .*marker
 **/tests/configuration_file_tests.json
 **/tmp
-
+birds_nest/pybirdai/admin.py
+birds_nest/pybirdai/models/bird_data_model.py
+**/report_cells.py
+*.csv
 # Environment variables - keep secrets secure
 .env
 **/.env

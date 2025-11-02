@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit ANCRDT Output Tables</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .editor-header {
+            padding: 15px 20px;
+            background: #343a40;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .editor-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .editor-title i {
+            color: #f39c12;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .btn-validate {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-validate:hover {
+            background: #138496;
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            background: white;
+        }
+
+        .CodeMirror {
+            height: 100%;
+            font-size: 14px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .status-bar {
+            padding: 8px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .status-info {
+            display: flex;
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .validation-success {
+            color: #28a745;
+        }
+
+        .validation-error {
+            color: #dc3545;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin: 10px 20px;
+            animation: fadeIn 0.3s;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-header">
+        <div class="editor-title">
+            <i class="fas fa-file-code"></i>
+            ancrdt_output_tables.py
+        </div>
+        <div class="editor-actions">
+            <button class="btn-action btn-validate" onclick="validateCode()">
+                <i class="fas fa-check-circle"></i> Validate
+            </button>
+            <button class="btn-action btn-save" onclick="saveCode()">
+                <i class="fas fa-save"></i> Save
+            </button>
+        </div>
+    </div>
+
+    <div id="message-container"></div>
+
+    <div class="editor-container">
+        <textarea id="code-editor">{{ code_content }}</textarea>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-info">
+            <div class="status-item">
+                <i class="fas fa-code"></i> Python
+            </div>
+            <div class="status-item" id="line-info">
+                <i class="fas fa-map-marker-alt"></i> Line 1, Col 1
+            </div>
+            <div class="status-item" id="validation-status">
+                <i class="fas fa-info-circle"></i> Ready
+            </div>
+        </div>
+        <div class="status-item">
+            <i class="fas fa-keyboard"></i> Press Ctrl+S to save
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script>
+        let editor;
+
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Initialize CodeMirror
+        document.addEventListener('DOMContentLoaded', function() {
+            editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+                mode: 'python',
+                theme: 'monokai',
+                lineNumbers: true,
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                indentUnit: 4,
+                indentWithTabs: false,
+                extraKeys: {
+                    "Ctrl-S": function() { saveCode(); },
+                    "Cmd-S": function() { saveCode(); }
+                }
+            });
+
+            // Update cursor position
+            editor.on('cursorActivity', function() {
+                const cursor = editor.getCursor();
+                document.getElementById('line-info').innerHTML =
+                    `<i class="fas fa-map-marker-alt"></i> Line ${cursor.line + 1}, Col ${cursor.ch + 1}`;
+            });
+        });
+
+        function showMessage(message, type) {
+            const container = document.getElementById('message-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            container.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function validateCode() {
+            const code = editor.getValue();
+            const statusEl = document.getElementById('validation-status');
+            document.body.classList.add('loading');
+
+            fetch('/pybirdai/execution-code-editing/api/validate/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    code_content: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.body.classList.remove('loading');
+
+                if (data.valid) {
+                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Valid Python syntax';
+                    statusEl.className = 'status-item validation-success';
+                    showMessage('Code is valid!', 'success');
+                } else {
+                    statusEl.innerHTML = `<i class="fas fa-times-circle"></i> Error at line ${data.line}`;
+                    statusEl.className = 'status-item validation-error';
+                    showMessage(`Syntax error at line ${data.line}: ${data.error}`, 'error');
+
+                    // Jump to error line
+                    if (data.line) {
+                        editor.setCursor(data.line - 1, 0);
+                        editor.focus();
+                    }
+                }
+            })
+            .catch(error => {
+                document.body.classList.remove('loading');
+                console.error('Validation error:', error);
+                showMessage('Failed to validate code', 'error');
+            });
+        }
+
+        function saveCode() {
+            const code = editor.getValue();
+            const statusEl = document.getElementById('validation-status');
+            document.body.classList.add('loading');
+
+            fetch('/pybirdai/save-ancrdt-output-tables/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    code_content: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.body.classList.remove('loading');
+
+                if (data.success) {
+                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Saved successfully';
+                    statusEl.className = 'status-item validation-success';
+                    showMessage('File saved successfully!', 'success');
+                } else {
+                    showMessage('Error saving file: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                document.body.classList.remove('loading');
+                console.error('Save error:', error);
+                showMessage('Failed to save file', 'error');
+            });
+        }
+    </script>
+</body>
+</html>

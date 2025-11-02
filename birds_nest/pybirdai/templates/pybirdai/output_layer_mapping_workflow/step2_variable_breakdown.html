@@ -1,0 +1,540 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Output Layer Mapping - Define Variable Breakdowns{% endblock %}
+
+{% block extra_css %}
+<style>
+    .workflow-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .workflow-steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .workflow-steps li {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+
+    .workflow-steps li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: #ddd;
+        z-index: -1;
+    }
+
+    .workflow-steps .step-number {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 50%;
+        background: #ddd;
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .workflow-steps .active .step-number {
+        background: #667eea;
+        color: white;
+    }
+
+    .workflow-steps .completed .step-number {
+        background: #48bb78;
+        color: white;
+    }
+
+    .breakdown-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .table-info-banner {
+        background: #f7f7f9;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 2rem;
+    }
+
+    .variable-breakdown-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: box-shadow 0.3s;
+    }
+
+    .variable-breakdown-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .variable-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .variable-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .variable-id {
+        font-size: 0.875rem;
+        color: #666;
+        font-family: monospace;
+        background: #f7f7f9;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+    }
+
+    .variable-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-item {
+        font-size: 0.875rem;
+    }
+
+    .info-label {
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .member-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .member-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        background: #edf2f7;
+        color: #4a5568;
+        border-radius: 4px;
+        font-size: 0.75rem;
+    }
+
+    .breakdown-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+        font-size: 0.875rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .transformation-rules {
+        margin-top: 1rem;
+    }
+
+    .rule-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .rule-option {
+        position: relative;
+    }
+
+    .rule-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .rule-option label {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: #f7f7f9;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .rule-option input[type="radio"]:checked + label {
+        background: #eef2ff;
+        border-color: #667eea;
+        color: #667eea;
+        font-weight: 600;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #5a67d8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+        background: #e2e8f0;
+        color: #4a5568;
+        margin-right: 1rem;
+    }
+
+    .btn-secondary:hover {
+        background: #cbd5e0;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .bulk-actions {
+        background: #f7f7f9;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+    }
+
+    .bulk-actions-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .bulk-actions-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-small {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .progress-indicator {
+        background: #edf2f7;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+
+    .progress-text {
+        font-size: 0.875rem;
+        color: #666;
+    }
+
+    .progress-bar {
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 2px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #667eea;
+        transition: width 0.3s;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="workflow-header">
+        <h1>Output Layer Mapping Workflow</h1>
+        <p>Create non-reference combinations and mappings for output layers</p>
+    </div>
+
+    <ul class="workflow-steps">
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Select Table</div>
+        </li>
+        <li class="active">
+            <span class="step-number">2</span>
+            <div>Define Breakdowns</div>
+        </li>
+        <li>
+            <span class="step-number">3</span>
+            <div>Edit Mappings</div>
+        </li>
+        <li>
+            <span class="step-number">4</span>
+            <div>Review & Name</div>
+        </li>
+        <li>
+            <span class="step-number">5</span>
+            <div>Generate</div>
+        </li>
+    </ul>
+
+    <div class="breakdown-form">
+        <h2>Step 2: Define Variable Breakdowns</h2>
+        <p>For each dimension in the selected table, define the source variables and transformation rules.</p>
+
+        <div class="table-info-banner">
+            <strong>Selected Table:</strong> {{ table.name }} ({{ table.code }})
+            <br>
+            <strong>Version:</strong> {{ table.version }}
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-text">
+                Defining breakdowns: <span id="progressCount">0</span> of {{ variables|length }}
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="bulk-actions">
+            <div class="bulk-actions-title">Bulk Actions</div>
+            <div class="bulk-actions-buttons">
+                <button type="button" class="btn btn-small btn-secondary" onclick="applyDirectMapping()">
+                    Apply Direct Mapping to All
+                </button>
+                <button type="button" class="btn btn-small btn-secondary" onclick="clearAllMappings()">
+                    Clear All
+                </button>
+            </div>
+        </div>
+
+        <form method="post" id="breakdownForm">
+            {% csrf_token %}
+
+            {% for var_id, var_data in variables.items %}
+            <div class="variable-breakdown-card" data-var-id="{{ var_id }}">
+                <div class="variable-header">
+                    <div>
+                        <div class="variable-title">{{ var_data.variable.name }}</div>
+                        <div class="variable-id">{{ var_id }}</div>
+                    </div>
+                    <div>
+                        {% if var_data.domain %}
+                        <span class="info-label">Domain:</span>
+                        <span class="info-value">{{ var_data.domain.name }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="variable-info">
+                    {% if var_data.subdomain %}
+                    <div class="info-item">
+                        <div class="info-label">Subdomain</div>
+                        <div class="info-value">{{ var_data.subdomain.name }}</div>
+                    </div>
+                    {% endif %}
+                    {% if var_data.members %}
+                    <div class="info-item">
+                        <div class="info-label">Members ({{ var_data.members|length }})</div>
+                        <div class="member-badges">
+                            {% for member in var_data.members|slice:":5" %}
+                            <span class="member-badge">{{ member.code }}</span>
+                            {% endfor %}
+                            {% if var_data.members|length > 5 %}
+                            <span class="member-badge">+{{ var_data.members|length|add:"-5" }} more</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="breakdown-fields">
+                    <div class="form-group">
+                        <label for="source_{{ var_id }}">Source Variable:</label>
+                        <select name="source_{{ var_id }}" id="source_{{ var_id }}"
+                                class="form-control source-variable"
+                                data-var-id="{{ var_id }}"
+                                onchange="updateProgress()">
+                            <option value="">-- Select Source Variable --</option>
+                            <option value="{{ var_id }}" selected>{{ var_data.variable.name }} (same)</option>
+                            {% for var in all_variables %}
+                            {% if var.variable_id != var_id %}
+                            <option value="{{ var.variable_id }}">{{ var.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Transformation Rule:</label>
+                        <div class="rule-options">
+                            <div class="rule-option">
+                                <input type="radio" name="rule_{{ var_id }}" id="rule_{{ var_id }}_direct"
+                                       value="DIRECT_MAP" checked>
+                                <label for="rule_{{ var_id }}_direct">Direct Map</label>
+                            </div>
+                            <div class="rule-option">
+                                <input type="radio" name="rule_{{ var_id }}" id="rule_{{ var_id }}_sum"
+                                       value="SUM">
+                                <label for="rule_{{ var_id }}_sum">Sum</label>
+                            </div>
+                            <div class="rule-option">
+                                <input type="radio" name="rule_{{ var_id }}" id="rule_{{ var_id }}_avg"
+                                       value="AVG">
+                                <label for="rule_{{ var_id }}_avg">Average</label>
+                            </div>
+                            <div class="rule-option">
+                                <input type="radio" name="rule_{{ var_id }}" id="rule_{{ var_id }}_custom"
+                                       value="CUSTOM">
+                                <label for="rule_{{ var_id }}_custom">Custom</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <div>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
+                        ← Back
+                    </button>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">
+                        Next: Edit Mappings →
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updateProgress() {
+        const totalVars = document.querySelectorAll('.variable-breakdown-card').length;
+        const definedVars = document.querySelectorAll('.source-variable').length;
+        let completedCount = 0;
+
+        document.querySelectorAll('.source-variable').forEach(select => {
+            if (select.value) {
+                completedCount++;
+            }
+        });
+
+        const percentage = (completedCount / totalVars) * 100;
+        document.getElementById('progressCount').textContent = completedCount;
+        document.getElementById('progressBar').style.width = percentage + '%';
+    }
+
+    function applyDirectMapping() {
+        document.querySelectorAll('.variable-breakdown-card').forEach(card => {
+            const varId = card.dataset.varId;
+            const sourceSelect = card.querySelector(`#source_${varId}`);
+            const directRadio = card.querySelector(`#rule_${varId}_direct`);
+
+            if (sourceSelect && !sourceSelect.value) {
+                sourceSelect.value = varId; // Set to same variable
+            }
+            if (directRadio) {
+                directRadio.checked = true;
+            }
+        });
+        updateProgress();
+    }
+
+    function clearAllMappings() {
+        if (confirm('Clear all breakdown definitions?')) {
+            document.querySelectorAll('.source-variable').forEach(select => {
+                select.value = '';
+            });
+            document.querySelectorAll('input[type="radio"][value="DIRECT_MAP"]').forEach(radio => {
+                radio.checked = true;
+            });
+            updateProgress();
+        }
+    }
+
+    // Initialize progress on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateProgress();
+    });
+
+    // Form validation
+    document.getElementById('breakdownForm').addEventListener('submit', function(e) {
+        let hasAtLeastOne = false;
+        document.querySelectorAll('.source-variable').forEach(select => {
+            if (select.value) {
+                hasAtLeastOne = true;
+            }
+        });
+
+        if (!hasAtLeastOne) {
+            e.preventDefault();
+            alert('Please define at least one variable breakdown before proceeding.');
+            return false;
+        }
+    });
+</script>
+{% endblock %}

@@ -97,7 +97,7 @@ class RunDatabaseSetup(AppConfig):
             tree = ast.parse(f_read.read())
             for node in ast.walk(tree):
                 if isinstance(node, ast.ClassDef) and node.name != "Meta" and node.name != "Admin":
-                    f_write.write(f"from .bird_meta_data_model import {node.name}\n")
+                    f_write.write(f"from pybirdai.models.bird_meta_data_model import {node.name}\n")
                     f_write.write(f"admin.site.register({node.name})\n")
 
     # Check if results file for reading (results/admin.py) exists

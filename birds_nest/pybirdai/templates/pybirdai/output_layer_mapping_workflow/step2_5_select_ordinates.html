@@ -1,0 +1,680 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Output Layer Mapping - Select Axis Ordinates{% endblock %}
+
+{% block extra_css %}
+<style>
+    .workflow-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .workflow-steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .workflow-steps li {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+
+    .workflow-steps li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: #ddd;
+        z-index: -1;
+    }
+
+    .workflow-steps .step-number {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 50%;
+        background: #ddd;
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .workflow-steps .active .step-number {
+        background: #667eea;
+        color: white;
+    }
+
+    .workflow-steps .completed .step-number {
+        background: #48bb78;
+        color: white;
+    }
+
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .summary-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .summary-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-label {
+        color: #666;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .axis-group {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .axis-header {
+        background: #f7fafc;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .axis-title {
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+
+    .axis-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: #e0f2fe;
+        color: #0c4a6e;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        margin-left: 1rem;
+    }
+
+    .ordinates-list {
+        padding: 1rem;
+    }
+
+    .ordinate-item {
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .ordinate-item:hover {
+        border-color: #667eea;
+        background: #f0f5ff;
+    }
+
+    .ordinate-item.selected {
+        border-color: #667eea;
+        background: #f0f5ff;
+    }
+
+    .ordinate-checkbox {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .ordinate-checkbox input[type="checkbox"] {
+        margin-right: 1rem;
+        margin-top: 0.25rem;
+        transform: scale(1.2);
+    }
+
+    .ordinate-details {
+        flex: 1;
+    }
+
+    .ordinate-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .ordinate-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .ordinate-info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-label {
+        color: #666;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .filter-controls {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-label {
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+
+    .filter-input {
+        padding: 0.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .btn-primary {
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #5a67d8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+        background: #e2e8f0;
+        color: #4a5568;
+    }
+
+    .btn-secondary:hover {
+        background: #cbd5e0;
+    }
+
+    .btn-outline {
+        background: white;
+        border: 1px solid #e2e8f0;
+        color: #4a5568;
+    }
+
+    .btn-outline:hover {
+        background: #f7fafc;
+        border-color: #cbd5e0;
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-info {
+        background: #e0f2fe;
+        border: 1px solid #7dd3fc;
+        color: #0c4a6e;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .badge-abstract {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-level {
+        background: #e0e7ff;
+        color: #3730a3;
+    }
+
+    .selected-count {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: #667eea;
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        z-index: 100;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="workflow-header">
+        <h2>Output Layer Mapping Workflow</h2>
+        <p class="mb-0">Select axis ordinates to include in the mapping</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <ul class="workflow-steps">
+        <li class="completed">
+            <span class="step-number">1</span>
+            <div>Select Table</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">1.5</span>
+            <div>Check Existing</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">2</span>
+            <div>Variable Breakdown</div>
+        </li>
+        <li class="active">
+            <span class="step-number">2.5</span>
+            <div>Select Ordinates</div>
+        </li>
+        <li>
+            <span class="step-number">3</span>
+            <div>Edit Mappings</div>
+        </li>
+        <li>
+            <span class="step-number">4</span>
+            <div>Review & Name</div>
+        </li>
+        <li>
+            <span class="step-number">5</span>
+            <div>Generate</div>
+        </li>
+    </ul>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="summary-card">
+            <div class="summary-value">{{ table.name }}</div>
+            <div class="summary-label">Selected Table</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ total_ordinates }}</div>
+            <div class="summary-label">Total Ordinates</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ total_cells }}</div>
+            <div class="summary-label">Total Cells</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value" id="selectedCount">0</div>
+            <div class="summary-label">Selected Ordinates</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Select Axis Ordinates to Map</h4>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <strong>ℹ️ About Axis Ordinates</strong><br>
+                Axis ordinates define the dimensional coordinates of table cells. By selecting specific ordinates,
+                you can filter which portions of the table will be included in your mapping.
+                Ordinates represent combinations of variables and members that position cells in the table structure.
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <h5>Filter Ordinates</h5>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Search by Name</label>
+                        <input type="text" id="searchFilter" class="filter-input" placeholder="Type to filter...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Filter by Axis</label>
+                        <select id="axisFilter" class="filter-input">
+                            <option value="">All Axes</option>
+                            {% for axis_name, axis_group in axes_groups.items %}
+                            <option value="{{ axis_name }}">{{ axis_name }} ({{ axis_group.orientation }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Show Only</label>
+                        <select id="typeFilter" class="filter-input">
+                            <option value="">All Types</option>
+                            <option value="abstract">Abstract Headers</option>
+                            <option value="concrete">Concrete Values</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-sm btn-outline" id="selectAllBtn">
+                        Select All Visible
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline" id="selectNoneBtn">
+                        Clear Selection
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline" id="invertSelectionBtn">
+                        Invert Selection
+                    </button>
+                </div>
+            </div>
+
+            <form method="post" id="ordinatesForm">
+                {% csrf_token %}
+
+                {% for axis_name, axis_group in axes_groups.items %}
+                <div class="axis-group" data-axis="{{ axis_name }}">
+                    <div class="axis-header">
+                        <div class="axis-title">
+                            {{ axis_name }}
+                            <span class="axis-badge">{{ axis_group.orientation }}</span>
+                        </div>
+                        <div>
+                            <span class="selected-in-group">0</span> / {{ axis_group.ordinates|length }} selected
+                        </div>
+                    </div>
+                    <div class="ordinates-list">
+                        {% for ordinate_data in axis_group.ordinates %}
+                        <div class="ordinate-item"
+                             data-ordinate-id="{{ ordinate_data.ordinate.axis_ordinate_id }}"
+                             data-abstract="{{ ordinate_data.is_abstract|lower }}"
+                             data-name="{{ ordinate_data.ordinate.name|lower }}">
+                            <div class="ordinate-checkbox">
+                                <input type="checkbox"
+                                       name="selected_ordinates"
+                                       value="{{ ordinate_data.ordinate.axis_ordinate_id }}"
+                                       id="ord_{{ ordinate_data.ordinate.axis_ordinate_id }}"
+                                       class="ordinate-check">
+                                <div class="ordinate-details">
+                                    <label for="ord_{{ ordinate_data.ordinate.axis_ordinate_id }}" class="ordinate-name">
+                                        {{ ordinate_data.ordinate.name|default:"Unnamed Ordinate" }}
+                                        {% if ordinate_data.is_abstract %}
+                                        <span class="badge badge-abstract">Abstract</span>
+                                        {% endif %}
+                                        {% if ordinate_data.level %}
+                                        <span class="badge badge-level">Level {{ ordinate_data.level }}</span>
+                                        {% endif %}
+                                    </label>
+                                    <div class="ordinate-info">
+                                        {% if ordinate_data.variables != 'None' %}
+                                        <div class="ordinate-info-item">
+                                            <span class="info-label">Variables</span>
+                                            <span class="info-value">{{ ordinate_data.variables }}</span>
+                                        </div>
+                                        {% endif %}
+                                        {% if ordinate_data.members != 'None' %}
+                                        <div class="ordinate-info-item">
+                                            <span class="info-label">Members</span>
+                                            <span class="info-value">{{ ordinate_data.members }}</span>
+                                        </div>
+                                        {% endif %}
+                                        {% if ordinate_data.subdomains != 'None' %}
+                                        <div class="ordinate-info-item">
+                                            <span class="info-label">Subdomains</span>
+                                            <span class="info-value">{{ ordinate_data.subdomains }}</span>
+                                        </div>
+                                        {% endif %}
+                                        <div class="ordinate-info-item">
+                                            <span class="info-label">Cells</span>
+                                            <span class="info-value">{{ ordinate_data.cell_count }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <a href="{% url 'pybirdai:output_layer_mapping_step2' %}" class="btn btn-secondary">
+                        ← Back to Variable Breakdown
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        Continue to Edit Mappings →
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Selected Count -->
+    <div class="selected-count" id="floatingCounter" style="display: none;">
+        <strong id="floatingCount">0</strong> ordinates selected
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('.ordinate-check');
+        const selectedCountEl = document.getElementById('selectedCount');
+        const floatingCounter = document.getElementById('floatingCounter');
+        const floatingCount = document.getElementById('floatingCount');
+        const searchFilter = document.getElementById('searchFilter');
+        const axisFilter = document.getElementById('axisFilter');
+        const typeFilter = document.getElementById('typeFilter');
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        const selectNoneBtn = document.getElementById('selectNoneBtn');
+        const invertSelectionBtn = document.getElementById('invertSelectionBtn');
+
+        // Update selected count
+        function updateSelectedCount() {
+            const selected = document.querySelectorAll('.ordinate-check:checked').length;
+            selectedCountEl.textContent = selected;
+            floatingCount.textContent = selected;
+
+            if (selected > 0) {
+                floatingCounter.style.display = 'block';
+            } else {
+                floatingCounter.style.display = 'none';
+            }
+
+            // Update group counts
+            document.querySelectorAll('.axis-group').forEach(group => {
+                const groupSelected = group.querySelectorAll('.ordinate-check:checked').length;
+                const groupCounter = group.querySelector('.selected-in-group');
+                if (groupCounter) {
+                    groupCounter.textContent = groupSelected;
+                }
+            });
+        }
+
+        // Handle ordinate item click
+        document.querySelectorAll('.ordinate-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (e.target.type !== 'checkbox') {
+                    const checkbox = this.querySelector('.ordinate-check');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected', checkbox.checked);
+                    updateSelectedCount();
+                }
+            });
+        });
+
+        // Handle checkbox change
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const item = this.closest('.ordinate-item');
+                item.classList.toggle('selected', this.checked);
+                updateSelectedCount();
+            });
+        });
+
+        // Filter functionality
+        function applyFilters() {
+            const searchTerm = searchFilter.value.toLowerCase();
+            const selectedAxis = axisFilter.value;
+            const selectedType = typeFilter.value;
+
+            document.querySelectorAll('.axis-group').forEach(group => {
+                const axisName = group.dataset.axis;
+                const shouldShowGroup = !selectedAxis || axisName === selectedAxis;
+                group.style.display = shouldShowGroup ? 'block' : 'none';
+
+                if (shouldShowGroup) {
+                    group.querySelectorAll('.ordinate-item').forEach(item => {
+                        const name = item.dataset.name || '';
+                        const isAbstract = item.dataset.abstract === 'true';
+
+                        let shouldShow = true;
+
+                        // Search filter
+                        if (searchTerm && !name.includes(searchTerm)) {
+                            shouldShow = false;
+                        }
+
+                        // Type filter
+                        if (selectedType) {
+                            if (selectedType === 'abstract' && !isAbstract) {
+                                shouldShow = false;
+                            } else if (selectedType === 'concrete' && isAbstract) {
+                                shouldShow = false;
+                            }
+                        }
+
+                        item.style.display = shouldShow ? 'block' : 'none';
+                    });
+                }
+            });
+        }
+
+        searchFilter.addEventListener('input', applyFilters);
+        axisFilter.addEventListener('change', applyFilters);
+        typeFilter.addEventListener('change', applyFilters);
+
+        // Select all visible
+        selectAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.ordinate-item').forEach(item => {
+                if (item.style.display !== 'none') {
+                    const checkbox = item.querySelector('.ordinate-check');
+                    checkbox.checked = true;
+                    item.classList.add('selected');
+                }
+            });
+            updateSelectedCount();
+        });
+
+        // Select none
+        selectNoneBtn.addEventListener('click', function() {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.closest('.ordinate-item').classList.remove('selected');
+            });
+            updateSelectedCount();
+        });
+
+        // Invert selection
+        invertSelectionBtn.addEventListener('click', function() {
+            document.querySelectorAll('.ordinate-item').forEach(item => {
+                if (item.style.display !== 'none') {
+                    const checkbox = item.querySelector('.ordinate-check');
+                    checkbox.checked = !checkbox.checked;
+                    item.classList.toggle('selected', checkbox.checked);
+                }
+            });
+            updateSelectedCount();
+        });
+
+        // Initialize count on page load
+        updateSelectedCount();
+
+        // Initialize selected state based on checkboxes
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                checkbox.closest('.ordinate-item').classList.add('selected');
+            }
+        });
+    });
+</script>
+{% endblock %}

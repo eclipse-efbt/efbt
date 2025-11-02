@@ -1,0 +1,132 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>View Combination Items</h1>
+<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<style>
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 1em;
+    }
+    table {
+        min-width: 100%;
+        white-space: nowrap;
+    }
+    th, td {
+        padding: 8px;
+        border: 1px solid #ddd;
+    }
+    .filter-form {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    .filter-form label {
+        margin-right: 10px;
+    }
+    .filter-form input {
+        margin-right: 20px;
+        padding: 5px;
+    }
+    .filter-form button {
+        padding: 5px 15px;
+    }
+    .filter-form select {
+        margin-right: 20px;
+        padding: 5px;
+        min-width: 200px;
+    }
+</style>
+
+<!-- Filter Form -->
+<form method="get" class="filter-form">
+    <label for="variable_id">Variable ID:</label>
+    <select id="variable_id" name="variable_id">
+        <option value="">All Variables</option>
+        {% for vid in unique_variable_ids %}
+            <option value="{{ vid }}" {% if vid == selected_variable_id %}selected{% endif %}>{{ vid }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="member_id">Member ID:</label>
+    <select id="member_id" name="member_id">
+        <option value="">All Members</option>
+        {% for mid in unique_member_ids %}
+            <option value="{{ mid }}" {% if mid == selected_member_id %}selected{% endif %}>{{ mid }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Apply Filters</button>
+    {% if request.GET.variable_id or request.GET.member_id %}
+        <a href="{% url 'pybirdai:combination_items' %}">Clear Filters</a>
+    {% endif %}
+</form>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Combination ID</th>
+                <th>Variable ID</th>
+                <th>Member ID</th>
+                <th>Member Hierarchy</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in formset %}
+            <tr>
+                <td>{{ form.instance.combination_id }}</td>
+                <td>{{ form.instance.variable_id }}</td>
+                <td>{{ form.instance.member_id }}</td>
+                <td>{{ form.instance.member_hierarchy }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

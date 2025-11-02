@@ -66,19 +66,53 @@
                     <span class="link-icon">⚠️</span>
                     <span class="link-text">Show Gaps in Join Metadata</span>
                 </a>
-                <a href="{% url 'pybirdai:edit_cube_links' %}" target="_blank" class="review-link">
-                    <span class="link-icon">✏️</span>
-                    <span class="link-text">Edit Cube Links</span>
-                </a>
-                <a href="{% url 'pybirdai:edit_cube_structure_item_links' %}" target="_blank" class="review-link">
-                    <span class="link-icon">✏️</span>
-                    <span class="link-text">Edit Cube Structure Item Links</span>
-                </a>
-                <a href="{% url 'pybirdai:run_delete_joins_meta_data' %}" target="_blank" class="review-link">
-                    <span class="link-icon">❌</span>
-                    <span class="link-text">Delete Joins</span>
-                </a>
             </div>
+        </div>
+    </div>
+
+    <!-- Tabbed Metadata Editor for Task 2 -->
+    <div class="tabs-container">
+        <h4><i class="fas fa-link"></i> Edit Joins Metadata</h4>
+
+        <!-- Tab Navigation -->
+        <div class="tabs-header">
+            <button class="tab-button active" onclick="switchTab('cube-links', 2)">
+                <i class="fas fa-cube"></i> Edit Cube Links
+            </button>
+            <button class="tab-button" onclick="switchTab('structure-links', 2)">
+                <i class="fas fa-sitemap"></i> Edit Cube Structure Item Links
+            </button>
+            <button class="tab-button" onclick="switchTab('member-links', 2)">
+                <i class="fas fa-link"></i> Edit Member Links
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content active" id="cube-links-tab-2">
+            <iframe
+                src="{% url 'pybirdai:edit_cube_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Cube Links">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="structure-links-tab-2">
+            <iframe
+                src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Cube Structure Item Links">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="member-links-tab-2">
+            <iframe
+                src="{% url 'pybirdai:edit_member_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Member Links">
+            </iframe>
         </div>
     </div>
 
@@ -508,5 +542,161 @@
     border: 1px solid #ffeaa7;
     color: #856404;
 }
+
+/* Tabbed Interface Styles */
+.tabs-container {
+    background: #fff;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.tabs-header {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 2px solid #667eea;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border: none;
+    border-right: 1px solid #e0e0e0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-button:last-child {
+    border-right: none;
+}
+
+.tab-button:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+.tab-button.active {
+    background: #667eea;
+    color: white;
+    position: relative;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #667eea;
+}
+
+.tab-content {
+    display: none;
+    padding: 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content iframe {
+    width: 100%;
+    min-height: 800px;
+    border: none;
+    display: block;
+}
+
+.tabs-container h4 {
+    margin: 0 0 15px 0;
+    padding: 20px 20px 0 20px;
+    color: #667eea;
+}
+
+.review-section {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.review-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.btn-execute {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.btn-execute:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-execute i {
+    margin-right: 5px;
+}
 </style>
+
+<script>
+// Tab switching function
+function switchTab(tabName, stepNumber) {
+    // Get all tab buttons and content for this step
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Remove active class from all buttons and content
+    tabButtons.forEach(button => button.classList.remove('active'));
+    tabContents.forEach(content => content.classList.remove('active'));
+
+    // Add active class to selected tab
+    const targetButton = Array.from(tabButtons).find(btn =>
+        btn.onclick && btn.onclick.toString().includes(`'${tabName}'`)
+    );
+    if (targetButton) {
+        targetButton.classList.add('active');
+    }
+
+    // Show selected tab content
+    const targetContent = document.getElementById(`${tabName}-tab-${stepNumber}`);
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+
+    // Save active tab to localStorage
+    localStorage.setItem(`task2-active-tab-${stepNumber}`, tabName);
+}
+
+// Restore active tab on page load
+window.addEventListener('DOMContentLoaded', function() {
+    const activeTab = localStorage.getItem('task2-active-tab-2');
+    if (activeTab) {
+        switchTab(activeTab, 2);
+    }
+});
+</script>
 {% endblock %}

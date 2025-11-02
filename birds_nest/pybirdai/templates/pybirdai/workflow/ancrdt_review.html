@@ -1,0 +1,334 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+# DEPRECATED: This template is no longer used directly.
+# All review functionality has been integrated into ancrdt_dashboard.html
+# The workflow_ancrdt_review view now redirects to the dashboard with an anchor.
+# This file is kept temporarily for reference and backward compatibility.
+#
+-->
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>AnaCredit Process Review - Step {{ step_number }}</h1>
+    <h2>{{ step_name }}</h2>
+
+    <!-- Status Badge -->
+    <div style="margin: 20px 0;">
+        <span class="operation-btn {{ status }}" style="padding: 10px 20px; font-size: 16px; cursor: default;">
+            {% if status == 'completed' %}
+                ✓ Completed
+            {% elif status == 'running' %}
+                ⏳ Running
+            {% elif status == 'failed' %}
+                ✗ Failed
+            {% elif status == 'pending' %}
+                ⏸️ Pending
+            {% else %}
+                {{ status|title }}
+            {% endif %}
+        </span>
+    </div>
+
+    <!-- Execution Timeline -->
+    <div class="review-section">
+        <h3>Execution Timeline</h3>
+        <table class="review-table">
+            <tr>
+                <th>Status:</th>
+                <td>{{ status|title }}</td>
+            </tr>
+            {% if started_at %}
+            <tr>
+                <th>Started At:</th>
+                <td>{{ started_at|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+            {% endif %}
+            {% if completed_at %}
+            <tr>
+                <th>Completed At:</th>
+                <td>{{ completed_at|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+            {% endif %}
+            {% if duration %}
+            <tr>
+                <th>Duration:</th>
+                <td>{{ duration }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <!-- Generated Files/Artifacts -->
+    {% if generated_files %}
+    <div class="review-section">
+        <h3>Generated Files & Artifacts</h3>
+        <ul class="file-list">
+            {% for file in generated_files %}
+            <li>{{ file }}</li>
+            {% endfor %}
+        </ul>
+        <p><small>Total: {{ generated_files|length }} item{{ generated_files|length|pluralize }}</small></p>
+    </div>
+    {% endif %}
+
+    <!-- Metadata Editing Section for Step 2 -->
+    {% if step_number == 2 and status == 'completed' %}
+    <div class="review-section" style="background: #e8f5e9; border: 2px solid #4caf50;">
+        <h3 style="color: #2e7d32;">
+            <i class="fas fa-edit"></i> Edit Joins Metadata
+            {% if joins_metadata_approved %}
+                <span style="float: right; background: #4caf50; color: white; padding: 5px 10px; border-radius: 15px; font-size: 14px;">
+                    <i class="fas fa-check-circle"></i> Approved
+                </span>
+            {% else %}
+                <span style="float: right; background: #ff9800; color: white; padding: 5px 10px; border-radius: 15px; font-size: 14px;">
+                    <i class="fas fa-exclamation-circle"></i> Pending Approval
+                </span>
+            {% endif %}
+        </h3>
+
+        <p style="margin-bottom: 20px; color: #555;">
+            Review and edit the generated joins metadata using the editors below. After making changes, proceed to Step 3 to regenerate the execution code.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+            <a href="{% url 'pybirdai:edit_cube_links' %}" target="_blank"
+               style="display: inline-flex; align-items: center; padding: 12px 20px; background: #ff9800; color: white; text-decoration: none; border-radius: 5px; transition: all 0.3s ease;">
+                <i class="fas fa-cube" style="margin-right: 8px;"></i>
+                Edit Cube Links
+                {% if metadata_counts.cube_links %}
+                    <span style="margin-left: auto; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 12px;">
+                        {{ metadata_counts.cube_links }}
+                    </span>
+                {% endif %}
+            </a>
+
+            <a href="{% url 'pybirdai:edit_cube_structure_item_links' %}" target="_blank"
+               style="display: inline-flex; align-items: center; padding: 12px 20px; background: #ff9800; color: white; text-decoration: none; border-radius: 5px; transition: all 0.3s ease;">
+                <i class="fas fa-sitemap" style="margin-right: 8px;"></i>
+                Edit Cube Structure Links
+                {% if metadata_counts.cube_structure_item_links %}
+                    <span style="margin-left: auto; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 12px;">
+                        {{ metadata_counts.cube_structure_item_links }}
+                    </span>
+                {% endif %}
+            </a>
+
+            <a href="{% url 'pybirdai:edit_member_links' %}" target="_blank"
+               style="display: inline-flex; align-items: center; padding: 12px 20px; background: #ff9800; color: white; text-decoration: none; border-radius: 5px; transition: all 0.3s ease;">
+                <i class="fas fa-link" style="margin-right: 8px;"></i>
+                Edit Member Links
+                {% if metadata_counts.member_links %}
+                    <span style="margin-left: auto; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 12px;">
+                        {{ metadata_counts.member_links }}
+                    </span>
+                {% endif %}
+            </a>
+        </div>
+
+        <div style="background: #f1f8e9; padding: 15px; border-radius: 5px; border-left: 4px solid #8bc34a;">
+            <p style="margin: 0; color: #555;">
+                <strong>Tip:</strong> After editing cube links, cube structure item links, or member links, proceed to Step 3 to regenerate the execution code with your changes.
+                The editors open in new tabs so you can make changes while keeping this review page open.
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Execution Code Editing Section for Step 3 -->
+    {% if step_number == 3 and status == 'completed' %}
+    <div class="review-section" style="background: #f3e5f5; border: 2px solid #9c27b0;">
+        <h3 style="color: #6a1b9a;">
+            <i class="fas fa-code"></i> Edit Execution Code
+            {% if execution_code_approved %}
+                <span style="float: right; background: #4caf50; color: white; padding: 5px 10px; border-radius: 15px; font-size: 14px;">
+                    <i class="fas fa-check-circle"></i> Approved
+                </span>
+            {% else %}
+                <span style="float: right; background: #ff9800; color: white; padding: 5px 10px; border-radius: 15px; font-size: 14px;">
+                    <i class="fas fa-exclamation-circle"></i> Pending Approval
+                </span>
+            {% endif %}
+        </h3>
+
+        <p style="margin-bottom: 20px; color: #555;">
+            Review and edit the generated execution code. You can modify individual files to add custom logic, filters, or other modifications.
+        </p>
+
+        <a href="{% url 'pybirdai:review_execution_code' %}"
+           style="display: inline-flex; align-items: center; padding: 12px 24px; background: #9c27b0; color: white; text-decoration: none; border-radius: 5px; transition: all 0.3s ease; font-size: 16px;">
+            <i class="fas fa-file-code" style="margin-right: 8px;"></i>
+            Open Code Editor
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Execution Logs -->
+    {% if execution_data %}
+    <div class="review-section">
+        <h3>Execution Details</h3>
+        <div class="log-container">
+            <pre>{{ execution_data|pprint }}</pre>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Error Messages -->
+    {% if error_message %}
+    <div class="review-section error-section">
+        <h3>Error Details</h3>
+        <div class="error-message">
+            {{ error_message }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div style="margin-top: 30px;">
+        <a href="{% url 'pybirdai:ancrdt_dashboard' %}" class="btn btn-primary">Back to ANCRDT Dashboard</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-primary">Main Workflow Dashboard</a>
+        {% if status == 'failed' %}
+        <button onclick="executeANCRDTStep({{ step_number }})" class="btn btn-warning">Retry Execution</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .review-section {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .review-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .review-table {
+        width: 100%;
+        max-width: 600px;
+        border-collapse: collapse;
+    }
+
+    .review-table th {
+        text-align: left;
+        padding: 8px;
+        width: 150px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .review-table td {
+        padding: 8px;
+        color: #333;
+    }
+
+    .file-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .file-list li {
+        padding: 8px;
+        margin: 5px 0;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+    }
+
+    .log-container {
+        background: #2d2d2d;
+        color: #f8f8f8;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .log-container pre {
+        margin: 0;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .error-section {
+        background: #fff3cd;
+        border-color: #ffeaa7;
+    }
+
+    .error-message {
+        background: white;
+        padding: 15px;
+        border-radius: 4px;
+        border-left: 4px solid #dc3545;
+        color: #721c24;
+        font-family: 'Courier New', monospace;
+        white-space: pre-wrap;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-right: 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .btn-warning:hover {
+        background: #e0a800;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function executeANCRDTStep(stepNumber) {
+    if (confirm('Are you sure you want to retry this step?')) {
+        window.location.href = '{% url "pybirdai:workflow_dashboard" %}';
+        // The actual execution will be triggered from the dashboard
+    }
+}
+</script>
+{% endblock %}

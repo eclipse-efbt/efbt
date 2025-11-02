@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Code Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .editor-header {
+            padding: 15px 20px;
+            background: #343a40;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #9c27b0;
+            flex-shrink: 0;
+        }
+
+        .editor-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .editor-title i {
+            color: #9c27b0;
+        }
+
+        .current-file {
+            font-size: 14px;
+            color: #adb5bd;
+            margin-left: 10px;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .btn-save:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .btn-validate {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-validate:hover {
+            background: #138496;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 350px;
+            background: white;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            background: #f8f9fa;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #9c27b0;
+        }
+
+        .file-count {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .file-item {
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .file-item:hover {
+            background: #f8f9fa;
+            border-color: #dee2e6;
+        }
+
+        .file-item.active {
+            background: #e3f2fd;
+            border-color: #9c27b0;
+        }
+
+        .file-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            word-break: break-word;
+        }
+
+        .file-item.active .file-name {
+            color: #9c27b0;
+        }
+
+        .file-size {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 2px;
+        }
+
+        .no-files {
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        /* Editor Panel */
+        .editor-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            overflow: hidden;
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .CodeMirror {
+            height: 100%;
+            font-size: 14px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .status-bar {
+            padding: 8px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #6c757d;
+            flex-shrink: 0;
+        }
+
+        .status-info {
+            display: flex;
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .validation-success {
+            color: #28a745;
+        }
+
+        .validation-error {
+            color: #dc3545;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin: 10px 20px;
+            animation: fadeIn 0.3s;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .unsaved-indicator {
+            color: #ffc107;
+            margin-left: 5px;
+        }
+
+        /* Scrollbar styling */
+        .file-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .file-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .file-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .file-list::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-header">
+        <div class="editor-title">
+            <i class="fas fa-code"></i>
+            Filter Code Editor
+            <span class="current-file" id="current-file-name">{{ first_file_name }}</span>
+            <span class="unsaved-indicator" id="unsaved-indicator" style="display: none;">*</span>
+        </div>
+        <div class="editor-actions">
+            <button class="btn-action btn-validate" onclick="validateCode()">
+                <i class="fas fa-check-circle"></i> Validate
+            </button>
+            <button class="btn-action btn-save" id="save-btn" onclick="saveCode()">
+                <i class="fas fa-save"></i> Save
+            </button>
+        </div>
+    </div>
+
+    <div id="message-container"></div>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <input type="text"
+                       class="search-box"
+                       id="search-box"
+                       placeholder="Search files..."
+                       autocomplete="off">
+                <div class="file-count">
+                    <span id="visible-count">{{ total_files }}</span> of {{ total_files }} files
+                </div>
+            </div>
+            <div class="file-list" id="file-list">
+                {% if files %}
+                    {% for file in files %}
+                    <div class="file-item {% if forloop.first %}active{% endif %}"
+                         data-filename="{{ file.name }}"
+                         onclick="loadFile('{{ file.name }}')">
+                        <div class="file-name">{{ file.name }}</div>
+                        <div class="file-size">{{ file.size_kb }} KB</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-files">No filter code files found</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Editor Panel -->
+        <div class="editor-panel">
+            <div class="editor-container">
+                <textarea id="code-editor">{{ first_file_content }}</textarea>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-info">
+                    <div class="status-item">
+                        <i class="fas fa-code"></i> Python
+                    </div>
+                    <div class="status-item" id="line-info">
+                        <i class="fas fa-map-marker-alt"></i> Line 1, Col 1
+                    </div>
+                    <div class="status-item" id="validation-status">
+                        <i class="fas fa-info-circle"></i> Ready
+                    </div>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-keyboard"></i> Ctrl+S to save
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script>
+        let editor;
+        let currentFileName = '{{ first_file_name }}';
+        let isDirty = false;
+
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Initialize CodeMirror
+        document.addEventListener('DOMContentLoaded', function() {
+            editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+                mode: 'python',
+                theme: 'monokai',
+                lineNumbers: true,
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                indentUnit: 4,
+                indentWithTabs: false,
+                extraKeys: {
+                    "Ctrl-S": function() { saveCode(); },
+                    "Cmd-S": function() { saveCode(); },
+                    "Ctrl-F": function() { document.getElementById('search-box').focus(); }
+                }
+            });
+
+            // Track changes
+            editor.on('change', function() {
+                if (!isDirty) {
+                    isDirty = true;
+                    document.getElementById('unsaved-indicator').style.display = 'inline';
+                }
+            });
+
+            // Update cursor position
+            editor.on('cursorActivity', function() {
+                const cursor = editor.getCursor();
+                document.getElementById('line-info').innerHTML =
+                    `<i class="fas fa-map-marker-alt"></i> Line ${cursor.line + 1}, Col ${cursor.ch + 1}`;
+            });
+
+            // Search functionality
+            const searchBox = document.getElementById('search-box');
+            searchBox.addEventListener('input', function(e) {
+                filterFiles(e.target.value);
+            });
+            searchBox.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    e.target.value = '';
+                    filterFiles('');
+                }
+            });
+        });
+
+        function filterFiles(searchTerm) {
+            const fileItems = document.querySelectorAll('.file-item');
+            const term = searchTerm.toLowerCase();
+            let visibleCount = 0;
+
+            fileItems.forEach(item => {
+                const fileName = item.getAttribute('data-filename').toLowerCase();
+                if (fileName.includes(term)) {
+                    item.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            document.getElementById('visible-count').textContent = visibleCount;
+        }
+
+        function loadFile(fileName) {
+            // Check for unsaved changes
+            if (isDirty && currentFileName !== fileName) {
+                if (!confirm('You have unsaved changes. Do you want to discard them?')) {
+                    return;
+                }
+            }
+
+            document.body.classList.add('loading');
+
+            fetch(`/pybirdai/filter-code-editor/api/load/?file_name=${encodeURIComponent(fileName)}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.body.classList.remove('loading');
+
+                    if (data.success) {
+                        editor.setValue(data.content);
+                        currentFileName = fileName;
+                        isDirty = false;
+                        document.getElementById('unsaved-indicator').style.display = 'none';
+                        document.getElementById('current-file-name').textContent = fileName;
+
+                        // Update active file in sidebar
+                        document.querySelectorAll('.file-item').forEach(item => {
+                            item.classList.remove('active');
+                            if (item.getAttribute('data-filename') === fileName) {
+                                item.classList.add('active');
+                            }
+                        });
+
+                        showMessage('File loaded successfully', 'success');
+                    } else {
+                        showMessage('Error loading file: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    document.body.classList.remove('loading');
+                    console.error('Load error:', error);
+                    showMessage('Failed to load file', 'error');
+                });
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('message-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            container.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function validateCode() {
+            const code = editor.getValue();
+            const statusEl = document.getElementById('validation-status');
+            document.body.classList.add('loading');
+
+            fetch('/pybirdai/execution-code-editing/api/validate/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    code_content: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.body.classList.remove('loading');
+
+                if (data.valid) {
+                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Valid Python syntax';
+                    statusEl.className = 'status-item validation-success';
+                    showMessage('Code is valid!', 'success');
+                } else {
+                    statusEl.innerHTML = `<i class="fas fa-times-circle"></i> Error at line ${data.line}`;
+                    statusEl.className = 'status-item validation-error';
+                    showMessage(`Syntax error at line ${data.line}: ${data.error}`, 'error');
+
+                    // Jump to error line
+                    if (data.line) {
+                        editor.setCursor(data.line - 1, 0);
+                        editor.focus();
+                    }
+                }
+            })
+            .catch(error => {
+                document.body.classList.remove('loading');
+                console.error('Validation error:', error);
+                showMessage('Failed to validate code', 'error');
+            });
+        }
+
+        function saveCode() {
+            const code = editor.getValue();
+            const statusEl = document.getElementById('validation-status');
+            document.body.classList.add('loading');
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.disabled = true;
+
+            fetch('/pybirdai/filter-code-editor/api/save/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    file_name: currentFileName,
+                    content: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.body.classList.remove('loading');
+                saveBtn.disabled = false;
+
+                if (data.success) {
+                    isDirty = false;
+                    document.getElementById('unsaved-indicator').style.display = 'none';
+                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Saved successfully';
+                    statusEl.className = 'status-item validation-success';
+                    showMessage('File saved successfully!', 'success');
+                } else {
+                    showMessage('Error saving file: ' + data.error, 'error');
+                    if (data.line) {
+                        editor.setCursor(data.line - 1, 0);
+                        editor.focus();
+                    }
+                }
+            })
+            .catch(error => {
+                document.body.classList.remove('loading');
+                saveBtn.disabled = false;
+                console.error('Save error:', error);
+                showMessage('Failed to save file', 'error');
+            });
+        }
+
+        // Prevent accidental navigation away with unsaved changes
+        window.addEventListener('beforeunload', function(e) {
+            if (isDirty) {
+                e.preventDefault();
+                e.returnValue = '';
+                return '';
+            }
+        });
+    </script>
+</body>
+</html>

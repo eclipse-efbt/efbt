@@ -24,6 +24,7 @@ class ImportWebsiteToSDDModel(object):
     '''
     Class responsible for importing SDD csv files into an instance of the analysis model
     '''
+
     def import_report_templates_from_sdd(self, sdd_context, dpm:bool=False):
         '''
         Import SDD csv files into an instance of the analysis model
@@ -614,6 +615,409 @@ class ImportWebsiteToSDDModel(object):
         if context.save_sdd_to_db and ordinates_to_create:
             AXIS_ORDINATE.objects.bulk_create(ordinates_to_create, batch_size=1000,ignore_conflicts=True)
 
+    def _backup_table_data(self, table_name, backup_table_name):
+        """
+        Create a temporary backup table and copy all existing data.
+        Phase 1 of the backup-restore approach.
+        """
+        with connection.cursor() as cursor:
+            if connection.vendor == 'sqlite':
+                cursor.execute(f"CREATE TEMP TABLE {backup_table_name} AS SELECT * FROM {table_name}")
+            elif connection.vendor == 'postgresql':
+                cursor.execute(f"CREATE TEMP TABLE {backup_table_name} AS SELECT * FROM {table_name}")
+            else:
+                # For other databases, use similar syntax
+                cursor.execute(f"CREATE TABLE {backup_table_name} AS SELECT * FROM {table_name}")
+
+    def _get_primary_key_column(self, table_name):
+        """
+        Get the primary key column name for a given table.
+        """
+        # Map table names to their primary key columns
+        pk_mapping = {
+            'pybirdai_table_cell': 'cell_id',
+            'pybirdai_ordinate_item': 'id',  # Auto-increment ID
+            'pybirdai_cell_position': 'id'   # Auto-increment ID
+        }
+        return pk_mapping.get(table_name, 'id')
+
+    def _is_duplicate_content(self, table_name, backed_up_row, columns, existing_rows_cache):
+        """
+        Check if backed-up row content is identical to any existing row.
+
+        For tables with string PKs (TABLE_CELL):
+            - Compare by PK first, then all content fields
+
+        For tables with auto-increment PKs (ORDINATE_ITEM, CELL_POSITION):
+            - Ignore PK, compare all content fields against all existing rows
+
+        Args:
+            table_name: Name of the table being restored
+            backed_up_row: Row from backup (list/tuple)
+            columns: Column names in order
+            existing_rows_cache: Dict (for TABLE_CELL) or list (for others) of existing rows
+
+        Returns:
+            True if duplicate found, False otherwise
+        """
+        pk_column = self._get_primary_key_column(table_name)
+
+        if table_name == 'pybirdai_table_cell':
+            # String PK - compare by key first
+            pk_index = columns.index('cell_id')
+            pk_value = str(backed_up_row[pk_index]) if backed_up_row[pk_index] else None
+
+            if not pk_value:
+                return False  # NULL PK, can't be duplicate
+
+            # Check if this PK exists in newly imported data
+            if pk_value not in existing_rows_cache:
+                return False  # Not a duplicate, new record
+
+            existing_row = existing_rows_cache[pk_value]
+
+            # Compare content fields (exclude PK and 'name' if exists)
+            content_fields = ['table_cell_combination_id', 'table_id_id', 'is_shaded', 'system_data_code']
+
+            for field in content_fields:
+                if field not in columns:
+                    continue  # Skip if field doesn't exist
+
+                backed_up_value = backed_up_row[columns.index(field)]
+                existing_value = existing_row[columns.index(field)]
+
+                # Normalize None and empty string for comparison
+                backed_up_value = None if backed_up_value in (None, '', 'None') else backed_up_value
+                existing_value = None if existing_value in (None, '', 'None') else existing_value
+
+                if backed_up_value != existing_value:
+                    return False  # Different content
+
+            return True  # Duplicate - same key, same content
+
+        elif table_name == 'pybirdai_ordinate_item':
+            # Auto-increment PK - compare all content fields
+            content_fields = ['axis_ordinate_id_id', 'variable_id_id', 'member_id_id',
+                            'member_hierarchy_id_id', 'starting_member_id_id', 'is_starting_member_included']
+
+            # Must compare against ALL existing rows
+            for existing_row in existing_rows_cache:
+                is_duplicate = True
+
+                for field in content_fields:
+                    if field not in columns:
+                        is_duplicate = False
+                        break
+
+                    backed_up_value = backed_up_row[columns.index(field)]
+                    existing_value = existing_row[columns.index(field)]
+
+                    # Normalize None values
+                    backed_up_value = None if backed_up_value in (None, '', 'None') else backed_up_value
+                    existing_value = None if existing_value in (None, '', 'None') else existing_value
+
+                    if backed_up_value != existing_value:
+                        is_duplicate = False
+                        break
+
+                if is_duplicate:
+                    return True  # Found duplicate
+
+            return False  # Not a duplicate
+
+        elif table_name == 'pybirdai_cell_position':
+            # Auto-increment PK - compare all content fields
+            content_fields = ['cell_id_id', 'axis_ordinate_id_id']
+
+            # Must compare against ALL existing rows
+            for existing_row in existing_rows_cache:
+                is_duplicate = True
+
+                for field in content_fields:
+                    if field not in columns:
+                        is_duplicate = False
+                        break
+
+                    backed_up_value = backed_up_row[columns.index(field)]
+                    existing_value = existing_row[columns.index(field)]
+
+                    # Normalize None values
+                    backed_up_value = None if backed_up_value in (None, '', 'None') else backed_up_value
+                    existing_value = None if existing_value in (None, '', 'None') else existing_value
+
+                    if backed_up_value != existing_value:
+                        is_duplicate = False
+                        break
+
+                if is_duplicate:
+                    return True  # Found duplicate
+
+            return False  # Not a duplicate
+
+        # Unknown table - don't skip
+        return False
+
+    def _restore_backed_up_data_bulk(self, table_name, backup_table_name, csv_file_path):
+        """
+        Restore backed-up data using bulk insert with key regeneration.
+        Phases 3-4 of the backup-restore approach:
+        - Query existing keys (in-memory)
+        - Generate new keys for conflicts (in-memory)
+        - Bulk insert restored data
+        """
+        import time
+        import tempfile
+
+        pk_column = self._get_primary_key_column(table_name)
+        timestamp = int(time.time())
+
+        with connection.cursor() as cursor:
+            # Get all existing rows (not just keys) for duplicate detection
+            cursor.execute(f"SELECT * FROM {table_name}")
+            existing_columns = [desc[0] for desc in cursor.description]
+            existing_rows = cursor.fetchall()
+
+            # Build cache structure for duplicate detection
+            # For TABLE_CELL (string PK): dict {cell_id: row}
+            # For others (auto-increment PK): list of rows
+            if table_name == 'pybirdai_table_cell':
+                pk_idx = existing_columns.index(pk_column)
+                existing_rows_cache = {str(row[pk_idx]): row for row in existing_rows}
+                existing_keys = set(existing_rows_cache.keys())
+            else:
+                existing_rows_cache = existing_rows
+                existing_keys = {str(row[existing_columns.index(pk_column)]) for row in existing_rows}
+
+            # Get all backed-up data
+            cursor.execute(f"SELECT * FROM {backup_table_name}")
+            columns = [desc[0] for desc in cursor.description]
+            backed_up_rows = cursor.fetchall()
+
+            if not backed_up_rows:
+                return  # No data to restore
+
+            print(f"Checking {len(backed_up_rows)} backed-up rows for duplicates...")
+
+            # Find primary key column index
+            pk_index = columns.index(pk_column)
+
+            # Skip duplicate records, restore non-duplicates with ORIGINAL IDs
+            modified_rows = []
+            skipped_duplicates = 0
+
+            for row in backed_up_rows:
+                row_list = list(row)
+
+                # Check for duplicate content
+                if self._is_duplicate_content(table_name, row_list, columns, existing_rows_cache):
+                    skipped_duplicates += 1
+                    continue  # Skip restoration of this duplicate row
+
+                # NOT a duplicate → restore with ORIGINAL ID (no modification)
+                modified_rows.append(row_list)
+
+            # Print statistics before bulk insert
+            total_backed_up = len(backed_up_rows)
+            total_restored = len(modified_rows)
+            print(f"\nRestoration Statistics for {table_name}:")
+            print(f"  Total backed-up rows: {total_backed_up}")
+            print(f"  Skipped duplicates: {skipped_duplicates}")
+            print(f"  Rows to restore: {total_restored}")
+            if skipped_duplicates > 0:
+                print(f"  → {skipped_duplicates}/{total_backed_up} ({skipped_duplicates*100/total_backed_up:.1f}%) were duplicates and not restored")
+
+            # Bulk insert restored data
+            if total_restored > 0:
+                print(f"\nBulk inserting {len(modified_rows)} rows into {table_name}...")
+                print(f"Columns: {columns}")
+                print(f"Database vendor: {connection.vendor}")
+            else:
+                print(f"No rows to restore for {table_name} - all backed-up data was duplicates")
+                return
+
+            try:
+                if connection.vendor == 'sqlite':
+                    self._bulk_insert_sqlite(table_name, columns, modified_rows, csv_file_path)
+                elif connection.vendor == 'postgresql':
+                    self._bulk_insert_postgresql(table_name, columns, modified_rows)
+                else:
+                    self._bulk_insert_generic(table_name, columns, modified_rows)
+                print(f"Successfully inserted {len(modified_rows)} rows into {table_name}")
+            except Exception as e:
+                print(f"ERROR: Failed to bulk insert into {table_name}")
+                print(f"  Table: {table_name}")
+                print(f"  Rows to insert: {len(modified_rows)}")
+                print(f"  Columns: {columns}")
+                print(f"  CSV file: {csv_file_path}")
+                print(f"  Error: {str(e)}")
+                raise
+
+    def _bulk_insert_sqlite(self, table_name, columns, rows, original_csv_path):
+        """
+        Bulk insert for SQLite using temporary CSV file.
+        Handles None values properly for auto-increment columns.
+        """
+        import tempfile
+        import csv as csv_module
+
+        # Find columns and rows where primary key is None (for auto-increment)
+        pk_column = self._get_primary_key_column(table_name)
+
+        # Check if any rows have None in primary key position
+        pk_index = columns.index(pk_column) if pk_column in columns else -1
+        has_null_pks = pk_index >= 0 and any(row[pk_index] is None for row in rows)
+
+        # If there are None primary keys, we need to exclude that column from import
+        # so SQLite can auto-generate the IDs
+        if has_null_pks:
+            # Filter out the primary key column
+            filtered_columns = [col for i, col in enumerate(columns) if i != pk_index]
+            filtered_rows = [[val for i, val in enumerate(row) if i != pk_index] for row in rows]
+            print(f"Excluding primary key column '{pk_column}' from import (contains NULL values for auto-increment)")
+        else:
+            filtered_columns = columns
+            filtered_rows = rows
+
+        # Create temporary CSV file for restored data
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, newline='', encoding='utf-8') as temp_file:
+            temp_csv_path = temp_file.name
+            writer = csv_module.writer(temp_file)
+            # Write header
+            writer.writerow(filtered_columns)
+            # Write data - convert None to empty string explicitly
+            for row in filtered_rows:
+                # Convert None to empty string for proper NULL handling in other columns
+                cleaned_row = ['' if val is None else val for val in row]
+                writer.writerow(cleaned_row)
+
+        try:
+            # If there are NULL primary keys, we can't use CSV import
+            # Fall back to direct SQL INSERTs with proper column specification
+            if has_null_pks and pk_index >= 0:
+                print(f"Using SQL INSERT method for {len(filtered_rows)} rows (has NULL primary keys)")
+                with connection.cursor() as cursor:
+                    # Temporarily disable FK constraints for restoration
+                    # This is necessary because backed-up data may reference entities
+                    # that were replaced during the new import
+                    print(f"Temporarily disabling foreign key constraints for {table_name} restoration...")
+                    cursor.execute("PRAGMA foreign_keys = OFF")
+
+                    try:
+                        column_list = ', '.join(filtered_columns)
+                        placeholders = ', '.join(['?' for _ in filtered_columns])
+                        insert_sql = f"INSERT INTO {table_name} ({column_list}) VALUES ({placeholders})"
+
+                        # Convert None to NULL explicitly for SQL
+                        cleaned_rows = []
+                        for row in filtered_rows:
+                            cleaned_row = [None if val == '' or val is None else val for val in row]
+                            cleaned_rows.append(cleaned_row)
+
+                        # Bulk insert using executemany
+                        cursor.executemany(insert_sql, cleaned_rows)
+                        print(f"Successfully inserted {len(cleaned_rows)} rows into {table_name}")
+                    finally:
+                        # Re-enable FK constraints
+                        cursor.execute("PRAGMA foreign_keys = ON")
+                        print(f"Re-enabled foreign key constraints")
+                return  # Skip CSV import
+
+            # Standard CSV import for rows without NULL primary keys
+            # Get database file path
+            db_file = Path(connection.settings_dict['NAME']).absolute()
+
+            # Create SQLite commands to import the restored data
+            commands = [
+                ".mode csv",
+                ".separator ','",
+                f".import --skip 1 '{temp_csv_path}' {table_name}"
+            ]
+
+            sqlite_script = '\n'.join(commands)
+
+            sqlite_program = "sqlite3"
+            if platform.system() == 'Windows':
+                sqlite_program += ".exe"
+
+            result = subprocess.run(
+                [sqlite_program, str(db_file)],
+                input=sqlite_script,
+                text=True,
+                capture_output=True,
+                check=False  # Don't raise exception, we'll check returncode manually
+            )
+
+            if result.returncode != 0:
+                # Display the actual error from sqlite3
+                error_msg = f"SQLite import failed with exit code {result.returncode}"
+                if result.stderr:
+                    error_msg += f"\nSTDERR: {result.stderr}"
+                if result.stdout:
+                    error_msg += f"\nSTDOUT: {result.stdout}"
+                error_msg += f"\nCommand: {' '.join([sqlite_program, str(db_file)])}"
+                error_msg += f"\nDatabase: {db_file}"
+                error_msg += f"\nCSV file: {temp_csv_path}"
+                error_msg += f"\nSQL script:\n{sqlite_script}"
+                print(error_msg)
+                raise subprocess.CalledProcessError(result.returncode, [sqlite_program, str(db_file)], result.stdout, result.stderr)
+
+            if result.stderr:
+                print(f"SQLite restore warning: {result.stderr}")
+        finally:
+            # Clean up temporary file
+            Path(temp_csv_path).unlink(missing_ok=True)
+
+    def _bulk_insert_postgresql(self, table_name, columns, rows):
+        """
+        Bulk insert for PostgreSQL using COPY.
+        """
+        import io
+        import csv as csv_module
+
+        # Create CSV string in memory
+        output = io.StringIO()
+        writer = csv_module.writer(output)
+        for row in rows:
+            writer.writerow(row)
+
+        output.seek(0)
+
+        with connection.cursor() as cursor:
+            columns_str = ', '.join(columns)
+            cursor.copy_expert(
+                f"COPY {table_name} ({columns_str}) FROM STDIN WITH (FORMAT CSV, DELIMITER ',')",
+                output
+            )
+
+    def _bulk_insert_generic(self, table_name, columns, rows):
+        """
+        Bulk insert for other databases using executemany.
+        """
+        if not rows:
+            return
+
+        columns_str = ', '.join(columns)
+        placeholders = ', '.join(['%s'] * len(columns))
+
+        with connection.cursor() as cursor:
+            cursor.executemany(
+                f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})",
+                rows
+            )
+
+    def _cleanup_backup_table(self, backup_table_name):
+        """
+        Drop the temporary backup table.
+        Phase 5 of the backup-restore approach.
+        """
+        with connection.cursor() as cursor:
+            if connection.vendor == 'sqlite':
+                cursor.execute(f"DROP TABLE IF EXISTS {backup_table_name}")
+            elif connection.vendor == 'postgresql':
+                cursor.execute(f"DROP TABLE IF EXISTS {backup_table_name}")
+            else:
+                cursor.execute(f"DROP TABLE IF EXISTS {backup_table_name}")
+
     def _create_instances_from_csv_copy(self, context, cls):
         sdd_table_name = cls.__name__.lower()
         table_name = f"pybirdai_{sdd_table_name}"
@@ -631,13 +1035,18 @@ class ImportWebsiteToSDDModel(object):
             # Define allowed table names to prevent SQL injection
             ALLOWED_TABLES = {
                 'pybirdai_table_cell',
-                'pybirdai_ordinate_item', 
+                'pybirdai_ordinate_item',
                 'pybirdai_cell_position'
             }
-            
+
             if table_name not in ALLOWED_TABLES:
                 raise ValueError(f"Table '{table_name}' not allowed for deletion")
-            
+
+            # PHASE 1: Backup existing data before truncation
+            backup_table_name = f"{table_name}_backup_temp"
+            print(f"Backing up existing data from {table_name}...")
+            self._backup_table_data(table_name, backup_table_name)
+
             with connection.cursor() as cursor:
                 if connection.vendor == 'sqlite':
                     cursor.execute("PRAGMA foreign_keys = 0;")
@@ -683,6 +1092,15 @@ class ImportWebsiteToSDDModel(object):
                     )
                 if result.stderr:
                     raise Exception(f"SQLite import error: {result.stderr}")
+
+                # PHASE 3-4: Restore backed-up data with key regeneration (bulk)
+                print(f"Restoring backed-up data to {table_name} with key regeneration...")
+                self._restore_backed_up_data_bulk(table_name, backup_table_name, str(csv_file))
+
+                # PHASE 5: Cleanup backup table
+                print(f"Cleaning up backup table {backup_table_name}...")
+                self._cleanup_backup_table(backup_table_name)
+
                 return result
 
             elif connection.vendor == 'postgresql':
@@ -696,6 +1114,15 @@ class ImportWebsiteToSDDModel(object):
                             f"COPY {table_name} FROM STDIN WITH (FORMAT CSV, DELIMITER '{delimiter}')",
                             f
                         )
+
+                # PHASE 3-4: Restore backed-up data with key regeneration (bulk)
+                print(f"Restoring backed-up data to {table_name} with key regeneration...")
+                self._restore_backed_up_data_bulk(table_name, backup_table_name, str(csv_file))
+
+                # PHASE 5: Cleanup backup table
+                print(f"Cleaning up backup table {backup_table_name}...")
+                self._cleanup_backup_table(backup_table_name)
+
                 return None
 
             elif connection.vendor in ['microsoft', 'mssql']:
@@ -718,16 +1145,40 @@ class ImportWebsiteToSDDModel(object):
                         # Fallback to row-by-row insert if BULK INSERT fails
                         print(f"BULK INSERT failed: {e}. Falling back to row-by-row insert.")
                         self._fallback_csv_import(csv_file, table_name, delimiter)
+
+                # PHASE 3-4: Restore backed-up data with key regeneration (bulk)
+                print(f"Restoring backed-up data to {table_name} with key regeneration...")
+                self._restore_backed_up_data_bulk(table_name, backup_table_name, str(csv_file))
+
+                # PHASE 5: Cleanup backup table
+                print(f"Cleaning up backup table {backup_table_name}...")
+                self._cleanup_backup_table(backup_table_name)
+
                 return None
 
             else:
                 # Fallback for other databases
                 print(f"Database vendor '{connection.vendor}' not explicitly supported. Using fallback method.")
                 self._fallback_csv_import(csv_file, table_name, delimiter)
+
+                # PHASE 3-4: Restore backed-up data with key regeneration (bulk)
+                print(f"Restoring backed-up data to {table_name} with key regeneration...")
+                self._restore_backed_up_data_bulk(table_name, backup_table_name, str(csv_file))
+
+                # PHASE 5: Cleanup backup table
+                print(f"Cleaning up backup table {backup_table_name}...")
+                self._cleanup_backup_table(backup_table_name)
+
                 return None
 
         except Exception as e:
             print(f"Error importing CSV for {table_name}: {str(e)}")
+            # Try to cleanup backup table even on error
+            try:
+                backup_table_name = f"{table_name}_backup_temp"
+                self._cleanup_backup_table(backup_table_name)
+            except:
+                pass
             raise
 
     def _fallback_csv_import(self, context, cls):

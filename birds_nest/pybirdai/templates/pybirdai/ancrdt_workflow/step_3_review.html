@@ -1,0 +1,84 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ANCRDT Step 3 Review: Execution Code{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pybirdai/css/ancrdt_workflow.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="workflow-container">
+    <!-- Page Header -->
+    <div class="step-header">
+        <h1><i class="fas fa-eye"></i> Step 3 Review: Execution Code</h1>
+        <p>Review and edit generated Python execution code</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if step.status == 'completed' %}
+    <!-- Generated Files -->
+    {% if step.generated_files %}
+    <div class="generated-files-section">
+        <h3><i class="fas fa-file-code"></i> Generated Python Files</h3>
+        <ul class="file-list">
+            {% for file in step.generated_files %}
+            <li>{{ file }}</li>
+            {% endfor %}
+        </ul>
+        <p class="file-count">Total: {{ step.generated_files|length }} file{{ step.generated_files|length|pluralize }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Unified Code Editor -->
+    <div class="tabs-container code-editor-tabs">
+        <h4><i class="fas fa-code"></i> Edit Filter Code</h4>
+
+        <!-- Unified Editor -->
+        <iframe
+            src="{% url 'pybirdai:unified_filter_code_editor' %}"
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            referrerpolicy="same-origin"
+            title="Filter Code Editor"
+            style="width: 100%; min-height: 800px; border: none; display: block;">
+        </iframe>
+    </div>
+    {% else %}
+    <div class="prerequisite-warning">
+        <i class="fas fa-info-circle"></i> Step 3 has not been completed yet. Please execute the step first.
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="navigation-buttons">
+        <a href="{% url 'pybirdai:ancrdt_step_3' %}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Step 3
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'pybirdai/js/ancrdt_workflow.js' %}"></script>
+{% endblock %}

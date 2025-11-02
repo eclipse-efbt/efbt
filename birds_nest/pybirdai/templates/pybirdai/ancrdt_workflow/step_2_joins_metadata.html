@@ -1,0 +1,107 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ANCRDT Step 2: Joins Metadata{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pybirdai/css/ancrdt_workflow.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="workflow-container">
+    <!-- Step Header -->
+    {% include 'pybirdai/ancrdt_workflow/_step_header.html' %}
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Execute Section -->
+    <div class="execute-section">
+        <h2><i class="fas fa-play-circle"></i> Execute Step</h2>
+        {% if step.can_execute %}
+            {% if step.status == 'pending' or step.status == 'failed' %}
+                <p>Click the button below to generate joins metadata from the imported data.</p>
+                <button class="btn-execute" onclick="executeStep(2)">
+                    <i class="fas fa-play"></i> Generate Joins Metadata
+                </button>
+            {% elif step.status == 'running' %}
+                <div class="status-running-indicator">
+                    <i class="fas fa-spinner fa-spin"></i> Step is currently running...
+                </div>
+            {% else %}
+                <div class="status-completed-indicator">
+                    <i class="fas fa-check-circle"></i> Step completed successfully
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="prerequisite-warning">
+                <i class="fas fa-lock"></i> Please complete Step 1 first before running this step.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Execution Timeline -->
+    {% include 'pybirdai/ancrdt_workflow/_execution_timeline.html' %}
+
+    <!-- Review Section -->
+    {% if step.status == 'completed' %}
+    <div class="review-section">
+        <h3><i class="fas fa-eye"></i> Review Results</h3>
+        <p>Step 2 has completed successfully. You can now review and edit the generated joins metadata.</p>
+        <a href="{% url 'pybirdai:ancrdt_step_2_review' %}" class="btn-review">
+            <i class="fas fa-eye"></i> View Review & Edit Metadata
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Error Messages -->
+    {% if step.error_message %}
+    <div class="error-message-section">
+        <h3><i class="fas fa-exclamation-triangle"></i> Error Details</h3>
+        <div class="error-content">
+            {{ step.error_message }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    {% include 'pybirdai/ancrdt_workflow/_navigation_buttons.html' %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'pybirdai/js/ancrdt_workflow.js' %}"></script>
+<script>
+// Auto-reload if step is running
+{% if step.status == 'running' %}
+setTimeout(() => location.reload(), 5000);
+{% endif %}
+
+// Restore active tab on page load
+window.addEventListener('DOMContentLoaded', function() {
+    const activeTab = localStorage.getItem('ancrdt-step2-active-tab');
+    if (activeTab) {
+        switchTab(activeTab, 2);
+    }
+});
+</script>
+{% endblock %}

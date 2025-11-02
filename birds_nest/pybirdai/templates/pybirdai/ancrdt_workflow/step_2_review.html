@@ -1,0 +1,142 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ANCRDT Step 2 Review: Joins Metadata{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pybirdai/css/ancrdt_workflow.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="workflow-container">
+    <!-- Page Header -->
+    <div class="step-header">
+        <h1><i class="fas fa-eye"></i> Step 2 Review: Joins Metadata</h1>
+        <p>Review and edit generated joins metadata</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if step.status == 'completed' %}
+    <!-- Metadata Statistics -->
+    {% if step.metadata_counts %}
+    <div class="metadata-stats-section">
+        <h3><i class="fas fa-chart-bar"></i> Metadata Statistics</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-link"></i></div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ step.metadata_counts.cube_links }}</div>
+                    <div class="stat-label">Cube Links</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ step.metadata_counts.cube_structure_item_links }}</div>
+                    <div class="stat-label">Structure Item Links</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ step.metadata_counts.member_links }}</div>
+                    <div class="stat-label">Member Links</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Tabbed Metadata Editor -->
+    <div class="tabs-container">
+        <h4><i class="fas fa-edit"></i> Edit Joins Metadata</h4>
+
+        <!-- Tab Navigation -->
+        <div class="tabs-header">
+            <button class="tab-button active" onclick="switchTab('cube-links', 2)">
+                <i class="fas fa-cube"></i> Edit Cube Links
+            </button>
+            <button class="tab-button" onclick="switchTab('structure-links', 2)">
+                <i class="fas fa-sitemap"></i> Edit Cube Structure Item Links
+            </button>
+            <button class="tab-button" onclick="switchTab('member-links', 2)">
+                <i class="fas fa-link"></i> Edit Member Links
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content active" id="cube-links-tab-2">
+            <iframe
+                src="{% url 'pybirdai:edit_cube_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Cube Links">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="structure-links-tab-2">
+            <iframe
+                src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Cube Structure Item Links">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="member-links-tab-2">
+            <iframe
+                src="{% url 'pybirdai:edit_member_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Member Links">
+            </iframe>
+        </div>
+    </div>
+    {% else %}
+    <div class="prerequisite-warning">
+        <i class="fas fa-info-circle"></i> Step 2 has not been completed yet. Please execute the step first.
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="navigation-buttons">
+        <a href="{% url 'pybirdai:ancrdt_step_2' %}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Step 2
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'pybirdai/js/ancrdt_workflow.js' %}"></script>
+<script>
+// Restore active tab on page load
+window.addEventListener('DOMContentLoaded', function() {
+    const activeTab = localStorage.getItem('ancrdt-step2-active-tab');
+    if (activeTab) {
+        switchTab(activeTab, 2);
+    }
+});
+</script>
+{% endblock %}

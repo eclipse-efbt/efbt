@@ -119,7 +119,21 @@ class JoinsMetaDataCreatorANCRDT:
         # Import here to ensure Django is fully configured first
         from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE_ITEM, CUBE_STRUCTURE, DOMAIN, VARIABLE, CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK,MAINTENANCE_AGENCY,MEMBER_LINK
 
-        ignored_domains = [DOMAIN.objects.get(domain_id=domain_id) for domain_id in IGNORED_DOMAINS]
+        # Get or create primitive type domains for filtering
+        ignored_domains = []
+        for domain_id in IGNORED_DOMAINS:
+            domain, created = DOMAIN.objects.get_or_create(
+                domain_id=domain_id,
+                defaults={
+                    'name': domain_id,
+                    'data_type': domain_id,  # Maps to FACET_VALUE_TYPE choices
+                    'is_enumerated': False,
+                    'description': f'Primitive type: {domain_id}'
+                }
+            )
+            if created:
+                logger.info(f"Created missing DOMAIN: {domain_id}")
+            ignored_domains.append(domain)
 
         mock_join_identifier = "mock_join_identifier"
 

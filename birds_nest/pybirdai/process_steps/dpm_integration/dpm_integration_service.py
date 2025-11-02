@@ -29,6 +29,19 @@ PROCESS_FILE_END = ".bat" if platform.system() == "Windows" else ".sh"
 SCRIPT_PATH = f"pybirdai{os.sep}process_steps{os.sep}dpm_integration{os.sep}process{PROCESS_FILE_END}"
 EXTRACTED_DB_PATH = f"dpm_database{os.sep}dpm_database.accdb"
 
+# HTTP headers to mimic a real browser and avoid 403 Forbidden errors
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+}
+
 def save_numpy_array_to_csv(array, filepath, index=False):
     """Save numpy structured array to CSV file"""
     if len(array) == 0:
@@ -89,7 +102,7 @@ class DPMImporterService:
         try:
             from bs4 import BeautifulSoup
             main_page = "https://www.eba.europa.eu/risk-and-data-analysis/reporting-frameworks/dpm-data-dictionary"
-            soup = BeautifulSoup(requests.get(main_page).text)
+            soup = BeautifulSoup(requests.get(main_page, headers=HEADERS).text)
             a_links = soup.find_all("a")
             print(a_links[0]["href"])
 
@@ -111,9 +124,8 @@ class DPMImporterService:
     def download_dpm_database(self):
         self.logger.info(f"Starting download of DPM database from: {self.link_db}")
 
-
         try:
-            response = requests.get(self.link_db)
+            response = requests.get(self.link_db, headers=HEADERS)
             response.raise_for_status()
             db_data = response.content
 
@@ -248,16 +260,33 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         logging.info("Mapped Framework Entities")
 
         domains_array, domain_map = new_maps.map_domains() # domains
-        save_numpy_array_to_csv(domains_array, f"{self.output_directory}domain.csv", index=False)
-        logging.info("Mapped Domain Entities")
+
+        # Map metrics from configuration - this also creates data type domains
+        metrics_array, metrics_map, data_type_domains = new_maps.map_metrics(domain_map=domain_map)
+        logging.info(f"Mapped {len(metrics_array)} Metric Variables from configuration")
+        logging.info(f"Created {len(data_type_domains)} Data Type Domains for metrics")
+
+        # Merge DPM domains with data type domains
+        combined_domains = np.concatenate([domains_array, data_type_domains])
+        save_numpy_array_to_csv(combined_domains, f"{self.output_directory}domain.csv", index=False)
+        logging.info(f"Saved {len(combined_domains)} total Domains ({len(domains_array)} DPM + {len(data_type_domains)} data types)")
+
+        # Update domain_map with data type domains
+        for domain_row in data_type_domains:
+            code = str(domain_row["CODE"])
+            domain_id = str(domain_row["DOMAIN_ID"])
+            domain_map[code] = domain_id
 
         members_array, member_map = new_maps.map_members(domain_id_map=domain_map) # members
         save_numpy_array_to_csv(members_array, f"{self.output_directory}member.csv", index=False)
         logging.info("Mapped Members Entities")
 
         dimensions_array, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map) # to enumerated variables
-        save_numpy_array_to_csv(dimensions_array, f"{self.output_directory}variable.csv", index=False)
-        logging.info("Mapped Variables Entities")
+
+        # Merge dimensions and metrics into single variable.csv
+        combined_variables = np.concatenate([dimensions_array, metrics_array])
+        save_numpy_array_to_csv(combined_variables, f"{self.output_directory}variable.csv", index=False)
+        logging.info(f"Saved {len(combined_variables)} total Variables ({len(dimensions_array)} dimensions + {len(metrics_array)} metrics)")
 
         hierarchy_array, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
         save_numpy_array_to_csv(hierarchy_array, f"{self.output_directory}member_hierarchy.csv", index=False)
@@ -323,4 +352,3 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(f"DPM Importer Service failed: {e}")
         raise
-

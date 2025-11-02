@@ -1,0 +1,660 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Execution Code - {{ file_name }}{% endblock %}
+
+{% block extra_css %}
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/matchesonscrollbar.min.css">
+
+<style>
+    .editor-container {
+        display: flex;
+        height: calc(100vh - 120px);
+        background: #f5f5f5;
+    }
+
+    .tree-panel {
+        width: 300px;
+        background: white;
+        border-right: 1px solid #ddd;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .editor-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: white;
+    }
+
+    .editor-header {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .editor-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+
+    .editor-title i {
+        color: #f39c12;
+        margin-right: 10px;
+    }
+
+    .editor-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-action {
+        padding: 8px 16px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-save {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-save:hover {
+        background: #218838;
+    }
+
+    .btn-validate {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .btn-validate:hover {
+        background: #138496;
+    }
+
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background: #5a6268;
+    }
+
+    .btn-action i {
+        margin-right: 5px;
+    }
+
+    .CodeMirror {
+        height: 100%;
+        font-size: 14px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    }
+
+    /* Tree View Styles */
+    .tree-header {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #007bff;
+    }
+
+    .tree-node {
+        margin-bottom: 2px;
+    }
+
+    .tree-node-content {
+        padding: 8px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        user-select: none;
+    }
+
+    .tree-node-content:hover {
+        background: #e9ecef;
+    }
+
+    .tree-node-content.active {
+        background: #007bff;
+        color: white;
+    }
+
+    .tree-node-icon {
+        margin-right: 8px;
+        width: 16px;
+        display: inline-block;
+    }
+
+    .tree-node.class > .tree-node-content .tree-node-icon {
+        color: #6f42c1;
+    }
+
+    .tree-node.method > .tree-node-content .tree-node-icon {
+        color: #28a745;
+    }
+
+    .tree-children {
+        margin-left: 20px;
+        margin-top: 2px;
+    }
+
+    .tree-node.collapsed .tree-children {
+        display: none;
+    }
+
+    .tree-node.expanded .tree-children {
+        display: block;
+    }
+
+    .tree-expand-icon {
+        margin-right: 5px;
+        width: 12px;
+        display: inline-block;
+        transition: transform 0.2s;
+    }
+
+    .tree-node.collapsed .tree-expand-icon {
+        transform: rotate(-90deg);
+    }
+
+    /* Status Bar */
+    .status-bar {
+        padding: 8px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: #6c757d;
+    }
+
+    .status-info {
+        display: flex;
+        gap: 20px;
+    }
+
+    .status-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .status-item i {
+        margin-right: 5px;
+    }
+
+    .validation-success {
+        color: #28a745;
+    }
+
+    .validation-error {
+        color: #dc3545;
+    }
+
+    /* Duplicate Class Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .modal-dialog {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        min-width: 400px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .modal-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .search-box {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    .loading-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="editor-container">
+    <!-- Tree Panel -->
+    <div class="tree-panel">
+        <div class="tree-header">
+            <i class="fas fa-sitemap"></i> Code Structure
+        </div>
+        <input type="text" class="search-box" placeholder="Search classes/methods..." id="tree-search">
+        <div id="tree-view">
+            <!-- Tree will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Editor Panel -->
+    <div class="editor-panel">
+        <div class="editor-header">
+            <div class="editor-title">
+                <i class="fas fa-file-code"></i>
+                {{ file_name }}
+            </div>
+            <div class="editor-actions">
+                <button class="btn-action btn-validate" onclick="validateCode()">
+                    <i class="fas fa-check-circle"></i> Validate
+                </button>
+                <button class="btn-action btn-save" onclick="saveCode()">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <a href="{% url 'pybirdai:review_execution_code' %}" class="btn-action btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </div>
+
+        <div style="flex: 1; position: relative;">
+            <textarea id="code-editor">{{ code_content }}</textarea>
+            <div class="loading-overlay" id="loading-overlay">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-info">
+                <div class="status-item">
+                    <i class="fas fa-code"></i> Python
+                </div>
+                <div class="status-item" id="line-info">
+                    <i class="fas fa-map-marker-alt"></i> Line 1, Col 1
+                </div>
+                <div class="status-item" id="validation-status">
+                    <i class="fas fa-info-circle"></i> Ready
+                </div>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-keyboard"></i> Press Ctrl+S to save
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Duplicate Class Modal -->
+<div class="modal-overlay" id="duplicate-modal">
+    <div class="modal-dialog">
+        <h3 class="modal-title">Duplicate Class</h3>
+        <input type="text" class="modal-input" id="new-class-name" placeholder="Enter new class name">
+        <div class="modal-actions">
+            <button class="btn-action btn-cancel" onclick="closeDuplicateModal()">Cancel</button>
+            <button class="btn-action btn-save" onclick="confirmDuplicate()">Duplicate</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/indent-fold.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/searchcursor.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/search.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/matchesonscrollbar.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/annotatescrollbar.min.js"></script>
+
+<script>
+    let editor;
+    let codeStructure = {{ code_structure|safe }};
+    let currentClassName = null;
+    const fileName = "{{ file_name }}";
+
+    // Initialize CodeMirror
+    document.addEventListener('DOMContentLoaded', function() {
+        editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+            mode: 'python',
+            theme: 'monokai',
+            lineNumbers: true,
+            foldGutter: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            indentUnit: 4,
+            indentWithTabs: false,
+            extraKeys: {
+                "Ctrl-S": function() { saveCode(); },
+                "Cmd-S": function() { saveCode(); },
+                "Ctrl-F": "findPersistent",
+                "F11": function(cm) {
+                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                },
+                "Esc": function(cm) {
+                    if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                }
+            }
+        });
+
+        // Update cursor position
+        editor.on('cursorActivity', function() {
+            const cursor = editor.getCursor();
+            document.getElementById('line-info').innerHTML =
+                `<i class="fas fa-map-marker-alt"></i> Line ${cursor.line + 1}, Col ${cursor.ch + 1}`;
+        });
+
+        // Build tree view
+        buildTreeView();
+
+        // Search functionality
+        document.getElementById('tree-search').addEventListener('input', function(e) {
+            filterTree(e.target.value.toLowerCase());
+        });
+    });
+
+    function buildTreeView() {
+        const treeView = document.getElementById('tree-view');
+        treeView.innerHTML = '';
+
+        codeStructure.forEach(cls => {
+            const classNode = createTreeNode(cls, 'class');
+            treeView.appendChild(classNode);
+        });
+    }
+
+    function createTreeNode(item, type) {
+        const node = document.createElement('div');
+        node.className = `tree-node ${type} expanded`;
+
+        const content = document.createElement('div');
+        content.className = 'tree-node-content';
+
+        if (type === 'class' && item.methods && item.methods.length > 0) {
+            const expandIcon = document.createElement('i');
+            expandIcon.className = 'fas fa-chevron-down tree-expand-icon';
+            content.appendChild(expandIcon);
+        }
+
+        const icon = document.createElement('i');
+        icon.className = type === 'class' ? 'fas fa-cube tree-node-icon' : 'fas fa-function tree-node-icon';
+        content.appendChild(icon);
+
+        const label = document.createElement('span');
+        label.textContent = item.name;
+        content.appendChild(label);
+
+        content.onclick = function() {
+            if (type === 'class' && item.methods && item.methods.length > 0) {
+                node.classList.toggle('expanded');
+                node.classList.toggle('collapsed');
+            }
+            goToLine(item.line);
+
+            // Update active state
+            document.querySelectorAll('.tree-node-content').forEach(n => n.classList.remove('active'));
+            content.classList.add('active');
+        };
+
+        // Right-click menu for classes
+        if (type === 'class') {
+            content.oncontextmenu = function(e) {
+                e.preventDefault();
+                currentClassName = item.name;
+                showDuplicateModal();
+            };
+        }
+
+        node.appendChild(content);
+
+        // Add methods as children
+        if (type === 'class' && item.methods && item.methods.length > 0) {
+            const children = document.createElement('div');
+            children.className = 'tree-children';
+
+            item.methods.forEach(method => {
+                const methodNode = createTreeNode(method, 'method');
+                children.appendChild(methodNode);
+            });
+
+            node.appendChild(children);
+        }
+
+        return node;
+    }
+
+    function goToLine(lineNumber) {
+        editor.setCursor(lineNumber - 1, 0);
+        editor.focus();
+        editor.scrollIntoView({line: lineNumber - 1, ch: 0});
+    }
+
+    function filterTree(searchTerm) {
+        const nodes = document.querySelectorAll('.tree-node');
+        nodes.forEach(node => {
+            const label = node.querySelector('span').textContent.toLowerCase();
+            if (label.includes(searchTerm) || searchTerm === '') {
+                node.style.display = 'block';
+            } else {
+                node.style.display = 'none';
+            }
+        });
+    }
+
+    function validateCode() {
+        const code = editor.getValue();
+        document.getElementById('loading-overlay').style.display = 'flex';
+
+        fetch('{% url "pybirdai:validate_python_code" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                code_content: code
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            const statusEl = document.getElementById('validation-status');
+
+            if (data.valid) {
+                statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Valid Python syntax';
+                statusEl.className = 'status-item validation-success';
+            } else {
+                statusEl.innerHTML = `<i class="fas fa-times-circle"></i> Error at line ${data.line}: ${data.error}`;
+                statusEl.className = 'status-item validation-error';
+
+                // Jump to error line
+                if (data.line) {
+                    goToLine(data.line);
+                }
+            }
+        })
+        .catch(error => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            console.error('Validation error:', error);
+        });
+    }
+
+    function saveCode() {
+        const code = editor.getValue();
+        document.getElementById('loading-overlay').style.display = 'flex';
+
+        fetch('{% url "pybirdai:save_code_modifications" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                file_name: fileName,
+                code_content: code
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
+
+            if (data.success) {
+                // Show success message
+                const statusEl = document.getElementById('validation-status');
+                statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Saved successfully';
+                statusEl.className = 'status-item validation-success';
+
+                // Redirect after short delay
+                setTimeout(() => {
+                    window.location.href = '{% url "pybirdai:review_execution_code" %}';
+                }, 1500);
+            } else {
+                alert('Error saving file: ' + data.error);
+            }
+        })
+        .catch(error => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            console.error('Save error:', error);
+            alert('Failed to save file');
+        });
+    }
+
+    function showDuplicateModal() {
+        document.getElementById('duplicate-modal').style.display = 'block';
+        document.getElementById('new-class-name').value = currentClassName + '_Copy';
+        document.getElementById('new-class-name').focus();
+    }
+
+    function closeDuplicateModal() {
+        document.getElementById('duplicate-modal').style.display = 'none';
+    }
+
+    function confirmDuplicate() {
+        const newClassName = document.getElementById('new-class-name').value;
+        if (!newClassName) {
+            alert('Please enter a new class name');
+            return;
+        }
+
+        document.getElementById('loading-overlay').style.display = 'flex';
+
+        fetch('{% url "pybirdai:duplicate_class_node" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                file_name: fileName,
+                class_name: currentClassName,
+                new_class_name: newClassName
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
+
+            if (data.success) {
+                closeDuplicateModal();
+                // Reload the page to show updated code
+                location.reload();
+            } else {
+                alert('Error duplicating class: ' + data.error);
+            }
+        })
+        .catch(error => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            console.error('Duplication error:', error);
+        });
+    }
+
+    // Keyboard shortcut for duplication
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'd') {
+            e.preventDefault();
+            // Find current class based on cursor position
+            const line = editor.getCursor().line;
+            for (let cls of codeStructure) {
+                if (line >= cls.line - 1) {
+                    currentClassName = cls.name;
+                }
+            }
+            if (currentClassName) {
+                showDuplicateModal();
+            }
+        }
+    });
+</script>
+{% endblock %}

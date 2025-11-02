@@ -1,0 +1,456 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Review Execution Code - Step {{ step }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .review-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .files-grid {
+        display: grid;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .file-card {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .file-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+
+    .file-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .file-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+
+    .file-name i {
+        color: #f39c12;
+        margin-right: 10px;
+    }
+
+    .file-meta {
+        display: flex;
+        gap: 20px;
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .file-meta-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .file-meta-item i {
+        margin-right: 5px;
+    }
+
+    .file-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-edit {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-edit:hover {
+        background: #0056b3;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-edit i {
+        margin-right: 5px;
+    }
+
+    .btn-view {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-view:hover {
+        background: #5a6268;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-view i {
+        margin-right: 5px;
+    }
+
+    .approval-section {
+        background: #e8f5e9;
+        border: 1px solid #4caf50;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    .approval-section.not-approved {
+        background: #fff3e0;
+        border-color: #ff9800;
+    }
+
+    .approval-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .approval-status i {
+        font-size: 24px;
+        margin-right: 10px;
+    }
+
+    .approval-status.approved i {
+        color: #4caf50;
+    }
+
+    .approval-status.not-approved i {
+        color: #ff9800;
+    }
+
+    .approve-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .approve-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .info-alert {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .info-alert i {
+        color: #2196f3;
+        margin-right: 8px;
+    }
+
+    .warning-alert {
+        background: #fff3e0;
+        border-left: 4px solid #ff9800;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .warning-alert i {
+        color: #ff9800;
+        margin-right: 8px;
+    }
+
+    .no-files-message {
+        text-align: center;
+        padding: 60px 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        color: #6c757d;
+    }
+
+    .no-files-message i {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #dee2e6;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb-item a {
+        color: #007bff;
+    }
+
+    .breadcrumb-item.active {
+        color: #6c757d;
+    }
+
+    .stats-row {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .stat-item i {
+        margin-right: 8px;
+        color: #007bff;
+    }
+
+    .stat-value {
+        font-weight: 600;
+        margin-right: 5px;
+    }
+
+    .modified-badge {
+        background: #ffc107;
+        color: #333;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        margin-left: 10px;
+    }
+
+    .source-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 0;
+    }
+
+    .source-tab {
+        padding: 12px 30px;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #6c757d;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        margin-bottom: -2px;
+    }
+
+    .source-tab:hover {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .source-tab.active {
+        color: #007bff;
+        border-bottom-color: #007bff;
+        font-weight: 600;
+    }
+
+    .source-tab i {
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="review-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'pybirdai:workflow_dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'pybirdai:ancrdt_dashboard' %}">ANCRDT Workflow</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Review Execution Code</li>
+        </ol>
+    </nav>
+
+    <h1><i class="fas fa-code"></i> Review Execution Code - Step {{ step }}</h1>
+
+    <!-- Source Selection Tabs -->
+    <div class="source-tabs">
+        <a href="{% url 'pybirdai:review_execution_code' source='joins' %}"
+           class="source-tab {% if source == 'joins' %}active{% endif %}">
+            <i class="fas fa-link"></i> Generated Joins
+        </a>
+        <a href="{% url 'pybirdai:review_execution_code' source='filters' %}"
+           class="source-tab {% if source == 'filters' %}active{% endif %}">
+            <i class="fas fa-filter"></i> Filter Code
+        </a>
+    </div>
+
+    <!-- Info Alert -->
+    <div class="info-alert">
+        <i class="fas fa-info-circle"></i>
+        <strong>Review and Edit:</strong> Review the generated execution code below. You can edit individual files to add custom logic, filters, or modifications before approving.
+    </div>
+
+    {% if logic_files %}
+
+        <!-- Files Grid -->
+        <div class="files-grid">
+            {% for file in logic_files %}
+            <div class="file-card">
+                <div class="file-header">
+                    <div class="file-name">
+                        <i class="fas fa-file-code"></i>
+                        {{ file.name }}
+                        {% if file.name in execution.code_modifications %}
+                            <span class="modified-badge">Modified</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="file-meta">
+                    <div class="file-meta-item">
+                        <i class="fas fa-weight"></i>
+                        {{ file.size_kb }} KB
+                    </div>
+                    <div class="file-meta-item">
+                        <i class="fas fa-clock"></i>
+                        Generated
+                    </div>
+                </div>
+
+                <div class="file-actions">
+                    <a href="{% url 'pybirdai:edit_execution_code' source=source file_name=file.name %}" class="btn-edit">
+                        <i class="fas fa-edit"></i> Edit Code
+                    </a>
+                    <a href="{% url 'pybirdai:view_execution_code' source=source file_name=file.name %}" class="btn-view" target="_blank">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <!-- No Files Message -->
+        <div class="no-files-message">
+            <i class="fas fa-folder-open"></i>
+            <h3>No execution code files found</h3>
+            <p>Please run Step 3 to generate the execution code first.</p>
+            <a href="{% url 'pybirdai:ancrdt_create_executable_joins' %}" class="btn btn-primary mt-3">
+                Generate Execution Code
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- Approval Section -->
+    {% if logic_files %}
+    <div class="approval-section {% if not execution_code_approved %}not-approved{% endif %}">
+        <div class="approval-status {% if execution_code_approved %}approved{% else %}not-approved{% endif %}">
+            {% if execution_code_approved %}
+                <i class="fas fa-check-circle"></i>
+                <strong>Execution code has been approved</strong>
+            {% else %}
+                <i class="fas fa-exclamation-circle"></i>
+                <strong>Execution code pending approval</strong>
+            {% endif %}
+        </div>
+
+        <p>
+            {% if execution_code_approved %}
+                The execution code has been reviewed and approved. You can proceed with running tests or make additional modifications if needed.
+            {% else %}
+                After reviewing and editing the execution code, click the button below to approve the changes.
+            {% endif %}
+        </p>
+
+        {% if not execution_code_approved %}
+        <form method="post" action="{% url 'pybirdai:approve_execution_code' step=step %}">
+            {% csrf_token %}
+            <button type="submit" class="approve-btn">
+                <i class="fas fa-check"></i>
+                Approve Execution Code
+            </button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="mt-4">
+        <a href="{% url 'pybirdai:review_joins_metadata' step=2 %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Joins Metadata Review
+        </a>
+        <a href="{% url 'pybirdai:ancrdt_dashboard' %}" class="btn btn-info">
+            <i class="fas fa-home"></i> ANCRDT Dashboard
+        </a>
+        {% if execution %}
+            <a href="{% url 'pybirdai:workflow_ancrdt_review' step_number=step %}" class="btn btn-info">
+                <i class="fas fa-history"></i> View Execution Details
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+{% if messages %}
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        {% for message in messages %}
+            <div class="toast show" role="alert">
+                <div class="toast-header">
+                    <strong class="me-auto">{{ message.tags|title }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-dismiss toasts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const toasts = document.querySelectorAll('.toast');
+        toasts.forEach(function(toast) {
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}

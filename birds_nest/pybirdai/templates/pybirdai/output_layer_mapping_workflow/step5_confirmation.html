@@ -1,0 +1,657 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Output Layer Mapping - Confirmation{% endblock %}
+
+{% block extra_css %}
+<style>
+    .workflow-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .workflow-steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .workflow-steps li {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+
+    .workflow-steps li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: #ddd;
+        z-index: -1;
+    }
+
+    .workflow-steps .step-number {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 50%;
+        background: #ddd;
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .workflow-steps .active .step-number {
+        background: #667eea;
+        color: white;
+    }
+
+    .workflow-steps .completed .step-number {
+        background: #48bb78;
+        color: white;
+    }
+
+    .confirmation-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Preview Panel */
+    .preview-panel {
+        background: #f7f7f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .preview-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .preview-item {
+        background: white;
+        padding: 1rem;
+        border-radius: 4px;
+    }
+
+    .preview-label {
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+
+    .preview-value {
+        font-weight: 600;
+        color: #333;
+        font-family: monospace;
+    }
+
+    /* Status Messages */
+    .status-banner {
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .status-banner.success {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+    }
+
+    .status-banner.error {
+        background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+        color: white;
+    }
+
+    .status-banner.pending {
+        background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        color: white;
+    }
+
+    .status-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .status-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .status-message {
+        font-size: 1rem;
+        opacity: 0.95;
+    }
+
+    /* Generated Objects */
+    .generated-objects {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .generated-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .generated-icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        margin-right: 0.5rem;
+        color: #48bb78;
+    }
+
+    .generated-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .generated-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f7f7f9;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+    }
+
+    .generated-item:hover {
+        background: #edf2f7;
+    }
+
+    .item-type {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        background: #667eea;
+        color: white;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-right: 1rem;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .item-id {
+        font-family: monospace;
+        color: #333;
+        flex: 1;
+    }
+
+    .item-action {
+        margin-left: 1rem;
+    }
+
+    .btn-small {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        background: #edf2f7;
+        color: #4a5568;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-small:hover {
+        background: #cbd5e0;
+    }
+
+    /* Action Buttons */
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #5a67d8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-success {
+        background: #48bb78;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #38a169;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+    }
+
+    .btn-secondary {
+        background: #e2e8f0;
+        color: #4a5568;
+        margin-right: 1rem;
+    }
+
+    .btn-secondary:hover {
+        background: #cbd5e0;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    /* Loading State */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+    .loading-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .spinner {
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        font-size: 1.125rem;
+        color: #333;
+    }
+
+    /* Error Details */
+    .error-details {
+        background: #fff5f5;
+        border: 1px solid #feb2b2;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: #742a2a;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    /* Copy Button */
+    .copy-button {
+        position: relative;
+        cursor: pointer;
+        margin-left: 0.5rem;
+        color: #718096;
+    }
+
+    .copy-button:hover {
+        color: #4a5568;
+    }
+
+    .copy-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+    }
+
+    .copy-tooltip.show {
+        opacity: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="workflow-header">
+        <h1>Output Layer Mapping Workflow</h1>
+        <p>Create non-reference combinations and mappings for output layers</p>
+    </div>
+
+    <ul class="workflow-steps">
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Select Table</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Define Breakdowns</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Edit Mappings</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Review & Name</div>
+        </li>
+        <li class="active">
+            <span class="step-number">5</span>
+            <div>Generate</div>
+        </li>
+    </ul>
+
+    <div class="confirmation-container">
+        {% if preview %}
+        <!-- Preview Mode -->
+        <h2>Step 5: Generate Structures</h2>
+        <p>Review the structures that will be created and confirm generation.</p>
+
+        <div class="preview-panel">
+            <div class="preview-title">Mapping Configuration</div>
+            <div class="preview-grid">
+                <div class="preview-item">
+                    <div class="preview-label">Mapping Name</div>
+                    <div class="preview-value">{{ mapping_name }}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Internal ID</div>
+                    <div class="preview-value">{{ internal_id }}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Table</div>
+                    <div class="preview-value">{{ table_code }}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Framework</div>
+                    <div class="preview-value">{{ framework }}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Version</div>
+                    <div class="preview-value">{{ version }}</div>
+                </div>
+            </div>
+            {% if mapping_description %}
+            <div style="margin-top: 1rem;">
+                <div class="preview-label">Description</div>
+                <div>{{ mapping_description }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="generated-objects">
+            <div class="generated-title">
+                <span class="generated-icon">📦</span>
+                Objects to be Generated
+            </div>
+            <ul class="generated-list">
+                <li class="generated-item">
+                    <span class="item-type">Variable Map</span>
+                    <span class="item-id">{{ internal_id }}_VAR_MAP_[timestamp]</span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Member Map</span>
+                    <span class="item-id">{{ internal_id }}_MEM_MAP_[timestamp]</span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Mapping Def</span>
+                    <span class="item-id">{{ internal_id }}_MAP_DEF_[timestamp]</span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Structure</span>
+                    <span class="item-id">{{ table_code }}_REF_STRUCTURE_[timestamp]</span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Cube</span>
+                    <span class="item-id">{{ table_code }}_REF_CUBE_[timestamp]</span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Combinations</span>
+                    <span class="item-id">Non-reference combinations for all cells</span>
+                </li>
+            </ul>
+        </div>
+
+        <form method="post" id="generateForm">
+            {% csrf_token %}
+            <input type="hidden" name="confirm" value="true">
+
+            <div class="form-actions">
+                <div>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step4' %}'">
+                        ← Back
+                    </button>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-success" id="confirmButton">
+                        Confirm and Generate
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        {% elif success %}
+        <!-- Success State -->
+        <div class="status-banner success">
+            <div class="status-icon">✓</div>
+            <div class="status-title">Successfully Generated!</div>
+            <div class="status-message">Your output layer mapping has been created successfully.</div>
+        </div>
+
+        <div class="generated-objects">
+            <div class="generated-title">
+                <span class="generated-icon">✓</span>
+                Generated Objects
+            </div>
+            <ul class="generated-list">
+                <li class="generated-item">
+                    <span class="item-type">Variable Map</span>
+                    <span class="item-id">
+                        {{ generated.variable_mapping_id }}
+                        <span class="copy-button" onclick="copyToClipboard('{{ generated.variable_mapping_id }}')">
+                            📋
+                            <span class="copy-tooltip">Copied!</span>
+                        </span>
+                    </span>
+                    <span class="item-action">
+                        <button class="btn-small" onclick="viewObject('variable_mapping', '{{ generated.variable_mapping_id }}')">
+                            View
+                        </button>
+                    </span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Mapping Def</span>
+                    <span class="item-id">
+                        {{ generated.mapping_definition_id }}
+                        <span class="copy-button" onclick="copyToClipboard('{{ generated.mapping_definition_id }}')">
+                            📋
+                            <span class="copy-tooltip">Copied!</span>
+                        </span>
+                    </span>
+                    <span class="item-action">
+                        <button class="btn-small" onclick="viewObject('mapping_definition', '{{ generated.mapping_definition_id }}')">
+                            View
+                        </button>
+                    </span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Structure</span>
+                    <span class="item-id">
+                        {{ generated.cube_structure_id }}
+                        <span class="copy-button" onclick="copyToClipboard('{{ generated.cube_structure_id }}')">
+                            📋
+                            <span class="copy-tooltip">Copied!</span>
+                        </span>
+                    </span>
+                    <span class="item-action">
+                        <button class="btn-small" onclick="viewObject('cube_structure', '{{ generated.cube_structure_id }}')">
+                            View
+                        </button>
+                    </span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Cube</span>
+                    <span class="item-id">
+                        {{ generated.cube_id }}
+                        <span class="copy-button" onclick="copyToClipboard('{{ generated.cube_id }}')">
+                            📋
+                            <span class="copy-tooltip">Copied!</span>
+                        </span>
+                    </span>
+                    <span class="item-action">
+                        <button class="btn-small" onclick="viewObject('cube', '{{ generated.cube_id }}')">
+                            View
+                        </button>
+                    </span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Combinations</span>
+                    <span class="item-id">{{ generated.combinations_created }} combinations created</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="form-actions">
+            <div>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
+                    Create Another Mapping
+                </button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" onclick="window.location.href='/workflow/dashboard'">
+                    Go to Dashboard
+                </button>
+            </div>
+        </div>
+
+        {% else %}
+        <!-- Error State -->
+        <div class="status-banner error">
+            <div class="status-icon">✗</div>
+            <div class="status-title">Generation Failed</div>
+            <div class="status-message">An error occurred while generating the structures.</div>
+        </div>
+
+        <div class="error-details">
+            {{ error }}
+        </div>
+
+        <div class="form-actions">
+            <div>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step4' %}'">
+                    ← Back to Review
+                </button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" onclick="window.location.reload()">
+                    Retry Generation
+                </button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <div class="loading-text">Generating structures...</div>
+    </div>
+</div>
+
+<script>
+    // Show loading overlay when form is submitted
+    document.getElementById('generateForm')?.addEventListener('submit', function() {
+        document.getElementById('loadingOverlay').classList.add('active');
+    });
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            // Show tooltip
+            event.target.nextElementSibling.classList.add('show');
+            setTimeout(() => {
+                event.target.nextElementSibling.classList.remove('show');
+            }, 2000);
+        });
+    }
+
+    function viewObject(type, id) {
+        // Map object types to their view URLs
+        const urlMap = {
+            'variable_mapping': '/edit_variable_mappings/',
+            'mapping_definition': '/edit_mapping_definitions/',
+            'cube_structure': '/edit_cube_structures/',
+            'cube': '/edit_cubes/'
+        };
+
+        const url = urlMap[type];
+        if (url) {
+            // Open in new tab
+            window.open(url + '?search=' + encodeURIComponent(id), '_blank');
+        }
+    }
+</script>
+{% endblock %}

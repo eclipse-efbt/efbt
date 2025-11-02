@@ -25,7 +25,7 @@ All functions are exposed at the module level for backward compatibility.
 """
 
 # Import all utility functions
-from .utils import (
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
     pascal_to_upper_snake,
     read_csv_to_dict,
     dict_list_to_structured_array,
@@ -43,6 +43,7 @@ from .frameworks import map_frameworks
 from .domains import map_domains
 from .members import map_members
 from .dimensions import map_dimensions
+from .metrics import map_metrics
 from .tables import (
     map_tables,
     load_template_to_framework_mapping,
@@ -80,6 +81,7 @@ __all__ = [
     'map_domains',
     'map_members',
     'map_dimensions',
+    'map_metrics',
     'map_tables',
     'map_axis',
     'map_axis_ordinate',
