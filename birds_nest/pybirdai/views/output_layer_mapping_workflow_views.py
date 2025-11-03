@@ -44,16 +44,11 @@ def select_table_for_mapping(request):
         return redirect('pybirdai:output_layer_mapping_step1_5')
 
     # GET request - show selection form
+    # Only pass frameworks; versions and tables will be loaded via AJAX
     frameworks = FRAMEWORK.objects.all().order_by('framework_id')
-    tables = TABLE.objects.all().order_by('name')
-
-    # Get distinct versions from tables
-    versions = TABLE.objects.values_list('version', flat=True).distinct().order_by('version')
 
     context = {
         'frameworks': frameworks,
-        'versions': versions,
-        'tables': tables,
         'step': 1,
         'total_steps': 5
     }
@@ -110,7 +105,7 @@ def check_existing_mappings(request):
 
     # Get the actual mapping definitions
     existing_mappings = MAPPING_DEFINITION.objects.filter(
-        mapping_definition_id__in=mapping_to_cube_links
+        mapping_id__in=mapping_to_cube_links
     ).distinct().select_related('variable_mapping_id', 'member_mapping_id')
 
     if request.method == 'POST':
@@ -125,7 +120,7 @@ def check_existing_mappings(request):
                 return redirect('pybirdai:output_layer_mapping_step1_5')
 
             request.session['olmw_existing_mapping_id'] = existing_mapping_id
-            messages.success(request, f'Using existing mapping: {MAPPING_DEFINITION.objects.get(mapping_definition_id=existing_mapping_id).name}')
+            messages.success(request, f'Using existing mapping: {MAPPING_DEFINITION.objects.get(mapping_id=existing_mapping_id).name}')
             # Skip to confirmation
             return redirect('pybirdai:output_layer_mapping_step5')
 
@@ -140,12 +135,12 @@ def check_existing_mappings(request):
             # Load existing mapping data into session for modification
             _load_existing_mapping_to_session(request, existing_mapping_id)
             messages.info(request, 'Existing mapping loaded. You can now modify it.')
-            return redirect('pybirdai:output_layer_mapping_step2')
+            return redirect('pybirdai:output_layer_mapping_step2_5')
 
         else:  # mapping_mode == 'new'
             # User wants to create a completely new mapping
             messages.info(request, 'Creating new mapping from scratch.')
-            return redirect('pybirdai:output_layer_mapping_step2')
+            return redirect('pybirdai:output_layer_mapping_step2_5')
 
     # Prepare context for template
     mapping_details = []
@@ -185,7 +180,7 @@ def _load_existing_mapping_to_session(request, mapping_id):
     Helper function to load existing mapping data into session for modification.
     """
     try:
-        mapping = MAPPING_DEFINITION.objects.get(mapping_definition_id=mapping_id)
+        mapping = MAPPING_DEFINITION.objects.get(mapping_id=mapping_id)
 
         # Load variable mappings
         if mapping.variable_mapping_id:
@@ -212,9 +207,10 @@ def _load_existing_mapping_to_session(request, mapping_id):
 
 def define_variable_breakdown(request):
     """
-    Step 2: Allow user to define the breakdown of source variables.
+    Step 2.5: Allow user to define the breakdown of source variables.
     For each dimension in the selected table, show current domain/members
     and allow selection of source variables and transformation rules.
+    This step requires ordinates to be selected first (in Step 2).
     """
     # Check if we have table selection in session
     if 'olmw_table_id' not in request.session:
@@ -224,32 +220,64 @@ def define_variable_breakdown(request):
     table_id = request.session['olmw_table_id']
     table = TABLE.objects.get(table_id=table_id)
 
-    # Get table cells with their combinations
-    cells = TABLE_CELL.objects.filter(table_id=table).select_related()
+    # Check if ordinates have been selected (required from Step 2)
+    if 'olmw_selected_ordinates' not in request.session:
+        messages.warning(request, 'Please select ordinates first to determine which dimensions to map.')
+        return redirect('pybirdai:output_layer_mapping_step2_5')
 
-    # Get unique combinations from cells
-    combination_ids = cells.values_list('table_cell_combination_id', flat=True).distinct()
-    combinations = COMBINATION.objects.filter(combination_id__in=combination_ids)
+    selected_ordinates = request.session.get('olmw_selected_ordinates', [])
 
-    # Get unique variables from combination items
-    combination_items = COMBINATION_ITEM.objects.filter(
-        combination_id__in=combinations
-    ).select_related('variable_id', 'member_id', 'subdomain_id')
+    # If ordinates were selected, filter variables to only those from selected ordinates
+    if selected_ordinates:
+        from pybirdai.models.bird_meta_data_model import ORDINATE_ITEM
 
-    # Group by variable for display
-    variables = {}
-    for item in combination_items:
-        if item.variable_id:
-            var_id = item.variable_id.variable_id
-            if var_id not in variables:
-                variables[var_id] = {
-                    'variable': item.variable_id,
-                    'domain': item.variable_id.domain_id if hasattr(item.variable_id, 'domain_id') else None,
-                    'members': set(),
-                    'subdomain': item.subdomain_id
-                }
-            if item.member_id:
-                variables[var_id]['members'].add(item.member_id)
+        # Get variables directly from selected ordinates
+        ordinate_items = ORDINATE_ITEM.objects.filter(
+            axis_ordinate_id__in=selected_ordinates
+        ).select_related('variable_id', 'member_id')
+
+        # Build variables dict from ordinate items
+        variables = {}
+        for item in ordinate_items:
+            if item.variable_id:
+                var_id = item.variable_id.variable_id
+                if var_id not in variables:
+                    variables[var_id] = {
+                        'variable': item.variable_id,
+                        'domain': item.variable_id.domain_id if hasattr(item.variable_id, 'domain_id') else None,
+                        'members': set(),
+                        'subdomain': None  # ORDINATE_ITEM doesn't have subdomain_id
+                    }
+                if item.member_id:
+                    variables[var_id]['members'].add(item.member_id)
+    else:
+        # Fallback: Get all variables from table combinations (original behavior)
+        # Get table cells with their combinations
+        cells = TABLE_CELL.objects.filter(table_id=table).select_related()
+
+        # Get unique combinations from cells
+        combination_ids = cells.values_list('table_cell_combination_id', flat=True).distinct()
+        combinations = COMBINATION.objects.filter(combination_id__in=combination_ids)
+
+        # Get unique variables from combination items
+        combination_items = COMBINATION_ITEM.objects.filter(
+            combination_id__in=combinations
+        ).select_related('variable_id', 'member_id', 'subdomain_id')
+
+        # Group by variable for display
+        variables = {}
+        for item in combination_items:
+            if item.variable_id:
+                var_id = item.variable_id.variable_id
+                if var_id not in variables:
+                    variables[var_id] = {
+                        'variable': item.variable_id,
+                        'domain': item.variable_id.domain_id if hasattr(item.variable_id, 'domain_id') else None,
+                        'members': set(),
+                        'subdomain': item.subdomain_id
+                    }
+                if item.member_id:
+                    variables[var_id]['members'].add(item.member_id)
 
     if request.method == 'POST':
         # Store breakdown definitions in session
@@ -264,7 +292,39 @@ def define_variable_breakdown(request):
                 }
 
         request.session['olmw_breakdowns'] = json.dumps(breakdowns)
-        return redirect('pybirdai:output_layer_mapping_step2_5')
+
+        # Process and store variable groups
+        groups = {}
+        # Extract all group IDs from POST data
+        group_ids = set()
+        for key in request.POST.keys():
+            if key.startswith('group_') and key.endswith('_name'):
+                # Extract group ID from key like "group_1_name"
+                group_id = key.replace('_name', '')
+                group_ids.add(group_id)
+
+        # Build groups dictionary
+        for group_id in group_ids:
+            group_name = request.POST.get(f'{group_id}_name', '')
+            group_variables = request.POST.get(f'{group_id}_variables', '')
+            group_mapping_type = request.POST.get(f'{group_id}_mapping_type', 'many_to_one')
+            group_targets = request.POST.get(f'{group_id}_targets', '')
+
+            # Parse comma-separated lists
+            variable_ids = [v.strip() for v in group_variables.split(',') if v.strip()]
+            target_ids = [t.strip() for t in group_targets.split(',') if t.strip()]
+
+            if variable_ids:  # Only store non-empty groups
+                groups[group_id] = {
+                    'name': group_name,
+                    'variable_ids': variable_ids,
+                    'mapping_type': group_mapping_type,
+                    'targets': target_ids
+                }
+
+        request.session['olmw_variable_groups'] = json.dumps(groups)
+
+        return redirect('pybirdai:output_layer_mapping_step3')
 
     # GET request - show breakdown form
     # Get all variables for dropdown
@@ -287,7 +347,7 @@ def select_axis_ordinates(request):
     These ordinates will be used to filter which cells are processed.
     """
     from pybirdai.models.bird_meta_data_model import (
-        CELL_POSITION, AXIS_ORDINATE, ORDINATE_ITEM, AXIS
+        CELL_POSITION, AXIS_ORDINATE, AXIS
     )
 
     # Check if table was selected in previous step
@@ -315,35 +375,16 @@ def select_axis_ordinates(request):
     for cp in cell_positions:
         ordinate = cp.axis_ordinate_id
         if ordinate and ordinate.axis_ordinate_id not in ordinates_data:
-            # Get ordinate items to understand what this ordinate represents
-            ordinate_items = ORDINATE_ITEM.objects.filter(
-                axis_ordinate_id=ordinate
-            ).select_related('variable_id', 'member_id', 'subdomain_id')
-
-            # Prepare display information
-            variables = []
-            members = []
-            subdomains = []
-
-            for item in ordinate_items:
-                if item.variable_id:
-                    variables.append(item.variable_id.name)
-                if item.member_id:
-                    members.append(item.member_id.name)
-                if item.subdomain_id:
-                    subdomains.append(item.subdomain_id.name)
-
+            # Use the ordinate name directly instead of querying ORDINATE_ITEM
             ordinates_data[ordinate.axis_ordinate_id] = {
                 'ordinate': ordinate,
                 'axis': ordinate.axis_id,
                 'axis_name': ordinate.axis_id.name if ordinate.axis_id else 'Unknown',
                 'axis_orientation': ordinate.axis_id.orientation if ordinate.axis_id else 'Unknown',
-                'variables': ', '.join(variables) if variables else 'None',
-                'members': ', '.join(members) if members else 'None',
-                'subdomains': ', '.join(subdomains) if subdomains else 'None',
+                'name': ordinate.name or ordinate.axis_ordinate_id,
                 'is_abstract': ordinate.is_abstract_header,
-                'level': ordinate.level,
-                'order': ordinate.order,
+                'level': ordinate.level or 0,
+                'order': ordinate.order or 0,
                 'cell_count': 0,
                 'parent': ordinate.parent_axis_ordinate_id
             }
@@ -364,8 +405,8 @@ def select_axis_ordinates(request):
             request.session['olmw_selected_ordinates'] = selected_ordinates
             messages.success(request, f'Selected {len(selected_ordinates)} ordinate(s) for mapping.')
 
-        # Continue to Step 3
-        return redirect('pybirdai:output_layer_mapping_step3')
+        # Continue to Step 2 (Variable Breakdown)
+        return redirect('pybirdai:output_layer_mapping_step2')
 
     # Prepare data for template
     # Sort ordinates by axis orientation (row/column) and then by order
@@ -399,7 +440,154 @@ def select_axis_ordinates(request):
         'total_steps': 7  # Updated from 5 to 7
     }
 
+    # Generate embedded table HTML for visual selection
+    table_html = generate_table_html(table, ordinates_data)
+    context['embedded_table_html'] = table_html
+    context['has_table_preview'] = True
+
     return render(request, 'pybirdai/output_layer_mapping_workflow/step2_5_select_ordinates.html', context)
+
+
+def generate_table_html(table, ordinates_data):
+    """
+    Generate HTML representation of TABLE with selectable ordinates.
+    Creates an interactive table matching the actual table structure.
+    """
+    from pybirdai.models.bird_meta_data_model import (
+        TABLE_CELL, CELL_POSITION, AXIS_ORDINATE, AXIS
+    )
+
+    # Get all cells for this table
+    cells = TABLE_CELL.objects.filter(table_id=table).select_related()
+
+    # Build structure: (row_ordinate_id, col_ordinate_id) -> cell
+    cell_matrix = {}
+    row_ordinates_set = set()
+    col_ordinates_set = set()
+
+    for cell in cells:
+        positions = CELL_POSITION.objects.filter(cell_id=cell).select_related(
+            'axis_ordinate_id', 'axis_ordinate_id__axis_id'
+        )
+
+        row_ord_id = None
+        col_ord_id = None
+
+        for pos in positions:
+            if pos.axis_ordinate_id and pos.axis_ordinate_id.axis_id:
+                orientation = pos.axis_ordinate_id.axis_id.orientation
+                ord_id = pos.axis_ordinate_id.axis_ordinate_id
+
+                if orientation in ['Y', '2']:  # Row
+                    row_ord_id = ord_id
+                    row_ordinates_set.add(ord_id)
+                elif orientation in ['X', '1']:  # Column
+                    col_ord_id = ord_id
+                    col_ordinates_set.add(ord_id)
+
+        if row_ord_id and col_ord_id:
+            cell_matrix[(row_ord_id, col_ord_id)] = {
+                'cell': cell,
+                'is_shaded': cell.is_shaded,
+                'name': cell.name or ''
+            }
+
+    # Get ordered lists of ordinates
+    row_ordinates = []
+    col_ordinates = []
+
+    for ord_id, ord_data in ordinates_data.items():
+        orientation = ord_data.get('axis_orientation', '')
+        if orientation in ['Y', '2'] and ord_id in row_ordinates_set:
+            row_ordinates.append({
+                'id': ord_id,
+                'data': ord_data,
+                'order': ord_data.get('order', 0),
+                'level': ord_data.get('level', 0)
+            })
+        elif orientation in ['X', '1'] and ord_id in col_ordinates_set:
+            col_ordinates.append({
+                'id': ord_id,
+                'data': ord_data,
+                'order': ord_data.get('order', 0),
+                'level': ord_data.get('level', 0)
+            })
+
+    # Sort by level and order
+    row_ordinates.sort(key=lambda x: (x['level'], x['order']))
+    col_ordinates.sort(key=lambda x: (x['level'], x['order']))
+
+    # Generate HTML
+    html = ['<table class="embedded-table table-bordered">']
+
+    # Header row with column ordinates
+    html.append('<thead><tr>')
+    html.append('<th class="corner-cell">Select Ordinates</th>')  # Corner cell
+
+    for col_ord in col_ordinates:
+        name = col_ord['data'].get('name', 'N/A')
+
+        html.append(
+            f'<th class="col-header" data-ordinate-id="{col_ord["id"]}" '
+            f'title="Click to select this column\n{name}">'
+            f'{name}</th>'
+        )
+
+    html.append('</tr></thead>')
+
+    # Body rows
+    html.append('<tbody>')
+
+    for row_ord in row_ordinates:
+        html.append('<tr>')
+
+        # Row header
+        name = row_ord['data'].get('name', 'N/A')
+
+        # Add indentation for hierarchy
+        level = row_ord.get('level', 0)
+        indent_style = f'padding-left: {level * 20 + 8}px;' if level > 0 else ''
+
+        html.append(
+            f'<th class="row-header" data-ordinate-id="{row_ord["id"]}" '
+            f'style="{indent_style}" '
+            f'title="Click to select this row\n{name}">'
+            f'{name}</th>'
+        )
+
+        # Data cells
+        for col_ord in col_ordinates:
+            cell_key = (row_ord['id'], col_ord['id'])
+
+            if cell_key in cell_matrix:
+                cell_info = cell_matrix[cell_key]
+                cell_name = cell_info['name']
+                is_shaded = cell_info['is_shaded']
+
+                shade_class = 'cell-shaded' if is_shaded else ''
+                html.append(
+                    f'<td class="data-cell {shade_class}" '
+                    f'data-row-ordinate="{row_ord["id"]}" '
+                    f'data-col-ordinate="{col_ord["id"]}" '
+                    f'title="Cell: {cell_name}\nClick to select both ordinates">'
+                    f'<span class="cell-indicator">●</span></td>'
+                )
+            else:
+                # Empty cell - no data
+                html.append(
+                    f'<td class="data-cell cell-empty" '
+                    f'data-row-ordinate="{row_ord["id"]}" '
+                    f'data-col-ordinate="{col_ord["id"]}" '
+                    f'title="No data in this cell">'
+                    f'<span class="empty-indicator">—</span></td>'
+                )
+
+        html.append('</tr>')
+
+    html.append('</tbody>')
+    html.append('</table>')
+
+    return '\n'.join(html)
 
 
 def edit_mappings_tabbed(request):
@@ -966,3 +1154,142 @@ def get_variable_domain_api(request):
 
     except VARIABLE.DoesNotExist:
         return JsonResponse({'error': 'Variable not found'}, status=404)
+
+
+@require_http_methods(["GET"])
+def get_filter_options_api(request):
+    """
+    API endpoint for cascading filter options.
+    Returns frameworks, versions filtered by framework, or tables filtered by framework+version.
+
+    Query Parameters:
+    - framework_code: Optional. If provided, filters versions and tables by this framework.
+    - version: Optional. If provided (with framework_code), filters tables by both.
+
+    Returns:
+    - If no params: all frameworks
+    - If framework_code only: versions that have tables matching that framework
+    - If framework_code + version: tables matching both criteria
+    """
+    framework_code = request.GET.get('framework_code')
+    version = request.GET.get('version')
+
+    try:
+        # Case 1: No parameters - return all frameworks
+        if not framework_code:
+            frameworks = FRAMEWORK.objects.all().order_by('framework_id')
+            return JsonResponse({
+                'status': 'success',
+                'frameworks': [
+                    {
+                        'id': fw.framework_id,
+                        'name': fw.name,
+                        'code': fw.code
+                    }
+                    for fw in frameworks
+                ]
+            })
+
+        # Case 2: Framework provided - return filtered versions
+        if framework_code and not version:
+            # Get all tables that match the framework (case-insensitive string matching)
+            # Check if framework code appears in table_id or code
+            tables = TABLE.objects.filter(
+                models.Q(table_id__icontains=framework_code) |
+                models.Q(code__icontains=framework_code)
+            )
+
+            # Get distinct versions from matching tables
+            versions_list = tables.values_list('version', flat=True).distinct().order_by('version')
+            versions_list = [v for v in versions_list if v]  # Filter out None/empty values
+
+            return JsonResponse({
+                'status': 'success',
+                'versions': versions_list
+            })
+
+        # Case 3: Framework and version provided - return filtered tables
+        if framework_code and version:
+            # Filter tables by both framework (string matching) and version
+            tables = TABLE.objects.filter(
+                models.Q(table_id__icontains=framework_code) |
+                models.Q(code__icontains=framework_code),
+                version=version
+            ).order_by('name')
+
+            return JsonResponse({
+                'status': 'success',
+                'tables': [
+                    {
+                        'id': table.table_id,
+                        'code': table.code,
+                        'name': table.name,
+                        'version': table.version
+                    }
+                    for table in tables
+                ]
+            })
+
+        return JsonResponse({'error': 'Invalid parameters'}, status=400)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_domains(request):
+    """
+    API endpoint to get all domains for variable creation modal
+    """
+    try:
+        from pybirdai.models.bird_meta_data_model import DOMAIN
+        domains = DOMAIN.objects.all().values('domain_id', 'name')
+        return JsonResponse({'domains': list(domains)})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def create_variable(request):
+    """
+    API endpoint to create a new variable
+    """
+    if request.method == 'POST':
+        try:
+            from pybirdai.models.bird_meta_data_model import VARIABLE, DOMAIN
+            data = json.loads(request.body)
+
+            variable_id = data.get('variable_id')
+
+            # Check if variable already exists
+            if VARIABLE.objects.filter(variable_id=variable_id).exists():
+                return JsonResponse({'success': False, 'error': 'Variable ID already exists'})
+
+            # Create variable
+            variable = VARIABLE()
+            variable.variable_id = variable_id
+            variable.name = data.get('name')
+            variable.code = data.get('code', '')
+            variable.description = data.get('description', '')
+
+            # Set domain if provided
+            if data.get('domain_id'):
+                try:
+                    variable.domain_id = DOMAIN.objects.get(domain_id=data['domain_id'])
+                except DOMAIN.DoesNotExist:
+                    return JsonResponse({'success': False, 'error': 'Domain not found'})
+
+            variable.save()
+
+            return JsonResponse({
+                'success': True,
+                'variable': {
+                    'variable_id': variable.variable_id,
+                    'name': variable.name,
+                    'code': variable.code,
+                    'description': variable.description
+                }
+            })
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)

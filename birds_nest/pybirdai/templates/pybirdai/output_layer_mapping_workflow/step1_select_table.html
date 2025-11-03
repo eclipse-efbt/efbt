@@ -6,7 +6,7 @@
 {% block extra_css %}
 <style>
     .workflow-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #0d6efd;
         color: white;
         padding: 2rem;
         border-radius: 8px;
@@ -51,7 +51,7 @@
     }
 
     .workflow-steps .active .step-number {
-        background: #667eea;
+        background: #0d6efd;
         color: white;
     }
 
@@ -88,8 +88,8 @@
 
     .form-control:focus {
         outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
     }
 
     .table-preview {
@@ -136,14 +136,14 @@
     }
 
     .btn-primary {
-        background: #667eea;
+        background: #0d6efd;
         color: white;
     }
 
     .btn-primary:hover {
-        background: #5a67d8;
+        background: #0b5ed7;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
     }
 
     .btn-secondary {
@@ -229,18 +229,15 @@
 
             <div class="form-group">
                 <label for="version">Version:</label>
-                <select name="version" id="version" class="form-control" required>
-                    <option value="">-- Select Version --</option>
-                    {% for ver in versions %}
-                    <option value="{{ ver }}">{{ ver }}</option>
-                    {% endfor %}
+                <select name="version" id="version" class="form-control" required disabled>
+                    <option value="">-- Select Framework First --</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="table_code">Table:</label>
-                <select name="table_code" id="table_code" class="form-control" required>
-                    <option value="">-- Select Table --</option>
+                <select name="table_code" id="table_code" class="form-control" required disabled>
+                    <option value="">-- Select Version First --</option>
                 </select>
                 <input type="hidden" name="table_id" id="table_id">
             </div>
@@ -287,56 +284,127 @@
 </div>
 
 <script>
-    // Filter tables based on framework and version
-    const allTables = [
-        {% for table in tables %}
-        {
-            id: "{{ table.table_id }}",
-            code: "{{ table.code }}",
-            name: "{{ table.name }}",
-            version: "{{ table.version|default:'' }}"
-        },
-        {% endfor %}
-    ];
-
-    document.getElementById('framework').addEventListener('change', filterTables);
-    document.getElementById('version').addEventListener('change', filterTables);
+    // Event listeners for cascading dropdowns
+    document.getElementById('framework').addEventListener('change', onFrameworkChange);
+    document.getElementById('version').addEventListener('change', onVersionChange);
     document.getElementById('table_code').addEventListener('change', onTableSelect);
 
-    function filterTables() {
-        const framework = document.getElementById('framework').value;
-        const version = document.getElementById('version').value;
+    /**
+     * Handle framework selection change
+     * Loads versions filtered by the selected framework
+     */
+    function onFrameworkChange() {
+        const frameworkSelect = document.getElementById('framework');
+        const versionSelect = document.getElementById('version');
         const tableSelect = document.getElementById('table_code');
+        const framework = frameworkSelect.value;
 
-        // Clear current options
+        // Clear and disable dependent dropdowns
+        versionSelect.innerHTML = '<option value="">-- Select Version --</option>';
+        versionSelect.disabled = true;
         tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
+        tableSelect.disabled = true;
+
+        // Hide preview and disable next button
+        document.getElementById('tablePreview').style.display = 'none';
+        document.getElementById('nextButton').disabled = true;
+
+        if (!framework) {
+            return;
+        }
+
+        // Show loading state
+        versionSelect.innerHTML = '<option value="">Loading versions...</option>';
+
+        // Fetch versions for the selected framework
+        const frameworkCode = framework; // Use the framework_id as the code for filtering
+        fetch(`/pybirdai/api/output-layer-mapping/filter-options/?framework_code=${encodeURIComponent(frameworkCode)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.versions) {
+                    versionSelect.innerHTML = '<option value="">-- Select Version --</option>';
+
+                    if (data.versions.length === 0) {
+                        versionSelect.innerHTML = '<option value="">No versions found</option>';
+                    } else {
+                        data.versions.forEach(version => {
+                            const option = document.createElement('option');
+                            option.value = version;
+                            option.textContent = version;
+                            versionSelect.appendChild(option);
+                        });
+                        versionSelect.disabled = false;
+                    }
+                } else {
+                    versionSelect.innerHTML = '<option value="">Error loading versions</option>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading versions:', error);
+                versionSelect.innerHTML = '<option value="">Error loading versions</option>';
+            });
+    }
+
+    /**
+     * Handle version selection change
+     * Loads tables filtered by framework and version
+     */
+    function onVersionChange() {
+        const frameworkSelect = document.getElementById('framework');
+        const versionSelect = document.getElementById('version');
+        const tableSelect = document.getElementById('table_code');
+        const framework = frameworkSelect.value;
+        const version = versionSelect.value;
+
+        // Clear and disable table dropdown
+        tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
+        tableSelect.disabled = true;
+
+        // Hide preview and disable next button
+        document.getElementById('tablePreview').style.display = 'none';
+        document.getElementById('nextButton').disabled = true;
 
         if (!framework || !version) {
             return;
         }
 
-        // Filter and add matching tables
-        const filteredTables = allTables.filter(table => {
-            // You may need to adjust this filtering logic based on your data
-            return !table.version || table.version === version;
-        });
+        // Show loading state
+        tableSelect.innerHTML = '<option value="">Loading tables...</option>';
 
-        filteredTables.forEach(table => {
-            const option = document.createElement('option');
-            option.value = table.code;
-            option.dataset.tableId = table.id;
-            option.textContent = `${table.code} - ${table.name}`;
-            tableSelect.appendChild(option);
-        });
+        // Fetch tables for the selected framework and version
+        const frameworkCode = framework;
+        fetch(`/pybirdai/api/output-layer-mapping/filter-options/?framework_code=${encodeURIComponent(frameworkCode)}&version=${encodeURIComponent(version)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.tables) {
+                    tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
 
-        if (filteredTables.length === 0) {
-            const option = document.createElement('option');
-            option.value = "";
-            option.textContent = "No tables found for this framework/version";
-            tableSelect.appendChild(option);
-        }
+                    if (data.tables.length === 0) {
+                        tableSelect.innerHTML = '<option value="">No tables found</option>';
+                    } else {
+                        data.tables.forEach(table => {
+                            const option = document.createElement('option');
+                            option.value = table.code;
+                            option.dataset.tableId = table.id;
+                            option.textContent = `${table.code} - ${table.name}`;
+                            tableSelect.appendChild(option);
+                        });
+                        tableSelect.disabled = false;
+                    }
+                } else {
+                    tableSelect.innerHTML = '<option value="">Error loading tables</option>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading tables:', error);
+                tableSelect.innerHTML = '<option value="">Error loading tables</option>';
+            });
     }
 
+    /**
+     * Handle table selection change
+     * Loads table preview and enables next button
+     */
     function onTableSelect() {
         const tableSelect = document.getElementById('table_code');
         const selectedOption = tableSelect.options[tableSelect.selectedIndex];
@@ -358,13 +426,16 @@
         loadTablePreview(tableId);
     }
 
+    /**
+     * Load and display table preview
+     */
     function loadTablePreview(tableId) {
         const preview = document.getElementById('tablePreview');
         const spinner = document.querySelector('.loading-spinner');
 
         spinner.classList.add('active');
 
-        fetch(`/api/output-layer-mapping/table-cells/?table_id=${tableId}`)
+        fetch(`/pybirdai/api/output-layer-mapping/table-cells/?table_id=${encodeURIComponent(tableId)}`)
             .then(response => response.json())
             .then(data => {
                 if (data.table) {
@@ -380,13 +451,16 @@
             })
             .catch(error => {
                 console.error('Error loading table preview:', error);
+                alert('Error loading table preview. Please try again.');
             })
             .finally(() => {
                 spinner.classList.remove('active');
             });
     }
 
-    // Form validation
+    /**
+     * Form validation before submission
+     */
     document.getElementById('tableSelectionForm').addEventListener('submit', function(e) {
         const framework = document.getElementById('framework').value;
         const version = document.getElementById('version').value;

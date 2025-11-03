@@ -468,4 +468,7 @@ urlpatterns = [
     # Output Layer Mapping API endpoints
     path("api/output-layer-mapping/table-cells/", output_layer_mapping_workflow_views.get_table_cells_api, name="olm_get_table_cells_api"),
     path("api/output-layer-mapping/variable-domain/", output_layer_mapping_workflow_views.get_variable_domain_api, name="olm_get_variable_domain_api"),
+    path("api/output-layer-mapping/filter-options/", output_layer_mapping_workflow_views.get_filter_options_api, name="olm_filter_options_api"),
+    path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
+    path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
 ]

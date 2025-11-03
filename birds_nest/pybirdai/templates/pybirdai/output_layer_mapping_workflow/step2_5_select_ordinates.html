@@ -6,7 +6,7 @@
 {% block extra_css %}
 <style>
     .workflow-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #0d6efd;
         color: white;
         padding: 2rem;
         border-radius: 8px;
@@ -51,7 +51,7 @@
     }
 
     .workflow-steps .active .step-number {
-        background: #667eea;
+        background: #0d6efd;
         color: white;
     }
 
@@ -78,7 +78,7 @@
     .summary-value {
         font-size: 2rem;
         font-weight: bold;
-        color: #667eea;
+        color: #0d6efd;
         margin-bottom: 0.5rem;
     }
 
@@ -137,12 +137,12 @@
     }
 
     .ordinate-item:hover {
-        border-color: #667eea;
+        border-color: #0d6efd;
         background: #f0f5ff;
     }
 
     .ordinate-item.selected {
-        border-color: #667eea;
+        border-color: #0d6efd;
         background: #f0f5ff;
     }
 
@@ -248,12 +248,12 @@
     }
 
     .btn-primary {
-        background: #667eea;
+        background: #0d6efd;
         color: white;
     }
 
     .btn-primary:hover {
-        background: #5a67d8;
+        background: #0b5ed7;
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
@@ -326,13 +326,251 @@
     .selected-count {
         position: fixed;
         bottom: 2rem;
-        right: 2rem;
-        background: #667eea;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #0d6efd;
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         z-index: 100;
+    }
+
+    /* Embedded Table Preview Styles */
+    .table-preview-section {
+        margin: 2rem 0;
+    }
+
+    .preview-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .table-preview-container {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 80vh;
+        min-height: 500px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .embedded-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .embedded-table th,
+    .embedded-table td {
+        border: 1px solid #ccc;
+        padding: 10px 12px;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+
+    .embedded-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        position: sticky;
+        z-index: 10;
+    }
+
+    .embedded-table thead th {
+        top: 0;
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .corner-cell {
+        background-color: #4c51bf !important;
+        color: white !important;
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: 20 !important;
+    }
+
+    .col-header {
+        cursor: pointer;
+        user-select: none;
+        min-width: 120px;
+    }
+
+    .col-header:hover {
+        background-color: #5568d3 !important;
+        transform: translateY(-2px);
+    }
+
+    .row-header {
+        background-color: #334155 !important;
+        color: white !important;
+        text-align: left;
+        cursor: pointer;
+        user-select: none;
+        position: sticky;
+        left: 0;
+        z-index: 5;
+        font-weight: 600;
+    }
+
+    .data-cell {
+        cursor: pointer;
+        user-select: none;
+        background-color: white;
+    }
+
+    .data-cell:hover {
+        background-color: #e9ecef;
+    }
+
+    .cell-indicator {
+        color: #28a745;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .cell-empty {
+        background-color: #f8f9fa;
+        background-image: linear-gradient(
+            45deg,
+            #e9ecef 25%,
+            transparent 25%,
+            transparent 75%,
+            #e9ecef 75%,
+            #e9ecef
+        ),
+        linear-gradient(
+            45deg,
+            #e9ecef 25%,
+            transparent 25%,
+            transparent 75%,
+            #e9ecef 75%,
+            #e9ecef
+        );
+        background-size: 10px 10px;
+        background-position: 0 0, 5px 5px;
+        cursor: not-allowed;
+    }
+
+    .empty-indicator {
+        color: #999;
+        font-size: 1rem;
+    }
+
+    .cell-shaded {
+        background-color: #fff3cd;
+    }
+
+    .cell-shaded .cell-indicator {
+        color: #856404;
+    }
+
+    /* Selection states */
+    .ordinate-selected {
+        background-color: #d4edda !important;
+        border: 2px solid #28a745 !important;
+        box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
+    }
+
+    .row-header.ordinate-selected,
+    .col-header.ordinate-selected {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+
+    .data-cell.cell-selected {
+        background-color: #d4edda !important;
+    }
+
+    .data-cell.cell-partial {
+        background-color: #fff3cd !important;
+    }
+
+    /* ========== HIERARCHY TREE VIEW STYLES ========== */
+
+    .hierarchy-visualizations {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Tree View */
+    .tree-view {
+        padding: 1rem;
+        background: #fafbfc;
+        border-radius: 6px;
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    .tree-node {
+        margin: 0.25rem 0;
+        user-select: none;
+    }
+
+    .tree-node-content {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    .tree-node-content:hover {
+        background: #f0f5ff;
+    }
+
+    .tree-node-content.selected {
+        background: #d4edda;
+        border-left: 3px solid #28a745;
+        font-weight: 600;
+    }
+
+    .tree-connector {
+        color: #cbd5e0;
+        margin-right: 0.5rem;
+    }
+
+    .expand-icon {
+        cursor: pointer;
+        user-select: none;
+        font-size: 0.9rem;
+        margin-right: 0.5rem;
+        display: inline-block;
+        width: 16px;
+        text-align: center;
+        color: #0d6efd;
+    }
+
+    .tree-children {
+        margin-left: 2rem;
+        border-left: 1px dashed #cbd5e0;
+        padding-left: 0.5rem;
+    }
+
+    .tree-children.collapsed {
+        display: none;
+    }
+
+    .axis-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .axis-section-title {
+        font-weight: 600;
+        color: #0d6efd;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        background: #f0f5ff;
+        border-radius: 4px;
     }
 </style>
 {% endblock %}
@@ -354,13 +592,13 @@
             <span class="step-number">1.5</span>
             <div>Check Existing</div>
         </li>
-        <li class="completed">
-            <span class="step-number">2</span>
-            <div>Variable Breakdown</div>
-        </li>
         <li class="active">
-            <span class="step-number">2.5</span>
+            <span class="step-number">2</span>
             <div>Select Ordinates</div>
+        </li>
+        <li>
+            <span class="step-number">2.5</span>
+            <div>Variable Breakdown</div>
         </li>
         <li>
             <span class="step-number">3</span>
@@ -398,7 +636,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h4>Select Axis Ordinates to Map</h4>
+            <h4>Step 2: Select Axis Ordinates to Map</h4>
         </div>
         <div class="card-body">
             <div class="alert alert-info">
@@ -408,119 +646,58 @@
                 Ordinates represent combinations of variables and members that position cells in the table structure.
             </div>
 
-            <!-- Filter Controls -->
-            <div class="filter-controls">
-                <h5>Filter Ordinates</h5>
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label class="filter-label">Search by Name</label>
-                        <input type="text" id="searchFilter" class="filter-input" placeholder="Type to filter...">
-                    </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Filter by Axis</label>
-                        <select id="axisFilter" class="filter-input">
-                            <option value="">All Axes</option>
-                            {% for axis_name, axis_group in axes_groups.items %}
-                            <option value="{{ axis_name }}">{{ axis_name }} ({{ axis_group.orientation }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Show Only</label>
-                        <select id="typeFilter" class="filter-input">
-                            <option value="">All Types</option>
-                            <option value="abstract">Abstract Headers</option>
-                            <option value="concrete">Concrete Values</option>
-                        </select>
-                    </div>
+            <!-- Hierarchical Tree Visualization -->
+            <div class="hierarchy-visualizations">
+                <h5 style="margin-bottom: 1rem;">🌳 Ordinate Hierarchy Tree</h5>
+                <div class="alert alert-success" style="margin-bottom: 1rem;">
+                    <strong>✨ Interactive Selection:</strong>
+                    Explore the hierarchical structure using the <code>path</code> field.
+                    Click on parent nodes to select all their children automatically!
+                    Ordinates ending with <code>_3</code> are pre-selected by default.
                 </div>
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-sm btn-outline" id="selectAllBtn">
-                        Select All Visible
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline" id="selectNoneBtn">
-                        Clear Selection
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline" id="invertSelectionBtn">
-                        Invert Selection
-                    </button>
+
+                <!-- Tree View -->
+                <div class="tree-view" id="treeViewContainer"></div>
+            </div>
+
+            {% if has_table_preview %}
+            <!-- Embedded Table Preview -->
+            <div class="table-preview-section">
+                <h5 class="preview-title">📊 Visual Table Preview - Click to Select Rows and Columns</h5>
+                <div class="alert alert-success">
+                    <strong>✨ Interactive Selection:</strong>
+                    Click on <strong>row headers</strong> or <strong>column headers</strong> to select ordinates.
+                    Cells with ● contain data, cells with — are empty.
+                    Click cells to select both row and column ordinates.
+                </div>
+                <div class="table-preview-container">
+                    {{ embedded_table_html|safe }}
                 </div>
             </div>
+            {% endif %}
 
             <form method="post" id="ordinatesForm">
                 {% csrf_token %}
 
-                {% for axis_name, axis_group in axes_groups.items %}
-                <div class="axis-group" data-axis="{{ axis_name }}">
-                    <div class="axis-header">
-                        <div class="axis-title">
-                            {{ axis_name }}
-                            <span class="axis-badge">{{ axis_group.orientation }}</span>
-                        </div>
-                        <div>
-                            <span class="selected-in-group">0</span> / {{ axis_group.ordinates|length }} selected
-                        </div>
-                    </div>
-                    <div class="ordinates-list">
+                <!-- Hidden checkboxes for form submission -->
+                <div id="hiddenCheckboxes" style="display: none;">
+                    {% for axis_name, axis_group in axes_groups.items %}
                         {% for ordinate_data in axis_group.ordinates %}
-                        <div class="ordinate-item"
-                             data-ordinate-id="{{ ordinate_data.ordinate.axis_ordinate_id }}"
-                             data-abstract="{{ ordinate_data.is_abstract|lower }}"
-                             data-name="{{ ordinate_data.ordinate.name|lower }}">
-                            <div class="ordinate-checkbox">
-                                <input type="checkbox"
-                                       name="selected_ordinates"
-                                       value="{{ ordinate_data.ordinate.axis_ordinate_id }}"
-                                       id="ord_{{ ordinate_data.ordinate.axis_ordinate_id }}"
-                                       class="ordinate-check">
-                                <div class="ordinate-details">
-                                    <label for="ord_{{ ordinate_data.ordinate.axis_ordinate_id }}" class="ordinate-name">
-                                        {{ ordinate_data.ordinate.name|default:"Unnamed Ordinate" }}
-                                        {% if ordinate_data.is_abstract %}
-                                        <span class="badge badge-abstract">Abstract</span>
-                                        {% endif %}
-                                        {% if ordinate_data.level %}
-                                        <span class="badge badge-level">Level {{ ordinate_data.level }}</span>
-                                        {% endif %}
-                                    </label>
-                                    <div class="ordinate-info">
-                                        {% if ordinate_data.variables != 'None' %}
-                                        <div class="ordinate-info-item">
-                                            <span class="info-label">Variables</span>
-                                            <span class="info-value">{{ ordinate_data.variables }}</span>
-                                        </div>
-                                        {% endif %}
-                                        {% if ordinate_data.members != 'None' %}
-                                        <div class="ordinate-info-item">
-                                            <span class="info-label">Members</span>
-                                            <span class="info-value">{{ ordinate_data.members }}</span>
-                                        </div>
-                                        {% endif %}
-                                        {% if ordinate_data.subdomains != 'None' %}
-                                        <div class="ordinate-info-item">
-                                            <span class="info-label">Subdomains</span>
-                                            <span class="info-value">{{ ordinate_data.subdomains }}</span>
-                                        </div>
-                                        {% endif %}
-                                        <div class="ordinate-info-item">
-                                            <span class="info-label">Cells</span>
-                                            <span class="info-value">{{ ordinate_data.cell_count }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            <input type="checkbox"
+                                   name="selected_ordinates"
+                                   value="{{ ordinate_data.ordinate.axis_ordinate_id }}"
+                                   id="ord_{{ ordinate_data.ordinate.axis_ordinate_id }}"
+                                   class="ordinate-check">
                         {% endfor %}
-                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
 
-                <div class="form-actions">
-                    <a href="{% url 'pybirdai:output_layer_mapping_step2' %}" class="btn btn-secondary">
-                        ← Back to Variable Breakdown
+                <div class="form-actions" style="margin-top: 2rem;">
+                    <a href="{% url 'pybirdai:output_layer_mapping_step1_5' %}" class="btn btn-secondary">
+                        ← Back
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        Continue to Edit Mappings →
+                        Continue to Variable Breakdown →
                     </button>
                 </div>
             </form>
@@ -538,20 +715,12 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const checkboxes = document.querySelectorAll('.ordinate-check');
-        const selectedCountEl = document.getElementById('selectedCount');
         const floatingCounter = document.getElementById('floatingCounter');
         const floatingCount = document.getElementById('floatingCount');
-        const searchFilter = document.getElementById('searchFilter');
-        const axisFilter = document.getElementById('axisFilter');
-        const typeFilter = document.getElementById('typeFilter');
-        const selectAllBtn = document.getElementById('selectAllBtn');
-        const selectNoneBtn = document.getElementById('selectNoneBtn');
-        const invertSelectionBtn = document.getElementById('invertSelectionBtn');
 
         // Update selected count
         function updateSelectedCount() {
             const selected = document.querySelectorAll('.ordinate-check:checked').length;
-            selectedCountEl.textContent = selected;
             floatingCount.textContent = selected;
 
             if (selected > 0) {
@@ -559,122 +728,388 @@
             } else {
                 floatingCounter.style.display = 'none';
             }
-
-            // Update group counts
-            document.querySelectorAll('.axis-group').forEach(group => {
-                const groupSelected = group.querySelectorAll('.ordinate-check:checked').length;
-                const groupCounter = group.querySelector('.selected-in-group');
-                if (groupCounter) {
-                    groupCounter.textContent = groupSelected;
-                }
-            });
         }
-
-        // Handle ordinate item click
-        document.querySelectorAll('.ordinate-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                if (e.target.type !== 'checkbox') {
-                    const checkbox = this.querySelector('.ordinate-check');
-                    checkbox.checked = !checkbox.checked;
-                    this.classList.toggle('selected', checkbox.checked);
-                    updateSelectedCount();
-                }
-            });
-        });
-
-        // Handle checkbox change
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const item = this.closest('.ordinate-item');
-                item.classList.toggle('selected', this.checked);
-                updateSelectedCount();
-            });
-        });
-
-        // Filter functionality
-        function applyFilters() {
-            const searchTerm = searchFilter.value.toLowerCase();
-            const selectedAxis = axisFilter.value;
-            const selectedType = typeFilter.value;
-
-            document.querySelectorAll('.axis-group').forEach(group => {
-                const axisName = group.dataset.axis;
-                const shouldShowGroup = !selectedAxis || axisName === selectedAxis;
-                group.style.display = shouldShowGroup ? 'block' : 'none';
-
-                if (shouldShowGroup) {
-                    group.querySelectorAll('.ordinate-item').forEach(item => {
-                        const name = item.dataset.name || '';
-                        const isAbstract = item.dataset.abstract === 'true';
-
-                        let shouldShow = true;
-
-                        // Search filter
-                        if (searchTerm && !name.includes(searchTerm)) {
-                            shouldShow = false;
-                        }
-
-                        // Type filter
-                        if (selectedType) {
-                            if (selectedType === 'abstract' && !isAbstract) {
-                                shouldShow = false;
-                            } else if (selectedType === 'concrete' && isAbstract) {
-                                shouldShow = false;
-                            }
-                        }
-
-                        item.style.display = shouldShow ? 'block' : 'none';
-                    });
-                }
-            });
-        }
-
-        searchFilter.addEventListener('input', applyFilters);
-        axisFilter.addEventListener('change', applyFilters);
-        typeFilter.addEventListener('change', applyFilters);
-
-        // Select all visible
-        selectAllBtn.addEventListener('click', function() {
-            document.querySelectorAll('.ordinate-item').forEach(item => {
-                if (item.style.display !== 'none') {
-                    const checkbox = item.querySelector('.ordinate-check');
-                    checkbox.checked = true;
-                    item.classList.add('selected');
-                }
-            });
-            updateSelectedCount();
-        });
-
-        // Select none
-        selectNoneBtn.addEventListener('click', function() {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-                checkbox.closest('.ordinate-item').classList.remove('selected');
-            });
-            updateSelectedCount();
-        });
-
-        // Invert selection
-        invertSelectionBtn.addEventListener('click', function() {
-            document.querySelectorAll('.ordinate-item').forEach(item => {
-                if (item.style.display !== 'none') {
-                    const checkbox = item.querySelector('.ordinate-check');
-                    checkbox.checked = !checkbox.checked;
-                    item.classList.toggle('selected', checkbox.checked);
-                }
-            });
-            updateSelectedCount();
-        });
 
         // Initialize count on page load
         updateSelectedCount();
 
-        // Initialize selected state based on checkboxes
+        // ========== Embedded Table Interaction ==========
+
+        // Track selected ordinates from table clicks
+        const selectedOrdinates = new Set();
+
+        // Initialize from existing checkbox selections
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) {
-                checkbox.closest('.ordinate-item').classList.add('selected');
+                selectedOrdinates.add(checkbox.value);
             }
         });
+
+        // Function to toggle ordinate selection
+        function toggleOrdinateSelection(ordinateId) {
+            // Find corresponding checkbox
+            const checkbox = document.querySelector(`.ordinate-check[value="${ordinateId}"]`);
+            if (!checkbox) {
+                console.warn('Checkbox not found for ordinate:', ordinateId);
+                return;
+            }
+
+            // Toggle checkbox
+            checkbox.checked = !checkbox.checked;
+
+            // Update selected set
+            if (checkbox.checked) {
+                selectedOrdinates.add(ordinateId);
+            } else {
+                selectedOrdinates.delete(ordinateId);
+            }
+
+            // Update count
+            updateSelectedCount();
+
+            // Update table visual state
+            updateTableVisualState();
+        }
+
+        // Function to update table visual state
+        function updateTableVisualState() {
+            // Update row headers
+            document.querySelectorAll('.row-header').forEach(header => {
+                const ordinateId = header.dataset.ordinateId;
+                if (selectedOrdinates.has(ordinateId)) {
+                    header.classList.add('ordinate-selected');
+                } else {
+                    header.classList.remove('ordinate-selected');
+                }
+            });
+
+            // Update column headers
+            document.querySelectorAll('.col-header').forEach(header => {
+                const ordinateId = header.dataset.ordinateId;
+                if (selectedOrdinates.has(ordinateId)) {
+                    header.classList.add('ordinate-selected');
+                } else {
+                    header.classList.remove('ordinate-selected');
+                }
+            });
+
+            // Update cells based on row/column selection
+            document.querySelectorAll('.data-cell').forEach(cell => {
+                const rowOrd = cell.dataset.rowOrdinate;
+                const colOrd = cell.dataset.colOrdinate;
+                const rowSelected = selectedOrdinates.has(rowOrd);
+                const colSelected = selectedOrdinates.has(colOrd);
+
+                cell.classList.remove('cell-selected', 'cell-partial');
+
+                if (rowSelected && colSelected) {
+                    cell.classList.add('cell-selected');
+                } else if (rowSelected || colSelected) {
+                    cell.classList.add('cell-partial');
+                }
+            });
+        }
+
+        // Row header click - select entire row
+        document.querySelectorAll('.row-header').forEach(header => {
+            header.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const ordinateId = this.dataset.ordinateId;
+                toggleOrdinateSelection(ordinateId);
+            });
+        });
+
+        // Column header click - select entire column
+        document.querySelectorAll('.col-header').forEach(header => {
+            header.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const ordinateId = this.dataset.ordinateId;
+                toggleOrdinateSelection(ordinateId);
+            });
+        });
+
+        // Cell click - select both row and column ordinates
+        document.querySelectorAll('.data-cell:not(.cell-empty)').forEach(cell => {
+            cell.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const rowOrd = this.dataset.rowOrdinate;
+                const colOrd = this.dataset.colOrdinate;
+
+                // Only toggle if both ordinates exist
+                if (rowOrd && colOrd) {
+                    // If both are already selected, deselect both
+                    // Otherwise, select both
+                    const bothSelected = selectedOrdinates.has(rowOrd) && selectedOrdinates.has(colOrd);
+
+                    if (bothSelected) {
+                        toggleOrdinateSelection(rowOrd);
+                        toggleOrdinateSelection(colOrd);
+                    } else {
+                        if (!selectedOrdinates.has(rowOrd)) {
+                            toggleOrdinateSelection(rowOrd);
+                        }
+                        if (!selectedOrdinates.has(colOrd)) {
+                            toggleOrdinateSelection(colOrd);
+                        }
+                    }
+                }
+            });
+        });
+
+        // Sync checkbox changes to table
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const ordinateId = this.value;
+                if (this.checked) {
+                    selectedOrdinates.add(ordinateId);
+                } else {
+                    selectedOrdinates.delete(ordinateId);
+                }
+                updateTableVisualState();
+            });
+        });
+
+        // Initialize table visual state on load
+        updateTableVisualState();
+
+        // ========== HIERARCHY VISUALIZATIONS ==========
+
+        // Ordinate data from Django context
+        const ordinateData = {
+            {% for axis_name, axis_group in axes_groups.items %}
+                {% for ordinate_data in axis_group.ordinates %}
+                    '{{ ordinate_data.ordinate.axis_ordinate_id }}': {
+                        id: '{{ ordinate_data.ordinate.axis_ordinate_id }}',
+                        name: '{{ ordinate_data.name|escapejs }}',
+                        path: '{{ ordinate_data.ordinate.path|default:""|escapejs }}',
+                        level: {{ ordinate_data.level }},
+                        order: {{ ordinate_data.order }},
+                        axis_name: '{{ ordinate_data.axis_name|escapejs }}',
+                        parent_id: '{{ ordinate_data.parent.axis_ordinate_id|default:""|escapejs }}'
+                    },
+                {% endfor %}
+            {% endfor %}
+        };
+
+        // Build hierarchy tree from path field
+        function buildHierarchyTree() {
+            const tree = {};
+            const allNodes = {};
+
+            // First pass: Create all nodes and parse paths
+            Object.values(ordinateData).forEach(ord => {
+                const pathStr = ord.path || '';
+                const pathParts = pathStr.split('.').filter(p => p.trim() !== '');
+
+                allNodes[ord.id] = {
+                    ...ord,
+                    pathArray: pathParts,
+                    children: [],
+                    parent: null
+                };
+            });
+
+            // Second pass: Build parent-child relationships
+            Object.values(allNodes).forEach(node => {
+                const pathParts = node.pathArray;
+
+                if (pathParts.length === 0 || pathParts.length === 1) {
+                    // Root node
+                    tree[node.id] = node;
+                } else {
+                    // Child node - find parent
+                    const parentId = pathParts[pathParts.length - 2];
+                    if (allNodes[parentId]) {
+                        allNodes[parentId].children.push(node);
+                        node.parent = allNodes[parentId];
+                    } else {
+                        // Parent not found, treat as root
+                        tree[node.id] = node;
+                    }
+                }
+            });
+
+            return { tree, allNodes };
+        }
+
+        const { tree, allNodes } = buildHierarchyTree();
+
+        // Collapsed state tracking
+        const collapsedNodes = new Set();
+
+        // Function to get all descendant IDs
+        function getAllDescendants(nodeId) {
+            const descendants = [];
+            const node = allNodes[nodeId];
+
+            if (!node) return descendants;
+
+            function traverse(n) {
+                n.children.forEach(child => {
+                    descendants.push(child.id);
+                    traverse(child);
+                });
+            }
+
+            traverse(node);
+            return descendants;
+        }
+
+        // Function to toggle selection with cascade
+        function toggleOrdinateWithCascade(ordinateId) {
+            const checkbox = document.querySelector(`.ordinate-check[value="${ordinateId}"]`);
+            if (!checkbox) return;
+
+            const willBeChecked = !checkbox.checked;
+
+            // Toggle the ordinate itself
+            checkbox.checked = willBeChecked;
+            if (willBeChecked) {
+                selectedOrdinates.add(ordinateId);
+            } else {
+                selectedOrdinates.delete(ordinateId);
+            }
+
+            // Get all descendants and update them
+            const descendants = getAllDescendants(ordinateId);
+            descendants.forEach(descId => {
+                const descCheckbox = document.querySelector(`.ordinate-check[value="${descId}"]`);
+                if (descCheckbox) {
+                    descCheckbox.checked = willBeChecked;
+                    if (willBeChecked) {
+                        selectedOrdinates.add(descId);
+                    } else {
+                        selectedOrdinates.delete(descId);
+                    }
+                }
+            });
+
+            updateSelectedCount();
+            updateTableVisualState();
+            updateAllVisualizationStates();
+        }
+
+        // Update visual states for tree and table
+        function updateAllVisualizationStates() {
+            updateTreeViewState();
+            updateTableVisualState();
+        }
+
+        // ===== TREE VIEW =====
+        function renderTreeView() {
+            const container = document.getElementById('treeViewContainer');
+            if (!container) return;
+
+            const html = [];
+
+            // Group by axis
+            const axisGroups = {};
+            Object.values(allNodes).forEach(node => {
+                if (!axisGroups[node.axis_name]) {
+                    axisGroups[node.axis_name] = [];
+                }
+                axisGroups[node.axis_name].push(node);
+            });
+
+            Object.entries(axisGroups).forEach(([axisName, nodes]) => {
+                html.push(`<div class="axis-section">`);
+                html.push(`<div class="axis-section-title">📁 ${axisName}</div>`);
+
+                const rootNodes = nodes.filter(n => !n.parent || n.pathArray.length <= 1);
+                rootNodes.forEach(root => {
+                    renderTreeNode(root, html, 0);
+                });
+
+                html.push('</div>');
+            });
+
+            container.innerHTML = html.join('');
+        }
+
+        function renderTreeNode(node, html, depth) {
+            const hasChildren = node.children && node.children.length > 0;
+            const isCollapsed = collapsedNodes.has(node.id);
+            const connector = depth === 0 ? '' : '├─ ';
+            const expandIcon = hasChildren ? (isCollapsed ? '▶ ' : '▼ ') : '  ';
+
+            html.push(`
+                <div class="tree-node" style="margin-left: ${depth * 1.5}rem;">
+                    <div class="tree-node-content" data-ordinate-id="${node.id}"
+                         onclick="handleTreeNodeClick('${node.id}', ${hasChildren})">
+                        <span class="tree-connector">${connector}</span>
+                        <span class="expand-icon">${expandIcon}</span>
+                        <span>${node.name}</span>
+                    </div>
+                    ${hasChildren && !isCollapsed ? `<div class="tree-children" data-parent-id="${node.id}">` : ''}
+            `);
+
+            if (hasChildren && !isCollapsed) {
+                node.children.forEach(child => {
+                    renderTreeNode(child, html, depth + 1);
+                });
+                html.push('</div>');
+            }
+
+            html.push('</div>');
+        }
+
+        window.handleTreeNodeClick = function(ordinateId, hasChildren) {
+            if (hasChildren && event.target.classList.contains('expand-icon')) {
+                // Toggle collapse
+                if (collapsedNodes.has(ordinateId)) {
+                    collapsedNodes.delete(ordinateId);
+                } else {
+                    collapsedNodes.add(ordinateId);
+                }
+                renderTreeView();
+                updateTreeViewState();
+            } else {
+                // Toggle selection
+                toggleOrdinateWithCascade(ordinateId);
+            }
+        };
+
+        function updateTreeViewState() {
+            document.querySelectorAll('.tree-node-content[data-ordinate-id]').forEach(elem => {
+                const ordId = elem.dataset.ordinateId;
+                if (selectedOrdinates.has(ordId)) {
+                    elem.classList.add('selected');
+                } else {
+                    elem.classList.remove('selected');
+                }
+            });
+        }
+
+        // ===== DEFAULT SELECTION FOR '_3' ORDINATES =====
+        function selectDefaultOrdinates() {
+            console.log('Selecting default _3 ordinates...');
+            Object.values(ordinateData).forEach(ord => {
+                if (ord.id.endsWith('_3')) {
+                    console.log('Auto-selecting:', ord.id);
+                    const checkbox = document.querySelector(`.ordinate-check[value="${ord.id}"]`);
+                    if (checkbox && !checkbox.checked) {
+                        checkbox.checked = true;
+                        selectedOrdinates.add(ord.id);
+
+                        // Also select all descendants
+                        const descendants = getAllDescendants(ord.id);
+                        descendants.forEach(descId => {
+                            const descCheckbox = document.querySelector(`.ordinate-check[value="${descId}"]`);
+                            if (descCheckbox) {
+                                descCheckbox.checked = true;
+                                selectedOrdinates.add(descId);
+                            }
+                        });
+                    }
+                }
+            });
+            updateSelectedCount();
+        }
+
+        // Initialize tree view and set defaults
+        renderTreeView();
+        selectDefaultOrdinates();
+        updateAllVisualizationStates();
     });
 </script>
 {% endblock %}
