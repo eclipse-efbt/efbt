@@ -280,18 +280,14 @@ def define_variable_breakdown(request):
                     variables[var_id]['members'].add(item.member_id)
 
     if request.method == 'POST':
-        # Store breakdown definitions in session
-        breakdowns = {}
-        for var_id in variables:
-            source_var = request.POST.get(f'source_{var_id}')
-            transform_rule = request.POST.get(f'rule_{var_id}')
-            if source_var:
-                breakdowns[var_id] = {
-                    'source': source_var,
-                    'rule': transform_rule
-                }
-
-        request.session['olmw_breakdowns'] = json.dumps(breakdowns)
+        # ========== DEBUG: Log POST Data ==========
+        print("\n" + "="*80)
+        print("[STEP 2 DEBUG] POST Data Received:")
+        for key in sorted(request.POST.keys()):
+            if '_type' in key or '_name' in key:
+                print(f"  {key} = {request.POST.get(key)}")
+        print("="*80 + "\n")
+        # ========== END DEBUG ==========
 
         # Process and store variable groups
         groups = {}
@@ -309,6 +305,7 @@ def define_variable_breakdown(request):
             group_variables = request.POST.get(f'{group_id}_variables', '')
             group_mapping_type = request.POST.get(f'{group_id}_mapping_type', 'many_to_one')
             group_targets = request.POST.get(f'{group_id}_targets', '')
+            group_type = request.POST.get(f'{group_id}_type', None)  # Can be None, 'dimension', or 'measure'
 
             # Parse comma-separated lists
             variable_ids = [v.strip() for v in group_variables.split(',') if v.strip()]
@@ -319,8 +316,101 @@ def define_variable_breakdown(request):
                     'name': group_name,
                     'variable_ids': variable_ids,
                     'mapping_type': group_mapping_type,
-                    'targets': target_ids
+                    'targets': target_ids,
+                    'group_type': group_type  # None if not set, or 'dimension'/'measure'
                 }
+
+        # ========== DEBUG: Log Extracted Groups ==========
+        print(f"\n[STEP 2] Extracted {len(groups)} Groups:")
+        for group_id, group_data in groups.items():
+            group_type_display = group_data.get('group_type') or 'MISSING/NULL'
+            emoji = '✓' if group_data.get('group_type') else '✗'
+            print(f"  {emoji} {group_id}: '{group_data['name']}' -> group_type='{group_type_display}'")
+        print()
+        # ========== END DEBUG ==========
+
+        # Validate: Check for duplicate source variables across groups
+        all_variables = []
+        duplicate_vars = []
+        for group_id, group_data in groups.items():
+            for var_id in group_data['variable_ids']:
+                if var_id in all_variables:
+                    # Find which group already has this variable
+                    for other_group_id, other_group_data in groups.items():
+                        if other_group_id != group_id and var_id in other_group_data['variable_ids']:
+                            duplicate_vars.append({
+                                'var_id': var_id,
+                                'group1': other_group_data['name'],
+                                'group2': group_data['name']
+                            })
+                            break
+                else:
+                    all_variables.append(var_id)
+
+        if duplicate_vars:
+            # Build error message
+            error_details = []
+            for dup in duplicate_vars:
+                error_details.append(
+                    f"Variable '{dup['var_id']}' appears in both '{dup['group1']}' and '{dup['group2']}'"
+                )
+            error_message = "Error: The following variable(s) are selected in multiple groups: " + "; ".join(error_details)
+            messages.error(request, error_message)
+            # Re-render form with error (don't store invalid data)
+            all_variables = VARIABLE.objects.all().order_by('name')
+            target_variables = VARIABLE.objects.exclude(
+                variable_id__contains='EBA_'
+            ).exclude(
+                variable_id__regex=r'[a-z]'
+            ).order_by('name')
+            context = {
+                'table': table,
+                'variables': variables,
+                'all_variables': all_variables,
+                'target_variables': target_variables,
+                'step': 2,
+                'total_steps': 5
+            }
+            return render(request, 'pybirdai/output_layer_mapping_workflow/step2_variable_breakdown.html', context)
+
+        # ========== STRICT VALIDATION: ALL groups MUST have group_type set ==========
+        groups_missing_type = []
+        for group_id, group_data in groups.items():
+            if not group_data.get('group_type'):
+                groups_missing_type.append(group_data.get('name', group_id))
+
+        if groups_missing_type:
+            # Reject submission - user MUST select Dimension or Measure for ALL groups
+            error_message = (
+                f"❌ Cannot proceed to Step 3. The following variable group(s) are missing "
+                f"'Dimension' or 'Measure' selection: {', '.join(groups_missing_type)}. "
+                f"Please select either 'Dimension' or 'Measure' for each group before submitting."
+            )
+            messages.error(request, error_message)
+            print(f"\n[STEP 2 VALIDATION ERROR] {error_message}\n")
+
+            # Re-render form with error (don't store invalid data)
+            all_variables = VARIABLE.objects.all().order_by('name')
+            target_variables = VARIABLE.objects.exclude(
+                variable_id__contains='EBA_'
+            ).exclude(
+                variable_id__regex=r'[a-z]'
+            ).order_by('name')
+            context = {
+                'table': table,
+                'variables': variables,
+                'all_variables': all_variables,
+                'target_variables': target_variables,
+                'step': 2,
+                'total_steps': 5
+            }
+            return render(request, 'pybirdai/output_layer_mapping_workflow/step2_variable_breakdown.html', context)
+        # ========== END STRICT VALIDATION ==========
+
+        print(f"\n[STEP 2 SUCCESS] All {len(groups)} groups validated and saved to session.")
+        for group_id, group_data in groups.items():
+            print(f"  ✓ {group_data['name']}: {group_data['group_type']}")
+        print()
 
         request.session['olmw_variable_groups'] = json.dumps(groups)
 
@@ -330,10 +420,38 @@ def define_variable_breakdown(request):
     # Get all variables for dropdown
     all_variables = VARIABLE.objects.all().order_by('name')
 
+    # Get filtered target variables (uppercase only, no EBA_)
+    target_variables = VARIABLE.objects.exclude(
+        variable_id__contains='EBA_'
+    ).exclude(
+        variable_id__regex=r'[a-z]'
+    ).order_by('name')
+
+    # DEBUG: Log variable counts and sample IDs
+    print(f"[DEBUG] Step 2 Variable Breakdown - Variables in context: {len(variables)}")
+    print(f"[DEBUG] All variables count: {all_variables.count()}")
+    print(f"[DEBUG] Target variables (filtered) count: {target_variables.count()}")
+    if variables:
+        sample_var_ids = list(variables.keys())[:5]
+        print(f"[DEBUG] Sample variable IDs from context: {sample_var_ids}")
+    else:
+        print("[DEBUG] WARNING: No variables in context! Check if ordinates were selected.")
+    if all_variables.exists():
+        sample_all_vars = [v.variable_id for v in all_variables[:5]]
+        print(f"[DEBUG] Sample all_variables IDs: {sample_all_vars}")
+    else:
+        print("[DEBUG] WARNING: No variables in database!")
+    if target_variables.exists():
+        sample_target_vars = [v.variable_id for v in target_variables[:5]]
+        print(f"[DEBUG] Sample target_variables IDs: {sample_target_vars}")
+    else:
+        print("[DEBUG] WARNING: No target variables after filtering!")
+
     context = {
         'table': table,
         'variables': variables,
         'all_variables': all_variables,
+        'target_variables': target_variables,
         'step': 2,
         'total_steps': 5
     }
@@ -593,68 +711,99 @@ def generate_table_html(table, ordinates_data):
 def edit_mappings_tabbed(request):
     """
     Step 3: Tabbed interface for editing mappings.
-    Provides tabs for Dimensions, Measures, Filters, and Validation.
+    REWRITTEN FOR SIMPLICITY - No silent failures, clear error messages, bulletproof logic.
     """
-    # Check session
-    if 'olmw_table_id' not in request.session or 'olmw_breakdowns' not in request.session:
-        messages.error(request, 'Please complete previous steps first.')
+    # ========== 1. VALIDATE SESSION DATA ==========
+    if 'olmw_table_id' not in request.session or 'olmw_variable_groups' not in request.session:
+        messages.error(request, 'Session expired or invalid. Please start from Step 1.')
         return redirect('pybirdai:output_layer_mapping_step1')
 
     table_id = request.session['olmw_table_id']
     table = TABLE.objects.get(table_id=table_id)
-    breakdowns = json.loads(request.session['olmw_breakdowns'])
+    variable_groups = json.loads(request.session['olmw_variable_groups'])
 
-    # Filter by selected ordinates if any were selected
-    selected_ordinates = request.session.get('olmw_selected_ordinates', [])
-    if selected_ordinates:
-        from pybirdai.models.bird_meta_data_model import ORDINATE_ITEM
+    print(f"\n[STEP 3] Processing {len(variable_groups)} groups for table '{table.name}'")
 
-        # Get variables from selected ordinates
-        ordinate_items = ORDINATE_ITEM.objects.filter(
-            axis_ordinate_id__in=selected_ordinates
-        ).select_related('variable_id')
+    # ========== 2. STRICT VALIDATION - NO EXCEPTIONS ==========
+    # Step 2 should have already validated, but double-check here as a safety net
+    invalid_groups = [
+        g.get('name', gid)
+        for gid, g in variable_groups.items()
+        if not g.get('group_type') or g.get('group_type') not in ['dimension', 'measure']
+    ]
 
-        # Get unique variable IDs from selected ordinates
-        allowed_variable_ids = set(
-            str(item.variable_id.variable_id)
-            for item in ordinate_items
-            if item.variable_id
+    if invalid_groups:
+        error_msg = (
+            f"Data integrity error: {len(invalid_groups)} group(s) have invalid or missing type: "
+            f"{', '.join(invalid_groups)}. This should have been caught in Step 2. "
+            f"Please go back and resubmit Step 2."
         )
+        messages.error(request, error_msg)
+        print(f"[STEP 3 ERROR] {error_msg}")
+        return redirect('pybirdai:output_layer_mapping_step2')
 
-        # Filter breakdowns to only include allowed variables
-        filtered_breakdowns = {}
-        for var_id, breakdown in breakdowns.items():
-            if var_id in allowed_variable_ids:
-                filtered_breakdowns[var_id] = breakdown
-        breakdowns = filtered_breakdowns
-
-        # Add message to inform user about filtering
-        if len(filtered_breakdowns) < len(json.loads(request.session['olmw_breakdowns'])):
-            messages.info(request, f'Filtered to {len(filtered_breakdowns)} variables based on selected ordinates.')
-
-    # Prepare data for tabs
+    # ========== 3. SIMPLE CATEGORIZATION - NO COMPLEX FILTERING ==========
     dimension_mappings = []
     measure_mappings = []
-    filter_conditions = []
 
-    # Get variables and categorize them
-    for var_id, breakdown in breakdowns.items():
-        variable = VARIABLE.objects.get(variable_id=var_id)
+    for group_id, group_data in variable_groups.items():
+        group_name = group_data.get('name', group_id)
+        group_type = group_data['group_type']  # Guaranteed to exist by validation above
+        source_vars = group_data.get('variable_ids', [])
+        target_vars = group_data.get('targets', [])
+        mapping_type = group_data.get('mapping_type', 'many_to_one')
 
-        # Determine if dimension or measure based on variable properties
-        # This is a simplified logic - you may need to adjust based on actual business rules
-        if variable.variable_id.startswith('TYP_') or variable.variable_id.endswith('_ID'):
-            dimension_mappings.append({
-                'variable': variable,
-                'source': breakdown['source'],
-                'rule': breakdown.get('rule', 'DIRECT_MAP')
-            })
-        else:
-            measure_mappings.append({
-                'variable': variable,
-                'source': breakdown['source'],
-                'rule': breakdown.get('rule', 'SUM')
-            })
+        print(f"[STEP 3] Group '{group_name}': {group_type} | {len(source_vars)} sources → {len(target_vars)} targets")
+
+        # Skip groups with no targets (nothing to map)
+        if not target_vars:
+            print(f"[STEP 3] Skipping '{group_name}' - no target variables defined")
+            continue
+
+        # Create mapping entry for each target variable
+        for target_var_id in target_vars:
+            try:
+                variable = VARIABLE.objects.get(variable_id=target_var_id)
+
+                # Determine source representation based on mapping type
+                if mapping_type == 'one_to_one' and len(source_vars) == len(target_vars):
+                    # One-to-one: match by index
+                    target_index = target_vars.index(target_var_id)
+                    source_representation = source_vars[target_index] if target_index < len(source_vars) else ','.join(source_vars)
+                else:
+                    # Many-to-one: all sources map to this target
+                    source_representation = ','.join(source_vars)
+
+                # Build mapping entry
+                mapping_entry = {
+                    'variable': variable,
+                    'source': source_representation,
+                    'rule': 'DIRECT_MAP' if group_type == 'dimension' else 'SUM'
+                }
+
+                # Categorize by group_type (simple if/else, no complexity)
+                if group_type == 'dimension':
+                    dimension_mappings.append(mapping_entry)
+                elif group_type == 'measure':
+                    measure_mappings.append(mapping_entry)
+
+            except VARIABLE.DoesNotExist:
+                messages.warning(request, f"Variable '{target_var_id}' not found in database. Skipping.")
+                print(f"[STEP 3 WARNING] Variable '{target_var_id}' not found")
+
+    # ========== 4. FINAL VALIDATION ==========
+    print(f"[STEP 3] Result: {len(dimension_mappings)} dimensions, {len(measure_mappings)} measures")
+
+    if not dimension_mappings and not measure_mappings:
+        messages.warning(
+            request,
+            "No mappings were created. This usually means groups have no target variables defined. "
+            "Go back to Step 2 and ensure each group has at least one target variable selected."
+        )
+        print("[STEP 3 WARNING] No mappings created - check target variables in Step 2")
+
+    # ========== 5. HANDLE FORM SUBMISSION OR RENDER ==========
+    filter_conditions = []  # For template context
 
     if request.method == 'POST':
         # Save mapping definitions

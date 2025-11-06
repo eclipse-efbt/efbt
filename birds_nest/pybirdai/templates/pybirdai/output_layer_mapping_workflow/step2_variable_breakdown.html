@@ -848,6 +848,24 @@
                     </div>
                 </div>
 
+                <!-- No Variables Warning -->
+                {% if not variables %}
+                <div class="alert alert-warning" style="margin: 1rem; padding: 1rem; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                    <strong>⚠️ No Variables Available</strong>
+                    <p style="margin: 0.5rem 0 0 0;">
+                        No variables were found for this table. This usually means:
+                    </p>
+                    <ul style="margin: 0.5rem 0 0 1.5rem;">
+                        <li>Ordinates have not been selected in the previous step (Step 2.5)</li>
+                        <li>The selected ordinates do not contain any variables</li>
+                        <li>No table cells with combinations exist for this table</li>
+                    </ul>
+                    <p style="margin: 0.5rem 0 0 0;">
+                        <strong>Solution:</strong> Go back to <a href="{% url 'pybirdai:output_layer_mapping_step2_5' %}">Step 2.5</a> and select ordinates, or verify that the table has proper data.
+                    </p>
+                </div>
+                {% endif %}
+
                 <!-- Groups Container -->
                 <div id="groupsContainer" class="groups-container">
                     <!-- Group cards will be dynamically added here -->
@@ -918,7 +936,7 @@
 </div>
 
 <script>
-    // Inject variables data from Django template
+    // Inject SOURCE variables data from Django template (ordinate-filtered)
     const AVAILABLE_VARIABLES = {
         {% for var_id, var_data in variables.items %}
         "{{ var_id }}": {
@@ -928,21 +946,43 @@
         {% endfor %}
     };
 
-    // Create filtered list for target variables (exclude EBA_ variables)
-    const NON_EBA_VARIABLES = Object.fromEntries(
-        Object.entries(AVAILABLE_VARIABLES).filter(([varId, varData]) => !varId.includes('EBA_'))
-    );
+    // Inject TARGET variables data from Django template (backend-filtered: uppercase only, no EBA_)
+    const TARGET_VARIABLES = {
+        {% for var in target_variables %}
+        "{{ var.variable_id }}": {
+            id: "{{ var.variable_id }}",
+            name: "{{ var.name|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
 
-    // Convert to arrays for Selectize options
+    // Convert to arrays for Tom Select options
     const ALL_VARIABLES_ARRAY = Object.entries(AVAILABLE_VARIABLES).map(([varId, varData]) => ({
         value: varId,
         text: `${varId} - ${varData.name}`
     }));
 
-    const NON_EBA_VARIABLES_ARRAY = Object.entries(NON_EBA_VARIABLES).map(([varId, varData]) => ({
+    const TARGET_VARIABLES_ARRAY = Object.entries(TARGET_VARIABLES).map(([varId, varData]) => ({
         value: varId,
         text: `${varId} - ${varData.name}`
     }));
+
+    // DEBUG: Log variable arrays to console
+    console.log('[DEBUG] AVAILABLE_VARIABLES (source, ordinate-filtered) count:', Object.keys(AVAILABLE_VARIABLES).length);
+    console.log('[DEBUG] TARGET_VARIABLES (backend-filtered) count:', Object.keys(TARGET_VARIABLES).length);
+    console.log('[DEBUG] ALL_VARIABLES_ARRAY count:', ALL_VARIABLES_ARRAY.length);
+    console.log('[DEBUG] TARGET_VARIABLES_ARRAY count:', TARGET_VARIABLES_ARRAY.length);
+
+    if (Object.keys(AVAILABLE_VARIABLES).length === 0) {
+        console.warn('[DEBUG] WARNING: No source variables available! Check if ordinates were selected in previous steps.');
+    }
+    if (Object.keys(TARGET_VARIABLES).length === 0) {
+        console.warn('[DEBUG] WARNING: No target variables available after backend filtering!');
+    }
+
+    console.log('[DEBUG] Sample source variables:', Object.keys(AVAILABLE_VARIABLES).slice(0, 5));
+    console.log('[DEBUG] Sample target variables:', Object.keys(TARGET_VARIABLES).slice(0, 5));
+    console.log('[DEBUG] Sample TARGET_VARIABLES_ARRAY:', TARGET_VARIABLES_ARRAY.slice(0, 3));
 </script>
 
 <script>
@@ -1042,6 +1082,93 @@
 
     // ========== End Variable Mapping Indicator Functions ==========
 
+    // ========== Duplicate Prevention Functions ==========
+
+    /**
+     * Get all source variables that are currently selected across ALL groups
+     * @returns {Object} Map of variable ID to group ID
+     */
+    function getSelectedVariablesAcrossGroups() {
+        const selectedVars = {};
+
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            if (group.variable_ids && Array.isArray(group.variable_ids)) {
+                group.variable_ids.forEach(varId => {
+                    selectedVars[varId] = groupId;
+                });
+            }
+        });
+
+        return selectedVars;
+    }
+
+    /**
+     * Check if a variable is already selected in another group
+     * @param {string} varId - Variable ID to check
+     * @param {string} currentGroupId - ID of the current group
+     * @returns {string|null} Group ID where variable is already selected, or null if not found
+     */
+    function isVariableInAnotherGroup(varId, currentGroupId) {
+        for (const [groupId, group] of Object.entries(variableGroups)) {
+            if (groupId !== currentGroupId &&
+                group.variable_ids &&
+                group.variable_ids.includes(varId)) {
+                return groupId;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Find and return duplicate variables in the current group's selection
+     * @param {Array} varIds - Array of variable IDs in current group
+     * @param {string} currentGroupId - ID of the current group
+     * @returns {Array} Array of objects {varId, groupId, groupName} for duplicates
+     */
+    function findDuplicates(varIds, currentGroupId) {
+        const duplicates = [];
+
+        varIds.forEach(varId => {
+            const conflictingGroupId = isVariableInAnotherGroup(varId, currentGroupId);
+            if (conflictingGroupId) {
+                const conflictingGroup = variableGroups[conflictingGroupId];
+                const varName = AVAILABLE_VARIABLES[varId] ? AVAILABLE_VARIABLES[varId].name : varId;
+                duplicates.push({
+                    varId: varId,
+                    varName: varName,
+                    groupId: conflictingGroupId,
+                    groupName: conflictingGroup ? conflictingGroup.name : conflictingGroupId
+                });
+            }
+        });
+
+        return duplicates;
+    }
+
+    // ========== End Duplicate Prevention Functions ==========
+
+    /**
+     * Get available variables for a specific group (excluding variables selected in other groups)
+     * @param {string} currentGroupId - ID of the current group
+     * @param {boolean} isSourceSelect - true for source variables, false for target variables
+     * @returns {Array} Filtered array of variable options
+     */
+    function getAvailableVariablesForGroup(currentGroupId, isSourceSelect = true) {
+        const selectedInOtherGroups = new Set();
+
+        // Collect all variables selected in OTHER groups (not current group)
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            if (groupId !== currentGroupId && group.variable_ids && Array.isArray(group.variable_ids)) {
+                group.variable_ids.forEach(varId => selectedInOtherGroups.add(varId));
+            }
+        });
+
+        // Filter the appropriate array based on select type
+        const sourceArray = isSourceSelect ? ALL_VARIABLES_ARRAY : TARGET_VARIABLES_ARRAY;
+
+        return sourceArray.filter(option => !selectedInOtherGroups.has(option.value));
+    }
+
     // Calculate mapping type implicitly based on source and target counts
     function calculateMappingType(sourceCount, targetCount) {
         if (sourceCount === 1 && targetCount === 1) return 'one_to_one';
@@ -1053,6 +1180,12 @@
 
     // Create a new group
     function createNewGroup() {
+        // Check if variables are available
+        if (Object.keys(AVAILABLE_VARIABLES).length === 0) {
+            alert('No variables available. Please go back to Step 2.5 and select ordinates first.');
+            return;
+        }
+
         groupCounter++;
         const groupId = `group_${groupCounter}`;
 
@@ -1061,7 +1194,8 @@
             name: `Variable Group ${groupCounter}`,
             variable_ids: [],
             mapping_type: 'many_to_one',
-            targets: []
+            targets: [],
+            group_type: 'dimension'  // Default to dimension (user can change to measure)
         };
 
         renderGroups();
@@ -1114,6 +1248,28 @@
         if (variableGroups[groupId]) {
             variableGroups[groupId][field] = value;
 
+            // CRITICAL: Update corresponding hidden input to sync with form submission
+            // Hidden input names use pattern: group_${groupId}_${shortField}
+            // where shortField strips any 'group_' prefix from field name
+            // e.g., 'group_type' -> 'type', 'mapping_type' -> 'mapping_type'
+            const shortField = field.startsWith('group_') ? field.substring(6) : field;
+            // Use type="hidden" selector to avoid matching radio buttons
+            const hiddenInput = document.querySelector(`input[type="hidden"][name="group_${groupId}_${shortField}"]`);
+            if (hiddenInput) {
+                hiddenInput.value = value;
+
+                // Debug logging for group_type changes
+                if (field === 'group_type') {
+                    console.log(`[DEBUG] ✓ Updated group_type for ${groupId}: ${value}`);
+                    console.log(`[DEBUG]   - Hidden input name: group_${groupId}_${shortField}`);
+                    console.log(`[DEBUG]   - Hidden input value: ${hiddenInput.value}`);
+                }
+            } else {
+                if (field === 'group_type') {
+                    console.error(`[DEBUG] ✗ Hidden input NOT FOUND for ${groupId}: group_${groupId}_${shortField}`);
+                }
+            }
+
             // If mapping type changes, adjust UI
             if (field === 'mapping_type') {
                 renderGroups();
@@ -1151,6 +1307,37 @@
                         </button>
                     </div>
 
+                    <!-- Variable Type Selection (Required) -->
+                    <div class="group-type-selector" style="padding: 1rem; background-color: #f0f8ff; border: 2px solid #0d6efd; border-radius: 4px; margin: 0.5rem 0;">
+                        <label style="font-weight: 600; display: block; margin-bottom: 0.5rem; color: #333;">
+                            Variable Type: <span style="color: #dc3545;">* REQUIRED</span>
+                        </label>
+                        <div style="display: flex; gap: 1.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio"
+                                       name="group_${groupId}_type"
+                                       value="dimension"
+                                       ${group.group_type === 'dimension' ? 'checked' : ''}
+                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'dimension')"
+                                       required
+                                       style="cursor: pointer;">
+                                <span style="font-weight: ${group.group_type === 'dimension' ? '700' : '400'};">Dimension</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio"
+                                       name="group_${groupId}_type"
+                                       value="measure"
+                                       ${group.group_type === 'measure' ? 'checked' : ''}
+                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'measure')"
+                                       style="cursor: pointer;">
+                                <span style="font-weight: ${group.group_type === 'measure' ? '700' : '400'};">Measure</span>
+                            </label>
+                        </div>
+                        <small style="color: #0d6efd; display: block; margin-top: 0.5rem;">
+                            ℹ️ Defaults to Dimension. Select Measure for numeric/aggregation fields.
+                        </small>
+                    </div>
+
                     <div class="group-mapping-config">
                         <div class="form-group">
                             <label for="sources_${groupId}">Source Variable(s):</label>
@@ -1178,33 +1365,35 @@
                     <input type="hidden" name="group_${groupId}_variables" value="${group.variable_ids.join(',')}">
                     <input type="hidden" name="group_${groupId}_mapping_type" value="${group.mapping_type}">
                     <input type="hidden" name="group_${groupId}_targets" value="${group.targets.join(',')}">
+                    <input type="hidden" name="group_${groupId}_type" id="hidden_${groupId}_type" value="${group.group_type || 'dimension'}">
                 </div>
             `;
         }).join('');
+
+        // Destroy all Tom Select instances BEFORE DOM elements are replaced by innerHTML
+        Object.entries(tomSelectInstances).forEach(([selectId, instance]) => {
+            if (instance && instance.destroy) {
+                instance.destroy();
+            }
+        });
+        tomSelectInstances = {}; // Clear the registry
 
         // Initialize Tom Select on all source and target variable selects
         Object.entries(variableGroups).forEach(([groupId, group]) => {
             const sourceId = `sources_${groupId}`;
             const targetId = `targets_${groupId}`;
 
-            // Destroy existing Tom Select instances if they exist
-            if (tomSelectInstances[sourceId]) {
-                tomSelectInstances[sourceId].destroy();
-                delete tomSelectInstances[sourceId];
-            }
-            if (tomSelectInstances[targetId]) {
-                tomSelectInstances[targetId].destroy();
-                delete tomSelectInstances[targetId];
-            }
-
-            // Initialize Tom Select for source variables
+            // Create Tom Select for source variables (instance destroyed before innerHTML replacement)
+            const availableSourceOptions = getAvailableVariablesForGroup(groupId, true);
+            console.log(`[DEBUG] Creating source Tom Select for ${sourceId} with ${availableSourceOptions.length} available options`);
             tomSelectInstances[sourceId] = new TomSelect(`#${sourceId}`, {
-                options: ALL_VARIABLES_ARRAY,
-                items: group.variable_ids,
+                options: availableSourceOptions,
+                items: group.variable_ids, // Restore selections from preserved data
                 maxItems: null,
                 plugins: ['remove_button', 'dropdown_input'],
                 placeholder: 'Type to search source variables...',
                 create: false,
+                searchField: ['text', 'value'],
                 sortField: { field: 'text', direction: 'asc' },
                 render: {
                     option: function(data, escape) {
@@ -1214,24 +1403,34 @@
                         return '<div class="item">' + escape(data.text) + '</div>';
                     },
                     no_results: function(data, escape) {
-                        return '<div class="no-results">No variables found matching "' + escape(data.input) + '"</div>';
+                        console.log(`[DEBUG] Source Tom Select: No results for search term "${data.input}" (Total options: ${availableSourceOptions.length})`);
+                        return '<div class="no-results">No variables found matching "' + escape(data.input) + '" (some variables may be selected in other groups)</div>';
                     }
                 },
                 onChange: function(value) {
                     if (variableGroups[groupId]) {
                         const sources = value ? (Array.isArray(value) ? value : value.split(',').filter(v => v)) : [];
                         variableGroups[groupId].variable_ids = sources;
+
                         // Calculate mapping type implicitly
-                        variableGroups[groupId].mapping_type = calculateMappingType(sources.length, variableGroups[groupId].targets.length);
+                        variableGroups[groupId].mapping_type = calculateMappingType(
+                            variableGroups[groupId].variable_ids.length,
+                            variableGroups[groupId].targets.length
+                        );
+
+                        // Refresh OTHER group dropdowns (not this one) to reflect the new selection
+                        refreshAllGroupDropdowns(groupId);
+
                         updateVariableMappingIndicator(); // Update indicator when source variables change
                     }
                 }
             });
 
-            // Initialize Tom Select for target variables (non-EBA only)
+            // Create Tom Select for target variables (instance destroyed before innerHTML replacement)
+            console.log(`[DEBUG] Creating target Tom Select for ${targetId} with ${TARGET_VARIABLES_ARRAY.length} options`);
             tomSelectInstances[targetId] = new TomSelect(`#${targetId}`, {
-                options: NON_EBA_VARIABLES_ARRAY,
-                items: group.targets,
+                options: TARGET_VARIABLES_ARRAY,
+                items: group.targets, // Restore selections from preserved data
                 maxItems: null,
                 plugins: ['remove_button', 'dropdown_input'],
                 placeholder: 'Type to search or create new variable...',
@@ -1239,6 +1438,7 @@
                     showCreateVariableModal(input, callback, groupId);
                     return false; // Prevent default creation
                 },
+                searchField: ['text', 'value'],
                 sortField: { field: 'text', direction: 'asc' },
                 render: {
                     option: function(data, escape) {
@@ -1248,6 +1448,7 @@
                         return '<div class="item">' + escape(data.text) + '</div>';
                     },
                     no_results: function(data, escape) {
+                        console.log(`[DEBUG] Target Tom Select: No results for search term "${data.input}" (Total options: ${TARGET_VARIABLES_ARRAY.length})`);
                         return '<div class="no-results">No variables found matching "' + escape(data.input) + '"</div>';
                     }
                 },
@@ -1270,6 +1471,52 @@
                 const groupId = this.getAttribute('data-group-id');
                 deleteGroup(groupId);
             });
+        });
+    }
+
+    /**
+     * Refresh all group dropdowns to update available options
+     * Called when variables are added/removed from any group
+     * @param {string} excludeGroupId - Optional group ID to exclude from refresh (typically the one that triggered the change)
+     */
+    function refreshAllGroupDropdowns(excludeGroupId = null) {
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            // Skip the group that triggered this refresh to avoid clearing its selection
+            if (groupId === excludeGroupId) {
+                console.log(`[DEBUG] Skipping refresh for ${groupId} (current group)`);
+                return;
+            }
+
+            const sourceId = `sources_${groupId}`;
+
+            // Refresh source dropdown with filtered options
+            if (tomSelectInstances[sourceId]) {
+                const instance = tomSelectInstances[sourceId];
+                const currentValues = instance.getValue();
+                const currentValuesSet = new Set(currentValues);
+                const availableOptions = getAvailableVariablesForGroup(groupId, true);
+                const availableSet = new Set(availableOptions.map(opt => opt.value));
+
+                console.log(`[DEBUG] Refreshing ${sourceId}: ${availableOptions.length} available options`);
+
+                // Remove options that shouldn't be available (except currently selected ones to preserve them)
+                Object.keys(instance.options).forEach(optValue => {
+                    if (!availableSet.has(optValue) && !currentValuesSet.has(optValue)) {
+                        instance.removeOption(optValue);
+                    }
+                });
+
+                // Add missing options
+                availableOptions.forEach(opt => {
+                    if (!instance.options[opt.value]) {
+                        instance.addOption(opt);
+                    }
+                });
+
+                instance.refreshOptions(false);
+            }
+
+            // Target dropdowns don't need filtering (each group can have independent targets)
         });
     }
 
@@ -1368,17 +1615,17 @@
         .then(response => response.json())
         .then(result => {
             if (result.success) {
-                // Add to NON_EBA_VARIABLES arrays
+                // Add to TARGET_VARIABLES arrays
                 const newOption = {
                     value: result.variable.variable_id,
                     text: `${result.variable.variable_id} - ${result.variable.name}`
                 };
 
-                NON_EBA_VARIABLES[result.variable.variable_id] = {
+                TARGET_VARIABLES[result.variable.variable_id] = {
                     id: result.variable.variable_id,
                     name: result.variable.name
                 };
-                NON_EBA_VARIABLES_ARRAY.push(newOption);
+                TARGET_VARIABLES_ARRAY.push(newOption);
 
                 // Call Tom Select callback to add the new variable
                 if (currentVariableCallback) {
@@ -1499,8 +1746,50 @@
 
     // ========== End Variable Grouping System ==========
 
+    // ========== Pre-Submit Data Sync ==========
+    // Sync all group data from JavaScript to hidden inputs before submission
+    function syncAllGroupDataToHiddenInputs() {
+        console.log('[SYNC] Syncing all group data from JavaScript to hidden inputs...');
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            updateHiddenInput(`group_${groupId}_name`, group.name);
+            updateHiddenInput(`group_${groupId}_variables`, group.variable_ids.join(','));
+            updateHiddenInput(`group_${groupId}_mapping_type`, group.mapping_type);
+            updateHiddenInput(`group_${groupId}_targets`, group.targets.join(','));
+            updateHiddenInput(`group_${groupId}_type`, group.group_type || 'dimension');
+
+            console.log(`[SYNC] ${groupId}: "${group.name}" -> type="${group.group_type}"`);
+        });
+        console.log('[SYNC] ✓ Sync complete');
+    }
+
+    function updateHiddenInput(name, value) {
+        const input = document.querySelector(`input[type="hidden"][name="${name}"]`);
+        if (input) {
+            input.value = value;
+        } else {
+            console.warn(`[SYNC] ⚠ Hidden input not found: ${name}`);
+        }
+    }
+    // ========== End Pre-Submit Data Sync ==========
+
     // Form validation
     document.getElementById('breakdownForm').addEventListener('submit', function(e) {
+        // CRITICAL: Sync ALL data from JavaScript to hidden inputs BEFORE validation
+        syncAllGroupDataToHiddenInputs();
+        // Check that all groups have explicit group_type (dimension or measure)
+        const groupsMissingType = [];
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            if (!group.group_type) {
+                groupsMissingType.push(group.name);
+            }
+        });
+
+        if (groupsMissingType.length > 0) {
+            e.preventDefault();
+            alert(`The following groups are missing a Variable Type (Dimension or Measure):\n\n${groupsMissingType.join('\n')}\n\nPlease select a variable type for each group before submitting.`);
+            return false;
+        }
+
         // Check if any groups have been created with source variables
         let hasAtLeastOne = Object.keys(variableGroups).some(groupId => {
             const group = variableGroups[groupId];
@@ -1510,6 +1799,43 @@
         if (!hasAtLeastOne) {
             e.preventDefault();
             alert('All variables are not mapped. Please map all variables to proceed to the next step');
+            return false;
+        }
+
+        // Check for duplicate variables across groups (final safeguard)
+        const allVariables = [];
+        const duplicateInfo = [];
+
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            if (group.variable_ids && Array.isArray(group.variable_ids)) {
+                group.variable_ids.forEach(varId => {
+                    // Check if this variable already exists in another group
+                    const existing = allVariables.find(item => item.varId === varId);
+                    if (existing) {
+                        duplicateInfo.push({
+                            varId: varId,
+                            varName: AVAILABLE_VARIABLES[varId] ? AVAILABLE_VARIABLES[varId].name : varId,
+                            group1: existing.groupName,
+                            group2: group.name
+                        });
+                    } else {
+                        allVariables.push({
+                            varId: varId,
+                            groupId: groupId,
+                            groupName: group.name
+                        });
+                    }
+                });
+            }
+        });
+
+        if (duplicateInfo.length > 0) {
+            e.preventDefault();
+            const duplicateDetails = duplicateInfo.map(dup =>
+                `• ${dup.varName} (${dup.varId}) appears in both "${dup.group1}" and "${dup.group2}"`
+            ).join('\n');
+
+            alert(`Error: The following variable(s) are selected in multiple groups:\n\n${duplicateDetails}\n\nPlease ensure each variable is only selected in one group.`);
             return false;
         }
     });

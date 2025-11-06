@@ -13,6 +13,7 @@ from .views import joins_metadata_embed_views
 from .api import lineage_api
 from .api import enhanced_lineage_api
 from .views import bpmn_metadata_lineage_views
+from . import joins_configuration_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -247,6 +248,12 @@ urlpatterns = [
     ),
     path("manual-edits/", report_views.manual_edits, name="manual_edits"),
     path("upload-joins-configuration/", views.upload_joins_configuration, name="upload_joins_configuration"),
+    # Join Configuration Management - AJAX API
+    path("joins-config/list-frameworks/", joins_configuration_views.list_frameworks, name="joins_config_list_frameworks"),
+    path("joins-config/load/", joins_configuration_views.load_csv, name="joins_config_load"),
+    path("joins-config/save/", joins_configuration_views.save_csv, name="joins_config_save"),
+    path("joins-config/create-framework/", joins_configuration_views.create_framework, name="joins_config_create_framework"),
+    path("joins-config/file-info/", joins_configuration_views.get_file_info, name="joins_config_file_info"),
     path("combinations/", views.combinations, name="combinations"),
     path("combination-items/", views.combination_items, name="combination_items"),
     path("output-layers/", views.output_layers, name="output_layers"),

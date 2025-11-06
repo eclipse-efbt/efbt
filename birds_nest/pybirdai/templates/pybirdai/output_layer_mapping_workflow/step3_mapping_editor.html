@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Output Layer Mapping - Edit Mappings{% endblock %}
+{% block title %}Output Layer Mapping - Step 3: Edit Mappings{% endblock %}
 
 {% block extra_css %}
 <style>
+    .workflow-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
     .workflow-header {
         background: #0d6efd;
         color: white;
@@ -13,68 +19,6 @@
         margin-bottom: 2rem;
     }
 
-    .workflow-steps {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .workflow-steps li {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-    .workflow-steps li:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #ddd;
-        z-index: -1;
-    }
-
-    .workflow-steps .step-number {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #ddd;
-        color: #666;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .workflow-steps .active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .workflow-steps .completed .step-number {
-        background: #48bb78;
-        color: white;
-    }
-
-    .mapping-editor {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .table-info-banner {
-        background: #f7f7f9;
-        padding: 1rem;
-        border-radius: 4px;
-        margin-bottom: 2rem;
-    }
-
-    /* Tab Navigation */
     .tab-navigation {
         display: flex;
         border-bottom: 2px solid #e2e8f0;
@@ -90,7 +34,6 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
-        position: relative;
     }
 
     .tab-button:hover {
@@ -111,7 +54,6 @@
         color: #4a5568;
         border-radius: 12px;
         font-size: 0.75rem;
-        font-weight: normal;
     }
 
     .tab-button.active .badge {
@@ -119,7 +61,6 @@
         color: white;
     }
 
-    /* Tab Content */
     .tab-content {
         display: none;
     }
@@ -130,22 +71,16 @@
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
 
-    /* Mapping Editor Styles */
     .mapping-item {
         background: #f7f7f9;
         border: 1px solid #e2e8f0;
         border-radius: 8px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-        position: relative;
-    }
-
-    .mapping-item:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .mapping-header {
@@ -156,25 +91,9 @@
     }
 
     .mapping-title {
-        font-size: 1.125rem;
         font-weight: 600;
+        font-size: 1.1rem;
         color: #333;
-    }
-
-    .mapping-status {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        background: #48bb78;
-        color: white;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-
-    .mapping-fields {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
     }
 
     .form-group {
@@ -183,10 +102,9 @@
 
     .form-group label {
         display: block;
+        font-weight: 600;
         margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: #333;
-        font-size: 0.875rem;
+        color: #555;
     }
 
     .form-control {
@@ -194,584 +112,208 @@
         padding: 0.5rem;
         border: 1px solid #ddd;
         border-radius: 4px;
-        font-size: 0.875rem;
     }
 
     .form-control:focus {
         outline: none;
         border-color: #0d6efd;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    /* Markdown Editor */
-    .markdown-editor {
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .markdown-toolbar {
-        background: #f7f7f9;
-        padding: 0.5rem;
-        border-bottom: 1px solid #ddd;
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .markdown-button {
-        padding: 0.25rem 0.5rem;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.875rem;
-    }
-
-    .markdown-button:hover {
-        background: #edf2f7;
-    }
-
-    .markdown-textarea {
-        width: 100%;
-        min-height: 150px;
-        padding: 1rem;
-        border: none;
-        font-family: 'Courier New', monospace;
-        font-size: 0.875rem;
-        resize: vertical;
-    }
-
-    .markdown-preview {
-        padding: 1rem;
-        background: #f7f7f9;
-        min-height: 150px;
-        font-size: 0.875rem;
-    }
-
-    /* Filter Builder */
-    .filter-builder {
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .filter-row {
-        display: grid;
-        grid-template-columns: 2fr 1fr 2fr auto;
-        gap: 1rem;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .filter-remove {
-        padding: 0.5rem;
-        background: #fed7d7;
-        border: none;
-        border-radius: 4px;
-        color: #c53030;
-        cursor: pointer;
-    }
-
-    .filter-remove:hover {
-        background: #fc8181;
-    }
-
-    .add-filter-btn {
-        padding: 0.5rem 1rem;
-        background: #edf2f7;
-        border: 2px dashed #cbd5e0;
-        border-radius: 4px;
-        color: #4a5568;
-        cursor: pointer;
-        font-weight: 600;
-    }
-
-    .add-filter-btn:hover {
-        background: #e2e8f0;
-        border-color: #a0aec0;
-    }
-
-    /* Validation Panel */
-    .validation-panel {
-        background: #f7f7f9;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 1.5rem;
-    }
-
-    .validation-status {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .validation-icon {
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        margin-right: 0.5rem;
-    }
-
-    .validation-icon.success {
-        color: #48bb78;
-    }
-
-    .validation-icon.warning {
-        color: #f6ad55;
-    }
-
-    .validation-icon.error {
-        color: #fc8181;
-    }
-
-    .validation-message {
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .preview-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-    }
-
-    .preview-table th,
-    .preview-table td {
-        padding: 0.75rem;
-        text-align: left;
-        border-bottom: 1px solid #e2e8f0;
-    }
-
-    .preview-table th {
-        background: #f7f7f9;
-        font-weight: 600;
-        font-size: 0.875rem;
-        color: #4a5568;
-    }
-
-    .preview-table td {
-        font-size: 0.875rem;
-    }
-
-    /* Action Buttons */
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
     }
 
     .btn-primary {
         background: #0d6efd;
         color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
     }
 
     .btn-primary:hover {
         background: #0b5ed7;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
-    .btn-secondary {
-        background: #e2e8f0;
-        color: #4a5568;
-        margin-right: 1rem;
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
     }
 
-    .btn-secondary:hover {
-        background: #cbd5e0;
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
     }
 
-    .form-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e2e8f0;
+    .alert {
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
     }
 
-    /* Helpers */
-    .text-muted {
-        color: #718096;
-        font-size: 0.875rem;
+    .alert-warning {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        color: #856404;
     }
-
-    .mt-2 { margin-top: 0.5rem; }
-    .mt-4 { margin-top: 1rem; }
-    .mb-2 { margin-bottom: 0.5rem; }
-    .mb-4 { margin-bottom: 1rem; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="workflow-container">
     <div class="workflow-header">
-        <h1>Output Layer Mapping Workflow</h1>
-        <p>Create non-reference combinations and mappings for output layers</p>
+        <h1>Step 3: Edit Mappings</h1>
+        <p>Configure dimension and measure mappings for <strong>{{ table.name }}</strong></p>
     </div>
 
-    <ul class="workflow-steps">
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Table</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Define Breakdowns</div>
-        </li>
-        <li class="active">
-            <span class="step-number">3</span>
-            <div>Edit Mappings</div>
-        </li>
-        <li>
-            <span class="step-number">4</span>
-            <div>Review & Name</div>
-        </li>
-        <li>
-            <span class="step-number">5</span>
-            <div>Generate</div>
-        </li>
-    </ul>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
-    <div class="mapping-editor">
-        <h2>Step 3: Edit Mappings</h2>
-        <p>Configure dimension mappings, measures, filters, and validate your transformations.</p>
+    {% if not dimension_mappings and not measure_mappings %}
+    <div class="alert alert-warning">
+        <strong>⚠️ No Mappings Found</strong><br>
+        No dimension or measure mappings were created. Go back to <a href="{% url 'pybirdai:output_layer_mapping_step2' %}">Step 2</a> and ensure each group has target variables selected.
+    </div>
+    {% endif %}
 
-        <div class="table-info-banner">
-            <strong>Selected Table:</strong> {{ table.name }} ({{ table.code }})
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button type="button" class="tab-button active" onclick="switchTab('dimensions')">
+                Dimensions <span class="badge">{{ dimension_mappings|length }}</span>
+            </button>
+            <button type="button" class="tab-button" onclick="switchTab('measures')">
+                Measures <span class="badge">{{ measure_mappings|length }}</span>
+            </button>
         </div>
 
-        <form method="post" id="mappingForm">
-            {% csrf_token %}
+        <!-- Dimensions Tab -->
+        <div id="dimensions-tab" class="tab-content active">
+            <h3>Dimension Mappings</h3>
 
-            <!-- Tab Navigation -->
-            <div class="tab-navigation">
-                <button type="button" class="tab-button active" onclick="switchTab('dimensions')">
-                    Dimensions <span class="badge">{{ dimension_mappings|length }}</span>
-                </button>
-                <button type="button" class="tab-button" onclick="switchTab('measures')">
-                    Measures <span class="badge">{{ measure_mappings|length }}</span>
-                </button>
-                <button type="button" class="tab-button" onclick="switchTab('filters')">
-                    Filters <span class="badge" id="filterCount">0</span>
-                </button>
-                <button type="button" class="tab-button" onclick="switchTab('validation')">
-                    Validation
-                </button>
+            {% if not dimension_mappings %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <p>No dimension mappings found. Select "Dimension" for groups in Step 2.</p>
             </div>
+            {% endif %}
 
-            <!-- Dimensions Tab -->
-            <div id="dimensions-tab" class="tab-content active">
-                <h3>Dimension Mappings</h3>
-                <p class="text-muted mb-4">Map source dimensions to target dimensions with transformation rules.</p>
-
-                {% for dim in dimension_mappings %}
-                <div class="mapping-item">
-                    <div class="mapping-header">
-                        <div class="mapping-title">{{ dim.variable.name }}</div>
-                        <div class="mapping-status">Configured</div>
-                    </div>
-
-                    <div class="mapping-fields">
-                        <div class="form-group">
-                            <label>Source Variable:</label>
-                            <input type="text" name="dim_source_{{ dim.variable.variable_id }}"
-                                   value="{{ dim.source }}" class="form-control" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Target Variable:</label>
-                            <input type="text" name="dim_target_{{ dim.variable.variable_id }}"
-                                   value="{{ dim.variable.variable_id }}" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Transformation Rule:</label>
-                        <div class="markdown-editor">
-                            <div class="markdown-toolbar">
-                                <button type="button" class="markdown-button" onclick="insertMarkdown('dim_rule_{{ dim.variable.variable_id }}', 'DIRECT_MAP')">
-                                    Direct Map
-                                </button>
-                                <button type="button" class="markdown-button" onclick="insertMarkdown('dim_rule_{{ dim.variable.variable_id }}', 'LOOKUP')">
-                                    Lookup
-                                </button>
-                                <button type="button" class="markdown-button" onclick="insertMarkdown('dim_rule_{{ dim.variable.variable_id }}', 'CONDITIONAL')">
-                                    Conditional
-                                </button>
-                            </div>
-                            <textarea name="dim_rule_{{ dim.variable.variable_id }}"
-                                      class="markdown-textarea"
-                                      placeholder="Enter transformation rule...">{{ dim.rule }}</textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>When Condition (Optional):</label>
-                        <input type="text" name="dim_when_{{ dim.variable.variable_id }}"
-                               class="form-control"
-                               placeholder="e.g., SOURCE.VALUE IN ('LOAN', 'DEPOSIT')">
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <!-- Measures Tab -->
-            <div id="measures-tab" class="tab-content">
-                <h3>Measure Mappings</h3>
-                <p class="text-muted mb-4">Configure measure aggregations and calculations.</p>
-
-                {% for meas in measure_mappings %}
-                <div class="mapping-item">
-                    <div class="mapping-header">
-                        <div class="mapping-title">{{ meas.variable.name }}</div>
-                        <div class="mapping-status">Configured</div>
-                    </div>
-
-                    <div class="mapping-fields">
-                        <div class="form-group">
-                            <label>Source Measure:</label>
-                            <input type="text" name="meas_source_{{ meas.variable.variable_id }}"
-                                   value="{{ meas.source }}" class="form-control" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Target Measure:</label>
-                            <input type="text" name="meas_target_{{ meas.variable.variable_id }}"
-                                   value="{{ meas.variable.variable_id }}" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Aggregation Method:</label>
-                        <select name="meas_agg_{{ meas.variable.variable_id }}" class="form-control">
-                            <option value="SUM" {% if meas.rule == 'SUM' %}selected{% endif %}>Sum</option>
-                            <option value="AVG" {% if meas.rule == 'AVG' %}selected{% endif %}>Average</option>
-                            <option value="MIN">Minimum</option>
-                            <option value="MAX">Maximum</option>
-                            <option value="COUNT">Count</option>
-                            <option value="CUSTOM">Custom Formula</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Custom Formula (Optional):</label>
-                        <textarea name="meas_formula_{{ meas.variable.variable_id }}"
-                                  class="form-control"
-                                  rows="3"
-                                  placeholder="e.g., SUM(amount) * 1.1"></textarea>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <!-- Filters Tab -->
-            <div id="filters-tab" class="tab-content">
-                <h3>Filter Conditions</h3>
-                <p class="text-muted mb-4">Add filter conditions to restrict the data.</p>
-
-                <div id="filterContainer">
-                    <!-- Filters will be added dynamically -->
+            {% for dim in dimension_mappings %}
+            <div class="mapping-item">
+                <div class="mapping-header">
+                    <div class="mapping-title">{{ dim.variable.name }}</div>
                 </div>
 
-                <button type="button" class="add-filter-btn" onclick="addFilter()">
-                    + Add Filter Condition
-                </button>
+                <div class="form-group">
+                    <label>Source Variable(s):</label>
+                    <input type="text" name="dim_source_{{ dim.variable.variable_id }}"
+                           value="{{ dim.source }}" class="form-control" readonly>
+                </div>
 
-                <input type="hidden" name="filter_count" id="filterCountInput" value="0">
-            </div>
+                <div class="form-group">
+                    <label>Target Variable:</label>
+                    <input type="text" name="dim_target_{{ dim.variable.variable_id }}"
+                           value="{{ dim.variable.variable_id }}" class="form-control">
+                </div>
 
-            <!-- Validation Tab -->
-            <div id="validation-tab" class="tab-content">
-                <h3>Mapping Validation</h3>
-                <p class="text-muted mb-4">Review and validate your mapping configuration.</p>
+                <div class="form-group">
+                    <label>Transformation Rule:</label>
+                    <textarea name="dim_rule_{{ dim.variable.variable_id }}"
+                              class="form-control" rows="3">{{ dim.rule }}</textarea>
+                </div>
 
-                <div class="validation-panel">
-                    <div class="validation-status">
-                        <span class="validation-icon success">✓</span>
-                        <strong>Validation Status: Ready</strong>
-                    </div>
-
-                    <div class="validation-message">
-                        <span class="validation-icon success">✓</span>
-                        All dimension mappings are configured
-                    </div>
-                    <div class="validation-message">
-                        <span class="validation-icon success">✓</span>
-                        All measure mappings are configured
-                    </div>
-                    <div class="validation-message">
-                        <span class="validation-icon warning">⚠</span>
-                        No filter conditions defined (optional)
-                    </div>
-
-                    <h4 class="mt-4 mb-2">Preview</h4>
-                    <table class="preview-table">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Source</th>
-                                <th>Target</th>
-                                <th>Rule</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for dim in dimension_mappings %}
-                            <tr>
-                                <td>Dimension</td>
-                                <td>{{ dim.source }}</td>
-                                <td>{{ dim.variable.variable_id }}</td>
-                                <td>{{ dim.rule }}</td>
-                            </tr>
-                            {% endfor %}
-                            {% for meas in measure_mappings %}
-                            <tr>
-                                <td>Measure</td>
-                                <td>{{ meas.source }}</td>
-                                <td>{{ meas.variable.variable_id }}</td>
-                                <td>{{ meas.rule }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="form-group">
+                    <label>Condition (Optional):</label>
+                    <input type="text" name="dim_when_{{ dim.variable.variable_id }}"
+                           class="form-control"
+                           placeholder="e.g., SOURCE.VALUE IN ('LOAN', 'DEPOSIT')">
                 </div>
             </div>
+            {% endfor %}
+        </div>
 
-            <div class="form-actions">
-                <div>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step2' %}'">
-                        ← Back
-                    </button>
+        <!-- Measures Tab -->
+        <div id="measures-tab" class="tab-content">
+            <h3>Measure Mappings</h3>
+
+            {% if not measure_mappings %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📈</div>
+                <p>No measure mappings found. Select "Measure" for groups in Step 2.</p>
+            </div>
+            {% endif %}
+
+            {% for meas in measure_mappings %}
+            <div class="mapping-item">
+                <div class="mapping-header">
+                    <div class="mapping-title">{{ meas.variable.name }}</div>
                 </div>
-                <div>
-                    <button type="button" class="btn btn-secondary" onclick="saveDraft()">
-                        Save Draft
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        Next: Review & Name →
-                    </button>
+
+                <div class="form-group">
+                    <label>Source Measure(s):</label>
+                    <input type="text" name="meas_source_{{ meas.variable.variable_id }}"
+                           value="{{ meas.source }}" class="form-control" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Measure:</label>
+                    <input type="text" name="meas_target_{{ meas.variable.variable_id }}"
+                           value="{{ meas.variable.variable_id }}" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Aggregation Method:</label>
+                    <select name="meas_agg_{{ meas.variable.variable_id }}" class="form-control">
+                        <option value="SUM" {% if meas.rule == 'SUM' %}selected{% endif %}>Sum</option>
+                        <option value="AVG" {% if meas.rule == 'AVG' %}selected{% endif %}>Average</option>
+                        <option value="MIN">Minimum</option>
+                        <option value="MAX">Maximum</option>
+                        <option value="COUNT">Count</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Custom Formula (Optional):</label>
+                    <textarea name="meas_formula_{{ meas.variable.variable_id }}"
+                              class="form-control" rows="2"
+                              placeholder="e.g., SUM(amount) * 1.1"></textarea>
                 </div>
             </div>
-        </form>
-    </div>
+            {% endfor %}
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between;">
+            <a href="{% url 'pybirdai:output_layer_mapping_step2' %}" class="btn btn-secondary">
+                ← Back to Step 2
+            </a>
+            <button type="submit" class="btn-primary">
+                Continue to Step 4 →
+            </button>
+        </div>
+    </form>
 </div>
 
 <script>
-    let filterCount = 0;
-
-    function switchTab(tabName) {
-        // Update tab buttons
-        document.querySelectorAll('.tab-button').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        event.target.classList.add('active');
-
-        // Update tab content
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-        document.getElementById(tabName + '-tab').classList.add('active');
-    }
-
-    function insertMarkdown(textareaName, template) {
-        const textarea = document.querySelector(`textarea[name="${textareaName}"]`);
-        let insertText = '';
-
-        switch(template) {
-            case 'DIRECT_MAP':
-                insertText = 'RULE: DIRECT_MAP\n';
-                break;
-            case 'LOOKUP':
-                insertText = 'RULE: LOOKUP\nTABLE: lookup_table\nKEY: source_key\nVALUE: target_value\n';
-                break;
-            case 'CONDITIONAL':
-                insertText = 'RULE: CONDITIONAL\nWHEN: condition_1 THEN: value_1\nWHEN: condition_2 THEN: value_2\nELSE: default_value\n';
-                break;
-        }
-
-        const startPos = textarea.selectionStart;
-        const endPos = textarea.selectionEnd;
-        textarea.value = textarea.value.substring(0, startPos) + insertText + textarea.value.substring(endPos);
-        textarea.focus();
-        textarea.setSelectionRange(startPos + insertText.length, startPos + insertText.length);
-    }
-
-    function addFilter() {
-        const container = document.getElementById('filterContainer');
-        const filterDiv = document.createElement('div');
-        filterDiv.className = 'filter-row';
-        filterDiv.innerHTML = `
-            <select name="filter_var_${filterCount}" class="form-control">
-                <option value="">-- Select Variable --</option>
-                {% for var in all_variables %}
-                <option value="{{ var.variable_id }}">{{ var.name }}</option>
-                {% endfor %}
-            </select>
-            <select name="filter_op_${filterCount}" class="form-control">
-                <option value="=">=</option>
-                <option value="!=">!=</option>
-                <option value=">">></option>
-                <option value="<"><</option>
-                <option value="IN">IN</option>
-                <option value="NOT IN">NOT IN</option>
-            </select>
-            <input type="text" name="filter_val_${filterCount}" class="form-control" placeholder="Value">
-            <button type="button" class="filter-remove" onclick="removeFilter(this)">×</button>
-        `;
-        container.appendChild(filterDiv);
-        filterCount++;
-        updateFilterCount();
-    }
-
-    function removeFilter(button) {
-        button.parentElement.remove();
-        updateFilterCount();
-    }
-
-    function updateFilterCount() {
-        const count = document.querySelectorAll('#filterContainer .filter-row').length;
-        document.getElementById('filterCount').textContent = count;
-        document.getElementById('filterCountInput').value = filterCount;
-    }
-
-    function saveDraft() {
-        // Save form data to localStorage
-        const formData = new FormData(document.getElementById('mappingForm'));
-        const data = {};
-        for (let [key, value] of formData.entries()) {
-            data[key] = value;
-        }
-        localStorage.setItem('olm_draft', JSON.stringify(data));
-        alert('Draft saved successfully!');
-    }
-
-    // Load draft on page load if exists
-    document.addEventListener('DOMContentLoaded', function() {
-        const draft = localStorage.getItem('olm_draft');
-        if (draft) {
-            const data = JSON.parse(draft);
-            // Restore form values
-            // This is a simplified version - you'd need to handle all field types
-        }
+function switchTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
     });
 
-    // Form validation
-    document.getElementById('mappingForm').addEventListener('submit', function(e) {
-        // Basic validation
-        let valid = true;
-
-        // Check if at least one mapping is defined
-        const hasDimensions = document.querySelectorAll('[name^="dim_target_"]').length > 0;
-        const hasMeasures = document.querySelectorAll('[name^="meas_target_"]').length > 0;
-
-        if (!hasDimensions && !hasMeasures) {
-            e.preventDefault();
-            alert('Please configure at least one dimension or measure mapping.');
-            return false;
-        }
-    });
+    // Show selected tab
+    document.getElementById(tabName + '-tab').classList.add('active');
+    event.target.classList.add('active');
+}
 </script>
+
 {% endblock %}

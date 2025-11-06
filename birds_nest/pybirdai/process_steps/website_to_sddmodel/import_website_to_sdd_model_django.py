@@ -445,6 +445,17 @@ class ImportWebsiteToSDDModel(object):
         missing_hierarchies = []
         nodes_to_create = []
 
+        # Pre-fetch all members to avoid N+1 queries (performance optimization)
+        # Build a cache: domain_id -> {member_id -> member_object}
+        from collections import defaultdict
+        member_cache = defaultdict(dict)
+        all_members = MEMBER.objects.select_related('domain_id').all()
+        for m in all_members:
+            if m.domain_id:
+                member_cache[m.domain_id.domain_id][m.member_id] = m
+            # Also add to general cache for parent member lookup
+            context.member_dictionary[m.member_id] = m
+
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             id_increment = 0
@@ -468,12 +479,15 @@ class ImportWebsiteToSDDModel(object):
                         print(f"Hierarchy {hierarchy_id} not found")
                         missing_hierarchies.append(hierarchy_id)
                     else:
-                        member = ImportWebsiteToSDDModel.find_member_with_id_for_hierarchy(self,member_id,hierarchy,context)
+                        # Use cache instead of database query (performance optimization)
+                        domain_id = hierarchy.domain_id.domain_id if hierarchy.domain_id else None
+                        member = member_cache.get(domain_id, {}).get(member_id, None)
                         if member is None:
                             print(f"Member {member_id} not found in the database for hierarchy {hierarchy_id}")
                             missing_members.append((hierarchy_id,member_id))
                         else:
-                            parent_member = ImportWebsiteToSDDModel.find_member_with_id(self,parent_member_id,context)
+                            # Parent member lookup now uses pre-populated context.member_dictionary
+                            parent_member = context.member_dictionary.get(parent_member_id, None)
                             if not (parent_member is None):
                                 hierarchy_node = MEMBER_HIERARCHY_NODE()
                                 hierarchy_node.member_hierarchy_id = hierarchy
@@ -696,63 +710,43 @@ class ImportWebsiteToSDDModel(object):
             return True  # Duplicate - same key, same content
 
         elif table_name == 'pybirdai_ordinate_item':
-            # Auto-increment PK - compare all content fields
+            # Auto-increment PK - compare all content fields using hash lookup (O(1))
             content_fields = ['axis_ordinate_id_id', 'variable_id_id', 'member_id_id',
                             'member_hierarchy_id_id', 'starting_member_id_id', 'is_starting_member_included']
 
-            # Must compare against ALL existing rows
-            for existing_row in existing_rows_cache:
-                is_duplicate = True
+            # Build tuple of backed-up row's content field values (normalized)
+            backed_up_values = []
+            for field in content_fields:
+                if field not in columns:
+                    continue
+                value = backed_up_row[columns.index(field)]
+                # Normalize None values
+                value = None if value in (None, '', 'None') else value
+                backed_up_values.append(value)
 
-                for field in content_fields:
-                    if field not in columns:
-                        is_duplicate = False
-                        break
+            backed_up_hash = tuple(backed_up_values)
 
-                    backed_up_value = backed_up_row[columns.index(field)]
-                    existing_value = existing_row[columns.index(field)]
-
-                    # Normalize None values
-                    backed_up_value = None if backed_up_value in (None, '', 'None') else backed_up_value
-                    existing_value = None if existing_value in (None, '', 'None') else existing_value
-
-                    if backed_up_value != existing_value:
-                        is_duplicate = False
-                        break
-
-                if is_duplicate:
-                    return True  # Found duplicate
-
-            return False  # Not a duplicate
+            # Check if this content tuple exists in the hash set (O(1) lookup)
+            return backed_up_hash in existing_rows_cache
 
         elif table_name == 'pybirdai_cell_position':
-            # Auto-increment PK - compare all content fields
+            # Auto-increment PK - compare all content fields using hash lookup (O(1))
             content_fields = ['cell_id_id', 'axis_ordinate_id_id']
 
-            # Must compare against ALL existing rows
-            for existing_row in existing_rows_cache:
-                is_duplicate = True
+            # Build tuple of backed-up row's content field values (normalized)
+            backed_up_values = []
+            for field in content_fields:
+                if field not in columns:
+                    continue
+                value = backed_up_row[columns.index(field)]
+                # Normalize None values
+                value = None if value in (None, '', 'None') else value
+                backed_up_values.append(value)
 
-                for field in content_fields:
-                    if field not in columns:
-                        is_duplicate = False
-                        break
+            backed_up_hash = tuple(backed_up_values)
 
-                    backed_up_value = backed_up_row[columns.index(field)]
-                    existing_value = existing_row[columns.index(field)]
-
-                    # Normalize None values
-                    backed_up_value = None if backed_up_value in (None, '', 'None') else backed_up_value
-                    existing_value = None if existing_value in (None, '', 'None') else existing_value
-
-                    if backed_up_value != existing_value:
-                        is_duplicate = False
-                        break
-
-                if is_duplicate:
-                    return True  # Found duplicate
-
-            return False  # Not a duplicate
+            # Check if this content tuple exists in the hash set (O(1) lookup)
+            return backed_up_hash in existing_rows_cache
 
         # Unknown table - don't skip
         return False
@@ -779,13 +773,34 @@ class ImportWebsiteToSDDModel(object):
 
             # Build cache structure for duplicate detection
             # For TABLE_CELL (string PK): dict {cell_id: row}
-            # For others (auto-increment PK): list of rows
+            # For others (auto-increment PK): set of content field tuples for O(1) lookup
             if table_name == 'pybirdai_table_cell':
                 pk_idx = existing_columns.index(pk_column)
                 existing_rows_cache = {str(row[pk_idx]): row for row in existing_rows}
                 existing_keys = set(existing_rows_cache.keys())
             else:
-                existing_rows_cache = existing_rows
+                # Build hash set of content tuples for fast duplicate detection
+                # Define content fields for each table (exclude auto-increment PK)
+                content_fields_map = {
+                    'pybirdai_ordinate_item': ['axis_ordinate_id_id', 'variable_id_id', 'member_id_id',
+                                               'member_hierarchy_id_id', 'starting_member_id_id', 'is_starting_member_included'],
+                    'pybirdai_cell_position': ['cell_id_id', 'axis_ordinate_id_id']
+                }
+
+                content_fields = content_fields_map.get(table_name, [])
+                existing_rows_cache = set()
+
+                for row in existing_rows:
+                    # Build tuple of content field values (normalized)
+                    values = []
+                    for field in content_fields:
+                        if field in existing_columns:
+                            value = row[existing_columns.index(field)]
+                            # Normalize None values
+                            value = None if value in (None, '', 'None') else value
+                            values.append(value)
+                    existing_rows_cache.add(tuple(values))
+
                 existing_keys = {str(row[existing_columns.index(pk_column)]) for row in existing_rows}
 
             # Get all backed-up data
@@ -813,7 +828,11 @@ class ImportWebsiteToSDDModel(object):
                     skipped_duplicates += 1
                     continue  # Skip restoration of this duplicate row
 
-                # NOT a duplicate → restore with ORIGINAL ID (no modification)
+                # NOT a duplicate → restore with NEW auto-generated ID
+                # For auto-increment tables, set PK to NULL so SQLite generates new sequential IDs
+                # This prevents UNIQUE constraint violations with newly imported data
+                if table_name in ['pybirdai_ordinate_item', 'pybirdai_cell_position']:
+                    row_list[pk_index] = None
                 modified_rows.append(row_list)
 
             # Print statistics before bulk insert
