@@ -143,7 +143,8 @@ def _export_database_to_csv_logic():
 
                     # Build the query - table_name is already validated against whitelist
                     # Column names are derived from model fields, not user input
-                    query = f"SELECT {',\n    '.join(escaped_headers)} \n FROM {table_name} \n {order_by}"
+                    escaped_headers_join = ',\n    '.join(escaped_headers)
+                    query = f"SELECT {escaped_headers_join} \n FROM {table_name} \n {order_by}"
                     cursor.execute(query)
                     rows = cursor.fetchall()
 
