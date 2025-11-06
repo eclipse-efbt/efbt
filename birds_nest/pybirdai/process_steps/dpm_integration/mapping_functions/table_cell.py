@@ -12,6 +12,7 @@
 #
 
 import os
+import numpy as np
 from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
     read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
     select_fields, rename_fields, pascal_to_upper_snake
@@ -28,55 +29,66 @@ def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map: dict
     cells = rename_fields(cells, column_mapping)
     cells = add_field(cells, "MAINTENANCE_AGENCY_ID", "EBA")
 
-    new_cell_ids = []
-    for row in cells:
-        new_cell_ids.append("EBA_" + str(int(float(str(row["CELL_ID"])))))
+    # Optimized: Vectorized string conversion (replaces catastrophic loop)
+    # Old: "EBA_" + str(int(float(str(row["CELL_ID"]))))
+    # Convert entire column to float then int then string, prepend "EBA_"
+    cell_ids_float = cells["CELL_ID"].astype(float).astype(int).astype(str)
+    new_cell_ids = np.char.add("EBA_", cell_ids_float)
 
     cells = add_field(cells, "NEW_CELL_ID", new_cell_ids)
 
-    # Update TABLE_VID
-    table_vids = []
-    for row in cells:
-        table_vids.append(table_map.get(str(row["TABLE_VID"]), str(row["TABLE_VID"])))
+    # Optimized: Update TABLE_VID using vectorized mapping
+    def map_table_vid(table_vid):
+        return table_map.get(str(table_vid), str(table_vid))
 
-    for i, row in enumerate(cells):
-        cells[i]["TABLE_VID"] = table_vids[i]
+    vec_map_table = np.vectorize(map_table_vid)
+    cells["TABLE_VID"] = vec_map_table(cells["TABLE_VID"])
 
-    # Convert IS_SHADED to bool
-    is_shaded = []
-    for row in cells:
-        if "IS_SHADED" in cells.dtype.names:
-            val = str(row["IS_SHADED"])
-        else:
-            val = "False"
-        is_shaded.append(val.lower() in ['true', '1', 'yes'])
+    # Optimized: Convert IS_SHADED to bool using vectorized operations
+    if "IS_SHADED" in cells.dtype.names:
+        # Vectorize the boolean conversion
+        is_shaded_str = np.char.lower(cells["IS_SHADED"].astype(str))
+        is_shaded = np.isin(is_shaded_str, ['true', '1', 'yes'])
+    else:
+        # Default to False for all rows
+        is_shaded = np.zeros(len(cells), dtype=bool)
 
     cells = add_field(cells, "IS_SHADED_BOOL", is_shaded, dtype='bool')
     if "IS_SHADED" in cells.dtype.names:
         cells = drop_fields(cells, "IS_SHADED")
     cells = rename_fields(cells, {"IS_SHADED_BOOL": "IS_SHADED"})
 
-    # Handle DATA_POINT_VID
+    # Optimized: Handle DATA_POINT_VID using vectorized operations
     if not dp_map:
         cells = add_field(cells, "DATA_POINT_VID_NEW", "")
     else:
-        dp_vids = []
-        for row in cells:
-            if "DATA_POINT_VID" in cells.dtype.names:
-                val = str(row["DATA_POINT_VID"])
-            else:
-                val = ""
-            val = val.replace(".0", "").replace("nan", "")
-            dp_vids.append(dp_map.get(val, val))
+        if "DATA_POINT_VID" in cells.dtype.names:
+            # Vectorize string cleaning and mapping
+            dp_str = cells["DATA_POINT_VID"].astype(str)
+            # Replace .0 and nan
+            dp_str = np.char.replace(dp_str, '.0', '')
+            dp_str = np.char.replace(dp_str, 'nan', '')
+
+            # Vectorize dictionary lookup
+            def map_dp_vid(val):
+                return dp_map.get(val, val)
+
+            vec_map_dp = np.vectorize(map_dp_vid)
+            dp_vids = vec_map_dp(dp_str)
+        else:
+            # Default to empty strings for all rows
+            dp_vids = np.full(len(cells), "", dtype=object)
+
         cells = add_field(cells, "DATA_POINT_VID_NEW", dp_vids)
 
     if "DATA_POINT_VID" in cells.dtype.names:
         cells = drop_fields(cells, "DATA_POINT_VID")
     cells = rename_fields(cells, {"DATA_POINT_VID_NEW": "DATA_POINT_VID"})
 
-    id_mapping = {}
-    for row in cells:
-        id_mapping[str(row["CELL_ID"])] = str(row["NEW_CELL_ID"])
+    # Optimized: Build id_mapping dict using vectorized array operations
+    old_ids = cells["CELL_ID"].astype(str)
+    new_ids = cells["NEW_CELL_ID"].astype(str)
+    id_mapping = dict(zip(old_ids, new_ids))
 
     cells = drop_fields(cells, "CELL_ID")
 
@@ -88,9 +100,8 @@ def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map: dict
 
     cells = add_field(cells, "SYSTEM_DATA_CODE", "")
 
-    names = []
-    for row in cells:
-        names.append(str(row["CELL_ID"]))
+    # Optimized: Build names array using vectorized conversion
+    names = cells["CELL_ID"].astype(str)
     cells = add_field(cells, "NAME", names)
 
     cells = select_fields(cells, [

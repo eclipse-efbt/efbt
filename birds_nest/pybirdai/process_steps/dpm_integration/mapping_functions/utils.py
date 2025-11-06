@@ -34,7 +34,7 @@ def read_csv_to_dict(path, dtype=None):
 
 
 def dict_list_to_structured_array(data, columns=None, force_str_columns=None):
-    """Convert list of dictionaries to numpy structured array"""
+    """Convert list of dictionaries to numpy structured array (optimized version)"""
     if not data:
         return np.array([])
 
@@ -44,35 +44,74 @@ def dict_list_to_structured_array(data, columns=None, force_str_columns=None):
     if force_str_columns is None:
         force_str_columns = set()
 
+    # Optimized: Calculate all max lengths in a single pass instead of once per column
+    num_rows = len(data)
+    sample_size = min(100, num_rows)  # Sample first 100 rows for type inference
+
+    # Single pass through sample data for both sampling and initial max length
+    column_samples = {col: [] for col in columns}
+    max_lengths = {col: 1 for col in columns}
+
+    for row in data[:sample_size]:
+        for col in columns:
+            val_str = str(row.get(col, ''))
+            column_samples[col].append(val_str)
+            max_lengths[col] = max(max_lengths[col], len(val_str))
+
+    # If data is larger than sample, continue scanning for max lengths only
+    if num_rows > sample_size:
+        for row in data[sample_size:]:
+            for col in columns:
+                max_lengths[col] = max(max_lengths[col], len(str(row.get(col, ''))))
+
     # Create dtype for structured array
     dtype_list = []
     for col in columns:
         # Force certain columns to be strings
         if col in force_str_columns:
-            max_len = max(len(str(row.get(col, ''))) for row in data)
-            dtype_list.append((col, f'U{max(max_len + 50, 100)}'))  # Extra space for transformations
+            dtype_list.append((col, f'U{max(max_lengths[col] + 50, 100)}'))  # Extra space for transformations
         else:
-            # Check if column contains numeric data
-            sample_val = str(data[0].get(col, '')).strip()
-            if sample_val and sample_val.replace('.', '').replace('-', '').isdigit():
+            # Check if column contains numeric data (sample-based)
+            # Check multiple samples instead of just first row
+            is_numeric = True
+            for sample_val in column_samples[col][:10]:  # Check first 10 non-empty values
+                val = sample_val.strip()
+                if val and not val.replace('.', '').replace('-', '').isdigit():
+                    is_numeric = False
+                    break
+
+            if is_numeric and any(column_samples[col]):  # At least one non-empty value
                 dtype_list.append((col, 'i8'))
             else:
-                # Find max string length for this column
-                max_len = max(len(str(row.get(col, ''))) for row in data)
-                dtype_list.append((col, f'U{max(max_len, 1)}'))
+                # String column
+                dtype_list.append((col, f'U{max(max_lengths[col], 1)}'))
 
-    # Create structured array
-    arr = np.zeros(len(data), dtype=dtype_list)
-    for i, row in enumerate(data):
+    # Optimized: Create structured array and populate column-by-column
+    arr = np.zeros(num_rows, dtype=dtype_list)
+
+    # Extract all column data in a single pass through rows
+    column_data = {col: [] for col in columns}
+    for row in data:
         for col in columns:
-            val = row.get(col, '')
-            if arr.dtype[col].kind in ['f', 'i']:
+            column_data[col].append(row.get(col, ''))
+
+    # Populate each column using vectorized operations
+    for col in columns:
+        col_dtype = arr.dtype[col]
+        values = column_data[col]
+
+        if col_dtype.kind in ['f', 'i']:
+            # Numeric column: bulk conversion with error handling
+            numeric_values = []
+            for val in values:
                 try:
-                    arr[i][col] = int(float(val)) if val else 0
+                    numeric_values.append(int(float(val)) if val else 0)
                 except:
-                    arr[i][col] = 0
-            else:
-                arr[i][col] = str(val)
+                    numeric_values.append(0)
+            arr[col] = np.array(numeric_values, dtype=col_dtype.str)
+        else:
+            # String column: bulk string conversion
+            arr[col] = np.array([str(v) for v in values], dtype=col_dtype.str)
 
     return arr
 

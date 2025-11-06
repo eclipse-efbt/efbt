@@ -12,6 +12,7 @@
 #
 
 import os
+import numpy as np
 from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
     read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
     rename_fields, pascal_to_upper_snake, select_fields
@@ -27,32 +28,38 @@ def map_cell_position(path=os.path.join("target", "CellPosition.csv"), cell_map:
     column_mapping = {col: pascal_to_upper_snake(col) for col in data.dtype.names}
     data = rename_fields(data, column_mapping)
 
-    # Update CELL_ID
-    cell_ids = []
-    for row in data:
-        cell_ids.append(cell_map.get(str(row["CELL_ID"]), str(row["CELL_ID"])))
+    # Optimized: Update CELL_ID and ORDINATE_ID using vectorized operations
+    # Create vectorized mapping functions
+    def map_cell_id(cell_id):
+        return cell_map.get(str(cell_id), str(cell_id))
 
-    for i, row in enumerate(data):
-        data[i]["CELL_ID"] = cell_ids[i]
+    def map_ordinate_id(ordinate_id):
+        return ordinate_map.get(str(ordinate_id), str(ordinate_id))
 
-    # Update ORDINATE_ID
-    ordinate_ids = []
-    for row in data:
-        ordinate_ids.append(ordinate_map.get(str(row["ORDINATE_ID"]), str(row["ORDINATE_ID"])))
+    # Vectorize the mapping functions for efficient application
+    vec_map_cell = np.vectorize(map_cell_id)
+    vec_map_ordinate = np.vectorize(map_ordinate_id)
 
-    for i, row in enumerate(data):
-        data[i]["ORDINATE_ID"] = ordinate_ids[i]
+    # Apply mappings to entire columns at once
+    data["CELL_ID"] = vec_map_cell(data["CELL_ID"])
+    data["ORDINATE_ID"] = vec_map_ordinate(data["ORDINATE_ID"])
 
+    # Optimized: Generate IDs using numpy array operations
     if start_index_after_last and "ID" in data.dtype.names and len(data) > 0:
-        max_id = max(int(float(row["ID"])) for row in data if str(row["ID"]) != 'nan')
+        # Vectorized max_id calculation
+        id_column = data["ID"]
+        # Filter out NaN values and convert to int
+        valid_ids = id_column[np.char.str_len(id_column.astype(str)) > 0]
+        valid_ids = valid_ids[valid_ids.astype(str) != 'nan']
+        max_id = int(float(np.max(valid_ids))) if len(valid_ids) > 0 else 0
         start_idx = max_id + 1 if max_id else 0
-        ids = list(range(start_idx, start_idx + len(data)))
-        for i, row in enumerate(data):
-            data[i]["ID"] = ids[i]
+        # Generate IDs using numpy arange (much faster than list(range()))
+        data["ID"] = np.arange(start_idx, start_idx + len(data), dtype='i8')
     else:
         if "ID" in data.dtype.names:
             data = drop_fields(data, "ID")
-        ids = list(range(len(data)))
+        # Generate IDs using numpy arange
+        ids = np.arange(len(data), dtype='i8')
         data = add_field(data, "ID", ids, dtype='i8')
 
     data = rename_fields(data, {"ORDINATE_ID": "AXIS_ORDINATE_ID"})

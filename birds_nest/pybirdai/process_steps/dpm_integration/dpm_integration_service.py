@@ -43,7 +43,7 @@ HEADERS = {
 }
 
 def save_numpy_array_to_csv(array, filepath, index=False):
-    """Save numpy structured array to CSV file"""
+    """Save numpy structured array to CSV file (optimized vectorized version)"""
     if len(array) == 0:
         # Write empty file with headers only
         with open(filepath, 'w', newline='', encoding='utf-8') as f:
@@ -52,32 +52,37 @@ def save_numpy_array_to_csv(array, filepath, index=False):
                 writer.writerow(array.dtype.names)
         return
 
+    # Optimized: Process each field/column as a vector instead of row-by-row
+    field_names = array.dtype.names
+    num_rows = len(array)
+
+    # Pre-allocate 2D object array for string data
+    data_matrix = np.empty((num_rows, len(field_names)), dtype=object)
+
+    for col_idx, field in enumerate(field_names):
+        column = array[field]
+        dtype = column.dtype
+
+        # Vectorized type conversion based on dtype
+        if np.issubdtype(dtype, np.bool_):
+            # Boolean: convert to "True"/"False" strings
+            data_matrix[:, col_idx] = np.where(column, 'True', 'False')
+        elif np.issubdtype(dtype, np.integer):
+            # Integer: convert to string
+            data_matrix[:, col_idx] = column.astype(str)
+        elif np.issubdtype(dtype, np.floating):
+            # Float: convert to string, but NaN becomes empty string
+            str_col = column.astype(str)
+            data_matrix[:, col_idx] = np.where(np.isnan(column), '', str_col)
+        else:
+            # String or other: convert to string
+            data_matrix[:, col_idx] = column.astype(str)
+
+    # Write to CSV using writerows (more efficient than repeated writerow)
     with open(filepath, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-
-        # Write header
-        writer.writerow(array.dtype.names)
-
-        # Write data rows
-        for row in array:
-            row_data = []
-            for field in array.dtype.names:
-                val = row[field]
-                # Convert numpy types to Python types for proper CSV writing
-                if isinstance(val, (np.bool_, bool)):
-                    row_data.append(str(val))
-                elif isinstance(val, (np.integer, int)):
-                    row_data.append(str(val))
-                elif isinstance(val, (np.floating, float)):
-                    # Check for NaN
-                    if np.isnan(val):
-                        row_data.append('')
-                    else:
-                        row_data.append(str(val))
-                else:
-                    # String or other types
-                    row_data.append(str(val))
-            writer.writerow(row_data)
+        writer.writerow(field_names)
+        writer.writerows(data_matrix)
 
 class DPMImporterService:
 

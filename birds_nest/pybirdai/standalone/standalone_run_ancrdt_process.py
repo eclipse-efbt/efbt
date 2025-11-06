@@ -57,12 +57,8 @@ if __name__ == "__main__":
     """Step 1: Import ANCRDT data with loading spinner"""
     RunANCRDTTransformation.run_step_1_import()
 
-    import cProfile
-    with cProfile.Profile() as pr:
-        """Step 2: Create joins metadata with loading spinner"""
-        RunANCRDTTransformation.run_step_2_joins_metadata()
-        pr.dump_stats('profile_data.prof')
-
+    """Step 2: Create joins metadata with loading spinner"""
+    RunANCRDTTransformation.run_step_2_joins_metadata()
 
     """Step 3: Create executable joins with loading spinner"""
     RunANCRDTTransformation.run_step_3_executable_joins()
