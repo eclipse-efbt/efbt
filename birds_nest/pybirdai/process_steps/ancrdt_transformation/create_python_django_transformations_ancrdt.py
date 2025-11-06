@@ -316,9 +316,9 @@ class CreatePythonTransformations:
                             cube_link_id = cube_link
                         )
                         for cube_structure_item_link in cube_structure_item_link_ids:
-                            generated_filter += [f"{TransformationBuildr.define_filter_from_structure_link(
+                            generated_filter += [TransformationBuildr.define_filter_from_structure_link(
                                 cube_structure_item_link.cube_structure_item_link_id
-                            )}"]
+                            )]
                     if not generated_filter:
                         continue
 
