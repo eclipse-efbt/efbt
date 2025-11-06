@@ -55,14 +55,14 @@ from pybirdai.entry_points.upload_sqldev_eldm_files import UploadSQLDevELDMFiles
 from pybirdai.entry_points.upload_technical_export_files import UploadTechnicalExportFiles
 from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
 from pybirdai.entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
-from ..process_steps.ancrdt_transformation.create_executable_joins_ancrdt import RunCreateExecutableJoins
-from ..process_steps.ancrdt_transformation.ancrdt_importer import RunANCRDTImport
-from ..process_steps.ancrdt_transformation.create_joins_meta_data_ancrdt import JoinsMetaDataCreatorANCRDT
+from pybirdai.process_steps.ancrdt_transformation.create_executable_joins_ancrdt import RunCreateExecutableJoins
+from pybirdai.process_steps.ancrdt_transformation.ancrdt_importer import RunANCRDTImport
+from pybirdai.process_steps.ancrdt_transformation.create_joins_meta_data_ancrdt import JoinsMetaDataCreatorANCRDT
 
 import os
 import csv
 from pathlib import Path
-from ..process_steps.upload_files.file_uploader import FileUploader
+from pybirdai.process_steps.upload_files.file_uploader import FileUploader
 from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
 from pybirdai.entry_points.upload_joins_configuration import UploadJoinsConfiguration
 from django.template.loader import render_to_string
@@ -3225,7 +3225,6 @@ def load_variables_from_csv_file(csv_file_path):
     """
     try:
         import csv
-        from .context.sdd_context_django import SDDContext
 
         if not os.path.exists(csv_file_path):
             logger.warning(f"Extra variables CSV file not found: {csv_file_path}")
