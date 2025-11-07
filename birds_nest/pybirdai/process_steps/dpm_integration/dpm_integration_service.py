@@ -17,6 +17,7 @@ import shutil
 import platform
 import logging
 import numpy as np
+import pandas as pd
 import csv
 
 logger = logging.getLogger(__name__)
@@ -42,47 +43,6 @@ HEADERS = {
     'Sec-Fetch-Site': 'none',
 }
 
-def save_numpy_array_to_csv(array, filepath, index=False):
-    """Save numpy structured array to CSV file (optimized vectorized version)"""
-    if len(array) == 0:
-        # Write empty file with headers only
-        with open(filepath, 'w', newline='', encoding='utf-8') as f:
-            if hasattr(array, 'dtype') and array.dtype.names:
-                writer = csv.writer(f)
-                writer.writerow(array.dtype.names)
-        return
-
-    # Optimized: Process each field/column as a vector instead of row-by-row
-    field_names = array.dtype.names
-    num_rows = len(array)
-
-    # Pre-allocate 2D object array for string data
-    data_matrix = np.empty((num_rows, len(field_names)), dtype=object)
-
-    for col_idx, field in enumerate(field_names):
-        column = array[field]
-        dtype = column.dtype
-
-        # Vectorized type conversion based on dtype
-        if np.issubdtype(dtype, np.bool_):
-            # Boolean: convert to "True"/"False" strings
-            data_matrix[:, col_idx] = np.where(column, 'True', 'False')
-        elif np.issubdtype(dtype, np.integer):
-            # Integer: convert to string
-            data_matrix[:, col_idx] = column.astype(str)
-        elif np.issubdtype(dtype, np.floating):
-            # Float: convert to string, but NaN becomes empty string
-            str_col = column.astype(str)
-            data_matrix[:, col_idx] = np.where(np.isnan(column), '', str_col)
-        else:
-            # String or other: convert to string
-            data_matrix[:, col_idx] = column.astype(str)
-
-    # Write to CSV using writerows (more efficient than repeated writerow)
-    with open(filepath, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f)
-        writer.writerow(field_names)
-        writer.writerows(data_matrix)
 
 class DPMImporterService:
 
@@ -260,8 +220,8 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         self.write_csv_maintenance_agency()
         logging.info("Created Maintenance Agency File")
 
-        frameworks_array, framework_map = new_maps.map_frameworks() # frameworks
-        save_numpy_array_to_csv(frameworks_array, f"{self.output_directory}framework.csv", index=False)
+        framework_df, framework_map = new_maps.map_frameworks() # frameworks
+        framework_df.to_csv(f"{self.output_directory}framework.csv", index=False, encoding='utf-8')
         logging.info("Mapped Framework Entities")
 
         domains_array, domain_map = new_maps.map_domains() # domains
@@ -272,33 +232,28 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         logging.info(f"Created {len(data_type_domains)} Data Type Domains for metrics")
 
         # Merge DPM domains with data type domains
-        combined_domains = np.concatenate([domains_array, data_type_domains])
-        save_numpy_array_to_csv(combined_domains, f"{self.output_directory}domain.csv", index=False)
+        combined_domains = pd.concat([domains_array, data_type_domains])
+        combined_domains.to_csv(f"{self.output_directory}domain.csv", index=False, encoding='utf-8')
+
         logging.info(f"Saved {len(combined_domains)} total Domains ({len(domains_array)} DPM + {len(data_type_domains)} data types)")
 
-        # Update domain_map with data type domains
-        for domain_row in data_type_domains:
-            code = str(domain_row["CODE"])
-            domain_id = str(domain_row["DOMAIN_ID"])
-            domain_map[code] = domain_id
-
         members_array, member_map = new_maps.map_members(domain_id_map=domain_map) # members
-        save_numpy_array_to_csv(members_array, f"{self.output_directory}member.csv", index=False)
+        members_array.to_csv(f"{self.output_directory}member.csv", index=False)
         logging.info("Mapped Members Entities")
 
         dimensions_array, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map) # to enumerated variables
 
         # Merge dimensions and metrics into single variable.csv
-        combined_variables = np.concatenate([dimensions_array, metrics_array])
-        save_numpy_array_to_csv(combined_variables, f"{self.output_directory}variable.csv", index=False)
+        combined_variables = pd.concat([dimensions_array, metrics_array])
+        combined_variables.to_csv(f"{self.output_directory}variable.csv", index=False)
         logging.info(f"Saved {len(combined_variables)} total Variables ({len(dimensions_array)} dimensions + {len(metrics_array)} metrics)")
 
-        hierarchy_array, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
-        save_numpy_array_to_csv(hierarchy_array, f"{self.output_directory}member_hierarchy.csv", index=False)
+        hierarchy_df, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map) # member hierarchies
+        hierarchy_df.to_csv(f"{self.output_directory}member_hierarchy.csv", index=False)
         logging.info("Mapped Hierarchy Entities")
 
-        hierarchy_node_array, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
-        save_numpy_array_to_csv(hierarchy_node_array, f"{self.output_directory}member_hierarchy_node.csv", index=False)
+        hierarchy_node_df, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map) # member hierarchy node
+        hierarchy_node_df.to_csv(f"{self.output_directory}member_hierarchy_node.csv", index=False)
         logging.info("Mapped HierarchyNode Entities")
 
 
@@ -318,28 +273,28 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         Rendering Package
         """
 
-        tables_array, table_map = new_maps.map_tables(framework_id_map=framework_map)
-        save_numpy_array_to_csv(tables_array, f"{self.output_directory}table.csv", index=False)
+        tables_df, table_map = new_maps.map_tables(framework_id_map=framework_map)
+        tables_df.to_csv(f"{self.output_directory}table.csv", index=False)
         logging.info("Mapped Table Entities")
 
-        axes_array, axis_map = new_maps.map_axis(table_map=table_map)
-        save_numpy_array_to_csv(axes_array, f"{self.output_directory}axis.csv", index=False)
+        axes_df, axis_map = new_maps.map_axis(table_map=table_map)
+        axes_df.to_csv(f"{self.output_directory}axis.csv", index=False)
         logging.info("Mapped Axis Entities")
 
-        ordinates_array, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
-        save_numpy_array_to_csv(ordinates_array, f"{self.output_directory}axis_ordinate.csv", index=False)
+        ordinates_df, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
+        ordinates_df.to_csv(f"{self.output_directory}axis_ordinate.csv", index=False)
         logging.info("Mapped AxisOrdinates Entities")
 
-        cells_array, cell_map = new_maps.map_table_cell(table_map=table_map)
-        save_numpy_array_to_csv(cells_array, f"{self.output_directory}table_cell.csv", index=False)
+        cells_df, cell_map = new_maps.map_table_cell(table_map=table_map)
+        cells_df.to_csv(f"{self.output_directory}table_cell.csv", index=False)
         logging.info("Mapped TableCell Entities")
 
-        cell_positions_array, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map,start_index_after_last=False)
-        save_numpy_array_to_csv(cell_positions_array, f"{self.output_directory}cell_position.csv", index=False)
+        cell_positions_df, cell_position_map = new_maps.map_cell_position(cell_map=cell_map,ordinate_map=ordinate_map,start_index_after_last=False)
+        cell_positions_df.to_csv(f"{self.output_directory}cell_position.csv", index=False)
         logging.info("Mapped CellPositions Entities")
 
-        ordinate_items_array, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map,start_index_after_last=False)
-        save_numpy_array_to_csv(ordinate_items_array, f"{self.output_directory}ordinate_item.csv", index=False)
+        ordinate_items_df, ordinate_item_map = new_maps.map_ordinate_categorisation(member_map=member_map,dimension_map=dimension_map,ordinate_map=ordinate_map,hierarchy_map=hierarchy_map,start_index_after_last=False)
+        ordinate_items_df.to_csv(f"{self.output_directory}ordinate_item.csv", index=False)
         logging.info("Mapped OrdinateItems Entities")
 
 if __name__ == "__main__":

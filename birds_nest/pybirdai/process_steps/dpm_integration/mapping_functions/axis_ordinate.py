@@ -12,87 +12,58 @@
 #
 
 import os
-from collections import defaultdict
+import pandas as pd
 from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, rename_fields, pascal_to_upper_snake, clean_spaces
+    pascal_to_upper_snake, clean_spaces_df
 )
 
 
 def map_axis_ordinate(path=os.path.join("target", "AxisOrdinate.csv"), axis_map: dict = {}):
     """Map axis ordinates from AxisOrdinate.csv to the target format"""
-    types = defaultdict(lambda: str, OrdinateID="int", OrdinateCode="str", AxisID="int")
-    data = read_csv_to_dict(path)
-    # Force ID and PATH fields to be strings since they will be mapped to string values
-    ordinates = dict_list_to_structured_array(data, force_str_columns={'OrdinateID', 'AxisID', 'ParentOrdinateID', 'Path'})
+    df = pd.read_csv(path, dtype=str)
 
-    column_mapping = {col: pascal_to_upper_snake(col) for col in ordinates.dtype.names}
-    ordinates = rename_fields(ordinates, column_mapping)
-    ordinates = add_field(ordinates, "MAINTENANCE_AGENCY_ID", "EBA")
+    # Transform column names to UPPER_SNAKE_CASE
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    new_ordinate_ids = []
-    for row in ordinates:
-        axis_id = axis_map.get(str(row["AXIS_ID"]), str(row["AXIS_ID"]))
-        code = str(row["ORDINATE_CODE"]).strip()
-        new_ordinate_ids.append(f"{axis_id}_{code}")
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
 
-    ordinates = add_field(ordinates, "NEW_ORDINATE_ID", new_ordinate_ids)
+    # Map axis IDs and create new ordinate IDs
+    df['AXIS_ID'] = df['AXIS_ID'].astype(str).map(axis_map).fillna(df['AXIS_ID'])
+    df['NEW_ORDINATE_ID'] = df['AXIS_ID'] + '_' + df['ORDINATE_CODE'].astype(str).str.strip()
 
-    id_mapping = {}
-    for row in ordinates:
-        id_mapping[str(row["ORDINATE_ID"])] = str(row["NEW_ORDINATE_ID"])
+    # Create ID mapping
+    id_mapping = dict(zip(df['ORDINATE_ID'].astype(str), df['NEW_ORDINATE_ID'].astype(str)))
 
-    ordinates = drop_fields(ordinates, "ORDINATE_ID")
-
-    ordinates = rename_fields(ordinates, {
+    # Rename columns
+    df.drop(axis=1,labels='ORDINATE_ID',inplace=True)
+    df = df.rename(columns={
         "NEW_ORDINATE_ID": "AXIS_ORDINATE_ID",
         "ORDINATE_CODE": "CODE",
         "PARENT_ORDINATE_ID": "PARENT_AXIS_ORDINATE_ID",
         "ORDINATE_LABEL": "NAME"
     })
 
-    # Update PARENT_AXIS_ORDINATE_ID
-    parent_ids = []
-    for row in ordinates:
-        parent_ids.append(id_mapping.get(str(row["PARENT_AXIS_ORDINATE_ID"]), str(row["PARENT_AXIS_ORDINATE_ID"])))
+    # Map parent IDs
+    df['PARENT_AXIS_ORDINATE_ID'] = df['PARENT_AXIS_ORDINATE_ID'].astype(str).map(id_mapping).fillna(df['PARENT_AXIS_ORDINATE_ID'])
 
-    for i, row in enumerate(ordinates):
-        ordinates[i]["PARENT_AXIS_ORDINATE_ID"] = parent_ids[i]
+    df['DESCRIPTION'] = ""
 
-    ordinates = add_field(ordinates, "DESCRIPTION", "")
+    # Map hierarchical path components
+    def map_path(path_str):
+        if pd.isna(path_str) or path_str == '':
+            return ''
+        parts = str(path_str).split('.')
+        return '.'.join([id_mapping.get(part, part) if part else part for part in parts])
 
-    # Update AXIS_ID
-    axis_ids = []
-    for row in ordinates:
-        axis_ids.append(axis_map.get(str(row["AXIS_ID"]), str(row["AXIS_ID"])))
+    df['PATH'] = df['PATH'].apply(map_path)
 
-    for i, row in enumerate(ordinates):
-        ordinates[i]["AXIS_ID"] = axis_ids[i]
-
-    # Update PATH
-    paths = []
-    for row in ordinates:
-        path = str(row["PATH"])
-        parts = path.split(".")
-        new_parts = []
-        for part in parts:
-            if part:
-                try:
-                    new_parts.append(id_mapping.get(part, part))
-                except:
-                    new_parts.append(part)
-            else:
-                new_parts.append(part)
-        paths.append(".".join(new_parts))
-
-    for i, row in enumerate(ordinates):
-        ordinates[i]["PATH"] = paths[i]
-
-    ordinates = select_fields(ordinates, [
-        "AXIS_ORDINATE_ID", "IS_ABSTRACT_HEADER", "CODE", "ORDER", "LEVEL", "PATH", "AXIS_ID", "PARENT_AXIS_ORDINATE_ID", "NAME", "DESCRIPTION"
-    ])
+    # Select final columns
+    df = df[[
+        "AXIS_ORDINATE_ID", "IS_ABSTRACT_HEADER", "CODE", "ORDER", "LEVEL",
+        "PATH", "AXIS_ID", "PARENT_AXIS_ORDINATE_ID", "NAME", "DESCRIPTION"
+    ]]
 
     # Clean text fields
-    ordinates = clean_spaces(ordinates)
+    df = clean_spaces_df(df)
 
-    return ordinates, id_mapping
+    return df, id_mapping

@@ -27,6 +27,9 @@ All functions are exposed at the module level for backward compatibility.
 # Import all utility functions
 from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
     pascal_to_upper_snake,
+    clean_spaces_df,
+    normalize_id_map,
+    # Compatibility wrappers (deprecated, use pandas directly)
     read_csv_to_dict,
     dict_list_to_structured_array,
     rename_fields,
@@ -64,8 +67,11 @@ from .ordinate_categorisation import (
 
 # Define what gets exported when using "from mapping_functions import *"
 __all__ = [
-    # Utility functions
+    # Utility functions (modern pandas-based)
     'pascal_to_upper_snake',
+    'clean_spaces_df',
+    'normalize_id_map',
+    # Compatibility functions (deprecated, use pandas directly)
     'read_csv_to_dict',
     'dict_list_to_structured_array',
     'rename_fields',

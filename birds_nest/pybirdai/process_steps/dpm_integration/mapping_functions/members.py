@@ -12,69 +12,44 @@
 #
 
 import os
-import numpy as np
+import pandas as pd
 from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, rename_fields, pascal_to_upper_snake, clean_spaces
+    pascal_to_upper_snake, clean_spaces_df, normalize_id_map
 )
 
 
 def map_members(path=os.path.join("target", "Member.csv"), domain_id_map: dict = {}):
     """Map members from Member.csv to the target format"""
-    data = read_csv_to_dict(path)
-    # Force DomainID to be string since it will be mapped to string values
-    members = dict_list_to_structured_array(data, force_str_columns={'DomainID'})
+    df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE
-    column_mapping = {col: pascal_to_upper_snake(col) for col in members.dtype.names}
-    members = rename_fields(members, column_mapping)
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    # Set maintenance agency ID and create new member ID
-    members = add_field(members, "MAINTENANCE_AGENCY_ID", "EBA")
+    # Normalize domain ID map for .0 variants
+    domain_map_norm = normalize_id_map(domain_id_map)
 
-    new_member_ids = []
-    new_domain_ids = []
-    for row in members:
-        original_domain_id = str(row["DOMAIN_ID"]).strip()
-        if original_domain_id and original_domain_id != "":
-            # Try both with and without .0 suffix for numeric domain IDs
-            domain_id = domain_id_map.get(original_domain_id, None)
-            if domain_id is None:
-                domain_id = domain_id_map.get(original_domain_id + ".0", original_domain_id)
-            new_member_ids.append(domain_id + "_EBA_" + str(row["MEMBER_CODE"]))
-            new_domain_ids.append(domain_id)
-        else:
-            # Handle empty domain ID - use the member code directly
-            new_member_ids.append("EBA_" + str(row["MEMBER_CODE"]))
-            new_domain_ids.append("")
+    # Map DOMAIN_ID
+    df['DOMAIN_ID'] = df['DOMAIN_ID'].str.strip()
+    df['MAPPED_DOMAIN_ID'] = df['DOMAIN_ID'].map(domain_map_norm).fillna(df['DOMAIN_ID'])
 
-    members = add_field(members, "NEW_MEMBER_ID", new_member_ids)
-
-    # Update DOMAIN_ID
-    for i, row in enumerate(members):
-        members[i]["DOMAIN_ID"] = new_domain_ids[i]
+    # Create NEW_MEMBER_ID
+    df['NEW_MEMBER_ID'] = df['MAPPED_DOMAIN_ID'] + "_EBA_" + df['MEMBER_CODE']
 
     # Create ID mapping
-    id_mapping = {}
-    for row in members:
-        id_mapping[str(row["MEMBER_ID"])] = str(row["NEW_MEMBER_ID"])
-
-    members = drop_fields(members, "MEMBER_ID")
-    members = rename_fields(members, {
+    id_mapping = dict(zip(df['MEMBER_ID'].astype(str), df['NEW_MEMBER_ID'].astype(str)))
+    df.drop(axis=1, columns=['MEMBER_ID'], inplace=True)
+    # Rename and select columns
+    df = df.rename(columns={
         "NEW_MEMBER_ID": "MEMBER_ID",
+        "MAPPED_DOMAIN_ID": "DOMAIN_ID",
         "MEMBER_CODE": "CODE",
         "MEMBER_LABEL": "NAME",
         "MEMBER_DESCRIPTION": "DESCRIPTION",
     })
 
-    # Filter out rows with empty MEMBER_ID
-    mask = np.array([row["MEMBER_ID"] != '' and row["MEMBER_ID"] != 'nan' for row in members])
-    members = members[mask]
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
 
-    members = select_fields(members, [
-        "MAINTENANCE_AGENCY_ID", "MEMBER_ID", "CODE", "NAME", "DOMAIN_ID", "DESCRIPTION"
-    ])
+    df = df[["MAINTENANCE_AGENCY_ID", "MEMBER_ID", "CODE", "NAME", "DOMAIN_ID", "DESCRIPTION"]]
+    df = clean_spaces_df(df)
 
-    members = clean_spaces(members)
-
-    return members, id_mapping
+    return df, id_mapping

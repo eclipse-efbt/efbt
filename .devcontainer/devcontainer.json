@@ -2,6 +2,22 @@
   "name": "PyBIRD AI (Eclipse EFBT)",
   "image": "mcr.microsoft.com/devcontainers/python:3.11-bullseye",
 
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+
+  "runArgs": [
+    "--cpus=4",
+    "--memory=8g",
+    "--shm-size=2g"
+  ],
+
+  "containerEnv": {
+    "PYTHONUNBUFFERED": "1"
+  },
+
   "workspaceFolder": "/workspaces/efbt",
 
   "postCreateCommand": "bash linux_startup.sh",

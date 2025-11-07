@@ -55,11 +55,20 @@ if __name__ == "__main__":
     # Database deletion removed to preserve existing data
     # The DPM import process now preserves and merges with existing data
 
-    app_config = RunImportDPMData('pybirdai', 'birds_nest')
-    app_config.run_import(import_=False)
+    import cProfile
+    with cProfile.Profile() as prof:
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import(import_=False)
+        prof.dump_stats('RunDownloadDPMData.prof')
 
-    app_config = RunImportDPMData('pybirdai', 'birds_nest')
-    app_config.run_import(import_=True)
+    import cProfile
+    with cProfile.Profile() as prof:
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import(import_=True)
+        prof.dump_stats('RunImportDPMDatabase.prof')
 
-    app_config = RunDPMOutputLayerCreation('pybirdai', 'birds_nest')
-    results = app_config.run_creation(table_code="C_07.00.a",version="COREP_3")
+    import cProfile
+    with cProfile.Profile() as prof:
+        app_config = RunDPMOutputLayerCreation('pybirdai', 'birds_nest')
+        results = app_config.run_creation(table_code="C_07.00.a",version="COREP_3")
+        prof.dump_stats('RunDPMOutputLayerCreation.prof')

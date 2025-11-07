@@ -12,40 +12,27 @@
 #
 
 import os
-from collections import defaultdict
+import pandas as pd
 from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field,
-    rename_fields, pascal_to_upper_snake
+    pascal_to_upper_snake
 )
 
 
 def map_context_definition(path=os.path.join("target", "ContextDefinition.csv"), dimension_map: dict = {}, member_map: dict = {}):
     """Map context definitions from ContextDefinition.csv to the target format"""
-    types = defaultdict(lambda: str, ContextID="str")
-    data_list = read_csv_to_dict(path)
-    # Force ID fields to be strings since they will be mapped to string values
-    data = dict_list_to_structured_array(data_list, force_str_columns={'DimensionID', 'MemberID'})
+    df = pd.read_csv(path, dtype=str)
 
-    column_mapping = {col: pascal_to_upper_snake(col) for col in data.dtype.names}
-    data = rename_fields(data, column_mapping)
-    data = add_field(data, "MAINTENANCE_AGENCY_ID", "EBA")
+    # Transform column names to UPPER_SNAKE_CASE
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    # Update DIMENSION_ID
-    dimension_ids = []
-    for row in data:
-        dim_id = int(float(str(row["DIMENSION_ID"])))
-        dimension_ids.append(dimension_map.get(str(dim_id), str(dim_id)))
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
 
-    for i, row in enumerate(data):
-        data[i]["DIMENSION_ID"] = dimension_ids[i]
+    # Convert to int then string for mapping (handles floats like "123.0")
+    df['DIMENSION_ID'] = pd.to_numeric(df['DIMENSION_ID'], errors='coerce').fillna(0).astype(int).astype(str)
+    df['MEMBER_ID'] = pd.to_numeric(df['MEMBER_ID'], errors='coerce').fillna(0).astype(int).astype(str)
 
-    # Update MEMBER_ID
-    member_ids = []
-    for row in data:
-        mem_id = int(float(str(row["MEMBER_ID"])))
-        member_ids.append(member_map.get(str(mem_id), str(mem_id)))
+    # Vectorized ID mapping
+    df['DIMENSION_ID'] = df['DIMENSION_ID'].map(dimension_map).fillna(df['DIMENSION_ID'])
+    df['MEMBER_ID'] = df['MEMBER_ID'].map(member_map).fillna(df['MEMBER_ID'])
 
-    for i, row in enumerate(data):
-        data[i]["MEMBER_ID"] = member_ids[i]
-
-    return data, {}
+    return df, {}

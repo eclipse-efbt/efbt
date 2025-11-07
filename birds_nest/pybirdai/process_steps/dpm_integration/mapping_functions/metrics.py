@@ -12,10 +12,9 @@
 #
 
 import os
-import numpy as np
+import pandas as pd
 from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field,
-    select_fields, rename_fields, pascal_to_upper_snake, clean_spaces
+    pascal_to_upper_snake, clean_spaces_df
 )
 
 
@@ -41,23 +40,18 @@ def _create_data_type_domains():
         {"CODE": "EBA_FRQNCY", "NAME": "FRQNCY", "DATA_TYPE": 2, "DESCRIPTION": "Frequency data type"},
     ]
 
-    # Create numpy structured array matching domain schema
-    domains = dict_list_to_structured_array(data_type_domains)
+    # Create DataFrame directly
+    df = pd.DataFrame(data_type_domains)
 
     # Add required fields
-    domains = add_field(domains, "MAINTENANCE_AGENCY_ID", "EBA")
-
-    # Domain IDs are the same as CODE (already have EBA_ prefix)
-    domain_ids = [str(row['CODE']) for row in domains]
-    domains = add_field(domains, "DOMAIN_ID", domain_ids)
-
-    # Add boolean fields
-    domains = add_field(domains, "IS_ENUMERATED", False, dtype='bool')
-    domains = add_field(domains, "FACET_ID", False, dtype='bool')
-    domains = add_field(domains, "IS_REFERENCE", False, dtype='bool')
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
+    df['DOMAIN_ID'] = df['CODE']  # Domain IDs are the same as CODE
+    df['IS_ENUMERATED'] = False
+    df['FACET_ID'] = False
+    df['IS_REFERENCE'] = False
 
     # Select and order fields to match domain schema
-    domains = select_fields(domains, [
+    df = df[[
         "MAINTENANCE_AGENCY_ID",
         "DOMAIN_ID",
         "NAME",
@@ -67,16 +61,12 @@ def _create_data_type_domains():
         "CODE",
         "FACET_ID",
         "IS_REFERENCE"
-    ])
+    ]]
 
     # Create mapping dict (code -> domain_id)
-    domain_map_dict = {}
-    for row in domains:
-        code = str(row["CODE"])
-        domain_id = str(row["DOMAIN_ID"])
-        domain_map_dict[code] = domain_id
+    domain_map_dict = dict(zip(df['CODE'].astype(str), df['DOMAIN_ID'].astype(str)))
 
-    return domains, domain_map_dict
+    return df, domain_map_dict
 
 
 def map_metrics(
@@ -105,58 +95,34 @@ def map_metrics(
     # Create data type domains first
     data_type_domains, data_type_domain_map = _create_data_type_domains()
 
-    # Read configuration CSV
-    data = read_csv_to_dict(config_path)
-
-    # Force domain_id to be string for mapping
-    metrics = dict_list_to_structured_array(data, force_str_columns={'domain_id', 'subdomain_id'})
+    # Read configuration CSV directly to DataFrame
+    df = pd.read_csv(config_path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE
-    column_mapping = {col: pascal_to_upper_snake(col) for col in metrics.dtype.names}
-    metrics = rename_fields(metrics, column_mapping)
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    # Set maintenance agency ID
-    metrics = add_field(metrics, "MAINTENANCE_AGENCY_ID", "EBA")
-
-    # Map domain IDs using the data_type_domain_map we created
+    # Map domain IDs using the data_type_domain_map
     # Configuration file already has EBA_ prefix, so direct lookup
-    mapped_domain_ids = []
-    for row in metrics:
-        domain_name = str(row["DOMAIN_ID"])
-        # Direct lookup - domain names in config already have EBA_ prefix
-        mapped_domain = data_type_domain_map.get(domain_name, domain_name)
-        mapped_domain_ids.append(mapped_domain)
-
-    # Update DOMAIN_ID field with mapped values
-    for i, row in enumerate(metrics):
-        metrics[i]["DOMAIN_ID"] = mapped_domain_ids[i]
+    df['DOMAIN_ID'] = df['DOMAIN_ID'].astype(str).map(data_type_domain_map).fillna(df['DOMAIN_ID'])
 
     # Create ID mapping for downstream use (code -> variable_id)
-    id_mapping = {}
-    for row in metrics:
-        id_mapping[str(row["VARIABLE_CODE"])] = str(row["VARIABLE_ID"])
+    id_mapping = dict(zip(df['VARIABLE_CODE'].astype(str), df['VARIABLE_ID'].astype(str)))
 
     # Rename fields to match variable schema
-    metrics = rename_fields(metrics, {
-        "MAINTENANCE_AGENCY_ID": "MAINTENANCE_AGENCY_ID",
-        "VARIABLE_ID": "VARIABLE_ID",
+    df = df.rename(columns={
         "VARIABLE_CODE": "CODE",
         "VARIABLE_NAME": "NAME"
     })
 
-    # Add DESCRIPTION field (use NAME as description)
-    descriptions = []
-    for row in metrics:
-        descriptions.append(str(row["NAME"]))
-    metrics = add_field(metrics, "DESCRIPTION", descriptions)
+    # Add fields
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
+    df['DESCRIPTION'] = df['NAME']  # Use NAME as description
+    df['PRIMARY_CONCEPT'] = ""
+    df['IS_DECOMPOSED'] = False
+    df['IS_IMPLIED_IF_NOT_EXPLICITLY_MODELLED'] = False
 
-    # Add required fields for variable schema
-    metrics = add_field(metrics, "PRIMARY_CONCEPT", "")
-    metrics = add_field(metrics, "IS_DECOMPOSED", False, dtype='bool')
-    metrics = add_field(metrics, "IS_IMPLIED_IF_NOT_EXPLICITLY_MODELLED", False, dtype='bool')
-
-    # Select and order final fields to match dimensions output
-    metrics = select_fields(metrics, [
+    # Select and order final fields
+    df = df[[
         "MAINTENANCE_AGENCY_ID",
         "VARIABLE_ID",
         "CODE",
@@ -166,9 +132,9 @@ def map_metrics(
         "PRIMARY_CONCEPT",
         "IS_DECOMPOSED",
         "IS_IMPLIED_IF_NOT_EXPLICITLY_MODELLED"
-    ])
+    ]]
 
     # Clean spaces and special characters
-    metrics = clean_spaces(metrics)
+    df = clean_spaces_df(df)
 
-    return metrics, id_mapping, data_type_domains
+    return df, id_mapping, data_type_domains
