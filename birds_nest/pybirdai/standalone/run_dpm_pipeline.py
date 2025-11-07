@@ -50,8 +50,8 @@ class DjangoSetup:
 if __name__ == "__main__":
     DjangoSetup.configure_django()
 
-    # os.system("uv run pybirdai/standalone/standalone_fetch_artifacts_eil.py")
-    # os.system("uv run pybirdai/standalone/standalone_setup_migrate_database.py")
+    os.system("uv run pybirdai/standalone/standalone_fetch_artifacts_eil.py")
+    os.system("uv run pybirdai/standalone/standalone_setup_migrate_database.py")
 
     from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
     app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")

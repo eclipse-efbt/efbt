@@ -41,3 +41,6 @@ birds_nest/pybirdai/models/bird_data_model.py
 **/.env
 .env.local
 .env.production
+**/.ipynb_checkpoints/
+*.prof
+*.ipynb
