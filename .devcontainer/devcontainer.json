@@ -1,6 +1,6 @@
 {
   "name": "PyBIRD AI (Eclipse EFBT)",
-  "image": "mcr.microsoft.com/devcontainers/python:3.11-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13-bullseye",
 
   "hostRequirements": {
     "cpus": 4,
