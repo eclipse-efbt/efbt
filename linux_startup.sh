@@ -7,7 +7,7 @@ python -m pip install django==5.1.3 --quiet
 python -m pip install pyecore==0.15.1 --quiet
 python -m pip install pytest==8.3.4 --quiet
 python -m pip install pytest-xdist==3.6.1 --quiet
-python -m pip install pandas=2.3.0 --quiet
+python -m pip install pandas==2.3.0 --quiet
 python -m pip install numpy --quiet
 python -m pip install requests --quiet
 python -m pip install psutil --quiet

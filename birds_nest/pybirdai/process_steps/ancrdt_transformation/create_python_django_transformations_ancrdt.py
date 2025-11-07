@@ -356,7 +356,8 @@ class CreatePythonTransformations:
                         domain = variable.domain_id.domain_id
                         for var, source_target_dict in assignment_dicts.items():
                             file.write('\tdef ' + var + '(self) -> str:\n')
-                            file.write(f'\t\tsource = self.{rolc_id}_{join_id.replace(' ','_')}.{var}()\n')
+                            replace_join_id = join_id.replace(' ','_')
+                            file.write(f'\t\tsource = self.{rolc_id}_{replace_join_id}.{var}()\n')
                             for row in source_target_dict:
                                 file.write(f"""\t\tif source == '{row.get("source")}' : return '{row.get("target")}'\n""")
                             file.write('\n')
