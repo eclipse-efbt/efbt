@@ -21,15 +21,18 @@ from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id, find_domain_with_id
 
 
-def import_members(context, ref):
+def import_members(context, ref, config=None):
     """
     Import all members from CSV file using bulk create.
 
     Args:
         context: SDDContext containing file paths and dictionaries
         ref: Boolean indicating if importing reference members (ECB) or others
+        config: Optional DatasetConfig for dynamic file paths and filtering
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member.csv"
+    # Determine file directory based on config
+    file_dir = config.file_directory if config else "technical_export"
+    file_location = context.file_directory + os.sep + file_dir + os.sep + "member.csv"
     header_skipped = False
     members_to_create = []
 
@@ -49,11 +52,17 @@ def import_members(context, ref):
                 if (member_name is None) or (member_name == ""):
                     member_name = member_id
 
-                include = False
-                if (ref) and (maintenence_agency == "ECB"):
+                # Determine if entity should be included
+                if config and config.bypass_ecb_filter:
+                    # For ANCRDT and other datasets that don't filter by ECB
                     include = True
-                if (not ref) and not (maintenence_agency == "ECB"):
-                    include = True
+                else:
+                    # Original ECB filtering logic
+                    include = False
+                    if (ref) and (maintenence_agency == "ECB"):
+                        include = True
+                    if (not ref) and not (maintenence_agency == "ECB"):
+                        include = True
 
                 if include:
                     member = MEMBER(name=replace_dots(member_id))

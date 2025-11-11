@@ -162,6 +162,10 @@ urlpatterns = [
     path("ancrdt-workflow/step-2/review/", ancrdt_workflow_views.ancrdt_step_2_review_view, name="ancrdt_step_2_review"),
     path("ancrdt-workflow/step-3/review/", ancrdt_workflow_views.ancrdt_step_3_review_view, name="ancrdt_step_3_review"),
 
+    # ANCRDT Workflow - API endpoints for cube structure visualization
+    path("api/ancrdt/cubes/", ancrdt_workflow_views.api_ancrdt_cubes, name="api_ancrdt_cubes"),
+    path("api/ancrdt/cube-structure/<str:cube_id>/", ancrdt_workflow_views.api_ancrdt_cube_structure, name="api_ancrdt_cube_structure"),
+
     # Execution Code Editing Workflow URLs
     path("execution-code-editing/review-joins/<int:step>/", execution_code_editor_views.review_joins_metadata, name="review_joins_metadata"),
     path("execution-code-editing/regenerate-code/<int:step>/", execution_code_editor_views.regenerate_execution_code, name="regenerate_execution_code"),
@@ -182,6 +186,16 @@ urlpatterns = [
 
     path("edit-ancrdt-output-tables/", execution_code_editor_views.edit_ancrdt_output_tables, name="edit_ancrdt_output_tables"),
     path("save-ancrdt-output-tables/", execution_code_editor_views.save_ancrdt_output_tables, name="save_ancrdt_output_tables"),
+
+    # Code Sync URLs - ANCRDT Lifecycle Management
+    path("code-sync/deploy/", execution_code_editor_views.sync_file_to_production, name="sync_file_to_production"),
+    path("code-sync/deploy-all/", execution_code_editor_views.sync_all_ancrdt_files, name="sync_all_ancrdt_files"),
+    path("code-sync/status/", execution_code_editor_views.get_sync_status, name="get_sync_status"),
+    path("code-sync/status/<str:file_name>/", execution_code_editor_views.get_sync_status, name="get_sync_status_file"),
+    path("code-sync/diff/<str:file_name>/", execution_code_editor_views.get_file_diff, name="get_file_diff"),
+    path("code-sync/check-edits/<str:file_name>/", execution_code_editor_views.check_manual_edits, name="check_manual_edits"),
+    path("code-sync/save-and-deploy/", execution_code_editor_views.save_and_deploy, name="save_and_deploy"),
+    path("code-sync/file-info/<str:source>/<str:file_name>/", execution_code_editor_views.get_file_info, name="get_file_info"),
 
     path(
         "run_import_semantic_integrations_from_website/",
@@ -465,17 +479,24 @@ urlpatterns = [
     # Output Layer Mapping Workflow URLs
     path("output-layer-mapping/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping"),
     path("output-layer-mapping/step1/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping_step1"),
-    path("output-layer-mapping/check-existing/", output_layer_mapping_workflow_views.check_existing_mappings, name="output_layer_mapping_step1_5"),
-    path("output-layer-mapping/step2/", output_layer_mapping_workflow_views.define_variable_breakdown, name="output_layer_mapping_step2"),
-    path("output-layer-mapping/select-ordinates/", output_layer_mapping_workflow_views.select_axis_ordinates, name="output_layer_mapping_step2_5"),
-    path("output-layer-mapping/step3/", output_layer_mapping_workflow_views.edit_mappings_tabbed, name="output_layer_mapping_step3"),
-    path("output-layer-mapping/step4/", output_layer_mapping_workflow_views.review_and_name_mapping, name="output_layer_mapping_step4"),
-    path("output-layer-mapping/step5/", output_layer_mapping_workflow_views.generate_structures, name="output_layer_mapping_step5"),
+    path("output-layer-mapping/step2/", output_layer_mapping_workflow_views.check_existing_mappings, name="output_layer_mapping_step2"),
+    path("output-layer-mapping/step3/", output_layer_mapping_workflow_views.select_axis_ordinates, name="output_layer_mapping_step3"),
+    path("output-layer-mapping/step4/", output_layer_mapping_workflow_views.define_variable_breakdown, name="output_layer_mapping_step4"),
+    path("output-layer-mapping/step5/", output_layer_mapping_workflow_views.edit_mappings_tabbed, name="output_layer_mapping_step5"),
+    path("output-layer-mapping/step6/", output_layer_mapping_workflow_views.review_and_name_mapping, name="output_layer_mapping_step6"),
+    path("output-layer-mapping/step7/", output_layer_mapping_workflow_views.generate_structures, name="output_layer_mapping_step7"),
 
     # Output Layer Mapping API endpoints
     path("api/output-layer-mapping/table-cells/", output_layer_mapping_workflow_views.get_table_cells_api, name="olm_get_table_cells_api"),
     path("api/output-layer-mapping/variable-domain/", output_layer_mapping_workflow_views.get_variable_domain_api, name="olm_get_variable_domain_api"),
     path("api/output-layer-mapping/filter-options/", output_layer_mapping_workflow_views.get_filter_options_api, name="olm_filter_options_api"),
+
+    # Cube structure viewer endpoints (reusable service)
+    path("api/cube-structure/<str:cube_id>/", output_layer_mapping_workflow_views.api_cube_structure, name="api_cube_structure"),
+    path("cube-viewer/<str:cube_id>/", output_layer_mapping_workflow_views.cube_structure_viewer, name="cube_structure_viewer"),
+
     path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
+    path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),
     path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
+    path("api/create_domain/", output_layer_mapping_workflow_views.create_domain, name="api_create_domain"),
 ]

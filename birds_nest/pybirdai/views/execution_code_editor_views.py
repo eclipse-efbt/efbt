@@ -17,6 +17,7 @@ from django.utils import timezone
 from pybirdai.models import AnaCreditProcessExecution, CUBE_LINK, MEMBER_MAPPING, CUBE_STRUCTURE_ITEM_LINK
 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
+from pybirdai.utils.code_sync import CodeSyncManager
 
 
 def _get_source_directory(source='joins'):
@@ -101,6 +102,19 @@ def edit_execution_code(request, file_name, source='joins'):
 
     if not os.path.exists(file_path):
         messages.error(request, f"File {file_name} not found")
+        return redirect('pybirdai:review_execution_code', source=source)
+
+    # Check file size before loading (max 300KB)
+    MAX_FILE_SIZE = 300 * 1024  # 300KB in bytes
+    file_size = os.path.getsize(file_path)
+    file_size_mb = file_size / (1024 * 1024)
+
+    if file_size > MAX_FILE_SIZE:
+        messages.error(
+            request,
+            f"File {file_name} is too large to edit in the browser ({file_size_mb:.2f} MB). "
+            f"Maximum allowed size is 300 KB. Please edit this file locally or split it into smaller files."
+        )
         return redirect('pybirdai:review_execution_code', source=source)
 
     # Parse the file to get structure
@@ -547,11 +561,27 @@ def unified_filter_code_editor(request):
     # Sort files alphabetically
     files.sort(key=lambda x: x['name'])
 
-    # Get first file content as default
+    # Determine which file to load by default
+    default_file_param = request.GET.get('default_file', None)
+    selected_file = None
+
+    if default_file_param and files:
+        if default_file_param == 'smallest':
+            # Find smallest file by size
+            selected_file = min(files, key=lambda x: x['size'])
+        else:
+            # Try to find specified file by name
+            selected_file = next((f for f in files if f['name'] == default_file_param), None)
+
+    # If no selection made or file not found, use first file alphabetically (current behavior)
+    if not selected_file and files:
+        selected_file = files[0]
+
+    # Get selected file content as default
     first_file_content = ""
     first_file_name = ""
-    if files:
-        first_file_name = files[0]['name']
+    if selected_file:
+        first_file_name = selected_file['name']
         first_file_path = os.path.join(filter_code_dir, first_file_name)
         try:
             with open(first_file_path, 'r', encoding='utf-8') as f:
@@ -674,3 +704,331 @@ def save_filter_code_file(request):
         return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+# ============================================================================
+# Code Sync Views - ANCRDT Lifecycle Management
+# ============================================================================
+
+@require_http_methods(["POST"])
+def sync_file_to_production(request):
+    """
+    Sync a single file from staging (generated_python_joins) to production (filter_code).
+    Part of the ANCRDT code lifecycle: Generate → Edit → Deploy.
+
+    Expected POST data:
+        {
+            "file_name": "ANCRDT_INSTRMNT_C_1_logic.py",
+            "create_backup": true
+        }
+    """
+    try:
+        data = json.loads(request.body)
+        file_name = data.get('file_name')
+        create_backup = data.get('create_backup', True)
+
+        if not file_name:
+            return JsonResponse({'error': 'Missing file_name'}, status=400)
+
+        # Initialize sync manager
+        sync_manager = CodeSyncManager()
+
+        # Perform sync
+        result = sync_manager.sync_file(file_name, create_backup)
+
+        if result['success']:
+            # Track the sync in execution record
+            try:
+                execution = AnaCreditProcessExecution.objects.filter(
+                    step_number=3
+                ).latest('started_at')
+                if hasattr(execution, 'code_modifications'):
+                    if not execution.code_modifications:
+                        execution.code_modifications = {}
+                    if file_name not in execution.code_modifications:
+                        execution.code_modifications[file_name] = {}
+                    execution.code_modifications[file_name]['synced_to_production'] = True
+                    execution.code_modifications[file_name]['sync_timestamp'] = result['timestamp']
+                    execution.save()
+            except:
+                pass  # Continue even if tracking fails
+
+            return JsonResponse({
+                'success': True,
+                'message': result['message'],
+                'file_name': file_name,
+                'timestamp': result['timestamp'],
+                'backup_created': result.get('backup_created', False)
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'error': result['message']
+            }, status=400)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_http_methods(["POST"])
+def sync_all_ancrdt_files(request):
+    """
+    Sync all ANCRDT files from staging to production.
+    """
+    try:
+        data = json.loads(request.body)
+        create_backup = data.get('create_backup', True)
+
+        # Initialize sync manager
+        sync_manager = CodeSyncManager()
+
+        # Perform sync
+        results = sync_manager.sync_all_ancrdt_files(create_backup)
+
+        # Count successes and failures
+        successes = [r for r in results if r['success']]
+        failures = [r for r in results if not r['success']]
+
+        return JsonResponse({
+            'success': True,
+            'total': len(results),
+            'successes': len(successes),
+            'failures': len(failures),
+            'results': results
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_http_methods(["GET"])
+def get_sync_status(request, file_name=None):
+    """
+    Get sync status for ANCRDT files.
+
+    If file_name is provided, returns status for that file.
+    Otherwise, returns status for all ANCRDT files.
+    """
+    try:
+        sync_manager = CodeSyncManager()
+
+        if file_name:
+            # Get status for specific file
+            status = sync_manager._get_file_status(file_name)
+            return JsonResponse({
+                'success': True,
+                'file_status': status
+            })
+        else:
+            # Get status for all files
+            status_map = sync_manager.get_sync_status()
+            return JsonResponse({
+                'success': True,
+                'status_map': status_map,
+                'total_files': len(status_map)
+            })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_http_methods(["GET"])
+def get_file_diff(request, file_name):
+    """
+    Get a diff summary between staging and production versions of a file.
+    """
+    try:
+        sync_manager = CodeSyncManager()
+
+        diff_summary = sync_manager.get_diff_summary(file_name)
+
+        if diff_summary:
+            return JsonResponse({
+                'success': True,
+                'diff': diff_summary
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'error': 'Unable to generate diff (one or both files may not exist)'
+            }, status=404)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_http_methods(["GET"])
+def check_manual_edits(request, file_name):
+    """
+    Check if a file has manual edits (differs from .generated base).
+    """
+    try:
+        sync_manager = CodeSyncManager()
+
+        has_edits = sync_manager.has_manual_edits(file_name)
+
+        return JsonResponse({
+            'success': True,
+            'file_name': file_name,
+            'has_manual_edits': has_edits
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_http_methods(["GET"])
+def get_file_info(request, source='joins', file_name=None):
+    """
+    Get information about a file (size, line count, etc.).
+
+    Args:
+        source: 'joins' for generated_python_joins or 'filters' for filter_code
+        file_name: Name of the file to get info for
+
+    Returns:
+        JSON with file information
+    """
+    if not file_name:
+        return JsonResponse({'error': 'Missing file_name'}, status=400)
+
+    try:
+        results_dir = _get_source_directory(source)
+        file_path = os.path.join(results_dir, file_name)
+
+        if not os.path.exists(file_path):
+            return JsonResponse({'error': 'File not found'}, status=404)
+
+        # Get file size
+        file_size = os.path.getsize(file_path)
+        file_size_kb = file_size / 1024
+        file_size_mb = file_size / (1024 * 1024)
+
+        # Check if file can be edited (under 300KB)
+        MAX_FILE_SIZE = 300 * 1024
+        can_edit = file_size <= MAX_FILE_SIZE
+
+        # Get line count
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                line_count = sum(1 for _ in f)
+        except Exception:
+            line_count = None
+
+        # Format size string
+        if file_size_mb >= 1:
+            size_str = f"{file_size_mb:.2f} MB"
+        else:
+            size_str = f"{file_size_kb:.1f} KB"
+
+        return JsonResponse({
+            'success': True,
+            'file_name': file_name,
+            'file_size': file_size,
+            'file_size_kb': round(file_size_kb, 1),
+            'file_size_mb': round(file_size_mb, 2),
+            'size_str': size_str,
+            'line_count': line_count,
+            'can_edit': can_edit,
+            'max_size_kb': 300
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_http_methods(["POST"])
+def save_and_deploy(request):
+    """
+    Combination endpoint: save code modifications and immediately deploy to production.
+    This is a convenience endpoint that combines save_code_modifications and sync_file_to_production.
+
+    Expected POST data:
+        {
+            "file_name": "ANCRDT_INSTRMNT_C_1_logic.py",
+            "code_content": "... python code ...",
+            "create_backup": true
+        }
+    """
+    try:
+        data = json.loads(request.body)
+        file_name = data.get('file_name')
+        code_content = data.get('code_content')
+        create_backup = data.get('create_backup', True)
+
+        if not file_name or not code_content:
+            return JsonResponse({'error': 'Missing file_name or code_content'}, status=400)
+
+        # Step 1: Validate Python syntax
+        try:
+            ast.parse(code_content)
+        except SyntaxError as e:
+            return JsonResponse({
+                'error': f'Syntax error: {str(e)}',
+                'line': e.lineno,
+                'offset': e.offset
+            }, status=400)
+
+        # Step 2: Save to staging area
+        results_dir = _get_source_directory('joins')
+        file_path = os.path.join(results_dir, file_name)
+
+        # Create backup in staging
+        backup_path = file_path + '.backup'
+        if os.path.exists(file_path):
+            with open(file_path, 'r') as f:
+                backup_content = f.read()
+            with open(backup_path, 'w') as f:
+                f.write(backup_content)
+
+        # Write new content to staging
+        with open(file_path, 'w') as f:
+            f.write(code_content)
+
+        # Step 3: Sync to production
+        sync_manager = CodeSyncManager()
+        sync_result = sync_manager.sync_file(file_name, create_backup)
+
+        # Step 4: Track modifications
+        try:
+            execution = AnaCreditProcessExecution.objects.filter(
+                step_number=3
+            ).latest('started_at')
+            if hasattr(execution, 'code_modifications'):
+                if not execution.code_modifications:
+                    execution.code_modifications = {}
+                execution.code_modifications[file_name] = {
+                    'modified': True,
+                    'timestamp': str(timezone.now()),
+                    'synced_to_production': sync_result['success'],
+                    'sync_timestamp': sync_result.get('timestamp')
+                }
+                execution.save()
+        except:
+            pass  # Continue even if tracking fails
+
+        if sync_result['success']:
+            return JsonResponse({
+                'success': True,
+                'message': f'File {file_name} saved and deployed successfully',
+                'saved': True,
+                'deployed': True,
+                'sync_result': sync_result
+            })
+        else:
+            return JsonResponse({
+                'success': True,
+                'message': f'File {file_name} saved but deployment failed: {sync_result["message"]}',
+                'saved': True,
+                'deployed': False,
+                'sync_result': sync_result
+            })
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

@@ -21,15 +21,18 @@ from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id
 
 
-def import_domains(context, ref):
+def import_domains(context, ref, config=None):
     """
     Import all domains from CSV file using bulk create.
 
     Args:
         context: SDDContext containing file paths and dictionaries
         ref: Boolean indicating if importing reference domains (ECB) or others
+        config: Optional DatasetConfig for dynamic file paths and filtering
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "domain.csv"
+    # Determine file directory based on config
+    file_dir = config.file_directory if config else "technical_export"
+    file_location = context.file_directory + os.sep + file_dir + os.sep + "domain.csv"
     header_skipped = False
     domains_to_create = []
 
@@ -48,11 +51,17 @@ def import_domains(context, ref):
                 is_reference = row[ColumnIndexes().domain_domain_is_reference]
                 domain_name = row[ColumnIndexes().domain_domain_name_index]
 
-                include = False
-                if (ref) and (maintenence_agency == "ECB"):
+                # Determine if entity should be included
+                if config and config.bypass_ecb_filter:
+                    # For ANCRDT and other datasets that don't filter by ECB
                     include = True
-                if (not ref) and not (maintenence_agency == "ECB"):
-                    include = True
+                else:
+                    # Original ECB filtering logic
+                    include = False
+                    if (ref) and (maintenence_agency == "ECB"):
+                        include = True
+                    if (not ref) and not (maintenence_agency == "ECB"):
+                        include = True
 
                 if include:
                     domain = DOMAIN(name=replace_dots(domain_id))

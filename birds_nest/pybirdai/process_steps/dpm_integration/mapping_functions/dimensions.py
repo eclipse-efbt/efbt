@@ -39,6 +39,10 @@ def map_dimensions(path=os.path.join("target", "Dimension.csv"), domain_id_map: 
         "DIMENSION_DESCRIPTION": "DESCRIPTION"
     })
 
+    # Remove _SOS_Duplicate_.* patterns from NAME and DESCRIPTION
+    df['NAME'] = df['NAME'].str.replace(r'_SOS_Duplicate_.*', '', regex=True)
+    df['DESCRIPTION'] = df['DESCRIPTION'].str.replace(r'_SOS_Duplicate_.*', '', regex=True)
+
     # Add new fields
     df['MAINTENANCE_AGENCY_ID'] = "EBA"
     df['PRIMARY_CONCEPT'] = ""

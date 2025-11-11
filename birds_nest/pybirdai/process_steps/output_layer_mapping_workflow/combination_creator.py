@@ -22,15 +22,23 @@ class CombinationCreator:
     Preserves the link: TABLE → TABLE_CELL → COMBINATION → CUBE
     """
 
-    def __init__(self):
-        """Initialize the combination creator."""
+    def __init__(self, table_code: str, table_version: str):
+        """
+        Initialize the combination creator.
+
+        Args:
+            table_code: The table code (e.g., 'FINREP')
+            table_version: The table version (e.g., '3_0')
+        """
+        self.table_code = table_code
+        self.table_version = table_version
         self.combination_counter = 0
 
     def create_combination_for_cell(
         self,
         cell: TABLE_CELL,
         cube: CUBE,
-        timestamp: str = None
+        timestamp: str
     ) -> Optional[COMBINATION]:
         """
         Create a non-reference combination for a table cell.
@@ -38,20 +46,17 @@ class CombinationCreator:
         Args:
             cell: The TABLE_CELL object
             cube: The CUBE object to link to
-            timestamp: Optional timestamp string for ID generation
+            timestamp: Timestamp string for the entire generation run
 
         Returns:
             COMBINATION object if created successfully, None otherwise
         """
-        if not timestamp:
-            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-
         self.combination_counter += 1
 
         try:
             # Generate combination ID
             combination_id = self._generate_combination_id(
-                cube.cube_id, timestamp, self.combination_counter
+                timestamp, self.combination_counter
             )
 
             # Get or create maintenance agency
@@ -90,7 +95,7 @@ class CombinationCreator:
         self,
         cells: List[TABLE_CELL],
         cube: CUBE,
-        timestamp: str = None
+        timestamp: str
     ) -> List[COMBINATION]:
         """
         Create combinations for multiple table cells.
@@ -98,14 +103,11 @@ class CombinationCreator:
         Args:
             cells: List of TABLE_CELL objects
             cube: The CUBE object to link to
-            timestamp: Optional timestamp string for ID generation
+            timestamp: Timestamp string for the entire generation run
 
         Returns:
             List of created COMBINATION objects
         """
-        if not timestamp:
-            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-
         combinations = []
         for cell in cells:
             combination = self.create_combination_for_cell(cell, cube, timestamp)
@@ -117,25 +119,22 @@ class CombinationCreator:
 
     def _generate_combination_id(
         self,
-        cube_id: str,
         timestamp: str,
         counter: int
     ) -> str:
         """
         Generate a unique combination ID.
 
+        Format: combination_{table_code}_{table_version}_{timestamp}_{index}
+
         Args:
-            cube_id: The cube ID
-            timestamp: Timestamp string
-            counter: Counter for uniqueness
+            timestamp: Timestamp string for the entire generation run
+            counter: Counter for uniqueness within the run
 
         Returns:
             Generated combination ID
         """
-        # Extract base from cube_id (remove timestamp if present)
-        base = cube_id.split('_')[0] if '_' in cube_id else cube_id
-
-        return f"{base}_COMB_{timestamp}_{counter:04d}"
+        return f"combination_{self.table_code}_{self.table_version}_{timestamp}_{counter:04d}"
 
     def _get_maintenance_agency(self) -> MAINTENANCE_AGENCY:
         """Get or create the default maintenance agency."""
@@ -148,6 +147,34 @@ class CombinationCreator:
             )
         return agency
 
+    def _get_single_member_from_subdomain(
+        self,
+        subdomain: Optional[SUBDOMAIN]
+    ) -> Optional[MEMBER]:
+        """
+        Check if subdomain has exactly one member and return it.
+
+        Args:
+            subdomain: The SUBDOMAIN object to check
+
+        Returns:
+            The single MEMBER if subdomain has exactly 1 member, None otherwise
+        """
+        if not subdomain:
+            return None
+
+        from pybirdai.models.bird_meta_data_model import SUBDOMAIN_ENUMERATION
+
+        # Get members in this subdomain
+        subdomain_members = SUBDOMAIN_ENUMERATION.objects.filter(
+            subdomain_id=subdomain
+        ).select_related('member_id')
+
+        if subdomain_members.count() == 1:
+            return subdomain_members.first().member_id
+
+        return None
+
     def _copy_combination_items(
         self,
         source_combination_id: str,
@@ -155,6 +182,7 @@ class CombinationCreator:
     ):
         """
         Copy combination items from source to target combination.
+        Optimizes single-member subdomains to use direct member references.
 
         Args:
             source_combination_id: ID of the source combination
@@ -172,12 +200,27 @@ class CombinationCreator:
 
             # Create copies for target combination
             for item in source_items:
+                # Check if we should optimize subdomain to member
+                final_subdomain = item.subdomain_id
+                final_member = item.member_id
+
+                # If no member is set but subdomain has only 1 member, use that member instead
+                if not final_member and final_subdomain:
+                    single_member = self._get_single_member_from_subdomain(final_subdomain)
+                    if single_member:
+                        final_member = single_member
+                        final_subdomain = None
+                        logger.info(
+                            f"Optimized single-member subdomain {item.subdomain_id.subdomain_id} "
+                            f"to member {single_member.code}"
+                        )
+
                 COMBINATION_ITEM.objects.create(
                     combination_id=target_combination,
                     variable_id=item.variable_id,
-                    subdomain_id=item.subdomain_id,
+                    subdomain_id=final_subdomain,
                     variable_set_id=item.variable_set_id,
-                    member_id=item.member_id,
+                    member_id=final_member,
                     member_hierarchy=item.member_hierarchy
                 )
 
@@ -198,6 +241,7 @@ class CombinationCreator:
     ):
         """
         Create default combination items based on cube structure.
+        Optimizes single-member subdomains to use direct member references.
 
         Args:
             combination: The COMBINATION object
@@ -231,23 +275,35 @@ class CombinationCreator:
 
         # Create combination items for dimensions
         for csi in dimension_items:
-            # If CSI has a fixed member, use it
+            # Determine final subdomain and member
+            final_subdomain = csi.subdomain_id
+            final_member = csi.member_id
+
+            # If CSI has a member (fixed or from single-member subdomain), use it
             if csi.member_id:
-                COMBINATION_ITEM.objects.create(
-                    combination_id=combination,
-                    variable_id=csi.variable_id,
-                    member_id=csi.member_id,
-                    subdomain_id=csi.subdomain_id,
-                    variable_set_id=csi.variable_set_id
-                )
-            else:
-                # Create without specific member (will be determined at runtime)
-                COMBINATION_ITEM.objects.create(
-                    combination_id=combination,
-                    variable_id=csi.variable_id,
-                    subdomain_id=csi.subdomain_id,
-                    variable_set_id=csi.variable_set_id
-                )
+                # CSI already has a member set, use it directly
+                final_member = csi.member_id
+                # Keep subdomain as None if it was already None in CSI
+                final_subdomain = csi.subdomain_id
+            elif csi.subdomain_id:
+                # No member set, but subdomain exists - check if it has only 1 member
+                single_member = self._get_single_member_from_subdomain(csi.subdomain_id)
+                if single_member:
+                    # Optimize: use member directly instead of subdomain
+                    final_member = single_member
+                    final_subdomain = None
+                    logger.info(
+                        f"Optimized single-member subdomain {csi.subdomain_id.subdomain_id} "
+                        f"to member {single_member.code} in combination item"
+                    )
+
+            COMBINATION_ITEM.objects.create(
+                combination_id=combination,
+                variable_id=csi.variable_id,
+                member_id=final_member,
+                subdomain_id=final_subdomain,
+                variable_set_id=csi.variable_set_id
+            )
 
         logger.info(f"Created default items for combination {combination.combination_id}")
 

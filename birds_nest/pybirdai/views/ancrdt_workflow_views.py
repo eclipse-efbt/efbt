@@ -20,10 +20,14 @@ Replaces the monolithic ancrdt_dashboard with individual step screens.
 
 import logging
 import glob
+import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
+from django.conf import settings
+from django.http import JsonResponse
 from pybirdai.models.workflow_model import WorkflowSession, AnaCreditProcessExecution
+from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER, SUBDOMAIN
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +82,7 @@ def _get_step_execution_data(session, step_num, step_name, description, previous
 
         if step_num == 0:
             # Fetch Metadata CSV
-            csv_pattern = "results/ancrdt_csv/*.csv"
+            csv_pattern = os.path.join(settings.BASE_DIR, "results", "ancrdt_csv", "*.csv")
             generated_files = glob.glob(csv_pattern)
         elif step_num == 1:
             # Import Metadata
@@ -110,8 +114,14 @@ def _get_step_execution_data(session, step_num, step_name, description, previous
             ]
         elif step_num == 3:
             # Create Executable Joins
-            py_pattern = "results/generated_python_joins/*.py"
-            generated_files = glob.glob(py_pattern)
+            py_pattern = os.path.join(settings.BASE_DIR, "results", "generated_python_joins", "*.py")
+            all_files = glob.glob(py_pattern)
+            # Filter out .backup and .generated files, and convert to relative paths for display
+            generated_files = []
+            for f in all_files:
+                basename = os.path.basename(f)
+                if not (basename.endswith('.backup') or basename.endswith('.generated') or basename == 'tmp'):
+                    generated_files.append(basename)
 
         step_data = {
             'number': step_num,
@@ -400,10 +410,38 @@ def ancrdt_step_3_view(request):
 
         navigation = _get_navigation_context(3, step_statuses)
 
+        # Get sync status for ANCRDT files
+        import json
+        from pybirdai.utils.code_sync import CodeSyncManager
+        try:
+            sync_manager = CodeSyncManager()
+            sync_status = sync_manager.get_sync_status()
+
+            # Calculate summary statistics
+            total_files = len(sync_status)
+            synced_files = sum(1 for status in sync_status.values() if status['is_synced'])
+            edited_files = sum(1 for status in sync_status.values() if status['is_edited'])
+            unsynced_files = total_files - synced_files
+
+            context_sync = {
+                'sync_status': json.dumps(sync_status),  # JSON for JavaScript
+                'sync_summary': {
+                    'total_files': total_files,
+                    'synced_files': synced_files,
+                    'unsynced_files': unsynced_files,
+                    'edited_files': edited_files,
+                    'all_synced': synced_files == total_files
+                }
+            }
+        except Exception as e:
+            logger.warning(f"Could not load sync status: {e}")
+            context_sync = {'sync_status': '{}', 'sync_summary': {'total_files': 0}}
+
         context = {
             'session': session,
             'step': step,
             'navigation': navigation,
+            **context_sync
         }
 
         return render(request, 'pybirdai/ancrdt_workflow/step_3_execution_code.html', context)
@@ -493,6 +531,7 @@ def ancrdt_step_3_review_view(request):
     Step 3 Review: Execution Code Review
 
     Dedicated review page with unified code editor for generated Python files.
+    Includes sync status for ANCRDT lifecycle management.
     """
     try:
         session, session_id = _get_or_create_workflow_session(request)
@@ -504,9 +543,29 @@ def ancrdt_step_3_review_view(request):
             'Generate Python execution code'
         )
 
+        # Get sync status for ANCRDT files
+        import json
+        from pybirdai.utils.code_sync import CodeSyncManager
+        sync_manager = CodeSyncManager()
+        sync_status = sync_manager.get_sync_status()
+
+        # Calculate summary statistics
+        total_files = len(sync_status)
+        synced_files = sum(1 for status in sync_status.values() if status['is_synced'])
+        edited_files = sum(1 for status in sync_status.values() if status['is_edited'])
+        unsynced_files = total_files - synced_files
+
         context = {
             'session': session,
             'step': step,
+            'sync_status': json.dumps(sync_status),  # JSON for JavaScript
+            'sync_summary': {
+                'total_files': total_files,
+                'synced_files': synced_files,
+                'unsynced_files': unsynced_files,
+                'edited_files': edited_files,
+                'all_synced': synced_files == total_files
+            }
         }
 
         return render(request, 'pybirdai/ancrdt_workflow/step_3_review.html', context)
@@ -515,5 +574,97 @@ def ancrdt_step_3_review_view(request):
         logger.error(f"Error in ANCRDT Step 3 Review: {e}")
         messages.error(request, f'Error loading Step 3 review: {str(e)}')
         return render(request, 'pybirdai/ancrdt_workflow/step_3_review.html', {'step': {'status': 'error'}})
+
+
+# API Endpoints for Cube Structure Visualization
+
+def api_ancrdt_cubes(request):
+    """
+    API endpoint to list all ANCRDT cubes.
+    Returns JSON array of cubes with id, name, code, and structure_id.
+    """
+    try:
+        cubes = CUBE.objects.filter(
+            framework_id__framework_id__icontains='ANCRDT'
+        ).select_related('cube_structure_id').order_by('name')
+
+        cube_list = []
+        for cube in cubes:
+            cube_list.append({
+                'cube_id': cube.cube_id,
+                'name': cube.name or cube.cube_id,
+                'code': cube.code,
+                'structure_id': cube.cube_structure_id.cube_structure_id if cube.cube_structure_id else None,
+                'structure_name': cube.cube_structure_id.name if cube.cube_structure_id else None,
+            })
+
+        return JsonResponse({'cubes': cube_list})
+
+    except Exception as e:
+        logger.error(f"Error fetching ANCRDT cubes: {e}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def api_ancrdt_cube_structure(request, cube_id):
+    """
+    API endpoint to get cube structure items for a specific cube.
+    Returns JSON with cube details and hierarchical structure items.
+    """
+    try:
+        # Get the cube
+        cube = get_object_or_404(CUBE, cube_id=cube_id)
+
+        if not cube.cube_structure_id:
+            return JsonResponse({
+                'error': 'Cube has no associated structure'
+            }, status=404)
+
+        structure = cube.cube_structure_id
+
+        # Get all structure items for this cube structure, ordered by order field
+        structure_items = CUBE_STRUCTURE_ITEM.objects.filter(
+            cube_structure_id=structure
+        ).select_related(
+            'variable_id',
+            'member_id',
+            'subdomain_id'
+        ).order_by('order')
+
+        # Build the items array
+        items = []
+        for item in structure_items:
+            items.append({
+                'order': item.order,
+                'role': item.role,
+                'role_display': dict(CUBE_STRUCTURE_ITEM.TYP_RL).get(item.role, item.role),
+                'cube_variable_code': item.cube_variable_code,
+                'variable_id': item.variable_id.variable_id if item.variable_id else None,
+                'variable_name': item.variable_id.name if item.variable_id else 'Unknown',
+                'variable_code': item.variable_id.code if item.variable_id else None,
+                'member_id': item.member_id.member_id if item.member_id else None,
+                'member_name': item.member_id.name if item.member_id else None,
+                'subdomain_id': item.subdomain_id.subdomain_id if item.subdomain_id else None,
+                'subdomain_name': item.subdomain_id.name if item.subdomain_id else None,
+                'dimension_type': item.dimension_type,
+                'is_mandatory': item.is_mandatory,
+                'is_identifier': item.is_identifier,
+            })
+
+        response_data = {
+            'cube_id': cube.cube_id,
+            'cube_name': cube.name or cube.cube_id,
+            'cube_code': cube.code,
+            'structure_id': structure.cube_structure_id,
+            'structure_name': structure.name or structure.cube_structure_id,
+            'structure_code': structure.code,
+            'items': items,
+            'item_count': len(items)
+        }
+
+        return JsonResponse(response_data)
+
+    except Exception as e:
+        logger.error(f"Error fetching cube structure for {cube_id}: {e}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 

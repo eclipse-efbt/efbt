@@ -250,27 +250,27 @@
             <div>Select Table</div>
         </li>
         <li class="active">
-            <span class="step-number">1.5</span>
-            <div>Check Existing</div>
-        </li>
-        <li>
             <span class="step-number">2</span>
-            <div>Variable Breakdown</div>
-        </li>
-        <li>
-            <span class="step-number">2.5</span>
-            <div>Select Ordinates</div>
+            <div>Existing Mappings</div>
         </li>
         <li>
             <span class="step-number">3</span>
-            <div>Edit Mappings</div>
+            <div>Select Ordinates</div>
         </li>
         <li>
             <span class="step-number">4</span>
-            <div>Review & Name</div>
+            <div>Variable Breakdown</div>
         </li>
         <li>
             <span class="step-number">5</span>
+            <div>Mapping Editor</div>
+        </li>
+        <li>
+            <span class="step-number">6</span>
+            <div>Review & Name</div>
+        </li>
+        <li>
+            <span class="step-number">7</span>
             <div>Generate</div>
         </li>
     </ul>
@@ -317,6 +317,17 @@
                         </div>
                         <div class="option-description">
                             Start from scratch to create a completely new mapping configuration.
+                        </div>
+                    </div>
+
+                    <div class="selection-card">
+                        <div class="radio-option">
+                            <input type="radio" id="regenerate_all" name="mapping_mode" value="regenerate_all">
+                            <label for="regenerate_all"><strong>Regenerate All Existing Mappings</strong></label>
+                        </div>
+                        <div class="option-description">
+                            Delete all existing output layer artifacts (CUBE, CUBE_STRUCTURE, COMBINATION, SUBDOMAIN, etc.) and regenerate them from all existing mappings.
+                            <strong style="color: #dc2626;">⚠️ Warning: This will delete existing data structures.</strong>
                         </div>
                     </div>
 
@@ -389,6 +400,52 @@
             {% endif %}
         </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div style="padding: 2rem; border-bottom: 1px solid #e2e8f0;">
+                <h3 style="margin: 0; color: #dc2626; display: flex; align-items: center;">
+                    <span style="font-size: 2rem; margin-right: 0.5rem;">⚠️</span>
+                    Confirm Regeneration
+                </h3>
+            </div>
+            <div style="padding: 2rem;">
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+                    You are about to delete and regenerate all output layer artifacts for <strong>{{ table.name }}</strong>.
+                </p>
+                <div style="background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin-top: 0; color: #991b1b;">The following will be deleted:</h4>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                        <li>All CUBE records for this table</li>
+                        <li>Associated CUBE_STRUCTURE and CUBE_STRUCTURE_ITEM records</li>
+                        <li>All COMBINATION and COMBINATION_ITEM records</li>
+                        <li>Related SUBDOMAIN and SUBDOMAIN_ENUMERATION records</li>
+                        <li>MAPPING_TO_CUBE link records</li>
+                    </ul>
+                </div>
+                <div style="background: #f0f9ff; border: 1px solid #7dd3fc; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin-top: 0; color: #0c4a6e;">Then regenerate from:</h4>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;" id="mappingsList">
+                        {% for mapping_detail in existing_mappings %}
+                        <li><strong>{{ mapping_detail.mapping.name }}</strong> ({{ mapping_detail.variable_count }} variables, {{ mapping_detail.member_count }} members)</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <p style="color: #666; font-size: 0.9rem;">
+                    <strong>Note:</strong> This action cannot be undone. Make sure you have backups if needed.
+                </p>
+            </div>
+            <div style="padding: 1.5rem 2rem; background: #f9fafb; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 1rem;">
+                <button type="button" id="cancelRegeneration" class="btn btn-secondary">
+                    Cancel
+                </button>
+                <button type="button" id="confirmRegeneration" class="btn" style="background: #dc2626; color: white;">
+                    Yes, Delete and Regenerate
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -398,9 +455,14 @@
         const useExistingRadio = document.getElementById('use_existing');
         const modifyExistingRadio = document.getElementById('modify_existing');
         const createNewRadio = document.getElementById('create_new');
+        const regenerateAllRadio = document.getElementById('regenerate_all');
         const existingMappingsList = document.getElementById('existingMappingsList');
         const continueBtn = document.getElementById('continueBtn');
         const mappingCards = document.querySelectorAll('.mapping-card');
+        const mappingSelectionForm = document.getElementById('mappingSelectionForm');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const cancelRegenerationBtn = document.getElementById('cancelRegeneration');
+        const confirmRegenerationBtn = document.getElementById('confirmRegeneration');
 
         function updateMappingListVisibility() {
             if (useExistingRadio && useExistingRadio.checked) {
@@ -427,6 +489,51 @@
             }
         }
 
+        function showConfirmationModal() {
+            if (confirmationModal) {
+                confirmationModal.style.display = 'flex';
+            }
+        }
+
+        function hideConfirmationModal() {
+            if (confirmationModal) {
+                confirmationModal.style.display = 'none';
+            }
+        }
+
+        // Handle form submission
+        if (mappingSelectionForm) {
+            mappingSelectionForm.addEventListener('submit', function(e) {
+                if (regenerateAllRadio && regenerateAllRadio.checked) {
+                    e.preventDefault();
+                    showConfirmationModal();
+                }
+            });
+        }
+
+        // Handle confirmation modal buttons
+        if (cancelRegenerationBtn) {
+            cancelRegenerationBtn.addEventListener('click', hideConfirmationModal);
+        }
+
+        if (confirmRegenerationBtn) {
+            confirmRegenerationBtn.addEventListener('click', function() {
+                hideConfirmationModal();
+                if (mappingSelectionForm) {
+                    mappingSelectionForm.submit();
+                }
+            });
+        }
+
+        // Close modal when clicking outside
+        if (confirmationModal) {
+            confirmationModal.addEventListener('click', function(e) {
+                if (e.target === confirmationModal) {
+                    hideConfirmationModal();
+                }
+            });
+        }
+
         // Add event listeners for radio buttons
         if (useExistingRadio) {
             useExistingRadio.addEventListener('change', updateMappingListVisibility);
@@ -436,6 +543,9 @@
         }
         if (createNewRadio) {
             createNewRadio.addEventListener('change', updateMappingListVisibility);
+        }
+        if (regenerateAllRadio) {
+            regenerateAllRadio.addEventListener('change', updateMappingListVisibility);
         }
 
         // Add click handlers for mapping cards

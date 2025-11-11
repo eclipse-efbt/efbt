@@ -45,7 +45,6 @@ class OutputLayerMappingWorkflow:
         """
         self.context = context or Context()
         self.orchestrator = OutputLayerMappingOrchestrator()
-        self.combination_creator = CombinationCreator()
         self.domain_manager = DomainManager()
         self.cube_generator = CubeStructureGenerator()
 
@@ -449,8 +448,8 @@ class OutputLayerMappingWorkflow:
         for var_id in mappings['dimensions']:
             variable = VARIABLE.objects.filter(variable_id=var_id).first()
             if variable:
-                # Create or get subdomain
-                subdomain = self.cube_generator.create_or_get_subdomain(
+                # Create or get subdomain (returns tuple: subdomain, single_member)
+                subdomain, single_member = self.cube_generator.create_or_get_subdomain(
                     variable, cube_structure.cube_structure_id
                 )
 
@@ -461,6 +460,7 @@ class OutputLayerMappingWorkflow:
                     role="D",  # Dimension
                     order=order,
                     subdomain_id=subdomain,
+                    member_id=single_member,
                     dimension_type="B",  # Business
                     is_mandatory=True
                 )
@@ -507,10 +507,15 @@ class OutputLayerMappingWorkflow:
         """Create non-reference combinations and link to cube."""
         cells = TABLE_CELL.objects.filter(table_id=table)
 
+        # Create combination creator with table code and version
+        table_code = table.code if hasattr(table, 'code') else 'TABLE'
+        table_version = table.version.replace('.', '_') if hasattr(table, 'version') and table.version else '1_0'
+        combination_creator = CombinationCreator(table_code, table_version)
+
         counter = 1
         for cell in cells[:10]:  # Limit for demo
             # Create combination
-            combination = self.combination_creator.create_combination_for_cell(
+            combination = combination_creator.create_combination_for_cell(
                 cell, cube, timestamp
             )
 

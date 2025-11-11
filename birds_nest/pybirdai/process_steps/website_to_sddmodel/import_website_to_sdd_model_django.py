@@ -53,7 +53,7 @@ class ImportWebsiteToSDDModel(object):
             dpm: Boolean indicating if importing DPM data (uses CSV copy
                  method for better performance with large datasets)
         """
-        _import_report_templates(sdd_context, dpm)
+        _import_report_templates(sdd_context, dpm=dpm)
 
     def import_semantic_integrations_from_sdd(self, sdd_context):
         """

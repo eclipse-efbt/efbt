@@ -340,8 +340,8 @@ class OutputLayerMappingOrchestrator:
                 variable = VARIABLE.objects.filter(variable_id=target_var_id).first()
 
                 if variable:
-                    # Create or get subdomain
-                    subdomain = generator.create_or_get_subdomain(
+                    # Create or get subdomain (returns tuple: subdomain, single_member)
+                    subdomain, single_member = generator.create_or_get_subdomain(
                         variable, cube_structure.cube_structure_id
                     )
 
@@ -352,6 +352,7 @@ class OutputLayerMappingOrchestrator:
                         role="D",  # Dimension
                         order=order_counter,
                         subdomain_id=subdomain,
+                        member_id=single_member,
                         dimension_type=self._determine_dimension_type(variable),
                         is_mandatory=True,
                         is_implemented=True,
@@ -457,7 +458,11 @@ class OutputLayerMappingOrchestrator:
         """Create non-reference combinations for all cells in the table."""
         from .combination_creator import CombinationCreator
 
-        creator = CombinationCreator()
+        # Extract table code and version for combination naming
+        table_code = table.code if hasattr(table, 'code') else 'TABLE'
+        table_version = table.version.replace('.', '_') if hasattr(table, 'version') and table.version else '1_0'
+
+        creator = CombinationCreator(table_code, table_version)
         cells = TABLE_CELL.objects.filter(table_id=table)
         combinations = []
 

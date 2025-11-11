@@ -21,7 +21,14 @@ from CSV files, organized into logical groups:
 - Hierarchies (member hierarchies and their nodes)
 - Report templates (tables, axes, cells, positions)
 - Mappings (variable/member mappings and their relationships)
+- ANCRDT-specific entities (cubes, subdomains) - unified with main imports
+
+The module now supports multiple dataset types (FINREP, ANCRDT, DPM) through
+the DatasetConfig class and dataset_type parameter in orchestrator functions.
 """
+
+# Configuration class (for dataset-specific routing)
+from .config import DatasetConfig
 
 # Orchestrator functions (main entry points)
 from .import_report_templates_from_sdd import import_report_templates_from_sdd
@@ -58,6 +65,13 @@ from .import_member_mappings import import_member_mappings
 from .import_member_mapping_items import import_member_mapping_items
 from .import_mapping_definitions import import_mapping_definitions
 from .import_mapping_to_cubes import import_mapping_to_cubes
+
+# ANCRDT-specific import functions (now unified)
+from .import_cubes import import_cubes
+from .import_cube_structures import import_cube_structures
+from .import_cube_structure_items import import_cube_structure_items
+from .import_subdomains import import_subdomains
+from .import_subdomain_enumerations import import_subdomain_enumerations
 
 # Utility functions
 from .utilities import replace_dots, delete_hierarchy_warnings_files, delete_mapping_warnings_files
@@ -108,6 +122,9 @@ from .csv_copy_importer import create_instances_from_csv_copy
 
 
 __all__ = [
+    # Configuration
+    'DatasetConfig',
+
     # Orchestrators
     'import_report_templates_from_sdd',
     'import_semantic_integrations_from_sdd',
@@ -143,4 +160,11 @@ __all__ = [
     'import_member_mapping_items',
     'import_mapping_definitions',
     'import_mapping_to_cubes',
+
+    # ANCRDT-specific imports (unified)
+    'import_cubes',
+    'import_cube_structures',
+    'import_cube_structure_items',
+    'import_subdomains',
+    'import_subdomain_enumerations',
 ]

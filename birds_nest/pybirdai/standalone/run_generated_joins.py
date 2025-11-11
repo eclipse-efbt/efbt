@@ -88,10 +88,55 @@ class GeneratedJoinsRunner:
         self.output_tables_module = None
         self.ancrdt_output_tables_module = None
 
-        # Ensure the results directory is in Python path
+        # Ensure both results and filter_code directories are in Python path
         results_dir = os.path.join(self.base_dir, 'results')
         if results_dir not in sys.path:
             sys.path.insert(0, results_dir)
+
+        # Also add pybirdai to path for filter_code access
+        pybirdai_dir = os.path.join(self.base_dir, 'pybirdai')
+        if pybirdai_dir not in sys.path:
+            sys.path.insert(0, pybirdai_dir)
+
+    def _import_module_with_fallback(self, module_name, source_preference='production'):
+        """
+        Try to import a module from filter_code (production) first, then fallback to generated_python_joins (staging).
+        This supports the ANCRDT lifecycle: Generate → Edit → Deploy.
+
+        Args:
+            module_name: Name of the module to import (e.g., 'ancrdt_output_tables', 'ANCRDT_INSTRMNT_C_1_logic')
+            source_preference: 'production' (filter_code first) or 'staging' (generated_python_joins first)
+
+        Returns:
+            tuple: (module, source) where source is 'production' or 'staging'
+        """
+        sources = []
+        if source_preference == 'production':
+            sources = [
+                ('pybirdai.process_steps.filter_code', 'production'),
+                ('generated_python_joins', 'staging')
+            ]
+        else:
+            sources = [
+                ('generated_python_joins', 'staging'),
+                ('pybirdai.process_steps.filter_code', 'production')
+            ]
+
+        for module_prefix, source_name in sources:
+            try:
+                full_module_name = f'{module_prefix}.{module_name}'
+                module = importlib.import_module(full_module_name)
+                logger.info(f"Imported {module_name} from {source_name} ({full_module_name})")
+                return module, source_name
+            except ImportError as e:
+                logger.debug(f"Could not import {module_name} from {source_name}: {e}")
+                continue
+            except Exception as e:
+                logger.warning(f"Error importing {module_name} from {source_name}: {e}")
+                continue
+
+        logger.error(f"Could not import {module_name} from any source")
+        return None, None
 
     def discover_tables(self, framework=None):
         """
@@ -120,22 +165,23 @@ class GeneratedJoinsRunner:
                     module_name = filename[:-3]  # Remove .py extension
 
                     try:
-                        # Import the logic module
-                        module = importlib.import_module(f'generated_python_joins.{module_name}')
+                        # Import the logic module with fallback support
+                        module, source = self._import_module_with_fallback(
+                            module_name,
+                            source_preference='production'
+                        )
 
-                        # Find all classes ending with _Table
-                        for name, obj in inspect.getmembers(module, inspect.isclass):
-                            if name.endswith('_Table') and hasattr(obj, 'init'):
-                                # Only add if not already discovered
-                                if name not in tables:
-                                    tables[name] = obj
-                                    logger.debug(f"Discovered FINREP table: {name} from {module_name}")
+                        if module:
+                            # Find all classes ending with _Table
+                            for name, obj in inspect.getmembers(module, inspect.isclass):
+                                if name.endswith('_Table') and hasattr(obj, 'init'):
+                                    # Only add if not already discovered
+                                    if name not in tables:
+                                        tables[name] = obj
+                                        logger.debug(f"Discovered FINREP table: {name} from {module_name} ({source})")
 
                     except SyntaxError as e:
                         logger.warning(f"Syntax error in {module_name}: {e}")
-                        continue
-                    except ImportError as e:
-                        logger.warning(f"Could not import {module_name}: {e}")
                         continue
                     except Exception as e:
                         logger.warning(f"Error processing {module_name}: {e}")
@@ -148,22 +194,28 @@ class GeneratedJoinsRunner:
                 logger.error(f"Error discovering FINREP tables: {e}")
 
         # Try to import ancrdt_output_tables (AnaCredit)
+        # New lifecycle: Try production (filter_code) first, then staging (generated_python_joins)
         if framework in [None, 'ancrdt']:
             try:
-                self.ancrdt_output_tables_module = importlib.import_module('generated_python_joins.ancrdt_output_tables')
-                logger.info("Imported ancrdt_output_tables module (AnaCredit)")
+                self.ancrdt_output_tables_module, source = self._import_module_with_fallback(
+                    'ancrdt_output_tables',
+                    source_preference='production'
+                )
 
-                # Find all classes ending with _Table
-                for name, obj in inspect.getmembers(self.ancrdt_output_tables_module, inspect.isclass):
-                    if name.endswith('_Table') and hasattr(obj, 'init'):
-                        tables[name] = obj
-                        logger.debug(f"Discovered AnaCredit table: {name}")
+                if self.ancrdt_output_tables_module:
+                    logger.info(f"Imported ancrdt_output_tables module (AnaCredit) from {source}")
+
+                    # Find all classes ending with _Table
+                    for name, obj in inspect.getmembers(self.ancrdt_output_tables_module, inspect.isclass):
+                        if name.endswith('_Table') and hasattr(obj, 'init'):
+                            tables[name] = obj
+                            logger.debug(f"Discovered AnaCredit table: {name} from {source}")
+                else:
+                    logger.warning("Could not import ancrdt_output_tables module from any source")
 
             except SyntaxError as e:
                 logger.error(f"Syntax error in generated AnaCredit code: {e}")
                 logger.error(f"Please regenerate the joins or fix the syntax error in {e.filename}:{e.lineno}")
-            except ImportError as e:
-                logger.warning(f"Could not import ancrdt_output_tables module: {e}")
             except Exception as e:
                 logger.error(f"Unexpected error importing AnaCredit tables: {e}")
 

@@ -733,8 +733,6 @@
     /* Modal body */
     .output-layer-modal .modal-body {
         padding: 1.5rem;
-        max-height: 60vh;
-        overflow-y: auto;
     }
 
     /* Modal footer */
@@ -786,28 +784,32 @@
         </li>
         <li class="completed">
             <span class="step-number">✓</span>
+            <div>Existing Mappings</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">✓</span>
             <div>Select Ordinates</div>
         </li>
         <li class="active">
-            <span class="step-number">2.5</span>
-            <div>Define Breakdowns</div>
-        </li>
-        <li>
-            <span class="step-number">3</span>
-            <div>Edit Mappings</div>
-        </li>
-        <li>
             <span class="step-number">4</span>
-            <div>Review & Name</div>
+            <div>Variable Breakdown</div>
         </li>
         <li>
             <span class="step-number">5</span>
+            <div>Mapping Editor</div>
+        </li>
+        <li>
+            <span class="step-number">6</span>
+            <div>Review & Name</div>
+        </li>
+        <li>
+            <span class="step-number">7</span>
             <div>Generate</div>
         </li>
     </ul>
 
     <div class="breakdown-form">
-        <h2>Step 2.5: Define Variable Breakdowns</h2>
+        <h2>Step 4: Define Variable Breakdowns</h2>
         <p>For each dimension from the selected ordinates, define the source variables and transformation rules.</p>
 
         <div class="table-info-banner">
@@ -861,7 +863,7 @@
                         <li>No table cells with combinations exist for this table</li>
                     </ul>
                     <p style="margin: 0.5rem 0 0 0;">
-                        <strong>Solution:</strong> Go back to <a href="{% url 'pybirdai:output_layer_mapping_step2_5' %}">Step 2.5</a> and select ordinates, or verify that the table has proper data.
+                        <strong>Solution:</strong> Go back to <a href="{% url 'pybirdai:output_layer_mapping_step3' %}">Step 3</a> and select ordinates, or verify that the table has proper data.
                     </p>
                 </div>
                 {% endif %}
@@ -877,7 +879,7 @@
 
             <div class="form-actions">
                 <div>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step3' %}'">
                         ← Back
                     </button>
                 </div>
@@ -901,19 +903,21 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label for="new_var_id">Variable ID: *</label>
-                <input type="text" id="new_var_id" class="form-control" required>
-                <small style="color: #666;">Unique identifier for the variable</small>
-            </div>
-
-            <div class="form-group">
                 <label for="new_var_name">Name: *</label>
                 <input type="text" id="new_var_name" class="form-control" required>
+                <small style="color: #666;">Human-readable name in English</small>
             </div>
 
             <div class="form-group">
-                <label for="new_var_code">Code:</label>
-                <input type="text" id="new_var_code" class="form-control">
+                <label for="new_var_id">Variable ID: *</label>
+                <input type="text" id="new_var_id" class="form-control" required>
+                <small style="color: #666;">Auto-generated from name (can be edited)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="new_var_code">Code: *</label>
+                <input type="text" id="new_var_code" class="form-control" required>
+                <small style="color: #666;">Auto-generated from name (can be edited)</small>
             </div>
 
             <div class="form-group">
@@ -941,7 +945,11 @@
         {% for var_id, var_data in variables.items %}
         "{{ var_id }}": {
             id: "{{ var_id }}",
-            name: "{{ var_data.variable.name|escapejs }}"
+            name: "{{ var_data.variable.name|escapejs }}",
+            domain_id: "{{ var_data.domain.domain_id|escapejs|default:'' }}",
+            domain_code: "{{ var_data.domain.code|escapejs|default:'' }}",
+            domain_name: "{{ var_data.domain.name|escapejs|default:'' }}",
+            is_enumerated: {{ var_data.domain.is_enumerated|lower|default:'false' }}
         }{% if not forloop.last %},{% endif %}
         {% endfor %}
     };
@@ -983,6 +991,91 @@
     console.log('[DEBUG] Sample source variables:', Object.keys(AVAILABLE_VARIABLES).slice(0, 5));
     console.log('[DEBUG] Sample target variables:', Object.keys(TARGET_VARIABLES).slice(0, 5));
     console.log('[DEBUG] Sample TARGET_VARIABLES_ARRAY:', TARGET_VARIABLES_ARRAY.slice(0, 3));
+
+    // ========== Domain Validation Helper Functions ==========
+
+    /**
+     * Check if a variable is valid for a given group type based on its domain
+     * @param {string} varId - Variable ID
+     * @param {string} groupType - 'Dimension', 'Observation', or 'Attribute'
+     * @returns {boolean} True if variable is valid for the group type
+     */
+    function isValidVariableForGroupType(varId, groupType) {
+        const variable = AVAILABLE_VARIABLES[varId];
+        if (!variable) {
+            console.warn(`[Domain Validation] Variable ${varId} not found in AVAILABLE_VARIABLES`);
+            return false;
+        }
+
+        if (groupType === 'Dimension') {
+            // Dimension variables must have enumerated domains
+            return variable.is_enumerated === true;
+        } else if (groupType === 'Observation') {
+            // Special case: EBA_ATY is a meta-variable representing all observation metrics
+            // It has an enumerated domain but expands to actual observation variables at runtime
+            if (varId === 'EBA_ATY') {
+                return true;
+            }
+
+            // Observation variables must have numeric domains
+            const numericPatterns = [
+                'Integer', 'EBA_Integer', 'INTGR',
+                'Float', 'EBA_Float',
+                'Decimal', 'EBA_Decimal',
+                'Monetary', 'EBA_Monetary', 'MNTRY'
+            ];
+            const domainFields = [
+                variable.domain_code || '',
+                variable.domain_name || '',
+                variable.domain_id || ''
+            ];
+            return numericPatterns.some(pattern =>
+                domainFields.some(field => field.includes(pattern))
+            );
+        } else if (groupType === 'Attribute') {
+            // Attribute variables must have string domains
+            const stringPatterns = ['String', 'EBA_String'];
+            const domainFields = [
+                variable.domain_code || '',
+                variable.domain_name || '',
+                variable.domain_id || ''
+            ];
+            return stringPatterns.some(pattern =>
+                domainFields.some(field => field.includes(pattern))
+            );
+        }
+
+        return false;
+    }
+
+    /**
+     * Get domain type badge HTML for display in dropdowns
+     * @param {Object} variable - Variable object with domain info
+     * @returns {string} HTML string for badge
+     */
+    function getDomainTypeBadge(variable) {
+        if (!variable) return '';
+
+        if (variable.is_enumerated) {
+            return '<span style="background: #198754; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; margin-left: 8px;">Dimension</span>';
+        }
+
+        const domainFields = [
+            variable.domain_code || '',
+            variable.domain_name || '',
+            variable.domain_id || ''
+        ].join(' ');
+
+        if (domainFields.includes('Integer') || domainFields.includes('Float')) {
+            return '<span style="background: #0d6efd; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; margin-left: 8px;">Observation</span>';
+        }
+
+        if (domainFields.includes('String')) {
+            return '<span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; margin-left: 8px;">Attribute</span>';
+        }
+
+        return '';
+    }
 </script>
 
 <script>
@@ -995,6 +1088,7 @@
 
     // Tom Select instances for cleanup
     let tomSelectInstances = {};
+    let domainTomSelect = null;
 
     // Get all available variables from the injected data
     function getAllVariables() {
@@ -1166,7 +1260,25 @@
         // Filter the appropriate array based on select type
         const sourceArray = isSourceSelect ? ALL_VARIABLES_ARRAY : TARGET_VARIABLES_ARRAY;
 
-        return sourceArray.filter(option => !selectedInOtherGroups.has(option.value));
+        // Get current group's type for domain filtering
+        const currentGroup = variableGroups[currentGroupId];
+        const groupType = currentGroup ? currentGroup.group_type : null;
+
+        // Filter by: not selected in other groups AND valid for group type (source only)
+        return sourceArray.filter(option => {
+            // First check: not selected in other groups
+            if (selectedInOtherGroups.has(option.value)) {
+                return false;
+            }
+
+            // Second check: for source variables, validate domain against group type
+            if (isSourceSelect && groupType) {
+                return isValidVariableForGroupType(option.value, groupType);
+            }
+
+            // Target variables don't need domain validation
+            return true;
+        });
     }
 
     // Calculate mapping type implicitly based on source and target counts
@@ -1195,7 +1307,7 @@
             variable_ids: [],
             mapping_type: 'many_to_one',
             targets: [],
-            group_type: 'dimension'  // Default to dimension (user can change to measure)
+            group_type: 'Dimension'  // Default to Dimension (user can change to Observation or Attribute)
         };
 
         renderGroups();
@@ -1270,6 +1382,12 @@
                 }
             }
 
+            // If group type changes, refresh the dropdown to show only valid variables
+            if (field === 'group_type') {
+                console.log(`[Domain Filter] Group type changed to ${value} for ${groupId}, refreshing dropdown...`);
+                refreshSingleGroupDropdown(groupId);
+            }
+
             // If mapping type changes, adjust UI
             if (field === 'mapping_type') {
                 renderGroups();
@@ -1312,29 +1430,38 @@
                         <label style="font-weight: 600; display: block; margin-bottom: 0.5rem; color: #333;">
                             Variable Type: <span style="color: #dc3545;">* REQUIRED</span>
                         </label>
-                        <div style="display: flex; gap: 1.5rem;">
+                        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
                             <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
                                 <input type="radio"
                                        name="group_${groupId}_type"
-                                       value="dimension"
-                                       ${group.group_type === 'dimension' ? 'checked' : ''}
-                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'dimension')"
+                                       value="Dimension"
+                                       ${group.group_type === 'Dimension' ? 'checked' : ''}
+                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'Dimension')"
                                        required
                                        style="cursor: pointer;">
-                                <span style="font-weight: ${group.group_type === 'dimension' ? '700' : '400'};">Dimension</span>
+                                <span style="font-weight: ${group.group_type === 'Dimension' ? '700' : '400'};">Dimension</span>
                             </label>
                             <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
                                 <input type="radio"
                                        name="group_${groupId}_type"
-                                       value="measure"
-                                       ${group.group_type === 'measure' ? 'checked' : ''}
-                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'measure')"
+                                       value="Observation"
+                                       ${group.group_type === 'Observation' ? 'checked' : ''}
+                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'Observation')"
                                        style="cursor: pointer;">
-                                <span style="font-weight: ${group.group_type === 'measure' ? '700' : '400'};">Measure</span>
+                                <span style="font-weight: ${group.group_type === 'Observation' ? '700' : '400'};">Observation</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio"
+                                       name="group_${groupId}_type"
+                                       value="Attribute"
+                                       ${group.group_type === 'Attribute' ? 'checked' : ''}
+                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'Attribute')"
+                                       style="cursor: pointer;">
+                                <span style="font-weight: ${group.group_type === 'Attribute' ? '700' : '400'};">Attribute</span>
                             </label>
                         </div>
                         <small style="color: #0d6efd; display: block; margin-top: 0.5rem;">
-                            ℹ️ Defaults to Dimension. Select Measure for numeric/aggregation fields.
+                            ℹ️ <strong>Dimension</strong>: Enumerated domains | <strong>Observation</strong>: Integer/Float domains | <strong>Attribute</strong>: String domains
                         </small>
                     </div>
 
@@ -1365,7 +1492,7 @@
                     <input type="hidden" name="group_${groupId}_variables" value="${group.variable_ids.join(',')}">
                     <input type="hidden" name="group_${groupId}_mapping_type" value="${group.mapping_type}">
                     <input type="hidden" name="group_${groupId}_targets" value="${group.targets.join(',')}">
-                    <input type="hidden" name="group_${groupId}_type" id="hidden_${groupId}_type" value="${group.group_type || 'dimension'}">
+                    <input type="hidden" name="group_${groupId}_type" id="hidden_${groupId}_type" value="${group.group_type || 'Dimension'}">
                 </div>
             `;
         }).join('');
@@ -1479,6 +1606,44 @@
      * Called when variables are added/removed from any group
      * @param {string} excludeGroupId - Optional group ID to exclude from refresh (typically the one that triggered the change)
      */
+    // Refresh dropdown for a single group (used when group type changes)
+    function refreshSingleGroupDropdown(groupId) {
+        const sourceId = `sources_${groupId}`;
+
+        // Refresh source dropdown with filtered options based on new group type
+        if (tomSelectInstances[sourceId]) {
+            const instance = tomSelectInstances[sourceId];
+            const currentValues = instance.getValue();
+            const currentValuesArray = Array.isArray(currentValues) ? currentValues : (currentValues ? [currentValues] : []);
+            const availableOptions = getAvailableVariablesForGroup(groupId, true);
+            const availableSet = new Set(availableOptions.map(opt => opt.value));
+
+            console.log(`[Domain Filter] Refreshing ${sourceId}: ${availableOptions.length} available options for group type ${variableGroups[groupId].group_type}`);
+
+            // Clear all options
+            instance.clearOptions();
+
+            // Add all available options
+            availableOptions.forEach(opt => {
+                instance.addOption(opt);
+            });
+
+            // Restore valid selections (only those that match the new group type)
+            const validSelections = currentValuesArray.filter(val => availableSet.has(val));
+            if (validSelections.length > 0) {
+                instance.setValue(validSelections, true);
+                variableGroups[groupId].variable_ids = validSelections;
+                console.log(`[Domain Filter] Restored ${validSelections.length}/${currentValuesArray.length} selections that match new group type`);
+            } else if (currentValuesArray.length > 0) {
+                // Clear selections in group data if none are valid
+                variableGroups[groupId].variable_ids = [];
+                console.log(`[Domain Filter] Cleared all ${currentValuesArray.length} selections (none match new group type)`);
+            }
+
+            instance.refreshOptions(false);
+        }
+    }
+
     function refreshAllGroupDropdowns(excludeGroupId = null) {
         Object.entries(variableGroups).forEach(([groupId, group]) => {
             // Skip the group that triggered this refresh to avoid clearing its selection
@@ -1526,14 +1691,69 @@
     let currentVariableCallback = null;
     let currentVariableGroupId = null;
 
+    /**
+     * Generate a variable code from English text by:
+     * 1. Removing stop words (the, a, an, of, in, etc.)
+     * 2. Removing vowels (a, e, i, o, u)
+     * 3. Uppercasing
+     * 4. Replacing spaces with underscores
+     *
+     * Example: "Total Value of Assets" -> "TTL_VL_SSTS"
+     */
+    function generateVariableCode(text) {
+        if (!text || text.trim() === '') {
+            return 'VARIABLE';
+        }
+
+        // Define stop words to remove (common English words)
+        const stopWords = [
+            'the', 'a', 'an', 'of', 'in', 'for', 'to', 'and', 'or',
+            'with', 'by', 'from', 'at', 'on', 'is', 'are', 'was', 'were',
+            'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does',
+            'did', 'will', 'would', 'should', 'could', 'may', 'might',
+            'must', 'can', 'this', 'that', 'these', 'those'
+        ];
+
+        // Step 1: Convert to lowercase and split into words
+        let words = text.toLowerCase().trim().split(/\s+/);
+
+        // Step 2: Remove stop words
+        words = words.filter(word => !stopWords.includes(word));
+
+        // Step 3: Remove vowels from each word
+        words = words.map(word => word.replace(/[aeiou]/gi, ''));
+
+        // Step 4: Filter out empty words (in case a word was all vowels)
+        words = words.filter(word => word.length > 0);
+
+        // Step 5: Join with underscores and uppercase
+        let result = words.join('_').toUpperCase();
+
+        // Step 6: Clean up - remove any remaining special characters (keep only A-Z, 0-9, _)
+        result = result.replace(/[^A-Z0-9_]/g, '_');
+
+        // Step 7: Remove consecutive underscores
+        result = result.replace(/_+/g, '_');
+
+        // Step 8: Remove leading/trailing underscores
+        result = result.replace(/^_+|_+$/g, '');
+
+        // Fallback if result is empty
+        return result || 'VARIABLE';
+    }
+
     function showCreateVariableModal(input, callback, groupId) {
         // Store callback and group ID
         currentVariableCallback = callback;
         currentVariableGroupId = groupId;
 
-        // Pre-fill variable ID with sanitized input (uppercase, replace spaces/special chars with underscore)
-        document.getElementById('new_var_id').value = input.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
-        document.getElementById('new_var_name').value = input;
+        // Generate code from input (removes stop words, vowels, uppercases, underscores spaces)
+        const generatedCode = generateVariableCode(input);
+
+        // Pre-fill all fields
+        document.getElementById('new_var_name').value = input;  // Raw English text
+        document.getElementById('new_var_id').value = generatedCode;  // Generated code
+        document.getElementById('new_var_code').value = generatedCode;  // Same as ID
 
         // Show modal
         document.getElementById('createVariableModal').style.display = 'block';
@@ -1554,36 +1774,106 @@
         document.getElementById('new_var_name').value = '';
         document.getElementById('new_var_code').value = '';
         document.getElementById('new_var_description').value = '';
-        document.getElementById('new_var_domain').value = '';
+
+        // Clear Tom Select instance
+        if (domainTomSelect) {
+            domainTomSelect.clear();
+        }
     }
 
     function loadDomains() {
-        const select = document.getElementById('new_var_domain');
-
-        // Check if already loaded
-        if (select.options.length > 1) {
+        // Check if Tom Select already initialized
+        if (domainTomSelect !== null) {
             return;
         }
 
-        // AJAX call to get domains
+        // AJAX call to get domains and initialize Tom Select
         fetch('/pybirdai/api/get_domains/')
             .then(response => response.json())
             .then(data => {
-                select.innerHTML = '<option value="">-- Select Domain --</option>';
-                data.domains.forEach(domain => {
+                // Transform domains into Tom Select options format
+                const domainOptions = data.domains.map(domain => {
                     const displayText = domain.name ? `${domain.name} (${domain.domain_id})` : domain.domain_id;
-                    select.innerHTML += `<option value="${domain.domain_id}">${displayText}</option>`;
+                    return {
+                        value: domain.domain_id,
+                        text: displayText
+                    };
+                });
+
+                // Initialize Tom Select with create functionality
+                domainTomSelect = new TomSelect('#new_var_domain', {
+                    maxItems: 1,
+                    options: domainOptions,
+                    placeholder: 'Type to search or create new domain...',
+                    create: function(input, callback) {
+                        // Create new domain via API
+                        createNewDomain(input, callback);
+                        return false; // Prevent default creation
+                    },
+                    searchField: ['text', 'value'],
+                    sortField: { field: 'text', direction: 'asc' },
+                    render: {
+                        option: function(data, escape) {
+                            return '<div class="option">' + escape(data.text) + '</div>';
+                        },
+                        item: function(data, escape) {
+                            return '<div class="item">' + escape(data.text) + '</div>';
+                        },
+                        no_results: function(data, escape) {
+                            return '<div class="no-results">No domains found. Press Enter to create "' + escape(data.input) + '"</div>';
+                        }
+                    }
                 });
             })
             .catch(error => {
                 console.error('Error loading domains:', error);
+                alert('Failed to load domains. Please try again.');
             });
+    }
+
+    function createNewDomain(domainId, callback) {
+        // Sanitize domain ID (uppercase, no spaces)
+        const sanitizedDomainId = domainId.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+
+        // Make AJAX request to create domain
+        fetch('/pybirdai/api/create_domain/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                domain_id: sanitizedDomainId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const displayText = data.domain.name ? `${data.domain.name} (${data.domain.domain_id})` : data.domain.domain_id;
+
+                // Call callback to add the new option to Tom Select
+                callback({
+                    value: data.domain.domain_id,
+                    text: displayText
+                });
+
+                console.log('Domain created successfully:', data.domain.domain_id);
+            } else {
+                alert('Error creating domain: ' + data.error);
+                callback(); // Call without arguments to cancel
+            }
+        })
+        .catch(error => {
+            console.error('Error creating domain:', error);
+            alert('Failed to create domain. Please try again.');
+            callback(); // Call without arguments to cancel
+        });
     }
 
     function submitNewVariable() {
         const variableId = document.getElementById('new_var_id').value.trim();
         const name = document.getElementById('new_var_name').value.trim();
-        const domainId = document.getElementById('new_var_domain').value;
+        const domainId = domainTomSelect ? domainTomSelect.getValue() : '';
 
         if (!variableId || !name) {
             alert('Variable ID and Name are required');
@@ -1600,7 +1890,7 @@
             name: name,
             code: document.getElementById('new_var_code').value.trim(),
             description: document.getElementById('new_var_description').value.trim(),
-            domain_id: document.getElementById('new_var_domain').value
+            domain_id: domainId
         };
 
         // AJAX call to create variable
@@ -1755,7 +2045,7 @@
             updateHiddenInput(`group_${groupId}_variables`, group.variable_ids.join(','));
             updateHiddenInput(`group_${groupId}_mapping_type`, group.mapping_type);
             updateHiddenInput(`group_${groupId}_targets`, group.targets.join(','));
-            updateHiddenInput(`group_${groupId}_type`, group.group_type || 'dimension');
+            updateHiddenInput(`group_${groupId}_type`, group.group_type || 'Dimension');
 
             console.log(`[SYNC] ${groupId}: "${group.name}" -> type="${group.group_type}"`);
         });
@@ -1776,7 +2066,7 @@
     document.getElementById('breakdownForm').addEventListener('submit', function(e) {
         // CRITICAL: Sync ALL data from JavaScript to hidden inputs BEFORE validation
         syncAllGroupDataToHiddenInputs();
-        // Check that all groups have explicit group_type (dimension or measure)
+        // Check that all groups have explicit group_type (Dimension, Measure, or Comment)
         const groupsMissingType = [];
         Object.entries(variableGroups).forEach(([groupId, group]) => {
             if (!group.group_type) {

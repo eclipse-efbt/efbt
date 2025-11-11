@@ -123,10 +123,11 @@ class CubeStructureGenerator:
         # Generate cube variable code
         cube_variable_code = f"{cube_structure.code}__{variable_id}"
 
-        # Create or get subdomain
+        # Create or get subdomain (or single member if domain has only 1 member)
         subdomain = None
+        single_member = None
         if dimension_def.get('create_subdomain', True):
-            subdomain = self.create_or_get_subdomain(
+            subdomain, single_member = self.create_or_get_subdomain(
                 variable, cube_structure.cube_structure_id
             )
 
@@ -135,7 +136,7 @@ class CubeStructureGenerator:
         if not dimension_type:
             dimension_type = self._determine_dimension_type(variable)
 
-        # Check for fixed member
+        # Check for fixed member (overrides single_member if specified)
         fixed_member = None
         if dimension_def.get('fixed_member_code'):
             if hasattr(variable, 'domain_id') and variable.domain_id:
@@ -144,7 +145,11 @@ class CubeStructureGenerator:
                     code=dimension_def['fixed_member_code']
                 ).first()
 
+        # Use fixed_member if specified, otherwise use single_member from subdomain check
+        final_member = fixed_member if fixed_member else single_member
+
         # Create cube structure item
+        # Note: If domain has 1 member, subdomain will be None and final_member will be set
         csi = CUBE_STRUCTURE_ITEM.objects.create(
             cube_structure_id=cube_structure,
             cube_variable_code=cube_variable_code,
@@ -152,7 +157,7 @@ class CubeStructureGenerator:
             role="D",  # Dimension
             order=order,
             subdomain_id=subdomain,
-            member_id=fixed_member,
+            member_id=final_member,
             dimension_type=dimension_type,
             is_mandatory=dimension_def.get('is_mandatory', True),
             is_implemented=True,
@@ -213,22 +218,42 @@ class CubeStructureGenerator:
         self,
         variable: VARIABLE,
         cube_structure_id: str
-    ) -> Optional[SUBDOMAIN]:
+    ) -> Tuple[Optional[SUBDOMAIN], Optional[MEMBER]]:
         """
         Create or get a subdomain for a variable in a cube structure.
+        If the domain has exactly one member, returns that member instead of a subdomain.
 
         Args:
             variable: The VARIABLE object
             cube_structure_id: The cube structure ID
 
         Returns:
-            The SUBDOMAIN object or None
+            Tuple of (SUBDOMAIN, MEMBER) where:
+            - If domain has 1 member: (None, member)
+            - If domain has multiple members: (subdomain, None)
+            - If error: (None, None)
         """
         if not hasattr(variable, 'domain_id') or not variable.domain_id:
             logger.warning(f"Variable {variable.variable_id} has no domain")
-            return None
+            return (None, None)
 
         domain = variable.domain_id
+
+        # Check if domain has exactly one member
+        if domain.is_enumerated:
+            members = MEMBER.objects.filter(domain_id=domain)
+            member_count = members.count()
+
+            if member_count == 1:
+                single_member = members.first()
+                logger.info(
+                    f"Domain {domain.domain_id} has single member {single_member.code}, "
+                    f"using direct member reference instead of subdomain"
+                )
+                return (None, single_member)
+            elif member_count == 0:
+                logger.warning(f"Domain {domain.domain_id} has no members")
+                return (None, None)
 
         # Generate subdomain ID
         subdomain_id = f"{variable.variable_id}_OUTPUT_SD_{cube_structure_id}"
@@ -238,7 +263,7 @@ class CubeStructureGenerator:
 
         if subdomain:
             logger.info(f"Using existing subdomain: {subdomain_id}")
-            return subdomain
+            return (subdomain, None)
 
         # Create new subdomain
         maintenance_agency = MAINTENANCE_AGENCY.objects.first()
@@ -265,7 +290,7 @@ class CubeStructureGenerator:
             self._copy_domain_enumeration_to_subdomain(domain, subdomain)
 
         logger.info(f"Created new subdomain: {subdomain_id}")
-        return subdomain
+        return (subdomain, None)
 
     def _copy_domain_enumeration_to_subdomain(
         self,
