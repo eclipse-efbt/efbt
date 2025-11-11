@@ -407,7 +407,6 @@ urlpatterns = [
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
-    path("workflow/ancrdt/review/<int:step_number>/", workflow_views.workflow_ancrdt_review, name="workflow_ancrdt_review"),
     path("api/aorta/trails/", aorta_views.AortaTrailListView.as_view(), name="aorta-trail-list"),
     path("api/aorta/trails/<int:trail_id>/", aorta_views.AortaTrailDetailView.as_view(), name="aorta-trail-detail"),
     path(
@@ -496,6 +495,7 @@ urlpatterns = [
     path("api/output-layer-mapping/table-cells/", output_layer_mapping_workflow_views.get_table_cells_api, name="olm_get_table_cells_api"),
     path("api/output-layer-mapping/variable-domain/", output_layer_mapping_workflow_views.get_variable_domain_api, name="olm_get_variable_domain_api"),
     path("api/output-layer-mapping/filter-options/", output_layer_mapping_workflow_views.get_filter_options_api, name="olm_filter_options_api"),
+    path("api/output-layer-mapping/delete-conflicts/", output_layer_mapping_workflow_views.delete_mapping_conflicts, name="olm_delete_conflicts_api"),
 
     # Cube structure viewer endpoints (reusable service)
     path("api/cube-structure/<str:cube_id>/", output_layer_mapping_workflow_views.api_cube_structure, name="api_cube_structure"),

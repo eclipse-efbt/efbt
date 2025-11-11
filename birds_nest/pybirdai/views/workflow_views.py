@@ -4261,53 +4261,6 @@ def workflow_dpm_review(request, step_number):
         return redirect('pybirdai:workflow_dashboard')
 
 
-def workflow_ancrdt_review(request, step_number):
-    """
-    Review page for AnaCredit step execution results.
-    DEPRECATED: This view now redirects to the ANCRDT dashboard with the step expanded.
-    All review functionality has been integrated into the dashboard for a unified experience.
-    """
-    logger = logging.getLogger(__name__)
-
-    try:
-        # Get workflow session to verify step exists
-        session_id = request.session.get('workflow_session_id')
-        if not session_id:
-            messages.error(request, 'No active workflow session found')
-            return redirect('pybirdai:workflow_dashboard')
-
-        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
-
-        # Check if step has been executed
-        try:
-            AnaCreditProcessExecution.objects.get(
-                session=workflow_session,
-                step_number=step_number
-            )
-        except AnaCreditProcessExecution.DoesNotExist:
-            messages.warning(request, f'AnaCredit Step {step_number} has not been executed yet')
-            # Redirect to step execution page
-            return redirect(f'pybirdai:ancrdt_step_{step_number}')
-
-        # Redirect to appropriate review page (no review for step 0)
-        if step_number == 0:
-            messages.info(request, 'Step 0 has no review page')
-            return redirect('pybirdai:ancrdt_step_0')
-        elif step_number == 1:
-            return redirect('pybirdai:ancrdt_step_1_review')
-        elif step_number == 2:
-            return redirect('pybirdai:ancrdt_step_2_review')
-        elif step_number == 3:
-            return redirect('pybirdai:ancrdt_step_3_review')
-        else:
-            return redirect('pybirdai:ancrdt_step_0')
-
-    except Exception as e:
-        logger.error(f"Error redirecting to AnaCredit dashboard: {e}")
-        messages.error(request, f'Error loading review page: {str(e)}')
-        return redirect('pybirdai:workflow_dashboard')
-
-
 def ancrdt_dashboard(request):
     """
     DEPRECATED: Old ANCRDT dashboard function.

@@ -392,10 +392,26 @@
                 </button>
             </div>
             <div class="task-card">
-                <a href="{% url 'pybirdai:workflow_ancrdt_review' step_number=task.step_number %}"
-                   class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
-                    Review
-                </a>
+                {% if task.step_number == 1 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_1_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 2 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_2_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 3 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_3_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% else %}
+                    <span class="operation-btn btn-grid-action invalidated">
+                        Review
+                    </span>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

@@ -417,9 +417,19 @@
             <i class="fas fa-home"></i> ANCRDT Dashboard
         </a>
         {% if execution %}
-            <a href="{% url 'pybirdai:workflow_ancrdt_review' step_number=step %}" class="btn btn-info">
-                <i class="fas fa-history"></i> View Execution Details
-            </a>
+            {% if step == 1 %}
+                <a href="{% url 'pybirdai:ancrdt_step_1_review' %}" class="btn btn-info">
+                    <i class="fas fa-history"></i> View Execution Details
+                </a>
+            {% elif step == 2 %}
+                <a href="{% url 'pybirdai:ancrdt_step_2_review' %}" class="btn btn-info">
+                    <i class="fas fa-history"></i> View Execution Details
+                </a>
+            {% elif step == 3 %}
+                <a href="{% url 'pybirdai:ancrdt_step_3_review' %}" class="btn btn-info">
+                    <i class="fas fa-history"></i> View Execution Details
+                </a>
+            {% endif %}
         {% endif %}
     </div>
 </div>

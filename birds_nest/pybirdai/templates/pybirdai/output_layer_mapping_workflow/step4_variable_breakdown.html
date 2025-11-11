@@ -767,6 +767,127 @@
     body.modal-open {
         overflow: hidden;
     }
+
+    /* ========== EBA_ATY Member Panel Styles ========== */
+    .eba-aty-members-panel {
+        background: #f0f8ff;
+        border: 2px solid #0d6efd;
+        border-radius: 6px;
+        padding: 0;
+        margin: 1rem 0;
+        display: none; /* Hidden by default */
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(13, 110, 253, 0.1);
+    }
+
+    .eba-aty-members-panel.show {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .members-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        padding: 1rem;
+        background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+        color: white;
+        font-weight: 600;
+        user-select: none;
+        transition: background 0.2s;
+    }
+
+    .members-header:hover {
+        background: linear-gradient(135deg, #0b5ed7 0%, #004494 100%);
+    }
+
+    .members-header strong {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .panel-icon {
+        font-weight: bold;
+        transition: transform 0.3s;
+        font-size: 1.2rem;
+    }
+
+    .panel-icon.expanded {
+        transform: rotate(180deg);
+    }
+
+    .members-list-container {
+        padding: 1rem;
+        background: white;
+        border-top: 1px solid #0d6efd;
+    }
+
+    .members-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+    }
+
+    .member-item {
+        background: #f8f9fa;
+        padding: 0.75rem;
+        border-radius: 4px;
+        border-left: 3px solid #0d6efd;
+        transition: all 0.2s;
+    }
+
+    .member-item:hover {
+        background: #e7f3ff;
+        border-left-color: #0056b3;
+        transform: translateX(2px);
+    }
+
+    .member-item strong {
+        display: block;
+        color: #333;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .member-item .member-code {
+        font-size: 0.875rem;
+        color: #666;
+        font-family: monospace;
+        background: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        display: inline-block;
+    }
+
+    .no-members-message {
+        color: #666;
+        font-style: italic;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .member-count-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    /* ========== End EBA_ATY Member Panel Styles ========== */
 </style>
 {% endblock %}
 
@@ -991,6 +1112,16 @@
     console.log('[DEBUG] Sample source variables:', Object.keys(AVAILABLE_VARIABLES).slice(0, 5));
     console.log('[DEBUG] Sample target variables:', Object.keys(TARGET_VARIABLES).slice(0, 5));
     console.log('[DEBUG] Sample TARGET_VARIABLES_ARRAY:', TARGET_VARIABLES_ARRAY.slice(0, 3));
+
+    // Inject variables with members data from Django template (includes member info for EBA_ATY, etc.)
+    const VARIABLES_WITH_MEMBERS = {{ variables_with_members_json|safe }};
+    console.log('[DEBUG] VARIABLES_WITH_MEMBERS loaded with', Object.keys(VARIABLES_WITH_MEMBERS).length, 'variables');
+
+    // Log EBA_ATY members if available
+    if (VARIABLES_WITH_MEMBERS['EBA_ATY']) {
+        console.log('[DEBUG] EBA_ATY has', VARIABLES_WITH_MEMBERS['EBA_ATY'].members.length, 'members from ordinates');
+        console.log('[DEBUG] Sample EBA_ATY members:', VARIABLES_WITH_MEMBERS['EBA_ATY'].members.slice(0, 3));
+    }
 
     // ========== Domain Validation Helper Functions ==========
 
@@ -1355,6 +1486,87 @@
         }
     }
 
+    // ========== EBA_ATY Member Panel Functions ==========
+
+    /**
+     * Toggle expand/collapse of EBA_ATY member panel
+     * @param {string} groupId - The group ID
+     */
+    function toggleMemberPanel(groupId) {
+        const listContainer = document.getElementById(`membersList_${groupId}`).parentElement;
+        const icon = document.getElementById(`panelIcon_${groupId}`);
+
+        if (listContainer.style.display === 'none') {
+            listContainer.style.display = 'block';
+            icon.classList.add('expanded');
+        } else {
+            listContainer.style.display = 'none';
+            icon.classList.remove('expanded');
+        }
+    }
+
+    /**
+     * Update EBA_ATY member panel visibility and content
+     * Shows panel only if group type is Observation AND EBA_ATY is selected
+     * @param {string} groupId - The group ID
+     */
+    function updateEbaAtyMemberDisplay(groupId) {
+        const group = variableGroups[groupId];
+        const panel = document.getElementById(`ebaAtyPanel_${groupId}`);
+        const membersList = document.getElementById(`membersList_${groupId}`);
+        const memberCount = document.getElementById(`memberCount_${groupId}`);
+
+        if (!panel || !membersList) {
+            console.warn(`[EBA_ATY Panel] Elements not found for ${groupId}`);
+            return;
+        }
+
+        // Show panel only if: group_type === 'Observation' AND EBA_ATY is selected
+        const isObservation = group.group_type === 'Observation';
+        const hasEbaAty = group.variable_ids && group.variable_ids.includes('EBA_ATY');
+
+        if (isObservation && hasEbaAty) {
+            // Get EBA_ATY members
+            const ebaAtyData = VARIABLES_WITH_MEMBERS['EBA_ATY'];
+
+            if (ebaAtyData && ebaAtyData.members && ebaAtyData.members.length > 0) {
+                // Update member count badge
+                memberCount.textContent = `${ebaAtyData.members.length} members`;
+
+                // Generate member list HTML
+                const membersHtml = ebaAtyData.members.map(member => `
+                    <div class="member-item">
+                        <strong>${member.name}</strong>
+                        <div>
+                            <span class="member-code">${member.code}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                membersList.innerHTML = membersHtml;
+                panel.classList.add('show');
+
+                console.log(`[EBA_ATY Panel] Displayed ${ebaAtyData.members.length} members for ${groupId}`);
+            } else {
+                membersList.innerHTML = '<div class="no-members-message">No EBA_ATY members found from selected ordinates</div>';
+                memberCount.textContent = '0 members';
+                panel.classList.add('show');
+                console.warn(`[EBA_ATY Panel] No members found for EBA_ATY in ${groupId}`);
+            }
+        } else {
+            // Hide panel if conditions not met
+            panel.classList.remove('show');
+
+            if (!isObservation) {
+                console.log(`[EBA_ATY Panel] Hidden for ${groupId}: not an Observation group`);
+            } else if (!hasEbaAty) {
+                console.log(`[EBA_ATY Panel] Hidden for ${groupId}: EBA_ATY not selected`);
+            }
+        }
+    }
+
+    // ========== End EBA_ATY Member Panel Functions ==========
+
     // Update group configuration
     function updateGroupConfig(groupId, field, value) {
         if (variableGroups[groupId]) {
@@ -1386,6 +1598,8 @@
             if (field === 'group_type') {
                 console.log(`[Domain Filter] Group type changed to ${value} for ${groupId}, refreshing dropdown...`);
                 refreshSingleGroupDropdown(groupId);
+                // Update EBA_ATY member panel visibility
+                updateEbaAtyMemberDisplay(groupId);
             }
 
             // If mapping type changes, adjust UI
@@ -1487,6 +1701,22 @@
                         </div>
                     </div>
 
+                    <!-- EBA_ATY Member Panel (shown only for Observation groups with EBA_ATY) -->
+                    <div id="ebaAtyPanel_${groupId}" class="eba-aty-members-panel">
+                        <div class="members-header" onclick="toggleMemberPanel('${groupId}')">
+                            <strong>
+                                📊 EBA_ATY Members from Selected Ordinates
+                                <span id="memberCount_${groupId}" class="member-count-badge"></span>
+                            </strong>
+                            <span id="panelIcon_${groupId}" class="panel-icon">▼</span>
+                        </div>
+                        <div class="members-list-container">
+                            <div id="membersList_${groupId}" class="members-list">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Hidden inputs for form submission -->
                     <input type="hidden" name="group_${groupId}_name" value="${group.name}">
                     <input type="hidden" name="group_${groupId}_variables" value="${group.variable_ids.join(',')}">
@@ -1549,6 +1779,9 @@
                         refreshAllGroupDropdowns(groupId);
 
                         updateVariableMappingIndicator(); // Update indicator when source variables change
+
+                        // Update EBA_ATY member panel if EBA_ATY is selected/deselected
+                        updateEbaAtyMemberDisplay(groupId);
                     }
                 }
             });

@@ -366,7 +366,7 @@ def approve_execution_code(request, step=3):
             execution.save()
 
         messages.success(request, "Execution code approved successfully!")
-        return redirect('pybirdai:workflow_ancrdt_review', step_number=3)
+        return redirect('pybirdai:ancrdt_step_3_review')
 
     except Exception as e:
         messages.error(request, f"Error approving execution code: {str(e)}")

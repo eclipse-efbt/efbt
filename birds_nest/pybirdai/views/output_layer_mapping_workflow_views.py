@@ -248,6 +248,130 @@ def delete_mapping_artifacts(mapping_ids):
     return stats
 
 
+def detect_mapping_conflicts(table_code, version, all_mappings, variable_groups):
+    """
+    Detect if any VARIABLE_MAPPING IDs would conflict with existing records.
+    This happens when users try to regenerate mappings with the same naming.
+
+    Args:
+        table_code: str - The table code (e.g., "F_01_01")
+        version: str - The version string (e.g., "3.0")
+        all_mappings: dict - Mapping data from session
+        variable_groups: dict - Variable groups from session
+
+    Returns:
+        list: List of conflict dictionaries with:
+            - variable_mapping_id: The conflicting ID
+            - mapping_name: Name of the conflicting mapping
+            - source_variables: List of source variable IDs
+            - target_variables: List of target variable IDs
+    """
+    conflicts = []
+
+    # Generate the mapping prefix
+    version_normalized = version.replace('.', '_')
+    mapping_prefix = f"{table_code}_{version_normalized}_MAP"
+
+    # Calculate starting sequence number
+    existing_count = MAPPING_DEFINITION.objects.filter(
+        code__startswith=mapping_prefix
+    ).count()
+    mapping_sequence_start = existing_count + 1
+
+    # Check each mapping for conflicts
+    mapping_counter = 0
+    for group_id, mapping_data in all_mappings.items():
+        mapping_name = mapping_data['mapping_name']
+        internal_id = mapping_data['internal_id']
+
+        # Calculate the variable_mapping_id that would be generated
+        current_sequence = mapping_sequence_start + mapping_counter
+        mapping_id_suffix = f"{current_sequence:03d}"
+        variable_mapping_id = f"{mapping_prefix}_{mapping_id_suffix}_VAR"
+        mapping_counter += 1
+
+        # Check if this VARIABLE_MAPPING already exists
+        if VARIABLE_MAPPING.objects.filter(variable_mapping_id=variable_mapping_id).exists():
+            # Get the group info to extract variables
+            group_info = variable_groups.get(group_id, {})
+            source_var_ids = group_info.get('variable_ids', [])
+            target_var_ids = group_info.get('targets', [])
+
+            # Get variable names for better display
+            source_vars = list(VARIABLE.objects.filter(variable_id__in=source_var_ids).values('variable_id', 'name'))
+            target_vars = list(VARIABLE.objects.filter(variable_id__in=target_var_ids).values('variable_id', 'name'))
+
+            conflicts.append({
+                'variable_mapping_id': variable_mapping_id,
+                'mapping_name': mapping_name,
+                'internal_id': internal_id,
+                'group_type': mapping_data.get('group_type', 'dimension'),
+                'source_variables': source_vars,
+                'target_variables': target_vars
+            })
+
+    return conflicts
+
+
+def delete_conflicting_mappings(conflict_ids):
+    """
+    Delete VARIABLE_MAPPING and related VARIABLE_MAPPING_ITEM records for conflicting IDs.
+
+    Args:
+        conflict_ids: List of variable_mapping_id strings to delete
+
+    Returns:
+        dict: Statistics about what was deleted
+    """
+    stats = {
+        'variable_mapping_items': 0,
+        'variable_mappings': 0,
+        'member_mapping_items': 0,
+        'member_mappings': 0,
+        'mapping_definitions': 0
+    }
+
+    logger.info(f"Deleting conflicting mappings: {conflict_ids}")
+
+    # Step 1: Find VARIABLE_MAPPING records
+    variable_mappings = VARIABLE_MAPPING.objects.filter(variable_mapping_id__in=conflict_ids)
+
+    # Step 2: Delete VARIABLE_MAPPING_ITEM records first (foreign key dependency)
+    for vm in variable_mappings:
+        items_deleted = VARIABLE_MAPPING_ITEM.objects.filter(variable_mapping_id=vm).delete()
+        stats['variable_mapping_items'] += items_deleted[0] if items_deleted[0] else 0
+
+    # Step 3: Find MAPPING_DEFINITION records that reference these VARIABLE_MAPPING records
+    mapping_definitions = MAPPING_DEFINITION.objects.filter(variable_mapping_id__in=variable_mappings)
+
+    # Step 4: Delete MEMBER_MAPPING_ITEM and MEMBER_MAPPING records associated with these MAPPING_DEFINITIONs
+    for mapping_def in mapping_definitions:
+        if mapping_def.member_mapping_id:
+            # Delete MEMBER_MAPPING_ITEM records first
+            member_items_deleted = MEMBER_MAPPING_ITEM.objects.filter(
+                member_mapping_id=mapping_def.member_mapping_id
+            ).delete()
+            stats['member_mapping_items'] += member_items_deleted[0] if member_items_deleted[0] else 0
+
+            # Delete MEMBER_MAPPING record
+            member_mapping_deleted = MEMBER_MAPPING.objects.filter(
+                member_mapping_id=mapping_def.member_mapping_id.member_mapping_id
+            ).delete()
+            stats['member_mappings'] += member_mapping_deleted[0] if member_mapping_deleted[0] else 0
+
+    # Step 5: Delete MAPPING_DEFINITION records
+    mapping_defs_deleted = mapping_definitions.delete()
+    stats['mapping_definitions'] = mapping_defs_deleted[0] if mapping_defs_deleted[0] else 0
+
+    # Step 6: Delete VARIABLE_MAPPING records
+    variable_mappings_deleted = variable_mappings.delete()
+    stats['variable_mappings'] = variable_mappings_deleted[0] if variable_mappings_deleted[0] else 0
+
+    logger.info(f"Conflict deletion complete. Stats: {stats}")
+
+    return stats
+
+
 def check_existing_mappings(request):
     """
     Step 1.5: Check for existing mappings for the selected table.
@@ -808,11 +932,36 @@ def define_variable_breakdown(request):
     else:
         print("[DEBUG] WARNING: No target variables after filtering!")
 
+    # Serialize variables with members for JavaScript consumption
+    # This allows the frontend to display EBA_ATY members when user selects Observation type
+    variables_with_members = {}
+    for var_id, var_data in variables.items():
+        variables_with_members[var_id] = {
+            'variable': {
+                'variable_id': var_data['variable'].variable_id,
+                'name': var_data['variable'].name,
+            },
+            'domain': {
+                'domain_id': var_data['domain'].domain_id if var_data['domain'] else None,
+                'name': var_data['domain'].name if var_data['domain'] else None,
+                'is_enumerated': var_data['domain'].is_enumerated if var_data['domain'] else False,
+            } if var_data['domain'] else None,
+            'members': [
+                {
+                    'member_id': m.member_id,
+                    'name': m.name,
+                    'code': m.code
+                }
+                for m in var_data['members']
+            ]
+        }
+
     context = {
         'table': table,
         'variables': variables,
         'all_variables': all_variables,
         'target_variables': target_variables,
+        'variables_with_members_json': json.dumps(variables_with_members),
         'step': 4,
         'total_steps': 7
     }
@@ -2057,6 +2206,8 @@ def generate_structures(request):
                     'cube_id': cube.cube_id,
                     'combinations_created': len(created_combinations)
                 },
+                'conflicts': [],
+                'conflicts_json': '[]',
                 'step': 7,
                 'total_steps': 7
             }
@@ -2069,6 +2220,8 @@ def generate_structures(request):
             context = {
                 'success': False,
                 'error': str(e),
+                'conflicts': [],
+                'conflicts_json': '[]',
                 'step': 7,
                 'total_steps': 7
             }
@@ -2076,6 +2229,7 @@ def generate_structures(request):
     else:
         # GET request - show confirmation page for all mappings
         mapping_summaries = []
+        conflicts = []
 
         if regenerate_mode:
             # Regenerate mode: build summaries from existing mappings
@@ -2111,6 +2265,15 @@ def generate_structures(request):
                     'attribute_count': len(mapping_data.get('attributes', []))
                 })
 
+            # Check for conflicts (only in normal mode, not regenerate mode)
+            variable_groups = json.loads(request.session['olmw_variable_groups'])
+            conflicts = detect_mapping_conflicts(table_code, version, all_mappings, variable_groups)
+
+            if conflicts:
+                logger.warning(f"[STEP 7] Detected {len(conflicts)} mapping conflicts")
+                for conflict in conflicts:
+                    logger.warning(f"  - {conflict['variable_mapping_id']}: {conflict['mapping_name']}")
+
         context = {
             'mappings': mapping_summaries,
             'mappings_count': len(mapping_summaries),
@@ -2120,10 +2283,45 @@ def generate_structures(request):
             'step': 7,
             'total_steps': 7,
             'preview': True,
-            'regenerate_mode': regenerate_mode
+            'regenerate_mode': regenerate_mode,
+            'conflicts': conflicts,
+            'conflicts_json': json.dumps(conflicts) if conflicts else '[]'
         }
 
     return render(request, 'pybirdai/output_layer_mapping_workflow/step7_confirmation.html', context)
+
+
+@require_http_methods(["POST"])
+@transaction.atomic
+def delete_mapping_conflicts(request):
+    """
+    API endpoint to delete conflicting VARIABLE_MAPPING records and proceed with generation.
+    Called from the conflict resolution modal when user confirms deletion.
+    """
+    try:
+        # Parse the conflict IDs from request body
+        data = json.loads(request.body)
+        conflict_ids = data.get('conflict_ids', [])
+
+        if not conflict_ids:
+            return JsonResponse({'error': 'No conflict IDs provided'}, status=400)
+
+        logger.info(f"[CONFLICT RESOLUTION] Deleting {len(conflict_ids)} conflicting mappings")
+
+        # Delete the conflicting mappings
+        deletion_stats = delete_conflicting_mappings(conflict_ids)
+
+        logger.info(f"[CONFLICT RESOLUTION] Deletion complete: {deletion_stats}")
+
+        return JsonResponse({
+            'success': True,
+            'deleted': deletion_stats,
+            'message': f"Successfully deleted {deletion_stats['variable_mappings']} conflicting mapping(s)"
+        })
+
+    except Exception as e:
+        logger.error(f"[CONFLICT RESOLUTION] Error deleting conflicts: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @require_http_methods(["GET"])

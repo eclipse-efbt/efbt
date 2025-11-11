@@ -528,6 +528,226 @@
         background-color: #0d6efd;
         color: white;
     }
+
+    /* ========== Observation Mapping Summary Panel Styles ========== */
+    .observation-mapping-summary {
+        background: linear-gradient(135deg, #f0f8ff 0%, #e3f2fd 100%);
+        border: 2px solid #0d6efd;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.1);
+    }
+
+    .summary-header {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #0d6efd;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .summary-overview {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #0d6efd;
+    }
+
+    .summary-overview strong {
+        color: #333;
+    }
+
+    .mapped-var-badge {
+        display: inline-block;
+        background: #0d6efd;
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 16px;
+        margin: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .member-mappings {
+        display: grid;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    .member-mappings-header {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .member-mapping-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: white;
+        border-radius: 4px;
+        border-left: 3px solid #0d6efd;
+        transition: all 0.2s;
+    }
+
+    .member-mapping-item:hover {
+        background: #f7fafc;
+        transform: translateX(2px);
+    }
+
+    .member-mapping-item .source-member {
+        flex: 1;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .member-mapping-item .source-member .member-code {
+        font-family: monospace;
+        background: #f0f8ff;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-size: 0.875rem;
+        margin-right: 0.5rem;
+    }
+
+    .mapping-arrow {
+        margin: 0 1rem;
+        color: #0d6efd;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .target-var {
+        flex: 1;
+        color: #198754;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .unmapped-warning {
+        color: #dc3545;
+        font-style: italic;
+        font-weight: 500;
+    }
+
+    .unmapped-count-badge {
+        background: #dc3545;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        margin-left: 0.5rem;
+    }
+    /* ========== End Observation Mapping Summary Panel Styles ========== */
+
+    /* ========== Observation Info Panel (Read-Only) Styles ========== */
+    .observation-info-panel {
+        background: linear-gradient(135deg, #fffaf0 0%, #ffe0b2 100%);
+        border: 2px solid #ffcc80;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(255, 204, 128, 0.15);
+        margin-bottom: 1.5rem;
+    }
+
+    .info-panel-header {
+        background: linear-gradient(135deg, #ffcc80 0%, #ffb74d 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        font-size: 1.125rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-panel-body {
+        padding: 2rem;
+        background: white;
+    }
+
+    .mapping-summary-line {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .source-info {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .source-info strong {
+        font-size: 1.125rem;
+        color: #333;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .members-list {
+        color: #666;
+        font-size: 0.95rem;
+        font-style: italic;
+        margin-top: 0.5rem;
+        line-height: 1.5;
+    }
+
+    .mapping-arrow {
+        font-size: 2rem;
+        color: #ffb74d;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+
+    .target-info {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .target-info strong {
+        font-size: 1rem;
+        color: #333;
+        display: block;
+        margin-bottom: 0.75rem;
+    }
+
+    .target-variables-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .target-var-chip {
+        background: #ffb74d;
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 16px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+        .mapping-summary-line {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .mapping-arrow {
+            transform: rotate(90deg);
+            align-self: center;
+        }
+    }
+    /* ========== End Observation Info Panel Styles ========== */
 </style>
 {% endblock %}
 
@@ -674,27 +894,31 @@
             <!-- Observations Inner Tab Content -->
             <div id="innerContent_{{ mapping.group_id }}_observations" class="inner-tab-content {% if not mapping.dimension_source_vars and not mapping.dimension_target_vars %}active{% endif %}">
                 {% if mapping.observation_source_vars or mapping.observation_target_vars %}
-                <div class="observation-instructions" style="background: #f7f9fc; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #0d6efd;">
-                    <p style="margin: 0; color: #4a5568; font-size: 0.9rem;">
-                        📊 Map EBA_ATY members to metric variables. Select or create a metric variable for each member below.
-                    </p>
+
+                <!-- Observation Info Panel (Read-Only) -->
+                <div id="observationInfo_{{ mapping.group_id }}" class="observation-info-panel">
+                    <div class="info-panel-header">
+                        📊 EBA_ATY Observation Mapping
+                    </div>
+                    <div class="info-panel-body">
+                        <div class="mapping-summary-line">
+                            <div class="source-info">
+                                <strong>EBA_ATY</strong>
+                                <div class="members-list">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+                            <div class="mapping-arrow">→</div>
+                            <div class="target-info">
+                                <strong>Mapped to:</strong>
+                                <div class="target-variables-list">
+                                    <!-- Populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Observation Mappings Table -->
-                <div class="mapping-table-container">
-                    <table class="mapping-table mapping-table-simple">
-                        <thead>
-                            <tr>
-                                <th class="source-column" style="width: 40%;">Source (EBA_ATY Member)</th>
-                                <th class="target-column" style="width: 40%;">Target Metric Variable</th>
-                                <th class="action-column" style="width: 20%;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="observationsRows_{{ mapping.group_id }}">
-                            <!-- Rows generated by JavaScript from EBA_ATY members -->
-                        </tbody>
-                    </table>
-                </div>
                 {% else %}
                 <div class="empty-state">
                     <div class="empty-state-icon">📊</div>
@@ -992,9 +1216,9 @@ document.addEventListener('DOMContentLoaded', function() {
             generateDimensionRows(mapping.group_id, mapping);
         }
 
-        // Initialize Tom Select for observation creator (if observations exist)
+        // Display read-only observation info panel (if observations exist)
         if (mapping.observationSourceVars.length > 0 || mapping.observationTargetVars.length > 0) {
-            initializeObservationCreator(mapping.group_id, mapping);
+            displayObservationInfo(mapping.group_id, mapping);
         }
 
         // Add one empty row for attributes
@@ -1269,155 +1493,62 @@ function deleteRow(tr) {
  * Allows searching existing variables or creating new ones
  */
 /**
- * Initialize observation rows from EBA_ATY members
- * Each EBA_ATY member gets a row with: Member Name → Metric Variable Dropdown
+ * Display read-only observation info panel
+ * Shows: EBA_ATY (member1, member2, ...) → Target Variables
+ * @param {string} groupId - The mapping group ID
+ * @param {Object} mapping - The mapping data object
  */
-function initializeObservationCreator(groupId, mapping) {
-    // Check if this mapping has EBA_ATY as a source variable
-    const hasEbaAty = mapping.observationSourceVars && mapping.observationSourceVars.some(v => v.variable_id === 'EBA_ATY');
+function displayObservationInfo(groupId, mapping) {
+    const infoPanel = document.getElementById(`observationInfo_${groupId}`);
+    if (!infoPanel) {
+        console.warn(`[Observation Info] Info panel not found for ${groupId}`);
+        return;
+    }
+
+    // Check if this mapping has EBA_ATY
+    const hasEbaAty = mapping.observationSourceVars &&
+                      mapping.observationSourceVars.some(v => v.variable_id === 'EBA_ATY');
 
     if (!hasEbaAty) {
-        console.log(`[Observation] No EBA_ATY variable in mapping ${groupId}`);
+        infoPanel.style.display = 'none';
+        console.log(`[Observation Info] No EBA_ATY in mapping ${groupId}`);
         return;
     }
 
-    // Get EBA_ATY members from ordinateSelectedMembers (ONLY ordinate-selected members)
+    // Get EBA_ATY members from ordinate-selected members
     const ebaAtyMembers = mapping.ordinateSelectedMembers['EBA_ATY'] || [];
+    const targetVars = mapping.observationTargetVars || [];
 
     if (ebaAtyMembers.length === 0) {
-        console.warn(`[Observation] EBA_ATY has no members in mapping ${groupId}`);
+        infoPanel.style.display = 'none';
+        console.warn(`[Observation Info] No EBA_ATY members found for ${groupId}`);
         return;
     }
 
-    console.log(`[Observation] Found ${ebaAtyMembers.length} EBA_ATY members for mapping ${groupId}`);
+    // Build members list string (comma-separated codes)
+    const membersList = ebaAtyMembers
+        .map(m => m.code || m.name)
+        .join(', ');
 
-    // Create a row for each EBA_ATY member
-    ebaAtyMembers.forEach((member, index) => {
-        addObservationVariableRow(groupId, member, index);
-    });
-}
+    // Build target variables list HTML (as chips)
+    const targetVarsList = targetVars.length > 0
+        ? targetVars.map(v => `<span class="target-var-chip">${v.name || v.variable_id}</span>`).join('')
+        : '<span style="color: #999; font-style: italic;">No variables mapped</span>';
 
-/**
- * Add an observation variable row to the table
- * Creates a row for EBA_ATY member → Metric Variable mapping
- */
-function addObservationVariableRow(groupId, member, index) {
-    const tbody = document.getElementById(`observationsRows_${groupId}`);
-    if (!tbody) {
-        console.error(`Could not find tbody with id: observationsRows_${groupId}`);
-        return;
+    // Populate panel content
+    const membersDiv = infoPanel.querySelector('.members-list');
+    const targetDiv = infoPanel.querySelector('.target-variables-list');
+
+    if (membersDiv) {
+        membersDiv.textContent = `(${membersList})`;
     }
 
-    const tr = document.createElement('tr');
-    tr.dataset.groupId = String(groupId);
-    tr.dataset.memberid = String(member.member_id);
-    tr.dataset.rowIndex = String(index);
-
-    // Column 1: EBA_ATY Member name (display only, locked)
-    const memberTd = document.createElement('td');
-    memberTd.className = 'source-column';
-    memberTd.style.background = '#f7f7f9';
-    memberTd.textContent = `EBA_ATY - ${member.name} (${member.code})`;
-    tr.appendChild(memberTd);
-
-    // Column 2: Target metric variable (Tom Select dropdown)
-    const targetTd = document.createElement('td');
-    targetTd.className = 'target-column';
-
-    const selectId = `metric_${groupId}_${member.member_id.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    const select = document.createElement('select');
-    select.id = selectId;
-    select.className = 'form-control metric-variable-select';
-    select.dataset.memberId = String(member.member_id);
-    select.placeholder = 'Select or create metric variable...';
-
-    targetTd.appendChild(select);
-    tr.appendChild(targetTd);
-
-    // Column 3: Actions (Delete button)
-    const actionTd = document.createElement('td');
-    actionTd.className = 'action-column';
-    const deleteBtn = document.createElement('button');
-    deleteBtn.type = 'button';
-    deleteBtn.className = 'delete-btn';
-    deleteBtn.textContent = 'Delete';
-    deleteBtn.onclick = function() {
-        if (confirm('Delete this measure mapping?')) {
-            tr.remove();
-        }
-    };
-    actionTd.appendChild(deleteBtn);
-    tr.appendChild(actionTd);
-
-    tbody.appendChild(tr);
-
-    // Initialize Tom Select for this metric variable dropdown
-    initializeMetricVariableSelect(selectId, groupId, member);
-}
-
-/**
- * Initialize Tom Select for a metric variable dropdown
- * Allows selecting existing variables or creating new ones
- * Automatically selects variable if it matches the EBA_ATY member code
- */
-function initializeMetricVariableSelect(selectId, groupId, member) {
-    const selectElement = document.getElementById(selectId);
-    if (!selectElement) {
-        console.error(`Could not find select element with id: ${selectId}`);
-        return;
+    if (targetDiv) {
+        targetDiv.innerHTML = targetVarsList;
     }
 
-    // Get all target variables as options (these are the metric variables)
-    const mapping = mappingsData.find(m => m.group_id === groupId);
-    const options = mapping.measureTargetVars ? mapping.measureTargetVars.map(varData => ({
-        value: varData.variable_id,
-        text: `${varData.name} (${varData.variable_id})`
-    })) : [];
-
-    // Try to find a variable that matches this EBA_ATY member's code
-    // Variables are typically named like "EBA_FIELD_XXX" where XXX matches the member code
-    const matchingVariable = mapping.measureTargetVars ?
-        mapping.measureTargetVars.find(v =>
-            v.code === member.code ||
-            v.variable_id === member.code ||
-            v.variable_id === `EBA_FIELD_${member.code}` ||
-            v.code === `EBA_FIELD_${member.code}`
-        ) : null;
-
-    // Initialize Tom Select with create functionality
-    const tomSelectInstance = new TomSelect(selectElement, {
-        options: options,
-        dropdownParent: 'body',
-        maxItems: 1,
-        items: matchingVariable ? [matchingVariable.variable_id] : [], // Pre-select if found
-        create: function(input, callback) {
-            // Open variable creation modal with pre-filled name based on EBA_ATY member
-            showCreateVariableModal(input , callback, groupId);
-            return false; // Prevent default creation
-        },
-        placeholder: matchingVariable ? 'Variable selected' : 'Select or create metric variable...',
-        searchField: ['text', 'value'],
-        sortField: { field: 'text', direction: 'asc' },
-        render: {
-            option: function(data, escape) {
-                return '<div class="option">' + escape(data.text) + '</div>';
-            },
-            item: function(data, escape) {
-                return '<div class="item">' + escape(data.text) + '</div>';
-            },
-            no_results: function(data, escape) {
-                return '<div class="no-results">No variables found. Press Enter to create "' + escape(data.input) + '"</div>';
-            }
-        }
-    });
-
-    // Store the Tom Select instance for later access
-    tomSelectInstances[selectId] = tomSelectInstance;
-
-    // Log if a matching variable was found and pre-selected
-    if (matchingVariable) {
-        console.log(`[Observation] Auto-selected variable ${matchingVariable.variable_id} for EBA_ATY member ${member.code}`);
-    }
+    infoPanel.style.display = 'block';
+    console.log(`[Observation Info] Displayed info for ${groupId}: ${ebaAtyMembers.length} members, ${targetVars.length} target variables`);
 }
 
 /**
