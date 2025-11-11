@@ -68,8 +68,8 @@ def import_report_templates_from_sdd(sdd_context, dataset_type="finrep", file_di
     base_path = os.path.join(sdd_context.file_directory, config.file_directory)
 
     # Import basic entities (always needed)
-    import_maintenance_agencies(sdd_context)
-    import_frameworks(sdd_context)
+    import_maintenance_agencies(sdd_context, config)
+    import_frameworks(sdd_context, config)
     import_domains(sdd_context, False, config)
     import_members(sdd_context, False, config)
     import_variables(sdd_context, False, config)
@@ -89,18 +89,18 @@ def import_report_templates_from_sdd(sdd_context, dataset_type="finrep", file_di
 
     if config.includes_rendering_package:
         # Import rendering entities (tables, axes, cells)
-        import_report_tables(sdd_context)
-        import_axis(sdd_context)
-        import_axis_ordinates(sdd_context)
+        import_report_tables(sdd_context, config)
+        import_axis(sdd_context, config)
+        import_axis_ordinates(sdd_context, config)
 
         # Import table cells and related entities (conditional based on dataset type)
         if config.use_csv_copy:
             # Use optimized CSV copy imports for large datasets
-            import_table_cells_csv_copy(sdd_context)
-            import_ordinate_items_csv_copy(sdd_context)
-            import_cell_positions_csv_copy(sdd_context)
+            import_table_cells_csv_copy(sdd_context, config)
+            import_ordinate_items_csv_copy(sdd_context, config)
+            import_cell_positions_csv_copy(sdd_context, config)
         else:
             # Use standard imports
-            import_table_cells(sdd_context)
-            import_ordinate_items(sdd_context)
-            import_cell_positions(sdd_context)
+            import_table_cells(sdd_context, config=config)
+            import_ordinate_items(sdd_context, config)
+            import_cell_positions(sdd_context, config=config)

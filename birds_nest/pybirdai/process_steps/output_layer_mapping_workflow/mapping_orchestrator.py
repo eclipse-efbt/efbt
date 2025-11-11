@@ -157,7 +157,7 @@ class OutputLayerMappingOrchestrator:
                 VARIABLE_MAPPING_ITEM.objects.create(
                     variable_mapping_id=variable_mapping,
                     variable_id=source_var,
-                    is_source="True"
+                    is_source="true"
                 )
 
             # Create target item
@@ -168,7 +168,7 @@ class OutputLayerMappingOrchestrator:
                 VARIABLE_MAPPING_ITEM.objects.create(
                     variable_mapping_id=variable_mapping,
                     variable_id=target_var,
-                    is_source="False"
+                    is_source="false"
                 )
 
         logger.info(f"Created variable mapping: {variable_mapping.variable_mapping_id}")
@@ -207,7 +207,7 @@ class OutputLayerMappingOrchestrator:
                         member_mapping_id=member_mapping,
                         member_mapping_row=str(row_counter),
                         variable_id=variable,
-                        is_source="True",
+                        is_source="true",
                         member_id=member
                     )
 
@@ -227,7 +227,7 @@ class OutputLayerMappingOrchestrator:
                                         member_mapping_id=member_mapping,
                                         member_mapping_row=str(row_counter),
                                         variable_id=target_var,
-                                        is_source="False",
+                                        is_source="false",
                                         member_id=target_member
                                     )
 

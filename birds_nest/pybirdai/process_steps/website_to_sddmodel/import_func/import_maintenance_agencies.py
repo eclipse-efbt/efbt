@@ -20,14 +20,16 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 
 
-def import_maintenance_agencies(context):
+def import_maintenance_agencies(context, config=None):
     """
     Import maintenance agencies from CSV file using bulk create.
 
     Args:
         context: SDDContext containing file paths and dictionaries
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "maintenance_agency.csv"
+    subdir = config.file_directory if config else "technical_export"
+    file_location = context.file_directory + os.sep + subdir + os.sep + "maintenance_agency.csv"
     header_skipped = False
     agencies_to_create = []
 

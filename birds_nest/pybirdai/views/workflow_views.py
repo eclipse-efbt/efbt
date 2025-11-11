@@ -3820,6 +3820,19 @@ def execute_dpm_step(request, step_number):
                 from pybirdai.entry_points.import_dpm_data import RunImportDPMData
                 RunImportDPMData.run_import(import_=True)
 
+                # After importing DPM data, ensure Float subdomain exists for MTRC variable
+                try:
+                    from pybirdai.process_steps.output_layer_mapping_workflow.create_float_subdomain import (
+                        ensure_float_subdomain_for_mtrc
+                    )
+                    float_result = ensure_float_subdomain_for_mtrc()
+                    if float_result['success']:
+                        logger.info(f"Float subdomain setup: {float_result['message']}")
+                    else:
+                        logger.warning(f"Float subdomain setup warning: {float_result['message']}")
+                except Exception as e:
+                    logger.warning(f"Float subdomain setup encountered an issue (non-critical): {str(e)}")
+
             elif step_number == 3:
                 # Create Output Layers from DPM tables
                 from pybirdai.entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
@@ -3945,45 +3958,6 @@ def get_dpm_status(request):
         })
 
 
-@require_http_methods(["GET"])
-def get_output_layer_options(request):
-    """Get available frameworks and tables for output layer generation"""
-    try:
-        from pybirdai.models.bird_meta_data_model import FRAMEWORK, TABLE
-
-        # Get distinct frameworks
-        frameworks = FRAMEWORK.objects.values('code', 'name').distinct().order_by('code')
-        framework_list = [
-            {'code': f['code'], 'name': f['name'] or f['code']}
-            for f in frameworks if f['code']
-        ]
-
-        # Get distinct tables with their codes and versions
-        tables = TABLE.objects.values('code', 'version').distinct().order_by('code', 'version')
-        table_list = [
-            {'code': t['code'], 'version': t['version'] or ''}
-            for t in tables if t['code']
-        ]
-
-        # Get distinct table codes (without version)
-        table_codes = TABLE.objects.values_list('code', flat=True).distinct().order_by('code')
-        table_code_list = [code for code in table_codes if code]
-
-        return JsonResponse({
-            'success': True,
-            'frameworks': framework_list,
-            'tables': table_list,
-            'table_codes': table_code_list
-        })
-
-    except Exception as e:
-        logger.error(f"Error getting output layer options: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        })
-
-
 @require_http_methods(["POST"])
 def execute_ancrdt_step(request, step_number):
     """Execute an AnaCredit process step"""
@@ -4094,28 +4068,140 @@ def get_ancrdt_status(request):
 
 # Review Pages for DPM and AnaCredit
 
+def get_cubes_for_dpm_step3():
+    """
+    Get all cubes generated from the output layer mapping workflow.
+    Filter by the pattern: table_code_REF_version
+    """
+    from pybirdai.models.bird_meta_data_model import (
+        CUBE, CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, MAPPING_TO_CUBE
+    )
+
+    # Find all cubes with '_REF_' pattern (from output layer mapping workflow)
+    cubes = CUBE.objects.filter(
+        cube_id__icontains='_REF_'
+    ).select_related('cube_structure_id', 'framework_id')
+
+    # Enrich with metadata
+    cube_data = []
+    for cube in cubes:
+        # Get combination count
+        combination_count = CUBE_TO_COMBINATION.objects.filter(
+            cube_id=cube
+        ).count()
+
+        # Get structure item count
+        item_count = 0
+        if cube.cube_structure_id:
+            item_count = CUBE_STRUCTURE_ITEM.objects.filter(
+                cube_structure_id=cube.cube_structure_id
+            ).count()
+
+        cube_data.append({
+            'cube_id': cube.cube_id,
+            'cube_name': cube.name or cube.cube_id,
+            'cube_code': cube.code,
+            'structure_id': cube.cube_structure_id.cube_structure_id if cube.cube_structure_id else None,
+            'structure_name': cube.cube_structure_id.name if cube.cube_structure_id else 'N/A',
+            'framework': cube.framework_id.framework_id if cube.framework_id else 'N/A',
+            'combination_count': combination_count,
+            'item_count': item_count,
+        })
+
+    return cube_data
+
+
+def api_dpm_cubes(request):
+    """
+    API endpoint to list Output Layer Mapping Workflow cubes only.
+    Returns JSON array of cubes created via the Output Layer Mapping Workflow.
+    Excludes ANCRDT cubes (which have their own viewer).
+    """
+    from pybirdai.models.bird_meta_data_model import CUBE
+    from django.http import JsonResponse
+    from django.db.models import Q
+
+    try:
+        # Get Output Layer Mapping Workflow cubes only
+        # Pattern: {tablecode}_{framework}_{version}_CUBE (e.g., C_07_00_a_COREP_3_CUBE)
+        # Also includes legacy: {table}_REF_CUBE_{timestamp}
+        cubes = CUBE.objects.filter(
+            cube_structure_id__isnull=False,  # Has a structure (actual output layer cube)
+            cube_id__endswith='_CUBE'  # Output Layer Mapping Workflow pattern
+        ).exclude(
+            Q(framework_id__framework_id__icontains='ANCRDT') |  # Exclude ANCRDT cubes
+            Q(cube_id='MAPPING_TO_CUBE')  # Exclude metadata cube
+        ).select_related('cube_structure_id', 'framework_id').order_by('name')
+
+        cube_list = []
+        for cube in cubes:
+            # Get structure item count
+            item_count = 0
+            if cube.cube_structure_id:
+                from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM
+                item_count = CUBE_STRUCTURE_ITEM.objects.filter(
+                    cube_structure_id=cube.cube_structure_id
+                ).count()
+
+            cube_list.append({
+                'cube_id': cube.cube_id,
+                'name': cube.name or cube.cube_id,
+                'code': cube.code,
+                'structure_id': cube.cube_structure_id.cube_structure_id if cube.cube_structure_id else None,
+                'structure_name': cube.cube_structure_id.name if cube.cube_structure_id else None,
+                'item_count': item_count,
+            })
+
+        return JsonResponse({'cubes': cube_list})
+
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error fetching DPM cubes: {e}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
 def workflow_dpm_review(request, step_number):
     """Review page for DPM step execution results"""
     logger = logging.getLogger(__name__)
 
     try:
-        # Get workflow session
+        # Get workflow session (optional for viewing artifacts)
         session_id = request.session.get('workflow_session_id')
-        if not session_id:
-            messages.error(request, 'No active workflow session found')
-            return redirect('pybirdai:workflow_dashboard')
+        if session_id:
+            try:
+                workflow_session = WorkflowSession.objects.get(session_id=session_id)
+            except WorkflowSession.DoesNotExist:
+                workflow_session = None
+        else:
+            workflow_session = None
 
-        workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+        # Show info message if no active session
+        if not workflow_session:
+            messages.info(request, 'No active workflow session. Showing available artifacts.')
 
-        # Get DPM execution record
-        try:
-            dpm_execution = DPMProcessExecution.objects.get(
-                session=workflow_session,
-                step_number=step_number
-            )
-        except DPMProcessExecution.DoesNotExist:
-            messages.warning(request, f'DPM Step {step_number} has not been executed yet')
-            return redirect('pybirdai:workflow_dashboard')
+        # Get DPM execution record (if it exists and we have a session)
+        if workflow_session:
+            try:
+                dpm_execution = DPMProcessExecution.objects.get(
+                    session=workflow_session,
+                    step_number=step_number
+                )
+                execution_exists = True
+            except DPMProcessExecution.DoesNotExist:
+                dpm_execution = None
+                execution_exists = False
+                messages.info(request, f'DPM Step {step_number} has not been executed. Showing available artifacts.')
+        else:
+            # No workflow session, so no execution record
+            dpm_execution = None
+            execution_exists = False
+
+        # Define step names for when execution doesn't exist
+        STEP_NAMES = {
+            1: 'Prepare DPM Data',
+            2: 'Import DPM Data',
+            3: 'Create Output Layers',
+        }
 
         # Gather generated files based on step number
         import glob
@@ -4134,28 +4220,35 @@ def workflow_dpm_review(request, step_number):
                 f"Members: {MEMBER.objects.count()} records",
             ]
         elif step_number == 3:
-            # Create Output Layers - check for cubes
-            from pybirdai.models.bird_meta_data_model import CUBE, COMBINATION
+            # Create Output Layers - check for cubes and related structures
+            from pybirdai.models.bird_meta_data_model import (
+                CUBE, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM,
+                COMBINATION, COMBINATION_ITEM
+            )
             generated_files = [
                 f"Cubes: {CUBE.objects.count()} records",
+                f"Cube Structures: {CUBE_STRUCTURE.objects.count()} records",
+                f"Cube Structure Items: {CUBE_STRUCTURE_ITEM.objects.count()} records",
                 f"Combinations: {COMBINATION.objects.count()} records",
+                f"Combination Items: {COMBINATION_ITEM.objects.count()} records",
             ]
 
         # Calculate duration if available
         duration = None
-        if dpm_execution.started_at and dpm_execution.completed_at:
+        if execution_exists and dpm_execution and dpm_execution.started_at and dpm_execution.completed_at:
             duration = dpm_execution.completed_at - dpm_execution.started_at
 
         context = {
             'step_number': step_number,
-            'step_name': dpm_execution.step_name,
+            'step_name': dpm_execution.step_name if (execution_exists and dpm_execution) else STEP_NAMES.get(step_number, f'Step {step_number}'),
             'execution': dpm_execution,
-            'status': dpm_execution.status,
-            'started_at': dpm_execution.started_at,
-            'completed_at': dpm_execution.completed_at,
+            'execution_exists': execution_exists,
+            'status': dpm_execution.status if (execution_exists and dpm_execution) else 'not_executed',
+            'started_at': dpm_execution.started_at if (execution_exists and dpm_execution) else None,
+            'completed_at': dpm_execution.completed_at if (execution_exists and dpm_execution) else None,
             'duration': duration,
-            'error_message': dpm_execution.error_message,
-            'execution_data': dpm_execution.execution_data,
+            'error_message': dpm_execution.error_message if (execution_exists and dpm_execution) else None,
+            'execution_data': dpm_execution.execution_data if (execution_exists and dpm_execution) else None,
             'generated_files': generated_files,
             'workflow_type': 'dpm',
         }

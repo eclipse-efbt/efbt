@@ -1609,7 +1609,7 @@ def generate_structures(request):
                     if mapping_def.variable_mapping_id:
                         var_items = VARIABLE_MAPPING_ITEM.objects.filter(
                             variable_mapping_id=mapping_def.variable_mapping_id,
-                            is_source="False"  # Target variables
+                            is_source="false"  # Target variables
                         ).select_related('variable_id')
 
                         for item in var_items:
@@ -1700,7 +1700,7 @@ def generate_structures(request):
                         if var_id not in created_var_ids:
                             variable = VARIABLE.objects.filter(variable_id=var_id).first()
                             if variable:
-                                is_source = "True" if var_id in source_var_ids else "False"
+                                is_source = "true" if var_id in source_var_ids else "false"
                                 VARIABLE_MAPPING_ITEM.objects.create(
                                     variable_mapping_id=variable_mapping,
                                     variable_id=variable,
@@ -1729,7 +1729,7 @@ def generate_structures(request):
                                             member_mapping_id=member_mapping,
                                             member_mapping_row=str(row_idx + 1),
                                             variable_id=variable,
-                                            is_source="True",  # Simplified
+                                            is_source="true",  # Simplified
                                             member_id=member
                                         )
 
@@ -1905,6 +1905,31 @@ def generate_structures(request):
 
             # 7. Get or create CUBE
             framework_obj = FRAMEWORK.objects.filter(framework_id=framework).first()
+
+            # Auto-create framework if it doesn't exist (e.g., COREP_REF, FINREP_REF)
+            if not framework_obj:
+                # Get or create EFBT maintenance agency
+                efbt_agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+                    maintenance_agency_id='EFBT',
+                    defaults={
+                        'name': 'EFBT System',
+                        'code': 'EFBT'
+                    }
+                )
+
+                # Create the missing framework
+                framework_obj, created = FRAMEWORK.objects.get_or_create(
+                    framework_id=framework,
+                    defaults={
+                        'name': framework,
+                        'code': framework,
+                        'maintenance_agency_id': efbt_agency,
+                        'description': f'Auto-generated framework for {framework}'
+                    }
+                )
+                if created:
+                    print(f"[STEP 7] Auto-created FRAMEWORK: {framework} with EFBT maintenance agency")
+
             cube_id = f"{table_code}_{framework}_{version_normalized}_CUBE"
             cube, cube_created = CUBE.objects.get_or_create(
                 cube_id=cube_id,
@@ -2021,9 +2046,10 @@ def generate_structures(request):
                 'generated': {
                     'mapping_definitions': [
                         {
-                            'id': m['mapping_definition'].mapping_id,
+                            'id': m['mapping_definition'].code,
                             'name': m['name'],
-                            'type': m['mapping_definition'].mapping_type
+                            'type': m['mapping_definition'].mapping_type,
+                            'member_mapping_id': m['mapping_definition'].member_mapping_id
                         }
                         for m in created_mapping_definitions
                     ],

@@ -17,11 +17,12 @@ from pybirdai.models.bird_meta_data_model import TABLE_CELL
 from pybirdai.process_steps.website_to_sddmodel.import_func.csv_copy_importer import create_instances_from_csv_copy
 
 
-def import_table_cells_csv_copy(context):
+def import_table_cells_csv_copy(context, config=None):
     """
     Import table cells using database-native CSV import.
 
     Args:
         context: SDDContext containing file paths
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    create_instances_from_csv_copy(context, TABLE_CELL)
+    create_instances_from_csv_copy(context, TABLE_CELL, config)

@@ -355,7 +355,7 @@ class OutputLayerMappingWorkflow:
                 VARIABLE_MAPPING_ITEM.objects.create(
                     variable_mapping_id=var_mapping,
                     variable_id=source_var,
-                    is_source="True"
+                    is_source="true"
                 )
 
             # Target
@@ -366,7 +366,7 @@ class OutputLayerMappingWorkflow:
                 VARIABLE_MAPPING_ITEM.objects.create(
                     variable_mapping_id=var_mapping,
                     variable_id=target_var,
-                    is_source="False"
+                    is_source="false"
                 )
 
         return var_mapping
@@ -391,7 +391,7 @@ class OutputLayerMappingWorkflow:
                         member_mapping_id=mem_mapping,
                         member_mapping_row=str(row_counter),
                         variable_id=variable,
-                        is_source="True",
+                        is_source="true",
                         member_id=member
                     )
                     row_counter += 1

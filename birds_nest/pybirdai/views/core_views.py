@@ -2471,29 +2471,44 @@ def run_create_python_transformations_from_db(request):
     )
 
 
-def return_semantic_integration_menu(request: Any, mapping_id: str = "") -> Any:
-    """Returns semantic integration menu view.
+def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
+    """Semantic integration editor view.
+
+    Optimized version with query optimization, caching, and pagination support.
 
     Args:
         request: HTTP request object
-        mapping_id: Optional mapping identifier
+        mapping_id: Optional mapping identifier (from URL path or query param)
 
     Returns:
         Rendered template response
     """
-    logger.info(f"Handling semantic integration menu request for mapping ID: {mapping_id}")
+    logger.info(f"Handling semantic integration editor request for mapping ID: {mapping_id}")
     domains = None
-    selected_mapping = request.GET.get('mapping_id', mapping_id)
 
-    mtcs = MAPPING_TO_CUBE.objects.all()
-    logger.debug(f"Found {len(mtcs)} MAPPING_TO_CUBE records")
-    maps = [mtc.cube_mapping_id for mtc in mtcs if 'M_F_01_01_REF_FINREP 3_0' == mtc.cube_mapping_id]
+    # Support both URL path parameter and query parameter for mapping_id
+    selected_mapping = mapping_id or request.GET.get('mapping_id', '')
 
-    mapping_definitions = MAPPING_DEFINITION.objects.all()
-    results = build_mapping_results(mapping_definitions)
-    context = {"mapping_data": {k: v for k, v in results.items() if v["has_member_mapping"]}}
+    # Pagination parameters
+    page = int(request.GET.get('page', 1))
+    page_size = int(request.GET.get('page_size', 200))
 
-    # Get reference variables and source variables
+    # Optimize MAPPING_DEFINITION query with pagination
+    # Filter at database level for efficiency and reliability
+    mapping_definitions = MAPPING_DEFINITION.objects.filter(
+        member_mapping_id__isnull=False
+    ).select_related(
+        'member_mapping_id',
+        'variable_mapping_id'
+    )
+    results, pagination_info = build_mapping_results(mapping_definitions, page=page, page_size=page_size)
+
+    context = {
+        "mapping_data": results,
+        "pagination": pagination_info
+    }
+
+    # Get reference variables and source variables (now cached!)
     reference_variables = get_reference_variables()
     source_variables = get_source_variables()
 
@@ -2508,32 +2523,70 @@ def return_semantic_integration_menu(request: Any, mapping_id: str = "") -> Any:
     # Add to context for template access
     context["reference_variables"] = reference_variables
     context["source_variables"] = source_variables
-    context["cubes"] = CUBE.objects.all().order_by('name')
+    # Optimize CUBE query with only needed fields
+    context["cubes"] = CUBE.objects.only('cube_id', 'name', 'code').order_by('name')
 
     if selected_mapping:
         logger.info(f"Processing selected mapping: {selected_mapping}")
-        map_def = MAPPING_DEFINITION.objects.get(code=selected_mapping)
-        member_mapping_items = MEMBER_MAPPING_ITEM.objects.filter(member_mapping_id=map_def.member_mapping_id.code)
-        var_items = VARIABLE_MAPPING_ITEM.objects.filter(variable_mapping_id=map_def.variable_mapping_id).order_by('is_source', 'variable_id__name')
-        temp_items, unique_set, source_target = process_member_mappings(member_mapping_items, var_items)
-        columns_of_table = sum(list(map(list,source_target.values())),[])
-        logging.debug(str(columns_of_table))
-        serialized_items_2 = {row_id: { k_:row_data['items'].get(k_)
-            for k_ in columns_of_table}
-            for row_id, row_data in temp_items.items()}
-        table_data = create_table_data(serialized_items_2, columns_of_table)
+
+        try:
+            # Optimize query with select_related
+            map_def = MAPPING_DEFINITION.objects.select_related(
+                'member_mapping_id',
+                'variable_mapping_id'
+            ).get(code=selected_mapping)
+
+            # Optimize member mapping items query
+            member_mapping_items = MEMBER_MAPPING_ITEM.objects.select_related(
+                'variable_id__domain_id',
+                'member_id'
+            ).filter(member_mapping_id=map_def.member_mapping_id)
+
+            # Optimize variable items query
+            var_items = VARIABLE_MAPPING_ITEM.objects.select_related(
+                'variable_id__domain_id'
+            ).filter(
+                variable_mapping_id=map_def.variable_mapping_id
+            ).order_by('is_source', 'variable_id__name')
+
+            temp_items, unique_set, source_target = process_member_mappings(member_mapping_items, var_items)
+            columns_of_table = sum(list(map(list,source_target.values())),[])
+            logging.debug(str(columns_of_table))
+            serialized_items_2 = {row_id: { k_:row_data['items'].get(k_)
+                for k_ in columns_of_table}
+                for row_id, row_data in temp_items.items()}
+            table_data = create_table_data(serialized_items_2, columns_of_table)
 
 
-        context.update({
-            'table_data': table_data,
-            "selected_mapping": selected_mapping,
-            "uniques":unique_set,
-            "domains":domains,
-            "uniques_sources":{k:{kk:v[kk] for kk,_ in sorted(v.items(), key=lambda item: item[1])} for k,v in unique_set.items() if k in source_target["source"]},
-            "uniques_targets":{k:{kk:v[kk] for kk,_ in sorted(v.items(), key=lambda item: item[1])} for k,v in unique_set.items() if k in source_target["target"]},
-        })
+            context.update({
+                'table_data': table_data,
+                "selected_mapping": selected_mapping,
+                "uniques":unique_set,
+                "domains":domains,
+                "uniques_sources":{k:{kk:v[kk] for kk,_ in sorted(v.items(), key=lambda item: item[1])} for k,v in unique_set.items() if k in source_target["source"]},
+                "uniques_targets":{k:{kk:v[kk] for kk,_ in sorted(v.items(), key=lambda item: item[1])} for k,v in unique_set.items() if k in source_target["target"]},
+            })
 
-    return render(request, 'pybirdai/return_semantic_integrations.html', context)
+        except MAPPING_DEFINITION.DoesNotExist:
+            logger.warning(f"Mapping '{selected_mapping}' not found in database")
+            from django.contrib import messages
+            messages.warning(
+                request,
+                f"The mapping '{selected_mapping}' could not be found. "
+                f"Please select a different mapping from the list."
+            )
+            # Clear selected_mapping and set empty defaults
+            selected_mapping = None
+            context.update({
+                'table_data': {'headers': [], 'rows': []},
+                'selected_mapping': None,
+                'uniques': {},
+                'domains': None,
+                'uniques_sources': {},
+                'uniques_targets': {},
+            })
+
+    return render(request, 'pybirdai/semantic_integration_editor.html', context)
 
 
 def add_variable_endpoint(request: Any) -> JsonResponse:

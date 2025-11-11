@@ -75,7 +75,7 @@ def retry_with_backoff(func, max_attempts=None, backoff_seconds=None):
                 raise last_exception
 
 
-def bulk_import_with_fallback(context, cls, csv_file, delimiter, table_name):
+def bulk_import_with_fallback(context, cls, csv_file, delimiter, table_name, config=None):
     """
     Attempt bulk import with automatic fallback to smaller batches on failure.
 
@@ -85,6 +85,7 @@ def bulk_import_with_fallback(context, cls, csv_file, delimiter, table_name):
         csv_file: Path to CSV file
         delimiter: CSV delimiter
         table_name: Name of the table
+        config: DatasetConfig object for configurable import paths
 
     Returns:
         Result of the import operation
@@ -92,7 +93,7 @@ def bulk_import_with_fallback(context, cls, csv_file, delimiter, table_name):
     Raises:
         Exception if all fallback attempts fail
     """
-    config = CSV_COPY_CONFIG
+    csv_copy_config = CSV_COPY_CONFIG
 
     # Try full bulk import first
     try:
@@ -103,7 +104,7 @@ def bulk_import_with_fallback(context, cls, csv_file, delimiter, table_name):
         # Fallback 1: Try with smaller batch size using executemany
         print("Attempting fallback with smaller batch size...")
         try:
-            return perform_batch_import(csv_file, delimiter, table_name, batch_size=config.get('BATCH_SIZE', 10000))
+            return perform_batch_import(csv_file, delimiter, table_name, batch_size=csv_copy_config.get('BATCH_SIZE', 10000))
         except Exception as batch_error:
             print(f"Batch import failed: {batch_error}")
 
@@ -115,9 +116,9 @@ def bulk_import_with_fallback(context, cls, csv_file, delimiter, table_name):
             from pybirdai.models.bird_meta_data_model import TABLE_CELL, ORDINATE_ITEM, CELL_POSITION
 
             fallback_func = {
-                TABLE_CELL: import_table_cells,
-                ORDINATE_ITEM: import_ordinate_items,
-                CELL_POSITION: import_cell_positions
+                TABLE_CELL: lambda ctx: import_table_cells(ctx, config=config),
+                ORDINATE_ITEM: lambda ctx: import_ordinate_items(ctx, config),
+                CELL_POSITION: lambda ctx: import_cell_positions(ctx, config=config)
             }.get(cls)
 
             if fallback_func:
@@ -231,7 +232,7 @@ def perform_batch_import(csv_file, delimiter, table_name, batch_size=10000):
         return total_rows
 
 
-def create_instances_from_csv_copy(context, cls):
+def create_instances_from_csv_copy(context, cls, config=None):
     """
     Import CSV data using database-native bulk import with backup/restore.
 
@@ -245,11 +246,13 @@ def create_instances_from_csv_copy(context, cls):
     Args:
         context: SDDContext containing file paths
         cls: Django model class (TABLE_CELL, ORDINATE_ITEM, or CELL_POSITION)
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
     sdd_table_name = cls.__name__.lower()
     table_name = f"pybirdai_{sdd_table_name}"
 
-    csv_file = context.file_directory + os.sep + "technical_export" + os.sep + f"{sdd_table_name}.csv"
+    subdir = config.file_directory if config else "technical_export"
+    csv_file = context.file_directory + os.sep + subdir + os.sep + f"{sdd_table_name}.csv"
     csv_file = Path(csv_file).absolute()
     delimiter = ","
 
@@ -291,7 +294,7 @@ def create_instances_from_csv_copy(context, cls):
         start_time = time.time()
 
         def import_with_retry():
-            return bulk_import_with_fallback(context, cls, str(csv_file), delimiter, table_name)
+            return bulk_import_with_fallback(context, cls, str(csv_file), delimiter, table_name, config)
 
         result = retry_with_backoff(import_with_retry)
 

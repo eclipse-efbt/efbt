@@ -26,14 +26,16 @@ from .lookups import (
 )
 
 
-def import_ordinate_items(context):
+def import_ordinate_items(context, config=None):
     """
     Import all ordinate items from the rendering package CSV file.
 
     Args:
         context: SDDContext containing file paths and dictionaries
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "ordinate_item.csv"
+    subdir = config.file_directory if config else "technical_export"
+    file_location = context.file_directory + os.sep + subdir + os.sep + "ordinate_item.csv"
     header_skipped = False
     ordinate_items_to_create = []
 

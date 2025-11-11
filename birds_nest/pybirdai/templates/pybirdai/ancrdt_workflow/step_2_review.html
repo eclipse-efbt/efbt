@@ -129,12 +129,6 @@
         <p>Review and edit generated joins metadata</p>
     </div>
 
-    <!-- Messages -->
-    {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
 
     {% if step.status == 'completed' %}
     <!-- Metadata Statistics -->

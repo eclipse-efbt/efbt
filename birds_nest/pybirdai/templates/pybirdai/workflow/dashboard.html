@@ -74,7 +74,7 @@
 
                 <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
                     {% csrf_token %}
-                    <button type="button" id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 8px; padding: 8px; font-size: 13px;" onclick="startDatabaseSetup(); return false;">
+                    <button type="button" id="database-setup-btn" class="btn operation-btn btn-action-primary {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" onclick="startDatabaseSetup(); return false;">
                         Retrieve Artifacts
                     </button>
                 </form>
@@ -82,13 +82,13 @@
 
                 <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
                     {% csrf_token %}
-                    <button type="button" id="migration-btn" class="btn operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 8px; padding: 8px; font-size: 13px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
+                    <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
                         Setup Database
                     </button>
                 </form>
                 <div id="migration-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
 
-                <button type="button" id="migration-btn" class="btn operation-btn" style="width: 100%; margin-bottom: 8px; padding: 8px; font-size: 13px;" onclick="showJoinConfigModal(); return false;">
+                <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;">
                     Edit Join Configuration
                 </button>
 
@@ -111,9 +111,9 @@
                         <option value="3">Task 3: Python Rules</option>
                         <option value="4" selected>Task 4: Full Execution</option>
                     </select>
-                    <button type="submit" id="automode-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 8px; padding: 8px; font-size: 13px;">Run Automode</button>
-                    <button type="button" id="clone-btn" class="btn btn-info" style="width: 100%; margin-bottom: 8px; padding: 8px; font-size: 13px;" onclick="startCloneImport(); return false;">Clone (beta)</button>
-                    <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary" style="width: 100%; display: block; text-align: center; padding: 8px; font-size: 13px; text-decoration: none;">Create Review</a>
+                    <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
+                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" onclick="startCloneImport(); return false;">Clone (beta)</button>
+                    <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
                 </form>
 
                 <div id="automode-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
@@ -130,67 +130,30 @@
                     <div style="margin-bottom: 15px;">
                         <button
                             id="quick-ancrdt-btn"
-                            class="btn operation-btn"
-                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;"
+                            class="btn operation-btn btn-action-primary"
+                            style="background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;"
                             onclick="executeCompleteANCRDTFlow()">
-                            🚀 Run Complete ANCRDT
+                            🚀 Run Complete ANCRDT Workflow
                         </button>
                         <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            BIRD Task 1 + ANCRDT Steps 0-3
+                            Main Workflow Task 1 + ANCRDT Workflow
                         </p>
                         <div id="quick-ancrdt-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
                     </div>
 
-                    <!-- DPM Flow (Enabled) -->
+                    <!-- DPM Flow (Enabled) - Manual Only -->
                     <div>
                         <button
-                            id="quick-dpm-btn"
-                            class="btn operation-btn"
-                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;"
-                            onclick="executeCompleteDPMFlow()">
-                            🚀 Run Complete DPM (Auto)
-                        </button>
-                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            DPM Steps 1-3 (Automatic)
-                        </p>
-
-                        <!-- New: Manual Output Layer Workflow Option -->
-                        <button
-                            id="dpm-manual-workflow-btn"
-                            class="btn operation-btn"
-                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #2196f3; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
-                            onclick="executeDPMSteps12ThenManual()">
-                            ✏️ DPM with Manual Output Layers
-                        </button>
-                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            Steps 1-2 Auto + Step 3 Manual
-                        </p>
-
-                        <!-- New: BIRD Task 1 + DPM Auto -->
-                        <button
-                            id="bird-task1-dpm-auto-btn"
-                            class="btn operation-btn"
-                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #673ab7; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
-                            onclick="executeBIRDTask1ThenDPM()">
-                            🎯 BIRD Task 1 + DPM (Auto)
-                        </button>
-                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            Task 1 + DPM Steps 1-3 (Automatic)
-                        </p>
-
-                        <!-- New: BIRD Task 1 + DPM Manual -->
-                        <button
                             id="bird-task1-dpm-manual-btn"
-                            class="btn operation-btn"
-                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #9c27b0; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
+                            class="btn operation-btn btn-action-primary"
+                            style="background: #9c27b0; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
                             onclick="executeBIRDTask1ThenDPMManual()">
-                            ✏️ BIRD Task 1 + DPM Manual
+                            ✏️ Run Complete DPM Workflow
                         </button>
                         <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            Task 1 + DPM 1-2 Auto + Step 3 Manual
+                            Main Workflow Task 1 + DPM Workflow
                         </p>
 
-                        <div id="quick-dpm-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
                         <div id="bird-task1-dpm-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
                     </div>
                 {% else %}
@@ -240,10 +203,10 @@
                 </ul>
 
                 <h4 style="margin-top: 15px; margin-bottom: 8px; font-size: 14px; color: #e65100;">Reset Session</h4>
-                <button type="button" id="reset-session-partial-btn" class="btn btn-warning" style="width: 100%; margin-bottom: 8px; padding: 8px; font-size: 13px;" onclick="resetSessionPartial(); return false;">
+                <button type="button" id="reset-session-partial-btn" class="btn btn-warning btn-action-primary" onclick="resetSessionPartial(); return false;">
                     Reset Tasks 1-4
                 </button>
-                <button type="button" id="reset-session-full-btn" class="btn btn-danger" style="width: 100%; padding: 8px; font-size: 13px;" onclick="resetSessionFull(); return false;">
+                <button type="button" id="reset-session-full-btn" class="btn btn-danger btn-action-primary" onclick="resetSessionFull(); return false;">
                     Reset Everything
                 </button>
                 <div id="reset-session-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
@@ -291,14 +254,14 @@
 
                 <div class="task-card">
                     <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
-                       class="operation-btn {{ task.operations.do.status }}">
+                       class="operation-btn btn-grid-action {{ task.operations.do.status }}">
                         Do
                     </a>
                 </div>
 
                 <div class="task-card">
                     <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
-                       class="operation-btn {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
+                       class="operation-btn btn-grid-action {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
                         Review
                     </a>
                 </div>
@@ -363,30 +326,15 @@
             </div>
             <div class="task-card">
                 {% if task.step_number == 3 %}
-                    <!-- Step 3: Create Output Layers - Use Interactive Workflow -->
-                    <a href="{% url 'pybirdai:output_layer_mapping_step1' %}"
-                       class="operation-btn running"
-                       style="display: block; text-decoration: none; padding: 8px; text-align: center;">
-                        ✏️ Manual Workflow
-                    </a>
-                    <button
-                        class="operation-btn {{ task.status }}"
-                        onclick="executeDPMStep({{ task.step_number }})"
-                        id="dpm-step-{{ task.step_number }}-btn"
-                        style="margin-top: 5px; font-size: 11px;"
-                        {% if task.status == 'running' %}disabled{% endif %}>
-                        {% if task.status == 'completed' %}✓ Auto Done
-                        {% elif task.status == 'running' %}⏳ Auto Running
-                        {% elif task.status == 'failed' %}✗ Auto Failed
-                        {% else %}⚡ Auto Generate{% endif %}
-                    </button>
+                    <!-- Step 3: Create Output Layers - Manual Workflow Only -->
+                    <a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="operation-btn btn-grid-action running">Do</a>
                 {% else %}
                     <button
-                        class="operation-btn {{ task.status }}"
+                        class="operation-btn btn-grid-action {{ task.status }}"
                         onclick="executeDPMStep({{ task.step_number }})"
                         id="dpm-step-{{ task.step_number }}-btn"
                         {% if task.status == 'running' %}disabled{% endif %}>
-                        {% if task.status == 'completed' %}✓ Done
+                        {% if task.status == 'completed' %}Do
                         {% elif task.status == 'running' %}⏳ Running
                         {% elif task.status == 'failed' %}✗ Failed
                         {% else %}Do{% endif %}
@@ -395,7 +343,7 @@
             </div>
             <div class="task-card">
                 <a href="{% url 'pybirdai:workflow_dpm_review' step_number=task.step_number %}"
-                   class="operation-btn {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                   class="operation-btn btn-grid-action running">
                     Review
                 </a>
             </div>
@@ -403,188 +351,6 @@
         </div>
     </div>
 </div>
-
-<!-- Tom Select CSS -->
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-
-<!-- Output Layer Selection Modal -->
-<div id="outputLayerModal" class="output-layer-modal" style="display: none;">
-    <div class="modal-overlay" onclick="closeOutputLayerModal()"></div>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Select Output Layers to Generate</h3>
-            <button class="modal-close" onclick="closeOutputLayerModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label>
-                    <input type="radio" name="selection_type" value="all" checked onchange="updateSelectionType()">
-                    Generate All Output Layers
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label>
-                    <input type="radio" name="selection_type" value="framework" onchange="updateSelectionType()">
-                    Generate by Framework
-                </label>
-                <div id="framework-options" class="selection-options" style="display: none; margin-left: 25px;">
-                    <label for="framework-select">Framework:</label>
-                    <select id="framework-select" class="form-control">
-                        <option value="">Loading...</option>
-                    </select>
-                    <label for="framework-version" style="margin-top: 10px;">Version (optional):</label>
-                    <input type="text" id="framework-version" class="form-control" placeholder="e.g., 3.0.0">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>
-                    <input type="radio" name="selection_type" value="table" onchange="updateSelectionType()">
-                    Generate by Table Code(s)
-                </label>
-                <div id="table-options" class="selection-options" style="display: none; margin-left: 25px;">
-                    <label for="table-select">Table Codes (type to search, select multiple):</label>
-                    <select id="table-select" class="form-control" multiple placeholder="Type to search table codes...">
-                        <option value="">Loading...</option>
-                    </select>
-                    <label for="table-version" style="margin-top: 15px;">Version (optional):</label>
-                    <input type="text" id="table-version" class="form-control" placeholder="e.g., 3.0.0">
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeOutputLayerModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="confirmOutputLayerSelection()">Generate Output Layers</button>
-        </div>
-    </div>
-</div>
-
-<style>
-.output-layer-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10000;
-}
-
-.modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.output-layer-modal .modal-content {
-    position: relative;
-    background: white;
-    border-radius: 8px;
-    max-width: 600px;
-    margin: 100px auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10001;
-}
-
-.modal-header {
-    padding: 20px;
-    border-bottom: 1px solid #dee2e6;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h3 {
-    margin: 0;
-    color: #333;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: #999;
-    line-height: 1;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-}
-
-.modal-close:hover {
-    color: #333;
-}
-
-.modal-body {
-    padding: 20px;
-    max-height: 500px;
-    overflow-y: auto;
-}
-
-.modal-footer {
-    padding: 15px 20px;
-    border-top: 1px solid #dee2e6;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: #333;
-}
-
-.form-control {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.selection-options {
-    margin-top: 10px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 4px;
-}
-
-.btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.btn-primary {
-    background: #007bff;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #0056b3;
-}
-
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background: #545b62;
-}
-</style>
 
 <!-- AnaCredit Workflow Section -->
 <div class="workflow-section" data-workflow="ancrdt">
@@ -615,11 +381,11 @@
             </div>
             <div class="task-card">
                 <button
-                    class="operation-btn {{ task.status }}"
+                    class="operation-btn btn-grid-action {{ task.status }}"
                     onclick="executeANCRDTStep({{ task.step_number }})"
                     id="ancrdt-step-{{ task.step_number }}-btn"
                     {% if task.status == 'running' %}disabled{% endif %}>
-                    {% if task.status == 'completed' %}✓ Done
+                    {% if task.status == 'completed' %}Do
                     {% elif task.status == 'running' %}⏳ Running
                     {% elif task.status == 'failed' %}✗ Failed
                     {% else %}Do{% endif %}
@@ -627,7 +393,7 @@
             </div>
             <div class="task-card">
                 <a href="{% url 'pybirdai:workflow_ancrdt_review' step_number=task.step_number %}"
-                   class="operation-btn {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                   class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
                     Review
                 </a>
             </div>
@@ -804,6 +570,23 @@
     .workflow-section[data-workflow="main"] .workflow-content {
         max-height: none;
         padding: 20px;
+    }
+
+    /* Standardized Button Sizing Classes */
+    .btn-action-primary {
+        width: 100%;
+        padding: 10px 16px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        min-height: 40px;
+        margin-bottom: 8px;
+    }
+
+    .btn-grid-action {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        min-height: 36px;
     }
 </style>
 {% endblock %}
@@ -1875,13 +1658,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function executeDPMStep(stepNumber, params = {}) {
     console.log('executeDPMStep() called for step:', stepNumber);
 
-    // If step 3 and no params provided, show the modal first
-    if (stepNumber === 3 && !params.fromModal) {
-        showOutputLayerModal(stepNumber);
-        return;
-    }
-
-    // Find button (optional when called from modal)
+    // Find button
     const btn = document.getElementById(`dpm-step-${stepNumber}-btn`);
     const fromModal = params.fromModal;
 
@@ -2017,170 +1794,6 @@ function executeDPMStep(stepNumber, params = {}) {
         }
         alert(`Error executing DPM Step ${stepNumber}: ${error.message}`);
     });
-}
-
-// Modal functions for output layer selection
-let currentDPMStep = null;
-let isAutomatedFlow = false;
-let automatedFlowCSRFToken = null;
-
-function showOutputLayerModal(stepNumber) {
-    currentDPMStep = stepNumber;
-    const modal = document.getElementById('outputLayerModal');
-    modal.style.display = 'block';
-
-    // Fetch available options
-    fetch('/pybirdai/workflow/dpm/output-layer-options/')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                populateFrameworkOptions(data.frameworks);
-                populateTableOptions(data.table_codes);
-            } else {
-                console.error('Failed to fetch output layer options:', data.error);
-                alert('Failed to load options: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching output layer options:', error);
-            alert('Error loading options: ' + error.message);
-        });
-}
-
-function closeOutputLayerModal() {
-    const modal = document.getElementById('outputLayerModal');
-    modal.style.display = 'none';
-    currentDPMStep = null;
-}
-
-function populateFrameworkOptions(frameworks) {
-    const select = document.getElementById('framework-select');
-    select.innerHTML = '<option value="">-- Select Framework --</option>';
-    frameworks.forEach(fw => {
-        const option = document.createElement('option');
-        option.value = fw.code;
-        option.textContent = `${fw.code}${fw.name ? ' - ' + fw.name : ''}`;
-        select.appendChild(option);
-    });
-}
-
-let tableSelectInstance = null;
-
-function populateTableOptions(tableCodes) {
-    const select = document.getElementById('table-select');
-
-    // Destroy existing Tom Select instance if any
-    if (tableSelectInstance) {
-        tableSelectInstance.destroy();
-    }
-
-    // Populate options
-    select.innerHTML = '';
-    tableCodes.forEach(code => {
-        const option = document.createElement('option');
-        option.value = code;
-        option.textContent = code;
-        select.appendChild(option);
-    });
-
-    // Initialize Tom Select with enhanced features
-    tableSelectInstance = new TomSelect('#table-select', {
-        plugins: {
-            'remove_button': {
-                title: 'Remove this item'
-            },
-            'clear_button': {
-                title: 'Remove all items'
-            }
-        },
-        maxItems: null, // unlimited selections
-        create: false,
-        placeholder: 'Type to search and select table codes...',
-        searchField: ['text', 'value'],
-        sortField: {
-            field: 'text',
-            direction: 'asc'
-        },
-        render: {
-            no_results: function(data, escape) {
-                return '<div class="no-results">No table codes found matching "' + escape(data.input) + '"</div>';
-            }
-        },
-        onInitialize: function() {
-            console.log('Tom Select initialized with', tableCodes.length, 'table codes');
-        }
-    });
-}
-
-function updateSelectionType() {
-    const selectedType = document.querySelector('input[name="selection_type"]:checked').value;
-    document.getElementById('framework-options').style.display = selectedType === 'framework' ? 'block' : 'none';
-    document.getElementById('table-options').style.display = selectedType === 'table' ? 'block' : 'none';
-}
-
-function confirmOutputLayerSelection() {
-    // Save step number BEFORE closing modal (which sets currentDPMStep to null)
-    const stepNumber = currentDPMStep;
-
-    if (!stepNumber) {
-        alert('Error: Step number not set. Please try again.');
-        closeOutputLayerModal();
-        return;
-    }
-
-    const selectedType = document.querySelector('input[name="selection_type"]:checked').value;
-    const params = { fromModal: true };
-
-    if (selectedType === 'framework') {
-        const framework = document.getElementById('framework-select').value;
-        const version = document.getElementById('framework-version').value.trim();
-
-        if (!framework) {
-            alert('Please select a framework');
-            return;
-        }
-
-        params.framework = framework;
-        if (version) {
-            params.version = version;
-        }
-    } else if (selectedType === 'table') {
-        const version = document.getElementById('table-version').value.trim();
-
-        // Get selected values from Tom Select instance
-        if (!tableSelectInstance) {
-            alert('Table selector not initialized');
-            return;
-        }
-
-        const tableCodes = tableSelectInstance.getValue();
-
-        if (!tableCodes || tableCodes.length === 0) {
-            alert('Please select at least one table code');
-            return;
-        }
-
-        // Send as comma-separated string (Tom Select returns array)
-        const tableCodesStr = Array.isArray(tableCodes) ? tableCodes.join(',') : tableCodes;
-        params.table_codes = tableCodesStr;
-        if (version) {
-            params.version = version;
-        }
-
-        console.log('Selected table codes:', tableCodes);
-    }
-
-    // Close modal
-    closeOutputLayerModal();
-
-    // Check if we're in automated flow mode or regular mode
-    if (isAutomatedFlow) {
-        // Continue automated DPM flow with user-selected parameters
-        continueAutomatedDPMFlow(params);
-    } else {
-        // Regular individual step execution
-        executeDPMStep(stepNumber, params);
-    }
 }
 
 // Execute AnaCredit step
@@ -2390,177 +2003,6 @@ function executeANCRDTStepSequential(stepNumber, csrfToken) {
     });
 }
 
-// Execute Complete DPM Flow (All DPM Steps)
-function executeCompleteDPMFlow() {
-    console.log('executeCompleteDPMFlow() called');
-
-    const btn = document.getElementById('quick-dpm-btn');
-    const statusDiv = document.getElementById('quick-dpm-status');
-
-    if (!btn || !statusDiv) {
-        console.error('DPM quick action button or status div not found!');
-        alert('Error: UI elements not found!');
-        return;
-    }
-
-    // Get CSRF token
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-    if (!csrfToken) {
-        alert('Error: CSRF token not found! Please refresh the page.');
-        return;
-    }
-
-    // Disable button and show initial status
-    btn.disabled = true;
-    btn.textContent = '⏳ Running...';
-    statusDiv.style.display = 'block';
-    statusDiv.style.background = '#e3f2fd';
-    statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting Complete DPM Flow...';
-
-    // Execute DPM Steps 1, 2 sequentially, then pause for user input
-    executeDPMStepSequential(1, csrfToken)
-        .then(() => {
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Step 1 completed. Starting Step 2...';
-            return executeDPMStepSequential(2, csrfToken);
-        })
-        .then(() => {
-            // Step 2 completed - PAUSE and show modal for user selection
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Step 2 completed. Please select output layers to generate...';
-            btn.disabled = false;
-            btn.textContent = 'Waiting for Selection...';
-
-            // Set automated flow flag and save CSRF token
-            isAutomatedFlow = true;
-            automatedFlowCSRFToken = csrfToken;
-
-            // Show modal - user will confirm, then confirmOutputLayerSelection() will continue
-            showOutputLayerModal(3);
-        })
-        .catch(error => {
-            // Handle errors
-            console.error('Complete DPM Flow error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
-            btn.disabled = false;
-            btn.textContent = 'Run Complete DPM Flow';
-
-            // Reset automated flow state
-            isAutomatedFlow = false;
-            automatedFlowCSRFToken = null;
-        });
-}
-
-// New function: Execute DPM Steps 1-2, then redirect to manual output layer workflow
-function executeDPMSteps12ThenManual() {
-    console.log('executeDPMSteps12ThenManual() called');
-
-    const btn = document.getElementById('dpm-manual-workflow-btn');
-    const statusDiv = document.getElementById('quick-dpm-status');
-
-    if (!btn || !statusDiv) {
-        console.error('DPM manual workflow button or status div not found!');
-        alert('Error: UI elements not found!');
-        return;
-    }
-
-    // Get CSRF token
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-    if (!csrfToken) {
-        alert('Error: CSRF token not found! Please refresh the page.');
-        return;
-    }
-
-    // Disable button and show initial status
-    btn.disabled = true;
-    btn.textContent = '⏳ Running Steps 1-2...';
-    statusDiv.style.display = 'block';
-    statusDiv.style.background = '#e3f2fd';
-    statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting DPM Steps 1-2...';
-
-    // Execute DPM Steps 1 and 2 sequentially
-    executeDPMStepSequential(1, csrfToken)
-        .then(() => {
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Step 1 completed. Starting Step 2...';
-            return executeDPMStepSequential(2, csrfToken);
-        })
-        .then(() => {
-            // Step 2 completed - redirect to manual output layer mapping workflow
-            statusDiv.style.background = '#d4edda';
-            statusDiv.style.color = '#155724';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Steps 1-2 completed. Redirecting to Output Layer Mapping Workflow...';
-
-            // Wait 1.5 seconds then redirect
-            setTimeout(() => {
-                window.location.href = '{% url "pybirdai:output_layer_mapping_step1" %}';
-            }, 1500);
-        })
-        .catch(error => {
-            // Handle errors
-            console.error('DPM Steps 1-2 error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
-            btn.disabled = false;
-            btn.textContent = '✏️ DPM with Manual Output Layers';
-        });
-}
-
-// Continue automated DPM flow after user selection (called from confirmOutputLayerSelection)
-function continueAutomatedDPMFlow(params) {
-    console.log('continueAutomatedDPMFlow() called with params:', params);
-
-    const btn = document.getElementById('quick-dpm-btn');
-    const statusDiv = document.getElementById('quick-dpm-status');
-    const csrfToken = automatedFlowCSRFToken;
-
-    if (!btn || !statusDiv || !csrfToken) {
-        console.error('Cannot continue automated flow: missing elements or token');
-        return;
-    }
-
-    // Update UI to show Step 3 is running
-    btn.disabled = true;
-    btn.textContent = '⏳ Running...';
-    statusDiv.style.background = '#e3f2fd';
-    statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>DPM Step 3 (Output Layer Creation) running...';
-
-    // Execute Step 3 with user-provided parameters
-    executeDPMStepSequential(3, csrfToken, params)
-        .then(() => {
-            // All steps completed successfully
-            statusDiv.style.background = '#d4edda';
-            statusDiv.style.color = '#155724';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Complete DPM Flow finished successfully!';
-            btn.disabled = false;
-            btn.textContent = 'Run Complete DPM Flow';
-
-            // Reset automated flow state
-            isAutomatedFlow = false;
-            automatedFlowCSRFToken = null;
-
-            // Refresh page after success to update status
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
-        })
-        .catch(error => {
-            // Handle errors
-            console.error('DPM Step 3 error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error in Step 3: ${error.message}`;
-            btn.disabled = false;
-            btn.textContent = 'Run Complete DPM Flow';
-
-            // Reset automated flow state
-            isAutomatedFlow = false;
-            automatedFlowCSRFToken = null;
-        });
-}
 
 // Helper function to execute DPM steps sequentially
 function executeDPMStepSequential(stepNumber, csrfToken, params = {}) {
@@ -2607,66 +2049,6 @@ function executeDPMStepSequential(stepNumber, csrfToken, params = {}) {
             reject(new Error(`DPM Step ${stepNumber} execution failed: ${error.message}`));
         });
     });
-}
-
-// Execute BIRD Task 1 + DPM Steps 1-3 (Auto Output Layers)
-function executeBIRDTask1ThenDPM() {
-    const btn = document.getElementById('bird-task1-dpm-auto-btn');
-    const statusDiv = document.getElementById('bird-task1-dpm-status');
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    if (!btn || !statusDiv || !csrfToken) {
-        console.error('Missing required elements or CSRF token');
-        return;
-    }
-
-    // Disable button and show progress
-    btn.disabled = true;
-    btn.textContent = '⏳ Running Task 1...';
-    statusDiv.style.display = 'block';
-    statusDiv.style.background = '#e3f2fd';
-    statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Executing BIRD Task 1 (SMCubes Core Creation)...';
-
-    // Store CSRF token for later use in modal
-    isAutomatedFlow = true;
-    automatedFlowCSRFToken = csrfToken;
-
-    // Execute BIRD Task 1
-    executeBIRDTask1(csrfToken)
-        .then(() => {
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>BIRD Task 1 completed. Starting DPM Step 1...';
-            btn.textContent = '⏳ Running DPM Step 1...';
-            return executeDPMStepSequential(1, csrfToken);
-        })
-        .then(() => {
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Step 1 completed. Starting DPM Step 2...';
-            btn.textContent = '⏳ Running DPM Step 2...';
-            return executeDPMStepSequential(2, csrfToken);
-        })
-        .then(() => {
-            // Steps 1-2 completed - show output layer selection modal for Step 3
-            statusDiv.style.background = '#fff3cd';
-            statusDiv.style.color = '#856404';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏸️</span>Task 1 and DPM Steps 1-2 completed. Please select output layers for Step 3...';
-            btn.textContent = '⏸️ Awaiting Selection...';
-
-            // Show the output layer modal for Step 3
-            showOutputLayerModal(3);
-        })
-        .catch(error => {
-            // Handle errors
-            console.error('BIRD Task 1 + DPM Flow error:', error);
-            statusDiv.style.background = '#f8d7da';
-            statusDiv.style.color = '#721c24';
-            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
-            btn.disabled = false;
-            btn.textContent = '🎯 BIRD Task 1 + DPM (Auto)';
-
-            // Reset automated flow state
-            isAutomatedFlow = false;
-            automatedFlowCSRFToken = null;
-        });
 }
 
 // Execute BIRD Task 1 + DPM Steps 1-2, then redirect to manual workflow

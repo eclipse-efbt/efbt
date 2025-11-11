@@ -298,9 +298,14 @@ urlpatterns = [
     path("import_members_from_csv/", views.import_members_from_csv, name="import_members_from_csv"),
     path("import_variables_from_csv/", views.import_variables_from_csv, name="import_variables_from_csv"),
     path(
-        "return_semantic_integration_menu/",
-        views.return_semantic_integration_menu,
-        name="return_semantic_integration_menu",
+        "semantic_integration_editor/",
+        views.semantic_integration_editor,
+        name="semantic_integration_editor",
+    ),
+    path(
+        "semantic_integration_editor/<str:mapping_id>/",
+        views.semantic_integration_editor,
+        name="semantic_integration_editor_with_id",
     ),
     path("edit_mapping_endpoint/", views.edit_mapping_endpoint, name="edit_mapping_endpoint"),
     path("add_variable_endpoint/", views.add_variable_endpoint, name="add_variable_endpoint"),
@@ -396,8 +401,9 @@ urlpatterns = [
     # DPM execution endpoints
     path("workflow/dpm/execute/<int:step_number>/", workflow_views.execute_dpm_step, name="workflow_execute_dpm_step"),
     path("workflow/dpm/status/", workflow_views.get_dpm_status, name="workflow_dpm_status"),
-    path("workflow/dpm/output-layer-options/", workflow_views.get_output_layer_options, name="workflow_dpm_output_layer_options"),
     path("workflow/dpm/review/<int:step_number>/", workflow_views.workflow_dpm_review, name="workflow_dpm_review"),
+    # DPM API endpoints for cube structure visualization
+    path("api/dpm/cubes/", workflow_views.api_dpm_cubes, name="api_dpm_cubes"),
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),

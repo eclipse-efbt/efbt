@@ -17,11 +17,12 @@ from pybirdai.models.bird_meta_data_model import ORDINATE_ITEM
 from pybirdai.process_steps.website_to_sddmodel.import_func.csv_copy_importer import create_instances_from_csv_copy
 
 
-def import_ordinate_items_csv_copy(context):
+def import_ordinate_items_csv_copy(context, config=None):
     """
     Import ordinate items using database-native CSV import.
 
     Args:
         context: SDDContext containing file paths
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    create_instances_from_csv_copy(context, ORDINATE_ITEM)
+    create_instances_from_csv_copy(context, ORDINATE_ITEM, config)

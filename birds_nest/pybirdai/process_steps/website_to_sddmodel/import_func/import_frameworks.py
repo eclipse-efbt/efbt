@@ -20,14 +20,16 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 
 
-def import_frameworks(context):
+def import_frameworks(context, config=None):
     """
     Import frameworks from CSV file using bulk create.
 
     Args:
         context: SDDContext containing file paths and dictionaries
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "framework.csv"
+    subdir = config.file_directory if config else "technical_export"
+    file_location = context.file_directory + os.sep + subdir + os.sep + "framework.csv"
     header_skipped = False
     frameworks_to_create = []
 

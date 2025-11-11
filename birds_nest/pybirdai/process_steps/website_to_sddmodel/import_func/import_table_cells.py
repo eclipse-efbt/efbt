@@ -21,15 +21,17 @@ from .utilities import replace_dots
 from .lookups import find_table_with_id
 
 
-def import_table_cells(context, dpm=False):
+def import_table_cells(context, dpm=False, config=None):
     """
     Import all table cells from the rendering package CSV file.
 
     Args:
         context: SDDContext containing file paths and dictionaries
         dpm: Boolean indicating if importing DPM data
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "table_cell.csv"
+    subdir = config.file_directory if config else "technical_export"
+    file_location = context.file_directory + os.sep + subdir + os.sep + "table_cell.csv"
     header_skipped = False
     table_cells_to_create = []
 

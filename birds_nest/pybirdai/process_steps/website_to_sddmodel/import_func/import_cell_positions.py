@@ -21,15 +21,17 @@ from .utilities import replace_dots
 from .lookups import find_axis_ordinate_with_id, find_table_cell_with_id
 
 
-def import_cell_positions(context, dpm=False):
+def import_cell_positions(context, dpm=False, config=None):
     """
     Import all cell positions from the rendering package CSV file.
 
     Args:
         context: SDDContext containing file paths and dictionaries
         dpm: Boolean indicating if importing DPM data
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "cell_position.csv"
+    subdir = config.file_directory if config else "technical_export"
+    file_location = context.file_directory + os.sep + subdir + os.sep + "cell_position.csv"
     header_skipped = False
     cell_positions_to_create = []
     id_increment = 0

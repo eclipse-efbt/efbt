@@ -21,14 +21,16 @@ from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id
 
 
-def import_report_tables(context):
+def import_report_tables(context, config=None):
     """
     Import all tables from the rendering package CSV file using bulk create.
 
     Args:
         context: SDDContext containing file paths and dictionaries
+        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "table.csv"
+    subdir = config.file_directory if config else "technical_export"
+    file_location = context.file_directory + os.sep + subdir + os.sep + "table.csv"
     header_skipped = False
     tables_to_create = []
 

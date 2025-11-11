@@ -577,13 +577,17 @@
                             <span class="copy-tooltip">Copied!</span>
                         </span>
                     </span>
-                    {% if mapping.type == 'E' %}
                     <span class="item-action">
-                        <button class="btn-small" onclick="viewObject('mapping_definition', '{{ mapping.id }}')">
-                            View
-                        </button>
+                        {% if mapping.member_mapping_id %}
+                            <a href="{% url 'pybirdai:semantic_integration_editor' %}?mapping_id={{ mapping.id }}" class="btn-small" style="text-decoration: none; display: inline-block;">
+                                View in Editor
+                            </a>
+                        {% else %}
+                            <span class="btn-small" style="opacity: 0.5; cursor: not-allowed; display: inline-block;" title="No member mapping available">
+                                View in Editor (Unavailable)
+                            </span>
+                        {% endif %}
                     </span>
-                    {% endif %}
                 </li>
                 {% endfor %}
                 <li class="generated-item">

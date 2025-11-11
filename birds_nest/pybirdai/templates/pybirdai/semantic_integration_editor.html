@@ -13,6 +13,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div style="height: 100vh; display: flex; flex-direction: column; gap: 20px;">
     <h1 style="margin: 0;">Semantic Integrations Editor</h1>
     <a href="{% url 'pybirdai:workflow_task' task_number=1 operation='review' %}">Back to Review</a>
@@ -21,15 +22,17 @@
     <div class="filters" style="flex-shrink: 0;">
         <form method="get" class="filter-form">
             <div class="filter-group">
-                <label for="mappingSelect">Select Mapping ID:</label>
-                <select name="mapping_id" id="mappingSelect">
-                    {% for mapping_data_item in mapping_data %}
-                        <option value="{{ mapping_data_item }}" {% if selected_mapping == mapping_data_item %}selected{% endif %}>{{ mapping_data_item }}</option>
+                <label for="mappingSelect">Select Mapping:</label>
+                <select name="mapping_id" id="mappingSelect" onchange="loadOnMappingChange()">
+                    {% for mapping_code, mapping_info in mapping_data.items %}
+                        <option value="{{ mapping_code }}" {% if selected_mapping == mapping_code %}selected{% endif %}>
+                            {{ mapping_code }} ({{ mapping_info.name }})
+                        </option>
                     {% endfor %}
                 </select>
             </div>
 
-            <button type="submit" class="filter-button">Apply Filters</button>
+            <button type="submit" class="filter-button" id="submit_change_mapping_button">Load Mapping</button>
         </form>
         <div class="table-controls" style="flex-shrink: 0; margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
             <div class="button-group" style="display: flex; gap: 10px; border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
@@ -240,7 +243,7 @@
 
     <!-- Display member mapping rows as a table if selected -->
     <div style="flex: 1; min-height: 0; display: flex; flex-direction: column;">
-        <div style="flex: 1; overflow: auto;">
+        <div style="flex: 1; overflow-x: auto; overflow-y: auto; max-width: 100%;">
             <table class="member-mapping-table">
                 <thead>
                     <tr></tr>
@@ -255,7 +258,7 @@
                     {% for row in table_data.rows %}
                     <tr data-row>
                         {% for col_header, value in row.items %}
-                        <td style="white-space: word-wrap: break-word; word-break: break-all;">{{ value }}</td>
+                        <td style="white-space: nowrap; padding: 8px; min-width: 100px;">{{ value }}</td>
                         {% endfor %}
                     </tr>
                     {% endfor %}
@@ -265,6 +268,10 @@
     </div>
 </div>
 <script>
+
+function loadOnMappingChange(){
+  document.getElementById('submit_change_mapping_button').click();
+}
 
 function sourceVariableSelected(selectedVariable) {
     const memberSelect = document.getElementById('sourceMemberSelect');
@@ -1013,22 +1020,6 @@ function submitForm(event) {
     });
 }
 
-// Add event listeners for selecting rows
-document.addEventListener('DOMContentLoaded', function() {
-    const table = document.querySelector('.member-mapping-table');
-
-    table.addEventListener('click', function(e) {
-        const row = e.target.closest('tr[data-row]');
-        if (row) {
-            // Clear any existing selection
-            const selectedRows = table.querySelectorAll('tr.selected');
-            selectedRows.forEach(r => r.classList.remove('selected'));
-
-            // Add selected class to the clicked row
-            row.classList.add('selected');
-        }
-    });
-});
 </script>
 <style>
     /* Main table styles */
@@ -1036,6 +1027,7 @@ document.addEventListener('DOMContentLoaded', function() {
         border-collapse: collapse;
         width: 100%;
         min-width: 2000px;
+        table-layout: auto; /* Allow table to expand based on content */
     }
 
     .member-mapping-table th,
@@ -1360,10 +1352,12 @@ tr[data-row]:hover {
     cursor: pointer;
 }
 
-/* Spin animation for loading indicator */
+/* Spin animation for loading indicator and overlay */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
 </style>
 {% endblock %}
