@@ -888,7 +888,7 @@ def workflow_dashboard(request):
     from django.db.utils import OperationalError, ProgrammingError
 
     if not os.path.exists("automode_config.json"):
-        messages.error(request, "Automode configuration file not found")
+        # Auto-create config file silently if it doesn't exist
         with open("automode_config.json", "w") as f:
             f.write("""{
               "data_model_type": "EIL",

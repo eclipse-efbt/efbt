@@ -13,7 +13,7 @@ from .views import joins_metadata_embed_views
 from .api import lineage_api
 from .api import enhanced_lineage_api
 from .views import bpmn_metadata_lineage_views
-from . import joins_configuration_views
+from .views import joins_configuration_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -457,7 +457,7 @@ urlpatterns = [
     path(
         "api/trail/<int:trail_id>/debug/",
         lambda request, trail_id: __import__(
-            "pybirdai.debug_tracking", fromlist=["create_debug_api_endpoint"]
+            "pybirdai.api.debug_tracking", fromlist=["create_debug_api_endpoint"]
         ).create_debug_api_endpoint()(request, trail_id),
         name="debug_trail_data",
     ),
