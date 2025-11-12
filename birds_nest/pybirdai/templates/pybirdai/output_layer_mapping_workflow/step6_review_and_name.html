@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Output Layer Mapping - Review and Name{% endblock %}
+
+{% block extra_css %}
+<style>
+    .workflow-header {
+        background: #0d6efd;
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .workflow-steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .workflow-steps li {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+
+    .workflow-steps li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: #ddd;
+        z-index: -1;
+    }
+
+    .workflow-steps .step-number {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 50%;
+        background: #ddd;
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .workflow-steps .active .step-number {
+        background: #0d6efd;
+        color: white;
+    }
+
+    .workflow-steps .completed .step-number {
+        background: #48bb78;
+        color: white;
+    }
+
+    .review-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    /* Mapping Card */
+    .mapping-card {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .mapping-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .mapping-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .mapping-type-badge {
+        padding: 0.5rem 1rem;
+        background: #0d6efd;
+        color: white;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    /* Summary Grid */
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+        background: linear-gradient(135deg, #0d6efd 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 6px;
+        text-align: center;
+    }
+
+    .summary-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+    }
+
+    .summary-label {
+        font-size: 0.75rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+    }
+
+    /* Form Fields */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .required-asterisk {
+        color: #e53e3e;
+        margin-left: 0.25rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-help {
+        font-size: 0.875rem;
+        color: #718096;
+        margin-top: 0.5rem;
+    }
+
+    .auto-name-display {
+        background: #f7f7f9;
+        padding: 0.75rem;
+        border-radius: 4px;
+        margin-top: 0.5rem;
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: #666;
+    }
+
+    /* Collapsible Sections */
+    .review-section {
+        background: #f7f7f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .review-section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .review-section-title:hover {
+        background: #edf2f7;
+        padding: 0.5rem;
+        margin: -0.5rem -0.5rem 0.25rem -0.5rem;
+        border-radius: 4px;
+    }
+
+    .collapse-icon {
+        margin-left: auto;
+        transition: transform 0.3s;
+    }
+
+    .collapsed .collapse-icon {
+        transform: rotate(-90deg);
+    }
+
+    .collapsible-content {
+        max-height: 500px;
+        overflow: auto;
+        transition: max-height 0.3s ease-out;
+    }
+
+    .collapsed .collapsible-content {
+        max-height: 0;
+        overflow: hidden;
+    }
+
+    /* Mapping Details */
+    .mapping-details {
+        font-size: 0.875rem;
+    }
+
+    .mapping-details p {
+        margin: 0.5rem 0;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background: #0d6efd;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #0b5ed7;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+        background: #e2e8f0;
+        color: #4a5568;
+        margin-right: 1rem;
+    }
+
+    .btn-secondary:hover {
+        background: #cbd5e0;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="workflow-header">
+        <h1>Output Layer Mapping Workflow</h1>
+        <p>Review and name your mappings before generation</p>
+    </div>
+
+    <ul class="workflow-steps">
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Select Table</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Existing Mappings</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Select Ordinates</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Variable Breakdown</div>
+        </li>
+        <li class="completed">
+            <span class="step-number">✓</span>
+            <div>Mapping Editor</div>
+        </li>
+        <li class="active">
+            <span class="step-number">6</span>
+            <div>Review & Name</div>
+        </li>
+        <li>
+            <span class="step-number">7</span>
+            <div>Generate</div>
+        </li>
+    </ul>
+
+    <div class="review-container">
+        <h2>Step 6: Review and Name Your Mappings</h2>
+        <p>Review all {{ mappings_count }} mapping(s) and provide names for each.</p>
+
+        <form method="post" id="namingForm">
+            {% csrf_token %}
+
+            {% for summary in mapping_summaries %}
+            <div class="mapping-card">
+                <div class="mapping-card-header">
+                    <div class="mapping-card-title">
+                        Mapping {{ forloop.counter }}: {{ summary.group_name }}
+                    </div>
+                    <div class="mapping-type-badge">{{ summary.group_type }}</div>
+                </div>
+
+                <!-- Summary Stats -->
+                <div class="summary-grid">
+                    {% if summary.dimension_count > 0 %}
+                    <div class="summary-card">
+                        <div class="summary-number">{{ summary.dimension_count }}</div>
+                        <div class="summary-label">Dimension Rows</div>
+                    </div>
+                    {% endif %}
+                    {% if summary.observation_count > 0 %}
+                    <div class="summary-card">
+                        <div class="summary-number">{{ summary.observation_count }}</div>
+                        <div class="summary-label">Observation Rows</div>
+                    </div>
+                    {% endif %}
+                    {% if summary.attribute_count > 0 %}
+                    <div class="summary-card">
+                        <div class="summary-number">{{ summary.attribute_count }}</div>
+                        <div class="summary-label">Attribute Rows</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Auto-generated Name Display -->
+                <div class="form-group">
+                    <label>Auto-generated Name:</label>
+                    <div class="auto-name-display">{{ summary.auto_name }}</div>
+                    <div class="form-help">This name was automatically generated based on the table and variables.</div>
+                </div>
+
+                <!-- Custom Name Input -->
+                <div class="form-group">
+                    <label for="mapping_name_{{ summary.group_id }}">
+                        Custom Mapping Name
+                    </label>
+                    <input type="text"
+                           name="mapping_name_{{ summary.group_id }}"
+                           id="mapping_name_{{ summary.group_id }}"
+                           class="form-control"
+                           value="{{ summary.mapping_name }}"
+                           placeholder="Edit name or keep auto-generated name">
+                    <div class="form-help">
+                        You can edit this name or keep the auto-generated one.
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="mapping_description_{{ summary.group_id }}">
+                        Description
+                    </label>
+                    <textarea name="mapping_description_{{ summary.group_id }}"
+                              id="mapping_description_{{ summary.group_id }}"
+                              class="form-control"
+                              rows="2"
+                              placeholder="Optional: Add a description for this mapping..."></textarea>
+                </div>
+
+                <!-- Collapsible Mapping Details -->
+                <div class="review-section">
+                    <div class="review-section-title" onclick="toggleCollapse(this.parentElement)">
+                        <span>📋 Mapping Details</span>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="mapping-details">
+                            <p><strong>Group Type:</strong> {{ summary.group_type|title }}</p>
+                            <p><strong>Total Mapping Rows:</strong> {{ summary.dimension_count|add:summary.observation_count|add:summary.attribute_count }}</p>
+                            {% if summary.dimension_count > 0 %}
+                            <p><strong>Dimension Mappings:</strong> {{ summary.dimension_count }} row(s)</p>
+                            {% endif %}
+                            {% if summary.observation_count > 0 %}
+                            <p><strong>Observation Mappings:</strong> {{ summary.observation_count }} row(s)</p>
+                            {% endif %}
+                            {% if summary.attribute_count > 0 %}
+                            <p><strong>Attribute Mappings:</strong> {{ summary.attribute_count }} row(s)</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <div>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step5' %}'">
+                        ← Back to Editor
+                    </button>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary" id="generateButton">
+                        Generate Structures →
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleCollapse(element) {
+        element.classList.toggle('collapsed');
+    }
+
+    // Form validation
+    document.getElementById('namingForm').addEventListener('submit', function(e) {
+        // Check if at least one mapping has a name
+        let hasValidNames = true;
+        const mappingInputs = document.querySelectorAll('[id^="mapping_name_"]');
+
+        mappingInputs.forEach(input => {
+            const name = input.value.trim();
+            if (!name) {
+                hasValidNames = false;
+                input.style.borderColor = 'red';
+            } else {
+                input.style.borderColor = '';
+            }
+        });
+
+        if (!hasValidNames) {
+            e.preventDefault();
+            alert('Please provide a name for all mappings.');
+            return false;
+        }
+
+        // Confirm before generating
+        if (!confirm('Are you ready to generate {{ mappings_count }} mapping structure(s)? This will create all necessary metadata objects.')) {
+            e.preventDefault();
+            return false;
+        }
+
+        // Disable button to prevent double submission
+        document.getElementById('generateButton').disabled = true;
+        document.getElementById('generateButton').textContent = 'Generating...';
+    });
+</script>
+{% endblock %}

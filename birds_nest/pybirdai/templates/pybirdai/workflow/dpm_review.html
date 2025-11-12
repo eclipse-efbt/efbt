@@ -1,0 +1,606 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>DPM Process Review - Step {{ step_number }}</h1>
+    <h2>{{ step_name }}</h2>
+    </div>
+
+    <!-- Cube Structure Viewer (Step 3 Only) -->
+    {% if step_number == 3 %}
+    <div class="cube-structure-section">
+        <h3>Output Layer Cube Viewer</h3>
+        <div class="viewer-controls">
+            <label for="cube-select">Select a cube to view its structure:</label>
+            <select id="cube-select" class="form-select">
+                <option value="">-- Select a cube --</option>
+            </select>
+        </div>
+        <div id="loading-indicator" class="loading-indicator" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i> Loading cube structure...
+        </div>
+        <div id="cube-tree-container" class="cube-tree-container" style="display: none;">
+            <div id="cube-info" class="cube-info"></div>
+            <div id="cube-tree" class="cube-tree"></div>
+        </div>
+        <div id="error-message" class="error-message" style="display: none;"></div>
+    </div>
+    {% endif %}
+
+    <!-- Execution Logs -->
+    {% if execution_data %}
+    <div class="review-section">
+        <h3>Execution Details</h3>
+        <div class="log-container">
+            <pre>{{ execution_data|pprint }}</pre>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Error Messages -->
+    {% if error_message %}
+    <div class="review-section error-section">
+        <h3>Error Details</h3>
+        <div class="error-message">
+            {{ error_message }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div style="margin-top: 30px;">
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+        {% if status == 'failed' %}
+        <button onclick="executeDPMStep({{ step_number }})" class="btn btn-warning">Retry Execution</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .review-section {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .review-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .review-table {
+        width: 100%;
+        max-width: 600px;
+        border-collapse: collapse;
+    }
+
+    .review-table th {
+        text-align: left;
+        padding: 8px;
+        width: 150px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .review-table td {
+        padding: 8px;
+        color: #333;
+    }
+
+    .file-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .file-list li {
+        padding: 8px;
+        margin: 5px 0;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+    }
+
+    .log-container {
+        background: #2d2d2d;
+        color: #f8f8f8;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .log-container pre {
+        margin: 0;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .error-section {
+        background: #fff3cd;
+        border-color: #ffeaa7;
+    }
+
+    .error-message {
+        background: white;
+        padding: 15px;
+        border-radius: 4px;
+        border-left: 4px solid #dc3545;
+        color: #721c24;
+        font-family: 'Courier New', monospace;
+        white-space: pre-wrap;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-right: 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .btn-warning:hover {
+        background: #e0a800;
+    }
+
+    .btn-success {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #218838;
+    }
+
+    .step-info-section {
+        background: #e7f3ff;
+        border-color: #0066cc;
+    }
+
+    .step-info-content {
+        line-height: 1.6;
+    }
+
+    .step-info-content p {
+        margin-bottom: 15px;
+    }
+
+    .workflow-guide {
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 15px 0;
+    }
+
+    .workflow-guide h4 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        color: #0066cc;
+    }
+
+    .workflow-steps {
+        margin: 0;
+        padding-left: 25px;
+    }
+
+    .workflow-steps li {
+        margin: 8px 0;
+        color: #333;
+    }
+
+    .workflow-steps li strong {
+        color: #0066cc;
+    }
+
+    .workflow-access {
+        margin: 15px 0;
+    }
+
+    .workflow-note {
+        background: #fff3cd;
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 4px solid #ffc107;
+        margin-top: 15px;
+    }
+
+    .workflow-note p {
+        margin: 0;
+        color: #856404;
+        font-size: 14px;
+    }
+
+    /* Status styling for not_executed */
+    .operation-btn.not_executed {
+        background: #6c757d;
+        color: white;
+    }
+
+    /* Cube Structure Viewer Styles */
+    .cube-structure-section {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .cube-structure-section h3 {
+        margin-top: 0;
+        color: #333;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .viewer-controls {
+        margin-bottom: 20px;
+    }
+
+    .viewer-controls label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .form-select {
+        width: 100%;
+        max-width: 500px;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+    }
+
+    .form-select:focus {
+        outline: none;
+        border-color: #4a90e2;
+    }
+
+    .loading-indicator {
+        padding: 20px;
+        text-align: center;
+        color: #4a90e2;
+        font-size: 16px;
+    }
+
+    .cube-tree-container {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .cube-info {
+        padding: 15px;
+        background: #fff;
+        border-left: 4px solid #4a90e2;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .cube-info h4 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 1.2em;
+    }
+
+    .cube-info p {
+        margin: 5px 0;
+        color: #666;
+        font-size: 0.95em;
+    }
+
+    /* Tree Structure Styles */
+    .cube-tree {
+        font-family: 'Monaco', 'Courier New', monospace;
+        font-size: 14px;
+    }
+
+    .tree-node {
+        margin: 5px 0;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+
+    .tree-node:hover {
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .tree-node-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .tree-indent {
+        display: inline-block;
+        width: 20px;
+    }
+
+    .tree-icon {
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .tree-label {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .tree-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    .tree-badge.role-d {
+        background: #3498db;
+    }
+
+    .tree-badge.role-a {
+        background: #27ae60;
+    }
+
+    .tree-badge.role-o {
+        background: #e67e22;
+    }
+
+    .tree-details {
+        color: #777;
+        font-size: 12px;
+        margin-left: 8px;
+    }
+
+    .tree-mandatory {
+        color: #e74c3c;
+        font-weight: 600;
+    }
+
+    .tree-identifier {
+        color: #9b59b6;
+        font-weight: 600;
+    }
+
+    .tree-structure-header {
+        font-size: 1.1em;
+        color: #555;
+        margin: 15px 0 10px 0;
+        padding: 8px 0;
+        border-bottom: 2px solid #ddd;
+        font-weight: 600;
+    }
+
+    .tree-item-count {
+        background: #4a90e2;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function executeDPMStep(stepNumber) {
+    if (confirm('Are you sure you want to retry this step?')) {
+        window.location.href = '{% url "pybirdai:workflow_dashboard" %}';
+        // The actual execution will be triggered from the dashboard
+    }
+}
+
+// Cube Structure Viewer JavaScript (only for step 3)
+{% if step_number == 3 %}
+document.addEventListener('DOMContentLoaded', function() {
+    const cubeSelect = document.getElementById('cube-select');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const treeContainer = document.getElementById('cube-tree-container');
+    const errorMessage = document.getElementById('error-message');
+    const cubeInfo = document.getElementById('cube-info');
+    const cubeTree = document.getElementById('cube-tree');
+
+    // Load cubes on page load
+    loadCubes();
+
+    // Handle cube selection
+    cubeSelect.addEventListener('change', function() {
+        const cubeId = this.value;
+        if (cubeId) {
+            loadCubeStructure(cubeId);
+        } else {
+            treeContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+        }
+    });
+
+    function loadCubes() {
+        fetch('/pybirdai/api/dpm/cubes/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showError('Error loading cubes: ' + data.error);
+                    return;
+                }
+
+                const cubes = data.cubes;
+                cubeSelect.innerHTML = '<option value="">-- Select a cube --</option>';
+
+                cubes.forEach(cube => {
+                    const option = document.createElement('option');
+                    option.value = cube.cube_id;
+                    option.textContent = cube.name + (cube.code ? ' (' + cube.code + ')' : '');
+                    cubeSelect.appendChild(option);
+                });
+
+                if (cubes.length === 0) {
+                    showError('No DPM output layer cubes found. Please create cubes through the Output Layer Mapping Workflow first.');
+                }
+            })
+            .catch(error => {
+                showError('Error loading cubes: ' + error.message);
+            });
+    }
+
+    function loadCubeStructure(cubeId) {
+        // Show loading indicator
+        loadingIndicator.style.display = 'block';
+        treeContainer.style.display = 'none';
+        errorMessage.style.display = 'none';
+
+        fetch('/pybirdai/api/cube-structure/' + cubeId + '/')
+            .then(response => response.json())
+            .then(data => {
+                loadingIndicator.style.display = 'none';
+
+                if (data.error) {
+                    showError('Error loading cube structure: ' + data.error);
+                    return;
+                }
+
+                renderCubeStructure(data);
+            })
+            .catch(error => {
+                loadingIndicator.style.display = 'none';
+                showError('Error loading cube structure: ' + error.message);
+            });
+    }
+
+    function renderCubeStructure(data) {
+        // Show cube information
+        cubeInfo.innerHTML = `
+            <h4><i class="fas fa-cube"></i> ${data.cube_name}</h4>
+            <p><strong>Cube ID:</strong> ${data.cube_id}</p>
+            <p><strong>Structure:</strong> ${data.structure_name} (${data.structure_id})</p>
+            <p><strong>Items:</strong> <span class="tree-item-count">${data.item_count}</span></p>
+        `;
+
+        // Group items by role for better organization
+        const dimensions = data.items.filter(item => item.role === 'D');
+        const attributes = data.items.filter(item => item.role === 'A');
+        const observations = data.items.filter(item => item.role === 'O');
+
+        // Build tree HTML
+        let treeHTML = '';
+
+        if (dimensions.length > 0) {
+            treeHTML += '<div class="tree-structure-header"><i class="fas fa-layer-group"></i> Dimensions (' + dimensions.length + ')</div>';
+            treeHTML += renderItems(dimensions);
+        }
+
+        if (attributes.length > 0) {
+            treeHTML += '<div class="tree-structure-header"><i class="fas fa-tags"></i> Attributes (' + attributes.length + ')</div>';
+            treeHTML += renderItems(attributes);
+        }
+
+        if (observations.length > 0) {
+            treeHTML += '<div class="tree-structure-header"><i class="fas fa-chart-bar"></i> Observations (' + observations.length + ')</div>';
+            treeHTML += renderItems(observations);
+        }
+
+        cubeTree.innerHTML = treeHTML;
+        treeContainer.style.display = 'block';
+    }
+
+    function renderItems(items) {
+        let html = '';
+        items.forEach((item, index) => {
+            const roleClass = 'role-' + item.role.toLowerCase();
+            const roleDisplay = item.role_display || item.role;
+
+            let details = [];
+            if (item.subdomain_name) {
+                details.push('<span title="Subdomain"><i class="fas fa-folder"></i> ' + item.subdomain_name + '</span>');
+            }
+            if (item.member_name) {
+                details.push('<span title="Member"><i class="fas fa-user"></i> ' + item.member_name + '</span>');
+            }
+            if (item.is_mandatory) {
+                details.push('<span class="tree-mandatory" title="Mandatory"><i class="fas fa-exclamation-circle"></i> Required</span>');
+            }
+            if (item.is_identifier) {
+                details.push('<span class="tree-identifier" title="Identifier"><i class="fas fa-key"></i> Identifier</span>');
+            }
+
+            html += `
+                <div class="tree-node">
+                    <div class="tree-node-content">
+                        <div class="tree-icon"><i class="fas fa-caret-right"></i></div>
+                        <div class="tree-label">
+                            <span class="tree-badge ${roleClass}">${roleDisplay}</span>
+                            <strong>${item.variable_name}</strong>
+                            <code style="background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${item.variable_id}</code>
+                            <span class="tree-details">[Order: ${item.order}]</span>
+                        </div>
+                    </div>
+                    ${details.length > 0 ? '<div class="tree-details" style="margin-left: 50px; margin-top: 5px;">' + details.join(' • ') + '</div>' : ''}
+                </div>
+            `;
+        });
+        return html;
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        treeContainer.style.display = 'none';
+        loadingIndicator.style.display = 'none';
+    }
+});
+{% endif %}
+</script>
+{% endblock %}

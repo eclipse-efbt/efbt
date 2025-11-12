@@ -83,6 +83,11 @@ class RunImportDPMData(AppConfig):
                 ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context,dpm=True)
                 logger.info("Report templates import completed successfully")
 
+                # Import hierarchies (including member hierarchy nodes)
+                logger.info("Importing hierarchies from SDD")
+                ImportWebsiteToSDDModel().import_hierarchies_from_sdd(sdd_context)
+                logger.info("Hierarchy import completed successfully")
+
         except Exception as e:
             logger.error(f"Error during DPM import process: {e}", exc_info=True)
             raise

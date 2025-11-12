@@ -12,55 +12,46 @@
 #
 
 import os
-from .utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, rename_fields, pascal_to_upper_snake, clean_spaces
+import pandas as pd
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, clean_spaces_df
 )
 
 
 def map_hierarchy(path=os.path.join("target", "Hierarchy.csv"), domain_id_map: dict = {}):
     """Map hierarchies from Hierarchy.csv to the target format"""
-    data_list = read_csv_to_dict(path)
-    # Force DomainID to be string since it will be mapped to string values
-    hierarchies = dict_list_to_structured_array(data_list, force_str_columns={'DomainID'})
+    df = pd.read_csv(path, dtype=str)
 
-    column_mapping = {col: pascal_to_upper_snake(col) for col in hierarchies.dtype.names}
-    hierarchies = rename_fields(hierarchies, column_mapping)
-    hierarchies = add_field(hierarchies, "MAINTENANCE_AGENCY_ID", "EBA")
+    # Transform column names to UPPER_SNAKE_CASE
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    new_hierarchy_ids = []
-    for row in hierarchies:
-        new_hierarchy_ids.append("EBA_" + str(row["HIERARCHY_CODE"]))
+    # Create new hierarchy ID
+    df['NEW_HIERARCHY_ID'] = "EBA_" + df['HIERARCHY_CODE'].astype(str)
 
-    hierarchies = add_field(hierarchies, "NEW_HIERARCHY_ID", new_hierarchy_ids)
+    # Map DOMAIN_ID
+    df['DOMAIN_ID'] = df['DOMAIN_ID'].astype(str).map(domain_id_map).fillna(df['DOMAIN_ID'])
 
-    # Update DOMAIN_ID
-    domain_ids = []
-    for row in hierarchies:
-        domain_ids.append(domain_id_map.get(str(row["DOMAIN_ID"]), str(row["DOMAIN_ID"])))
+    # Generate ID mapping
+    id_mapping = dict(zip(df['HIERARCHY_ID'].astype(str), df['NEW_HIERARCHY_ID'].astype(str)))
 
-    for i, row in enumerate(hierarchies):
-        hierarchies[i]["DOMAIN_ID"] = domain_ids[i]
-
-    # Generate id mapping
-    id_mapping = {}
-    for row in hierarchies:
-        id_mapping[str(row["HIERARCHY_ID"])] = str(row["NEW_HIERARCHY_ID"])
-
-    hierarchies = rename_fields(hierarchies, {
+    # Rename columns
+    df.drop(axis=1,labels='HIERARCHY_ID',inplace=True)
+    df = df.rename(columns={
         "NEW_HIERARCHY_ID": "MEMBER_HIERARCHY_ID",
         "HIERARCHY_CODE": "CODE",
         "HIERARCHY_LABEL": "NAME",
         "HIERARCHY_DESCRIPTION": "DESCRIPTION"
     })
 
-    hierarchies = add_field(hierarchies, "IS_MAIN_HIERARCHY", False, dtype='bool')
+    # Add new fields
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
+    df['IS_MAIN_HIERARCHY'] = False
 
-    hierarchies = select_fields(hierarchies, [
-        "MAINTENANCE_AGENCY_ID", "MEMBER_HIERARCHY_ID", "CODE", "DOMAIN_ID", "NAME", "DESCRIPTION", "IS_MAIN_HIERARCHY"
-    ])
+    df = df[[
+        "MAINTENANCE_AGENCY_ID", "MEMBER_HIERARCHY_ID", "CODE", "DOMAIN_ID",
+        "NAME", "DESCRIPTION", "IS_MAIN_HIERARCHY"
+    ]]
 
-    # Clean text fields
-    hierarchies = clean_spaces(hierarchies)
+    df = clean_spaces_df(df)
 
-    return hierarchies, id_mapping
+    return df, id_mapping

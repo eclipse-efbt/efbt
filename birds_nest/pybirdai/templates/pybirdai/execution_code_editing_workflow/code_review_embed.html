@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Execution Code</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .review-container {
+            max-width: 100%;
+        }
+
+        .info-alert {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .info-alert i {
+            color: #2196f3;
+            margin-right: 8px;
+        }
+
+        .files-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .file-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .file-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .file-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .file-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            word-break: break-word;
+        }
+
+        .file-name i {
+            color: #f39c12;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .file-meta {
+            display: flex;
+            gap: 20px;
+            color: #6c757d;
+            font-size: 13px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .file-meta-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-meta-item i {
+            margin-right: 5px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-edit {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .btn-edit:hover {
+            background: #0056b3;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .btn-edit i {
+            margin-right: 5px;
+        }
+
+        .btn-view {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .btn-view:hover {
+            background: #5a6268;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .btn-view i {
+            margin-right: 5px;
+        }
+
+        .modified-badge {
+            background: #ffc107;
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+
+        .no-files-message {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 8px;
+            color: #6c757d;
+            border: 2px dashed #dee2e6;
+        }
+
+        .no-files-message i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #dee2e6;
+            display: block;
+        }
+
+        .no-files-message h3 {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .no-files-message p {
+            margin-bottom: 20px;
+        }
+
+        .stats-summary {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-item i {
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .stats-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stats-label {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .section-header i {
+            color: #007bff;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="review-container">
+        <!-- Section Header -->
+        <div class="section-header">
+            <i class="fas fa-{% if source == 'filters' %}filter{% else %}link{% endif %}"></i>
+            <h2>{% if source == 'filters' %}Filter Code{% else %}Join Code{% endif %} - Generated Files</h2>
+        </div>
+
+        <!-- Info Alert -->
+        <div class="info-alert">
+            <i class="fas fa-info-circle"></i>
+            <strong>Review and Edit:</strong> Review the generated execution code below. Click "Edit Code" to modify individual files.
+        </div>
+
+        {% if logic_files %}
+            <!-- Stats Summary -->
+            <div class="stats-summary">
+                <div class="stats-item">
+                    <i class="fas fa-file-code"></i>
+                    <div>
+                        <div class="stats-value">{{ logic_files|length }}</div>
+                        <div class="stats-label">Logic Files</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Files Grid -->
+            <div class="files-grid">
+                {% for file in logic_files %}
+                <div class="file-card">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <i class="fas fa-file-code"></i>
+                            {{ file.name }}
+                            {% if file.modified %}
+                                <span class="modified-badge">Modified</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="file-meta">
+                        <div class="file-meta-item">
+                            <i class="fas fa-weight"></i>
+                            {{ file.size_kb }} KB
+                        </div>
+                        <div class="file-meta-item">
+                            <i class="fas fa-code"></i>
+                            Python
+                        </div>
+                    </div>
+
+                    <div class="file-actions">
+                        <a href="{% url 'pybirdai:edit_execution_code' source=source file_name=file.name %}"
+                           class="btn-edit"
+                           target="_blank">
+                            <i class="fas fa-edit"></i> Edit Code
+                        </a>
+                        <a href="{% url 'pybirdai:view_execution_code' source=source file_name=file.name %}"
+                           class="btn-view"
+                           target="_blank">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- No Files Message -->
+            <div class="no-files-message">
+                <i class="fas fa-folder-open"></i>
+                <h3>No execution code files found</h3>
+                <p>Please run Task 3 to generate the {% if source == 'filters' %}filter{% else %}join{% endif %} code first.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

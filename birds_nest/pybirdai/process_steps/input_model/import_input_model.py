@@ -20,7 +20,8 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 from django.db import transaction
 from uuid import uuid4
-from pybirdai.views import load_variables_from_csv_file
+from pybirdai.views.core_views import load_variables_from_csv_file
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 import logging
 from django.conf import settings
 import copy
@@ -97,7 +98,7 @@ class ImportInputModel(object):
         ]
 
         # Bulk create all agencies
-        created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies, ignore_conflicts=True)
+        created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
 
         # Update dictionary with created instances
@@ -127,7 +128,7 @@ class ImportInputModel(object):
             sdd_context.domain_dictionary[domain_type] = domain
 
         # Bulk create all domains
-        DOMAIN.objects.bulk_create(domains, ignore_conflicts=True)
+        DOMAIN.objects.bulk_create(domains, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
     def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str=""):
         file_location = sdd_context.file_directory + os.sep + (alternative_folder or "technical_export") + os.sep + "subdomain.csv"
@@ -311,7 +312,7 @@ class ImportInputModel(object):
 
         # Bulk create all objects
         if variables_to_create and sdd_context.save_sdd_to_db:
-            VARIABLE.objects.bulk_create(variables_to_create, ignore_conflicts=True)
+            VARIABLE.objects.bulk_create(variables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
         if cube_structure_items_to_create and context.save_derived_sdd_items:
             if model._meta.verbose_name == "Party_role":
@@ -411,16 +412,16 @@ class ImportInputModel(object):
 
             # Bulk create all objects
             if domains_to_create and sdd_context.save_sdd_to_db:
-                DOMAIN.objects.bulk_create(domains_to_create, ignore_conflicts=True)
+                DOMAIN.objects.bulk_create(domains_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
             if subdomains_to_create and sdd_context.save_sdd_to_db:
-                SUBDOMAIN.objects.bulk_create(subdomains_to_create, ignore_conflicts=True)
+                SUBDOMAIN.objects.bulk_create(subdomains_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
             if members_to_create and sdd_context.save_sdd_to_db:
-                MEMBER.objects.bulk_create(members_to_create, ignore_conflicts=True)
+                MEMBER.objects.bulk_create(members_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
             if subdomain_enums_to_create and sdd_context.save_sdd_to_db:
-                SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create, ignore_conflicts=True)
+                SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
             return sdd_context.domain_dictionary.get(domain_id), subdomain
 

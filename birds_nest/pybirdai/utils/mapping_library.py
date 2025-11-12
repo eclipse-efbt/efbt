@@ -14,7 +14,10 @@
 import json
 import logging
 from typing import Dict, List, Set, Tuple, Any, Optional
-from ..models.bird_meta_data_model import (
+from django.core.cache import cache
+from django.core.paginator import Paginator
+from django.db.models import Prefetch
+from pybirdai.models.bird_meta_data_model import (
     MEMBER,
     MEMBER_MAPPING_ITEM,
     MAPPING_DEFINITION,
@@ -64,38 +67,75 @@ def get_filtered_var_items(variable_mapping_id: str) -> Tuple[List[VARIABLE_MAPP
     target_vars = [item for item in var_items if item.is_source.lower() != 'true']
     return var_items, source_vars, target_vars
 
-def build_mapping_results(mapping_definitions: List[MAPPING_DEFINITION]) -> Dict[str, Dict[str, Any]]:
-    """Builds mapping results dictionary from mapping definitions.
+def build_mapping_results(mapping_definitions: List[MAPPING_DEFINITION], page: int = 1, page_size: int = 50) -> Tuple[Dict[str, Dict[str, Any]], Dict[str, Any]]:
+    """Builds mapping results dictionary from mapping definitions with pagination.
 
     Args:
         mapping_definitions: List of mapping definition objects
+        page: Page number for pagination (1-indexed)
+        page_size: Number of items per page
 
     Returns:
-        Dictionary containing mapping results
+        Tuple of (results dictionary, pagination info dictionary)
     """
-    logger.debug("Building mapping results")
+    logger.debug(f"Building mapping results (page {page}, size {page_size})")
+
+    # Since filtering and select_related are now handled in the view,
+    # just add prefetch_related for variable mapping items
+    # Note: variable_mapping_id reverse relation is 'variablemapping_item_set' (lowercase with underscore)
+    optimized_definitions = mapping_definitions.prefetch_related(
+        'variable_mapping_id__variable_mapping_item_set__variable_id'
+    )
+
+    # Convert to list for pagination (filtering already done at database level)
+    valid_mappings = list(optimized_definitions)
+
+    # Apply pagination
+    paginator = Paginator(valid_mappings, page_size)
+    page_obj = paginator.get_page(page)
+
+    # Build results from paginated data
     results = {}
-    for map_def in mapping_definitions:
-
-
-        if not map_def.member_mapping_id:
+    for map_def in page_obj.object_list:
+        # Skip mappings without a code (defensive programming)
+        if not map_def.code:
+            logger.warning(f"Skipping mapping {map_def.mapping_id} - no code set")
             continue
 
-        if map_def.variable_mapping_id:
-            var_items, source_vars, target_vars = get_filtered_var_items(map_def.variable_mapping_id)
-            if len(target_vars) == 0 or len(var_items) == 1:
-                continue
+        if map_def.code not in results:
+            has_member_mapping = map_def.member_mapping_id is not None
 
-        if map_def.mapping_id not in results:
-            results[map_def.mapping_id] = {
+            # Get member mapping code with safety check for NULL code field
+            member_mapping_code = None
+            if has_member_mapping:
+                member_mapping_code = (
+                    map_def.member_mapping_id.code
+                    if map_def.member_mapping_id.code
+                    else map_def.member_mapping_id.member_mapping_id
+                )
+
+            results[map_def.code] = {
                 "variable_mapping_id": map_def.variable_mapping_id.code if map_def.variable_mapping_id else None,
-                "has_member_mapping": True,
+                "has_member_mapping": has_member_mapping,
                 "member_mapping_id": {
-                    "code": map_def.member_mapping_id.code,
+                    "code": member_mapping_code,
                     "items": []
-                }
+                } if has_member_mapping else None,
+                "name": map_def.name if map_def.name else map_def.code  # Add name for display
             }
-    return results
+
+    # Pagination metadata
+    pagination_info = {
+        'current_page': page_obj.number,
+        'total_pages': paginator.num_pages,
+        'total_items': paginator.count,
+        'page_size': page_size,
+        'has_next': page_obj.has_next(),
+        'has_previous': page_obj.has_previous(),
+    }
+
+    logger.debug(f"Built {len(results)} results (page {page}/{paginator.num_pages})")
+    return results, pagination_info
 
 def get_source_target_vars(var_items: List[VARIABLE_MAPPING_ITEM]) -> Dict[str, List[str]]:
     """Gets source and target variables from variable items.
@@ -114,6 +154,8 @@ def get_source_target_vars(var_items: List[VARIABLE_MAPPING_ITEM]) -> Dict[str, 
 def initialize_unique_set(member_mapping_items: List[MEMBER_MAPPING_ITEM]) -> Dict[str, Set[str]]:
     """Initializes unique set of member mappings.
 
+    Optimized version that eliminates N+1 queries by prefetching members for all domains.
+
     Args:
         member_mapping_items: List of member mapping items
 
@@ -122,11 +164,52 @@ def initialize_unique_set(member_mapping_items: List[MEMBER_MAPPING_ITEM]) -> Di
     """
     logger.debug("Initializing unique set")
     unique_set = {}
+
+    # Collect unique domains from all items
+    unique_domains = set()
+    for item in member_mapping_items:
+        if item.variable_id and item.variable_id.domain_id:
+            unique_domains.add(item.variable_id.domain_id.domain_id)
+
+    # Fetch all members for these domains in one query
+    domain_members_cache = {}
+    if unique_domains:
+        logger.debug(f"Fetching members for {len(unique_domains)} unique domains: {unique_domains}")
+        all_members = MEMBER.objects.filter(
+            domain_id__domain_id__in=unique_domains
+        ).select_related('domain_id')
+
+        members_count = 0
+        for member in all_members:
+            domain_id = member.domain_id.domain_id
+            if domain_id not in domain_members_cache:
+                domain_members_cache[domain_id] = {}
+            domain_members_cache[domain_id][member.member_id] = f"{member.name} ({member.code})"
+            members_count += 1
+
+        logger.debug(f"Built cache for {len(domain_members_cache)} domains with {members_count} total members")
+
+    # Build unique_set using cached data
     for item in member_mapping_items:
         vars_ = f"{item.variable_id.name} ({item.variable_id.code})"
         if vars_ not in unique_set:
-            unique_set[vars_] = {elt.member_id: f"{elt.name} ({elt.code})"
-            for elt in MEMBER.objects.filter(domain_id=item.variable_id.domain_id)}
+            domain_id = item.variable_id.domain_id.domain_id
+            cached_members = domain_members_cache.get(domain_id, {})
+
+            # Defensive fallback: if cache is empty, query directly
+            if not cached_members:
+                logger.warning(f"Cache miss for domain {domain_id}, falling back to direct query for variable {vars_}")
+                cached_members = {
+                    m.member_id: f"{m.name} ({m.code})"
+                    for m in MEMBER.objects.filter(domain_id=item.variable_id.domain_id)
+                }
+                # Update cache for future iterations
+                if cached_members:
+                    domain_members_cache[domain_id] = cached_members
+
+            unique_set[vars_] = cached_members
+
+    logger.debug(f"Initialized unique set with {len(unique_set)} variables")
     return unique_set
 
 def build_temp_items(member_mapping_items: List[MEMBER_MAPPING_ITEM], unique_set:dict) -> Dict[str, Dict[str, Any]]:
@@ -301,50 +384,139 @@ def process_mapping_chain(variable: VARIABLE, mapping_def: MAPPING_DEFINITION) -
         ).first())
 
 def get_source_variables():
+    """Get all available source variables from EBA framework.
+
+    Optimized version with caching and prefetch_related to eliminate N+1 queries.
+    Cache TTL: 900 seconds (15 minutes)
+
+    Returns:
+        Dictionary of source variables with their domains and members
+    """
+    # Try to get from cache first
+    cache_key = 'source_variables_v1'
+    cached_result = cache.get(cache_key)
+    if cached_result is not None:
+        logger.debug("Returning cached source variables")
+        return cached_result
+
+    logger.debug("Building source variables (cache miss)")
     source_variables = {}
-    for v in VARIABLE.objects.all():
-        if v.maintenance_agency_id:
-            if "EBA" == v.maintenance_agency_id.code:
-                domain = v.domain_id
+
+    # Optimize query with select_related and prefetch_related
+    variables = VARIABLE.objects.select_related(
+        'maintenance_agency_id',
+        'domain_id'
+    ).prefetch_related(
+        Prefetch(
+            'domain_id__member_set',
+            queryset=MEMBER.objects.all(),
+            to_attr='prefetched_members'
+        )
+    ).filter(
+        maintenance_agency_id__code="EBA"
+    )
+
+    for v in variables:
+        domain = v.domain_id
+        if domain and hasattr(domain, 'prefetched_members'):
+            members = domain.prefetched_members
+            if len(members):
                 domain_members = {}
-                members = MEMBER.objects.filter(domain_id=domain)
-                if len(members):
-                    for m in members:
-                        domain_members[m.member_id] = {
-                            'code': m.code,
-                            'name': m.name
-                        }
-                    source_variables[v.variable_id] = {
-                        'domain': {
-                            'id': domain.domain_id,
-                            'code': domain.code,
-                            'name': domain.name,
-                            'members': domain_members
-                        }
+                for m in members:
+                    domain_members[m.member_id] = {
+                        'code': m.code,
+                        'name': m.name
                     }
+                source_variables[v.variable_id] = {
+                    'domain': {
+                        'id': domain.domain_id,
+                        'code': domain.code,
+                        'name': domain.name,
+                        'members': domain_members
+                    }
+                }
+
+    # Cache the result for 15 minutes
+    cache.set(cache_key, source_variables, 900)
+    logger.debug(f"Cached {len(source_variables)} source variables")
     return source_variables
 
 # Get all available variables from reference framework - FINREF_REF
 def get_reference_variables():
+    """Get all available reference variables from REF framework.
+
+    Optimized version with caching and prefetch_related to eliminate N+1 queries.
+    Cache TTL: 900 seconds (15 minutes)
+
+    Returns:
+        Dictionary of reference variables with their domains and members
+    """
+    # Try to get from cache first
+    cache_key = 'reference_variables_v1'
+    cached_result = cache.get(cache_key)
+    if cached_result is not None:
+        logger.debug("Returning cached reference variables")
+        return cached_result
+
+    logger.debug("Building reference variables (cache miss)")
     reference_variables = {}
-    for v in VARIABLE.objects.all():
-        if v.maintenance_agency_id:
-            if "REF" == v.maintenance_agency_id.code:
-                domain = v.domain_id
+
+    # Optimize query with select_related and prefetch_related
+    variables = VARIABLE.objects.select_related(
+        'maintenance_agency_id',
+        'domain_id'
+    ).prefetch_related(
+        Prefetch(
+            'domain_id__member_set',
+            queryset=MEMBER.objects.all(),
+            to_attr='prefetched_members'
+        )
+    ).filter(
+        maintenance_agency_id__code="REF"
+    )
+
+    for v in variables:
+        domain = v.domain_id
+        if domain and hasattr(domain, 'prefetched_members'):
+            members = domain.prefetched_members
+            if len(members):
                 domain_members = {}
-                members = MEMBER.objects.filter(domain_id=domain)
-                if len(members):
-                    for m in members:
-                        domain_members[m.member_id] = {
-                            'code': m.code,
-                            'name': m.name
-                        }
-                    reference_variables[v.variable_id] = {
-                        'domain': {
-                            'id': domain.domain_id,
-                            'code': domain.code,
-                            'name': domain.name,
-                            'members': domain_members
-                        }
+                for m in members:
+                    domain_members[m.member_id] = {
+                        'code': m.code,
+                        'name': m.name
                     }
+                reference_variables[v.variable_id] = {
+                    'domain': {
+                        'id': domain.domain_id,
+                        'code': domain.code,
+                        'name': domain.name,
+                        'members': domain_members
+                    }
+                }
+
+    # Cache the result for 15 minutes
+    cache.set(cache_key, reference_variables, 900)
+    logger.debug(f"Cached {len(reference_variables)} reference variables")
     return reference_variables
+
+
+def invalidate_variable_caches():
+    """Invalidate all variable-related caches.
+
+    Call this function when variables or members are modified to ensure
+    fresh data is loaded on next request.
+    """
+    cache.delete('source_variables_v1')
+    cache.delete('reference_variables_v1')
+    logger.info("Invalidated variable caches")
+
+
+def clear_all_mapping_caches():
+    """Clear all mapping-related caches.
+
+    This is a convenience function for clearing all caches at once.
+    Useful for development or after bulk data operations.
+    """
+    invalidate_variable_caches()
+    logger.info("Cleared all mapping caches")

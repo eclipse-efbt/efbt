@@ -474,5 +474,146 @@ class WorkflowSession(models.Model):
             operation_type='do',
             status='completed'
         ).count()
-        
+
         return int((completed_do_operations / total_tasks) * 100)
+
+
+class DPMProcessExecution(models.Model):
+    """Track DPM process execution status"""
+
+    STEP_CHOICES = [
+        (1, 'Prepare DPM Data'),
+        (2, 'Import DPM Data'),
+        (3, 'Create Output Layers'),
+    ]
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('running', 'Running'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ]
+
+    session = models.ForeignKey(WorkflowSession, on_delete=models.CASCADE, related_name='dpm_executions')
+    step_number = models.IntegerField(choices=STEP_CHOICES)
+    step_name = models.CharField(max_length=255)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending')
+    started_at = models.DateTimeField(blank=True, null=True)
+    completed_at = models.DateTimeField(blank=True, null=True)
+    error_message = models.TextField(blank=True, null=True)
+    execution_data = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "DPM Process Execution"
+        verbose_name_plural = "DPM Process Executions"
+        ordering = ['step_number', 'created_at']
+        unique_together = [['session', 'step_number']]
+
+    def __str__(self):
+        return f"DPM Step {self.step_number} - {self.step_name}: {self.status}"
+
+    def start_execution(self):
+        """Mark execution as started"""
+        self.status = 'running'
+        self.started_at = timezone.now()
+        self.save(update_fields=['status', 'started_at'])
+
+    def complete_execution(self, final_data=None):
+        """Mark execution as completed"""
+        self.status = 'completed'
+        self.completed_at = timezone.now()
+
+        if final_data:
+            self.execution_data.update(final_data)
+
+        self.save(update_fields=['status', 'completed_at', 'execution_data'])
+
+    def handle_error(self, error_message):
+        """Handle execution error"""
+        self.status = 'failed'
+        self.error_message = error_message
+        self.completed_at = timezone.now()
+
+        self.save(update_fields=['status', 'error_message', 'completed_at'])
+
+
+class AnaCreditProcessExecution(models.Model):
+    """Track AnaCredit process execution status"""
+
+    STEP_CHOICES = [
+        (0, 'Fetch Metadata CSV'),
+        (1, 'Import Metadata'),
+        (2, 'Create Joins Metadata'),
+        (3, 'Create Executable Joins'),
+    ]
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('running', 'Running'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ]
+
+    session = models.ForeignKey(WorkflowSession, on_delete=models.CASCADE, related_name='anacredit_executions')
+    step_number = models.IntegerField(choices=STEP_CHOICES)
+    step_name = models.CharField(max_length=255)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending')
+    started_at = models.DateTimeField(blank=True, null=True)
+    completed_at = models.DateTimeField(blank=True, null=True)
+    error_message = models.TextField(blank=True, null=True)
+    execution_data = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    # New fields for execution code editing workflow
+    joins_metadata_approved = models.BooleanField(
+        default=False,
+        help_text="Whether the generated joins metadata has been approved"
+    )
+    execution_code_approved = models.BooleanField(
+        default=False,
+        help_text="Whether the generated execution code has been approved"
+    )
+    code_modifications = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Track modifications made to generated code files"
+    )
+    feedback_notes = models.TextField(
+        blank=True,
+        null=True,
+        help_text="User feedback notes about the generated code"
+    )
+
+    class Meta:
+        verbose_name = "AnaCredit Process Execution"
+        verbose_name_plural = "AnaCredit Process Executions"
+        ordering = ['step_number', 'created_at']
+        unique_together = [['session', 'step_number']]
+
+    def __str__(self):
+        return f"AnaCredit Step {self.step_number} - {self.step_name}: {self.status}"
+
+    def start_execution(self):
+        """Mark execution as started"""
+        self.status = 'running'
+        self.started_at = timezone.now()
+        self.save(update_fields=['status', 'started_at'])
+
+    def complete_execution(self, final_data=None):
+        """Mark execution as completed"""
+        self.status = 'completed'
+        self.completed_at = timezone.now()
+
+        if final_data:
+            self.execution_data.update(final_data)
+
+        self.save(update_fields=['status', 'completed_at', 'execution_data'])
+
+    def handle_error(self, error_message):
+        """Handle execution error"""
+        self.status = 'failed'
+        self.error_message = error_message
+        self.completed_at = timezone.now()
+
+        self.save(update_fields=['status', 'error_message', 'completed_at'])

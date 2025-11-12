@@ -170,6 +170,10 @@ class ImportDatabaseToSDDModel(object):
             for future in futures:
                 future.result()
 
+        # Import CUBE_STRUCTURE (depends on CUBE)
+        if 'CUBE_STRUCTURE' in tables_to_import:
+            ImportDatabaseToSDDModel.create_all_rol_cube_structures(self, sdd_context)
+
         # Group 3 - Tables that depend on CUBE_STRUCTURE and VARIABLE
         if 'CUBE_STRUCTURE_ITEM' in tables_to_import:
             ImportDatabaseToSDDModel.create_all_rol_cube_structure_items(self, sdd_context)
@@ -208,7 +212,7 @@ class ImportDatabaseToSDDModel(object):
         import all the variable mapping items
         '''
         context.variable_mapping_item_dictionary = {}
-        for variable_mapping_item in VARIABLE_MAPPING_ITEM.objects.all():
+        for variable_mapping_item in VARIABLE_MAPPING_ITEM.objects.all().select_related('variable_mapping_id'):
             try:
                 variable_mapping_list = context.variable_mapping_item_dictionary[
                     variable_mapping_item.variable_mapping_id.variable_mapping_id]
@@ -240,7 +244,13 @@ class ImportDatabaseToSDDModel(object):
         import all the rol cube structure items
         '''
         context.bird_cube_structure_item_dictionary = {}
-        for rol_cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
+        # Optimize with select_related to reduce database queries during joins metadata creation
+        for rol_cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all().select_related(
+            'cube_structure_id',
+            'variable_id',
+            'variable_id__domain_id',
+            'subdomain_id'
+        ):
             try:
                 context.bird_cube_structure_item_dictionary[
                     rol_cube_structure_item.cube_structure_id.cube_structure_id
@@ -255,7 +265,7 @@ class ImportDatabaseToSDDModel(object):
         import all the mapping to cubes
         '''
         context.mapping_to_cube_dictionary = {}
-        for mapping_to_cube in MAPPING_TO_CUBE.objects.all():
+        for mapping_to_cube in MAPPING_TO_CUBE.objects.all().select_related('mapping_id', 'mapping_id__member_mapping_id'):
             try:
                 mapping_to_cube_list = context.mapping_to_cube_dictionary[
                     mapping_to_cube.cube_mapping_id]
@@ -296,7 +306,7 @@ class ImportDatabaseToSDDModel(object):
         context.member_dictionary = {}
         context.member_id_to_domain_map = {}
         context.member_id_to_member_code_map = {}
-        for member in MEMBER.objects.all():
+        for member in MEMBER.objects.all().select_related('domain_id', 'maintenance_agency_id'):
             context.member_dictionary[member.member_id] = member
             context.member_id_to_domain_map[member] = member.domain_id
             context.member_id_to_member_code_map[member.member_id] = member.code
@@ -309,7 +319,7 @@ class ImportDatabaseToSDDModel(object):
         context.variable_to_domain_map = {}
         context.variable_to_long_names_map = {}
         context.variable_to_primary_concept_map = {}
-        for variable in VARIABLE.objects.all():
+        for variable in VARIABLE.objects.all().select_related('domain_id', 'maintenance_agency_id'):
             context.variable_dictionary[variable.variable_id] = variable
             context.variable_to_domain_map[variable.variable_id] = variable.domain_id
             context.variable_to_long_names_map[variable.variable_id] = variable.name
@@ -330,7 +340,7 @@ class ImportDatabaseToSDDModel(object):
         Import all non-reference member hierarchy nodes
         '''
         context.member_hierarchy_node_dictionary = {}
-        for hierarchy_node in MEMBER_HIERARCHY_NODE.objects.all():
+        for hierarchy_node in MEMBER_HIERARCHY_NODE.objects.all().select_related('member_id', 'member_hierarchy_id'):
             member = hierarchy_node.member_id
             member_name = 'None'
             if not(member is None):
@@ -369,7 +379,7 @@ class ImportDatabaseToSDDModel(object):
         import all the axis_ordinate from the rendering package
         '''
         sdd_context.axis_ordinate_to_ordinate_items_map = {}
-        for ordinate_item in ORDINATE_ITEM.objects.all():
+        for ordinate_item in ORDINATE_ITEM.objects.all().select_related('axis_ordinate_id', 'variable_id', 'member_id'):
             try:
                 ordinate_item_list = sdd_context.axis_ordinate_to_ordinate_items_map[
                     ordinate_item.axis_ordinate_id.axis_ordinate_id]
@@ -384,7 +394,7 @@ class ImportDatabaseToSDDModel(object):
         '''
         context.table_cell_dictionary = {}
         context.table_to_table_cell_dictionary = {}
-        for table_cell in TABLE_CELL.objects.all():
+        for table_cell in TABLE_CELL.objects.all().select_related('table_id'):
             context.table_cell_dictionary[table_cell.cell_id] = table_cell
 
 
@@ -404,7 +414,7 @@ class ImportDatabaseToSDDModel(object):
         import all the axis_ordinate from the rendering package
         '''
         context.cell_positions_dictionary = {}
-        for cell_position in CELL_POSITION.objects.all():
+        for cell_position in CELL_POSITION.objects.all().select_related('cell_id', 'axis_ordinate_id'):
             try:
                 cell_position_list = context.cell_positions_dictionary[
                     cell_position.cell_id.cell_id]
@@ -428,7 +438,7 @@ class ImportDatabaseToSDDModel(object):
     def create_all_member_mapping_items(self, context):
         ''' import all the member mappings from the rendering package'''
         context.member_mapping_items_dictionary = {}
-        for member_mapping_item in MEMBER_MAPPING_ITEM.objects.all():
+        for member_mapping_item in MEMBER_MAPPING_ITEM.objects.all().select_related('member_mapping_id', 'variable_id', 'member_id', 'member_hierarchy'):
             try:
                 member_mapping_list = context.member_mapping_items_dictionary[
                     member_mapping_item.member_mapping_id.member_mapping_id]
@@ -443,7 +453,7 @@ class ImportDatabaseToSDDModel(object):
         Import all the combination items
         '''
         context.combination_item_dictionary = {}
-        for combination_item in COMBINATION_ITEM.objects.all():
+        for combination_item in COMBINATION_ITEM.objects.all().select_related('combination_id', 'variable_id', 'member_id', 'subdomain_id'):
             try:
                 combination_item_list = context.combination_item_dictionary[
                     combination_item.combination_id.combination_id]
@@ -467,7 +477,7 @@ class ImportDatabaseToSDDModel(object):
         Import all the cube to combination
         '''
         context.combination_to_rol_cube_map = {}
-        for cube_to_combination in CUBE_TO_COMBINATION.objects.all():
+        for cube_to_combination in CUBE_TO_COMBINATION.objects.all().select_related('cube_id', 'combination_id'):
             try:
                 context.combination_to_rol_cube_map[
                     cube_to_combination.cube_id.cube_id
@@ -485,13 +495,18 @@ class ImportDatabaseToSDDModel(object):
         context.cube_link_to_foreign_cube_map = {}
         context.cube_link_to_join_identifier_map = {}
         context.cube_link_to_join_for_report_id_map = {}
-        for cube_link in CUBE_LINK.objects.all():
+
+        all_cube_links = CUBE_LINK.objects.all().select_related('foreign_cube_id')
+        print(f"DEBUG: Loading {all_cube_links.count()} CUBE_LINK objects from database")
+
+        for cube_link in all_cube_links:
             context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
             foreign_cube = cube_link.foreign_cube_id
             try:
                 context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
             except KeyError:
                 context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = [cube_link]
+            print(f"DEBUG: Added to map - cube_link_id={cube_link.cube_link_id}, foreign_cube={foreign_cube.cube_id}")
             join_identifier = cube_link.join_identifier
             try:
                 context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
@@ -511,7 +526,7 @@ class ImportDatabaseToSDDModel(object):
         '''
         context.cube_structure_item_links_dictionary = {}
         context.cube_structure_item_link_to_cube_link_map = {}
-        for cube_structure_item_link in CUBE_STRUCTURE_ITEM_LINK.objects.all():
+        for cube_structure_item_link in CUBE_STRUCTURE_ITEM_LINK.objects.all().select_related('cube_link_id'):
             context.cube_structure_item_links_dictionary[cube_structure_item_link.cube_structure_item_link_id] = cube_structure_item_link
             cube_link = cube_structure_item_link.cube_link_id
             try:

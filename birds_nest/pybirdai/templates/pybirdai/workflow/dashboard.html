@@ -56,152 +56,368 @@
     </div>
 </div> -->
 
-
-
-<!-- Task Grid -->
-<div class="task-grid">
-
-
-    <!--  -->
-    <div class="task-card">
-        <div id="reset-session-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
+<!-- Actions Section (4 Columns) -->
+<div class="workflow-section actions-section" style="margin-bottom: 20px;">
+    <div class="workflow-header non-collapsible" style="background: #f8f9fa; border-bottom-color: #dee2e6;">
+        <h2>ACTIONS</h2>
     </div>
-    <div class="task-card">
-        <h3>Do</h3>
-    </div>
-    <div class="task-card">
-        <h3>Review</h3>
-    </div>
- 
+    <div class="workflow-content" style="padding: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px;">
 
-    {% if database_ready and task_grid %}
-        {% for task in task_grid %}
-        <div class="task-card">
-            <h3>{{ forloop.counter}}. {{ task.task_name }}</h3>
-        </div>
+            <!-- Column 1: Workflow Setup -->
+            <div style="background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #1976d2; border-bottom: 2px solid #90caf9; padding-bottom: 10px;">Workflow Setup</h3>
 
-        <div class="task-card">
-            
-            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
-               class="operation-btn {{ task.operations.do.status }}" >
-                Do
-            </a>
-           
-        </div>
+                <p style="font-size: 12px; margin-bottom: 10px;">
+                    <strong>Step {% if migration_ready %}2{% else %}1{% endif %}:</strong> {% if migration_ready %}Ready to run migrations{% else %}Download resources{% endif %}
+                </p>
 
-        <div class="task-card">
+                <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
+                    {% csrf_token %}
+                    <button type="button" id="database-setup-btn" class="btn operation-btn btn-action-primary {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" onclick="startDatabaseSetup(); return false;">
+                        Retrieve Artifacts
+                    </button>
+                </form>
+                <div id="database-setup-status" style="display: none; margin-top: 8px; margin-bottom: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
 
-            <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
-               class="operation-btn {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
-                Review
-            </a>
-  
-        </div>
+                <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
+                    {% csrf_token %}
+                    <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
+                        Setup Database
+                    </button>
+                </form>
+                <div id="migration-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
 
-        
-        {% endfor %}
-    {% else %}
-        <!-- Default task grid when database is not available -->
-        {% for i in "1234" %}
-        <div class="task-card">
-            <h3>{{ forloop.counter }}.
-                {% if forloop.counter == 1 %}SMCubes Core Creation
-                {% elif forloop.counter == 2 %}SMCubes Transformation Rules
-                {% elif forloop.counter == 3 %}Python Transformation Rules
-                {% elif forloop.counter == 4 %}Full Execution
+                <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;">
+                    Edit Join Configuration
+                </button>
+
+                {% if migration_ready %}
+                    <p style="font-size: 11px; margin-top: 8px;"><small>Server restarted. Click above to complete setup.</small></p>
                 {% endif %}
-            </h3>
-        </div>
+            </div>
 
-        
+            <!-- Column 2: Automode Execution -->
+            <div style="background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #7b1fa2; border-bottom: 2px solid #ce93d8; padding-bottom: 10px;">Automode Execution</h3>
 
-        <div class="task-card">
-            {% if forloop.counter < 1 %}
-                <span class="operation-btn pending">Review</span>
-            {% endif %}
-        </div>
+                <p style="font-size: 12px; margin-bottom: 10px;">Run tasks automatically from Task 1</p>
 
-        <div class="task-card">
-            {% if forloop.counter < 1 %}
-                <span class="operation-btn pending">Compare</span>
-            {% endif %}
-        </div>
-        {% endfor %}
-    {% endif %}
-</div>
+                <form id="automode-form" method="post" action="{% url 'pybirdai:workflow_automode' %}">
+                    {% csrf_token %}
+                    <select name="target_task" class="form-control" style="margin-bottom: 8px; padding: 6px; font-size: 12px;">
+                        <option value="1">Task 1: SMCubes Core</option>
+                        <option value="2">Task 2: SMCubes Rules</option>
+                        <option value="3">Task 3: Python Rules</option>
+                        <option value="4" selected>Task 4: Full Execution</option>
+                    </select>
+                    <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
+                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" onclick="startCloneImport(); return false;">Clone (beta)</button>
+                    <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
+                </form>
 
-<!-- Quick Actions -->
-<div class="task-content">
-    <h2>Quick Actions</h2>
+                <div id="automode-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+                <div id="clone-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+            </div>
 
-    <div style="display: flex; gap: 20px; margin-top: 20px;">
-        <div style="flex: 1;">
-            <h3>Database Setup</h3>
-            <p><strong>Step {% if migration_ready %}2{% else %}1{% endif %}:</strong> {% if migration_ready %}Ready to run database migrations{% else %}Download resources and prepare database{% endif %}</p>
+            <!-- Column 3: Alternative FLows -->
 
-            <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
-                {% csrf_token %}
-                <button type="button" id="database-setup-btn" class="btn operation-btn {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startDatabaseSetup(); return false;">
-                    Retrieve Artifacts
-                </button>
-            </form>
-            <div id="database-setup-status" style="display: none; margin-top: 10px; margin-bottom: 10px; padding: 10px; border-radius: 5px;"></div>
+            <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #333; border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">Alternative Flows</h3>
 
-            <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
-                {% csrf_token %}
-                <button type="button" id="migration-btn" class="btn operation-btn {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" style="width: 100%; margin-bottom: 10px;" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
-                    Setup Database
-                </button>
-            </form>
-            <div id="migration-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
+                {% if database_ready %}
+                    <!-- ANCRDT Flow (Enabled) -->
+                    <div style="margin-bottom: 15px;">
+                        <button
+                            id="quick-ancrdt-btn"
+                            class="btn operation-btn btn-action-primary"
+                            style="background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;"
+                            onclick="executeCompleteANCRDTFlow()">
+                            🚀 Run Complete ANCRDT Workflow
+                        </button>
+                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
+                            Main Workflow Task 1 + ANCRDT Workflow
+                        </p>
+                        <div id="quick-ancrdt-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
+                    </div>
 
-            {% if migration_ready %}
-                <p><small>Admin files were updated and server restarted. Click above to complete database setup.</small></p>
-            {% endif %}
-        </div>
+                    <!-- DPM Flow (Enabled) - Manual Only -->
+                    <div>
+                        <button
+                            id="bird-task1-dpm-manual-btn"
+                            class="btn operation-btn btn-action-primary"
+                            style="background: #9c27b0; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
+                            onclick="executeBIRDTask1ThenDPMManual()">
+                            ✏️ Run Complete DPM Workflow
+                        </button>
+                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
+                            Main Workflow Task 1 + DPM Workflow
+                        </p>
 
-        <div style="flex: 1;">
-            <h3>Automode Execution</h3>
-            <p>Run tasks automatically from Task 1 up to selected point</p>
-            <form id="automode-form" method="post" action="{% url 'pybirdai:workflow_automode' %}">
-                {% csrf_token %}
-                <select name="target_task" class="form-control" style="margin-bottom: 10px;">
-                    <option value="1">Task 1: SMCubes Core Creation</option>
-                    <option value="2">Task 2: SMCubes Transformation Rules</option>
-                    <option value="3">Task 3: Python Transformation Rules</option>
-                    <option value="4" selected>Task 4: Full Execution</option>
-                </select>
-                <button type="submit" id="automode-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Run Automode (from Task 1)</button>
-                <button type="button" id="clone-btn" class="btn btn-info" style="width: 100%; margin-bottom: 10px;" onclick="startCloneImport(); return false;">Clone (beta version)</button>
-                <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary" style="width: 100%; display: block; text-align: center;">Create Review</a>
-            </form>
-            <div id="automode-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
-            <div id="clone-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
-        </div>
-
-        <div style="flex: 1;">
-            <h3>System Status</h3>
-            <ul>
-                <li>Database: {% if database_ready %}✅ Ready{% else %}❌ Not created{% endif %}</li>
-                <li>Configuration: {% if config %}✅ Configured{% else %}❌ Not configured{% endif %}</li>
-                {% if workflow_session %}
-                    <li>Session ID: {{ workflow_session.session_id|slice:":8" }}...</li>
+                        <div id="bird-task1-dpm-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
+                    </div>
                 {% else %}
-                    <li>Session: ⏳ Waiting for database</li>
-                {% endif %}
-            </ul>
+                    <!-- ANCRDT Flow (Disabled) -->
+                    <div style="margin-bottom: 15px; opacity: 0.6;">
+                        <button
+                            class="btn operation-btn"
+                            disabled
+                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
+                            title="Database setup required">
+                            🔒 Run Complete ANCRDT
+                        </button>
+                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
+                            <em>Database setup required</em>
+                        </p>
+                    </div>
 
-            <h4 style="margin-top: 20px;">Reset Session</h4>
-            <button type="button" id="reset-session-partial-btn" class="btn btn-warning" style="width: 100%; margin-bottom: 10px;" onclick="resetSessionPartial(); return false;">
-                Reset Tasks 1-4
-            </button>
-            <button type="button" id="reset-session-full-btn" class="btn btn-danger" style="width: 100%;" onclick="resetSessionFull(); return false;">
-                Reset Everything
-            </button>
-            <div id="reset-session-status" style="display: none; margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
+                    <!-- DPM Flow (Disabled) -->
+                    <div style="opacity: 0.6;">
+                        <button
+                            class="btn operation-btn"
+                            disabled
+                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
+                            title="Database setup required">
+                            🔒 Run Complete DPM
+                        </button>
+                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
+                            <em>Database setup required</em>
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+
+            <!-- Column 4: System Status -->
+            <div style="background: #fff3e0; border: 1px solid #ffb74d; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #e65100; border-bottom: 2px solid #ffb74d; padding-bottom: 10px;">System Status</h3>
+
+                <ul style="font-size: 12px; padding-left: 20px; margin-bottom: 15px;">
+                    <li>Database: {% if database_ready %}✅ Ready{% else %}❌ Not created{% endif %}</li>
+                    <li>Configuration: {% if config %}✅ Configured{% else %}❌ Not configured{% endif %}</li>
+                    {% if workflow_session %}
+                        <li>Session: {{ workflow_session.session_id|slice:":8" }}...</li>
+                    {% else %}
+                        <li>Session: ⏳ Waiting</li>
+                    {% endif %}
+                </ul>
+
+                <h4 style="margin-top: 15px; margin-bottom: 8px; font-size: 14px; color: #e65100;">Reset Session</h4>
+                <button type="button" id="reset-session-partial-btn" class="btn btn-warning btn-action-primary" onclick="resetSessionPartial(); return false;">
+                    Reset Tasks 1-4
+                </button>
+                <button type="button" id="reset-session-full-btn" class="btn btn-danger btn-action-primary" onclick="resetSessionFull(); return false;">
+                    Reset Everything
+                </button>
+                <div id="reset-session-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+            </div>
+
         </div>
     </div>
 </div>
+
+<!-- Main BIRD Workflow Section (Non-Collapsible) -->
+<div class="workflow-section" data-workflow="main">
+    <div class="workflow-header non-collapsible">
+        <h2>
+            MAIN BIRD WORKFLOW
+            {% if workflow_summaries %}
+            <span class="workflow-summary">
+                {% if workflow_summaries.main.active %}
+                    (Task {{ workflow_summaries.main.current }}/4) ⏳
+                {% elif workflow_summaries.main.completed == 4 %}
+                    Completed ✓
+                {% elif workflow_summaries.main.completed > 0 %}
+                    (Task {{ workflow_summaries.main.completed }}/4) ✓
+                {% endif %}
+            </span>
+            {% endif %}
+        </h2>
+    </div>
+    <div class="workflow-content">
+        <div class="task-grid">
+            <div class="task-card">
+                <h3>Step</h3>
+            </div>
+            <div class="task-card">
+                <h3>Do</h3>
+            </div>
+            <div class="task-card">
+                <h3>Review</h3>
+            </div>
+
+            {% if database_ready and task_grid %}
+                {% for task in task_grid %}
+                <div class="task-card">
+                    <h3>{{ forloop.counter}}. {{ task.task_name }}</h3>
+                </div>
+
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
+                       class="operation-btn btn-grid-action {{ task.operations.do.status }}">
+                        Do
+                    </a>
+                </div>
+
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
+                       class="operation-btn btn-grid-action {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
+                        Review
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Default task grid when database is not available -->
+                {% for i in "1234" %}
+                <div class="task-card">
+                    <h3>{{ forloop.counter }}.
+                        {% if forloop.counter == 1 %}SMCubes Core Creation
+                        {% elif forloop.counter == 2 %}SMCubes Transformation Rules
+                        {% elif forloop.counter == 3 %}Python Transformation Rules
+                        {% elif forloop.counter == 4 %}Full Execution
+                        {% endif %}
+                    </h3>
+                </div>
+
+                <div class="task-card">
+                    {% if forloop.counter < 1 %}
+                        <span class="operation-btn pending">Do</span>
+                    {% endif %}
+                </div>
+
+                <div class="task-card">
+                    {% if forloop.counter < 1 %}
+                        <span class="operation-btn pending">Review</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- DPM Workflow Section -->
+{% if database_ready %}
+<div class="workflow-section" data-workflow="dpm">
+    <div class="workflow-header" onclick="toggleWorkflow('dpm')">
+        <h2>
+            <span class="toggle-icon" id="dpm-toggle">▶</span>
+            DPM DATA OPERATIONS
+            <span class="workflow-summary">
+                {% if workflow_summaries.dpm.active %}
+                    (Step {{ workflow_summaries.dpm.current }}/3) ⏳
+                {% elif workflow_summaries.dpm.completed == 3 %}
+                    Completed ✓
+                {% elif workflow_summaries.dpm.completed > 0 %}
+                    (Step {{ workflow_summaries.dpm.completed }}/3) ✓
+                {% endif %}
+            </span>
+        </h2>
+    </div>
+    <div class="workflow-content collapsed" id="dpm-content">
+        <div class="task-grid dpm-grid">
+            <div class="task-card"><h3>Step</h3></div>
+            <div class="task-card"><h3>Do</h3></div>
+            <div class="task-card"><h3>Review</h3></div>
+
+            {% for task in dpm_task_grid %}
+            <div class="task-card">
+                <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
+            </div>
+            <div class="task-card">
+                {% if task.step_number == 3 %}
+                    <!-- Step 3: Create Output Layers - Manual Workflow Only -->
+                    <a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="operation-btn btn-grid-action running">Do</a>
+                {% else %}
+                    <button
+                        class="operation-btn btn-grid-action {{ task.status }}"
+                        onclick="executeDPMStep({{ task.step_number }})"
+                        id="dpm-step-{{ task.step_number }}-btn"
+                        {% if task.status == 'running' %}disabled{% endif %}>
+                        {% if task.status == 'completed' %}Do
+                        {% elif task.status == 'running' %}⏳ Running
+                        {% elif task.status == 'failed' %}✗ Failed
+                        {% else %}Do{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+            <div class="task-card">
+                <a href="{% url 'pybirdai:workflow_dpm_review' step_number=task.step_number %}"
+                   class="operation-btn btn-grid-action running">
+                    Review
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- AnaCredit Workflow Section -->
+<div class="workflow-section" data-workflow="ancrdt">
+    <div class="workflow-header" onclick="toggleWorkflow('ancrdt')">
+        <h2>
+            <span class="toggle-icon" id="ancrdt-toggle">▶</span>
+            DATASET TRANSFORMATION (ANACREDIT)
+            <span class="workflow-summary">
+                {% if workflow_summaries.ancrdt.active %}
+                    (Step {{ workflow_summaries.ancrdt.current }}/4) ⏳
+                {% elif workflow_summaries.ancrdt.completed == 4 %}
+                    Completed ✓
+                {% elif workflow_summaries.ancrdt.completed > 0 %}
+                    (Step {{ workflow_summaries.ancrdt.completed }}/4) ✓
+                {% endif %}
+            </span>
+        </h2>
+    </div>
+    <div class="workflow-content collapsed" id="ancrdt-content">
+        <div class="task-grid ancrdt-grid">
+            <div class="task-card"><h3>Step</h3></div>
+            <div class="task-card"><h3>Do</h3></div>
+            <div class="task-card"><h3>Review</h3></div>
+
+            {% for task in ancrdt_task_grid %}
+            <div class="task-card">
+                <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
+            </div>
+            <div class="task-card">
+                <button
+                    class="operation-btn btn-grid-action {{ task.status }}"
+                    onclick="executeANCRDTStep({{ task.step_number }})"
+                    id="ancrdt-step-{{ task.step_number }}-btn"
+                    {% if task.status == 'running' %}disabled{% endif %}>
+                    {% if task.status == 'completed' %}Do
+                    {% elif task.status == 'running' %}⏳ Running
+                    {% elif task.status == 'failed' %}✗ Failed
+                    {% else %}Do{% endif %}
+                </button>
+            </div>
+            <div class="task-card">
+                {% if task.step_number == 1 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_1_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 2 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_2_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 3 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_3_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% else %}
+                    <span class="operation-btn btn-grid-action invalidated">
+                        Review
+                    </span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <!-- Legend -->
 <div class="task-content" style="margin-top: 20px;">
@@ -233,7 +449,7 @@
         align-items: center;
         justify-content: center;
     }
-    
+
     #server-restart-overlay .overlay-content {
         background: white;
         padding: 40px;
@@ -243,27 +459,150 @@
         max-width: 500px;
         width: 90%;
     }
-    
+
     #server-restart-overlay h3 {
         margin-top: 20px;
         margin-bottom: 15px;
         color: #333;
     }
-    
+
     #server-restart-overlay p {
         margin-bottom: 10px;
         color: #666;
     }
-    
+
     #server-restart-overlay .overlay-timer {
         margin-top: 20px;
         font-size: 14px;
         color: #999;
     }
-    
+
     #server-restart-overlay .spinner-border {
         width: 3rem;
         height: 3rem;
+    }
+
+    /* Workflow Section Accordion Styles */
+    .workflow-section {
+        margin-bottom: 20px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+    }
+
+    .workflow-header {
+        background: #f8f9fa;
+        padding: 15px 20px;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.3s ease;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .workflow-header:hover {
+        background: #e9ecef;
+    }
+
+    .workflow-header h2 {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .toggle-icon {
+        display: inline-block;
+        width: 20px;
+        font-size: 16px;
+        transition: transform 0.3s ease;
+    }
+
+    .workflow-summary {
+        margin-left: auto;
+        font-size: 14px;
+        font-weight: normal;
+        color: #6c757d;
+    }
+
+    .workflow-content {
+        max-height: 2000px;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        padding: 20px;
+    }
+
+    .workflow-content.collapsed {
+        max-height: 0;
+        padding: 0 20px;
+    }
+
+    /* Different color schemes for workflows */
+    .workflow-section[data-workflow="main"] .workflow-header {
+        background: #e3f2fd;
+        border-bottom-color: #90caf9;
+    }
+
+    .workflow-section[data-workflow="main"] .workflow-header:hover {
+        background: #bbdefb;
+    }
+
+    .workflow-section[data-workflow="dpm"] .workflow-header {
+        background: #e8f5e9;
+        border-bottom-color: #a5d6a7;
+    }
+
+    .workflow-section[data-workflow="dpm"] .workflow-header:hover {
+        background: #c8e6c9;
+    }
+
+    .workflow-section[data-workflow="ancrdt"] .workflow-header {
+        background: #fff3e0;
+        border-bottom-color: #ffcc80;
+    }
+
+    .workflow-section[data-workflow="ancrdt"] .workflow-header:hover {
+        background: #ffe0b2;
+    }
+
+    /* 3-column grid for DPM/AnaCredit (matching main workflow) - equal column widths */
+    .dpm-grid, .ancrdt-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    /* Non-collapsible workflow header (Main BIRD Workflow) */
+    .workflow-header.non-collapsible {
+        cursor: default;
+        pointer-events: none;
+    }
+
+    .workflow-header.non-collapsible:hover {
+        background: #e3f2fd;  /* No hover effect change */
+    }
+
+    /* Main workflow always expanded */
+    .workflow-section[data-workflow="main"] .workflow-content {
+        max-height: none;
+        padding: 20px;
+    }
+
+    /* Standardized Button Sizing Classes */
+    .btn-action-primary {
+        width: 100%;
+        padding: 10px 16px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        min-height: 40px;
+        margin-bottom: 8px;
+    }
+
+    .btn-grid-action {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        min-height: 36px;
     }
 </style>
 {% endblock %}
@@ -983,17 +1322,17 @@ function handleServerRestart(statusDiv, btn) {
             if (response.ok) {
                 // Server is back online
                 console.log('Server restart completed - server is back online');
-                
+
                 // Clear timer
                 if (timerInterval) {
                     clearInterval(timerInterval);
                 }
-                
+
                 // Hide overlay
                 if (overlay) {
                     overlay.style.display = 'none';
                 }
-                
+
                 statusDiv.style.background = '#d4edda';
                 statusDiv.style.color = '#155724';
                 statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Server restart completed! Refreshing page to show "Setup Database" button...';
@@ -1290,6 +1629,1022 @@ function doResetSession(type) {
         btn.disabled = false;
         btn.textContent = isPartial ? 'Reset Tasks 1-4' : 'Reset Everything';
     });
+}
+
+// Accordion toggle function
+function toggleWorkflow(workflowId) {
+    const content = document.getElementById(workflowId + '-content');
+    const toggle = document.getElementById(workflowId + '-toggle');
+
+    if (!content || !toggle) {
+        console.error('Workflow content or toggle not found:', workflowId);
+        return;
+    }
+
+    if (content.classList.contains('collapsed')) {
+        content.classList.remove('collapsed');
+        toggle.textContent = '▼';
+        localStorage.setItem('workflow_' + workflowId + '_expanded', 'true');
+    } else {
+        content.classList.add('collapsed');
+        toggle.textContent = '▶';
+        localStorage.setItem('workflow_' + workflowId + '_expanded', 'false');
+    }
+}
+
+// Restore accordion state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Restore accordion states from localStorage
+    ['dpm', 'ancrdt'].forEach(workflowId => {
+        const expanded = localStorage.getItem('workflow_' + workflowId + '_expanded');
+        // Auto-expand if there's an active task
+        const hasActiveTask = document.querySelector(`[data-workflow="${workflowId}"] .operation-btn.running`);
+
+        if (expanded === 'true' || hasActiveTask) {
+            const content = document.getElementById(workflowId + '-content');
+            const toggle = document.getElementById(workflowId + '-toggle');
+            if (content && toggle && content.classList.contains('collapsed')) {
+                toggleWorkflow(workflowId);
+            }
+        }
+    });
+});
+
+// Execute DPM step
+function executeDPMStep(stepNumber, params = {}) {
+    console.log('executeDPMStep() called for step:', stepNumber);
+
+    // Find button
+    const btn = document.getElementById(`dpm-step-${stepNumber}-btn`);
+    const fromModal = params.fromModal;
+
+    if (!btn && !fromModal) {
+        console.error('DPM button not found for step:', stepNumber);
+        alert('Error: Button not found!');
+        return;
+    }
+
+    // Log if button not found but proceeding anyway (from modal)
+    if (!btn && fromModal) {
+        console.log('Button not found, but proceeding from modal');
+    }
+
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+
+    // Update button state (only if button exists)
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Running...';
+        btn.classList.remove('pending', 'completed', 'failed');
+        btn.classList.add('running');
+    }
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Add output layer parameters if provided
+    if (params.framework) {
+        formData.append('framework', params.framework);
+    }
+    if (params.version) {
+        formData.append('version', params.version);
+    }
+    if (params.table_code) {
+        formData.append('table_code', params.table_code);
+    }
+    if (params.table_codes) {
+        formData.append('table_codes', params.table_codes);
+    }
+
+    // Make AJAX request
+    fetch(`/pybirdai/workflow/dpm/execute/${stepNumber}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('DPM step response:', data);
+
+        if (data.success && data.status === 'completed') {
+            // Update button state if it exists
+            if (btn) {
+                btn.textContent = '✓ Done';
+                btn.classList.remove('running');
+                btn.classList.add('completed');
+            }
+            alert(`DPM Step ${stepNumber} completed successfully!`);
+
+            // Refresh page after success to update status
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else if (data.success && data.status === 'partial') {
+            // Partial success - some tables succeeded, some failed
+            if (btn) {
+                btn.textContent = '⚠ Partial';
+                btn.classList.remove('running');
+                btn.classList.add('paused'); // Use paused class for warning color
+            }
+
+            const details = data.details || {};
+            const processed = details.processed || 0;
+            const errors = details.errors || 0;
+
+            let errorDetails = '';
+            if (details.error_list && details.error_list.length > 0) {
+                errorDetails = '\n\nFailed tables:\n';
+                details.error_list.forEach(err => {
+                    errorDetails += `- ${err.table_code}: ${err.error}\n`;
+                });
+            }
+
+            alert(`DPM Step ${stepNumber} partially completed:\n${processed} table(s) processed successfully\n${errors} table(s) failed${errorDetails}`);
+
+            // Refresh page after partial success to update status
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            // Update button state if it exists
+            if (btn) {
+                btn.textContent = '✗ Failed';
+                btn.classList.remove('running');
+                btn.classList.add('failed');
+                btn.disabled = false;
+            }
+
+            // Build detailed error message
+            let errorMsg = data.error || 'Unknown error';
+            if (data.details && data.details.length > 0) {
+                errorMsg += '\n\nDetails:\n';
+                data.details.forEach(err => {
+                    errorMsg += `- ${err.table_code}: ${err.error}\n`;
+                });
+            }
+
+            alert(`DPM Step ${stepNumber} failed: ${errorMsg}`);
+        }
+    })
+    .catch(error => {
+        console.error('DPM step execution error:', error);
+        // Update button state if it exists
+        if (btn) {
+            btn.textContent = '✗ Failed';
+            btn.classList.remove('running');
+            btn.classList.add('failed');
+            btn.disabled = false;
+        }
+        alert(`Error executing DPM Step ${stepNumber}: ${error.message}`);
+    });
+}
+
+// Execute AnaCredit step
+function executeANCRDTStep(stepNumber) {
+    console.log('executeANCRDTStep() called for step:', stepNumber);
+
+    const btn = document.getElementById(`ancrdt-step-${stepNumber}-btn`);
+    if (!btn) {
+        console.error('AnaCredit button not found for step:', stepNumber);
+        alert('Error: Button not found!');
+        return;
+    }
+
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+
+    // Update button state
+    btn.disabled = true;
+    btn.textContent = '⏳ Running...';
+    btn.classList.remove('pending', 'completed', 'failed');
+    btn.classList.add('running');
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Make AJAX request
+    fetch(`/pybirdai/workflow/ancrdt/execute/${stepNumber}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('AnaCredit step response:', data);
+
+        if (data.success && data.status === 'completed') {
+            btn.textContent = '✓ Done';
+            btn.classList.remove('running');
+            btn.classList.add('completed');
+            alert(`AnaCredit Step ${stepNumber} completed successfully!`);
+
+            // Refresh page after success to update status
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            btn.textContent = '✗ Failed';
+            btn.classList.remove('running');
+            btn.classList.add('failed');
+            btn.disabled = false;
+            alert(`AnaCredit Step ${stepNumber} failed: ${data.error || 'Unknown error'}`);
+        }
+    })
+    .catch(error => {
+        console.error('AnaCredit step execution error:', error);
+        btn.textContent = '✗ Failed';
+        btn.classList.remove('running');
+        btn.classList.add('failed');
+        btn.disabled = false;
+        alert(`Error executing AnaCredit Step ${stepNumber}: ${error.message}`);
+    });
+}
+
+// Execute Complete ANCRDT Flow (BIRD Task 1 + All ANCRDT Steps)
+function executeCompleteANCRDTFlow() {
+    console.log('executeCompleteANCRDTFlow() called');
+
+    const btn = document.getElementById('quick-ancrdt-btn');
+    const statusDiv = document.getElementById('quick-ancrdt-status');
+
+    if (!btn || !statusDiv) {
+        console.error('ANCRDT quick action button or status div not found!');
+        alert('Error: UI elements not found!');
+        return;
+    }
+
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+
+    // Disable button and show initial status
+    btn.disabled = true;
+    btn.textContent = '⏳ Running...';
+    statusDiv.style.display = 'block';
+    statusDiv.style.background = '#e3f2fd';
+    statusDiv.style.color = '#1976d2';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting Complete ANCRDT Flow...';
+
+    // Step 1: Execute BIRD Task 1 (Import Input Model)
+    executeBIRDTask1(csrfToken)
+        .then(() => {
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>BIRD Task 1 completed. Starting ANCRDT Step 0...';
+            return executeANCRDTStepSequential(0, csrfToken);
+        })
+        .then(() => {
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>ANCRDT Step 0 completed. Starting Step 1...';
+            return executeANCRDTStepSequential(1, csrfToken);
+        })
+        .then(() => {
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>ANCRDT Step 1 completed. Starting Step 2...';
+            return executeANCRDTStepSequential(2, csrfToken);
+        })
+        .then(() => {
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>ANCRDT Step 2 completed. Starting Step 3...';
+            return executeANCRDTStepSequential(3, csrfToken);
+        })
+        .then(() => {
+            // All steps completed successfully
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.color = '#155724';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>🎉 Complete ANCRDT Flow finished successfully!';
+            btn.disabled = false;
+            btn.textContent = 'Run Complete ANCRDT Flow';
+
+            // Refresh page after success to update status
+            setTimeout(() => {
+                location.reload();
+            }, 3000);
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('Complete ANCRDT Flow error:', error);
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
+            btn.disabled = false;
+            btn.textContent = 'Run Complete ANCRDT Flow';
+        });
+}
+
+// Helper function to execute BIRD Task 1
+function executeBIRDTask1(csrfToken) {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', csrfToken);
+
+        fetch('/pybirdai/workflow/task/1/do/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                resolve(data);
+            } else {
+                reject(new Error(data.error || 'BIRD Task 1 failed'));
+            }
+        })
+        .catch(error => {
+            reject(new Error(`BIRD Task 1 execution failed: ${error.message}`));
+        });
+    });
+}
+
+// Helper function to execute ANCRDT steps sequentially
+function executeANCRDTStepSequential(stepNumber, csrfToken) {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', csrfToken);
+
+        fetch(`/pybirdai/workflow/ancrdt/execute/${stepNumber}/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.status === 'completed') {
+                resolve(data);
+            } else {
+                reject(new Error(data.error || `ANCRDT Step ${stepNumber} failed`));
+            }
+        })
+        .catch(error => {
+            reject(new Error(`ANCRDT Step ${stepNumber} execution failed: ${error.message}`));
+        });
+    });
+}
+
+
+// Helper function to execute DPM steps sequentially
+function executeDPMStepSequential(stepNumber, csrfToken, params = {}) {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', csrfToken);
+
+        // Add optional parameters if provided
+        if (params.framework) {
+            formData.append('framework', params.framework);
+        }
+        if (params.version) {
+            formData.append('version', params.version);
+        }
+        if (params.table_code) {
+            formData.append('table_code', params.table_code);
+        }
+        if (params.table_codes) {
+            formData.append('table_codes', params.table_codes);
+        }
+
+        fetch(`/pybirdai/workflow/dpm/execute/${stepNumber}/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && (data.status === 'completed' || data.status === 'partial')) {
+                // Accept both completed and partial success for DPM steps
+                resolve(data);
+            } else {
+                reject(new Error(data.error || `DPM Step ${stepNumber} failed`));
+            }
+        })
+        .catch(error => {
+            reject(new Error(`DPM Step ${stepNumber} execution failed: ${error.message}`));
+        });
+    });
+}
+
+// Execute BIRD Task 1 + DPM Steps 1-2, then redirect to manual workflow
+function executeBIRDTask1ThenDPMManual() {
+    const btn = document.getElementById('bird-task1-dpm-manual-btn');
+    const statusDiv = document.getElementById('bird-task1-dpm-status');
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    if (!btn || !statusDiv || !csrfToken) {
+        console.error('Missing required elements or CSRF token');
+        return;
+    }
+
+    // Disable button and show progress
+    btn.disabled = true;
+    btn.textContent = '⏳ Running Task 1...';
+    statusDiv.style.display = 'block';
+    statusDiv.style.background = '#e3f2fd';
+    statusDiv.style.color = '#1976d2';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Executing BIRD Task 1 (SMCubes Core Creation)...';
+
+    // Execute BIRD Task 1
+    executeBIRDTask1(csrfToken)
+        .then(() => {
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>BIRD Task 1 completed. Starting DPM Step 1...';
+            btn.textContent = '⏳ Running DPM Step 1...';
+            return executeDPMStepSequential(1, csrfToken);
+        })
+        .then(() => {
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Step 1 completed. Starting DPM Step 2...';
+            btn.textContent = '⏳ Running DPM Step 2...';
+            return executeDPMStepSequential(2, csrfToken);
+        })
+        .then(() => {
+            // Steps 1-2 completed - redirect to manual output layer mapping workflow
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.color = '#155724';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Task 1 and DPM Steps 1-2 completed. Redirecting to Output Layer Mapping Workflow...';
+            btn.textContent = '✅ Redirecting...';
+
+            // Wait 1.5 seconds then redirect
+            setTimeout(() => {
+                window.location.href = '{% url "pybirdai:output_layer_mapping_step1" %}';
+            }, 1500);
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('BIRD Task 1 + DPM Manual Flow error:', error);
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
+            btn.disabled = false;
+            btn.textContent = '✏️ BIRD Task 1 + DPM Manual';
+        });
+}
+</script>
+
+<!-- Tom Select JS -->
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+<!-- Join Configuration Modal -->
+<div id="joinConfigModal" class="output-layer-modal" style="display: none;">
+    <div class="modal-overlay" onclick="closeJoinConfigModal()"></div>
+    <div class="modal-content" style="max-width: 90%; width: 1400px; max-height: 90vh;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; padding: 1.5rem; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <h3 style="margin: 0; font-size: 18px;">
+                    <i class="fas fa-edit"></i> Edit Join Configuration Files
+                </h3>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="frameworkSelect" style="font-size: 14px; margin: 0;">Framework:</label>
+                    <select id="frameworkSelect" onchange="switchFramework()" style="padding: 6px 12px; border: none; border-radius: 4px; font-size: 14px; background: white; color: #333;">
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+            </div>
+            <button class="modal-close" onclick="closeJoinConfigModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+        </div>
+
+        <div class="modal-body" style="padding: 0; height: calc(90vh - 180px); display: flex; flex-direction: column;">
+            <!-- Tab Navigation -->
+            <div class="tab-navigation" style="display: flex; border-bottom: 2px solid #e2e8f0; margin: 0; background: #f8f9fa;">
+                <button class="tab-button active" onclick="switchTab('in_scope_reports')" data-tab="in_scope_reports" style="padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-list"></i> In-Scope Reports
+                    <span class="badge" id="badge-in_scope_reports" style="background: #6c757d; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; margin-left: 5px;">0</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('product_to_category')" data-tab="product_to_category" style="padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-sitemap"></i> Product Categories
+                    <span class="badge" id="badge-product_to_category" style="background: #6c757d; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; margin-left: 5px;">0</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('product_il_definitions')" data-tab="product_il_definitions" style="padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-database"></i> IL Definitions
+                    <span class="badge" id="badge-product_il_definitions" style="background: #6c757d; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; margin-left: 5px;">0</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('create_framework')" data-tab="create_framework" style="padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-plus-circle"></i> Create Framework
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="tab-in_scope_reports" class="tab-content active" style="flex: 1; flex-direction: column; padding: 0;">
+                <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="file-info-in_scope_reports" style="font-size: 12px; color: #666;">Loading...</span>
+                    <div>
+                        <button onclick="downloadCSV('in_scope_reports')" class="btn btn-sm btn-secondary" style="padding: 4px 12px; font-size: 12px; margin-right: 5px;">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                <textarea id="editor-in_scope_reports" style="flex: 1; resize: none; border: none; padding: 0; margin: 0;"></textarea>
+            </div>
+
+            <div id="tab-product_to_category" class="tab-content" style="flex: 1; flex-direction: column; padding: 0;">
+                <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="file-info-product_to_category" style="font-size: 12px; color: #666;">Loading...</span>
+                    <div>
+                        <button onclick="downloadCSV('product_to_category')" class="btn btn-sm btn-secondary" style="padding: 4px 12px; font-size: 12px; margin-right: 5px;">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                <textarea id="editor-product_to_category" style="flex: 1; resize: none; border: none; padding: 0; margin: 0;"></textarea>
+            </div>
+
+            <div id="tab-product_il_definitions" class="tab-content" style="flex: 1; flex-direction: column; padding: 0;">
+                <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="file-info-product_il_definitions" style="font-size: 12px; color: #666;">Loading...</span>
+                    <div>
+                        <button onclick="downloadCSV('product_il_definitions')" class="btn btn-sm btn-secondary" style="padding: 4px 12px; font-size: 12px; margin-right: 5px;">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                <textarea id="editor-product_il_definitions" style="flex: 1; resize: none; border: none; padding: 0; margin: 0;"></textarea>
+            </div>
+
+            <div id="tab-create_framework" class="tab-content" style="flex: 1; padding: 2rem;">
+                <h4 style="margin-top: 0;">Create New Framework</h4>
+                <p style="color: #666; font-size: 14px;">Create a new set of join configuration files based on an existing framework template.</p>
+
+                <div style="max-width: 500px;">
+                    <div style="margin-bottom: 20px;">
+                        <label for="newFrameworkName" style="display: block; margin-bottom: 5px; font-weight: 600;">Framework Name:</label>
+                        <input type="text" id="newFrameworkName" placeholder="e.g., EBA_REF or DATASET_REF" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" />
+                        <small style="color: #666;">Use letters, numbers, and underscores only</small>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Template Style:</label>
+                        <div>
+                            <label style="display: block; margin-bottom: 10px; cursor: pointer;">
+                                <input type="radio" name="templateStyle" value="FINREP_REF" checked style="margin-right: 8px;" />
+                                <strong>EBA Style (FINREP_REF)</strong> - Full regulatory reporting with 48+ reports
+                            </label>
+                            <label style="display: block; cursor: pointer;">
+                                <input type="radio" name="templateStyle" value="ANCRDT_REF" style="margin-right: 8px;" />
+                                <strong>Dataset Style (ANCRDT_REF)</strong> - Simplified dataset mapping
+                            </label>
+                        </div>
+                    </div>
+
+                    <button onclick="createNewFramework()" class="btn btn-success" style="padding: 10px 20px; font-size: 14px;">
+                        <i class="fas fa-plus-circle"></i> Create Framework
+                    </button>
+                </div>
+
+                <div id="create-framework-status" style="display: none; margin-top: 20px; padding: 12px; border-radius: 5px; font-size: 14px;"></div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; border-radius: 0 0 8px 8px;">
+            <div id="modal-status" style="font-size: 13px; color: #666;"></div>
+            <div>
+                <button class="btn btn-secondary" onclick="closeJoinConfigModal()" style="padding: 8px 20px; margin-right: 10px;">Close</button>
+                <button class="btn btn-primary" onclick="saveCurrentTab()" id="saveButton" style="padding: 8px 20px; background: #007bff;">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+
+<style>
+/* Modal styles */
+.output-layer-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.output-layer-modal .modal-content {
+    position: relative;
+    background-color: #ffffff;
+    margin: 2% auto;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    animation: slideIn 0.3s ease-out;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Tab styles */
+.tab-button:hover {
+    background: #f7f7f9;
+    color: #333;
+}
+
+.tab-button.active {
+    color: #ff9800;
+    border-bottom-color: #ff9800 !important;
+    background: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: flex !important;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* CodeMirror in modal */
+.CodeMirror {
+    height: 100%;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+}
+</style>
+
+<script>
+// Join Configuration Modal Script
+let currentFramework = 'FINREP_REF';
+let currentTab = 'in_scope_reports';
+let editors = {};
+const fileTypes = ['in_scope_reports', 'product_to_category', 'product_il_definitions'];
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+function showJoinConfigModal() {
+    document.getElementById('joinConfigModal').style.display = 'block';
+    document.body.classList.add('modal-open');
+
+    // Load frameworks
+    loadFrameworks();
+
+    // Initialize CodeMirror editors after modal is visible
+    setTimeout(() => {
+        if (!editors['in_scope_reports']) {
+            fileTypes.forEach(fileType => {
+                editors[fileType] = CodeMirror.fromTextArea(document.getElementById(`editor-${fileType}`), {
+                    mode: 'text/plain',
+                    theme: 'monokai',
+                    lineNumbers: true,
+                    lineWrapping: false,
+                    indentUnit: 4,
+                    extraKeys: {
+                        "Ctrl-S": function() { saveCurrentTab(); },
+                        "Cmd-S": function() { saveCurrentTab(); }
+                    }
+                });
+            });
+        }
+
+        // Refresh current editor
+        if (editors[currentTab]) {
+            editors[currentTab].refresh();
+        }
+
+        // Load initial content
+        loadCSV(currentTab);
+    }, 100);
+}
+
+function closeJoinConfigModal() {
+    document.getElementById('joinConfigModal').style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
+function loadFrameworks() {
+    fetch('/pybirdai/joins-config/list-frameworks/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const select = document.getElementById('frameworkSelect');
+                select.innerHTML = '';
+                data.frameworks.forEach(fw => {
+                    const option = document.createElement('option');
+                    option.value = fw;
+                    option.textContent = fw;
+                    if (fw === data.default) {
+                        option.selected = true;
+                        currentFramework = fw;
+                    }
+                    select.appendChild(option);
+                });
+
+                // Load file info
+                loadFileInfo();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading frameworks:', error);
+            showStatus('Error loading frameworks', 'error');
+        });
+}
+
+function switchFramework() {
+    const select = document.getElementById('frameworkSelect');
+    currentFramework = select.value;
+
+    // Reload current tab content
+    loadCSV(currentTab);
+
+    // Update file info
+    loadFileInfo();
+}
+
+function loadFileInfo() {
+    fetch(`/pybirdai/joins-config/file-info/?framework=${currentFramework}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                fileTypes.forEach(fileType => {
+                    const info = data.files[fileType];
+                    const badge = document.getElementById(`badge-${fileType}`);
+                    const fileInfo = document.getElementById(`file-info-${fileType}`);
+
+                    if (info && info.exists) {
+                        badge.textContent = info.row_count;
+                        badge.style.background = '#28a745';
+                        fileInfo.textContent = `${info.description} • ${info.row_count} rows • ${(info.size / 1024).toFixed(1)} KB`;
+                    } else {
+                        badge.textContent = '0';
+                        badge.style.background = '#6c757d';
+                        fileInfo.textContent = `${info.description} • File not found`;
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error loading file info:', error);
+        });
+}
+
+function switchTab(tabName) {
+    // Don't load CSV for create_framework tab
+    if (tabName === 'create_framework') {
+        currentTab = tabName;
+
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+
+        // Show selected tab
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+        // Hide save button for create tab
+        document.getElementById('saveButton').style.display = 'none';
+        return;
+    }
+
+    // Show save button for editor tabs
+    document.getElementById('saveButton').style.display = 'inline-block';
+
+    currentTab = tabName;
+
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+
+    // Show selected tab
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+    // Load content and refresh editor
+    loadCSV(tabName);
+}
+
+function loadCSV(fileType) {
+    showStatus('Loading...', 'info');
+
+    fetch('/pybirdai/joins-config/load/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            file_type: fileType,
+            framework: currentFramework
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (editors[fileType]) {
+                editors[fileType].setValue(data.content);
+                editors[fileType].refresh();
+            }
+            showStatus(data.exists ? 'File loaded' : 'New file (not saved yet)', data.exists ? 'success' : 'warning');
+        } else {
+            showStatus('Error: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error loading CSV:', error);
+        showStatus('Error loading file', 'error');
+    });
+}
+
+function saveCurrentTab() {
+    if (currentTab === 'create_framework') return;
+
+    showStatus('Saving...', 'info');
+    document.getElementById('saveButton').disabled = true;
+
+    const content = editors[currentTab].getValue();
+
+    fetch('/pybirdai/joins-config/save/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            file_type: currentTab,
+            framework: currentFramework,
+            content: content
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showStatus('✓ ' + data.message, 'success');
+            loadFileInfo(); // Refresh file info
+        } else {
+            showStatus('Error: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving CSV:', error);
+        showStatus('Error saving file', 'error');
+    })
+    .finally(() => {
+        document.getElementById('saveButton').disabled = false;
+    });
+}
+
+function downloadCSV(fileType) {
+    const content = editors[fileType].getValue();
+    const blob = new Blob([content], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileType}_${currentFramework}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showStatus('File downloaded', 'success');
+}
+
+function createNewFramework() {
+    const frameworkName = document.getElementById('newFrameworkName').value.trim();
+    const template = document.querySelector('input[name="templateStyle"]:checked').value;
+
+    if (!frameworkName) {
+        showCreateStatus('Please enter a framework name', 'error');
+        return;
+    }
+
+    showCreateStatus('Creating framework...', 'info');
+
+    fetch('/pybirdai/joins-config/create-framework/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            framework_name: frameworkName,
+            template: template
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showCreateStatus('✓ ' + data.message, 'success');
+
+            // Reload frameworks
+            setTimeout(() => {
+                loadFrameworks();
+
+                // Switch to new framework
+                setTimeout(() => {
+                    document.getElementById('frameworkSelect').value = data.framework_name;
+                    currentFramework = data.framework_name;
+                    loadFileInfo();
+
+                    // Switch to first tab
+                    switchTab('in_scope_reports');
+                }, 500);
+            }, 1000);
+        } else {
+            showCreateStatus('Error: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error creating framework:', error);
+        showCreateStatus('Error creating framework', 'error');
+    });
+}
+
+function showStatus(message, type) {
+    const statusEl = document.getElementById('modal-status');
+    statusEl.textContent = message;
+    statusEl.style.color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#666';
+}
+
+function showCreateStatus(message, type) {
+    const statusEl = document.getElementById('create-framework-status');
+    statusEl.textContent = message;
+    statusEl.style.display = 'block';
+    statusEl.style.background = type === 'success' ? '#d4edda' : type === 'error' ? '#f8d7da' : type === 'warning' ? '#fff3cd' : '#d1ecf1';
+    statusEl.style.color = type === 'success' ? '#155724' : type === 'error' ? '#721c24' : type === 'warning' ? '#856404' : '#0c5460';
+    statusEl.style.border = '1px solid ' + (type === 'success' ? '#c3e6cb' : type === 'error' ? '#f5c6cb' : type === 'warning' ? '#ffeaa7' : '#bee5eb');
 }
 </script>
 

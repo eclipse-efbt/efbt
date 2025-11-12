@@ -26,6 +26,7 @@ from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 
 import importlib
+import re
 class OrchestrationWithLineage:
 	# Class variable to track initialized objects
 	_initialized_objects = set()
@@ -507,7 +508,7 @@ class OrchestrationWithLineage:
 				return new_object
 			except (ImportError, AttributeError):
 				pass
-			
+
 			# If that fails, try to find the class in the logic files
 			# Extract the report prefix from the class name (e.g., F_05_01_REF_FINREP_3_0 from F_05_01_REF_FINREP_3_0_Other_loans_Table)
 			if "_" in eReference:
@@ -517,7 +518,7 @@ class OrchestrationWithLineage:
 					# Extract report prefix (first 7 parts: F_05_01_REF_FINREP_3_0)
 					report_prefix = "_".join(parts[:7])
 					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
-					
+
 					try:
 						module = importlib.import_module(logic_module_name)
 						cls = getattr(module, eReference)
@@ -525,7 +526,39 @@ class OrchestrationWithLineage:
 						return new_object
 					except (ImportError, AttributeError) as e:
 						print(f"Could not find {eReference} in {logic_module_name}: {e}")
-			
+
+				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
+				if len(parts) >= 2 and parts[0] == "ANCRDT":
+					# Extract report prefix by finding the _C_<number> pattern
+					# Pattern: ANCRDT_INSTRMNT_C_1_Loans_and_advances_Table -> ANCRDT_INSTRMNT_C_1
+					# Pattern: ANCRDT_INSTRMNT_C_1_UnionTable -> ANCRDT_INSTRMNT_C_1
+					match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
+					if match:
+						report_prefix = match.group(1)
+					else:
+						# Fallback to old suffix removal logic for backward compatibility
+						report_prefix = eReference
+						for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
+							if report_prefix.endswith(suffix):
+								report_prefix = report_prefix[:-len(suffix)]
+								break
+
+					# Try multiple import paths for flexibility
+					module_paths = [
+						f"generated_python_joins.{report_prefix}_logic",
+						f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+					]
+
+					for logic_module_name in module_paths:
+						try:
+							module = importlib.import_module(logic_module_name)
+							cls = getattr(module, eReference)
+							new_object = cls()
+							return new_object
+						except (ImportError, AttributeError) as e:
+							print(f"Could not find {eReference} in {logic_module_name}: {e}")
+							continue
+
 			# If all else fails, print error
 			print(f"Error: Could not find class {eReference} in any expected location")
 			return None
@@ -2238,7 +2271,7 @@ class OrchestrationOriginal:
 				return new_object
 			except (ImportError, AttributeError):
 				pass
-			
+
 			# If that fails, try to find the class in the logic files
 			# Extract the report prefix from the class name (e.g., F_05_01_REF_FINREP_3_0 from F_05_01_REF_FINREP_3_0_Other_loans_Table)
 			if "_" in eReference:
@@ -2248,7 +2281,7 @@ class OrchestrationOriginal:
 					# Extract report prefix (first 7 parts: F_05_01_REF_FINREP_3_0)
 					report_prefix = "_".join(parts[:7])
 					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
-					
+
 					try:
 						module = importlib.import_module(logic_module_name)
 						cls = getattr(module, eReference)
@@ -2256,7 +2289,39 @@ class OrchestrationOriginal:
 						return new_object
 					except (ImportError, AttributeError) as e:
 						print(f"Could not find {eReference} in {logic_module_name}: {e}")
-			
+
+				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
+				if len(parts) >= 2 and parts[0] == "ANCRDT":
+					# Extract report prefix by finding the _C_<number> pattern
+					# Pattern: ANCRDT_INSTRMNT_C_1_Loans_and_advances_Table -> ANCRDT_INSTRMNT_C_1
+					# Pattern: ANCRDT_INSTRMNT_C_1_UnionTable -> ANCRDT_INSTRMNT_C_1
+					match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
+					if match:
+						report_prefix = match.group(1)
+					else:
+						# Fallback to old suffix removal logic for backward compatibility
+						report_prefix = eReference
+						for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
+							if report_prefix.endswith(suffix):
+								report_prefix = report_prefix[:-len(suffix)]
+								break
+
+					# Try multiple import paths for flexibility
+					module_paths = [
+						f"generated_python_joins.{report_prefix}_logic",
+						f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+					]
+
+					for logic_module_name in module_paths:
+						try:
+							module = importlib.import_module(logic_module_name)
+							cls = getattr(module, eReference)
+							new_object = cls()
+							return new_object
+						except (ImportError, AttributeError) as e:
+							print(f"Could not find {eReference} in {logic_module_name}: {e}")
+							continue
+
 			# If all else fails, print error
 			print(f"Error: Could not find class {eReference} in any expected location")
 			return None

@@ -12,56 +12,41 @@
 #
 
 import os
-from .utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, clean_spaces
-)
+import pandas as pd
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import clean_spaces_df
 
 
 def map_frameworks(path=os.path.join("target", "ReportingFramework.csv")):
     """Map frameworks from ReportingFramework.csv to the target format"""
-    data = read_csv_to_dict(path)
-    frameworks = dict_list_to_structured_array(data)
+    df = pd.read_csv(path, dtype=str)
 
     framework_columns = [
         "MAINTENANCE_AGENCY_ID", "FRAMEWORK_ID", "NAME", "CODE", "DESCRIPTION",
         "FRAMEWORK_TYPE", "REPORTING_POPULATION", "OTHER_LINKS", "ORDER", "FRAMEWORK_STATUS"
     ]
 
-    # Add new fields
-    frameworks = add_field(frameworks, "MAINTENANCE_AGENCY_ID", "EBA")
+    # Create ID mapping before transforming
+    framework_id_mapping = dict(zip(
+        df['FrameworkID'].astype(str),
+        "EBA_" + df['FrameworkCode'].astype(str)
+    ))
 
-    # Create FRAMEWORK_ID
-    framework_ids = []
-    codes = []
-    names = []
-    for row in frameworks:
-        framework_ids.append("EBA_" + str(row["FrameworkCode"]))
-        codes.append(str(row["FrameworkCode"]))
-        names.append(str(row["FrameworkLabel"]))
+    # Build transformed DataFrame
+    df = df.assign(
+        MAINTENANCE_AGENCY_ID="EBA",
+        FRAMEWORK_ID="EBA_" + df['FrameworkCode'].astype(str),
+        CODE=df['FrameworkCode'].astype(str),
+        NAME=df['FrameworkLabel'].astype(str),
+        FRAMEWORK_STATUS="PUBLISHED"
+    )
 
-    frameworks = add_field(frameworks, "FRAMEWORK_ID", framework_ids)
-    frameworks = add_field(frameworks, "CODE", codes)
-    frameworks = add_field(frameworks, "NAME", names)
-    frameworks = add_field(frameworks, "FRAMEWORK_STATUS", "PUBLISHED")
-
-    # Add empty fields
+    # Add missing columns as empty strings
     for col in framework_columns:
-        if col not in frameworks.dtype.names:
-            frameworks = add_field(frameworks, col, "")
+        if col not in df.columns:
+            df[col] = ""
 
-    # Create mapping before dropping
-    framework_id_mapping = {}
-    for row in frameworks:
-        framework_id_mapping[str(row["FrameworkID"])] = str(row["FRAMEWORK_ID"])
+    # Select and clean
+    df = df[framework_columns]
+    df = clean_spaces_df(df)
 
-    # Drop unwanted columns
-    frameworks = drop_fields(frameworks, ["ConceptID", "FrameworkCode", "FrameworkLabel", "FrameworkID"])
-
-    # Select only required columns
-    frameworks = select_fields(frameworks, framework_columns)
-
-    # Clean text fields
-    frameworks = clean_spaces(frameworks)
-
-    return frameworks, framework_id_mapping
+    return df, framework_id_mapping

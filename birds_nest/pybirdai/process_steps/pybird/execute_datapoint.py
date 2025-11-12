@@ -68,7 +68,7 @@ class ExecuteDataPoint:
             print(f"Set calculation context: {calculation_name}")
 
             # Add debugging to orchestration
-            from pybirdai.debug_tracking import add_debug_to_orchestration
+            from pybirdai.api.debug_tracking import add_debug_to_orchestration
             add_debug_to_orchestration(orchestration)
 
             # Set calculation context BEFORE initialization to capture all function calls

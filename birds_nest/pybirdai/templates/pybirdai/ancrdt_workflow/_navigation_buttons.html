@@ -1,0 +1,104 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+
+{# Reusable navigation buttons component for ANCRDT workflow steps #}
+
+<div class="navigation-buttons">
+    {% if navigation.can_go_previous %}
+    <a href="{{ navigation.previous_step_url }}" class="nav-btn btn-previous">
+        <i class="fas fa-arrow-left"></i> Previous Step
+    </a>
+    {% endif %}
+
+    {% if navigation.can_go_next %}
+    <a href="{{ navigation.next_step_url }}" class="nav-btn btn-next">
+        Next Step <i class="fas fa-arrow-right"></i>
+    </a>
+    {% endif %}
+
+    <a href="{% url 'pybirdai:workflow_dashboard' %}" class="nav-btn btn-home">
+        <i class="fas fa-home"></i> Main Dashboard
+    </a>
+</div>
+
+<style>
+.navigation-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    border: none;
+}
+
+.nav-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
+
+.btn-landing {
+    background: #667eea;
+    color: white;
+}
+
+.btn-landing:hover {
+    background: #5568d3;
+    color: white;
+}
+
+.btn-previous {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-previous:hover {
+    background: #5a6268;
+    color: white;
+}
+
+.btn-next {
+    background: #28a745;
+    color: white;
+}
+
+.btn-next:hover {
+    background: #218838;
+    color: white;
+}
+
+.btn-home {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-home:hover {
+    background: #138496;
+    color: white;
+}
+</style>

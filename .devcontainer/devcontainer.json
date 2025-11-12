@@ -1,0 +1,62 @@
+{
+  "name": "PyBIRD AI (Eclipse EFBT)",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13-bullseye",
+
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb",
+    "storage": "32gb"
+  },
+
+  "runArgs": [
+    "--cpus=4",
+    "--memory=16g",
+    "--shm-size=2g"
+  ],
+
+  "containerEnv": {
+    "PYTHONUNBUFFERED": "1"
+  },
+
+  "workspaceFolder": "/workspaces/efbt",
+
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y sqlite3 && bash linux_startup.sh",
+
+  "forwardPorts": [8000],
+
+  "portsAttributes": {
+    "8000": {
+      "label": "Django Server",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "batisteo.vscode-django"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": false,
+        "python.formatting.provider": "none",
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.python"
+        }
+      }
+    }
+  },
+
+  "remoteUser": "vscode",
+
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "installOhMyZsh": false,
+      "upgradePackages": true
+    }
+  }
+}

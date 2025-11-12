@@ -1,0 +1,576 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Output Layer Mapping - Check Existing Mappings{% endblock %}
+
+{% block extra_css %}
+<style>
+    .workflow-header {
+        background: #0d6efd;
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .workflow-steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .workflow-steps li {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+
+    .workflow-steps li:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: #ddd;
+        z-index: -1;
+    }
+
+    .workflow-steps .step-number {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 50%;
+        background: #ddd;
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .workflow-steps .active .step-number {
+        background: #0d6efd;
+        color: white;
+    }
+
+    .workflow-steps .completed .step-number {
+        background: #48bb78;
+        color: white;
+    }
+
+    .selection-card {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s;
+    }
+
+    .selection-card:hover {
+        border-color: #0d6efd;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .selection-card.selected {
+        border-color: #0d6efd;
+        background: #f7fafc;
+    }
+
+    .mapping-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .mapping-card:hover {
+        border-color: #0d6efd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .mapping-card.selected {
+        border-color: #0d6efd;
+        background: #f0f5ff;
+    }
+
+    .mapping-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .info-item {
+        font-size: 0.875rem;
+    }
+
+    .info-label {
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .radio-option input[type="radio"] {
+        margin-right: 0.5rem;
+        transform: scale(1.2);
+    }
+
+    .radio-option label {
+        cursor: pointer;
+        font-size: 1.1rem;
+    }
+
+    .option-description {
+        font-size: 0.9rem;
+        color: #666;
+        margin-left: 1.75rem;
+        margin-top: 0.25rem;
+    }
+
+    .existing-mappings-list {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        background: #f9fafb;
+        margin-top: 1rem;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-info {
+        background: #e0f2fe;
+        border: 1px solid #7dd3fc;
+        color: #0c4a6e;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        border: 1px solid #6ee7b7;
+        color: #065f46;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background: #0d6efd;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #0b5ed7;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+
+    .btn-secondary {
+        background: #e2e8f0;
+        color: #4a5568;
+        margin-right: 1rem;
+    }
+
+    .btn-secondary:hover {
+        background: #cbd5e0;
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .icon {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 0.5rem;
+        vertical-align: middle;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+
+    .empty-state h3 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="workflow-header">
+        <h2>Output Layer Mapping Workflow</h2>
+        <p class="mb-0">Create mappings for output layer tables</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <ul class="workflow-steps">
+        <li class="completed">
+            <span class="step-number">1</span>
+            <div>Select Table</div>
+        </li>
+        <li class="active">
+            <span class="step-number">2</span>
+            <div>Existing Mappings</div>
+        </li>
+        <li>
+            <span class="step-number">3</span>
+            <div>Select Ordinates</div>
+        </li>
+        <li>
+            <span class="step-number">4</span>
+            <div>Variable Breakdown</div>
+        </li>
+        <li>
+            <span class="step-number">5</span>
+            <div>Mapping Editor</div>
+        </li>
+        <li>
+            <span class="step-number">6</span>
+            <div>Review & Name</div>
+        </li>
+        <li>
+            <span class="step-number">7</span>
+            <div>Generate</div>
+        </li>
+    </ul>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Check for Existing Mappings - Table: {{ table.name }}</h4>
+        </div>
+        <div class="card-body">
+            {% if has_existing %}
+                <div class="alert alert-info">
+                    <strong>ℹ️ Existing mappings found!</strong><br>
+                    We found {{ existing_mappings|length }} existing mapping(s) for this table.
+                    You can choose to use an existing mapping, modify one, or create a new mapping from scratch.
+                </div>
+
+                <form method="post" id="mappingSelectionForm">
+                    {% csrf_token %}
+
+                    <div class="selection-card">
+                        <div class="radio-option">
+                            <input type="radio" id="use_existing" name="mapping_mode" value="use_existing">
+                            <label for="use_existing"><strong>Use Existing Mapping</strong></label>
+                        </div>
+                        <div class="option-description">
+                            Select an existing mapping to apply it directly without modifications.
+                        </div>
+                    </div>
+
+                    <div class="selection-card">
+                        <div class="radio-option">
+                            <input type="radio" id="modify_existing" name="mapping_mode" value="modify_existing">
+                            <label for="modify_existing"><strong>Modify Existing Mapping</strong></label>
+                        </div>
+                        <div class="option-description">
+                            Start with an existing mapping as a template and modify it to meet your requirements.
+                        </div>
+                    </div>
+
+                    <div class="selection-card">
+                        <div class="radio-option">
+                            <input type="radio" id="create_new" name="mapping_mode" value="new" checked>
+                            <label for="create_new"><strong>Create New Mapping</strong></label>
+                        </div>
+                        <div class="option-description">
+                            Start from scratch to create a completely new mapping configuration.
+                        </div>
+                    </div>
+
+                    <div class="selection-card">
+                        <div class="radio-option">
+                            <input type="radio" id="regenerate_all" name="mapping_mode" value="regenerate_all">
+                            <label for="regenerate_all"><strong>Regenerate All Existing Mappings</strong></label>
+                        </div>
+                        <div class="option-description">
+                            Delete all existing output layer artifacts (CUBE, CUBE_STRUCTURE, COMBINATION, SUBDOMAIN, etc.) and regenerate them from all existing mappings.
+                            <strong style="color: #dc2626;">⚠️ Warning: This will delete existing data structures.</strong>
+                        </div>
+                    </div>
+
+                    <div id="existingMappingsList" style="display: none;">
+                        <h5 class="mt-3">Select a Mapping:</h5>
+                        <div class="existing-mappings-list">
+                            {% for mapping_detail in existing_mappings %}
+                            <div class="mapping-card" data-mapping-id="{{ mapping_detail.mapping.mapping_definition_id }}">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio"
+                                           name="existing_mapping_id"
+                                           id="mapping_{{ mapping_detail.mapping.mapping_definition_id }}"
+                                           value="{{ mapping_detail.mapping.mapping_definition_id }}">
+                                    <label class="form-check-label" for="mapping_{{ mapping_detail.mapping.mapping_definition_id }}">
+                                        <strong>{{ mapping_detail.mapping.name }}</strong>
+                                        {% if mapping_detail.mapping.description %}
+                                        <p class="text-muted small mb-2">{{ mapping_detail.mapping.description }}</p>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="mapping-info">
+                                    <div class="info-item">
+                                        <div class="info-label">Variables</div>
+                                        <div class="info-value">{{ mapping_detail.variable_count }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Members</div>
+                                        <div class="info-value">{{ mapping_detail.member_count }}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Created By</div>
+                                        <div class="info-value">{{ mapping_detail.created_date }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="btn btn-secondary">
+                            ← Back to Table Selection
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="continueBtn">
+                            Continue →
+                        </button>
+                    </div>
+                </form>
+
+            {% else %}
+                <div class="empty-state">
+                    <h3>No Existing Mappings Found</h3>
+                    <p>No existing mappings were found for the selected table.</p>
+                    <p>Click continue to create a new mapping from scratch.</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="mapping_mode" value="new">
+
+                    <div class="form-actions">
+                        <a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="btn btn-secondary">
+                            ← Back to Table Selection
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            Continue to Create New Mapping →
+                        </button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div style="padding: 2rem; border-bottom: 1px solid #e2e8f0;">
+                <h3 style="margin: 0; color: #dc2626; display: flex; align-items: center;">
+                    <span style="font-size: 2rem; margin-right: 0.5rem;">⚠️</span>
+                    Confirm Regeneration
+                </h3>
+            </div>
+            <div style="padding: 2rem;">
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+                    You are about to delete and regenerate all output layer artifacts for <strong>{{ table.name }}</strong>.
+                </p>
+                <div style="background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin-top: 0; color: #991b1b;">The following will be deleted:</h4>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                        <li>All CUBE records for this table</li>
+                        <li>Associated CUBE_STRUCTURE and CUBE_STRUCTURE_ITEM records</li>
+                        <li>All COMBINATION and COMBINATION_ITEM records</li>
+                        <li>Related SUBDOMAIN and SUBDOMAIN_ENUMERATION records</li>
+                        <li>MAPPING_TO_CUBE link records</li>
+                    </ul>
+                </div>
+                <div style="background: #f0f9ff; border: 1px solid #7dd3fc; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin-top: 0; color: #0c4a6e;">Then regenerate from:</h4>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;" id="mappingsList">
+                        {% for mapping_detail in existing_mappings %}
+                        <li><strong>{{ mapping_detail.mapping.name }}</strong> ({{ mapping_detail.variable_count }} variables, {{ mapping_detail.member_count }} members)</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <p style="color: #666; font-size: 0.9rem;">
+                    <strong>Note:</strong> This action cannot be undone. Make sure you have backups if needed.
+                </p>
+            </div>
+            <div style="padding: 1.5rem 2rem; background: #f9fafb; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 1rem;">
+                <button type="button" id="cancelRegeneration" class="btn btn-secondary">
+                    Cancel
+                </button>
+                <button type="button" id="confirmRegeneration" class="btn" style="background: #dc2626; color: white;">
+                    Yes, Delete and Regenerate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const useExistingRadio = document.getElementById('use_existing');
+        const modifyExistingRadio = document.getElementById('modify_existing');
+        const createNewRadio = document.getElementById('create_new');
+        const regenerateAllRadio = document.getElementById('regenerate_all');
+        const existingMappingsList = document.getElementById('existingMappingsList');
+        const continueBtn = document.getElementById('continueBtn');
+        const mappingCards = document.querySelectorAll('.mapping-card');
+        const mappingSelectionForm = document.getElementById('mappingSelectionForm');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const cancelRegenerationBtn = document.getElementById('cancelRegeneration');
+        const confirmRegenerationBtn = document.getElementById('confirmRegeneration');
+
+        function updateMappingListVisibility() {
+            if (useExistingRadio && useExistingRadio.checked) {
+                existingMappingsList.style.display = 'block';
+                validateSelection();
+            } else if (modifyExistingRadio && modifyExistingRadio.checked) {
+                existingMappingsList.style.display = 'block';
+                validateSelection();
+            } else {
+                existingMappingsList.style.display = 'none';
+                if (continueBtn) {
+                    continueBtn.disabled = false;
+                }
+            }
+        }
+
+        function validateSelection() {
+            const needsMapping = (useExistingRadio && useExistingRadio.checked) ||
+                                (modifyExistingRadio && modifyExistingRadio.checked);
+            const mappingSelected = document.querySelector('input[name="existing_mapping_id"]:checked');
+
+            if (continueBtn) {
+                continueBtn.disabled = needsMapping && !mappingSelected;
+            }
+        }
+
+        function showConfirmationModal() {
+            if (confirmationModal) {
+                confirmationModal.style.display = 'flex';
+            }
+        }
+
+        function hideConfirmationModal() {
+            if (confirmationModal) {
+                confirmationModal.style.display = 'none';
+            }
+        }
+
+        // Handle form submission
+        if (mappingSelectionForm) {
+            mappingSelectionForm.addEventListener('submit', function(e) {
+                if (regenerateAllRadio && regenerateAllRadio.checked) {
+                    e.preventDefault();
+                    showConfirmationModal();
+                }
+            });
+        }
+
+        // Handle confirmation modal buttons
+        if (cancelRegenerationBtn) {
+            cancelRegenerationBtn.addEventListener('click', hideConfirmationModal);
+        }
+
+        if (confirmRegenerationBtn) {
+            confirmRegenerationBtn.addEventListener('click', function() {
+                hideConfirmationModal();
+                if (mappingSelectionForm) {
+                    mappingSelectionForm.submit();
+                }
+            });
+        }
+
+        // Close modal when clicking outside
+        if (confirmationModal) {
+            confirmationModal.addEventListener('click', function(e) {
+                if (e.target === confirmationModal) {
+                    hideConfirmationModal();
+                }
+            });
+        }
+
+        // Add event listeners for radio buttons
+        if (useExistingRadio) {
+            useExistingRadio.addEventListener('change', updateMappingListVisibility);
+        }
+        if (modifyExistingRadio) {
+            modifyExistingRadio.addEventListener('change', updateMappingListVisibility);
+        }
+        if (createNewRadio) {
+            createNewRadio.addEventListener('change', updateMappingListVisibility);
+        }
+        if (regenerateAllRadio) {
+            regenerateAllRadio.addEventListener('change', updateMappingListVisibility);
+        }
+
+        // Add click handlers for mapping cards
+        mappingCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selected class from all cards
+                mappingCards.forEach(c => c.classList.remove('selected'));
+                // Add selected class to clicked card
+                this.classList.add('selected');
+                // Check the radio button inside this card
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    validateSelection();
+                }
+            });
+        });
+
+        // Add change event for mapping selection radios
+        document.querySelectorAll('input[name="existing_mapping_id"]').forEach(radio => {
+            radio.addEventListener('change', validateSelection);
+        });
+
+        // Initialize on page load
+        updateMappingListVisibility();
+    });
+</script>
+{% endblock %}

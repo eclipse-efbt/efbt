@@ -12,90 +12,66 @@
 #
 
 import os
-from .utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, rename_fields, pascal_to_upper_snake, clean_spaces
+import pandas as pd
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, clean_spaces_df
 )
 
 
 def map_axis(path=os.path.join("target", "Axis.csv"), table_map: dict = {}):
     """Map axis from Axis.csv to the target format"""
     orientation_id_map = {"X": "1", "Y": "2", "Z": "3", "0": "0"}
-    data = read_csv_to_dict(path)
-    # Force ID fields to be strings since they will be mapped to string values
-    axes = dict_list_to_structured_array(data, force_str_columns={'AxisID', 'TableVID'})
+    df = pd.read_csv(path, dtype=str)
 
-    column_mapping = {col: pascal_to_upper_snake(col) for col in axes.dtype.names}
-    axes = rename_fields(axes, column_mapping)
-    axes = add_field(axes, "MAINTENANCE_AGENCY_ID", "EBA")
+    # Transform column names to UPPER_SNAKE_CASE
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    new_axis_ids = []
-    for row in axes:
-        table_id = table_map.get(str(row["TABLE_VID"]), str(row["TABLE_VID"]))
-        orientation = orientation_id_map.get(str(row["AXIS_ORIENTATION"]), "")
-        new_axis_ids.append(f"{table_id}_{orientation}")
+    # Map table IDs and create new axis IDs
+    df['TABLE_ID'] = df['TABLE_VID'].astype(str).map(table_map).fillna(df['TABLE_VID'])
+    df['ORIENTATION'] = df['AXIS_ORIENTATION'].astype(str).map(orientation_id_map).fillna('')
+    df['NEW_AXIS_ID'] = df['TABLE_ID'] + "_" + df['ORIENTATION']
 
-    axes = add_field(axes, "NEW_AXIS_ID", new_axis_ids)
+    # Create ID mapping
+    id_mapping = dict(zip(df['AXIS_ID'].astype(str), df['NEW_AXIS_ID'].astype(str)))
 
-    id_mapping = {}
-    for row in axes:
-        id_mapping[str(row["AXIS_ID"])] = str(row["NEW_AXIS_ID"])
-
-    axes = drop_fields(axes, "AXIS_ID")
-
-    axes = rename_fields(axes, {
+    # Rename columns
+    df.drop(axis=1,labels='AXIS_ID',inplace=True)
+    df = df.rename(columns={
         "NEW_AXIS_ID": "AXIS_ID",
         "AXIS_LABEL": "NAME",
-        "AXIS_ORIENTATION": "ORIENTATION"
     })
 
-    # Add CODE field
-    codes = []
-    for row in axes:
-        parts = str(row["AXIS_ID"]).rsplit("_", 4)
+    # Generate CODE from AXIS_ID
+    def extract_code(axis_id):
+        parts = str(axis_id).rsplit("_", 4)
         if len(parts) >= 4:
-            code = "_".join(parts[-4:-2] + [parts[-1]])
-        else:
-            code = str(row["AXIS_ID"])
-        codes.append(code)
+            return "_".join(parts[-4:-2] + [parts[-1]])
+        return str(axis_id)
 
-    axes = add_field(axes, "CODE", codes)
-
-    # Add TABLE_ID field
-    table_ids = []
-    for row in axes:
-        table_ids.append(table_map.get(str(row["TABLE_VID"]), str(row["TABLE_VID"])))
-
-    axes = add_field(axes, "TABLE_ID", table_ids)
+    df['CODE'] = df['AXIS_ID'].apply(extract_code)
 
     # Add ORDER field
-    orders = []
-    for row in axes:
-        orders.append(orientation_id_map.get(str(row["ORIENTATION"]), ""))
+    df['ORDER'] = df['ORIENTATION'].astype(str).map(orientation_id_map).fillna('')
 
-    axes = add_field(axes, "ORDER", orders)
-
-    axes = add_field(axes, "DESCRIPTION", "")
+    # Add new fields
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
+    df['DESCRIPTION'] = ""
 
     # Convert IS_OPEN_AXIS to bool
-    is_open = []
-    for row in axes:
-        if "IS_OPEN_AXIS" in axes.dtype.names:
-            val = str(row["IS_OPEN_AXIS"])
-        else:
-            val = "False"
-        is_open.append(val.lower() in ['true', '1', 'yes'])
+    if 'IS_OPEN_AXIS' in df.columns:
+        df['IS_OPEN_AXIS'] = (
+            df['IS_OPEN_AXIS']
+            .astype(str)
+            .str.lower()
+            .isin(['true', '1', 'yes'])
+        )
+    else:
+        df['IS_OPEN_AXIS'] = False
 
-    axes = add_field(axes, "IS_OPEN_AXIS_BOOL", is_open, dtype='bool')
-    if "IS_OPEN_AXIS" in axes.dtype.names:
-        axes = drop_fields(axes, "IS_OPEN_AXIS")
-    axes = rename_fields(axes, {"IS_OPEN_AXIS_BOOL": "IS_OPEN_AXIS"})
-
-    axes = select_fields(axes, [
+    df = df[[
         "AXIS_ID", "CODE", "ORIENTATION", "ORDER", "NAME", "DESCRIPTION", "TABLE_ID", "IS_OPEN_AXIS"
-    ])
+    ]]
 
-    # Clean text fields
-    axes = clean_spaces(axes)
+    df = clean_spaces_df(df)
 
-    return axes, id_mapping
+    return df, id_mapping
