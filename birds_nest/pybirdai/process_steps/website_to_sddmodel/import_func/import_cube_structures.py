@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE
 from pybirdai.process_steps.ancrdt_transformation.csv_column_index_context_ancrdt import ColumnIndexes
 from .utils import find_maintenance_agency_with_id, replace_dots
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_cube_structures(base_path, context):
@@ -51,4 +52,4 @@ def import_cube_structures(base_path, context):
                     context.cube_structure_dictionary[structure.cube_structure_id] = structure
 
     if context.save_sdd_to_db and structures_to_create:
-        CUBE_STRUCTURE.objects.bulk_create(structures_to_create, batch_size=1000, ignore_conflicts=True)
+        CUBE_STRUCTURE.objects.bulk_create(structures_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

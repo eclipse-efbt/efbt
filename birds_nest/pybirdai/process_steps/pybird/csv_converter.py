@@ -64,7 +64,7 @@ class CSVConverter:
 			object_list = relevant_model.objects.all()
 			print(f"newObject: {object_list}")
 			django_model = True
-			
+
 			# Note: Removed broad Django model access tracking as it pollutes lineage with unused fields
 			# Lineage is now tracked through improved @lineage decorators on actual calculations
 			# CSVConverter._track_django_model_access(table_name, object_list)
@@ -75,7 +75,7 @@ class CSVConverter:
 			if not headerCreated:
 				csvString = csvString + CSVConverter.createCSVHeaderStringForRow(o,django_model)
 				headerCreated = True
-				csvString = csvString + CSVConverter.createCSVStringForRow(o, useLongNames,django_model)
+			csvString = csvString + CSVConverter.createCSVStringForRow(o, useLongNames,django_model)
 
 
 

@@ -26,6 +26,7 @@ from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 
 import importlib
+import re
 class OrchestrationWithLineage:
 	# Class variable to track initialized objects
 	_initialized_objects = set()
@@ -528,15 +529,19 @@ class OrchestrationWithLineage:
 
 				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
 				if len(parts) >= 2 and parts[0] == "ANCRDT":
-					# Extract report prefix by removing table suffixes
+					# Extract report prefix by finding the _C_<number> pattern
+					# Pattern: ANCRDT_INSTRMNT_C_1_Loans_and_advances_Table -> ANCRDT_INSTRMNT_C_1
 					# Pattern: ANCRDT_INSTRMNT_C_1_UnionTable -> ANCRDT_INSTRMNT_C_1
-					report_prefix = eReference
-
-					# Remove known table suffixes
-					for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
-						if report_prefix.endswith(suffix):
-							report_prefix = report_prefix[:-len(suffix)]
-							break
+					match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
+					if match:
+						report_prefix = match.group(1)
+					else:
+						# Fallback to old suffix removal logic for backward compatibility
+						report_prefix = eReference
+						for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
+							if report_prefix.endswith(suffix):
+								report_prefix = report_prefix[:-len(suffix)]
+								break
 
 					# Try multiple import paths for flexibility
 					module_paths = [
@@ -2287,15 +2292,19 @@ class OrchestrationOriginal:
 
 				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
 				if len(parts) >= 2 and parts[0] == "ANCRDT":
-					# Extract report prefix by removing table suffixes
+					# Extract report prefix by finding the _C_<number> pattern
+					# Pattern: ANCRDT_INSTRMNT_C_1_Loans_and_advances_Table -> ANCRDT_INSTRMNT_C_1
 					# Pattern: ANCRDT_INSTRMNT_C_1_UnionTable -> ANCRDT_INSTRMNT_C_1
-					report_prefix = eReference
-
-					# Remove known table suffixes
-					for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
-						if report_prefix.endswith(suffix):
-							report_prefix = report_prefix[:-len(suffix)]
-							break
+					match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
+					if match:
+						report_prefix = match.group(1)
+					else:
+						# Fallback to old suffix removal logic for backward compatibility
+						report_prefix = eReference
+						for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
+							if report_prefix.endswith(suffix):
+								report_prefix = report_prefix[:-len(suffix)]
+								break
 
 					# Try multiple import paths for flexibility
 					module_paths = [

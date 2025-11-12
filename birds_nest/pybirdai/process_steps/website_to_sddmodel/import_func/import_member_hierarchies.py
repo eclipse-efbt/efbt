@@ -19,6 +19,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id, find_domain_with_id
 from .warning_writers import save_missing_domains_to_csv
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_member_hierarchies(context):
@@ -61,7 +62,7 @@ def import_member_hierarchies(context):
                 context.member_hierarchy_dictionary[hierarchy.member_hierarchy_id] = hierarchy
 
     if context.save_sdd_to_db and hierarchies_to_create:
-        MEMBER_HIERARCHY.objects.bulk_create(hierarchies_to_create, batch_size=5000, ignore_conflicts=True)
+        MEMBER_HIERARCHY.objects.bulk_create(hierarchies_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
     if missing_domains:
         save_missing_domains_to_csv(context, list(missing_domains))

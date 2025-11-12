@@ -17,6 +17,7 @@ import os
 import csv
 from pybirdai.models.bird_meta_data_model import AXIS
 from pybirdai.context.csv_column_index_context import ColumnIndexes
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 from .utilities import replace_dots
 from .lookups import find_table_with_id
 
@@ -59,4 +60,4 @@ def import_axis(context, config=None):
                 context.axis_dictionary[axis.axis_id] = axis
 
     if context.save_sdd_to_db and axes_to_create:
-        AXIS.objects.bulk_create(axes_to_create, batch_size=1000, ignore_conflicts=True)
+        AXIS.objects.bulk_create(axes_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

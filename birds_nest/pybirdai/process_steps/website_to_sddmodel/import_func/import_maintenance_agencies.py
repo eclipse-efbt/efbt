@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_maintenance_agencies(context, config=None):
@@ -54,4 +55,4 @@ def import_maintenance_agencies(context, config=None):
                 context.agency_dictionary[id] = maintenance_agency
 
     if context.save_sdd_to_db and agencies_to_create:
-        MAINTENANCE_AGENCY.objects.bulk_create(agencies_to_create, batch_size=1000, ignore_conflicts=True)
+        MAINTENANCE_AGENCY.objects.bulk_create(agencies_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

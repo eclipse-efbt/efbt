@@ -21,6 +21,7 @@ from pybirdai.models.bird_meta_data_model import (
     CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, SUBDOMAIN,
     SUBDOMAIN_ENUMERATION, TABLE_CELL
 )
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 class PersistenceManager:
@@ -54,47 +55,47 @@ class PersistenceManager:
         """
         if cube_structures:
             CUBE_STRUCTURE.objects.bulk_create(
-                cube_structures, batch_size=1000, ignore_conflicts=True
+                cube_structures, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True
             )
 
         if cubes:
             CUBE.objects.bulk_create(
-                cubes, batch_size=1000, ignore_conflicts=True
+                cubes, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True
             )
 
         if combinations:
             COMBINATION.objects.bulk_create(
-                combinations, batch_size=5000
+                combinations, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT
             )
 
         # Save subdomains first as they are referenced by other objects
         if subdomains:
             SUBDOMAIN.objects.bulk_create(
-                subdomains, batch_size=1000
+                subdomains, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT
             )
 
         if subdomain_enumerations:
             SUBDOMAIN_ENUMERATION.objects.bulk_create(
-                subdomain_enumerations, batch_size=5000
+                subdomain_enumerations, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT
             )
 
         if combination_items:
             COMBINATION_ITEM.objects.bulk_create(
-                combination_items, batch_size=5000
+                combination_items, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT
             )
 
         if cube_structure_items:
             CUBE_STRUCTURE_ITEM.objects.bulk_create(
-                cube_structure_items, batch_size=5000
+                cube_structure_items, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT
             )
 
         if cube_to_combinations:
             CUBE_TO_COMBINATION.objects.bulk_create(
-                cube_to_combinations, batch_size=5000
+                cube_to_combinations, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT
             )
 
         # Update cells with new combination IDs
         if cells_to_update:
             TABLE_CELL.objects.bulk_update(
-                cells_to_update, ['table_cell_combination_id'], batch_size=5000
+                cells_to_update, ['table_cell_combination_id'], batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT
             )

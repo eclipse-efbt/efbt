@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import TABLE_CELL
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_table_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_table_cells(context, dpm=False, config=None):
@@ -63,4 +64,4 @@ def import_table_cells(context, dpm=False, config=None):
                     table_cell_list.append(table_cell)
 
     if context.save_sdd_to_db and table_cells_to_create:
-        TABLE_CELL.objects.bulk_create(table_cells_to_create, batch_size=1000, ignore_conflicts=True)
+        TABLE_CELL.objects.bulk_create(table_cells_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

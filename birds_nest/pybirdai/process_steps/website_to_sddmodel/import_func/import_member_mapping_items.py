@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING_ITEM
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_member_with_id, find_variable_with_id, find_member_mapping_with_id
 from .warning_writers import save_missing_mapping_variables_to_csv, save_missing_mapping_members_to_csv
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_member_mapping_items(context):
@@ -79,7 +80,7 @@ def import_member_mapping_items(context):
                         except KeyError:
                             context.member_mapping_items_dictionary[member_mapping_id] = [member_mapping_item]
     if context.save_sdd_to_db and member_mapping_items_to_create:
-        MEMBER_MAPPING_ITEM.objects.bulk_create(member_mapping_items_to_create, batch_size=1000, ignore_conflicts=True)
+        MEMBER_MAPPING_ITEM.objects.bulk_create(member_mapping_items_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
     for missing_member in missing_members:
         print(f"Missing member {missing_member}")
     for missing_variable in missing_variables:

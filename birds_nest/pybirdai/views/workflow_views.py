@@ -28,6 +28,8 @@ import json
 import glob
 import subprocess
 import requests
+import zlib
+import binascii
 
 from pybirdai.models.workflow_model import WorkflowTaskExecution, WorkflowSession, DPMProcessExecution, AnaCreditProcessExecution
 from .core_views import create_response_with_loading
@@ -59,6 +61,32 @@ from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRu
 import traceback
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+
+def encode_file_list(file_list):
+    """
+    Compress and hex-encode a list of filenames for URL transmission.
+
+    Args:
+        file_list: List of filenames (strings)
+
+    Returns:
+        Hex-encoded string representing compressed file list
+    """
+    if not file_list:
+        return ""
+
+    # Join filenames with pipe separator
+    file_string = "|".join(file_list)
+
+    # Compress using zlib
+    compressed = zlib.compress(file_string.encode('utf-8'))
+
+    # Convert to hex string
+    hex_string = binascii.hexlify(compressed).decode('ascii')
+
+    return hex_string
+
 
 def refresh_complete_status(task:int=3,all:bool=True):
 
@@ -1540,10 +1568,17 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
         if do_execution.status == "completed":
             task_execution.status = "completed"
 
+        # Generate encoded file list for Filter Code Editor (FINREP files only)
+        filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        finrep_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_dir, 'F_*.py'))]
+        finrep_files.sort()  # Sort alphabetically for consistency
+        encoded_files = encode_file_list(finrep_files)
+
         return render(request, 'pybirdai/workflow/task3/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
+            'encoded_file_filter': encoded_files,
         })
 
 

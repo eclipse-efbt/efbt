@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import TABLE
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_report_tables(context, config=None):
@@ -63,4 +64,4 @@ def import_report_tables(context, config=None):
                 context.report_tables_dictionary[table.table_id] = table
 
     if context.save_sdd_to_db and tables_to_create:
-        TABLE.objects.bulk_create(tables_to_create, batch_size=1000, ignore_conflicts=True)
+        TABLE.objects.bulk_create(tables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

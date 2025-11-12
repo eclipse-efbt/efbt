@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import MAPPING_TO_CUBE
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_mapping_definition_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_mapping_to_cubes(context):
@@ -61,4 +62,4 @@ def import_mapping_to_cubes(context):
                     mapping_to_cube_list.append(mapping_to_cube)
 
     if context.save_sdd_to_db and mapping_to_cubes_to_create:
-        MAPPING_TO_CUBE.objects.bulk_create(mapping_to_cubes_to_create, batch_size=1000, ignore_conflicts=True)
+        MAPPING_TO_CUBE.objects.bulk_create(mapping_to_cubes_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

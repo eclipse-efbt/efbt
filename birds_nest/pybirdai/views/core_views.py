@@ -48,6 +48,7 @@ from pybirdai.entry_points.import_export_mapping_join_metadata import RunExporte
 
 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
 from pybirdai.entry_points.execute_datapoint import RunExecuteDataPoint
 from pybirdai.entry_points.upload_sqldev_eil_files import UploadSQLDevEILFiles
@@ -2338,7 +2339,7 @@ def import_members_from_csv(request):
 
             # Bulk create the members
             if members_to_create:
-                MEMBER.objects.bulk_create(members_to_create)
+                MEMBER.objects.bulk_create(members_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
 
             return JsonResponse({'message': 'Import successful', 'count': len(members_to_create)})
 
@@ -2392,7 +2393,7 @@ def import_variables_from_csv(request):
 
             # Bulk create the variables
             if variables_to_create:
-                created_variables = VARIABLE.objects.bulk_create(variables_to_create)
+                created_variables = VARIABLE.objects.bulk_create(variables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
 
                 # Update SDDContext variable dictionary
                 for variable in created_variables:
@@ -3324,7 +3325,7 @@ def load_variables_from_csv_file(csv_file_path):
 
             # Bulk create the variables
             if variables_to_create:
-                created_variables = VARIABLE.objects.bulk_create(variables_to_create)
+                created_variables = VARIABLE.objects.bulk_create(variables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
 
                 # Update SDDContext variable dictionary
                 for variable in created_variables:

@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import SUBDOMAIN, SUBDOMAIN_ENUMERATION
 from pybirdai.process_steps.ancrdt_transformation.csv_column_index_context_ancrdt import ColumnIndexes
 from .utils import find_member_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_subdomain_enumerations(base_path, sdd_context):
@@ -58,4 +59,4 @@ def import_subdomain_enumerations(base_path, sdd_context):
                 sdd_context.subdomain_enumeration_dictionary[subdomain_id].append(enumeration)
 
     if sdd_context.save_sdd_to_db and enumerations_to_create:
-        SUBDOMAIN_ENUMERATION.objects.bulk_create(enumerations_to_create, batch_size=5000, ignore_conflicts=True)
+        SUBDOMAIN_ENUMERATION.objects.bulk_create(enumerations_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

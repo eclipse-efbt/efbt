@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import MAPPING_DEFINITION
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_member_mapping_with_id, find_variable_mapping_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_mapping_definitions(context):
@@ -65,4 +66,4 @@ def import_mapping_definitions(context):
             context.mapping_definition_dictionary[mapping_id] = mapping_definition
 
     if context.save_sdd_to_db and mapping_definitions_to_create:
-        MAPPING_DEFINITION.objects.bulk_create(mapping_definitions_to_create, batch_size=5000, ignore_conflicts=True)
+        MAPPING_DEFINITION.objects.bulk_create(mapping_definitions_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

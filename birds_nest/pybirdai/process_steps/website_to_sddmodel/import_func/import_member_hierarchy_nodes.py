@@ -20,6 +20,7 @@ from pybirdai.models.bird_meta_data_model import MEMBER, MEMBER_HIERARCHY_NODE
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_member_hierarchy_with_id
 from .warning_writers import save_missing_members_to_csv, save_missing_hierarchies_to_csv
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_member_hierarchy_nodes(context):
@@ -89,7 +90,7 @@ def import_member_hierarchy_nodes(context):
                             context.member_hierarchy_node_dictionary[hierarchy_id + ":" + member_id] = hierarchy_node
 
     if context.save_sdd_to_db and nodes_to_create:
-        MEMBER_HIERARCHY_NODE.objects.bulk_create(nodes_to_create, batch_size=1000, ignore_conflicts=True)
+        MEMBER_HIERARCHY_NODE.objects.bulk_create(nodes_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
     save_missing_members_to_csv(context, missing_members)
     save_missing_hierarchies_to_csv(context, missing_hierarchies)

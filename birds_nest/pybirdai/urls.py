@@ -153,9 +153,10 @@ urlpatterns = [
 
     # ANCRDT Workflow - Separate step execution views
     path("ancrdt-workflow/step-0/", ancrdt_workflow_views.ancrdt_step_0_view, name="ancrdt_step_0"),
-    path("ancrdt-workflow/step-1/", ancrdt_workflow_views.ancrdt_step_1_view, name="ancrdt_step_1"),
-    path("ancrdt-workflow/step-2/", ancrdt_workflow_views.ancrdt_step_2_view, name="ancrdt_step_2"),
-    path("ancrdt-workflow/step-3/", ancrdt_workflow_views.ancrdt_step_3_view, name="ancrdt_step_3"),
+    # Steps 1, 2, 3 direct access removed - use review pages instead
+    # path("ancrdt-workflow/step-1/", ancrdt_workflow_views.ancrdt_step_1_view, name="ancrdt_step_1"),
+    # path("ancrdt-workflow/step-2/", ancrdt_workflow_views.ancrdt_step_2_view, name="ancrdt_step_2"),
+    # path("ancrdt-workflow/step-3/", ancrdt_workflow_views.ancrdt_step_3_view, name="ancrdt_step_3"),
 
     # ANCRDT Workflow - Separate review views (no review for step 0)
     path("ancrdt-workflow/step-1/review/", ancrdt_workflow_views.ancrdt_step_1_review_view, name="ancrdt_step_1_review"),

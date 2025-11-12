@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import VARIABLE_MAPPING_ITEM
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_variable_with_id, find_variable_mapping_with_id
 from .warning_writers import save_missing_mapping_variables_to_csv
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_variable_mapping_items(context):
@@ -82,7 +83,7 @@ def import_variable_mapping_items(context):
 
     # Single bulk create with larger batch size
     if context.save_sdd_to_db and variable_mapping_items_to_create:
-        VARIABLE_MAPPING_ITEM.objects.bulk_create(variable_mapping_items_to_create, batch_size=5000, ignore_conflicts=True)
+        VARIABLE_MAPPING_ITEM.objects.bulk_create(variable_mapping_items_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
     if missing_variables:
         save_missing_mapping_variables_to_csv(context, missing_variables)

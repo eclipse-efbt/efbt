@@ -19,6 +19,7 @@ import logging
 from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE, FRAMEWORK
 from pybirdai.process_steps.ancrdt_transformation.csv_column_index_context_ancrdt import ColumnIndexes
 from .utils import find_maintenance_agency_with_id, replace_dots
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ def import_cubes(base_path, context):
                     context.cube_dictionary[cube.cube_id] = cube
 
     if context.save_sdd_to_db and cubes_to_create:
-        CUBE.objects.bulk_create(cubes_to_create, batch_size=1000, ignore_conflicts=True)
+        CUBE.objects.bulk_create(cubes_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
         logger.info(f"CUBE import: Created {len(cubes_to_create)} of {total_cube_rows} cubes from CSV")
 
     # Report missing frameworks

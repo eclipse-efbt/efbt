@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import VARIABLE_MAPPING
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_maintenance_agency_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_variable_mappings(context):
@@ -54,4 +55,4 @@ def import_variable_mappings(context):
 
     # Single bulk create with larger batch size
     if context.save_sdd_to_db and variable_mappings_to_create:
-        VARIABLE_MAPPING.objects.bulk_create(variable_mappings_to_create, batch_size=5000, ignore_conflicts=True)
+        VARIABLE_MAPPING.objects.bulk_create(variable_mappings_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

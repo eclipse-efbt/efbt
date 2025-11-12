@@ -44,3 +44,4 @@ birds_nest/pybirdai/models/bird_data_model.py
 **/.ipynb_checkpoints/
 *.prof
 *.ipynb
+example_calc_ancrdt.md

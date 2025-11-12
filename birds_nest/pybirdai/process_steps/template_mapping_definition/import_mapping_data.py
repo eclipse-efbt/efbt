@@ -25,6 +25,7 @@ from pybirdai.models.bird_meta_data_model import (
     MEMBER,
     MEMBER_HIERARCHY,
 )
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 class ImportMappingData:
@@ -235,7 +236,7 @@ class ImportMappingData:
 
         # Bulk create items
         if items_to_create:
-            MEMBER_MAPPING_ITEM.objects.bulk_create(items_to_create)
+            MEMBER_MAPPING_ITEM.objects.bulk_create(items_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
 
         return member_mapping
 
@@ -325,7 +326,7 @@ class ImportMappingData:
 
         # Bulk create items
         if items_to_create:
-            VARIABLE_MAPPING_ITEM.objects.bulk_create(items_to_create)
+            VARIABLE_MAPPING_ITEM.objects.bulk_create(items_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
 
         return variable_mapping
 

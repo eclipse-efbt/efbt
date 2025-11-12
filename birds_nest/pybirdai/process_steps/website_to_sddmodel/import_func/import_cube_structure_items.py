@@ -19,6 +19,7 @@ import logging
 from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, SUBDOMAIN
 from pybirdai.process_steps.ancrdt_transformation.csv_column_index_context_ancrdt import ColumnIndexes
 from .utils import find_variable_with_id, find_member_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +101,7 @@ def import_cube_structure_items(base_path, context):
                 items_to_create.append(item)
 
     if context.save_sdd_to_db and items_to_create:
-        CUBE_STRUCTURE_ITEM.objects.bulk_create(items_to_create, batch_size=1000, ignore_conflicts=True)
+        CUBE_STRUCTURE_ITEM.objects.bulk_create(items_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
         logger.info(f"CUBE_STRUCTURE_ITEM import: Created {len(items_to_create)} of {total_rows} items from CSV")
     else:
         logger.warning(f"CUBE_STRUCTURE_ITEM import: No items created. Total rows: {total_rows}")

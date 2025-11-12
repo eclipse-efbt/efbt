@@ -21,6 +21,8 @@ Replaces the monolithic ancrdt_dashboard with individual step screens.
 import logging
 import glob
 import os
+import zlib
+import binascii
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
@@ -30,6 +32,60 @@ from pybirdai.models.workflow_model import WorkflowSession, AnaCreditProcessExec
 from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER, SUBDOMAIN
 
 logger = logging.getLogger(__name__)
+
+
+def encode_file_list(file_list):
+    """
+    Compress and hex-encode a list of filenames for URL transmission.
+
+    Args:
+        file_list: List of filenames (strings)
+
+    Returns:
+        Hex-encoded string representing compressed file list
+    """
+    if not file_list:
+        return ""
+
+    # Join filenames with pipe separator
+    file_string = "|".join(file_list)
+
+    # Compress using zlib
+    compressed = zlib.compress(file_string.encode('utf-8'))
+
+    # Convert to hex string
+    hex_string = binascii.hexlify(compressed).decode('ascii')
+
+    return hex_string
+
+
+def decode_file_list(hex_string):
+    """
+    Decode and decompress a hex-encoded file list from URL parameter.
+
+    Args:
+        hex_string: Hex-encoded compressed file list
+
+    Returns:
+        List of filenames, or None if decoding fails
+    """
+    if not hex_string:
+        return None
+
+    try:
+        # Convert from hex to bytes
+        compressed = binascii.unhexlify(hex_string)
+
+        # Decompress
+        file_string = zlib.decompress(compressed).decode('utf-8')
+
+        # Split by pipe separator
+        file_list = file_string.split("|")
+
+        return file_list
+    except Exception as e:
+        logger.error(f"Error decoding file list: {e}")
+        return None
 
 
 def _get_or_create_workflow_session(request):
@@ -113,21 +169,23 @@ def _get_step_execution_data(session, step_num, step_name, description, previous
                 f"Member Links: {metadata_counts['member_links']} records",
             ]
         elif step_num == 3:
-            # Create Executable Joins
+            # Create Executable Joins - Filter for ANCRDT files only
             py_pattern = os.path.join(settings.BASE_DIR, "results", "generated_python_joins", "*.py")
             all_files = glob.glob(py_pattern)
-            # Filter out .backup and .generated files, and convert to relative paths for display
+            # Filter for ANCRDT files only (matching CodeSyncManager patterns)
             generated_files = []
             for f in all_files:
                 basename = os.path.basename(f)
-                if not (basename.endswith('.backup') or basename.endswith('.generated') or basename == 'tmp'):
+                # Include only ANCRDT files, exclude backups and generated bases
+                if (basename.startswith('ANCRDT_') or basename.startswith('ancrdt_')) and \
+                   not (basename.endswith('.backup') or basename.endswith('.generated') or basename == 'tmp'):
                     generated_files.append(basename)
 
         step_data = {
             'number': step_num,
             'name': step_name,
             'description': description,
-            'detail_url': reverse(f'pybirdai:ancrdt_step_{step_num}'),
+            'detail_url': reverse(f'pybirdai:ancrdt_step_{step_num}_review') if step_num in [1, 2, 3] else reverse(f'pybirdai:ancrdt_step_{step_num}'),
             'status': execution.status,
             'started_at': execution.started_at,
             'completed_at': execution.completed_at,
@@ -151,7 +209,7 @@ def _get_step_execution_data(session, step_num, step_name, description, previous
             'number': step_num,
             'name': step_name,
             'description': description,
-            'detail_url': reverse(f'pybirdai:ancrdt_step_{step_num}'),
+            'detail_url': reverse(f'pybirdai:ancrdt_step_{step_num}_review') if step_num in [1, 2, 3] else reverse(f'pybirdai:ancrdt_step_{step_num}'),
             'status': 'pending',
             'started_at': None,
             'completed_at': None,
@@ -555,6 +613,10 @@ def ancrdt_step_3_review_view(request):
         edited_files = sum(1 for status in sync_status.values() if status['is_edited'])
         unsynced_files = total_files - synced_files
 
+        # Generate encoded file list for Filter Code Editor
+        ancrdt_files = ['ANCRDT_INSTRMNT_C_1_logic.py', 'ancrdt_output_tables.py']
+        encoded_files = encode_file_list(ancrdt_files)
+
         context = {
             'session': session,
             'step': step,
@@ -565,7 +627,8 @@ def ancrdt_step_3_review_view(request):
                 'unsynced_files': unsynced_files,
                 'edited_files': edited_files,
                 'all_synced': synced_files == total_files
-            }
+            },
+            'encoded_file_filter': encoded_files  # Hex-encoded compressed file whitelist
         }
 
         return render(request, 'pybirdai/ancrdt_workflow/step_3_review.html', context)

@@ -12,6 +12,7 @@
 #
 
 from pybirdai.models.bird_meta_data_model import *
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 import os
 import csv
@@ -44,8 +45,8 @@ class CreateOutputLayers:
 
         # Bulk create if saving is enabled
         if context.save_derived_sdd_items and cubes_to_create:
-            CUBE_STRUCTURE.objects.bulk_create(structures_to_create)
-            CUBE.objects.bulk_create(cubes_to_create)
+            CUBE_STRUCTURE.objects.bulk_create(structures_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
+            CUBE.objects.bulk_create(cubes_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
 
     def _get_in_scope_reports(self, file_location, framework, version):
         """

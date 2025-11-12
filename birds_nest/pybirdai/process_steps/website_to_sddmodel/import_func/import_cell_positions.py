@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import CELL_POSITION
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_axis_ordinate_with_id, find_table_cell_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_cell_positions(context, dpm=False, config=None):
@@ -59,4 +60,4 @@ def import_cell_positions(context, dpm=False, config=None):
                     cell_positions_list.append(cell_position)
 
     if context.save_sdd_to_db and cell_positions_to_create:
-        CELL_POSITION.objects.bulk_create(cell_positions_to_create, batch_size=1000, ignore_conflicts=True)
+        CELL_POSITION.objects.bulk_create(cell_positions_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

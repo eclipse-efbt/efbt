@@ -10,6 +10,9 @@
 # Contributors:
 #    Benjamin Arfa - initial API and implementation
 #
+import os
+
+os.system("uv run pybirdai/standalone/run_core_pipeline_setup.py")
 
 """
 Unified ANCRDT pipeline script that runs all steps in a single Python process.

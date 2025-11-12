@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import VARIABLE
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id, find_domain_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_variables(context, ref, config=None):
@@ -81,4 +82,4 @@ def import_variables(context, ref, config=None):
                         context.variable_to_primary_concept_map[variable.variable_id] = primary_concept
 
     if context.save_sdd_to_db and variables_to_create:
-        VARIABLE.objects.bulk_create(variables_to_create, batch_size=1000, ignore_conflicts=True)
+        VARIABLE.objects.bulk_create(variables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

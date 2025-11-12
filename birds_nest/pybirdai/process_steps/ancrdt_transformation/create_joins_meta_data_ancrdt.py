@@ -183,13 +183,19 @@ class JoinsMetaDataCreatorANCRDT:
 
         logger.info(f"Cached CUBE_STRUCTURE_ITEM objects for {len(self.cube_structure_items_cache)} cubes")
 
-        # 5. Cache MAINTENANCE_AGENCY "NODE" (queried repeatedly in loops)
-        try:
-            self.node_agency = MAINTENANCE_AGENCY.objects.get(maintenance_agency_id="NODE")
+        # 5. Cache MAINTENANCE_AGENCY "NODE" (queried repeatedly in loops, create if missing)
+        self.node_agency, created = MAINTENANCE_AGENCY.objects.get_or_create(
+            maintenance_agency_id="NODE",
+            defaults={
+                "code": "NODE",
+                "name": "Node Maintenance Agency",
+                "description": "Auto-generated maintenance agency for ANCRDT joins"
+            }
+        )
+        if created:
+            logger.info("Created MAINTENANCE_AGENCY 'NODE' (did not exist)")
+        else:
             logger.info("Cached MAINTENANCE_AGENCY 'NODE'")
-        except MAINTENANCE_AGENCY.DoesNotExist:
-            logger.error("MAINTENANCE_AGENCY 'NODE' not found")
-            self.node_agency = None
 
         # 6. Prefetch ignored DOMAIN objects
         self.ignored_domains = []
@@ -319,11 +325,7 @@ class JoinsMetaDataCreatorANCRDT:
 
                 name_code_description = f"{ilc}:{mock_join_identifier}:{rolc}"
 
-                # Use cached MAINTENANCE_AGENCY
-                if not self.node_agency:
-                    logger.error("MAINTENANCE_AGENCY 'NODE' not available in cache")
-                    continue
-
+                # Use cached MAINTENANCE_AGENCY (guaranteed to exist after get_or_create)
                 cube_link, exists = CUBE_LINK.objects.get_or_create(
                     primary_cube_id=ilc_cube,
                     foreign_cube_id=rolc_cube,

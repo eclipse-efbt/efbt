@@ -122,9 +122,9 @@
     <div class="tabs-container code-editor-tabs">
         <h4><i class="fas fa-code"></i> Edit Filter Code</h4>
 
-        <!-- Unified Editor -->
+        <!-- Unified Editor (filtered to show only ANCRDT files) -->
         <iframe
-            src="{% url 'pybirdai:unified_filter_code_editor' %}?default_file=smallest"
+            src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_file_filter }}&default_file=smallest"
             sandbox="allow-scripts allow-same-origin allow-forms"
             referrerpolicy="same-origin"
             title="Filter Code Editor"
@@ -139,8 +139,8 @@
 
     <!-- Navigation -->
     <div class="navigation-buttons">
-        <a href="{% url 'pybirdai:ancrdt_step_3' %}" class="btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Step 3
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Workflow Dashboard
         </a>
     </div>
 </div>

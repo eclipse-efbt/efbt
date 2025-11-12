@@ -19,6 +19,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_member_hierarchy_with_id, find_member_with_id, find_maintenance_agency_with_id
 from .warning_writers import save_missing_children_to_csv
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_parent_members_with_children(context):
@@ -103,6 +104,6 @@ def import_parent_members_with_children(context):
                     context.member_id_to_member_code_map[parent_member.member_id] = parent_member.member_id
 
     if context.save_sdd_to_db and parent_members_to_create:
-        MEMBER.objects.bulk_create(parent_members_to_create, batch_size=5000, ignore_conflicts=True)
+        MEMBER.objects.bulk_create(parent_members_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
     save_missing_children_to_csv(context, missing_children)

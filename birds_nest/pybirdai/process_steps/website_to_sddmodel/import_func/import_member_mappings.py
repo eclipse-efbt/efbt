@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_maintenance_agency_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_member_mappings(context):
@@ -53,4 +54,4 @@ def import_member_mappings(context):
                     context.member_mapping_dictionary[member_mapping_id] = member_mapping
 
     if context.save_sdd_to_db and member_mappings_to_create:
-        MEMBER_MAPPING.objects.bulk_create(member_mappings_to_create, batch_size=1000, ignore_conflicts=True)
+        MEMBER_MAPPING.objects.bulk_create(member_mappings_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

@@ -17,6 +17,7 @@ import os
 import csv
 from pybirdai.models.bird_meta_data_model import ORDINATE_ITEM
 from pybirdai.context.csv_column_index_context import ColumnIndexes
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_ORDINATE_ITEMS
 from .utilities import replace_dots
 from .lookups import (
     find_axis_ordinate_with_id,
@@ -86,4 +87,4 @@ def import_ordinate_items(context, config=None):
                     context.axis_ordinate_to_ordinate_items_map[ordinate_item.axis_ordinate_id.axis_ordinate_id] = [ordinate_item]
 
     if context.save_sdd_to_db and ordinate_items_to_create:
-        ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=50000, ignore_conflicts=True)
+        ORDINATE_ITEM.objects.bulk_create(ordinate_items_to_create, batch_size=BULK_CREATE_BATCH_SIZE_ORDINATE_ITEMS, ignore_conflicts=True)

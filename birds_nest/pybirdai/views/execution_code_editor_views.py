@@ -7,6 +7,9 @@ with a feedback loop for iterative refinement.
 import ast
 import json
 import os
+import zlib
+import binascii
+import logging
 from pathlib import Path
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
@@ -18,6 +21,37 @@ from pybirdai.models import AnaCreditProcessExecution, CUBE_LINK, MEMBER_MAPPING
 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
 from pybirdai.utils.code_sync import CodeSyncManager
+
+logger = logging.getLogger(__name__)
+
+
+def _decode_file_list(hex_string):
+    """
+    Decode and decompress a hex-encoded file list from URL parameter.
+
+    Args:
+        hex_string: Hex-encoded compressed file list
+
+    Returns:
+        List of filenames, or None if decoding fails
+    """
+    if not hex_string:
+        return None
+
+    try:
+        # Convert from hex to bytes
+        compressed = binascii.unhexlify(hex_string)
+
+        # Decompress
+        file_string = zlib.decompress(compressed).decode('utf-8')
+
+        # Split by pipe separator
+        file_list = file_string.split("|")
+
+        return file_list
+    except Exception as e:
+        logger.error(f"Error decoding file list: {e}")
+        return None
 
 
 def _get_source_directory(source='joins'):
@@ -538,14 +572,28 @@ def unified_filter_code_editor(request):
     Unified code editor with sidebar for filter code files.
     Shows all files from pybirdai/process_steps/filter_code/ directory.
     Provides left sidebar for file selection and right panel with CodeMirror editor.
+
+    URL Parameters:
+        f: Optional hex-encoded compressed whitelist of filenames
+        default_file: Optional file to load initially (or "smallest" for smallest file)
     """
     filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+
+    # Get optional file whitelist parameter (hex-encoded)
+    hex_param = request.GET.get('f', None)
+    whitelist = None
+    if hex_param:
+        whitelist = _decode_file_list(hex_param)
 
     # Get list of all Python files in filter_code directory
     files = []
     if os.path.exists(filter_code_dir):
         for file_name in os.listdir(filter_code_dir):
             if file_name.endswith('.py'):
+                # Apply whitelist filter if provided
+                if whitelist and file_name not in whitelist:
+                    continue
+
                 # Exclude report_cells.py due to large size (75MB)
                 if file_name == 'report_cells.py':
                     continue

@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import SUBDOMAIN
 from pybirdai.process_steps.ancrdt_transformation.csv_column_index_context_ancrdt import ColumnIndexes
 from .utils import find_domain_with_id, find_maintenance_agency_with_id
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
 def import_subdomains(base_path, sdd_context):
@@ -49,4 +50,4 @@ def import_subdomains(base_path, sdd_context):
                 sdd_context.subdomain_dictionary[subdomain_id] = subdomain
 
     if sdd_context.save_sdd_to_db and subdomains_to_create:
-        SUBDOMAIN.objects.bulk_create(subdomains_to_create, batch_size=5000, ignore_conflicts=True)
+        SUBDOMAIN.objects.bulk_create(subdomains_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
