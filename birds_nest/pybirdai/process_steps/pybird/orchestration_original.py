@@ -70,8 +70,10 @@ class Orchestration:
 							if operation == "init":
 								try:
 									getattr(newObject, operation)()
-								except:
-									print (" could not call function called " + operation)
+								except Exception as e:
+									import traceback
+									print(f" could not call function called {operation}:")
+									traceback.print_exc()
 
 						setattr(theObject,eReference,newObject)
 

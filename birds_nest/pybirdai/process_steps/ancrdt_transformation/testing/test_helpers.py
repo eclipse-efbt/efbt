@@ -191,7 +191,7 @@ def get_test_suite_config_path() -> Path:
     """
     # Navigate from testing module to test suite directory
     # Path: testing/ -> ancrdt_transformation/ -> process_steps/ -> pybirdai/ -> birds_nest/ -> tests/
-    return Path(__file__).parent.parent.parent.parent.parent / 'tests' / 'ancrdt-comprehensive-test-suite' / 'configuration_file_tests.json'
+    return Path(__file__).parent.parent.parent.parent.parent / 'tests' / 'ancrdt-test-suite' / 'configuration_file_tests.json'
 
 
 def load_test_config() -> Dict[str, Any]:
