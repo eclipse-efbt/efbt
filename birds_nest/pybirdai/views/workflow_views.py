@@ -772,6 +772,7 @@ def get_ancrdt_task_grid(session):
         (1, 'Import Metadata'),
         (2, 'Create Joins Metadata'),
         (3, 'Create Executable Joins'),
+        (4, 'Execute Tables'),
     ]
 
     grid = []
@@ -809,7 +810,7 @@ def get_workflow_progress_summary(session):
         return {
             'main': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
             'dpm': {'completed': 0, 'total': 3, 'active': False, 'current': 0},
-            'ancrdt': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+            'ancrdt': {'completed': 0, 'total': 5, 'active': False, 'current': 0},
         }
 
     # Main workflow progress
@@ -1024,7 +1025,7 @@ def workflow_dashboard(request):
                 'workflow_summaries': {
                     'main': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
                     'dpm': {'completed': 0, 'total': 3, 'active': False, 'current': 0},
-                    'ancrdt': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+                    'ancrdt': {'completed': 0, 'total': 5, 'active': False, 'current': 0},
                 },
             })
     else:
@@ -1039,7 +1040,7 @@ def workflow_dashboard(request):
             'workflow_summaries': {
                 'main': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
                 'dpm': {'completed': 0, 'total': 3, 'active': False, 'current': 0},
-                'ancrdt': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
+                'ancrdt': {'completed': 0, 'total': 5, 'active': False, 'current': 0},
             },
         })
 

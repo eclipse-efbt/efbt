@@ -23,11 +23,14 @@ import glob
 import os
 import zlib
 import binascii
+import json
+import time
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.conf import settings
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 from pybirdai.models.workflow_model import WorkflowSession, AnaCreditProcessExecution
 from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER, SUBDOMAIN
 
@@ -228,7 +231,7 @@ def _get_navigation_context(current_step, step_statuses):
 
     Args:
         current_step: Current step number
-        step_statuses: List of step statuses [status0, status1, status2, status3]
+        step_statuses: List of step statuses [status0, status1, status2, status3, status4]
 
     Returns:
         Dictionary with navigation URLs and availability flags
@@ -236,16 +239,20 @@ def _get_navigation_context(current_step, step_statuses):
     navigation = {
         'current_step': current_step,
         'can_go_previous': current_step > 0,
-        'can_go_next': current_step < 3 and step_statuses[current_step] == 'completed',
+        'can_go_next': current_step < 4 and len(step_statuses) > current_step and step_statuses[current_step] == 'completed',
         'previous_step_url': None,
         'next_step_url': None,
-        'landing_url': reverse('pybirdai:ancrdt_workflow_landing'),
+        'landing_url': None,
     }
 
     if current_step > 0:
-        navigation['previous_step_url'] = reverse(f'pybirdai:ancrdt_step_{current_step - 1}')
+        if current_step == 4:
+            # Step 4 previous should go to step 3 review
+            navigation['previous_step_url'] = reverse('pybirdai:ancrdt_step_3_review')
+        else:
+            navigation['previous_step_url'] = reverse(f'pybirdai:ancrdt_step_{current_step - 1}')
 
-    if current_step < 3:
+    if current_step < 4:
         navigation['next_step_url'] = reverse(f'pybirdai:ancrdt_step_{current_step + 1}')
 
     return navigation
@@ -729,5 +736,714 @@ def api_ancrdt_cube_structure(request, cube_id):
     except Exception as e:
         logger.error(f"Error fetching cube structure for {cube_id}: {e}")
         return JsonResponse({'error': str(e)}, status=500)
+
+
+def extract_class_attributes(class_node):
+    """Extract all class-level attributes from a ClassDef AST node."""
+    import ast
+    attributes = {}
+    for item in class_node.body:
+        if isinstance(item, ast.Assign):
+            for target in item.targets:
+                if isinstance(target, ast.Name):
+                    try:
+                        attributes[target.id] = ast.unparse(item.value)
+                    except:
+                        attributes[target.id] = None
+        elif isinstance(item, ast.AnnAssign):
+            if isinstance(item.target, ast.Name):
+                try:
+                    attributes[item.target.id] = ast.unparse(item.value) if item.value else None
+                except:
+                    attributes[item.target.id] = None
+    return attributes
+
+
+def extract_calc_methods(class_node):
+    """Extract methods starting with 'calc_' from a ClassDef AST node."""
+    import ast
+    calc_methods = []
+    for item in class_node.body:
+        if isinstance(item, ast.FunctionDef) and item.name.startswith('calc_'):
+            try:
+                signature = ast.unparse(item)
+            except:
+                signature = f"def {item.name}(...)"
+
+            try:
+                return_type = ast.unparse(item.returns) if item.returns else None
+            except:
+                return_type = None
+
+            method_info = {
+                'name': item.name,
+                'signature': signature,
+                'return_type': return_type,
+            }
+            calc_methods.append(method_info)
+    return calc_methods
+
+
+def extract_mapping_enums(class_node):
+    """Extract enum values from mapping dictionaries in method bodies."""
+    import ast
+    dimension_enums = {}
+
+    for item in class_node.body:
+        if isinstance(item, ast.FunctionDef):
+            # Look for 'mapping = {...}' assignments in method body
+            for stmt in item.body:
+                if isinstance(stmt, ast.Assign):
+                    for target in stmt.targets:
+                        if isinstance(target, ast.Name) and target.id == 'mapping':
+                            # Extract dictionary keys
+                            if isinstance(stmt.value, ast.Dict):
+                                try:
+                                    keys = [ast.unparse(k) for k in stmt.value.keys if k is not None]
+                                    # Clean quotes from keys
+                                    keys = [k.strip("'\"") for k in keys]
+                                    if keys:
+                                        dimension_enums[item.name] = sorted(set(keys))
+                                except:
+                                    pass
+
+    return dimension_enums
+
+
+def parse_union_table_metadata(table_name):
+    """
+    Parse logic file to extract union table metadata.
+
+    Returns:
+        Dict with:
+        - logic_file: Logic file name
+        - union_table_class: Union table class name
+        - source_tables: List of source table attribute names
+        - dimensions: List of dimension names
+        - dimension_enums: Dict mapping dimensions to enum values
+    """
+    import ast
+
+    logic_file = f'{table_name}_logic.py'
+    logic_file_path = os.path.join(
+        settings.BASE_DIR,
+        'pybirdai',
+        'process_steps',
+        'filter_code',
+        logic_file
+    )
+
+    metadata = {
+        'logic_file': logic_file,
+        'union_table_class': None,
+        'source_tables': [],
+        'dimensions': [],
+        'dimension_enums': {}
+    }
+
+    if not os.path.exists(logic_file_path):
+        logger.warning(f"Logic file not found: {logic_file_path}")
+        return metadata
+
+    try:
+        with open(logic_file_path, 'r') as f:
+            tree = ast.parse(f.read())
+
+        union_table_class_name = f'{table_name}_UnionTable'
+
+        # Find UnionTable class
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef) and node.name == union_table_class_name:
+                metadata['union_table_class'] = node.name
+
+                # Extract source table attributes
+                attributes = extract_class_attributes(node)
+                source_tables = [
+                    attr for attr in attributes.keys()
+                    if attr.endswith('_Table') and 'UnionItems' not in attr
+                ]
+                metadata['source_tables'] = source_tables
+                break
+
+        # Find mapping class (e.g., ANCRDT_INSTRMNT_C_1_Loans_and_advances_filtered_and_aggregated)
+        # Note: We want the instance class, NOT the Table class (which has no mappings)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef) and 'filtered_and_aggregated' in node.name and not node.name.endswith('_Table'):
+                dimension_enums = extract_mapping_enums(node)
+                if dimension_enums:  # Only use if we actually found mappings
+                    metadata['dimension_enums'] = dimension_enums
+                    metadata['dimensions'] = list(dimension_enums.keys())
+                    break
+
+        return metadata
+
+    except Exception as e:
+        logger.error(f"Error parsing logic file {logic_file}: {e}")
+        return metadata
+
+
+def get_dimension_members(table_name, dimension, codes):
+    """
+    Get full member details for a given dimension and list of codes.
+
+    Args:
+        table_name: ANCRDT table name (cube_id)
+        dimension: Dimension name (cube_variable_code, e.g., 'PRPS')
+        codes: List of member codes (e.g., ['7', '8', '13'])
+
+    Returns:
+        List of dicts with member details:
+        [{
+            'member_id': 'PRPS_7',
+            'code': '7',
+            'name': 'House purchase',
+            'description': '...'
+        }, ...]
+    """
+    from pybirdai.models.bird_meta_data_model import (
+        CUBE, CUBE_STRUCTURE_ITEM, SUBDOMAIN_ENUMERATION, MEMBER
+    )
+
+    try:
+        # Get the cube
+        cube = CUBE.objects.filter(cube_id=table_name).first()
+        if not cube or not cube.cube_structure_id:
+            logger.warning(f"No cube structure found for table {table_name}")
+            return []
+
+        # Find the cube structure item for this dimension
+        structure_item = CUBE_STRUCTURE_ITEM.objects.filter(
+            cube_structure_id=cube.cube_structure_id,
+            cube_variable_code=dimension
+        ).select_related('subdomain_id').first()
+
+        if not structure_item or not structure_item.subdomain_id:
+            logger.warning(f"No subdomain found for dimension {dimension} in table {table_name}")
+            return []
+
+        # Get all members for this subdomain that match the codes
+        subdomain_enums = SUBDOMAIN_ENUMERATION.objects.filter(
+            subdomain_id=structure_item.subdomain_id,
+            member_id__code__in=codes
+        ).select_related('member_id').order_by('order')
+
+        # Build member details list
+        members = []
+        for enum in subdomain_enums:
+            if enum.member_id:
+                members.append({
+                    'member_id': enum.member_id.member_id,
+                    'code': enum.member_id.code,
+                    'name': enum.member_id.name or enum.member_id.code,
+                    'description': enum.member_id.description or ''
+                })
+
+        return members
+
+    except Exception as e:
+        logger.error(f"Error fetching members for dimension {dimension}: {e}")
+        return []
+
+
+def get_implemented_ancrdt_tables():
+    """
+    Get detailed metadata for ANCRDT tables implemented in ancrdt_output_tables.py.
+
+    Uses AST parsing to find class definitions without executing the code.
+
+    Returns:
+        List of dicts with table metadata including:
+        - table_name: Base table name (e.g., 'ANCRDT_INSTRMNT_C_1')
+        - class_name: Table class name (e.g., 'ANCRDT_INSTRMNT_C_1_Table')
+        - union_table_attr: Union table attribute name
+        - calc_function: Name of calc_ method
+        - calc_signature: Full method signature
+        - return_type: Return type annotation
+        - logic_file: Logic file name
+        - union_table_class: Union table class name
+        - source_tables: List of source table names
+        - dimensions: List of dimension/column names
+        - dimension_enums: Dict mapping dimensions to possible values
+    """
+    import ast
+
+    # Path to ancrdt_output_tables.py
+    output_tables_path = os.path.join(
+        settings.BASE_DIR,
+        'pybirdai',
+        'process_steps',
+        'filter_code',
+        'ancrdt_output_tables.py'
+    )
+
+    if not os.path.exists(output_tables_path):
+        logger.warning(f"ancrdt_output_tables.py not found at {output_tables_path}")
+        return []
+
+    try:
+        # Parse the file as AST without executing it
+        with open(output_tables_path, 'r') as f:
+            tree = ast.parse(f.read())
+
+        implemented_tables = []
+
+        # Find all *_Table classes
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef) and node.name.endswith('_Table'):
+                table_name = node.name[:-6]  # Remove '_Table' suffix
+
+                # Extract class attributes
+                attributes = extract_class_attributes(node)
+
+                # Extract calc_ methods
+                calc_methods = extract_calc_methods(node)
+
+                # Find union table attribute
+                union_table_attr = f'{table_name}_UnionTable'
+
+                # Build table metadata
+                table_info = {
+                    'table_name': table_name,
+                    'class_name': node.name,
+                    'union_table_attr': union_table_attr if union_table_attr in attributes else None,
+                    'calc_function': calc_methods[0]['name'] if calc_methods else None,
+                    'calc_signature': calc_methods[0]['signature'] if calc_methods else None,
+                    'return_type': calc_methods[0]['return_type'] if calc_methods else None,
+                }
+
+                # Parse logic file for additional metadata
+                logic_metadata = parse_union_table_metadata(table_name)
+                table_info.update(logic_metadata)
+
+                implemented_tables.append(table_info)
+
+        logger.info(f"Found {len(implemented_tables)} implemented ANCRDT tables with metadata")
+        return implemented_tables
+
+    except Exception as e:
+        logger.error(f"Error parsing ancrdt_output_tables.py: {e}")
+        return []
+
+
+def format_display_text(text):
+    """
+    Replace underscores with spaces for display.
+
+    Args:
+        text: String to format
+
+    Returns:
+        Formatted string with underscores replaced by spaces
+    """
+    return text.replace('_', ' ') if text else text
+
+
+def ancrdt_step_4_execute_view(request):
+    """
+    Step 4: Execute ANCRDT Tables
+
+    Provides interface for:
+    - Viewing table implementation details (join/union info, calc functions)
+    - Setting filter parameters based on dimension enums
+    - Executing tables with database data
+    - Viewing execution results
+    """
+    # Get or create workflow session
+    session_id = request.session.get('workflow_session_id')
+    if not session_id:
+        messages.error(request, "No active workflow session. Please start from Step 0.")
+        return redirect('pybirdai:ancrdt_step_0')
+
+    workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
+
+    # Get enhanced metadata for implemented tables
+    implemented_tables = get_implemented_ancrdt_tables()
+
+    if not implemented_tables:
+        logger.warning("No implemented ANCRDT tables found in ancrdt_output_tables.py")
+    else:
+        logger.info(f"Found {len(implemented_tables)} implemented ANCRDT tables with metadata")
+
+    # Enhance each table with database display name and prepare for template
+    tables_list = []
+    for table_info in implemented_tables:
+        table_name = table_info['table_name']
+        display_name = table_name  # Default to technical name
+
+        try:
+            # Try to find matching cube in database by cube_id for display name
+            cube_entry = CUBE.objects.filter(cube_id=table_name).first()
+            if cube_entry and cube_entry.name:
+                display_name = cube_entry.name
+        except Exception as e:
+            logger.warning(f"Could not fetch cube metadata for {table_name}: {e}")
+
+        # Build dimension_members with full member details from database
+        dimension_enums = table_info.get('dimension_enums', {})
+        dimension_members = {}
+
+        for dimension, codes in dimension_enums.items():
+            members = get_dimension_members(table_name, dimension, codes)
+            if members:
+                dimension_members[dimension] = members
+            else:
+                # Fallback: if no members found in DB, create minimal structure from codes
+                dimension_members[dimension] = [
+                    {
+                        'member_id': f"{dimension}_{code}",
+                        'code': code,
+                        'name': code,
+                        'description': ''
+                    }
+                    for code in codes
+                ]
+
+        # Build dimensions list with display names and members for template
+        dimensions_with_display = []
+        for dim in table_info.get('dimensions', []):
+            if dim in dimension_members:
+                dimensions_with_display.append({
+                    'key': dim,
+                    'display_name': format_display_text(dim),
+                    'members': dimension_members[dim]
+                })
+
+        # Build table entry for template
+        table_entry = {
+            'name': display_name,
+            'cube_id': table_name,
+            'union_table': table_info.get('union_table_attr'),
+            'union_table_class': table_info.get('union_table_class'),
+            'union_table_class_display': format_display_text(table_info.get('union_table_class')),
+            'calc_function': table_info.get('calc_function'),
+            'calc_function_display': format_display_text(table_info.get('calc_function')),
+            'calc_signature': table_info.get('calc_signature'),
+            'return_type': table_info.get('return_type'),
+            'return_type_display': format_display_text(table_info.get('return_type')),
+            'source_tables': table_info.get('source_tables', []),
+            'source_tables_display': [
+                format_display_text(s) for s in table_info.get('source_tables', [])
+            ],
+            'dimensions': table_info.get('dimensions', []),
+            'dimension_enums': dimension_enums,
+            'dimension_members': dimension_members,  # Full member details for Selectize
+            'dimensions_with_display': dimensions_with_display  # For template iteration
+        }
+
+        tables_list.append(table_entry)
+
+    logger.info(f"Built tables list with {len(tables_list)} entries")
+
+    # Check if Step 3 (code generation) has been completed
+    try:
+        prev_execution = AnaCreditProcessExecution.objects.filter(
+            session=workflow_session, step_number=3
+        ).latest('created_at')
+        previous_status = prev_execution.status
+    except AnaCreditProcessExecution.DoesNotExist:
+        previous_status = 'pending'
+
+    step_3_completed = previous_status == 'completed'
+
+    # Validate prerequisites - Step 3 must be completed before executing Step 4
+    if not step_3_completed:
+        messages.warning(
+            request,
+            'Step 3 (Generate Execution Code) must be completed successfully before executing tables. '
+            'Please complete Step 3 first.'
+        )
+        logger.warning(f"Step 4 accessed without completing Step 3. Previous status: {previous_status}")
+
+        # If step 3 failed, show specific message
+        if previous_status == 'failed':
+            messages.error(
+                request,
+                'Step 3 failed during execution. Please review the errors and re-run Step 3.'
+            )
+
+    # Step 4 context (not tracked in AnaCreditProcessExecution, but we provide step info for UI consistency)
+    step = {
+        'number': 4,
+        'name': 'Execute Tables',
+        'description': 'Execute ANCRDT tables with filter parameters',
+        'status': 'completed' if step_3_completed else 'pending',
+        'can_execute': step_3_completed
+    }
+
+    # Get navigation context
+    step_statuses = []
+    for step_num in range(5):  # Now we have steps 0-4
+        try:
+            exec_obj = AnaCreditProcessExecution.objects.filter(
+                session=workflow_session, step_number=step_num
+            ).latest('created_at')
+            step_statuses.append(exec_obj.status)
+        except AnaCreditProcessExecution.DoesNotExist:
+            step_statuses.append('pending')
+
+    navigation = _get_navigation_context(4, step_statuses)
+
+    context = {
+        'workflow_session': workflow_session,
+        'step': step,
+        'navigation': navigation,
+        'tables': tables_list,
+        'can_execute': step_3_completed
+    }
+
+    return render(request, 'pybirdai/ancrdt_workflow/step_4_execute.html', context)
+
+
+def convert_row_to_dict(row):
+    """
+    Convert ANCRDT row object to JSON-serializable dictionary.
+
+    Args:
+        row: ANCRDT row object or dictionary
+
+    Returns:
+        Dictionary with row data
+    """
+    if isinstance(row, dict):
+        return row
+
+    # If it's an object with __dict__, convert it
+    if hasattr(row, '__dict__'):
+        row_dict = {}
+        for key, value in row.__dict__.items():
+            if not key.startswith('_'):  # Skip private attributes
+                # Convert callables (methods) to their return values
+                if callable(value):
+                    try:
+                        row_dict[key] = value()
+                    except Exception:
+                        row_dict[key] = str(value)
+                else:
+                    row_dict[key] = value
+        return row_dict
+
+    # Fallback: try to convert to string representation
+    return str(row)
+
+
+@require_http_methods(["GET", "POST"])
+def execute_ancrdt_table_with_fixture(request, table_name):
+    """
+    Execute an ANCRDT table with optional filters.
+
+    This endpoint:
+    1. Cleans test data from database
+    2. Executes the ANCRDT table with existing database data
+    3. Applies post-execution filters if provided
+    4. Returns JSON or HTML based on format parameter
+
+    GET Request (with query parameters):
+        /pybirdai/ancrdt-workflow/execute-table/ANCRDT_INSTRMNT_C_1/?format=html&PRPS=7,8&TYP_INSTRMNT=80
+
+    POST Request (with JSON body):
+    {
+        "filters": {                       # Optional
+            "PRPS": "7,8",
+            "TYP_INSTRMNT": "80,51"
+        }
+    }
+
+    Query Parameters:
+        format: 'html' (default) or 'json' - Response format
+        Other params: Filter dimensions (e.g., PRPS=7,8)
+
+    Returns:
+        JsonResponse or HTML template based on format parameter
+    """
+    start_time = time.time()
+
+    try:
+        # Validate prerequisites - Check if Step 3 is completed
+        session_id = request.session.get('workflow_session_id')
+        if session_id:
+            try:
+                workflow_session = WorkflowSession.objects.get(session_id=session_id)
+                prev_execution = AnaCreditProcessExecution.objects.filter(
+                    session=workflow_session, step_number=3
+                ).latest('created_at')
+
+                if prev_execution.status != 'completed':
+                    error_msg = (
+                        f'Cannot execute table: Step 3 (Generate Execution Code) status is "{prev_execution.status}". '
+                        f'Please ensure Step 3 completes successfully before executing tables.'
+                    )
+                    logger.error(error_msg)
+
+                    response_format = request.GET.get('format', 'html')
+                    if response_format == 'json':
+                        return JsonResponse({
+                            'success': False,
+                            'error': error_msg,
+                            'prerequisite_failed': True
+                        }, status=400)
+                    else:
+                        return render(request, 'pybirdai/ancrdt_workflow/execution_results.html', {
+                            'success': False,
+                            'error': error_msg,
+                            'table_name': table_name,
+                            'prerequisite_failed': True
+                        })
+
+            except AnaCreditProcessExecution.DoesNotExist:
+                error_msg = 'Cannot execute table: Step 3 (Generate Execution Code) has not been run. Please complete Step 3 first.'
+                logger.error(error_msg)
+
+                response_format = request.GET.get('format', 'html')
+                if response_format == 'json':
+                    return JsonResponse({
+                        'success': False,
+                        'error': error_msg,
+                        'prerequisite_failed': True
+                    }, status=400)
+                else:
+                    return render(request, 'pybirdai/ancrdt_workflow/execution_results.html', {
+                        'success': False,
+                        'error': error_msg,
+                        'table_name': table_name,
+                        'prerequisite_failed': True
+                    })
+            except WorkflowSession.DoesNotExist:
+                logger.warning("No workflow session found for execution request")
+
+        # Determine response format
+        response_format = request.GET.get('format', 'html')
+
+        # Parse parameters based on request method
+        if request.method == 'POST':
+            # POST: Parse JSON body
+            data = json.loads(request.body)
+            filters = data.get('filters', {})
+        else:
+            # GET: Parse query parameters as filters
+            filters = {}
+            # Collect all query params except 'format' as filters
+            for key, value in request.GET.items():
+                if key != 'format':
+                    filters[key] = value
+
+        # Import required modules
+        from pybirdai.process_steps.ancrdt_transformation.execute_ancrdt_table import ExecuteANCRDTTable
+
+        # Execute the ANCRDT table with filters on existing database data
+        logger.info(f"Executing ANCRDT table: {table_name}")
+        logger.info(f"Filters: {filters}")
+
+        result = ExecuteANCRDTTable.execute_table(
+            table_name=table_name,
+            filters=filters if filters else None
+        )
+
+        # Calculate execution time
+        execution_time = time.time() - start_time
+
+        # Create execution history record
+        try:
+            session_id = request.session.get('workflow_session_id')
+            if session_id:
+                workflow_session = WorkflowSession.objects.get(session_id=session_id)
+
+                # Create execution record for step 4
+                AnaCreditProcessExecution.objects.create(
+                    session=workflow_session,
+                    step_number=4,
+                    step_name='Execute Tables',
+                    status='completed',
+                    started_at=time.time() - execution_time,  # Calculate start time
+                    completed_at=time.time(),
+                    execution_data={
+                        'table_name': table_name,
+                        'filters': filters,
+                        'row_count': result['row_count'],
+                        'row_count_total': result.get('row_count_total', result['row_count']),
+                        'csv_path': result.get('csv_path'),
+                        'execution_time_seconds': execution_time
+                    }
+                )
+                logger.info(f"Created execution history record for table: {table_name}")
+        except Exception as e:
+            logger.warning(f"Could not create execution history record: {e}")
+
+        # Step 4: Prepare response data
+        # Convert row objects to JSON-serializable dictionaries
+        rows = result.get('rows', [])[:10]  # Get first 10 rows
+        serializable_rows = [convert_row_to_dict(row) for row in rows]
+
+        response_data = {
+            'success': True,
+            'table_name': result['table_name'],
+            'row_count': result['row_count'],
+            'row_count_total': result.get('row_count_total', result['row_count']),
+            'csv_path': result.get('csv_path'),
+            'filters_applied': result.get('filters_applied', {}),
+            'execution_time': execution_time,
+            'rows': serializable_rows
+        }
+
+        logger.info(f"Table execution completed: {table_name}, rows={result['row_count']}, time={execution_time:.3f}s")
+
+        # Return based on format
+        if response_format == 'json':
+            return JsonResponse(response_data)
+        else:
+            # Return HTML
+            return render(request, 'pybirdai/ancrdt_workflow/execution_results.html', response_data)
+
+    except json.JSONDecodeError:
+        if response_format == 'json':
+            return JsonResponse({
+                'success': False,
+                'error': 'Invalid JSON in request body'
+            }, status=400)
+        else:
+            return render(request, 'pybirdai/ancrdt_workflow/execution_results.html', {
+                'success': False,
+                'error': 'Invalid JSON in request body',
+                'table_name': table_name
+            })
+
+    except Exception as e:
+        logger.error(f"Error executing ANCRDT table {table_name}: {e}", exc_info=True)
+
+        # Create failed execution history record
+        try:
+            session_id = request.session.get('workflow_session_id')
+            if session_id:
+                workflow_session = WorkflowSession.objects.get(session_id=session_id)
+                execution_time = time.time() - start_time
+
+                AnaCreditProcessExecution.objects.create(
+                    session=workflow_session,
+                    step_number=4,
+                    step_name='Execute Tables',
+                    status='failed',
+                    started_at=time.time() - execution_time,
+                    completed_at=time.time(),
+                    error_message=str(e),
+                    execution_data={
+                        'table_name': table_name,
+                        'filters': filters if 'filters' in locals() else {},
+                        'execution_time_seconds': execution_time
+                    }
+                )
+                logger.info(f"Created failed execution history record for table: {table_name}")
+        except Exception as tracking_error:
+            logger.warning(f"Could not create failed execution history record: {tracking_error}")
+
+        if response_format == 'json':
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=500)
+        else:
+            return render(request, 'pybirdai/ancrdt_workflow/execution_results.html', {
+                'success': False,
+                'error': str(e),
+                'table_name': table_name
+            })
 
 
