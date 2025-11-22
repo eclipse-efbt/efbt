@@ -1082,21 +1082,31 @@ def ancrdt_step_4_execute_view(request):
         dimension_enums = table_info.get('dimension_enums', {})
         dimension_members = {}
 
+        # DEBUG: Log what dimensions were found
+        logger.info(f"[DEBUG] Table {table_name} dimension_enums: {dimension_enums}")
+        logger.info(f"[DEBUG] Table {table_name} dimensions list: {table_info.get('dimensions', [])}")
+
         for dimension, codes in dimension_enums.items():
             members = get_dimension_members(table_name, dimension, codes)
             if members:
                 dimension_members[dimension] = members
             else:
                 # Fallback: if no members found in DB, create minimal structure from codes
+                logger.warning(f"Using fallback for dimension {dimension} in table {table_name} - creating from {len(codes)} parsed codes")
                 dimension_members[dimension] = [
                     {
                         'member_id': f"{dimension}_{code}",
                         'code': code,
-                        'name': code,
-                        'description': ''
+                        'name': f"{dimension} {code}",
+                        'description': f"Code {code}"
                     }
                     for code in codes
                 ]
+
+        # DEBUG: Log final dimension_members
+        logger.info(f"[DEBUG] Table {table_name} dimension_members keys: {list(dimension_members.keys())}")
+        for dim_key in dimension_members.keys():
+            logger.info(f"[DEBUG] {dim_key} has {len(dimension_members[dim_key])} members")
 
         # Build dimensions list with display names and members for template
         dimensions_with_display = []
@@ -1107,6 +1117,11 @@ def ancrdt_step_4_execute_view(request):
                     'display_name': format_display_text(dim),
                     'members': dimension_members[dim]
                 })
+            else:
+                logger.warning(f"[DEBUG] Dimension {dim} in dimensions list but NOT in dimension_members!")
+
+        # DEBUG: Log final result
+        logger.info(f"[DEBUG] Table {table_name} dimensions_with_display: {[d['key'] for d in dimensions_with_display]}")
 
         # Build table entry for template
         table_entry = {
@@ -1445,5 +1460,93 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                 'error': str(e),
                 'table_name': table_name
             })
+
+
+def download_ancrdt_csv(request, table_name):
+    """
+    Download the CSV file for an executed ANCRDT table with applied filters.
+    Makes an HTTP GET request to the execute endpoint and converts JSON to CSV.
+
+    Args:
+        request: HTTP request with optional filter query parameters
+        table_name: Name of the ANCRDT table (cube_id)
+
+    Query Parameters:
+        Filter dimensions (e.g., PRPS=7,8&TYP_INSTRMNT=51)
+
+    Returns:
+        HttpResponse with CSV content or error message
+    """
+    from django.http import HttpResponse
+    import csv
+    import io
+    import requests
+
+    try:
+        logger.info(f"Downloading CSV for table {table_name} with filters: {dict(request.GET)}")
+
+        # Build query string with format=json and all filter parameters
+        query_params = request.GET.copy()
+        query_params['format'] = 'json'
+        query_string = query_params.urlencode()
+
+        # Build URL to execute endpoint
+        url = f"http://localhost:8000/pybirdai/execute-ancrdt-table/{table_name}/?{query_string}"
+
+        logger.info(f"Making request to: {url}")
+
+        # Make HTTP GET request with session cookies
+        response = requests.get(url, cookies=request.COOKIES)
+
+        # Parse JSON response
+        response_data = response.json()
+
+        # Check if execution was successful
+        if not response_data.get('success'):
+            error_msg = response_data.get('error', 'Unknown error')
+            logger.error(f"Execution failed for table {table_name}: {error_msg}")
+            http_response = HttpResponse(f"Error: {error_msg}", content_type='text/plain')
+            http_response.status_code = 500
+            return http_response
+
+        # Extract rows from response
+        rows = response_data.get('rows', [])
+        if not rows:
+            logger.warning(f"No data available for table {table_name}")
+            http_response = HttpResponse("No data available for this table with the applied filters.", content_type='text/plain')
+            http_response.status_code = 404
+            return http_response
+
+        # Create CSV in memory
+        output = io.StringIO()
+
+        # Get column names from first row
+        fieldnames = list(rows[0].keys())
+        writer = csv.DictWriter(output, fieldnames=fieldnames)
+
+        # Write header
+        writer.writeheader()
+
+        # Write data rows, replacing None/null with empty string
+        for row in rows:
+            # Replace None values with empty strings
+            cleaned_row = {k: (v if v is not None else "") for k, v in row.items()}
+            writer.writerow(cleaned_row)
+
+        # Create response
+        csv_content = output.getvalue()
+        http_response = HttpResponse(csv_content, content_type='text/csv')
+        http_response['Content-Disposition'] = f'attachment; filename="{table_name}_export.csv"'
+
+        logger.info(f"Successfully generated CSV for table {table_name} with {len(rows)} rows")
+        return http_response
+
+    except Exception as e:
+        logger.error(f"Error generating CSV for table {table_name}: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        http_response = HttpResponse(f"Error generating CSV: {str(e)}", content_type='text/plain')
+        http_response.status_code = 500
+        return http_response
 
 

@@ -12,11 +12,15 @@
 //
 /**
  * JavaScript for ANCRDT Step 4: Table Execution
- * Handles table execution with filter parameters
+ * Handles table execution with filter parameters and modal display
+ * Version: 2.0 - Modal-only results
  */
 
 // Store selectize instances for each filter
 const selectizeInstances = {};
+
+// Store execution state for each table
+const executionStates = {};
 
 /**
  * Format text by replacing underscores with spaces
@@ -58,6 +62,12 @@ function initializeSelectize() {
                 sortField: 'text',
                 maxItems: null,  // Allow unlimited selections
                 closeAfterSelect: false,
+                onChange: function(value) {
+                    // Update filter count when selection changes
+                    if (typeof updateFilterCount === 'function') {
+                        updateFilterCount(table);
+                    }
+                },
                 render: {
                     option: function(item, escape) {
                         // Extract name and code from text like "Member_Name (CODE)"
@@ -107,6 +117,43 @@ function reinitializeSelectize() {
 }
 
 /**
+ * Update the "View Executed Table" button state based on execution results
+ * @param {string} tableName - The table name
+ * @param {string} state - The state ('disabled', 'error', 'warning', 'success')
+ */
+function updateViewButtonState(tableName, state) {
+    const btn = document.getElementById(`btn-view-${tableName}`);
+    if (!btn) {
+        console.error(`View button not found for table: ${tableName}`);
+        return;
+    }
+
+    // Remove all state classes
+    btn.classList.remove('btn-view-results-disabled', 'btn-view-results-error', 'btn-view-results-warning', 'btn-view-results-success');
+
+    // Add appropriate state class and enable/disable
+    switch (state) {
+        case 'error':
+            btn.classList.add('btn-view-results-error');
+            btn.disabled = false;
+            break;
+        case 'warning':
+            btn.classList.add('btn-view-results-warning');
+            btn.disabled = false;
+            break;
+        case 'success':
+            btn.classList.add('btn-view-results-success');
+            btn.disabled = false;
+            break;
+        case 'disabled':
+        default:
+            btn.classList.add('btn-view-results-disabled');
+            btn.disabled = true;
+            break;
+    }
+}
+
+/**
  * Execute an ANCRDT table with the selected filters
  * @param {string} tableName - The ANCRDT table name (cube_id)
  */
@@ -114,20 +161,12 @@ async function executeTable(tableName) {
     console.log(`Executing table: ${tableName}`);
 
     // Get UI elements
-    const btn = document.getElementById(`btn-${tableName}`);
-    const resultsSection = document.getElementById(`results-${tableName}`);
-    const resultsContent = document.getElementById(`results-content-${tableName}`);
-    const errorSection = document.getElementById(`error-${tableName}`);
-    const errorContent = document.getElementById(`error-content-${tableName}`);
+    const btn = document.getElementById(`btn-execute-${tableName}`);
 
     if (!btn) {
         console.error(`Button not found for table: ${tableName}`);
         return;
     }
-
-    // Hide previous results/errors
-    resultsSection?.classList.remove('show');
-    errorSection?.classList.remove('show');
 
     // Disable button and show loading
     btn.disabled = true;
@@ -199,37 +238,42 @@ async function executeTable(tableName) {
         console.log('Response data:', data);
 
         if (data.success) {
-            // Show results
-            displayResults(tableName, data);
-            if (resultsSection) {
-                resultsSection.classList.add('show');
+            // Store execution state
+            executionStates[tableName] = {
+                status: 'success',
+                data: data,
+                error: null
+            };
+
+            // Update button state based on row count
+            if (data.rows && data.rows.length > 0) {
+                updateViewButtonState(tableName, 'success');
+            } else {
+                updateViewButtonState(tableName, 'warning');
             }
-            console.log('Results displayed successfully');
+
+            console.log('Execution successful');
         } else {
-            // Show error
+            // Store error state
             const errorMessage = data.error || 'Unknown error occurred';
-            if (errorContent) {
-                errorContent.innerHTML = `
-                    <p><strong>Error:</strong> ${escapeHtml(errorMessage)}</p>
-                `;
-            }
-            if (errorSection) {
-                errorSection.classList.add('show');
-            }
+            executionStates[tableName] = {
+                status: 'error',
+                data: null,
+                error: errorMessage
+            };
+            updateViewButtonState(tableName, 'error');
             console.error('Execution failed:', errorMessage);
         }
 
     } catch (error) {
         console.error('Execution error:', error);
-        if (errorContent) {
-            errorContent.innerHTML = `
-                <p><strong>Error:</strong> ${escapeHtml(error.message)}</p>
-                <p style="margin-top: 10px; font-size: 12px;">Check the browser console for more details.</p>
-            `;
-        }
-        if (errorSection) {
-            errorSection.classList.add('show');
-        }
+        // Store error state
+        executionStates[tableName] = {
+            status: 'error',
+            data: null,
+            error: error.message
+        };
+        updateViewButtonState(tableName, 'error');
     } finally {
         // Re-enable button
         if (btn) {
@@ -241,138 +285,185 @@ async function executeTable(tableName) {
 }
 
 /**
- * Display execution results
- * @param {string} tableName - The table name
- * @param {object} data - The response data
+ * Build results table HTML
+ * @param {Array} rows - Data rows
+ * @param {boolean} showAll - Show all rows (true) or limit to 5 (false)
+ * @returns {string} HTML string
  */
-function displayResults(tableName, data) {
-    const resultsContent = document.getElementById(`results-content-${tableName}`);
-
-    let html = '<div style="display: grid; gap: 10px;">';
-
-    // Row counts
-    html += `
-        <div>
-            <strong>Total Rows Generated:</strong> ${data.row_count_total || 0}
-        </div>
-    `;
-
-    if (data.filters_applied && Object.keys(data.filters_applied).length > 0) {
-        html += `
-            <div>
-                <strong>Rows After Filtering:</strong> ${data.row_count || 0}
-            </div>
-            <div>
-                <strong>Filters Applied:</strong>
-                <ul style="margin: 5px 0; padding-left: 20px;">
-        `;
-        for (const [key, value] of Object.entries(data.filters_applied)) {
-            html += `<li>${escapeHtml(key)}: ${escapeHtml(value)}</li>`;
-        }
-        html += `
-                </ul>
-            </div>
-        `;
-    } else {
-        html += `
-            <div>
-                <strong>Filters Applied:</strong> None
-            </div>
-        `;
+function buildResultsTable(rows, showAll = false) {
+    if (!rows || rows.length === 0) {
+        return '<div style="padding: 20px; text-align: center; color: #999;">No rows to display</div>';
     }
 
-    // CSV output
-    if (data.csv_path) {
-        html += `
-            <div>
-                <strong>CSV Output:</strong> ${escapeHtml(data.csv_path)}
-            </div>
-        `;
-    }
-
-    // Execution time
-    if (data.execution_time) {
-        html += `
-            <div>
-                <strong>Execution Time:</strong> ${data.execution_time.toFixed(3)}s
-            </div>
-        `;
-    }
-
-    // Show sample rows
-    if (data.rows && data.rows.length > 0) {
-        // Filter out columns where all values are null
-        const columnsWithData = new Set();
-        data.rows.forEach(row => {
-            Object.entries(row).forEach(([key, value]) => {
-                // Include column if it has at least one non-null value
-                if (value !== null && value !== 'null' && value !== '' && value !== undefined) {
-                    columnsWithData.add(key);
-                }
-            });
-        });
-
-        // Convert to array and maintain order from first row
-        const firstRow = data.rows[0];
-        const displayColumns = Object.keys(firstRow).filter(key => columnsWithData.has(key));
-
-        html += `
-            <div style="margin-top: 15px;">
-                <strong>Sample Rows (first ${Math.min(5, data.rows.length)}):</strong>
-                <div style="overflow-x: auto; margin-top: 10px;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                        <thead>
-                            <tr style="background: #f5f5f5;">
-        `;
-
-        // Table headers (only columns with data)
-        for (const key of displayColumns) {
-            html += `<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">${escapeHtml(key)}</th>`;
-        }
-
-        html += `
-                            </tr>
-                        </thead>
-                        <tbody>
-        `;
-
-        // Table rows (max 5, only columns with data)
-        const displayRows = data.rows.slice(0, 5);
-        displayRows.forEach((row, idx) => {
-            html += `<tr style="background: ${idx % 2 === 0 ? 'white' : '#fafafa'};">`;
-            for (const key of displayColumns) {
-                const value = row[key];
-                const displayValue = value === null || value === 'null' ? '<em style="color: #999;">null</em>' : escapeHtml(String(value));
-                html += `<td style="padding: 8px; border: 1px solid #ddd;">${displayValue}</td>`;
+    // Filter out columns where all values are null
+    const columnsWithData = new Set();
+    rows.forEach(row => {
+        Object.entries(row).forEach(([key, value]) => {
+            if (value !== null && value !== 'null' && value !== '' && value !== undefined) {
+                columnsWithData.add(key);
             }
-            html += `</tr>`;
         });
+    });
 
-        html += `
-                        </tbody>
-                    </table>
+    const firstRow = rows[0];
+    const displayColumns = Object.keys(firstRow).filter(key => columnsWithData.has(key));
+
+    const displayRows = showAll ? rows : rows.slice(0, 5);
+    const tableClass = showAll ? 'results-modal-table' : '';
+    const wrapperClass = showAll ? 'results-modal-table-wrapper' : '';
+    const wrapperStyle = showAll ? '' : 'overflow-x: auto; margin-top: 10px;';
+    const tableStyle = showAll ? '' : 'width: 100%; border-collapse: collapse; font-size: 12px;';
+
+    let html = `<div class="${wrapperClass}" style="${wrapperStyle}">`;
+    html += `<table class="${tableClass}" style="${tableStyle}">`;
+    html += '<thead><tr style="background: #f5f5f5;">';
+
+    // Headers
+    for (const key of displayColumns) {
+        const padding = showAll ? '12px' : '8px';
+        html += `<th style="padding: ${padding}; border: 1px solid #ddd; text-align: left;">${escapeHtml(key)}</th>`;
+    }
+    html += '</tr></thead><tbody>';
+
+    // Rows
+    displayRows.forEach((row, idx) => {
+        html += `<tr style="background: ${idx % 2 === 0 ? 'white' : '#fafafa'};">`;
+        const padding = showAll ? '10px 12px' : '8px';
+        for (const key of displayColumns) {
+            const value = row[key];
+            const displayValue = value === null || value === 'null' ? '<em style="color: #999;">null</em>' : escapeHtml(String(value));
+            html += `<td style="padding: ${padding}; border: 1px solid #ddd;">${displayValue}</td>`;
+        }
+        html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+
+    return html;
+}
+
+/**
+ * Open results modal with execution results
+ * @param {string} tableName - The table name
+ */
+function openResultsModal(tableName) {
+    const modal = document.getElementById('results-modal');
+    const title = document.getElementById('modal-table-title');
+    const summary = document.getElementById('modal-results-summary');
+    const tableContainer = document.getElementById('modal-results-table-container');
+
+    // Get execution state
+    const state = executionStates[tableName];
+    if (!state) {
+        console.error(`No execution state found for table: ${tableName}`);
+        return;
+    }
+
+    // Set title
+    title.textContent = `Results for ${tableName}`;
+
+    let summaryHtml = '';
+    let tableHtml = '';
+
+    if (state.status === 'error') {
+        // Error state - show error message
+        summaryHtml = `
+            <div style="background: #fef2f2; border: 2px solid #dc2626; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <i class="fas fa-exclamation-circle" style="color: #dc2626; font-size: 24px;"></i>
+                    <h3 style="margin: 0; color: #991b1b;">Execution Error</h3>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 4px; margin-top: 15px;">
+                    <strong>Error Message:</strong><br>
+                    <p style="margin: 10px 0; color: #991b1b; font-family: monospace;">${escapeHtml(state.error)}</p>
                 </div>
             </div>
         `;
+        tableHtml = '';
+    } else if (state.status === 'success') {
+        const data = state.data;
 
-        if (data.rows.length > 5) {
-            html += `
-                <div style="margin-top: 10px; font-style: italic; color: #666;">
-                    Showing 5 of ${data.rows.length} total rows. Check the CSV file for complete results.
+        // Build summary
+        summaryHtml = '<div style="display: grid; gap: 10px; margin-bottom: 20px;">';
+
+        if (!data.rows || data.rows.length === 0) {
+            // Warning state - execution succeeded but no results
+            summaryHtml += `
+                <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-exclamation-triangle" style="color: #d97706; font-size: 24px;"></i>
+                        <div>
+                            <h3 style="margin: 0; color: #92400e;">Execution Succeeded - No Results</h3>
+                            <p style="margin: 5px 0 0 0; color: #78350f;">The table executed successfully but returned 0 rows.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Success state - show stats
+            summaryHtml += `
+                <div style="background: #d1fae5; border: 2px solid #10b981; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-check-circle" style="color: #059669; font-size: 24px;"></i>
+                        <h3 style="margin: 0; color: #065f46;">Execution Successful</h3>
+                    </div>
                 </div>
             `;
         }
-    } else {
-        html += `
-            <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 4px; color: #856404;">
-                <i class="fas fa-info-circle"></i> No rows returned. The table execution completed but produced no results.
-            </div>
-        `;
+
+        summaryHtml += `<div><strong>Total Rows Generated:</strong> ${data.row_count_total || 0}</div>`;
+
+        if (data.filters_applied && Object.keys(data.filters_applied).length > 0) {
+            summaryHtml += `<div><strong>Rows After Filtering:</strong> ${data.row_count || 0}</div>`;
+            summaryHtml += `<div><strong>Filters Applied:</strong> `;
+            const filterPairs = Object.entries(data.filters_applied).map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`);
+            summaryHtml += filterPairs.join(', ');
+            summaryHtml += `</div>`;
+        }
+
+        if (data.execution_time) {
+            summaryHtml += `<div><strong>Execution Time:</strong> ${data.execution_time.toFixed(3)}s</div>`;
+        }
+
+        if (data.csv_path) {
+            // Build query string with filters
+            let downloadUrl = `/pybirdai/download-ancrdt-csv/${encodeURIComponent(tableName)}/`;
+            if (data.filters_applied && Object.keys(data.filters_applied).length > 0) {
+                const queryParams = Object.entries(data.filters_applied)
+                    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                    .join('&');
+                downloadUrl += `?${queryParams}`;
+            }
+
+            summaryHtml += `
+                <div style="margin-top: 10px;">
+                    <a href="${downloadUrl}" class="btn-download-csv" download>
+                        <i class="fas fa-download"></i> Download CSV
+                    </a>
+                </div>`;
+        }
+
+        summaryHtml += '</div>';
+
+        // Build table if there are rows
+        if (data.rows && data.rows.length > 0) {
+            tableHtml = buildResultsTable(data.rows, true);
+        }
     }
 
-    html += '</div>';
+    summary.innerHTML = summaryHtml;
+    tableContainer.innerHTML = tableHtml;
 
-    resultsContent.innerHTML = html;
+    // Show modal
+    modal.classList.add('show');
+}
+
+/**
+ * Close results modal
+ */
+function closeResultsModal() {
+    const modal = document.getElementById('results-modal');
+    modal.classList.remove('show');
 }
 
 /**
@@ -410,3 +501,11 @@ function getCookie(name) {
 $(document).ready(function() {
     initializeSelectize();
 });
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('results-modal');
+    if (event.target === modal) {
+        closeResultsModal();
+    }
+};

@@ -121,7 +121,7 @@ class CSVConverter:
 					cardinality = 1
 					if not (relationship is None):
 						cardinality = 1
-						
+
 					if not(cardinality == -1):
 						if firstItem:
 							referencedItem = getattr(theObject,relationship)
@@ -140,13 +140,29 @@ class CSVConverter:
 								referencedItemString = "None"
 							csvString = csvString + "," + str(referencedItemString)
 		else:
-			# Don't automatically call all methods - this causes unwanted function evaluations
-			# Instead, just serialize the object representation
-			if (firstItem):
-				csvString = csvString + str(theObject)
-				firstItem = False
-			else:
-				csvString = csvString + "," + str(theObject)
+			# For non-Django objects (like ANCRDT row objects), call methods to get values
+			# Get all callable methods (same as header creation logic)
+			operations = [method for method in dir(theObject.__class__) if callable(
+				getattr(theObject.__class__, method)) and not method.startswith('__')]
+
+			for eOperation in operations:
+				try:
+					# Call the method to get the value
+					value = getattr(theObject, eOperation)()
+					valueStr = str(value) if value is not None else ""
+
+					if firstItem:
+						csvString = csvString + valueStr
+						firstItem = False
+					else:
+						csvString = csvString + "," + valueStr
+				except Exception as e:
+					# If method call fails, use empty string
+					if firstItem:
+						csvString = csvString + ""
+						firstItem = False
+					else:
+						csvString = csvString + ","
 
 		return csvString + "\n"
 
