@@ -360,9 +360,19 @@ class Command(BaseCommand):
 
             # Use DatabaseCleanupService to clean all BIRD tables
             cleanup_service = DatabaseCleanupService()
-            success = cleanup_service.cleanup_bird_data_tables()
+            deletion_results = cleanup_service.cleanup_bird_data_tables()
 
-            if success:
+            # cleanup_bird_data_tables() returns a dict mapping table names to deleted counts
+            # An empty dict means tables were already empty (success)
+            # A dict with values means records were deleted (success)
+            # Only None or exception indicates failure
+            if deletion_results is not None:
+                total_deleted = sum(count for count in deletion_results.values() if count > 0)
+                if self.verbose and total_deleted > 0:
+                    self.stdout.write(f"Deleted {total_deleted} records from {len([c for c in deletion_results.values() if c > 0])} tables")
+                elif self.verbose:
+                    self.stdout.write("All tables were already empty")
+
                 self.stdout.write(self.style.SUCCESS(
                     "\nDatabase cleanup completed successfully!"
                 ))
@@ -393,12 +403,22 @@ class Command(BaseCommand):
             with open(sql_file_path, 'r', encoding='utf-8') as f:
                 sql_content = f.read()
 
-            # Split into individual statements
-            statements = [
-                stmt.strip()
-                for stmt in sql_content.split(';')
-                if stmt.strip() and not stmt.strip().startswith('--')
-            ]
+            # Split into individual statements and filter
+            raw_statements = sql_content.split(';')
+            statements = []
+
+            for stmt in raw_statements:
+                # Remove comment lines (lines starting with --)
+                lines = stmt.split('\n')
+                non_comment_lines = [
+                    line for line in lines
+                    if line.strip() and not line.strip().startswith('--')
+                ]
+
+                # Join non-comment lines and check if there's actual SQL
+                cleaned_stmt = '\n'.join(non_comment_lines).strip()
+                if cleaned_stmt:
+                    statements.append(cleaned_stmt)
 
             if self.verbose:
                 self.stdout.write(f"Executing {len(statements)} SQL statements...")
