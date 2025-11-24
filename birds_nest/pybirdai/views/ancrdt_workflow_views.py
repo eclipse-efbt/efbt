@@ -1490,8 +1490,10 @@ def download_ancrdt_csv(request, table_name):
         query_params['format'] = 'json'
         query_string = query_params.urlencode()
 
-        # Build URL to execute endpoint
-        url = f"http://localhost:8000/pybirdai/execute-ancrdt-table/{table_name}/?{query_string}"
+        # Build URL to execute endpoint with dynamic host detection
+        scheme = 'https' if request.is_secure() else 'http'
+        host = request.get_host()
+        url = f"{scheme}://{host}/pybirdai/execute-ancrdt-table/{table_name}/?{query_string}"
 
         logger.info(f"Making request to: {url}")
 
