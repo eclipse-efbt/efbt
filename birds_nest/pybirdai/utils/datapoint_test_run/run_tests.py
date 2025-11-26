@@ -610,6 +610,10 @@ class RegulatoryTemplateTestRunner:
         """
         Run tests based on a configuration file.
 
+        Supports both FINREP datapoint tests and ANCRDT table tests.
+        Test type is detected from the 'test_type' field in the config,
+        or inferred from the structure of the test configuration.
+
         Args:
             config_path: Path to config file
             use_uv: Whether to use UV as backend
@@ -628,6 +632,54 @@ class RegulatoryTemplateTestRunner:
         if not config:
             logger.error("Invalid or missing configuration file.")
             return
+
+        # Detect test type (FINREP vs ANCRDT)
+        test_type = config.get('test_type', None)
+
+        # If not explicitly set, try to infer from structure
+        if test_type is None and config.get('tests'):
+            first_test = config['tests'][0]
+            # ANCRDT tests have 'table_name', FINREP tests have 'reg_tid'
+            if 'table_name' in first_test:
+                test_type = 'ancrdt'
+                logger.info("Detected ANCRDT test type from configuration structure")
+            elif 'reg_tid' in first_test:
+                test_type = 'finrep'
+                logger.info("Detected FINREP test type from configuration structure")
+            else:
+                # Default to FINREP for backward compatibility
+                test_type = 'finrep'
+                logger.warning("Could not detect test type, defaulting to FINREP")
+
+        # Route to appropriate test runner
+        if test_type == 'ancrdt':
+            logger.info(f"Running ANCRDT tests from config: {config_path}")
+            try:
+                # Set up Python path and Django before importing ANCRDT runner
+                if '.' not in sys.path:
+                    sys.path.insert(0, '.')
+                if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+                    os.environ['DJANGO_SETTINGS_MODULE'] = 'birds_nest.settings'
+
+                import django
+                from django.conf import settings
+                if not settings.configured:
+                    django.setup()
+
+                from pybirdai.process_steps.ancrdt_transformation.test_runner_ancrdt import ANCRDTTestRunner
+                runner = ANCRDTTestRunner(suite_name=suite_name, use_uv=use_uv)
+                runner.run_ancrdt_tests_from_config(config_path)
+                return
+            except ImportError as e:
+                logger.error(f"Failed to import ANCRDT test runner: {e}")
+                logger.error("Ensure ANCRDT test infrastructure is installed")
+                return
+            except Exception as e:
+                logger.error(f"ANCRDT test execution failed: {e}", exc_info=True)
+                return
+
+        # Continue with FINREP tests (original logic)
+        logger.info(f"Running FINREP tests from config: {config_path}")
 
         connection = sqlite3.connect("db.sqlite3")
         cursor = connection.cursor()

@@ -3752,7 +3752,7 @@ def automode_create_database(request):
                     'To complete the setup:',
                     '1. Stop the Django server (Ctrl+C in the terminal)',
                     '2. Run: python manage.py complete_automode_setup',
-                    '3. Restart the server: python manage.py runserver 0.0.0.0:8000',
+                    '3. Restart the server using your preferred port (e.g., python manage.py runserver 0.0.0.0:8001)',
                     '4. Your database will be ready to use!'
                 ]
             })

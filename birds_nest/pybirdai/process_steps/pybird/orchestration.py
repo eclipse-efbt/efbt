@@ -401,11 +401,17 @@ class OrchestrationWithLineage:
 				if getattr(theObject, eReference) is None:
 					from django.apps import apps
 					table_name = eReference.split('_Table')[0]
+
+					# For ANCRDT intermediate tables - skip Django model lookup, create directly
+					is_ancrdt_intermediate = (table_name.startswith('ANCRDT_') and
+						any(pattern in table_name for pattern in ['Union', 'Loans_and_advances', '_filtered_', '_aggregated_']))
+
 					relevant_model = None
-					try:
-						relevant_model = apps.get_model('pybirdai',table_name)
-					except LookupError:
-						print("LookupError: " + table_name)
+					if not is_ancrdt_intermediate:
+						try:
+							relevant_model = apps.get_model('pybirdai',table_name)
+						except LookupError:
+							print("LookupError: " + table_name)
 
 					if relevant_model:
 						print("relevant_model: " + str(relevant_model))
@@ -543,21 +549,16 @@ class OrchestrationWithLineage:
 								report_prefix = report_prefix[:-len(suffix)]
 								break
 
-					# Try multiple import paths for flexibility
-					module_paths = [
-						f"generated_python_joins.{report_prefix}_logic",
-						f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
-					]
+					# Import from filter_code (executable production code)
+					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
 
-					for logic_module_name in module_paths:
-						try:
-							module = importlib.import_module(logic_module_name)
-							cls = getattr(module, eReference)
-							new_object = cls()
-							return new_object
-						except (ImportError, AttributeError) as e:
-							print(f"Could not find {eReference} in {logic_module_name}: {e}")
-							continue
+					try:
+						module = importlib.import_module(logic_module_name)
+						cls = getattr(module, eReference)
+						new_object = cls()
+						return new_object
+					except (ImportError, AttributeError) as e:
+						print(f"Could not find {eReference} in {logic_module_name}: {e}")
 
 			# If all else fails, print error
 			print(f"Error: Could not find class {eReference} in any expected location")
@@ -2210,18 +2211,25 @@ class OrchestrationOriginal:
 				if getattr(theObject, eReference) is None:
 					from django.apps import apps
 					table_name = eReference.split('_Table')[0]
+
+					# For ANCRDT intermediate tables - skip Django model lookup, create directly
+					is_ancrdt_intermediate = (table_name.startswith('ANCRDT_') and
+						any(pattern in table_name for pattern in ['Union', 'Loans_and_advances', '_filtered_', '_aggregated_']))
+
 					relevant_model = None
-					try:
-						relevant_model = apps.get_model('pybirdai',table_name)
-					except LookupError:
-						print("LookupError: " + table_name)
+					if not is_ancrdt_intermediate:
+						try:
+							relevant_model = apps.get_model('pybirdai',table_name)
+						except LookupError:
+							print("LookupError: " + table_name)
 
 					if relevant_model:
 						print("relevant_model: " + str(relevant_model))
 						newObject = relevant_model.objects.all()
 						print("newObject: " + str(newObject))
-						if newObject:
-							setattr(theObject,eReference,newObject)
+						# Always set the QuerySet even if empty (empty QuerySet evaluates to False in boolean context)
+						setattr(theObject,eReference,newObject)
+						if newObject.exists():
 							CSVConverter.persist_object_as_csv(newObject,True);
 
 					else:
@@ -2234,8 +2242,10 @@ class OrchestrationOriginal:
 							if operation == "init":
 								try:
 									getattr(newObject, operation)()
-								except:
-									print (" could not call function called " + operation)
+								except Exception as e:
+									import traceback
+									print(f" could not call function called {operation}:")
+									traceback.print_exc()
 
 						setattr(theObject,eReference,newObject)
 
@@ -2306,21 +2316,16 @@ class OrchestrationOriginal:
 								report_prefix = report_prefix[:-len(suffix)]
 								break
 
-					# Try multiple import paths for flexibility
-					module_paths = [
-						f"generated_python_joins.{report_prefix}_logic",
-						f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
-					]
+					# Import from filter_code (executable production code)
+					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
 
-					for logic_module_name in module_paths:
-						try:
-							module = importlib.import_module(logic_module_name)
-							cls = getattr(module, eReference)
-							new_object = cls()
-							return new_object
-						except (ImportError, AttributeError) as e:
-							print(f"Could not find {eReference} in {logic_module_name}: {e}")
-							continue
+					try:
+						module = importlib.import_module(logic_module_name)
+						cls = getattr(module, eReference)
+						new_object = cls()
+						return new_object
+					except (ImportError, AttributeError) as e:
+						print(f"Could not find {eReference} in {logic_module_name}: {e}")
 
 			# If all else fails, print error
 			print(f"Error: Could not find class {eReference} in any expected location")

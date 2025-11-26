@@ -143,7 +143,20 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
-CSRF_TRUSTED_ORIGINS = ["https://localhost:8000"]
+
+# Dynamic CSRF Trusted Origins configuration
+# Supports environment variable for production: CSRF_TRUSTED_ORIGINS="https://example.com,https://www.example.com"
+# Defaults to common localhost ports for development
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if os.environ.get('CSRF_TRUSTED_ORIGINS') else [
+    'http://localhost:8000',
+    'http://localhost:8001',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:8001',
+    'https://localhost:8000',
+    'https://localhost:8001',
+    'https://127.0.0.1:8000',
+    'https://127.0.0.1:8001',
+]
 
 DATA_UPLOAD_MAX_NUMBER_FILES = 1000
 DATA_UPLOAD_MAX_MEMORY_SIZE = 262144000

@@ -17,12 +17,20 @@ import os
 import gzip
 from urllib.parse import urlencode
 
-def main():
+def main(suite_name=None):
+    """
+    Generate a shareable URL for test results.
 
+    Args:
+        suite_name (str, optional): Name of the test suite. If not provided,
+            defaults to "basic_test_suite" or searches for available suites.
+    """
     # Get all JSON files from suite structure
-    # Default to basic_test_suite if no specific suite is found
-    DEFAULT_SUITE_NAME = "basic_test_suite"
-    PATH = os.path.join("tests", DEFAULT_SUITE_NAME, "tests", "test_results", "json")
+    # Allow caller to specify suite name, otherwise use environment variable or default
+    if suite_name is None:
+        suite_name = os.environ.get('TEST_SUITE_NAME', 'basic_test_suite')
+
+    PATH = os.path.join("tests", suite_name, "tests", "test_results", "json")
 
     # Check if path exists, if not, try to find other suites
     if not os.path.exists(PATH):
@@ -33,6 +41,7 @@ def main():
                 suite_path = os.path.join(tests_dir, item, "tests", "test_results", "json")
                 if os.path.exists(suite_path):
                     PATH = suite_path
+                    print(f"Using test results from suite: {item}")
                     break
 
         # If still no path found, create the default path structure

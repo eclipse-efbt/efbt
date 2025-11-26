@@ -64,7 +64,7 @@ class DatabaseCleanupService:
         try:
             # Get the path to bird_data_model.py
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            models_dir = os.path.join(current_dir, '..', 'models')
+            models_dir = os.path.join(current_dir, '..', '..', 'models')
             bird_data_model_path = os.path.join(models_dir, 'bird_data_model.py')
 
             if not os.path.exists(bird_data_model_path):

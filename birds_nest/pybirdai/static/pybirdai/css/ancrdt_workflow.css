@@ -9,9 +9,9 @@
    ======================= */
 
 .workflow-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 100%;
+    margin: 0;
+    padding: 10px 15px;
 }
 
 /* =======================

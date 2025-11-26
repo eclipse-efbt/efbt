@@ -264,32 +264,45 @@ class CreateExecutableFilters:
         report_html_file.write("{% endblock %}\n")
 
     def _generate_filter_logic(self, combination_item_list, sdd_context, indent):
-        """Generate filter logic for combination items (including TYP_INSTRMNT for completeness)"""
-        filter_string = ""
-        
+        """Generate filter logic using all([...]) pattern with 'in' checks"""
+
+        # Collect all filter conditions
+        filter_conditions = []
+
         for combination_item in combination_item_list:
             # Include TYP_INSTRMNT filter even though it's redundant with product class selection
-                
+
             leaf_node_members = CreateExecutableFilters.get_leaf_node_codes(self,
                                                                           sdd_context,
                                                                           combination_item.member_id,
                                                                           combination_item.member_hierarchy)
-            
+
             if len(leaf_node_members) > 0:
+                # Skip if it's just the default '0' code
                 if (len(leaf_node_members) == 1) and (str(leaf_node_members[0].code) == '0'):
-                    pass
-                else:
-                    filter_string += indent + "if "
-                    for leaf_node_member in leaf_node_members:
-                        filter_string += indent + "\t(item." + combination_item.variable_id.name + "() == '" + str(leaf_node_member.code) + "')  or \\\n"
-                    filter_string += indent + "\tFalse:\n"
-                    filter_string += indent + "\tpass\n"
-                    filter_string += indent + "else:\n"
-                    filter_string += indent + "\tfilter_passed = False\n"
+                    continue
+
+                # Collect all valid codes
+                valid_codes = [str(leaf_node_member.code) for leaf_node_member in leaf_node_members]
+
+                # Build the condition: item.VARIABLE() in ['val1', 'val2', ...]
+                condition = f"item.{combination_item.variable_id.name}() in ["
+                condition += ", ".join([f"'{code}'" for code in valid_codes])
+                condition += "]"
+
+                filter_conditions.append(condition)
             else:
                 print("No leaf node members for " + combination_item.variable_id.name + ":" + combination_item.member_id.member_id)
-        
-        return filter_string
+
+        # Generate the filter_passed = all([...]) statement
+        if filter_conditions:
+            filter_string = indent + "filter_passed = all([\n"
+            for condition in filter_conditions:
+                filter_string += indent + "\t" + condition + ",\n"
+            filter_string += indent + "])\n"
+            return filter_string
+        else:
+            return ""
 
     def get_leaf_node_codes(self, sdd_context, member, member_hierarchy):
         return_list = []

@@ -5,6 +5,8 @@ from .views import aorta_views
 from .views import workflow_views
 from .views import ancrdt_transformation_views
 from .views import ancrdt_workflow_views
+from .views import ancrdt_sql_fixture_editor_views
+from .views import ancrdt_views
 from .views import lineage_views
 from .views import output_layer_mapping_workflow_views
 from .views import execution_code_editor_views
@@ -163,6 +165,20 @@ urlpatterns = [
     path("ancrdt-workflow/step-2/review/", ancrdt_workflow_views.ancrdt_step_2_review_view, name="ancrdt_step_2_review"),
     path("ancrdt-workflow/step-3/review/", ancrdt_workflow_views.ancrdt_step_3_review_view, name="ancrdt_step_3_review"),
 
+    # ANCRDT Workflow - Step 4: Execute Tables
+    path("ancrdt-workflow/step-4/", ancrdt_workflow_views.ancrdt_step_4_execute_view, name="ancrdt_step_4"),
+    path("ancrdt-workflow/execute-table/<str:table_name>/", ancrdt_workflow_views.execute_ancrdt_table_with_fixture, name="ancrdt_execute_table_with_fixture"),
+    path("download-ancrdt-csv/<str:table_name>/", ancrdt_workflow_views.download_ancrdt_csv, name="download_ancrdt_csv"),
+
+    # ANCRDT Workflow - SQL Fixtures Editor
+    path("ancrdt-workflow/sql-fixtures-editor/", ancrdt_sql_fixture_editor_views.sql_fixtures_editor, name="ancrdt_sql_fixtures_editor"),
+    path("ancrdt-workflow/sql-fixtures-editor/<str:table_name>/", ancrdt_sql_fixture_editor_views.sql_fixtures_editor, name="ancrdt_sql_fixtures_editor_table"),
+    path("api/ancrdt/sql-fixtures/load/", ancrdt_sql_fixture_editor_views.load_sql_fixture, name="ancrdt_load_sql_fixture"),
+    path("api/ancrdt/sql-fixtures/save/", ancrdt_sql_fixture_editor_views.save_sql_fixture, name="ancrdt_save_sql_fixture"),
+    path("api/ancrdt/sql-fixtures/create/", ancrdt_sql_fixture_editor_views.create_sql_fixture, name="ancrdt_create_sql_fixture"),
+    path("api/ancrdt/sql-fixtures/delete/", ancrdt_sql_fixture_editor_views.delete_sql_fixture, name="ancrdt_delete_sql_fixture"),
+    path("api/ancrdt/sql-fixtures/list/<str:table_name>/", ancrdt_sql_fixture_editor_views.list_sql_fixtures, name="ancrdt_list_sql_fixtures"),
+
     # ANCRDT Workflow - API endpoints for cube structure visualization
     path("api/ancrdt/cubes/", ancrdt_workflow_views.api_ancrdt_cubes, name="api_ancrdt_cubes"),
     path("api/ancrdt/cube-structure/<str:cube_id>/", ancrdt_workflow_views.api_ancrdt_cube_structure, name="api_ancrdt_cube_structure"),
@@ -239,6 +255,7 @@ urlpatterns = [
         name="run_create_python_transformations_from_db",
     ),
     path("execute-data-point/<str:data_point_id>/", views.execute_data_point, name="execute_data_point"),
+    path("execute-ancrdt-table/<str:table_name>/", ancrdt_views.execute_ancrdt_table, name="execute_ancrdt_table"),
     path("show-report/<str:report_id>/", views.show_report, name="show_report"),
     path("report-templates/", report_views.report_templates, name="report_templates"),
     path("lineage/", views.list_lineage_files, name="list_lineage_files"),

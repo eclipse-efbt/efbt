@@ -380,16 +380,23 @@
                 <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
             </div>
             <div class="task-card">
-                <button
-                    class="operation-btn btn-grid-action {{ task.status }}"
-                    onclick="executeANCRDTStep({{ task.step_number }})"
-                    id="ancrdt-step-{{ task.step_number }}-btn"
-                    {% if task.status == 'running' %}disabled{% endif %}>
-                    {% if task.status == 'completed' %}Do
-                    {% elif task.status == 'running' %}⏳ Running
-                    {% elif task.status == 'failed' %}✗ Failed
-                    {% else %}Do{% endif %}
-                </button>
+                {% if task.step_number == 4 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_4' %}"
+                       class="operation-btn btn-grid-action running">
+                        Execute
+                    </a>
+                {% else %}
+                    <button
+                        class="operation-btn btn-grid-action {{ task.status }}"
+                        onclick="executeANCRDTStep({{ task.step_number }})"
+                        id="ancrdt-step-{{ task.step_number }}-btn"
+                        {% if task.status == 'running' %}disabled{% endif %}>
+                        {% if task.status == 'completed' %}Do
+                        {% elif task.status == 'running' %}⏳ Running
+                        {% elif task.status == 'failed' %}✗ Failed
+                        {% else %}Do{% endif %}
+                    </button>
+                {% endif %}
             </div>
             <div class="task-card">
                 {% if task.step_number == 1 %}
@@ -406,6 +413,11 @@
                     <a href="{% url 'pybirdai:ancrdt_step_3_review' %}"
                        class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
                         Review
+                    </a>
+                {% elif task.step_number == 4 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_4' %}"
+                       class="operation-btn btn-grid-action running">
+                        Execute
                     </a>
                 {% else %}
                     <span class="operation-btn btn-grid-action invalidated">

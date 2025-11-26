@@ -45,3 +45,7 @@ birds_nest/pybirdai/models/bird_data_model.py
 *.prof
 *.ipynb
 example_calc_ancrdt.md
+documentation/archive
+birds_nest/pybirdai/process_steps/filter_code/ancrdt_output_tables.py
+documentation
+docs/
