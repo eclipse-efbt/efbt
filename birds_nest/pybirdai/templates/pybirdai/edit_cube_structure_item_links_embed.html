@@ -407,11 +407,16 @@
                     <td>${link.foreign_cube_id || '-'}</td>
                     <td>${link.primary_cube_id || '-'}</td>
                     <td>
-                        <button class="delete-btn" onclick="deleteStructureItemLink('${link.cube_structure_item_link_id}')">
+                        <button class="delete-btn" data-link-id="${link.cube_structure_item_link_id || ''}">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </td>
                 `;
+                // Add click handler to the delete button
+                const deleteBtn = row.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', function() {
+                    deleteStructureItemLink(this.getAttribute('data-link-id'));
+                });
                 tbody.appendChild(row);
             });
         }
@@ -426,7 +431,7 @@
                 return;
             }
 
-            fetch(`/pybirdai/delete-cube-structure-item-link/${linkId}/`, {
+            fetch(`/pybirdai/delete-cube-structure-item-link/${encodeURIComponent(linkId)}/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrftoken,

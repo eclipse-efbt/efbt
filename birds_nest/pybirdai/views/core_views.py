@@ -1948,8 +1948,11 @@ def show_gaps(request):
 
 @require_http_methods(["POST"])
 def delete_cube_structure_item_link(request, cube_structure_item_link_id):
+    # Check if this is an AJAX request
+    is_ajax = request.headers.get('Content-Type') == 'application/json' or request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
     try:
-        link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
+        link = CUBE_STRUCTURE_ITEM_LINK.objects.get(cube_structure_item_link_id=cube_structure_item_link_id)
         # Store the cube_link_id before deleting
         cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
         link.delete()
@@ -1974,10 +1977,20 @@ def delete_cube_structure_item_link(request, cube_structure_item_link_id):
             except KeyError:
                 pass
 
+        # Return JSON response for AJAX requests
+        if is_ajax:
+            return JsonResponse({'status': 'success', 'message': 'Link deleted successfully.'})
+
         messages.success(request, 'Link deleted successfully.')
+    except CUBE_STRUCTURE_ITEM_LINK.DoesNotExist:
+        if is_ajax:
+            return JsonResponse({'status': 'error', 'message': 'Link not found. It may have already been deleted.'}, status=404)
+        messages.error(request, 'Link not found. It may have already been deleted.')
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'cube structure item link deletion')
+        if is_ajax:
+            return JsonResponse({'status': 'error', 'message': 'An error occurred while deleting the link.'}, status=500)
 
     # Check the referer to determine which page to redirect back to
     referer = request.META.get('HTTP_REFERER', '')
