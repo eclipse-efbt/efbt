@@ -30,6 +30,7 @@
     <table>
         <thead>
             <tr>
+                <th>Actions</th>
                 <th>Maintenance Agency</th>
                 <th>Cube ID</th>
                 <th>Code</th>
@@ -45,6 +46,13 @@
         <tbody>
             {% for form in formset %}
             <tr>
+                <td>
+                    <a href="{% url 'pybirdai:cube_structure_viewer' cube_id=form.instance.cube_id %}"
+                       class="action-link"
+                       title="View dimensions and manage hierarchies">
+                        View Dimensions
+                    </a>
+                </td>
                 <td>{{ form.instance.maintenance_agency_id }}</td>
                 <td>{{ form.instance.cube_id }}</td>
                 <td>{{ form.instance.code }}</td>
@@ -89,7 +97,7 @@
     table {
         border-collapse: collapse;
         width: 100%;
-        min-width: 2000px; /* Set minimum width to ensure horizontal scroll */
+        min-width: 2100px; /* Set minimum width to ensure horizontal scroll */
     }
     th, td {
         border: 1px solid #ddd;
@@ -103,6 +111,19 @@
     }
     .pagination {
         margin-top: 20px;
+    }
+    .action-link {
+        display: inline-block;
+        padding: 4px 10px;
+        background-color: #4a90e2;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 0.9em;
+        white-space: nowrap;
+    }
+    .action-link:hover {
+        background-color: #357abd;
     }
 </style>
 {% endblock %}

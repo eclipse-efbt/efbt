@@ -13,11 +13,23 @@
 Navigation views for basic page rendering.
 """
 from django.shortcuts import render
+from django.conf import settings
 
 
 def home_view(request):
-    """Render the home page."""
-    return render(request, 'pybirdai/home.html')
+    """Render the home page with optional admin credentials display."""
+    context = {}
+
+    # Only show credentials in DEBUG mode (development/codespace)
+    if settings.DEBUG:
+        context['admin_credentials'] = {
+            'username': 'admin',
+            'password': 'password',
+            'email': 'a@b.com',
+            'admin_url': '/admin/'
+        }
+
+    return render(request, 'pybirdai/home.html', context)
 
 
 def automode_view(request):

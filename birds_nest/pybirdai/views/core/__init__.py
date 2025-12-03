@@ -28,6 +28,9 @@ Views are organized into submodules by functionality:
 - loading_helpers: Loading page patterns
 - view_helpers: Common view patterns
 - cache_manager: SDDContext cache operations
+- semantic_integration_views: Semantic integration editor
+- member_hierarchy_views: Member hierarchy editor
+- automode_views: Automode configuration and execution
 """
 
 # Navigation views
@@ -62,6 +65,7 @@ from .process_execution_views import (
     upload_technical_export_files,
     upload_joins_configuration,
     execute_data_point,
+    execute_datapoint_with_lineage,
 )
 
 # Variable mapping views
@@ -127,6 +131,13 @@ from .csv_views import (
     export_database_to_csv,
     import_bird_data_from_csv_export,
     load_variables_from_csv_file,
+    # Mapping import/export
+    export_mapping_template,
+    export_mapping_data,
+    import_mapping_from_csv,
+    delete_mapping_row,
+    duplicate_mapping,
+    update_mapping_row,
 )
 
 # Analysis views
@@ -170,6 +181,45 @@ from .cache_manager import (
     update_variable_mapping_cache,
 )
 
+# Semantic integration views
+from .semantic_integration_views import (
+    semantic_integration_editor,
+    add_variable_endpoint,
+    edit_mapping_endpoint,
+    get_domain_members,
+    get_mapping_details,
+)
+
+# Member hierarchy views
+from .member_hierarchy_views import (
+    member_hierarchy_editor,
+    add_member_to_hierarchy,
+    delete_member_from_hierarchy,
+    edit_hierarchy_node,
+    get_members_by_domain,
+    get_subdomain_enumerations,
+    get_hierarchy_json,
+    save_hierarchy_json,
+    get_domain_members_json,
+    get_available_hierarchies_json,
+    create_hierarchy_from_visualization,
+    create_hierarchy_simple,
+    create_member_json,
+)
+
+# Automode views
+from .automode_views import (
+    automode_create_database,
+    automode_import_bird_metamodel_from_website,
+    test_automode_components,
+    run_fetch_curated_resources,
+    automode_configure,
+    automode_execute,
+    automode_continue_post_restart,
+    automode_debug_config,
+    automode_status,
+)
+
 # Define __all__ for explicit public API
 __all__ = [
     # Navigation
@@ -200,6 +250,7 @@ __all__ = [
     'upload_technical_export_files',
     'upload_joins_configuration',
     'execute_data_point',
+    'execute_datapoint_with_lineage',
     # Variable mappings
     'edit_variable_mappings',
     'edit_variable_mapping_items',
@@ -247,6 +298,12 @@ __all__ = [
     'export_database_to_csv',
     'import_bird_data_from_csv_export',
     'load_variables_from_csv_file',
+    'export_mapping_template',
+    'export_mapping_data',
+    'import_mapping_from_csv',
+    'delete_mapping_row',
+    'duplicate_mapping',
+    'update_mapping_row',
     # Analysis
     'DuplicatePrimaryMemberIdListView',
     'JoinIdentifierListView',
@@ -274,4 +331,34 @@ __all__ = [
     'update_mapping_definition_cache',
     'update_member_mapping_cache',
     'update_variable_mapping_cache',
+    # Semantic integration
+    'semantic_integration_editor',
+    'add_variable_endpoint',
+    'edit_mapping_endpoint',
+    'get_domain_members',
+    'get_mapping_details',
+    # Member hierarchy
+    'member_hierarchy_editor',
+    'add_member_to_hierarchy',
+    'delete_member_from_hierarchy',
+    'edit_hierarchy_node',
+    'get_members_by_domain',
+    'get_subdomain_enumerations',
+    'get_hierarchy_json',
+    'save_hierarchy_json',
+    'get_domain_members_json',
+    'get_available_hierarchies_json',
+    'create_hierarchy_from_visualization',
+    'create_hierarchy_simple',
+    'create_member_json',
+    # Automode
+    'automode_create_database',
+    'automode_import_bird_metamodel_from_website',
+    'test_automode_components',
+    'run_fetch_curated_resources',
+    'automode_configure',
+    'automode_execute',
+    'automode_continue_post_restart',
+    'automode_debug_config',
+    'automode_status',
 ]

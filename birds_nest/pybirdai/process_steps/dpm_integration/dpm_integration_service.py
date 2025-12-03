@@ -376,12 +376,41 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         # Filter tables if selected_tables provided
         if selected_tables:
             self.logger.info(f"Filtering to {len(selected_tables)} selected tables BEFORE mapping")
-            tables_df = tables_df[tables_df['TABLE_ID'].isin(selected_tables)]
+
+            # Normalize selected_tables codes (replace . with _ for comparison)
+            # User passes codes like 'C_07.00.a', which may need normalization
+            normalized_codes = set()
+            for code in selected_tables:
+                # Add both original and normalized versions
+                normalized_codes.add(code)
+                normalized_codes.add(code.replace('.', '_'))
+
+            # Filter tables_df by CODE column (not TABLE_ID)
+            # CODE column contains values like 'C_07.00.a'
+            if 'CODE' in tables_df.columns:
+                tables_df = tables_df[tables_df['CODE'].isin(normalized_codes)]
+            else:
+                # Fallback: filter by TABLE_ID if CODE not available
+                tables_df = tables_df[tables_df['TABLE_ID'].isin(selected_tables)]
 
             # Get table_map from phase_a_data and filter to only selected tables
-            # CSV no longer contains TABLE_VID column - mapping comes from JSON
+            # table_map values are TABLE_IDs like 'EBA_COREP_C_07_00_a_4_0'
+            # We need to match against the code pattern in the TABLE_ID
             table_map = phase_a_data.get('table_map', {})
-            table_map = {vid: tid for vid, tid in table_map.items() if tid in selected_tables}
+
+            def tid_matches_codes(tid, codes):
+                """Check if a TABLE_ID matches any of the selected table codes."""
+                for code in codes:
+                    # Normalize the code: C_07.00.a -> C_07_00_a
+                    normalized = code.replace('.', '_')
+                    # Check if normalized code appears in the TABLE_ID
+                    # e.g., 'C_07_00_a' in 'EBA_COREP_C_07_00_a_4_0'
+                    if normalized in tid:
+                        return True
+                return False
+
+            table_map = {vid: tid for vid, tid in table_map.items()
+                        if tid_matches_codes(tid, selected_tables)}
 
             self.logger.info(f"Filtered to {len(tables_df)} tables (table_map: {len(table_map)} entries)")
         else:

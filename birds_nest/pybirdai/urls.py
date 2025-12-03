@@ -394,6 +394,8 @@ urlpatterns = [
     path(
         "api/hierarchy/create/", views.create_hierarchy_from_visualization, name="create_hierarchy_from_visualization"
     ),
+    path("api/hierarchy/create-simple/", views.create_hierarchy_simple, name="create_hierarchy_simple"),
+    path("api/member/create/", views.create_member_json, name="create_member_json"),
     path("automode/configure/", views.automode_configure, name="automode_configure"),
     path("automode/execute/", views.automode_execute, name="automode_execute"),
     path(

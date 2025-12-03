@@ -23,7 +23,8 @@ from pybirdai.models.bird_meta_data_model import (
     MAPPING_DEFINITION, VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM,
     MEMBER_MAPPING, MEMBER_MAPPING_ITEM, MAPPING_TO_CUBE,
     DOMAIN, MEMBER, SUBDOMAIN, SUBDOMAIN_ENUMERATION,
-    VARIABLE, FRAMEWORK, FRAMEWORK_TABLE, MAINTENANCE_AGENCY
+    VARIABLE, FRAMEWORK, FRAMEWORK_TABLE, MAINTENANCE_AGENCY,
+    MEMBER_HIERARCHY
 )
 from pybirdai.process_steps.output_layer_mapping_workflow.mapping_orchestrator import OutputLayerMappingOrchestrator
 from pybirdai.process_steps.output_layer_mapping_workflow.combination_creator import CombinationCreator
@@ -5032,6 +5033,9 @@ def api_cube_structure(request, cube_id):
     Generic API endpoint to get cube structure items for any cube.
     Returns JSON with cube details and hierarchical structure items.
     Reusable service for cube structure visualization.
+
+    Now includes domain_id and existing hierarchy information for each variable
+    to support hierarchy creation/editing from the cube structure viewer.
     """
     try:
         # Get the cube
@@ -5049,13 +5053,46 @@ def api_cube_structure(request, cube_id):
             cube_structure_id=structure
         ).select_related(
             'variable_id',
+            'variable_id__domain_id',
             'member_id',
             'subdomain_id'
         ).order_by('order')
 
+        # Collect all domain IDs to batch-fetch hierarchies
+        domain_ids = set()
+        for item in structure_items:
+            if item.variable_id and item.variable_id.domain_id:
+                domain_ids.add(item.variable_id.domain_id.domain_id)
+
+        # Build a mapping of domain_id -> list of hierarchies
+        domain_hierarchies = {}
+        if domain_ids:
+            hierarchies = MEMBER_HIERARCHY.objects.filter(
+                domain_id__domain_id__in=domain_ids
+            ).select_related('domain_id')
+            for h in hierarchies:
+                if h.domain_id:
+                    d_id = h.domain_id.domain_id
+                    if d_id not in domain_hierarchies:
+                        domain_hierarchies[d_id] = []
+                    domain_hierarchies[d_id].append({
+                        'hierarchy_id': h.member_hierarchy_id,
+                        'name': h.name,
+                        'code': h.code
+                    })
+
         # Build the items array
         items = []
         for item in structure_items:
+            # Get domain info if variable has a domain
+            domain_id = None
+            domain_name = None
+            variable_hierarchies = []
+            if item.variable_id and item.variable_id.domain_id:
+                domain_id = item.variable_id.domain_id.domain_id
+                domain_name = item.variable_id.domain_id.name
+                variable_hierarchies = domain_hierarchies.get(domain_id, [])
+
             items.append({
                 'order': item.order,
                 'role': item.role,
@@ -5064,6 +5101,9 @@ def api_cube_structure(request, cube_id):
                 'variable_id': item.variable_id.variable_id if item.variable_id else None,
                 'variable_name': item.variable_id.name if item.variable_id else 'Unknown',
                 'variable_code': item.variable_id.code if item.variable_id else None,
+                'domain_id': domain_id,
+                'domain_name': domain_name,
+                'hierarchies': variable_hierarchies,
                 'member_id': item.member_id.member_id if item.member_id else None,
                 'member_name': item.member_id.name if item.member_id else None,
                 'subdomain_id': item.subdomain_id.subdomain_id if item.subdomain_id else None,

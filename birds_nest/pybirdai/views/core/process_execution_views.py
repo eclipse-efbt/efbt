@@ -411,3 +411,77 @@ def execute_data_point(request, data_point_id):
         <p><a href="/pybirdai/trails/">Go To Lineage Viewer</a></p>
     """
     return HttpResponse(html_response)
+
+
+def execute_datapoint_with_lineage(request, data_point_id):
+    """
+    API endpoint that executes a datapoint and returns the filtered lineage as JSON.
+    This combines datapoint execution with filtered lineage retrieval in a single call.
+
+    Returns:
+    - Execution result
+    - Trail ID
+    - Filtered lineage of the latest execution
+    """
+    import json
+    from django.views.decorators.http import require_http_methods
+    from .view_helpers import serialize_datetime
+
+    try:
+        # Execute the datapoint
+        app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
+        result = app_config.run_execute_data_point(data_point_id)
+
+        # Get the latest trail created by this execution
+        from pybirdai.views.models import Trail
+        latest_trail = Trail.objects.filter(
+            name__startswith=f"DataPoint_{data_point_id}_"
+        ).order_by('-id').first()
+
+        if not latest_trail:
+            return JsonResponse({
+                'success': False,
+                'error': 'No trail found for the executed datapoint'
+            }, status=404)
+
+        # Get the filtered lineage for this trail
+        from pybirdai.views.enhanced_lineage_api import get_trail_filtered_lineage
+
+        # Create a mock request for the lineage API
+        class MockRequest:
+            def __init__(self):
+                self.GET = {'include_unused': 'false'}
+                self.method = 'GET'
+
+        mock_request = MockRequest()
+        lineage_response = get_trail_filtered_lineage(mock_request, latest_trail.id)
+
+        # Parse the lineage response
+        lineage_data = json.loads(lineage_response.content)
+
+        # Construct the final response
+        response_data = {
+            'success': True,
+            'execution': {
+                'datapoint_id': data_point_id,
+                'result': result,
+                'trail_id': latest_trail.id,
+                'trail_name': latest_trail.name,
+                'execution_time': latest_trail.created_at.isoformat() if latest_trail.created_at else None
+            },
+            'filtered_lineage': lineage_data
+        }
+
+        return JsonResponse(response_data, json_dumps_params={'default': serialize_datetime})
+
+    except Exception as e:
+        logger.error(f"Error executing datapoint with lineage: {str(e)}", exc_info=True)
+
+        # Optionally, provide a generic hint about possible file permissions if relevant
+        hint = 'Check file permissions on the birds_nest directory if running locally.'
+
+        return JsonResponse({
+            'success': False,
+            'error': "An internal error has occurred.",
+            'hint': hint
+        }, status=500)
