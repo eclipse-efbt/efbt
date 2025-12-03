@@ -68,6 +68,9 @@ class RunImportDPMData(AppConfig):
         dpm_service = DPMImporterService(output_directory=os.path.join(base_dir, 'results'))
 
         try:
+            # Ensure DPM database is downloaded and extracted (creates CSV files in target/)
+            dpm_service.ensure_dpm_database_extracted()
+
             # Run Step 1 - writes all CSVs to results/technical_export/
             phase_a_data = dpm_service.map_csvs_phase_a(frameworks=frameworks)
             logger.info("Step 1 completed - all CSVs written to results/technical_export/")

@@ -194,6 +194,31 @@ class DPMImporterService:
 
         self.logger.info("DPM application run completed successfully")
 
+    def ensure_dpm_database_extracted(self):
+        """
+        Ensure DPM database is downloaded and extracted.
+        This creates CSV files in the target/ directory.
+
+        Call this before map_csvs_phase_a() to ensure the source CSV files exist.
+        """
+        self.logger.info("Ensuring DPM database is downloaded and extracted")
+
+        # Clean up existing extraction
+        if os.path.exists("dpm_database"):
+            self.logger.debug("Cleaning up existing dpm_database directory")
+            shutil.rmtree("dpm_database")
+
+        # Download if not present
+        if not os.path.exists(DEFAULT_DB_LOCAL_PATH):
+            self.logger.info("DPM database not found locally, downloading...")
+            self.fetch_link_for_database_download()
+            self.download_dpm_database()
+        else:
+            self.logger.info(f"Using existing DPM database file: {DEFAULT_DB_LOCAL_PATH}")
+
+        # Extract to create CSV files in target/
+        self.extract_dpm_database()
+        self.logger.info("DPM database extracted successfully - CSV files available in target/")
 
     def write_csv_maintenance_agency(self):
         """
