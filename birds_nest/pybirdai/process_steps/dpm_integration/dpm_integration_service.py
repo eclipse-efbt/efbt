@@ -146,15 +146,17 @@ class DPMImporterService:
             self.logger.error(f"Failed to extract DPM database: {e}")
             raise
 
-    def run_application(self,extract_cleanup:bool=False,download_cleanup:bool=False,with_extract:bool=True,enable_table_duplication:bool=True,frameworks:list=None):
+    def run_application(self,extract_cleanup:bool=False,download_cleanup:bool=False,with_extract:bool=True,enable_table_duplication:bool=True,frameworks:list=None,selected_tables:list=None):
         """
         Run the DPM application to extract and map DPM database.
 
         Args:
             frameworks: List of framework codes to import (e.g., ['FINREP', 'COREP']).
                        If None, all frameworks are imported.
+            selected_tables: List of table_ids to process (filters ordinates/cells).
+                            If None, all tables are processed.
         """
-        self.logger.info(f"Starting DPM application run with parameters: extract_cleanup={extract_cleanup}, download_cleanup={download_cleanup}, with_extract={with_extract}, enable_table_duplication={enable_table_duplication}, frameworks={frameworks}")
+        self.logger.info(f"Starting DPM application run with parameters: extract_cleanup={extract_cleanup}, download_cleanup={download_cleanup}, with_extract={with_extract}, enable_table_duplication={enable_table_duplication}, frameworks={frameworks}, selected_tables={len(selected_tables) if selected_tables else 'all'}")
 
         if with_extract:
             if os.path.exists("dpm_database"):
@@ -172,8 +174,8 @@ class DPMImporterService:
 
             self.extract_dpm_database()
 
-        self.logger.info(f"Starting CSV mapping to SDD exchange format with frameworks: {frameworks}")
-        self.map_csvs_to_sdd_exchange_format(enable_table_duplication=enable_table_duplication, frameworks=frameworks)
+        self.logger.info(f"Starting CSV mapping to SDD exchange format with frameworks: {frameworks}, selected_tables: {len(selected_tables) if selected_tables else 'all'}")
+        self.map_csvs_to_sdd_exchange_format(enable_table_duplication=enable_table_duplication, frameworks=frameworks, selected_tables=selected_tables)
 
         if extract_cleanup:
             self.logger.debug("Cleaning up extracted dpm_database directory")

@@ -59,16 +59,18 @@ if __name__ == "__main__":
     app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
     app_config.run_delete_bird_metadata_database()
 
+    # Phase A: Extract metadata only (no explosion - fast)
     import cProfile
     with cProfile.Profile() as prof:
         app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=False)
+        app_config.run_import_phase_a(frameworks=['COREP'])
         prof.dump_stats('RunDownloadDPMData.prof')
 
-    import cProfile
+    # Phase B: Process only selected tables then import (controlled explosion)
+    selected_tables = ['C_07.00.a']  # Limited set for CI testing
     with cProfile.Profile() as prof:
         app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=True)
+        app_config.run_import_phase_b(selected_tables=selected_tables, enable_table_duplication=False)
         prof.dump_stats('RunImportDPMDatabase.prof')
 
     # import cProfile
