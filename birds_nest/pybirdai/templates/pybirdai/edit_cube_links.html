@@ -289,7 +289,7 @@ function exportVisualization() {
 
 function confirmDelete(cubeLinkId) {
     if (confirm('Are you sure you want to delete this cube link?')) {
-        fetch("{% url 'pybirdai:delete_cube_link' 0 %}".replace('0', cubeLinkId), {
+        fetch("{% url 'pybirdai:delete_cube_link' 0 %}".replace('0', encodeURIComponent(cubeLinkId)), {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',

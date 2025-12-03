@@ -422,11 +422,16 @@
                     <td>${link.join_identifier || '-'}</td>
                     <td>${link.order_relevance !== null ? link.order_relevance : '-'}</td>
                     <td>
-                        <button class="delete-btn" onclick="deleteCubeLink('${link.cube_link_id}')">
+                        <button class="delete-btn" data-cube-link-id="${link.cube_link_id || ''}">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </td>
                 `;
+                // Add click handler to the delete button
+                const deleteBtn = row.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', function() {
+                    deleteCubeLink(this.getAttribute('data-cube-link-id'));
+                });
                 tbody.appendChild(row);
             });
         }
@@ -442,7 +447,7 @@
                 return;
             }
 
-            fetch(`/pybirdai/delete-cube-link/${cubeLinkId}/`, {
+            fetch(`/pybirdai/delete-cube-link/${encodeURIComponent(cubeLinkId)}/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrftoken,
