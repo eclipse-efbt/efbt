@@ -18,8 +18,17 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map: dict = {}, dp_map: dict = {}):
-    """Map table cells from TableCell.csv to the target format"""
+def map_table_cell(path=None, table_map: dict = {}, dp_map: dict = {}, base_path="target"):
+    """Map table cells from TableCell.csv to the target format
+
+    Args:
+        path: Path to TableCell.csv (deprecated, use base_path instead)
+        table_map: Dictionary mapping table IDs
+        dp_map: Dictionary mapping data point IDs
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "TableCell.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE

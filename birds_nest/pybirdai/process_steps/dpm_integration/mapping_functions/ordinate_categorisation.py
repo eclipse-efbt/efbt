@@ -20,8 +20,15 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def traceback_restrictions(path=os.path.join("target", "OpenMemberRestriction.csv")):
-    """Load and process open member restrictions"""
+def traceback_restrictions(path=None, base_path="target"):
+    """Load and process open member restrictions
+
+    Args:
+        path: Path to OpenMemberRestriction.csv (deprecated, use base_path instead)
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "OpenMemberRestriction.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Rename columns with "Restriction" prefix (except RestrictionID)
@@ -31,12 +38,25 @@ def traceback_restrictions(path=os.path.join("target", "OpenMemberRestriction.cs
     return df
 
 
-def map_ordinate_categorisation(path=os.path.join("target", "OrdinateCategorisation.csv"), member_map: dict = {}, dimension_map: dict = {}, ordinate_map: dict = {}, hierarchy_map: dict = {}, metrics_map: dict = {}, start_index_after_last: bool = False):
-    """Map ordinate categorisation from OrdinateCategorisation.csv to the target format"""
+def map_ordinate_categorisation(path=None, member_map: dict = {}, dimension_map: dict = {}, ordinate_map: dict = {}, hierarchy_map: dict = {}, metrics_map: dict = {}, start_index_after_last: bool = False, base_path="target"):
+    """Map ordinate categorisation from OrdinateCategorisation.csv to the target format
+
+    Args:
+        path: Path to OrdinateCategorisation.csv (deprecated, use base_path instead)
+        member_map: Dictionary mapping member IDs
+        dimension_map: Dictionary mapping dimension IDs
+        ordinate_map: Dictionary mapping ordinate IDs
+        hierarchy_map: Dictionary mapping hierarchy IDs
+        metrics_map: Dictionary mapping metrics
+        start_index_after_last: Whether to start ID index after the last existing ID
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "OrdinateCategorisation.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Merge with restrictions
-    restrictions_df = traceback_restrictions()
+    restrictions_df = traceback_restrictions(base_path=base_path)
     if not restrictions_df.empty:
         df = df.merge(restrictions_df, on="RestrictionID", how="left")
 

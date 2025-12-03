@@ -18,8 +18,18 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def map_cell_position(path=os.path.join("target", "CellPosition.csv"), cell_map: dict = {}, ordinate_map: dict = {}, start_index_after_last: bool = False):
-    """Map cell positions from CellPosition.csv to the target format"""
+def map_cell_position(path=None, cell_map: dict = {}, ordinate_map: dict = {}, start_index_after_last: bool = False, base_path="target"):
+    """Map cell positions from CellPosition.csv to the target format
+
+    Args:
+        path: Path to CellPosition.csv (deprecated, use base_path instead)
+        cell_map: Dictionary mapping cell IDs
+        ordinate_map: Dictionary mapping ordinate IDs
+        start_index_after_last: Whether to start ID index after the last existing ID
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "CellPosition.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE

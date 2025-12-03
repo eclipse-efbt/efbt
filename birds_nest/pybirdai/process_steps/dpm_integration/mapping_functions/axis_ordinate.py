@@ -18,8 +18,16 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def map_axis_ordinate(path=os.path.join("target", "AxisOrdinate.csv"), axis_map: dict = {}):
-    """Map axis ordinates from AxisOrdinate.csv to the target format"""
+def map_axis_ordinate(path=None, axis_map: dict = {}, base_path="target"):
+    """Map axis ordinates from AxisOrdinate.csv to the target format
+
+    Args:
+        path: Path to AxisOrdinate.csv (deprecated, use base_path instead)
+        axis_map: Dictionary mapping axis IDs
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "AxisOrdinate.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE

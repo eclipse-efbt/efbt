@@ -41,15 +41,18 @@ FRAMEWORK_FRIENDLY_NAMES = {
 }
 
 
-def map_frameworks(path=os.path.join("target", "ReportingFramework.csv"), frameworks=None):
+def map_frameworks(path=None, frameworks=None, base_path="target"):
     """
     Map frameworks from ReportingFramework.csv to the target format.
 
     Args:
-        path: Path to ReportingFramework.csv
+        path: Path to ReportingFramework.csv (deprecated, use base_path instead)
         frameworks: List of framework codes to filter (e.g., ['FINREP', 'COREP']).
                    If None, all frameworks are imported.
+        base_path: Base directory containing CSV files (default: "target")
     """
+    if path is None:
+        path = os.path.join(base_path, "ReportingFramework.csv")
     df = pd.read_csv(path, dtype=str)
 
     if frameworks:

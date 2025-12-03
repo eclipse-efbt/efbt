@@ -18,8 +18,16 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def map_dimensions(path=os.path.join("target", "Dimension.csv"), domain_id_map: dict = {}):
-    """Map dimensions from Dimension.csv to the target format"""
+def map_dimensions(path=None, domain_id_map: dict = {}, base_path="target"):
+    """Map dimensions from Dimension.csv to the target format
+
+    Args:
+        path: Path to Dimension.csv (deprecated, use base_path instead)
+        domain_id_map: Dictionary mapping domain IDs
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "Dimension.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE

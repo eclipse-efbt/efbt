@@ -21,20 +21,23 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 logger = logging.getLogger(__name__)
 
 
-def map_axis(path=os.path.join("target", "Axis.csv"), table_map: dict = {},
-             save_z_axis_config: bool = False, output_directory: str = None):
+def map_axis(path=None, table_map: dict = {},
+             save_z_axis_config: bool = False, output_directory: str = None, base_path="target"):
     """
     Map axis from Axis.csv to the target format.
 
     Args:
-        path: Path to Axis.csv
+        path: Path to Axis.csv (deprecated, use base_path instead)
         table_map: Mapping of table VIDs to table IDs
         save_z_axis_config: If True, save Z-axis configuration to JSON file
         output_directory: Directory to save config (defaults to results/dpm_z_axis_configuration)
+        base_path: Base directory containing CSV files (default: "target")
 
     Returns:
         Tuple of (df, id_mapping)
     """
+    if path is None:
+        path = os.path.join(base_path, "Axis.csv")
     # Map numeric to alphabetic (for ORIENTATION field)
     orientation_map = {"1": "X", "2": "Y", "3": "Z", "0": "0", "X": "X", "Y": "Y", "Z": "Z"}
     # Map alphabetic to numeric (for ORDER field)

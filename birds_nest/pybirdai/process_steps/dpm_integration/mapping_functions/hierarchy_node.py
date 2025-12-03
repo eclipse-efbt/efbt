@@ -18,8 +18,17 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def map_hierarchy_node(path=os.path.join("target", "HierarchyNode.csv"), hierarchy_map: dict = {}, member_map: dict = {}):
-    """Map hierarchy nodes from HierarchyNode.csv to the target format"""
+def map_hierarchy_node(path=None, hierarchy_map: dict = {}, member_map: dict = {}, base_path="target"):
+    """Map hierarchy nodes from HierarchyNode.csv to the target format
+
+    Args:
+        path: Path to HierarchyNode.csv (deprecated, use base_path instead)
+        hierarchy_map: Dictionary mapping hierarchy IDs
+        member_map: Dictionary mapping member IDs
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "HierarchyNode.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Handle NaN/empty values

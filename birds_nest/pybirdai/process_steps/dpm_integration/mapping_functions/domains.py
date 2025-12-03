@@ -18,8 +18,15 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def map_domains(path=os.path.join("target", "Domain.csv")):
-    """Map domains from Domain.csv to the target format"""
+def map_domains(path=None, base_path="target"):
+    """Map domains from Domain.csv to the target format
+
+    Args:
+        path: Path to Domain.csv (deprecated, use base_path instead)
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "Domain.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE

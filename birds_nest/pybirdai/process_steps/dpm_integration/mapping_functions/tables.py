@@ -18,14 +18,19 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def load_table_to_framework_mapping(base_path="target"):
+def load_table_to_framework_mapping(base_path=None):
     """
     Load mapping from tables to frameworks using the correct chain:
     ReportingFramework → Taxonomy → TaxonomyTableVersion → Table
 
+    Args:
+        base_path: Base directory containing CSV files (default: "target")
+
     Returns:
         dict: Mapping of TABLE_VID → FRAMEWORK_CODE (e.g., "12345" → "COREP")
     """
+    if base_path is None:
+        base_path = "target"
     # Load ReportingFramework.csv to get FrameworkID → FrameworkCode
     reporting_framework = pd.read_csv(os.path.join(base_path, "ReportingFramework.csv"), dtype=str)
     framework_id_to_code = dict(zip(
@@ -64,8 +69,14 @@ def load_table_to_framework_mapping(base_path="target"):
     return table_to_framework
 
 
-def load_taxonomy_version_to_table_mapping(base_path="target"):
-    """Load mapping from taxonomy versions to tables"""
+def load_taxonomy_version_to_table_mapping(base_path=None):
+    """Load mapping from taxonomy versions to tables
+
+    Args:
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if base_path is None:
+        base_path = "target"
     taxonomy_to_table_version = pd.read_csv(os.path.join(base_path, "TaxonomyTableVersion.csv"), dtype=str)
     taxonomy_to_package_version = pd.read_csv(os.path.join(base_path, "Taxonomy.csv"), dtype=str)
 
@@ -81,21 +92,24 @@ def load_taxonomy_version_to_table_mapping(base_path="target"):
     return normalize_id_map(result)
 
 
-def map_tables(path=os.path.join("target", "Table.csv"), framework_id_map: dict = {}, frameworks=None, generate_framework_table=True):
+def map_tables(path=None, framework_id_map: dict = {}, frameworks=None, generate_framework_table=True, base_path="target"):
     """
     Map tables from Table.csv to the target format.
 
     Args:
-        path: Path to Table.csv
+        path: Path to Table.csv (deprecated, use base_path instead)
         framework_id_map: Dictionary mapping framework IDs
         frameworks: List of framework codes to filter (e.g., ['FINREP', 'COREP']).
                    If None, all frameworks are imported.
         generate_framework_table: If True, also generate framework_table junction data
+        base_path: Base directory containing CSV files (default: "target")
 
     Returns:
         If generate_framework_table is True: (tables_df, id_mapping, framework_table_df)
         Otherwise: (tables_df, id_mapping)
     """
+    if path is None:
+        path = os.path.join(base_path, "Table.csv")
     # Read tables and table versions
     df = pd.read_csv(path, dtype=str)
     if 'ConceptID' in df.columns:
@@ -111,8 +125,8 @@ def map_tables(path=os.path.join("target", "Table.csv"), framework_id_map: dict 
     df = df.merge(df_versions, on="TableID", how="left")
 
     # Load mappings using correct chain: ReportingFramework → Taxonomy → TaxonomyTableVersion → Table
-    table_to_framework_mapping = load_table_to_framework_mapping()
-    table_to_taxonomy_mapping = load_taxonomy_version_to_table_mapping()
+    table_to_framework_mapping = load_table_to_framework_mapping(base_path=base_path)
+    table_to_taxonomy_mapping = load_taxonomy_version_to_table_mapping(base_path=base_path)
 
     # Filter by frameworks if specified (before column transformation)
     if frameworks:

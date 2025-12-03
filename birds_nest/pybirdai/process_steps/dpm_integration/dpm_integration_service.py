@@ -52,7 +52,10 @@ class DPMImporterService:
         self.logger.info(f"Initializing DPMImporterService with output directory: {output_directory}, preserve_existing: {preserve_existing}")
         self.link_db = None
         self.output_directory = f"{output_directory}{os.sep}technical_export{os.sep}"
+        # Store absolute path to target directory to ensure consistent path resolution
+        self.target_path = os.path.abspath("target")
         self.logger.debug(f"Setting output directory to: {self.output_directory}")
+        self.logger.debug(f"Setting target path to: {self.target_path}")
 
         if not preserve_existing:
             if os.path.exists(self.output_directory):
@@ -237,11 +240,11 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         self.write_csv_maintenance_agency()
         logging.info("Created Maintenance Agency File")
 
-        framework_df, framework_map = new_maps.map_frameworks(frameworks=frameworks)
+        framework_df, framework_map = new_maps.map_frameworks(frameworks=frameworks, base_path=self.target_path)
         framework_df.to_csv(f"{self.output_directory}framework.csv", index=False, encoding='utf-8')
         logging.info(f"Mapped {len(framework_df)} Framework Entities (filtered: {frameworks})")
 
-        domains_array, domain_map = new_maps.map_domains()
+        domains_array, domain_map = new_maps.map_domains(base_path=self.target_path)
 
         # Map metrics from configuration
         metrics_array, metrics_map, data_type_domains = new_maps.map_metrics(domain_map=domain_map)
@@ -253,27 +256,27 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         combined_domains.to_csv(f"{self.output_directory}domain.csv", index=False, encoding='utf-8')
         logging.info(f"Saved {len(combined_domains)} total Domains")
 
-        members_array, member_map = new_maps.map_members(domain_id_map=domain_map)
+        members_array, member_map = new_maps.map_members(domain_id_map=domain_map, base_path=self.target_path)
         members_array.to_csv(f"{self.output_directory}member.csv", index=False)
         logging.info("Mapped Members Entities")
 
-        dimensions_array, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map)
+        dimensions_array, dimension_map = new_maps.map_dimensions(domain_id_map=domain_map, base_path=self.target_path)
 
         # Merge dimensions and metrics
         combined_variables = pd.concat([dimensions_array, metrics_array])
         combined_variables.to_csv(f"{self.output_directory}variable.csv", index=False)
         logging.info(f"Saved {len(combined_variables)} total Variables")
 
-        hierarchy_df, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map)
+        hierarchy_df, hierarchy_map = new_maps.map_hierarchy(domain_id_map=domain_map, base_path=self.target_path)
         hierarchy_df.to_csv(f"{self.output_directory}member_hierarchy.csv", index=False)
         logging.info("Mapped Hierarchy Entities")
 
-        hierarchy_node_df, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map)
+        hierarchy_node_df, hierarchy_node_map = new_maps.map_hierarchy_node(hierarchy_map=hierarchy_map, member_map=member_map, base_path=self.target_path)
         hierarchy_node_df.to_csv(f"{self.output_directory}member_hierarchy_node.csv", index=False)
         logging.info("Mapped HierarchyNode Entities")
 
         # Rendering Package - Tables only (axes/ordinates/cells moved to Phase B)
-        tables_df, table_map, framework_table_df = new_maps.map_tables(framework_id_map=framework_map, frameworks=frameworks, generate_framework_table=True)
+        tables_df, table_map, framework_table_df = new_maps.map_tables(framework_id_map=framework_map, frameworks=frameworks, generate_framework_table=True, base_path=self.target_path)
         framework_table_df.to_csv(f"{self.output_directory}framework_table.csv", index=False)
         tables_df.to_csv(f"{self.output_directory}table.csv", index=False)
         logging.info(f"Mapped {len(tables_df)} Table Entities")
@@ -300,6 +303,7 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         # Return all data needed for Phase B (axes/ordinates/cells will be created in Phase B)
         return {
             'new_maps': new_maps,
+            'target_path': self.target_path,  # Include target_path for Phase B
             'framework_df': framework_df,
             'framework_map': framework_map,
             'domains_array': domains_array,
@@ -362,25 +366,26 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         # Now map axes/ordinates/cells/positions for the FILTERED tables only
         self.logger.info("Mapping axes/ordinates/cells for filtered tables...")
 
-        axes_df, axis_map = new_maps.map_axis(table_map=table_map, save_z_axis_config=False, output_directory="results/dpm_z_axis_configuration")
+        axes_df, axis_map = new_maps.map_axis(table_map=table_map, save_z_axis_config=False, output_directory="results/dpm_z_axis_configuration", base_path=self.target_path)
         logging.info(f"Mapped {len(axes_df)} Axis Entities")
 
-        ordinates_df, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map)
+        ordinates_df, ordinate_map = new_maps.map_axis_ordinate(axis_map=axis_map, base_path=self.target_path)
         logging.info(f"Mapped {len(ordinates_df)} AxisOrdinates Entities")
 
-        cells_df, cell_map = new_maps.map_table_cell(table_map=table_map)
+        cells_df, cell_map = new_maps.map_table_cell(table_map=table_map, base_path=self.target_path)
         logging.info(f"Mapped {len(cells_df)} TableCell Entities")
 
-        cell_positions_df, cell_position_map = new_maps.map_cell_position(cell_map=cell_map, ordinate_map=ordinate_map, start_index_after_last=False)
+        cell_positions_df, cell_position_map = new_maps.map_cell_position(cell_map=cell_map, ordinate_map=ordinate_map, start_index_after_last=False, base_path=self.target_path)
         logging.info(f"Mapped {len(cell_positions_df)} CellPositions Entities")
 
         # Run ordinate explosion (THE EXPENSIVE OPERATION)
-        # Pass path to OrdinateCategorisation.csv in target/ directory
-        ordinate_cat_path = os.path.join("target", "OrdinateCategorisation.csv")
+        # Use absolute target_path for consistent path resolution
+        ordinate_cat_path = os.path.join(self.target_path, "OrdinateCategorisation.csv")
         logging.info(f"Reading OrdinateCategorisation from: {ordinate_cat_path}")
 
         ordinate_items_df, ordinate_item_info = new_maps.map_ordinate_categorisation(
             path=ordinate_cat_path,
+            base_path=self.target_path,
             member_map=member_map,
             dimension_map=dimension_map,
             ordinate_map=ordinate_map,
