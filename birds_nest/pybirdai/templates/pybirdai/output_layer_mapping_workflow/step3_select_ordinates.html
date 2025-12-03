@@ -614,6 +614,24 @@
         </li>
     </ul>
 
+    {% if batch_edit_mode %}
+    <!-- Batch Edit Mode Banner -->
+    <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h4 style="margin: 0 0 0.5rem 0;">✏️ Batch Edit Mode</h4>
+        <p style="margin: 0 0 1rem 0; opacity: 0.9;">
+            Editing <strong>{{ batch_edit_mapping_count }}</strong> mapping(s). Ordinates are pre-selected based on existing mappings.
+            You can add or remove ordinates - changes will apply to all selected mappings.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            {% for mapping_id, mapping_data in batch_edit_data.items %}
+            <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem;">
+                {{ mapping_data.name }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Summary Cards -->
     <div class="summary-cards">
         <div class="summary-card">
@@ -885,6 +903,7 @@
                         level: {{ ordinate_data.level }},
                         order: {{ ordinate_data.order }},
                         axis_name: '{{ ordinate_data.axis_name|escapejs }}',
+                        axis_orientation: '{{ ordinate_data.axis_orientation|escapejs }}',
                         parent_id: '{{ ordinate_data.parent.axis_ordinate_id|default:""|escapejs }}'
                     },
                 {% endfor %}
@@ -1082,10 +1101,37 @@
 
         // ===== DEFAULT SELECTION FOR '_3' ORDINATES =====
         function selectDefaultOrdinates() {
-            console.log('Selecting default _3 ordinates...');
+            console.log('Selecting default ordinates...');
+
+            // Auto-select Z-axis ordinates (orientation = 'Z' or '3')
+            // Z-axis ordinates are fundamental to deduplicated table structure
+            console.log('Auto-selecting Z-axis ordinates...');
+            Object.values(ordinateData).forEach(ord => {
+                if (ord.axis_orientation === 'Z' || ord.axis_orientation === '3') {
+                    console.log('Auto-selecting Z-axis ordinate:', ord.id, ord.name);
+                    const checkbox = document.querySelector(`.ordinate-check[value="${ord.id}"]`);
+                    if (checkbox && !checkbox.checked) {
+                        checkbox.checked = true;
+                        selectedOrdinates.add(ord.id);
+
+                        // Also select all descendants (cascade selection)
+                        const descendants = getAllDescendants(ord.id);
+                        descendants.forEach(descId => {
+                            const descCheckbox = document.querySelector(`.ordinate-check[value="${descId}"]`);
+                            if (descCheckbox) {
+                                descCheckbox.checked = true;
+                                selectedOrdinates.add(descId);
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Also auto-select ordinates ending with '_3' (existing behavior)
+            console.log('Auto-selecting _3 ordinates...');
             Object.values(ordinateData).forEach(ord => {
                 if (ord.id.endsWith('_3')) {
-                    console.log('Auto-selecting:', ord.id);
+                    console.log('Auto-selecting _3 ordinate:', ord.id);
                     const checkbox = document.querySelector(`.ordinate-check[value="${ord.id}"]`);
                     if (checkbox && !checkbox.checked) {
                         checkbox.checked = true;
@@ -1103,12 +1149,40 @@
                     }
                 }
             });
+
             updateSelectedCount();
         }
 
+        // ===== BATCH EDIT MODE PRE-SELECTION =====
+        {% if batch_edit_mode and pre_selected_ordinates %}
+        function selectBatchEditOrdinates() {
+            console.log('Batch edit mode: selecting pre-existing ordinates...');
+            const preSelectedOrdinates = {{ pre_selected_ordinates|safe }};
+            console.log('Pre-selected ordinates:', preSelectedOrdinates.length);
+
+            preSelectedOrdinates.forEach(ordinateId => {
+                const checkbox = document.querySelector(`.ordinate-check[value="${ordinateId}"]`);
+                if (checkbox && !checkbox.checked) {
+                    checkbox.checked = true;
+                    selectedOrdinates.add(ordinateId);
+                }
+            });
+
+            updateSelectedCount();
+            updateTreeViewState();
+            updateTableVisualState();
+            console.log('Batch edit: selected', selectedOrdinates.size, 'ordinates');
+        }
+        {% endif %}
+
         // Initialize tree view and set defaults
         renderTreeView();
+        {% if batch_edit_mode and pre_selected_ordinates %}
+        // In batch edit mode, use pre-selected ordinates instead of defaults
+        selectBatchEditOrdinates();
+        {% else %}
         selectDefaultOrdinates();
+        {% endif %}
         updateAllVisualizationStates();
     });
 </script>

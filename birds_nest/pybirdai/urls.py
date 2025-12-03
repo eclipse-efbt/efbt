@@ -142,10 +142,6 @@ urlpatterns = [
     path("import-mapping-from-csv/", views.import_mapping_from_csv, name="import_mapping_from_csv"),
     path("delete-cube/<str:cube_id>/", views.delete_cube, name="delete_cube"),
     path("import_report_templates/", views.import_report_templates, name="import_report_templates"),
-    path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
-    path("prepare_dpm_data/", views.prepare_dpm_data, name="prepare_dpm_data"),
-    path("dpm_output_layer_creation/", views.dpm_output_layer_creation, name="dpm_output_layer_creation"),
-
 
     # ANCRDT Transformation URLs (old step-by-step views - deprecated)
     path("ancrdt/fetch-csv/", ancrdt_transformation_views.ancrdt_fetch_csv, name="ancrdt_fetch_csv"),
@@ -169,6 +165,10 @@ urlpatterns = [
     path("ancrdt-workflow/step-4/", ancrdt_workflow_views.ancrdt_step_4_execute_view, name="ancrdt_step_4"),
     path("ancrdt-workflow/execute-table/<str:table_name>/", ancrdt_workflow_views.execute_ancrdt_table_with_fixture, name="ancrdt_execute_table_with_fixture"),
     path("download-ancrdt-csv/<str:table_name>/", ancrdt_workflow_views.download_ancrdt_csv, name="download_ancrdt_csv"),
+
+    # ANCRDT Workflow - Step 5: Full Execution with Test Suite
+    path("ancrdt-workflow/step-5/", ancrdt_workflow_views.ancrdt_step_5_test_suite_view, name="ancrdt_step_5"),
+    path("ancrdt-workflow/step-5/review/", ancrdt_workflow_views.ancrdt_step_5_review_view, name="ancrdt_step_5_review"),
 
     # ANCRDT Workflow - SQL Fixtures Editor
     path("ancrdt-workflow/sql-fixtures-editor/", ancrdt_sql_fixture_editor_views.sql_fixtures_editor, name="ancrdt_sql_fixtures_editor"),
@@ -422,6 +422,10 @@ urlpatterns = [
     path("workflow/dpm/review/<int:step_number>/", workflow_views.workflow_dpm_review, name="workflow_dpm_review"),
     # DPM API endpoints for cube structure visualization
     path("api/dpm/cubes/", workflow_views.api_dpm_cubes, name="api_dpm_cubes"),
+    # DPM table selection endpoints
+    path("workflow/dpm/get-available-tables/", workflow_views.get_available_tables_for_selection, name="workflow_dpm_get_available_tables"),
+    path("workflow/dpm/save-table-selection/", workflow_views.save_table_selection, name="workflow_dpm_save_table_selection"),
+    path("workflow/dpm/presets/", workflow_views.manage_table_presets, name="workflow_dpm_manage_presets"),
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
@@ -503,6 +507,14 @@ urlpatterns = [
     path("output-layer-mapping/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping"),
     path("output-layer-mapping/step1/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping_step1"),
     path("output-layer-mapping/step2/", output_layer_mapping_workflow_views.check_existing_mappings, name="output_layer_mapping_step2"),
+
+    # Step 2 bulk operations
+    path("output-layer-mapping/step2/go-back/", output_layer_mapping_workflow_views.step2_go_back, name="output_layer_mapping_step2_go_back"),
+    path("output-layer-mapping/step2/apply-bulk/", output_layer_mapping_workflow_views.step2_apply_bulk, name="output_layer_mapping_step2_apply_bulk"),
+    path("output-layer-mapping/step2/edit-bulk/", output_layer_mapping_workflow_views.step2_edit_bulk, name="output_layer_mapping_step2_edit_bulk"),
+    path("output-layer-mapping/step2/reapply-all/", output_layer_mapping_workflow_views.step2_reapply_all, name="output_layer_mapping_step2_reapply_all"),
+    path("output-layer-mapping/step2/delete-bulk/", output_layer_mapping_workflow_views.step2_delete_bulk, name="output_layer_mapping_step2_delete_bulk"),
+
     path("output-layer-mapping/step3/", output_layer_mapping_workflow_views.select_axis_ordinates, name="output_layer_mapping_step3"),
     path("output-layer-mapping/step4/", output_layer_mapping_workflow_views.define_variable_breakdown, name="output_layer_mapping_step4"),
     path("output-layer-mapping/step5/", output_layer_mapping_workflow_views.edit_mappings_tabbed, name="output_layer_mapping_step5"),
@@ -514,6 +526,11 @@ urlpatterns = [
     path("api/output-layer-mapping/variable-domain/", output_layer_mapping_workflow_views.get_variable_domain_api, name="olm_get_variable_domain_api"),
     path("api/output-layer-mapping/filter-options/", output_layer_mapping_workflow_views.get_filter_options_api, name="olm_filter_options_api"),
     path("api/output-layer-mapping/delete-conflicts/", output_layer_mapping_workflow_views.delete_mapping_conflicts, name="olm_delete_conflicts_api"),
+
+    # Z-axis variant management APIs
+    path("api/output-layer-mapping/z-axis-siblings/", output_layer_mapping_workflow_views.get_z_axis_siblings_api, name="olm_get_z_axis_siblings_api"),
+    path("api/output-layer-mapping/save-selected-z-tables/", output_layer_mapping_workflow_views.save_selected_z_tables_api, name="olm_save_selected_z_tables_api"),
+    path("api/output-layer-mapping/regenerate-combinations/", output_layer_mapping_workflow_views.regenerate_combinations_api, name="olm_regenerate_combinations_api"),
 
     # Cube structure viewer endpoints (reusable service)
     path("api/cube-structure/<str:cube_id>/", output_layer_mapping_workflow_views.api_cube_structure, name="api_cube_structure"),

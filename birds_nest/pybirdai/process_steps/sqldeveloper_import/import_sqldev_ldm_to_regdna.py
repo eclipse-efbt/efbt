@@ -23,7 +23,7 @@ from pybirdai.process_steps.generate_etl.generate_etl import GenerateETL
 from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
 from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 
-class SQLDevLDMImport(object):
+class SQLDevLDMImport:
     '''
     Documentation for SQLDevLDMImport
     '''

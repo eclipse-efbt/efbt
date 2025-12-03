@@ -177,7 +177,65 @@
     .loading-spinner.active {
         display: inline-block;
     }
+
+    /* Tom Select Styling */
+    .ts-wrapper {
+        width: 100%;
+    }
+
+    .ts-control {
+        min-height: 48px !important;
+        padding: 0.75rem !important;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .ts-control:focus-within {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+    }
+
+    .ts-dropdown {
+        z-index: 10002 !important;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .ts-dropdown .option {
+        padding: 0.75rem;
+        cursor: pointer;
+    }
+
+    .ts-dropdown .option:hover {
+        background-color: #f0f9ff;
+    }
+
+    .ts-dropdown .option.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .ts-wrapper.disabled .ts-control {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .ts-control .item {
+        padding: 0;
+        border: none;
+        background: none;
+    }
+
+    .ts-dropdown .no-results {
+        padding: 0.75rem;
+        color: #666;
+        font-style: italic;
+    }
 </style>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -230,7 +288,7 @@
                 <select name="framework" id="framework" class="form-control" required>
                     <option value="">-- Select Framework --</option>
                     {% for fw in frameworks %}
-                    <option value="{{ fw.framework_id }}">{{ fw.framework_id }} - {{ fw.name }}</option>
+                    <option value="{{ fw.framework_id }}">{{ fw.code }} - {{ fw.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -269,6 +327,10 @@
                         <div class="info-label">Has Combinations</div>
                         <div class="info-value" id="hasCombinations">-</div>
                     </div>
+                    <div class="info-item">
+                        <div class="info-label">Z-Axis Variants</div>
+                        <div class="info-value" id="zAxisVariants">-</div>
+                    </div>
                 </div>
             </div>
 
@@ -291,38 +353,122 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
-    // Event listeners for cascading dropdowns
-    document.getElementById('framework').addEventListener('change', onFrameworkChange);
-    document.getElementById('version').addEventListener('change', onVersionChange);
-    document.getElementById('table_code').addEventListener('change', onTableSelect);
+    // Global Tom Select instances
+    let frameworkTS = null;
+    let versionTS = null;
+    let tableTS = null;
+
+    // Initialize Tom Select instances after DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Framework Tom Select
+        frameworkTS = new TomSelect('#framework', {
+            maxItems: 1,
+            create: false,
+            placeholder: 'Search frameworks...',
+            searchField: ['text', 'value'],
+            sortField: { field: 'text', direction: 'asc' },
+            dropdownParent: 'body',
+            onChange: function(value) {
+                if (value) {
+                    onFrameworkChange();
+                }
+            },
+            render: {
+                option: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                no_results: function(data, escape) {
+                    return '<div class="no-results">No frameworks found matching "' + escape(data.input) + '"</div>';
+                }
+            }
+        });
+
+        // Initialize Version Tom Select (initially disabled)
+        versionTS = new TomSelect('#version', {
+            maxItems: 1,
+            create: false,
+            placeholder: 'Select framework first...',
+            searchField: ['text', 'value'],
+            sortField: { field: 'text', direction: 'asc' },
+            dropdownParent: 'body',
+            onChange: function(value) {
+                if (value) {
+                    onVersionChange();
+                }
+            },
+            render: {
+                option: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                no_results: function(data, escape) {
+                    return '<div class="no-results">No versions found matching "' + escape(data.input) + '"</div>';
+                }
+            }
+        });
+        versionTS.disable();
+
+        // Initialize Table Tom Select (initially disabled)
+        tableTS = new TomSelect('#table_code', {
+            maxItems: 1,
+            create: false,
+            placeholder: 'Select version first...',
+            searchField: ['text', 'value'],
+            sortField: { field: 'text', direction: 'asc' },
+            dropdownParent: 'body',
+            onChange: function(value) {
+                if (value) {
+                    onTableSelect();
+                }
+            },
+            render: {
+                option: function(data, escape) {
+                    return '<div><strong>' + escape(data.value) + '</strong> - ' + escape(data.text) + '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                no_results: function(data, escape) {
+                    return '<div class="no-results">No tables found matching "' + escape(data.input) + '"</div>';
+                }
+            }
+        });
+        tableTS.disable();
+    });
 
     /**
      * Handle framework selection change
      * Loads versions filtered by the selected framework
      */
     function onFrameworkChange() {
-        const frameworkSelect = document.getElementById('framework');
-        const versionSelect = document.getElementById('version');
-        const tableSelect = document.getElementById('table_code');
-        const framework = frameworkSelect.value;
+        const framework = frameworkTS.getValue();
 
-        // Clear and disable dependent dropdowns
-        versionSelect.innerHTML = '<option value="">-- Select Version --</option>';
-        versionSelect.disabled = true;
-        tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
-        tableSelect.disabled = true;
+        // Clear and disable dependent Tom Select instances
+        versionTS.clearOptions();
+        versionTS.clear();
+        versionTS.disable();
+        versionTS.settings.placeholder = 'Loading versions...';
+
+        tableTS.clearOptions();
+        tableTS.clear();
+        tableTS.disable();
+        tableTS.settings.placeholder = 'Select version first...';
 
         // Hide preview and disable next button
         document.getElementById('tablePreview').style.display = 'none';
         document.getElementById('nextButton').disabled = true;
 
         if (!framework) {
+            versionTS.settings.placeholder = 'Select framework first...';
             return;
         }
-
-        // Show loading state
-        versionSelect.innerHTML = '<option value="">Loading versions...</option>';
 
         // Fetch versions for the selected framework
         const frameworkCode = framework; // Use the framework_id as the code for filtering
@@ -330,26 +476,26 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success' && data.versions) {
-                    versionSelect.innerHTML = '<option value="">-- Select Version --</option>';
-
                     if (data.versions.length === 0) {
-                        versionSelect.innerHTML = '<option value="">No versions found</option>';
+                        versionTS.settings.placeholder = 'No versions found';
                     } else {
+                        // Add options to Tom Select
                         data.versions.forEach(version => {
-                            const option = document.createElement('option');
-                            option.value = version;
-                            option.textContent = version;
-                            versionSelect.appendChild(option);
+                            versionTS.addOption({
+                                value: version,
+                                text: version
+                            });
                         });
-                        versionSelect.disabled = false;
+                        versionTS.enable();
+                        versionTS.settings.placeholder = 'Search versions...';
                     }
                 } else {
-                    versionSelect.innerHTML = '<option value="">Error loading versions</option>';
+                    versionTS.settings.placeholder = 'Error loading versions';
                 }
             })
             .catch(error => {
                 console.error('Error loading versions:', error);
-                versionSelect.innerHTML = '<option value="">Error loading versions</option>';
+                versionTS.settings.placeholder = 'Error loading versions';
             });
     }
 
@@ -358,26 +504,23 @@
      * Loads tables filtered by framework and version
      */
     function onVersionChange() {
-        const frameworkSelect = document.getElementById('framework');
-        const versionSelect = document.getElementById('version');
-        const tableSelect = document.getElementById('table_code');
-        const framework = frameworkSelect.value;
-        const version = versionSelect.value;
+        const framework = frameworkTS.getValue();
+        const version = versionTS.getValue();
 
         // Clear and disable table dropdown
-        tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
-        tableSelect.disabled = true;
+        tableTS.clearOptions();
+        tableTS.clear();
+        tableTS.disable();
+        tableTS.settings.placeholder = 'Loading tables...';
 
         // Hide preview and disable next button
         document.getElementById('tablePreview').style.display = 'none';
         document.getElementById('nextButton').disabled = true;
 
         if (!framework || !version) {
+            tableTS.settings.placeholder = 'Select version first...';
             return;
         }
-
-        // Show loading state
-        tableSelect.innerHTML = '<option value="">Loading tables...</option>';
 
         // Fetch tables for the selected framework and version
         const frameworkCode = framework;
@@ -385,27 +528,27 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success' && data.tables) {
-                    tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
-
                     if (data.tables.length === 0) {
-                        tableSelect.innerHTML = '<option value="">No tables found</option>';
+                        tableTS.settings.placeholder = 'No tables found';
                     } else {
+                        // Add options with data attributes
                         data.tables.forEach(table => {
-                            const option = document.createElement('option');
-                            option.value = table.code;
-                            option.dataset.tableId = table.id;
-                            option.textContent = `${table.code} - ${table.name}`;
-                            tableSelect.appendChild(option);
+                            tableTS.addOption({
+                                value: table.code,
+                                text: `${table.name} - ${table.description}`,
+                                tableId: table.id  // Store table ID in option
+                            });
                         });
-                        tableSelect.disabled = false;
+                        tableTS.enable();
+                        tableTS.settings.placeholder = 'Search tables...';
                     }
                 } else {
-                    tableSelect.innerHTML = '<option value="">Error loading tables</option>';
+                    tableTS.settings.placeholder = 'Error loading tables';
                 }
             })
             .catch(error => {
                 console.error('Error loading tables:', error);
-                tableSelect.innerHTML = '<option value="">Error loading tables</option>';
+                tableTS.settings.placeholder = 'Error loading tables';
             });
     }
 
@@ -414,17 +557,19 @@
      * Loads table preview and enables next button
      */
     function onTableSelect() {
-        const tableSelect = document.getElementById('table_code');
-        const selectedOption = tableSelect.options[tableSelect.selectedIndex];
+        const selectedValue = tableTS.getValue();
 
-        if (!selectedOption || !selectedOption.value) {
+        if (!selectedValue) {
             document.getElementById('tablePreview').style.display = 'none';
             document.getElementById('nextButton').disabled = true;
             return;
         }
 
+        // Get table_id from Tom Select option data
+        const selectedOption = tableTS.options[selectedValue];
+        const tableId = selectedOption.tableId;
+
         // Set hidden table_id field
-        const tableId = selectedOption.dataset.tableId;
         document.getElementById('table_id').value = tableId;
 
         // Enable next button
@@ -455,6 +600,27 @@
                     document.getElementById('hasCombinations').textContent = hasCombinations ? 'Yes' : 'No';
 
                     preview.style.display = 'block';
+
+                    // Fetch Z-axis variant information
+                    fetch(`/pybirdai/api/output-layer-mapping/z-axis-siblings/?table_id=${encodeURIComponent(tableId)}`)
+                        .then(response => response.json())
+                        .then(zData => {
+                            const zVariantsEl = document.getElementById('zAxisVariants');
+                            if (zData.is_deduplicated) {
+                                const totalVariants = zData.siblings.length + 1; // siblings + current table
+                                zVariantsEl.textContent = `Yes (${totalVariants} variants)`;
+                                zVariantsEl.style.color = '#0d6efd';
+                                zVariantsEl.style.fontWeight = '600';
+                            } else {
+                                zVariantsEl.textContent = 'No';
+                                zVariantsEl.style.color = '';
+                                zVariantsEl.style.fontWeight = '';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading Z-axis info:', error);
+                            document.getElementById('zAxisVariants').textContent = '-';
+                        });
                 }
             })
             .catch(error => {
@@ -469,17 +635,19 @@
     /**
      * Form validation before submission
      */
-    document.getElementById('tableSelectionForm').addEventListener('submit', function(e) {
-        const framework = document.getElementById('framework').value;
-        const version = document.getElementById('version').value;
-        const tableCode = document.getElementById('table_code').value;
-        const tableId = document.getElementById('table_id').value;
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('tableSelectionForm').addEventListener('submit', function(e) {
+            const framework = frameworkTS.getValue();
+            const version = versionTS.getValue();
+            const tableCode = tableTS.getValue();
+            const tableId = document.getElementById('table_id').value;
 
-        if (!framework || !version || !tableCode || !tableId) {
-            e.preventDefault();
-            alert('Please select all required fields');
-            return false;
-        }
+            if (!framework || !version || !tableCode || !tableId) {
+                e.preventDefault();
+                alert('Please select all required fields');
+                return false;
+            }
+        });
     });
 </script>
 {% endblock %}

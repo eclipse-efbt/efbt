@@ -55,3 +55,41 @@ def map_hierarchy(path=os.path.join("target", "Hierarchy.csv"), domain_id_map: d
     df = clean_spaces_df(df)
 
     return df, id_mapping
+
+
+def create_default_hierarchies(domains_needing_hierarchy: list) -> tuple:
+    """
+    Create default hierarchies for domains that need them.
+
+    Args:
+        domains_needing_hierarchy: List of domain IDs that need default hierarchies
+
+    Returns:
+        Tuple of (DataFrame of new hierarchies, dict mapping domain_id to hierarchy_id)
+    """
+    hierarchies = []
+    hierarchy_map = {}  # domain_id -> hierarchy_id
+
+    for domain_id in domains_needing_hierarchy:
+        # Extract domain code from domain_id (e.g., "EBA_CU" -> "CU")
+        domain_code = domain_id.replace("EBA_", "") if domain_id.startswith("EBA_") else domain_id
+
+        hierarchy_id = f"EBA_{domain_code}_DEFAULT"
+        hierarchy_map[domain_id] = hierarchy_id
+
+        hierarchies.append({
+            "MAINTENANCE_AGENCY_ID": "EBA",
+            "MEMBER_HIERARCHY_ID": hierarchy_id,
+            "CODE": f"{domain_code}_DEFAULT",
+            "DOMAIN_ID": domain_id,
+            "NAME": "Technical Hierarchy",
+            "DESCRIPTION": f"Technical hierarchy for {domain_id} domain",
+            "IS_MAIN_HIERARCHY": False
+        })
+
+    df = pd.DataFrame(hierarchies) if hierarchies else pd.DataFrame(columns=[
+        "MAINTENANCE_AGENCY_ID", "MEMBER_HIERARCHY_ID", "CODE", "DOMAIN_ID",
+        "NAME", "DESCRIPTION", "IS_MAIN_HIERARCHY"
+    ])
+
+    return df, hierarchy_map

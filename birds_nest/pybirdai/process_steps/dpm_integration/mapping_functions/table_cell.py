@@ -13,7 +13,9 @@
 
 import os
 import pandas as pd
-from pybirdai.process_steps.dpm_integration.mapping_functions.utils import pascal_to_upper_snake
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, apply_cascade_filter, convert_to_bool
+)
 
 
 def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map: dict = {}, dp_map: dict = {}):
@@ -25,6 +27,9 @@ def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map: dict
 
     df['MAINTENANCE_AGENCY_ID'] = "EBA"
 
+    # Filter cells: only keep cells where TABLE_VID exists in table_map (cascade filter)
+    df = apply_cascade_filter(df, 'TABLE_VID', table_map)
+
     # Create new cell IDs (convert to float→int→string then prepend "EBA_")
     df['NEW_CELL_ID'] = "EBA_" + pd.to_numeric(df['CELL_ID'], errors='coerce').fillna(0).astype(int).astype(str)
 
@@ -32,10 +37,7 @@ def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map: dict
     df['TABLE_VID'] = df['TABLE_VID'].astype(str).map(table_map).fillna(df['TABLE_VID'])
 
     # Convert IS_SHADED to bool
-    if 'IS_SHADED' in df.columns:
-        df['IS_SHADED'] = df['IS_SHADED'].astype(str).str.lower().isin(['true', '1', 'yes'])
-    else:
-        df['IS_SHADED'] = False
+    df = convert_to_bool(df, 'IS_SHADED', default=False)
 
     # Handle DATA_POINT_VID
     if not dp_map:

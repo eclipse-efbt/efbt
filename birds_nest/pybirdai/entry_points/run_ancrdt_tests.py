@@ -23,6 +23,7 @@ import argparse
 import logging
 import django
 from django.apps import AppConfig
+from django.conf import settings
 
 # Set up logging
 logging.basicConfig(
@@ -52,7 +53,6 @@ class DjangoSetup:
             logger.info("Django configured successfully with settings module: %s",
                        os.environ['DJANGO_SETTINGS_MODULE'])
             cls._initialized = True
-            settings.configure()
         except Exception as e:
             logger.error(f"Django configuration failed: {str(e)}")
             raise
@@ -131,7 +131,6 @@ def main():
         uv run pybirdai/entry_points/run_ancrdt_tests.py --config-file tests/ancrdt-test-suite/configuration_file_tests.json --uv
     """
     DjangoSetup.configure_django()
-    from django.conf import settings
 
     parser = argparse.ArgumentParser(
         description='Run ANCRDT table transformation tests',

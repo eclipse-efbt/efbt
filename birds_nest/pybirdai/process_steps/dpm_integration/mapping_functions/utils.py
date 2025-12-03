@@ -12,7 +12,6 @@
 #
 
 import pandas as pd
-import numpy as np
 import re
 
 
@@ -71,87 +70,99 @@ def normalize_id_map(id_map):
 
 
 # ============================================================================
-# COMPATIBILITY WRAPPERS FOR UNMIGRATED FILES
-# These functions provide backwards compatibility for mapping files that
-# haven't been migrated to pandas yet. They wrap pandas functionality.
+# COMMON MAPPING UTILITIES
+# Reusable functions for common patterns in mapping files
 # ============================================================================
 
-def read_csv_to_dict(path, dtype=None):
-    """DEPRECATED: Use pd.read_csv() directly. Compatibility wrapper."""
-    df = pd.read_csv(path, dtype=str)
-    return df.to_dict('records')
+def apply_cascade_filter(df, column, id_map):
+    """
+    Filter DataFrame to only keep rows where column value exists in id_map keys.
+
+    This is the "cascade filter" pattern - ensuring child entities only include
+    those whose parent entity was imported.
+
+    Args:
+        df: DataFrame to filter
+        column: Column name to filter on
+        id_map: Dict mapping source IDs to target IDs (only keys are used)
+
+    Returns:
+        Filtered DataFrame
+
+    Example:
+        # Only keep axes where TABLE_VID exists in table_map
+        df = apply_cascade_filter(df, 'TABLE_VID', table_map)
+    """
+    if not id_map:
+        return df
+    return df[df[column].astype(str).isin(id_map.keys())]
 
 
-def dict_list_to_structured_array(data, columns=None, force_str_columns=None):
-    """DEPRECATED: Use pd.DataFrame() directly. Compatibility wrapper."""
-    if not data:
-        return np.array([])
+def convert_to_bool(df, column, default=False):
+    """
+    Convert a column to boolean, handling string representations.
 
-    df = pd.DataFrame(data)
-    if columns:
-        df = df[columns]
+    Recognizes 'true', '1', 'yes' (case-insensitive) as True, everything else as False.
 
-    return df.to_records(index=False)
+    Args:
+        df: DataFrame (modified in place)
+        column: Column name to convert
+        default: Default value if column doesn't exist
 
+    Returns:
+        DataFrame with converted column
 
-def add_field(arr, field_name, values, dtype='U100'):
-    """DEPRECATED: Use df[field_name] = values. Compatibility wrapper."""
-    df = pd.DataFrame(arr)
-    df[field_name] = values
-    return df.to_records(index=False)
-
-
-def rename_fields(arr, rename_dict):
-    """DEPRECATED: Use df.rename(columns=...). Compatibility wrapper."""
-    if len(arr) == 0:
-        return arr
-    df = pd.DataFrame(arr)
-    df = df.rename(columns=rename_dict)
-    return df.to_records(index=False)
-
-
-def drop_fields(arr, fields_to_drop):
-    """DEPRECATED: Use df.drop(columns=...). Compatibility wrapper."""
-    if len(arr) == 0:
-        return arr
-    df = pd.DataFrame(arr)
-    if isinstance(fields_to_drop, str):
-        fields_to_drop = [fields_to_drop]
-    df = df.drop(columns=fields_to_drop, errors='ignore')
-    return df.to_records(index=False)
+    Example:
+        df = convert_to_bool(df, 'IS_SHADED', default=False)
+    """
+    if column not in df.columns:
+        df[column] = default
+    else:
+        df[column] = (
+            df[column]
+            .astype(str)
+            .str.lower()
+            .isin(['true', '1', 'yes'])
+        )
+    return df
 
 
-def select_fields(arr, fields):
-    """DEPRECATED: Use df[fields]. Compatibility wrapper."""
-    if len(arr) == 0:
-        return arr
-    df = pd.DataFrame(arr)
-    return df[fields].to_records(index=False)
+def map_column(df, column, id_map, keep_original=True):
+    """
+    Map values in a column using an ID mapping dict.
+
+    Args:
+        df: DataFrame (modified in place)
+        column: Column name to map
+        id_map: Dict mapping source values to target values
+        keep_original: If True, keep original value when no mapping found
+
+    Returns:
+        DataFrame with mapped column
+
+    Example:
+        df = map_column(df, 'TABLE_VID', table_map)
+    """
+    if not id_map:
+        return df
+
+    if keep_original:
+        df[column] = df[column].astype(str).map(id_map).fillna(df[column])
+    else:
+        df[column] = df[column].astype(str).map(id_map)
+
+    return df
 
 
-def clean_spaces(arr):
-    """DEPRECATED: Use clean_spaces_df(). Compatibility wrapper."""
-    if len(arr) == 0:
-        return arr
-    df = pd.DataFrame(arr)
-    df = clean_spaces_df(df)
-    return df.to_records(index=False)
+def select_final_columns(df, columns):
+    """
+    Select and reorder columns for final output.
 
+    Args:
+        df: DataFrame
+        columns: List of column names to select (in order)
 
-def merge_arrays(left, right, left_on, right_on=None, how='inner', force_str_columns=None):
-    """DEPRECATED: Use df.merge(). Compatibility wrapper."""
-    if right_on is None:
-        right_on = left_on
-    if len(left) == 0 or len(right) == 0:
-        return np.array([])
-
-    df_left = pd.DataFrame(left)
-    df_right = pd.DataFrame(right)
-    result = df_left.merge(df_right, left_on=left_on, right_on=right_on, how=how)
-    return result.to_records(index=False)
-
-
-def array_to_dict(arr, key_field, value_field):
-    """DEPRECATED: Use dict(zip()). Compatibility wrapper."""
-    df = pd.DataFrame(arr)
-    return dict(zip(df[key_field].astype(str), df[value_field].astype(str)))
+    Returns:
+        DataFrame with only the specified columns
+    """
+    return df[columns]

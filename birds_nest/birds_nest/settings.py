@@ -38,6 +38,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-0f_te@%1w4g_en
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
+# Enable/disable debug data export for output layer mapping workflow
+# Set to False in production to improve memory usage
+DEBUG_EXPORT_ENABLED = False
 ALLOWED_HOSTS = []
 
 

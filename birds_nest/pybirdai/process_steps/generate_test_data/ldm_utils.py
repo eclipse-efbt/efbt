@@ -23,7 +23,7 @@ from pyecore.resources import ResourceSet, URI
 from pybirdai.regdna import ELReference
 
 
-class Utils(object):
+class Utils:
     '''
     Documentation for Utils
     '''

@@ -15,7 +15,7 @@ from pybirdai.regdna import ELAttribute, ELClass,ELReference,ELEnum
 from pybirdai.process_steps.generate_test_data.ldm_utils import Utils
 
 
-class SubtypeExploder(object):
+class SubtypeExploder:
     '''
     To make input layer test data for transformations, we want to have
     some ’useful concrete things’ like an example of ‘credit credit debt’,

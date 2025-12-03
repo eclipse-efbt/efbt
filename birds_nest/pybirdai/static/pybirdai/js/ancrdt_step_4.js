@@ -441,6 +441,44 @@ function openResultsModal(tableName) {
                         <i class="fas fa-download"></i> Download CSV
                     </a>
                 </div>`;
+
+            // Build API URLs for sharing
+            const baseUrl = window.location.origin;
+            let jsonApiUrl = `${baseUrl}/pybirdai/execute-ancrdt-table/${encodeURIComponent(tableName)}/?format=json`;
+            let csvApiUrl = `${baseUrl}/pybirdai/download-ancrdt-csv/${encodeURIComponent(tableName)}/`;
+
+            if (data.filters_applied && Object.keys(data.filters_applied).length > 0) {
+                const queryParams = Object.entries(data.filters_applied)
+                    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                    .join('&');
+                jsonApiUrl += `&${queryParams}`;
+                csvApiUrl += `?${queryParams}`;
+            }
+
+            summaryHtml += `
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #dee2e6;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: #495057;">
+                        <i class="fas fa-link"></i> API Endpoints
+                    </h4>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-weight: 500; font-size: 12px; color: #6c757d; display: block; margin-bottom: 4px;">JSON API:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <code id="json-api-url" style="flex: 1; padding: 8px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; word-break: break-all;">${jsonApiUrl}</code>
+                            <button onclick="copyToClipboard('json-api-url')" class="btn-copy" style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap; font-size: 12px;">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-weight: 500; font-size: 12px; color: #6c757d; display: block; margin-bottom: 4px;">CSV API:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <code id="csv-api-url" style="flex: 1; padding: 8px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; word-break: break-all;">${csvApiUrl}</code>
+                            <button onclick="copyToClipboard('csv-api-url')" class="btn-copy" style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap; font-size: 12px;">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
         }
 
         summaryHtml += '</div>';
@@ -475,6 +513,82 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+/**
+ * Copy text to clipboard from an element
+ * @param {string} elementId - ID of the element containing the text to copy
+ */
+function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        console.error('Element not found:', elementId);
+        return;
+    }
+
+    const text = element.textContent || element.innerText;
+
+    // Use the Clipboard API if available
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+            // Visual feedback - change button text temporarily
+            const button = event.target.closest('button');
+            if (button) {
+                const originalHtml = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.style.background = '#28a745';
+                setTimeout(function() {
+                    button.innerHTML = originalHtml;
+                    button.style.background = '#007bff';
+                }, 2000);
+            }
+        }).catch(function(err) {
+            console.error('Failed to copy text: ', err);
+            // Fallback to execCommand
+            fallbackCopyToClipboard(text);
+        });
+    } else {
+        // Fallback for older browsers
+        fallbackCopyToClipboard(text);
+    }
+}
+
+/**
+ * Fallback copy method for older browsers
+ * @param {string} text - Text to copy
+ */
+function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.top = '-9999px';
+    textArea.style.left = '-9999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            const button = event.target.closest('button');
+            if (button) {
+                const originalHtml = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.style.background = '#28a745';
+                setTimeout(function() {
+                    button.innerHTML = originalHtml;
+                    button.style.background = '#007bff';
+                }, 2000);
+            }
+        } else {
+            alert('Failed to copy text. Please copy manually.');
+        }
+    } catch (err) {
+        console.error('Fallback copy failed:', err);
+        alert('Failed to copy text. Please copy manually.');
+    }
+
+    document.body.removeChild(textArea);
 }
 
 /**

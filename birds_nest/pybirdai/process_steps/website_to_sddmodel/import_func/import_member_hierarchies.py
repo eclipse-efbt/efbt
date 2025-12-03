@@ -14,12 +14,15 @@
 """Import member hierarchies from CSV file."""
 
 import csv
-from pybirdai.models.bird_meta_data_model import MEMBER_HIERARCHY
+import logging
+from pybirdai.models.bird_meta_data_model import MEMBER_HIERARCHY, FRAMEWORK, FRAMEWORK_HIERARCHY
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id, find_domain_with_id
 from .warning_writers import save_missing_domains_to_csv
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
+
+logger = logging.getLogger(__name__)
 
 
 def import_member_hierarchies(context):
@@ -63,6 +66,41 @@ def import_member_hierarchies(context):
 
     if context.save_sdd_to_db and hierarchies_to_create:
         MEMBER_HIERARCHY.objects.bulk_create(hierarchies_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
+
+        # Create FRAMEWORK_HIERARCHY junction records if frameworks are specified
+        if hasattr(context, 'selected_frameworks') and context.selected_frameworks:
+            logger.info(f"Creating FRAMEWORK_HIERARCHY junction records for {len(hierarchies_to_create)} hierarchies and {len(context.selected_frameworks)} frameworks")
+            framework_hierarchy_links = []
+            framework_cache = {}  # Cache to avoid repeated database queries
+
+            for framework_code in context.selected_frameworks:
+                framework_id_str = f"EBA_{framework_code}"
+
+                # Get or cache FRAMEWORK object
+                if framework_id_str not in framework_cache:
+                    try:
+                        framework_obj = FRAMEWORK.objects.get(framework_id=framework_id_str)
+                        framework_cache[framework_id_str] = framework_obj
+                    except FRAMEWORK.DoesNotExist:
+                        logger.warning(f"Framework {framework_id_str} not found, skipping junction records for this framework")
+                        continue
+                else:
+                    framework_obj = framework_cache[framework_id_str]
+
+                # Create junction records for all hierarchies with this framework
+                for hierarchy in hierarchies_to_create:
+                    framework_hierarchy_link = FRAMEWORK_HIERARCHY(
+                        framework_id=framework_obj,
+                        member_hierarchy_id=hierarchy
+                    )
+                    framework_hierarchy_links.append(framework_hierarchy_link)
+
+            # Bulk create junction records
+            if framework_hierarchy_links:
+                FRAMEWORK_HIERARCHY.objects.bulk_create(framework_hierarchy_links, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
+                logger.info(f"Created {len(framework_hierarchy_links)} FRAMEWORK_HIERARCHY junction records")
+            else:
+                logger.warning("No FRAMEWORK_HIERARCHY junction records created")
 
     if missing_domains:
         save_missing_domains_to_csv(context, list(missing_domains))

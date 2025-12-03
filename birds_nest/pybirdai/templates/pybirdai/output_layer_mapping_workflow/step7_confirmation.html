@@ -4,6 +4,7 @@
 {% block title %}Output Layer Mapping - Confirmation{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" />
 <style>
     .workflow-header {
         background: #0d6efd;
@@ -260,6 +261,17 @@
         background: #38a169;
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+    }
+
+    .btn-warning {
+        background: #ed8936;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background: #dd6b20;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
     }
 
     .btn-secondary {
@@ -669,6 +681,231 @@
         cursor: not-allowed;
         transform: none;
     }
+
+    /* ========== Z-Axis Member Mapping Modal ========== */
+    .z-member-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 10001;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .z-member-modal.active {
+        display: flex;
+    }
+
+    .z-member-modal-content {
+        background: white;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 900px;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+    }
+
+    .z-member-modal-header {
+        background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        color: white;
+        padding: 1.5rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .z-member-modal-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        flex: 1;
+    }
+
+    .z-member-icon {
+        font-size: 2rem;
+    }
+
+    .z-member-modal-body {
+        padding: 2rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .z-member-warning {
+        background: #fff7ed;
+        border: 2px solid #fed7aa;
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #9a3412;
+    }
+
+    .z-member-warning strong {
+        display: block;
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+        color: #c2410c;
+    }
+
+    .z-member-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .z-member-item {
+        background: #f7f7f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .z-member-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .z-member-item-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #333;
+        font-family: monospace;
+    }
+
+    .z-member-badge {
+        background: #ed8936;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .z-member-item-body {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .z-member-field {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .z-member-field-label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .z-member-field-value {
+        font-family: monospace;
+        font-weight: 600;
+        color: #0d6efd;
+        font-size: 1rem;
+    }
+
+    .z-member-field select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 1rem;
+        background: white;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+
+    .z-member-field select:focus {
+        outline: none;
+        border-color: #0d6efd;
+    }
+
+    .z-member-modal-footer {
+        padding: 1.5rem 2rem;
+        background: #f7f7f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #e2e8f0;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .z-member-footer-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #666;
+        font-size: 0.875rem;
+    }
+
+    .z-member-count-badge {
+        background: #ed8936;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .z-member-footer-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-z-member-cancel {
+        background: #e2e8f0;
+        color: #4a5568;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-z-member-cancel:hover {
+        background: #cbd5e0;
+    }
+
+    .btn-z-member-confirm {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-z-member-confirm:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+    }
+
+    .btn-z-member-confirm:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
 </style>
 {% endblock %}
 
@@ -710,19 +947,35 @@
         </li>
     </ul>
 
+    {% if batch_edit_mode %}
+    <!-- Batch Edit Mode Banner -->
+    <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h4 style="margin: 0 0 0.5rem 0;">✏️ Batch Edit Mode - Generation</h4>
+        <p style="margin: 0; opacity: 0.9;">
+            Updating <strong>{{ batch_edit_mapping_count }}</strong> existing mapping(s).
+        </p>
+        <p style="margin: 0.75rem 0 0 0; font-size: 0.9rem; opacity: 0.85;">
+            When you confirm, the old mappings will be deleted and replaced with the updated versions.
+            Output layers (CUBE, COMBINATIONS) will be regenerated.
+        </p>
+    </div>
+    {% endif %}
+
     <div class="confirmation-container">
         {% if preview %}
         <!-- Preview Mode -->
-        <h2>Step 7: Generate Structures</h2>
+        <h2>Step 7: {% if batch_edit_mode %}Update{% else %}Generate{% endif %} Structures</h2>
         <p>Review the structures that will be created and confirm generation.</p>
 
         <div class="preview-panel">
             <div class="preview-title">Mapping Configuration</div>
             <div class="preview-grid">
+                {% if not selected_z_tables %}
                 <div class="preview-item">
                     <div class="preview-label">Table</div>
                     <div class="preview-value">{{ table_code }}</div>
                 </div>
+                {% endif %}
                 <div class="preview-item">
                     <div class="preview-label">Framework</div>
                     <div class="preview-value">{{ framework }}</div>
@@ -734,25 +987,92 @@
             </div>
         </div>
 
+        {% if selected_z_tables %}
+        <!-- Selected Z-Variant Tables Display -->
+        <div class="preview-panel" style="background: #f0f9ff; border-color: #0d6efd;">
+            <div class="preview-title" style="color: #0d6efd;">
+                <span style="margin-right: 0.5rem;">🔄</span>
+                Selected Z-Variant Tables
+            </div>
+            <p style="color: #666; margin-bottom: 1rem;">
+                The following {{ selected_z_tables|length }} table(s) were selected in Step 5 and will receive the same mapping configuration:
+            </p>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for table in selected_z_tables %}
+                <li style="padding: 0.75rem 1rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border: 1px solid #e2e8f0; display: flex; align-items: center;">
+                    <span style="display: inline-block; width: 8px; height: 8px; background: #0d6efd; border-radius: 50%; margin-right: 0.75rem;"></span>
+                    <div style="flex: 1;">
+                        <strong style="color: #333;">{{ table.table_id }}</strong>
+                        {% if table.name and table.name != table.table_id %}
+                        <span style="color: #666; margin-left: 0.5rem;">{{ table.name }}</span>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <p style="font-size: 0.875rem; color: #666; margin-top: 1rem; padding: 0.75rem; background: #fff; border-radius: 4px; border: 1px solid #e2e8f0;">
+                <strong>💡 Note:</strong> All variable groups and member mappings will be replicated to these tables.
+                To change the selection, go back to Step 5.
+            </p>
+        </div>
+        {% endif %}
+
+        {% if selected_z_tables %}
+        <!-- Multi-Table Generation Summary -->
+        <div class="preview-panel" style="background: #e6f7ff; border-color: #91d5ff;">
+            <div class="preview-title" style="color: #0050b3;">
+                <span style="margin-right: 0.5rem;">📊</span>
+                Multi-Table Generation Summary
+            </div>
+            <p style="margin: 0.5rem 0; color: #333;">
+                <strong>{{ mappings_count }}</strong> mapping definition(s) for
+                <strong>{{ framework }} {{ version }}</strong> across
+                <strong>{{ selected_z_tables|length }}</strong> output layer(s)
+            </p>
+        </div>
+        {% endif %}
+
         <div class="generated-objects">
             <div class="generated-title">
                 <span class="generated-icon">📦</span>
                 Objects to be Generated
             </div>
             <ul class="generated-list">
-                {% if not regenerate_mode %}
+                {% for mapping in mappings %}
                 <li class="generated-item">
                     <span class="item-type">Mapping Def</span>
-                    <span class="item-id">_MAP_DEF_[timestamp]</span>
+                    <span class="item-id">
+                        {{ mapping.name }}
+                        {% if mapping.internal_id %}
+                        <small style="color: #666; margin-left: 0.5rem;">({{ mapping.internal_id }})</small>
+                        {% endif %}
+                    </span>
                 </li>
-                {% endif %}
+                {% endfor %}
+                {% if selected_z_tables %}
+                <!-- Cubes for selected Z-variant tables -->
+                {% for z_table in selected_z_tables %}
+                <li class="generated-item">
+                    <span class="item-type">Cube</span>
+                    <span class="item-id">{{ z_table.table_code }}_{{ framework }}_{{ version }}_CUBE</span>
+                </li>
+                {% endfor %}
+                {% else %}
+                <!-- Cube for current table -->
                 <li class="generated-item">
                     <span class="item-type">Cube</span>
                     <span class="item-id">{{ table_code }}_{{ framework }}_{{ version }}_CUBE</span>
                 </li>
+                {% endif %}
                 <li class="generated-item">
                     <span class="item-type">Combinations</span>
-                    <span class="item-id">Reference combinations for all selected cells</span>
+                    <span class="item-id">
+                        {% if selected_z_tables %}
+                        {{ selected_z_tables|length }} combination set(s) for selected tables
+                        {% else %}
+                        Reference combinations for {{ table_code }}
+                        {% endif %}
+                    </span>
                 </li>
             </ul>
         </div>
@@ -844,6 +1164,40 @@
             </ul>
         </div>
 
+        {% if replication_results %}
+        <!-- Replication Results Section -->
+        <div class="generated-objects" style="border: 2px solid {% if replication_results|length > 0 %}#48bb78{% else %}#e2e8f0{% endif %};">
+            <div class="generated-title" style="color: #48bb78;">
+                <span class="generated-icon">🔄</span>
+                Replication Results ({{ replication_results|length }} table{{ replication_results|length|pluralize }})
+            </div>
+            <ul class="generated-list">
+                {% for result in replication_results %}
+                <li class="generated-item" style="{% if result.status == 'error' %}background: #fff5f5; border-left: 4px solid #fc8181;{% else %}background: #f0fdf4; border-left: 4px solid #48bb78;{% endif %}">
+                    <span class="item-type" style="{% if result.status == 'error' %}background: #fc8181;{% else %}background: #48bb78;{% endif %}">
+                        {{ result.table_code }}
+                    </span>
+                    <span class="item-id" style="flex: 2;">
+                        <strong>{{ result.table_id }}</strong>
+                        {% if result.status == 'success' %}
+                            <br><small style="color: #666;">✓ {{ result.message }}</small>
+                        {% else %}
+                            <br><small style="color: #e53e3e;">✗ {{ result.message }}</small>
+                        {% endif %}
+                    </span>
+                    {% if result.status == 'success' and result.cube_id %}
+                    <span class="item-action">
+                        <button class="btn-small" onclick="viewObject('cube', '{{ result.cube_id }}')" style="background: #48bb78; color: white;">
+                            View Cube
+                        </button>
+                    </span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
         <div class="form-actions">
             <div>
                 <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
@@ -851,6 +1205,9 @@
                 </button>
             </div>
             <div>
+                <button type="button" class="btn btn-warning" onclick="regenerateCombinations('{{ generated.cube_id }}', '{{ generated.table_id }}')" style="margin-right: 1rem;">
+                    Regenerate Combinations
+                </button>
                 <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'pybirdai:workflow_dashboard' %}'">
                     Go to Dashboard
                 </button>
@@ -937,6 +1294,38 @@
     </div>
 </div>
 
+<!-- Z-Axis Member Mapping Modal -->
+<div class="z-member-modal" id="zMemberModal">
+    <div class="z-member-modal-content">
+        <div class="z-member-modal-header">
+            <span class="z-member-icon">🔄</span>
+            <h2>Z-Axis Member Mappings Required</h2>
+        </div>
+        <div class="z-member-modal-body">
+            <div class="z-member-warning">
+                <strong>Member mappings needed for replication</strong>
+                Before generating structures for the selected tables, please provide Z-axis member mappings for each target table.
+                Each deduplicated table represents a different Z-axis member value.
+            </div>
+            <ul class="z-member-list" id="zMemberList">
+                <!-- Populated by JavaScript -->
+            </ul>
+        </div>
+        <div class="z-member-modal-footer">
+            <div class="z-member-footer-left">
+                <span class="z-member-count-badge" id="zMemberCount">0</span>
+                <span>table(s) require member mapping</span>
+            </div>
+            <div class="z-member-footer-buttons">
+                <button class="btn-z-member-cancel" onclick="closeZMemberModal()">Cancel</button>
+                <button class="btn-z-member-confirm" id="confirmZMemberBtn" onclick="confirmZMemberMappings()">
+                    Confirm and Generate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Show loading overlay when form is submitted
     document.getElementById('generateForm')?.addEventListener('submit', function() {
@@ -951,6 +1340,56 @@
                 event.target.nextElementSibling.classList.remove('show');
             }, 2000);
         });
+    }
+
+    /**
+     * Regenerate combinations for an existing cube
+     * @param {string} cubeId - The cube ID
+     * @param {string} tableId - The table ID for cell lookup
+     */
+    async function regenerateCombinations(cubeId, tableId) {
+        if (!confirm('This will delete existing combinations and regenerate them using the current cell configuration. Continue?')) {
+            return;
+        }
+
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.querySelector('.loading-text');
+
+        loadingOverlay.classList.add('active');
+        if (loadingText) {
+            loadingText.textContent = 'Regenerating combinations...';
+        }
+
+        try {
+            const response = await fetch('{% url "pybirdai:olm_regenerate_combinations_api" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({
+                    cube_id: cubeId,
+                    table_id: tableId
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                alert(`Successfully regenerated ${data.combinations_created} combinations!\n(Deleted ${data.deleted_count} previous combinations)`);
+                window.location.reload();
+            } else {
+                alert('Failed to regenerate combinations: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Regenerate error:', error);
+            alert('Network error: ' + error.message);
+        } finally {
+            loadingOverlay.classList.remove('active');
+            if (loadingText) {
+                loadingText.textContent = 'Generating structures...';
+            }
+        }
     }
 
     function viewObject(type, id) {
@@ -1182,6 +1621,195 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('[CONFLICT MODAL] Page loaded, conflicts detected, showing modal...');
         showConflictModal();
+    });
+    {% endif %}
+
+    // ========== Table Replication Multi-Select ==========
+    {% if is_duplicated_table and related_duplicates %}
+    // Load Selectize.js library
+    const selectizeScript = document.createElement('script');
+    selectizeScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js';
+    selectizeScript.onload = function() {
+        // Initialize Selectize on the multi-select dropdown
+        const selectElement = document.getElementById('replicateTablesSelect');
+        if (selectElement) {
+            $(selectElement).selectize({
+                plugins: ['remove_button'],
+                delimiter: ',',
+                persist: false,
+                create: false,
+                placeholder: 'Select tables to replicate to...',
+                maxItems: {{ related_duplicates|length }},
+                onInitialize: function() {
+                    console.log('[REPLICATION] Selectize initialized with {{ related_duplicates|length }} options');
+                }
+            });
+        }
+    };
+    document.head.appendChild(selectizeScript);
+
+    // Modify form submission to check for Z-axis member mappings
+    let zMemberMappingsProvided = false;  // Flag to prevent infinite loop
+
+    document.getElementById('generateForm')?.addEventListener('submit', function(e) {
+        const selectElement = document.getElementById('replicateTablesSelect');
+        if (selectElement) {
+            const selectedValues = $(selectElement).val();
+            console.log('[REPLICATION] Selected tables for replication:', selectedValues);
+
+            // Check if Z-axis member mappings are needed
+            if (selectedValues && selectedValues.length > 0 && !zMemberMappingsProvided) {
+                // Prevent form submission
+                e.preventDefault();
+
+                // Show Z-axis member mapping modal
+                showZMemberModal(selectedValues);
+                return false;
+            }
+
+            // Add hidden input for each selected table
+            if (selectedValues && selectedValues.length > 0) {
+                selectedValues.forEach(tableId => {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'replicate_to_tables[]';
+                    hiddenInput.value = tableId;
+                    this.appendChild(hiddenInput);
+                });
+                console.log('[REPLICATION] Added', selectedValues.length, 'tables to form submission');
+            } else {
+                console.log('[REPLICATION] No tables selected for replication');
+            }
+        }
+    });
+    {% endif %}
+
+    // ========== Z-Axis Member Mapping Modal Logic ==========
+    {% if is_duplicated_table and related_duplicates %}
+    const RELATED_DUPLICATES = {{ related_duplicates_json|safe }};
+    const Z_MEMBER_MAPPINGS = {};  // Store member mappings
+
+    function extractZAxisMember(tableId) {
+        // Extract Z-axis member from table ID
+        // Pattern: anything_EBA_qx50 or anything_EBA_qEC_EBA_qx50
+        const match1 = tableId.match(/_EBA_([a-zA-Z]{2}\d+)(?:_Z)?$/);
+        if (match1) {
+            return 'EBA_' + match1[1];
+        }
+
+        const match2 = tableId.match(/_EBA_q[A-Z]{1,2}_EBA_([a-zA-Z]{2}\d+)/);
+        if (match2) {
+            return 'EBA_' + match2[1];
+        }
+
+        return null;
+    }
+
+    function showZMemberModal(selectedTableIds) {
+        console.log('[Z-MEMBER] Showing modal for', selectedTableIds.length, 'tables');
+
+        const modal = document.getElementById('zMemberModal');
+        const list = document.getElementById('zMemberList');
+        const count = document.getElementById('zMemberCount');
+
+        // Clear existing content
+        list.innerHTML = '';
+
+        // Update count
+        count.textContent = selectedTableIds.length;
+
+        // Build list items for each table
+        selectedTableIds.forEach((tableId, index) => {
+            const zMember = extractZAxisMember(tableId);
+            const tableInfo = RELATED_DUPLICATES.find(t => t.table_id === tableId);
+
+            const li = document.createElement('li');
+            li.className = 'z-member-item';
+            li.innerHTML = `
+                <div class="z-member-item-header">
+                    <div class="z-member-item-title">${tableId}</div>
+                    <div class="z-member-badge">Z-axis member: ${zMember || 'Unknown'}</div>
+                </div>
+                <div class="z-member-item-body">
+                    <div class="z-member-field">
+                        <div class="z-member-field-label">Target Member Mapping</div>
+                        <select class="z-member-select" data-table-id="${tableId}">
+                            <option value="">Select member...</option>
+                            <option value="${zMember}">${zMember}</option>
+                            <!-- TODO: Load available members from server -->
+                        </select>
+                    </div>
+                </div>
+            `;
+
+            list.appendChild(li);
+        });
+
+        // Show modal
+        modal.classList.add('active');
+    }
+
+    function closeZMemberModal() {
+        const modal = document.getElementById('zMemberModal');
+        modal.classList.remove('active');
+        console.log('[Z-MEMBER] Modal closed');
+    }
+
+    function confirmZMemberMappings() {
+        console.log('[Z-MEMBER] Confirming member mappings...');
+
+        const selects = document.querySelectorAll('.z-member-select');
+        let allSelected = true;
+
+        // Collect mappings
+        selects.forEach(select => {
+            const tableId = select.getAttribute('data-table-id');
+            const memberValue = select.value;
+
+            if (!memberValue) {
+                allSelected = false;
+            } else {
+                Z_MEMBER_MAPPINGS[tableId] = memberValue;
+            }
+        });
+
+        if (!allSelected) {
+            alert('Please select a member mapping for all tables');
+            return;
+        }
+
+        console.log('[Z-MEMBER] Collected mappings:', Z_MEMBER_MAPPINGS);
+
+        // Add mappings to form as hidden inputs
+        const form = document.getElementById('generateForm');
+        Object.entries(Z_MEMBER_MAPPINGS).forEach(([tableId, memberId]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = `z_member_mapping[${tableId}]`;
+            input.value = memberId;
+            form.appendChild(input);
+        });
+
+        // Set flag and close modal
+        zMemberMappingsProvided = true;
+        closeZMemberModal();
+
+        // Submit form
+        form.submit();
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('zMemberModal')?.addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeZMemberModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeZMemberModal();
+        }
     });
     {% endif %}
 </script>

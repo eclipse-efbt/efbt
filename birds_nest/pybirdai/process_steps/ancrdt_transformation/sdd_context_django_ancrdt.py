@@ -13,7 +13,7 @@
 
 
 
-class SDDContext(object):
+class SDDContext:
     '''
     Documentation for Context
     '''

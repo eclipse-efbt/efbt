@@ -43,6 +43,26 @@ def map_hierarchy_node(path=os.path.join("target", "HierarchyNode.csv"), hierarc
     df['HIERARCHY_ID'] = df['HIERARCHY_ID'].astype(str).map(hierarchy_map_norm).fillna(df['HIERARCHY_ID'])
     df['PARENT_HIERARCHY_ID'] = df['PARENT_HIERARCHY_ID'].astype(str).map(hierarchy_map_norm).fillna(df['PARENT_HIERARCHY_ID'])
 
+    # Fix AT→ATY domain mismatch for metric members
+    def fix_aty_domain_mismatch(member_id):
+        """Fix AT→ATY domain mismatch for metric members (mi*, si*, ei* codes)"""
+        if pd.isna(member_id) or member_id == '':
+            return member_id
+
+        # Replace EBA_AT_EBA_ with EBA_ATY_EBA_ for metric codes
+        if 'EBA_AT_EBA_' in str(member_id):
+            parts = str(member_id).split('_EBA_')
+            if len(parts) == 2:
+                member_code = parts[1]
+                # Check if it's a metric code (mi*, si*, ei*)
+                if member_code.startswith(('mi', 'si', 'ei')):
+                    return str(member_id).replace('EBA_AT_EBA_', 'EBA_ATY_EBA_')
+        return member_id
+
+    # Apply fix to member ID columns
+    df['MEMBER_ID'] = df['MEMBER_ID'].apply(fix_aty_domain_mismatch)
+    df['PARENT_MEMBER_ID'] = df['PARENT_MEMBER_ID'].apply(fix_aty_domain_mismatch)
+
     # Rename fields
     df = df.rename(columns={
         "HIERARCHY_ID": "MEMBER_HIERARCHY_ID",
@@ -73,3 +93,77 @@ def map_hierarchy_node(path=os.path.join("target", "HierarchyNode.csv"), hierarc
     ]]
 
     return df, {}
+
+
+def create_default_hierarchy_nodes(hierarchy_id: str, domain_id: str, members_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create hierarchy nodes for a default hierarchy.
+    The _x0 member is the root (level 0), and all other domain members are children (level 1).
+
+    Args:
+        hierarchy_id: The hierarchy ID (e.g., "EBA_CU_DEFAULT")
+        domain_id: The domain ID (e.g., "EBA_CU")
+        members_df: DataFrame of all members
+
+    Returns:
+        DataFrame of hierarchy nodes
+    """
+    # Get all members for this domain
+    domain_members = members_df[members_df['DOMAIN_ID'] == domain_id]['MEMBER_ID'].tolist()
+
+    x0_member_id = f"{domain_id}_x0"
+    nodes = []
+
+    # Create root node (_x0 at level 0)
+    nodes.append({
+        "MEMBER_HIERARCHY_ID": hierarchy_id,
+        "MEMBER_ID": x0_member_id,
+        "LEVEL": 0,
+        "PARENT_MEMBER_ID": "",
+        "COMPARATOR": ">=",
+        "OPERATOR": "",
+        "VALID_FROM": "1900-01-01",
+        "VALID_TO": "9999-12-31"
+    })
+
+    # Create child nodes (all other members at level 1, parented to _x0)
+    for member_id in domain_members:
+        if member_id != x0_member_id:
+            nodes.append({
+                "MEMBER_HIERARCHY_ID": hierarchy_id,
+                "MEMBER_ID": member_id,
+                "LEVEL": 1,
+                "PARENT_MEMBER_ID": x0_member_id,
+                "COMPARATOR": ">=",
+                "OPERATOR": "",
+                "VALID_FROM": "1900-01-01",
+                "VALID_TO": "9999-12-31"
+            })
+
+    return pd.DataFrame(nodes)
+
+
+def create_all_default_hierarchy_nodes(domain_to_hierarchy_map: dict, members_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create hierarchy nodes for all default hierarchies.
+
+    Args:
+        domain_to_hierarchy_map: Dict mapping domain_id to hierarchy_id
+        members_df: DataFrame of all members
+
+    Returns:
+        DataFrame of all hierarchy nodes for default hierarchies
+    """
+    all_nodes = []
+
+    for domain_id, hierarchy_id in domain_to_hierarchy_map.items():
+        nodes_df = create_default_hierarchy_nodes(hierarchy_id, domain_id, members_df)
+        all_nodes.append(nodes_df)
+
+    if all_nodes:
+        return pd.concat(all_nodes, ignore_index=True)
+
+    return pd.DataFrame(columns=[
+        "MEMBER_HIERARCHY_ID", "MEMBER_ID", "LEVEL", "PARENT_MEMBER_ID",
+        "COMPARATOR", "OPERATOR", "VALID_FROM", "VALID_TO"
+    ])

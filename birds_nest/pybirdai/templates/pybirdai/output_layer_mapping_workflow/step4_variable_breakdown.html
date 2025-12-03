@@ -929,6 +929,16 @@
         </li>
     </ul>
 
+    {% if batch_edit_mode %}
+    <!-- Batch Edit Mode Banner -->
+    <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h4 style="margin: 0 0 0.5rem 0;">✏️ Batch Edit Mode - Variable Groups</h4>
+        <p style="margin: 0; opacity: 0.9;">
+            Editing <strong>{{ batch_edit_mapping_count }}</strong> mapping(s). All variable groups from selected mappings are shown below.
+        </p>
+    </div>
+    {% endif %}
+
     <div class="breakdown-form">
         <h2>Step 4: Define Variable Breakdowns</h2>
         <p>For each dimension from the selected ordinates, define the source variables and transformation rules.</p>
@@ -1142,10 +1152,11 @@
             // Dimension variables must have enumerated domains
             return variable.is_enumerated === true;
         } else if (groupType === 'Observation') {
-            // Special case: EBA_ATY is a meta-variable representing all observation metrics
-            // It has an enumerated domain but expands to actual observation variables at runtime
-            if (varId === 'EBA_ATY') {
-                return true;
+            // CRITICAL: Enumerated variables CANNOT be observations
+            // This prevents dimension variables from being incorrectly used as measures
+            if (variable.is_enumerated === true) {
+                console.warn(`[Domain Validation] Rejected ${varId} for Observation: is_enumerated=true`);
+                return false;
             }
 
             // Observation variables must have numeric domains
@@ -1429,6 +1440,25 @@
             return;
         }
 
+        // Check if any existing groups have source variables selected
+        const hasExistingSelections = Object.values(variableGroups).some(group =>
+            (group.variable_ids && group.variable_ids.length > 0) ||
+            (group.targets && group.targets.length > 0)
+        );
+
+        // Show confirmation if there are existing selections
+        if (hasExistingSelections) {
+            const confirmed = confirm(
+                'Creating a new group will refresh the interface.\n\n' +
+                'Your current selections will be preserved automatically.\n\n' +
+                'Do you want to continue?'
+            );
+
+            if (!confirmed) {
+                return; // User cancelled, don't create new group
+            }
+        }
+
         groupCounter++;
         const groupId = `group_${groupCounter}`;
 
@@ -1486,87 +1516,6 @@
         }
     }
 
-    // ========== EBA_ATY Member Panel Functions ==========
-
-    /**
-     * Toggle expand/collapse of EBA_ATY member panel
-     * @param {string} groupId - The group ID
-     */
-    function toggleMemberPanel(groupId) {
-        const listContainer = document.getElementById(`membersList_${groupId}`).parentElement;
-        const icon = document.getElementById(`panelIcon_${groupId}`);
-
-        if (listContainer.style.display === 'none') {
-            listContainer.style.display = 'block';
-            icon.classList.add('expanded');
-        } else {
-            listContainer.style.display = 'none';
-            icon.classList.remove('expanded');
-        }
-    }
-
-    /**
-     * Update EBA_ATY member panel visibility and content
-     * Shows panel only if group type is Observation AND EBA_ATY is selected
-     * @param {string} groupId - The group ID
-     */
-    function updateEbaAtyMemberDisplay(groupId) {
-        const group = variableGroups[groupId];
-        const panel = document.getElementById(`ebaAtyPanel_${groupId}`);
-        const membersList = document.getElementById(`membersList_${groupId}`);
-        const memberCount = document.getElementById(`memberCount_${groupId}`);
-
-        if (!panel || !membersList) {
-            console.warn(`[EBA_ATY Panel] Elements not found for ${groupId}`);
-            return;
-        }
-
-        // Show panel only if: group_type === 'Observation' AND EBA_ATY is selected
-        const isObservation = group.group_type === 'Observation';
-        const hasEbaAty = group.variable_ids && group.variable_ids.includes('EBA_ATY');
-
-        if (isObservation && hasEbaAty) {
-            // Get EBA_ATY members
-            const ebaAtyData = VARIABLES_WITH_MEMBERS['EBA_ATY'];
-
-            if (ebaAtyData && ebaAtyData.members && ebaAtyData.members.length > 0) {
-                // Update member count badge
-                memberCount.textContent = `${ebaAtyData.members.length} members`;
-
-                // Generate member list HTML
-                const membersHtml = ebaAtyData.members.map(member => `
-                    <div class="member-item">
-                        <strong>${member.name}</strong>
-                        <div>
-                            <span class="member-code">${member.code}</span>
-                        </div>
-                    </div>
-                `).join('');
-
-                membersList.innerHTML = membersHtml;
-                panel.classList.add('show');
-
-                console.log(`[EBA_ATY Panel] Displayed ${ebaAtyData.members.length} members for ${groupId}`);
-            } else {
-                membersList.innerHTML = '<div class="no-members-message">No EBA_ATY members found from selected ordinates</div>';
-                memberCount.textContent = '0 members';
-                panel.classList.add('show');
-                console.warn(`[EBA_ATY Panel] No members found for EBA_ATY in ${groupId}`);
-            }
-        } else {
-            // Hide panel if conditions not met
-            panel.classList.remove('show');
-
-            if (!isObservation) {
-                console.log(`[EBA_ATY Panel] Hidden for ${groupId}: not an Observation group`);
-            } else if (!hasEbaAty) {
-                console.log(`[EBA_ATY Panel] Hidden for ${groupId}: EBA_ATY not selected`);
-            }
-        }
-    }
-
-    // ========== End EBA_ATY Member Panel Functions ==========
-
     // Update group configuration
     function updateGroupConfig(groupId, field, value) {
         if (variableGroups[groupId]) {
@@ -1598,8 +1547,6 @@
             if (field === 'group_type') {
                 console.log(`[Domain Filter] Group type changed to ${value} for ${groupId}, refreshing dropdown...`);
                 refreshSingleGroupDropdown(groupId);
-                // Update EBA_ATY member panel visibility
-                updateEbaAtyMemberDisplay(groupId);
             }
 
             // If mapping type changes, adjust UI
@@ -1609,8 +1556,40 @@
         }
     }
 
+    // Sync all Tom Select instances to variableGroups data
+    // This prevents data loss when renderGroups() destroys and recreates DOM elements
+    function syncAllTomSelectToData() {
+        Object.entries(tomSelectInstances).forEach(([selectId, instance]) => {
+            if (!instance) return;
+
+            // Extract groupId from selectId (e.g., 'sources_group_1' -> 'group_1')
+            const groupId = selectId.replace(/^(sources_|targets_)/, '');
+
+            // Ensure the group exists
+            if (!variableGroups[groupId]) return;
+
+            // Sync source variables
+            if (selectId.startsWith('sources_')) {
+                const currentValues = instance.getValue();
+                variableGroups[groupId].variable_ids = Array.isArray(currentValues)
+                    ? currentValues
+                    : (currentValues ? [currentValues] : []);
+            }
+
+            // Sync target variables
+            if (selectId.startsWith('targets_')) {
+                const currentValues = instance.getValue();
+                variableGroups[groupId].targets = Array.isArray(currentValues)
+                    ? currentValues
+                    : (currentValues ? [currentValues] : []);
+            }
+        });
+    }
+
     // Render all groups
     function renderGroups() {
+        // CRITICAL: Sync all Tom Select data BEFORE destroying DOM
+        syncAllTomSelectToData();
         const container = document.getElementById('groupsContainer');
 
         if (Object.keys(variableGroups).length === 0) {
@@ -1645,32 +1624,32 @@
                             Variable Type: <span style="color: #dc3545;">* REQUIRED</span>
                         </label>
                         <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: not-allowed; opacity: 0.8;">
                                 <input type="radio"
                                        name="group_${groupId}_type"
                                        value="Dimension"
                                        ${group.group_type === 'Dimension' ? 'checked' : ''}
-                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'Dimension')"
+                                       onclick="return false;"
                                        required
-                                       style="cursor: pointer;">
+                                       style="cursor: not-allowed;">
                                 <span style="font-weight: ${group.group_type === 'Dimension' ? '700' : '400'};">Dimension</span>
                             </label>
-                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: not-allowed; opacity: 0.8;">
                                 <input type="radio"
                                        name="group_${groupId}_type"
                                        value="Observation"
                                        ${group.group_type === 'Observation' ? 'checked' : ''}
-                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'Observation')"
-                                       style="cursor: pointer;">
+                                       onclick="return false;"
+                                       style="cursor: not-allowed;">
                                 <span style="font-weight: ${group.group_type === 'Observation' ? '700' : '400'};">Observation</span>
                             </label>
-                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: not-allowed; opacity: 0.8;">
                                 <input type="radio"
                                        name="group_${groupId}_type"
                                        value="Attribute"
                                        ${group.group_type === 'Attribute' ? 'checked' : ''}
-                                       onchange="updateGroupConfig('${groupId}', 'group_type', 'Attribute')"
-                                       style="cursor: pointer;">
+                                       onclick="return false;"
+                                       style="cursor: not-allowed;">
                                 <span style="font-weight: ${group.group_type === 'Attribute' ? '700' : '400'};">Attribute</span>
                             </label>
                         </div>
@@ -1701,22 +1680,6 @@
                         </div>
                     </div>
 
-                    <!-- EBA_ATY Member Panel (shown only for Observation groups with EBA_ATY) -->
-                    <div id="ebaAtyPanel_${groupId}" class="eba-aty-members-panel">
-                        <div class="members-header" onclick="toggleMemberPanel('${groupId}')">
-                            <strong>
-                                📊 EBA_ATY Members from Selected Ordinates
-                                <span id="memberCount_${groupId}" class="member-count-badge"></span>
-                            </strong>
-                            <span id="panelIcon_${groupId}" class="panel-icon">▼</span>
-                        </div>
-                        <div class="members-list-container">
-                            <div id="membersList_${groupId}" class="members-list">
-                                <!-- Populated by JavaScript -->
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Hidden inputs for form submission -->
                     <input type="hidden" name="group_${groupId}_name" value="${group.name}">
                     <input type="hidden" name="group_${groupId}_variables" value="${group.variable_ids.join(',')}">
@@ -1742,10 +1705,29 @@
 
             // Create Tom Select for source variables (instance destroyed before innerHTML replacement)
             const availableSourceOptions = getAvailableVariablesForGroup(groupId, true);
-            console.log(`[DEBUG] Creating source Tom Select for ${sourceId} with ${availableSourceOptions.length} available options`);
+
+            // CRITICAL FIX: Merge currently selected variables back into options to preserve them
+            // Tom Select silently drops items that aren't in the options array
+            const selectedVarIds = group.variable_ids || [];
+            const optionsMap = new Map(availableSourceOptions.map(opt => [opt.value, opt]));
+
+            // Add missing selected variables to options (preserves existing selections during re-render)
+            selectedVarIds.forEach(varId => {
+                if (!optionsMap.has(varId) && AVAILABLE_VARIABLES[varId]) {
+                    const varData = AVAILABLE_VARIABLES[varId];
+                    optionsMap.set(varId, {
+                        value: varId,
+                        text: `${varId} - ${varData.name}`
+                    });
+                }
+            });
+
+            const finalSourceOptions = Array.from(optionsMap.values());
+            console.log(`[DEBUG] Creating source Tom Select for ${sourceId} with ${finalSourceOptions.length} options (${availableSourceOptions.length} available + ${selectedVarIds.length} pre-selected)`);
+
             tomSelectInstances[sourceId] = new TomSelect(`#${sourceId}`, {
-                options: availableSourceOptions,
-                items: group.variable_ids, // Restore selections from preserved data
+                options: finalSourceOptions,  // Use merged options that include pre-selected variables
+                items: group.variable_ids, // Now all items will be found in options
                 maxItems: null,
                 plugins: ['remove_button', 'dropdown_input'],
                 placeholder: 'Type to search source variables...',
@@ -1769,6 +1751,32 @@
                         const sources = value ? (Array.isArray(value) ? value : value.split(',').filter(v => v)) : [];
                         variableGroups[groupId].variable_ids = sources;
 
+                        // Auto-suggest group type based on first selected variable's domain
+                        if (sources.length > 0) {
+                            const firstVarId = sources[0];
+                            const varData = VARIABLES_WITH_MEMBERS[firstVarId];
+                            if (varData && varData.suggested_role) {
+                                const currentGroupType = variableGroups[groupId].group_type;
+                                const suggestedRole = varData.suggested_role;
+
+                                // Only auto-set if group type is still default 'Dimension' OR if it's the first variable
+                                if (currentGroupType === 'Dimension' || sources.length === 1) {
+                                    variableGroups[groupId].group_type = suggestedRole;
+                                    console.log(`[Auto-suggest] Setting group ${groupId} type to ${suggestedRole} based on ${firstVarId}`);
+
+                                    // Update radio button and hidden input
+                                    const radioButton = document.querySelector(`input[name="group_${groupId}_type"][value="${suggestedRole}"]`);
+                                    if (radioButton) {
+                                        radioButton.checked = true;
+                                    }
+                                    updateHiddenInput(`group_${groupId}_type`, suggestedRole);
+
+                                    // Refresh dropdown to show only valid variables for this type
+                                    refreshSingleGroupDropdown(groupId);
+                                }
+                            }
+                        }
+
                         // Calculate mapping type implicitly
                         variableGroups[groupId].mapping_type = calculateMappingType(
                             variableGroups[groupId].variable_ids.length,
@@ -1779,9 +1787,6 @@
                         refreshAllGroupDropdowns(groupId);
 
                         updateVariableMappingIndicator(); // Update indicator when source variables change
-
-                        // Update EBA_ATY member panel if EBA_ATY is selected/deselected
-                        updateEbaAtyMemberDisplay(groupId);
                     }
                 }
             });
@@ -2299,6 +2304,29 @@
     document.getElementById('breakdownForm').addEventListener('submit', function(e) {
         // CRITICAL: Sync ALL data from JavaScript to hidden inputs BEFORE validation
         syncAllGroupDataToHiddenInputs();
+
+        // Show confirmation dialog with selection summary
+        const groupCount = Object.keys(variableGroups).length;
+        let totalSourceVars = 0;
+        let totalTargetVars = 0;
+
+        Object.values(variableGroups).forEach(group => {
+            totalSourceVars += (group.variable_ids || []).length;
+            totalTargetVars += (group.targets || []).length;
+        });
+
+        const confirmMessage =
+            `You are about to proceed to the Mapping Editor with:\n\n` +
+            `• ${groupCount} variable group(s)\n` +
+            `• ${totalSourceVars} source variable(s) selected\n` +
+            `• ${totalTargetVars} target variable(s) selected\n\n` +
+            `Continue to Edit Mappings?`;
+
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
+            return false; // User cancelled
+        }
+
         // Check that all groups have explicit group_type (Dimension, Measure, or Comment)
         const groupsMissingType = [];
         Object.entries(variableGroups).forEach(([groupId, group]) => {
@@ -2365,6 +2393,108 @@
 
     // Initialize the variable mapping indicator on page load
     updateVariableMappingIndicator();
+
+    // ========== BATCH EDIT MODE FUNCTIONS ==========
+    {% if batch_edit_mode %}
+    // Batch edit data from backend (mapping_id -> mapping data)
+    const BATCH_EDIT_DATA = {{ batch_edit_data_json|safe }};
+
+    /**
+     * Initialize batch edit mode on page load.
+     * Loads ALL variable groups from ALL mappings directly into variableGroups.
+     */
+    function initBatchEditMode() {
+        console.log('[BATCH EDIT] Initializing batch edit mode with', Object.keys(BATCH_EDIT_DATA).length, 'mappings');
+
+        // Load all variable groups from all mappings into the global variableGroups
+        Object.entries(BATCH_EDIT_DATA).forEach(([mappingId, mappingData]) => {
+            console.log(`[BATCH EDIT] Loading mapping ${mappingId}:`, mappingData.name);
+
+            // Load variable groups from mapping data
+            const varGroups = mappingData.variable_groups || {};
+
+            Object.entries(varGroups).forEach(([groupId, groupData]) => {
+                groupCounter++;
+                const newGroupId = `group_${groupCounter}`;
+
+                variableGroups[newGroupId] = {
+                    id: newGroupId,
+                    name: groupData.name || `Variable Group ${groupCounter}`,
+                    variable_ids: groupData.variable_ids || [],
+                    mapping_type: groupData.mapping_type || 'many_to_one',
+                    targets: groupData.targets || [],
+                    group_type: groupData.group_type || 'Dimension'
+                };
+
+                console.log(`[BATCH EDIT] Loaded group ${newGroupId} from mapping ${mappingId}:`, variableGroups[newGroupId]);
+            });
+        });
+
+        // Render all loaded groups at once
+        renderGroups();
+
+        // Update the variable mapping indicator
+        updateVariableMappingIndicator();
+
+        console.log('[BATCH EDIT] Initialization complete:', Object.keys(variableGroups).length, 'groups loaded from', Object.keys(BATCH_EDIT_DATA).length, 'mappings');
+    }
+
+    // Initialize batch edit mode after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for Tom Select script to load, then initialize
+        setTimeout(function() {
+            initBatchEditMode();
+        }, 100);
+    });
+    {% endif %}
+    // ========== END BATCH EDIT MODE FUNCTIONS ==========
+
+    {% if mapping_mode == 'modify_existing' and not batch_edit_mode %}
+    // ========== SINGLE EDIT MODE INITIALIZATION ==========
+    const EXISTING_VARIABLE_GROUPS = {{ existing_variable_groups_json|default:'{}'|safe }};
+
+    /**
+     * Initialize single edit mode on page load.
+     * Loads existing variable groups from the mapping being edited.
+     */
+    function initSingleEditMode() {
+        console.log('[SINGLE EDIT] Initializing single edit mode with', Object.keys(EXISTING_VARIABLE_GROUPS).length, 'existing groups');
+
+        // Load variable groups from existing mapping data
+        Object.entries(EXISTING_VARIABLE_GROUPS).forEach(([groupId, groupData]) => {
+            groupCounter++;
+            const newGroupId = `group_${groupCounter}`;
+
+            variableGroups[newGroupId] = {
+                id: newGroupId,
+                name: groupData.name || `Variable Group ${groupCounter}`,
+                variable_ids: groupData.variable_ids || [],
+                mapping_type: groupData.mapping_type || 'many_to_one',
+                targets: groupData.targets || [],
+                group_type: groupData.group_type || 'Dimension'
+            };
+
+            console.log(`[SINGLE EDIT] Loaded group ${newGroupId}:`, variableGroups[newGroupId]);
+        });
+
+        // Render all loaded groups at once
+        renderGroups();
+
+        // Update the variable mapping indicator
+        updateVariableMappingIndicator();
+
+        console.log('[SINGLE EDIT] Initialization complete:', Object.keys(variableGroups).length, 'groups loaded');
+    }
+
+    // Initialize single edit mode after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for Tom Select script to load, then initialize
+        setTimeout(function() {
+            initSingleEditMode();
+        }, 100);
+    });
+    {% endif %}
+    // ========== END SINGLE EDIT MODE INITIALIZATION ==========
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>

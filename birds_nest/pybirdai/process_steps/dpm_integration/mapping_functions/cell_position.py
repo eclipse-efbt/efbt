@@ -13,7 +13,9 @@
 
 import os
 import pandas as pd
-from pybirdai.process_steps.dpm_integration.mapping_functions.utils import pascal_to_upper_snake
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, apply_cascade_filter
+)
 
 
 def map_cell_position(path=os.path.join("target", "CellPosition.csv"), cell_map: dict = {}, ordinate_map: dict = {}, start_index_after_last: bool = False):
@@ -22,6 +24,10 @@ def map_cell_position(path=os.path.join("target", "CellPosition.csv"), cell_map:
 
     # Transform column names to UPPER_SNAKE_CASE
     df.columns = [pascal_to_upper_snake(col) for col in df.columns]
+
+    # Filter positions: only keep positions where both CELL_ID and ORDINATE_ID are valid (cascade filter)
+    df = apply_cascade_filter(df, 'CELL_ID', cell_map)
+    df = apply_cascade_filter(df, 'ORDINATE_ID', ordinate_map)
 
     # Map cell and ordinate IDs
     df['CELL_ID'] = df['CELL_ID'].astype(str).map(cell_map).fillna(df['CELL_ID'])

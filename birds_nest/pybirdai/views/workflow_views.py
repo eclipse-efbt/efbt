@@ -728,9 +728,12 @@ def get_dpm_task_grid(session):
         return []
 
     dpm_steps = [
-        (1, 'Prepare DPM Data'),
-        (2, 'Import DPM Data'),
+        (1, 'Extract DPM Metadata'),
+        (2, 'Process & Import Selected Tables'),
         (3, 'Create Output Layers'),
+        (4, 'Create Transformation Rules'),
+        (5, 'Generate Python Code'),
+        (6, 'Execute DPM Tests'),
     ]
 
     grid = []
@@ -772,7 +775,8 @@ def get_ancrdt_task_grid(session):
         (1, 'Import Metadata'),
         (2, 'Create Joins Metadata'),
         (3, 'Create Executable Joins'),
-        (4, 'Execute Tables'),
+        (4, 'Full Execution with Test Suite'),
+        (5, 'Execute Tables'),
     ]
 
     grid = []
@@ -1593,7 +1597,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
         if request.method == 'POST':
             # Start test execution
             task_execution.status = 'running'
-            task_execution.started_at = datetime.datetime.now()
+            task_execution.started_at = timezone.now()
             task_execution.save()
 
             try:
@@ -1654,6 +1658,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
                         test_runner.args.dp_suffix = None
                         test_runner.args.scenario = None
                         test_runner.args.suite_name = suite['name']
+                        test_runner.args.framework = "FINREP"
 
                         # Execute tests
                         logger.info(f"Executing tests from config: {suite['config_path']}")
@@ -1682,7 +1687,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
                 execution_data['current_stage'] = 'completed'
 
                 # Calculate execution time
-                execution_time = datetime.datetime.now() - task_execution.started_at
+                execution_time = timezone.now() - task_execution.started_at
                 execution_data['execution_time'] = str(execution_time).split('.')[0]
 
                 # Check if all selected subtasks are completed before marking main task as completed
@@ -2256,6 +2261,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
                         test_runner.args.reg_tid = None
                         test_runner.args.dp_suffix = None
                         test_runner.args.scenario = None
+                        test_runner.args.framework = "FINREP"
 
                         # Execute tests
                         logger.info(f"Executing tests for suite: {suite_name}")
@@ -2752,6 +2758,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
                         test_runner.args.reg_tid = None
                         test_runner.args.dp_suffix = None
                         test_runner.args.scenario = None
+                        test_runner.args.framework = "FINREP"
 
                         # Execute tests
                         logger.info(f"Executing tests for suite: {suite_name}")
@@ -3841,20 +3848,72 @@ def execute_dpm_step(request, step_number):
             }
         )
 
+        # Extract selected frameworks from request
+        selected_frameworks = request.POST.getlist('frameworks')
+
+        # Validate selected frameworks
+        VALID_FRAMEWORKS = [
+            'FINREP', 'COREP', 'AE', 'FP', 'SBP', 'REM', 'RES', 'PAY',
+            'COVID19', 'IF', 'GSII', 'MREL', 'IMPRAC', 'ESG',
+            'IPU', 'PILLAR3', 'IRRBB', 'DORA', 'FC', 'MICA'
+        ]
+
+        if selected_frameworks:
+            # Check for invalid frameworks
+            invalid_frameworks = [fw for fw in selected_frameworks if fw not in VALID_FRAMEWORKS]
+            if invalid_frameworks:
+                return JsonResponse({
+                    'success': False,
+                    'error': f'Invalid frameworks selected: {", ".join(invalid_frameworks)}. Valid frameworks are: {", ".join(VALID_FRAMEWORKS)}'
+                })
+
+            dpm_execution.selected_frameworks = selected_frameworks
+            dpm_execution.save()
+
         # Mark as running
         dpm_execution.start_execution()
 
         # Execute the appropriate entry point based on step number
+        # Wrap in try-finally to ensure status is ALWAYS updated, even if error handler fails
         try:
             if step_number == 1:
-                # Prepare DPM Data - Map DPM metadata to SDD format
+                # Step 1: Extract DPM Metadata (formerly Phase A)
                 from pybirdai.entry_points.import_dpm_data import RunImportDPMData
-                RunImportDPMData.run_import(import_=False)
+
+                logger.info("Running DPM Step 1: Extracting metadata")
+
+                result = RunImportDPMData.run_import_phase_a(frameworks=selected_frameworks or None)
+
+                logger.info(f"Step 1 complete - {result.get('table_count', 0)} tables available for selection")
 
             elif step_number == 2:
-                # Import DPM Data - Import report templates into database
+                # Step 2: Process Selected Tables & Import (formerly Phase B + Step 2)
+                # This step combines table processing (ordinate explosion) with database import
                 from pybirdai.entry_points.import_dpm_data import RunImportDPMData
-                RunImportDPMData.run_import(import_=True)
+                import json
+
+                # Check if selected_tables provided
+                selected_tables_json = request.POST.get('selected_tables')
+                selected_tables = json.loads(selected_tables_json) if selected_tables_json else None
+
+                if not selected_tables:
+                    # No tables selected - this should be caught by modal, but handle gracefully
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'No tables selected. Please select tables to process.'
+                    })
+
+                logger.info(f"Running DPM Step 2 with {len(selected_tables)} selected tables")
+                dpm_execution.selected_tables = selected_tables
+                dpm_execution.save()
+
+                # Run Phase B: Process selected tables with ordinate explosion
+                RunImportDPMData.run_import_phase_b(
+                    selected_tables=selected_tables,
+                    enable_table_duplication=True  # Enable Z-axis table duplication
+                )
+
+                logger.info("Table processing completed, database import already done in Phase B")
 
                 # After importing DPM data, ensure Float subdomain exists for MTRC variable
                 try:
@@ -3937,6 +3996,118 @@ def execute_dpm_step(request, step_number):
                             }
                         })
 
+            elif step_number == 4:
+                # Create Transformation Rules - Generate filters and joins metadata for DPM output layers
+                logger.info("DPM Step 4: Creating transformation rules (filters and joins metadata)...")
+
+                from pybirdai.entry_points.create_filters import RunCreateFilters
+                from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
+
+                execution_data = {
+                    'filters_created': False,
+                    'joins_metadata_created': False,
+                    'steps_completed': []
+                }
+
+                # Generate filters
+                logger.info("Generating filters for DPM output layer cubes...")
+                RunCreateFilters.run_create_filters()
+                execution_data['filters_created'] = True
+                execution_data['steps_completed'].append('Filters creation')
+
+                # Create joins metadata
+                logger.info("Creating joins metadata for DPM output layer cubes...")
+                RunCreateJoinsMetadata.run_create_joins_meta_data()
+                execution_data['joins_metadata_created'] = True
+                execution_data['steps_completed'].append('Joins metadata creation')
+
+                logger.info("DPM Step 4 completed: Transformation rules created successfully")
+
+                # Store execution data before completing
+                dpm_execution.execution_data = execution_data
+                dpm_execution.save()
+
+            elif step_number == 5:
+                # Generate Python Code - Create executable Python transformations for DPM
+                logger.info("DPM Step 5: Generating Python code (executable filters and joins)...")
+
+                from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
+                from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
+
+                execution_data = {
+                    'filter_code_generated': False,
+                    'join_code_generated': False,
+                    'steps_completed': []
+                }
+
+                # Generate filter code
+                logger.info("Generating executable filter Python code...")
+                RunCreateExecutableFilters.run_create_executable_filters_from_db()
+                execution_data['filter_code_generated'] = True
+                execution_data['steps_completed'].append('Executable filter code generation')
+
+                # Generate join code
+                logger.info("Generating executable join Python code...")
+                RunCreateExecutableJoins.run_create_executable_joins()
+                execution_data['join_code_generated'] = True
+                execution_data['steps_completed'].append('Executable join code generation')
+
+                logger.info("DPM Step 5 completed: Python code generated successfully")
+
+                # Store execution data before completing
+                dpm_execution.execution_data = execution_data
+                dpm_execution.save()
+
+            elif step_number == 6:
+                # Execute DPM Tests - Run DPM test suite and validate results
+                logger.info("DPM Step 6: Executing DPM test suite...")
+
+                from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+
+                execution_data = {
+                    'tests_executed': False,
+                    'steps_completed': []
+                }
+
+                # Look for DPM-specific test suite in tests/dpm/ directory
+                tests_dir = 'tests/dpm'
+                config_file_path = os.path.join(tests_dir, 'configuration_file_tests.json')
+
+                if os.path.exists(config_file_path):
+                    logger.info(f"Found DPM test suite configuration: {config_file_path}")
+
+                    # Create test runner instance
+                    test_runner = RegulatoryTemplateTestRunner(False)
+
+                    # Configure test runner
+                    test_runner.args.uv = "False"
+                    test_runner.args.config_file = config_file_path
+                    test_runner.args.dp_value = None
+                    test_runner.args.reg_tid = None
+                    test_runner.args.dp_suffix = None
+                    test_runner.args.scenario = None
+                    test_runner.args.suite_name = 'dpm'
+                    test_runner.args.framework = "FINREP"
+
+                    # Execute tests
+                    logger.info(f"Executing DPM tests from config: {config_file_path}")
+                    test_runner.main()
+                    logger.info("Completed DPM test suite")
+
+                    execution_data['tests_executed'] = True
+                    execution_data['steps_completed'].append('DPM test suite executed')
+                else:
+                    logger.warning(f"No DPM test configuration found at {config_file_path}")
+                    logger.info("Step 6 completed without test execution (no test suite configured)")
+                    execution_data['tests_executed'] = False
+                    execution_data['steps_completed'].append('No test suite found - skipped')
+
+                # Store execution data before completing
+                dpm_execution.execution_data = execution_data
+                dpm_execution.save()
+
+                logger.info("DPM Step 6 completed")
+
             else:
                 raise ValueError(f'Invalid DPM step number: {step_number}')
 
@@ -3959,6 +4130,18 @@ def execute_dpm_step(request, step_number):
                 'error': str(e),
                 'status': 'failed'
             })
+        finally:
+            # Safety net: If task is still 'running' after all error handling,
+            # force it to 'failed' to prevent stuck status
+            # This ensures tasks can NEVER remain stuck in 'running' status
+            dpm_execution.refresh_from_db()
+            if dpm_execution.status == 'running':
+                logger.error(f"DPM Step {step_number} was still 'running' after execution - forcing to 'failed'")
+                dpm_execution.status = 'failed'
+                if not dpm_execution.error_message:
+                    dpm_execution.error_message = 'Execution interrupted unexpectedly'
+                dpm_execution.completed_at = timezone.now()
+                dpm_execution.save(update_fields=['status', 'error_message', 'completed_at'])
 
     except Exception as e:
         logger.error(f"Error executing DPM step: {e}")
@@ -4024,6 +4207,7 @@ def execute_ancrdt_step(request, step_number):
         ancrdt_execution.start_execution()
 
         # Execute the appropriate entry point based on step number
+        # Wrap in try-finally to ensure status is ALWAYS updated, even if error handler fails
         try:
             if step_number == 0:
                 # Fetch Metadata CSV
@@ -4067,6 +4251,18 @@ def execute_ancrdt_step(request, step_number):
                 'error': str(e),
                 'status': 'failed'
             })
+        finally:
+            # Safety net: If task is still 'running' after all error handling,
+            # force it to 'failed' to prevent stuck status
+            # This ensures tasks can NEVER remain stuck in 'running' status
+            ancrdt_execution.refresh_from_db()
+            if ancrdt_execution.status == 'running':
+                logger.error(f"AnaCredit Step {step_number} was still 'running' after execution - forcing to 'failed'")
+                ancrdt_execution.status = 'failed'
+                if not ancrdt_execution.error_message:
+                    ancrdt_execution.error_message = 'Execution interrupted unexpectedly'
+                ancrdt_execution.completed_at = timezone.now()
+                ancrdt_execution.save(update_fields=['status', 'error_message', 'completed_at'])
 
     except Exception as e:
         logger.error(f"Error executing AnaCredit step: {e}")
@@ -4196,6 +4392,233 @@ def api_dpm_cubes(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
+def get_available_tables_for_selection(request):
+    """
+    API endpoint to get available tables for selection after Phase A.
+    Reads table.csv and returns list of tables with metadata.
+    """
+    logger = logging.getLogger(__name__)
+
+    try:
+        import pandas as pd
+        import os
+        from django.conf import settings
+
+        base_dir = settings.BASE_DIR
+        table_csv_path = os.path.join(base_dir, 'results', 'technical_export', 'table.csv')
+
+        if not os.path.exists(table_csv_path):
+            return JsonResponse({
+                'success': False,
+                'error': 'table.csv not found. Please run Phase A first.'
+            }, status=404)
+
+        # Read table.csv
+        tables_df = pd.read_csv(table_csv_path)
+
+        # Convert to list of dictionaries
+        tables = []
+        for _, row in tables_df.iterrows():
+            table_id = str(row.get('TABLE_ID', ''))
+            # Use correct column names from table.csv: NAME and CODE (not TABLE_NAME and TABLE_CODE)
+            table_name = str(row.get('NAME', ''))
+            table_code = str(row.get('CODE', ''))
+            version = str(row.get('VERSION', ''))
+            description = str(row.get('DESCRIPTION', ''))
+
+            # Extract framework from table_id (format: EBA_FRAMEWORK_CODE_VERSION)
+            framework = ''
+            if table_id.startswith('EBA_'):
+                parts = table_id.split('_')
+                if len(parts) >= 2:
+                    framework = parts[1]
+
+            tables.append({
+                'table_id': table_id,
+                'table_name': table_name,
+                'table_code': table_code,
+                'framework': framework,
+                'version': version,
+                'description': description
+                # Note: TABLE_VID is intentionally excluded as it's an internal ID
+            })
+
+        logger.info(f"Returning {len(tables)} available tables for selection")
+
+        return JsonResponse({
+            'success': True,
+            'tables': tables,
+            'count': len(tables)
+        })
+
+    except Exception as e:
+        logger.error(f"Error getting available tables: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+def save_table_selection(request):
+    """
+    API endpoint to save table selection and continue with Phase B.
+    Receives selected_tables and triggers Phase B execution.
+    """
+    logger = logging.getLogger(__name__)
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+
+    try:
+        import json
+
+        # Get selected tables from JSON body
+        data = json.loads(request.body)
+        selected_tables = data.get('selected_tables', [])
+
+        if not selected_tables:
+            return JsonResponse({
+                'success': False,
+                'error': 'No tables selected'
+            }, status=400)
+
+        logger.info(f"Received table selection: {len(selected_tables)} tables")
+
+        # Call execute_dpm_step with selected_tables to trigger Phase B
+        # We need to create a new request object with the selected_tables
+        from django.test import RequestFactory
+        factory = RequestFactory()
+
+        # Create new POST request with selected_tables
+        new_request = factory.post('/workflow/dpm/execute/1/', {
+            'selected_tables': json.dumps(selected_tables)
+        })
+
+        # Copy session from original request
+        new_request.session = request.session
+
+        # Execute Phase B
+        response = execute_dpm_step(new_request, step_number=1)
+
+        return response
+
+    except Exception as e:
+        logger.error(f"Error saving table selection: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+def manage_table_presets(request):
+    """
+    API endpoint to manage table selection presets (get/save/delete).
+    GET: Returns all saved presets
+    POST: Saves a new preset
+    DELETE: Deletes a preset
+    """
+    logger = logging.getLogger(__name__)
+
+    try:
+        # Get workflow session
+        session_id = request.session.get('workflow_session_id')
+        if not session_id:
+            return JsonResponse({
+                'success': False,
+                'error': 'No active workflow session'
+            }, status=400)
+
+        workflow_session = WorkflowSession.objects.get(session_id=session_id)
+
+        # Get DPM execution record (for storing presets)
+        dpm_execution = DPMProcessExecution.objects.filter(
+            session=workflow_session,
+            step_number=1
+        ).first()
+
+        if not dpm_execution:
+            return JsonResponse({
+                'success': False,
+                'error': 'DPM Step 1 execution not found'
+            }, status=404)
+
+        if request.method == 'GET':
+            # Return all presets
+            presets = dpm_execution.table_selection_presets or {}
+            return JsonResponse({
+                'success': True,
+                'presets': presets
+            })
+
+        elif request.method == 'POST':
+            # Save a new preset
+            import json
+            data = json.loads(request.body)
+            preset_name = data.get('preset_name')
+            selected_tables = data.get('table_ids', [])
+
+            if not preset_name:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Preset name required'
+                }, status=400)
+
+            # Get existing presets
+            presets = dpm_execution.table_selection_presets or {}
+            presets[preset_name] = selected_tables
+
+            # Save to database
+            dpm_execution.table_selection_presets = presets
+            dpm_execution.save()
+
+            logger.info(f"Saved preset '{preset_name}' with {len(selected_tables)} tables")
+
+            return JsonResponse({
+                'success': True,
+                'message': f"Preset '{preset_name}' saved successfully"
+            })
+
+        elif request.method == 'DELETE':
+            # Delete a preset
+            import json
+            data = json.loads(request.body)
+            preset_name = data.get('preset_name')
+
+            if not preset_name:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Preset name required'
+                }, status=400)
+
+            presets = dpm_execution.table_selection_presets or {}
+            if preset_name in presets:
+                del presets[preset_name]
+                dpm_execution.table_selection_presets = presets
+                dpm_execution.save()
+
+                logger.info(f"Deleted preset '{preset_name}'")
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f"Preset '{preset_name}' deleted successfully"
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'error': f"Preset '{preset_name}' not found"
+                }, status=404)
+
+        else:
+            return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    except Exception as e:
+        logger.error(f"Error managing presets: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
 def workflow_dpm_review(request, step_number):
     """Review page for DPM step execution results"""
     logger = logging.getLogger(__name__)
@@ -4237,6 +4660,9 @@ def workflow_dpm_review(request, step_number):
             1: 'Prepare DPM Data',
             2: 'Import DPM Data',
             3: 'Create Output Layers',
+            4: 'Create Transformation Rules',
+            5: 'Generate Python Code',
+            6: 'Execute DPM Tests',
         }
 
         # Gather generated files based on step number
@@ -4268,6 +4694,93 @@ def workflow_dpm_review(request, step_number):
                 f"Combinations: {COMBINATION.objects.count()} records",
                 f"Combination Items: {COMBINATION_ITEM.objects.count()} records",
             ]
+        elif step_number == 4:
+            # Create Transformation Rules - check for filters and joins metadata
+            from pybirdai.models.bird_meta_data_model import (
+                CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MEMBER_LINK, TABLE_CELL
+            )
+            generated_files = [
+                f"Cube Links: {CUBE_LINK.objects.count()} records",
+                f"Cube Structure Item Links: {CUBE_STRUCTURE_ITEM_LINK.objects.count()} records",
+                f"Member Links: {MEMBER_LINK.objects.count()} records",
+                f"Table Cells: {TABLE_CELL.objects.count()} records",
+            ]
+        elif step_number == 5:
+            # Generate Python Code - check for generated Python files
+            filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+            join_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'join_code')
+
+            filter_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_dir, 'F_*.py'))]
+            join_files = [os.path.basename(f) for f in glob.glob(os.path.join(join_code_dir, 'J_*.py'))]
+
+            filter_files.sort()
+            join_files.sort()
+
+            # Encode file lists for code editor
+            encoded_filter_files = encode_file_list(filter_files)
+            encoded_join_files = encode_file_list(join_files)
+
+            generated_files = [
+                f"Generated Filter Files: {len(filter_files)} Python files",
+                f"Generated Join Files: {len(join_files)} Python files",
+            ]
+
+            # Add sample file names if they exist
+            if filter_files:
+                generated_files.append(f"Sample Filter: {filter_files[0]}")
+            if join_files:
+                generated_files.append(f"Sample Join: {join_files[0]}")
+        elif step_number == 6:
+            # Execute DPM Tests - check for test results and reports
+            test_config_path = "tests/dpm/configuration_file_tests.json"
+            test_results_pattern = "results/test_reports/dpm_*.html"
+
+            test_config_exists = os.path.exists(test_config_path)
+            test_reports = glob.glob(test_results_pattern)
+
+            generated_files = [
+                f"DPM Test Configuration: {'Found' if test_config_exists else 'Not Found'}",
+                f"Test Reports Generated: {len(test_reports)} reports",
+            ]
+
+            # Add test execution summary from execution data if available
+            if execution_exists and dpm_execution and dpm_execution.execution_data:
+                tests_executed = dpm_execution.execution_data.get('tests_executed', False)
+                generated_files.append(f"Tests Executed: {'Yes' if tests_executed else 'No'}")
+
+                steps_completed = dpm_execution.execution_data.get('steps_completed', [])
+                if steps_completed:
+                    generated_files.append(f"Steps Completed: {len(steps_completed)}")
+
+            # Add report file names if they exist
+            if test_reports:
+                for report in test_reports[:3]:  # Show first 3 reports
+                    generated_files.append(f"Report: {os.path.basename(report)}")
+
+        # Step 6: Load test results
+        test_results_list = []
+        total_tests = 0
+        passed_tests = 0
+        failed_tests = 0
+
+        if step_number == 6:
+            # Load test results from JSON files
+            all_test_results = load_test_results()
+
+            # Filter for DPM suite tests only
+            test_results_list = [r for r in all_test_results if r.get('suite_name') == 'dpm']
+
+            # Calculate statistics
+            total_tests = len(test_results_list)
+            for result in test_results_list:
+                test_data = result.get('test_results', {})
+                passed_list = test_data.get('passed', [])
+                failed_list = test_data.get('failed', [])
+
+                if passed_list:
+                    passed_tests += len(passed_list) if isinstance(passed_list, list) else 1
+                if failed_list:
+                    failed_tests += len(failed_list) if isinstance(failed_list, list) else 1
 
         # Calculate duration if available
         duration = None
@@ -4287,6 +4800,16 @@ def workflow_dpm_review(request, step_number):
             'execution_data': dpm_execution.execution_data if (execution_exists and dpm_execution) else None,
             'generated_files': generated_files,
             'workflow_type': 'dpm',
+            # Step 5 specific context
+            'encoded_filter_files': encoded_filter_files if step_number == 5 else None,
+            'encoded_join_files': encoded_join_files if step_number == 5 else None,
+            'filter_files_count': len(filter_files) if step_number == 5 else 0,
+            'join_files_count': len(join_files) if step_number == 5 else 0,
+            # Step 6 specific context
+            'test_results': test_results_list,
+            'total_tests': total_tests,
+            'passed_tests': passed_tests,
+            'failed_tests': failed_tests,
         }
 
         return render(request, 'pybirdai/workflow/dpm_review.html', context)

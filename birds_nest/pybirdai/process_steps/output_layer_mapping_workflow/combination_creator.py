@@ -10,7 +10,7 @@ from datetime import datetime
 from pybirdai.models.bird_meta_data_model import (
     TABLE_CELL, COMBINATION, COMBINATION_ITEM,
     CUBE, VARIABLE, MEMBER, SUBDOMAIN,
-    MAINTENANCE_AGENCY
+    MAINTENANCE_AGENCY, VARIABLE_SET, MEMBER_HIERARCHY
 )
 
 logger = logging.getLogger(__name__)
@@ -215,13 +215,62 @@ class CombinationCreator:
                             f"to member {single_member.code}"
                         )
 
+                # Validate all foreign keys before creating COMBINATION_ITEM
+                # Skip if variable is invalid (minimum requirement)
+                if not item.variable_id or not VARIABLE.objects.filter(
+                    variable_id=item.variable_id.variable_id
+                ).exists():
+                    logger.warning(
+                        f"Skipping COMBINATION_ITEM - invalid or non-existent variable "
+                        f"{item.variable_id.variable_id if item.variable_id else 'None'}"
+                    )
+                    continue
+
+                # Validate subdomain - set to None if doesn't exist
+                if final_subdomain and not SUBDOMAIN.objects.filter(
+                    subdomain_id=final_subdomain.subdomain_id
+                ).exists():
+                    logger.warning(
+                        f"Subdomain {final_subdomain.subdomain_id} doesn't exist, setting to None"
+                    )
+                    final_subdomain = None
+
+                # Validate member - set to None if doesn't exist
+                if final_member and not MEMBER.objects.filter(
+                    member_id=final_member.member_id
+                ).exists():
+                    logger.warning(
+                        f"Member {final_member.member_id} doesn't exist, setting to None"
+                    )
+                    final_member = None
+
+                # Validate variable_set - set to None if doesn't exist
+                validated_variable_set = item.variable_set_id
+                if validated_variable_set and not VARIABLE_SET.objects.filter(
+                    variable_set_id=validated_variable_set.variable_set_id
+                ).exists():
+                    logger.warning(
+                        f"Variable set {validated_variable_set.variable_set_id} doesn't exist, setting to None"
+                    )
+                    validated_variable_set = None
+
+                # Validate member_hierarchy - set to None if doesn't exist
+                validated_member_hierarchy = item.member_hierarchy
+                if validated_member_hierarchy and not MEMBER_HIERARCHY.objects.filter(
+                    member_hierarchy_id=validated_member_hierarchy.member_hierarchy_id
+                ).exists():
+                    logger.warning(
+                        f"Member hierarchy {validated_member_hierarchy.member_hierarchy_id} doesn't exist, setting to None"
+                    )
+                    validated_member_hierarchy = None
+
                 COMBINATION_ITEM.objects.create(
                     combination_id=target_combination,
                     variable_id=item.variable_id,
                     subdomain_id=final_subdomain,
-                    variable_set_id=item.variable_set_id,
+                    variable_set_id=validated_variable_set,
                     member_id=final_member,
-                    member_hierarchy=item.member_hierarchy
+                    member_hierarchy=validated_member_hierarchy
                 )
 
             # Also copy the metric if present
@@ -297,12 +346,51 @@ class CombinationCreator:
                         f"to member {single_member.code} in combination item"
                     )
 
+            # Validate all foreign keys before creating COMBINATION_ITEM
+            # Skip if variable is invalid (minimum requirement)
+            if not csi.variable_id or not VARIABLE.objects.filter(
+                variable_id=csi.variable_id.variable_id
+            ).exists():
+                logger.warning(
+                    f"Skipping COMBINATION_ITEM - invalid or non-existent variable "
+                    f"{csi.variable_id.variable_id if csi.variable_id else 'None'}"
+                )
+                continue
+
+            # Validate subdomain - set to None if doesn't exist
+            if final_subdomain and not SUBDOMAIN.objects.filter(
+                subdomain_id=final_subdomain.subdomain_id
+            ).exists():
+                logger.warning(
+                    f"Subdomain {final_subdomain.subdomain_id} doesn't exist, setting to None"
+                )
+                final_subdomain = None
+
+            # Validate member - set to None if doesn't exist
+            if final_member and not MEMBER.objects.filter(
+                member_id=final_member.member_id
+            ).exists():
+                logger.warning(
+                    f"Member {final_member.member_id} doesn't exist, setting to None"
+                )
+                final_member = None
+
+            # Validate variable_set - set to None if doesn't exist
+            validated_variable_set = csi.variable_set_id
+            if validated_variable_set and not VARIABLE_SET.objects.filter(
+                variable_set_id=validated_variable_set.variable_set_id
+            ).exists():
+                logger.warning(
+                    f"Variable set {validated_variable_set.variable_set_id} doesn't exist, setting to None"
+                )
+                validated_variable_set = None
+
             COMBINATION_ITEM.objects.create(
                 combination_id=combination,
                 variable_id=csi.variable_id,
                 member_id=final_member,
                 subdomain_id=final_subdomain,
-                variable_set_id=csi.variable_set_id
+                variable_set_id=validated_variable_set
             )
 
         logger.info(f"Created default items for combination {combination.combination_id}")

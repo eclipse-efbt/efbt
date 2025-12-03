@@ -44,7 +44,42 @@ class AutomodeConfiguration(models.Model):
         ('PYTHON_CODE', 'Use previous customisation and stop after generating Python code'),
         ('FULL_EXECUTION', 'Do everything including creating Python code and running the test suite'),
     ]
-    
+
+    FRAMEWORK_CHOICES = [
+        # Core Reporting Frameworks
+        ('FINREP', 'FINREP (Financial Reporting)'),
+        ('COREP', 'COREP (Common Reporting)'),
+        ('AE', 'AE (Asset Encumbrance)'),
+        ('FP', 'FP (Funding Plans)'),
+        ('SBP', 'SBP (Supervisory Benchmarking)'),
+        # Regulatory Frameworks
+        ('REM', 'REM (Remuneration)'),
+        ('RES', 'RES (Resolution)'),
+        ('PAY', 'PAY (Payments)'),
+        ('GSII', 'GSII (Global Systemic Institutions)'),
+        ('MREL', 'MREL (MREL and TLAC)'),
+        ('IMPRAC', 'IMPRAC (Impracticability of Bail-in)'),
+        # Specialized Frameworks
+        ('COVID19', 'COVID19 (COVID-19 Moratoria)'),
+        ('IF', 'IF (Investment Firms)'),
+        ('ESG', 'ESG (Environmental, Social & Governance)'),
+        ('IPU', 'IPU (Intermediate Parent Undertaking)'),
+        ('PILLAR3', 'PILLAR3 (Pillar 3 Disclosures)'),
+        ('IRRBB', 'IRRBB (Interest Rate Risk in Banking Book)'),
+        ('DORA', 'DORA (Digital Operational Resilience)'),
+        ('FC', 'FC (FICO)'),
+        ('MICA', 'MICA (Markets in Crypto-Assets)'),
+        # Non-DPM Framework
+        ('ANCRDT', 'ANCRDT (Analytical Credit Datasets)'),
+    ]
+
+    framework = models.CharField(
+        max_length=20,
+        choices=FRAMEWORK_CHOICES,
+        default='FINREP',
+        help_text='Select the framework to process (FINREP, COREP, or ANCRDT)'
+    )
+
     data_model_type = models.CharField(
         max_length=10,
         choices=DATA_MODEL_CHOICES,
@@ -197,7 +232,15 @@ class WorkflowTaskExecution(models.Model):
     error_message = models.TextField(blank=True, null=True)
     execution_data = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
-    
+
+    # Framework association - auto-detected as FINREP for main workflow
+    framework_id = models.CharField(
+        max_length=100,
+        default='FINREP',
+        help_text="Framework this execution belongs to (auto-detected: FINREP for main workflow)",
+        verbose_name="Framework"
+    )
+
     # New fields for enhanced workflow functionality
     substep_results = models.JSONField(
         default=dict, 
@@ -428,7 +471,15 @@ class WorkflowSession(models.Model):
     current_task = models.IntegerField(default=1)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
+    # Framework association - determines which framework this workflow session operates on
+    framework_id = models.CharField(
+        max_length=100,
+        default='FINREP',
+        help_text="Framework this session belongs to (FINREP, COREP, or ANCRDT)",
+        verbose_name="Framework"
+    )
+
     class Meta:
         verbose_name = "WorkflowSession"
         verbose_name_plural = "WorkflowSessions"
@@ -482,9 +533,12 @@ class DPMProcessExecution(models.Model):
     """Track DPM process execution status"""
 
     STEP_CHOICES = [
-        (1, 'Prepare DPM Data'),
-        (2, 'Import DPM Data'),
+        (1, 'Extract DPM Metadata'),
+        (2, 'Process & Import Selected Tables'),
         (3, 'Create Output Layers'),
+        (4, 'Create Transformation Rules'),
+        (5, 'Generate Python Code'),
+        (6, 'Execute DPM Tests'),
     ]
 
     STATUS_CHOICES = [
@@ -504,6 +558,57 @@ class DPMProcessExecution(models.Model):
     execution_data = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
 
+    # Framework association - user-selected framework(s) for DPM workflow
+    # Primary framework for this execution (used for output layer creation and tests)
+    framework_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Primary framework for this execution (FINREP, COREP, etc.)",
+        verbose_name="Framework"
+    )
+
+    # List of frameworks selected for import steps (allows multiple)
+    # Example: ['FINREP', 'COREP'] for importing both frameworks
+    selected_frameworks = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="List of frameworks selected for import (e.g., ['FINREP', 'COREP'])",
+        verbose_name="Selected Frameworks"
+    )
+
+    # Table selection for DPM import (Step 1)
+    # List of table_ids selected for import (e.g., ['EBA_FINREP_F_01_01_2_8', 'EBA_COREP_C_01_00_2_8'])
+    selected_tables = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="List of table IDs selected for import (filters ordinate explosion)",
+        verbose_name="Selected Tables"
+    )
+
+    # Saved presets for table selections
+    # Example: {'balance_sheet': ['EBA_FINREP_F_01_01_2_8', ...], 'income': [...]}
+    table_selection_presets = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Saved presets for table selections (name -> list of table_ids)",
+        verbose_name="Table Selection Presets"
+    )
+
+    # Fields for tracking substeps and progress
+    substep_results = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Detailed execution results for each substep",
+        verbose_name="Substep Results"
+    )
+
+    progress_percentage = models.IntegerField(
+        default=0,
+        help_text="Progress percentage (0-100) of the current execution",
+        verbose_name="Progress Percentage"
+    )
+
     class Meta:
         verbose_name = "DPM Process Execution"
         verbose_name_plural = "DPM Process Executions"
@@ -517,7 +622,9 @@ class DPMProcessExecution(models.Model):
         """Mark execution as started"""
         self.status = 'running'
         self.started_at = timezone.now()
-        self.save(update_fields=['status', 'started_at'])
+        self.completed_at = None  # Clear previous completion time
+        self.error_message = None  # Clear previous errors
+        self.save(update_fields=['status', 'started_at', 'completed_at', 'error_message'])
 
     def complete_execution(self, final_data=None):
         """Mark execution as completed"""
@@ -546,6 +653,7 @@ class AnaCreditProcessExecution(models.Model):
         (1, 'Import Metadata'),
         (2, 'Create Joins Metadata'),
         (3, 'Create Executable Joins'),
+        (5, 'Full Execution with Test Suite'),
     ]
 
     STATUS_CHOICES = [
@@ -564,6 +672,14 @@ class AnaCreditProcessExecution(models.Model):
     error_message = models.TextField(blank=True, null=True)
     execution_data = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
+
+    # Framework association - auto-detected as ANCRDT for AnaCredit workflow
+    framework_id = models.CharField(
+        max_length=100,
+        default='ANCRDT',
+        help_text="Framework this execution belongs to (auto-detected: ANCRDT for AnaCredit workflow)",
+        verbose_name="Framework"
+    )
 
     # New fields for execution code editing workflow
     joins_metadata_approved = models.BooleanField(
@@ -598,7 +714,9 @@ class AnaCreditProcessExecution(models.Model):
         """Mark execution as started"""
         self.status = 'running'
         self.started_at = timezone.now()
-        self.save(update_fields=['status', 'started_at'])
+        self.completed_at = None  # Clear previous completion time
+        self.error_message = None  # Clear previous errors
+        self.save(update_fields=['status', 'started_at', 'completed_at', 'error_message'])
 
     def complete_execution(self, final_data=None):
         """Mark execution as completed"""
@@ -617,3 +735,139 @@ class AnaCreditProcessExecution(models.Model):
         self.completed_at = timezone.now()
 
         self.save(update_fields=['status', 'error_message', 'completed_at'])
+
+
+class FrameworkTestSuite(models.Model):
+    """Track framework-specific test suites.
+
+    Each framework (FINREP, COREP, ANCRDT) has its own test suite with
+    specific configuration and test data. This model manages the test
+    configurations for each framework.
+    """
+
+    framework_id = models.CharField(
+        max_length=100,
+        unique=True,
+        help_text="Framework identifier (FINREP, COREP, or ANCRDT)",
+        verbose_name="Framework"
+    )
+
+    test_suite_name = models.CharField(
+        max_length=255,
+        help_text="Descriptive name for the test suite",
+        verbose_name="Test Suite Name"
+    )
+
+    test_config_path = models.CharField(
+        max_length=500,
+        help_text="Path to the test configuration JSON file (relative to project root)",
+        verbose_name="Test Configuration Path"
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Whether this test suite is currently active and should be executed",
+        verbose_name="Is Active"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Detailed description of what this test suite covers",
+        verbose_name="Description"
+    )
+
+    last_execution_date = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text="When this test suite was last executed",
+        verbose_name="Last Execution Date"
+    )
+
+    last_execution_status = models.CharField(
+        max_length=50,
+        choices=[
+            ('not_run', 'Not Run'),
+            ('passed', 'Passed'),
+            ('failed', 'Failed'),
+            ('partial', 'Partially Passed'),
+        ],
+        default='not_run',
+        help_text="Status of the last test execution",
+        verbose_name="Last Execution Status"
+    )
+
+    test_count = models.IntegerField(
+        default=0,
+        help_text="Number of tests in this suite",
+        verbose_name="Test Count"
+    )
+
+    class Meta:
+        verbose_name = "Framework Test Suite"
+        verbose_name_plural = "Framework Test Suites"
+        ordering = ['framework_id']
+
+    def __str__(self):
+        return f"{self.framework_id} Test Suite - {self.test_suite_name}"
+
+    def mark_executed(self, status, test_count=None):
+        """Mark the test suite as executed with given status"""
+        self.last_execution_date = timezone.now()
+        self.last_execution_status = status
+        if test_count is not None:
+            self.test_count = test_count
+        self.save(update_fields=['last_execution_date', 'last_execution_status', 'test_count'])
+
+    @classmethod
+    def get_test_suite_for_framework(cls, framework_id):
+        """Get the active test suite for a specific framework"""
+        try:
+            return cls.objects.get(framework_id=framework_id, is_active=True)
+        except cls.DoesNotExist:
+            return None
+
+    @classmethod
+    def create_default_test_suites(cls):
+        """Create default test suites for all frameworks if they don't exist"""
+        default_suites = [
+            {
+                'framework_id': 'BIRD_EIL',
+                'test_suite_name': 'BIRD EIL Test Suite',
+                'test_config_path': 'tests/bird_eil/configuration_file_tests.json',
+                'description': 'Test suite for BIRD EIL (Input Layer) data model'
+            },
+            {
+                'framework_id': 'BIRD_ELDM',
+                'test_suite_name': 'BIRD ELDM Test Suite',
+                'test_config_path': 'tests/bird_eldm/configuration_file_tests.json',
+                'description': 'Test suite for BIRD ELDM (Logical Data Model)'
+            },
+            {
+                'framework_id': 'FINREP',
+                'test_suite_name': 'FINREP Test Suite',
+                'test_config_path': 'tests/finrep/configuration_file_tests.json',
+                'description': 'Test suite for FINREP (Financial Reporting) framework'
+            },
+            {
+                'framework_id': 'COREP',
+                'test_suite_name': 'COREP Test Suite',
+                'test_config_path': 'tests/corep/configuration_file_tests.json',
+                'description': 'Test suite for COREP (Common Reporting) framework / DPM process'
+            },
+            {
+                'framework_id': 'ANCRDT',
+                'test_suite_name': 'AnaCredit Test Suite',
+                'test_config_path': 'tests/ancrdt-test-suite/configuration_file_tests.json',
+                'description': 'Test suite for AnaCredit (Analytical Credit Datasets) framework'
+            },
+        ]
+
+        for suite_data in default_suites:
+            cls.objects.get_or_create(
+                framework_id=suite_data['framework_id'],
+                defaults=suite_data
+            )

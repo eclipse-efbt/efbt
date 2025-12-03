@@ -31,12 +31,40 @@ CSV_COPY_CONFIG = {
     'PARALLEL_WORKERS': int(os.environ.get('CSV_COPY_PARALLEL_WORKERS', max(1, os.cpu_count() - 1))),
     'ENABLE_PARALLEL': os.environ.get('CSV_COPY_ENABLE_PARALLEL', 'True').lower() == 'true',
     'ENABLE_INDEXING': os.environ.get('CSV_COPY_ENABLE_INDEXING', 'True').lower() == 'true',
+    'CLEANUP_TEMP_INDEXES': os.environ.get('CSV_COPY_CLEANUP_TEMP_INDEXES', 'True').lower() == 'true',
     'ENABLE_DB_SIDE_DEDUP': os.environ.get('CSV_COPY_ENABLE_DB_SIDE_DEDUP', 'True').lower() == 'true',
     'STREAM_CHUNK_SIZE': int(os.environ.get('CSV_COPY_STREAM_CHUNK_SIZE', 5000)),
     'IN_MEMORY_THRESHOLD_MB': int(os.environ.get('CSV_COPY_IN_MEMORY_THRESHOLD_MB', 10)),
     'ENABLE_COMPRESSION': os.environ.get('CSV_COPY_ENABLE_COMPRESSION', 'False').lower() == 'true',
     'RETRY_ATTEMPTS': int(os.environ.get('CSV_COPY_RETRY_ATTEMPTS', 3)),
     'RETRY_BACKOFF_SECONDS': float(os.environ.get('CSV_COPY_RETRY_BACKOFF_SECONDS', 1.0)),
+}
+
+# Column name mapping from CSV headers to database columns
+# Django ForeignKey fields have _id suffix in the database
+# Tables listed here use batch import (executemany) instead of SQLite bulk import
+# This is required for tables with auto-increment id columns
+CSV_TO_DB_COLUMN_MAPPING = {
+    'pybirdai_table_cell': {
+        'CELL_ID': 'cell_id',
+        'TABLE_ID': 'table_id_id',
+        'COMBINATION_ID': 'combination_id',
+        'IS_SHADED': 'is_shaded',
+    },
+    'pybirdai_cell_position': {
+        # ID excluded - let SQLite auto-generate (DPM duplication creates duplicate IDs)
+        'CELL_ID': 'cell_id_id',
+        'AXIS_ORDINATE_ID': 'axis_ordinate_id_id',
+    },
+    'pybirdai_ordinate_item': {
+        'member_hierarchy_valid_from': 'member_hierarchy_valid_from',
+        'is_starting_member_included': 'is_starting_member_included',
+        'axis_ordinate_id_id': 'axis_ordinate_id_id',
+        'variable_id_id': 'variable_id_id',
+        'member_id_id': 'member_id_id',
+        'member_hierarchy_id_id': 'member_hierarchy_id_id',
+        'starting_member_id_id': 'starting_member_id_id',
+    },
 }
 
 
@@ -94,42 +122,51 @@ def bulk_import_with_fallback(context, cls, csv_file, delimiter, table_name, con
         Exception if all fallback attempts fail
     """
     csv_copy_config = CSV_COPY_CONFIG
+    batch_error = None
 
-    # Try full bulk import first
+    # Try fast bulk import first (uses temp table approach for SQLite)
     try:
         return perform_bulk_import(csv_file, delimiter, table_name)
     except Exception as bulk_error:
         print(f"Bulk import failed: {bulk_error}")
 
-        # Fallback 1: Try with smaller batch size using executemany
-        print("Attempting fallback with smaller batch size...")
-        try:
-            return perform_batch_import(csv_file, delimiter, table_name, batch_size=csv_copy_config.get('BATCH_SIZE', 10000))
-        except Exception as batch_error:
-            print(f"Batch import failed: {batch_error}")
+    # Fallback 1: Try with smaller batch size using executemany
+    print("Attempting fallback with smaller batch size...")
+    try:
+        return perform_batch_import(csv_file, delimiter, table_name, batch_size=csv_copy_config.get('BATCH_SIZE', 10000))
+    except Exception as e:
+        batch_error = e
+        print(f"Batch import failed: {batch_error}")
 
-            # Fallback 2: Use original row-by-row import
-            print("Falling back to row-by-row import...")
-            from pybirdai.process_steps.website_to_sddmodel.import_func.import_table_cells import import_table_cells
-            from pybirdai.process_steps.website_to_sddmodel.import_func.import_ordinate_items import import_ordinate_items
-            from pybirdai.process_steps.website_to_sddmodel.import_func.import_cell_positions import import_cell_positions
-            from pybirdai.models.bird_meta_data_model import TABLE_CELL, ORDINATE_ITEM, CELL_POSITION
+    # Fallback 2: Use original row-by-row import (for both paths)
+    print("Falling back to row-by-row import...")
+    from pybirdai.process_steps.website_to_sddmodel.import_func.import_table_cells import import_table_cells
+    from pybirdai.process_steps.website_to_sddmodel.import_func.import_ordinate_items import import_ordinate_items
+    from pybirdai.process_steps.website_to_sddmodel.import_func.import_cell_positions import import_cell_positions
+    from pybirdai.models.bird_meta_data_model import TABLE_CELL, ORDINATE_ITEM, CELL_POSITION
 
-            fallback_func = {
-                TABLE_CELL: lambda ctx: import_table_cells(ctx, config=config),
-                ORDINATE_ITEM: lambda ctx: import_ordinate_items(ctx, config),
-                CELL_POSITION: lambda ctx: import_cell_positions(ctx, config=config)
-            }.get(cls)
+    fallback_func = {
+        TABLE_CELL: lambda ctx: import_table_cells(ctx, config=config),
+        ORDINATE_ITEM: lambda ctx: import_ordinate_items(ctx, config),
+        CELL_POSITION: lambda ctx: import_cell_positions(ctx, config=config)
+    }.get(cls)
 
-            if fallback_func:
-                return fallback_func(context)
-            else:
-                raise Exception(f"No fallback function available for {cls.__name__}")
+    if fallback_func:
+        return fallback_func(context)
+    else:
+        raise Exception(f"No fallback function available for {cls.__name__}. Last error: {batch_error}")
 
 
 def perform_bulk_import(csv_file, delimiter, table_name):
     """
-    Perform database-native bulk import.
+    Perform database-native bulk import using temp table approach.
+
+    For SQLite, uses temp table to handle auto-increment id:
+    1. Read CSV header to get column names
+    2. Create temp table with those columns (no id)
+    3. Fast .import into temp table
+    4. INSERT SELECT into real table (id auto-generates)
+    5. Drop temp table
 
     Args:
         csv_file: Path to CSV file
@@ -140,13 +177,39 @@ def perform_bulk_import(csv_file, delimiter, table_name):
         Result of the import operation
     """
     if connection.vendor == 'sqlite':
+        import csv as csv_module
+
+        # Read CSV header to get column names
+        with open(csv_file, 'r', encoding='utf-8') as f:
+            reader = csv_module.reader(f, delimiter=delimiter)
+            csv_headers = next(reader)
+
+        # Map CSV headers to database column names
+        column_mapping = CSV_TO_DB_COLUMN_MAPPING.get(table_name, {})
+        db_columns = []
+        for header in csv_headers:
+            if header in column_mapping:
+                db_columns.append(column_mapping[header])
+            else:
+                db_columns.append(header.lower())
+
         db_file = Path(connection.settings_dict['NAME']).absolute()
+        temp_table = f"temp_{table_name.replace('pybirdai_', '')}_import"
+
+        # Build SQLite script with temp table approach
         commands = [
             ".mode csv",
             f".separator '{delimiter}'",
-            f".import --skip 1 '{csv_file}' {table_name}"
+            "PRAGMA foreign_keys = 0;",
+            f"DROP TABLE IF EXISTS {temp_table};",
+            f"CREATE TEMP TABLE {temp_table} ({', '.join(db_columns)});",
+            f".import --skip 1 '{csv_file}' {temp_table}",
+            f"INSERT INTO {table_name} ({', '.join(db_columns)}) SELECT * FROM {temp_table};",
+            f"DROP TABLE {temp_table};",
+            "PRAGMA foreign_keys = 1;",
         ]
         sqlite_script = '\n'.join(commands)
+
         sqlite_program = "sqlite3"
         if platform.system() == 'Windows':
             sqlite_program += ".exe"
@@ -156,10 +219,11 @@ def perform_bulk_import(csv_file, delimiter, table_name):
             input=sqlite_script,
             text=True,
             capture_output=True,
-            check=True
+            check=False  # Don't raise, check manually for better error message
         )
-        if result.stderr:
-            raise Exception(f"SQLite import error: {result.stderr}")
+        if result.returncode != 0:
+            error_msg = result.stderr or result.stdout or "Unknown error"
+            raise Exception(f"SQLite import error (exit {result.returncode}): {error_msg}")
         return result
 
     elif connection.vendor == 'postgresql':
@@ -206,27 +270,49 @@ def perform_batch_import(csv_file, delimiter, table_name, batch_size=10000):
 
     with open(csv_file, 'r', encoding='utf-8') as f:
         reader = csv_module.reader(f, delimiter=delimiter)
-        headers = next(reader)  # Skip header
+        csv_headers = next(reader)  # Get CSV headers
+
+        # Map CSV headers to database column names
+        column_mapping = CSV_TO_DB_COLUMN_MAPPING.get(table_name, {})
+        db_columns = []
+        for header in csv_headers:
+            if header in column_mapping:
+                db_columns.append(column_mapping[header])
+            else:
+                # Fallback: convert to lowercase
+                db_columns.append(header.lower())
 
         batch = []
         total_rows = 0
 
         with connection.cursor() as cursor:
-            placeholders = ', '.join(['%s'] * len(headers))
-            insert_sql = f"INSERT INTO {table_name} ({', '.join(headers)}) VALUES ({placeholders})"
+            # Disable foreign key checks for SQLite during batch import
+            # This handles cases where referenced records may not exist yet
+            if connection.vendor == 'sqlite':
+                cursor.execute("PRAGMA foreign_keys = 0;")
 
-            for row in reader:
-                batch.append(row)
-                if len(batch) >= batch_size:
+            try:
+                placeholders = ', '.join(['%s'] * len(db_columns))
+                insert_sql = f"INSERT INTO {table_name} ({', '.join(db_columns)}) VALUES ({placeholders})"
+
+                for row in reader:
+                    # Convert empty strings to None for nullable fields
+                    cleaned_row = [None if val == '' else val for val in row]
+                    batch.append(cleaned_row)
+                    if len(batch) >= batch_size:
+                        cursor.executemany(insert_sql, batch)
+                        total_rows += len(batch)
+                        print(f"Imported {total_rows} rows...")
+                        batch = []
+
+                # Insert remaining rows
+                if batch:
                     cursor.executemany(insert_sql, batch)
                     total_rows += len(batch)
-                    print(f"Imported {total_rows} rows...")
-                    batch = []
-
-            # Insert remaining rows
-            if batch:
-                cursor.executemany(insert_sql, batch)
-                total_rows += len(batch)
+            finally:
+                # Re-enable foreign key checks
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 1;")
 
         print(f"Batch import complete: {total_rows} rows imported")
         return total_rows
@@ -304,6 +390,23 @@ def create_instances_from_csv_copy(context, cls, config=None):
         # PHASE 4: Restore backed-up data with key regeneration
         print(f"Restoring backed-up data to {table_name} with key regeneration...")
         restore_backed_up_data_bulk(table_name, backup_table_name, str(csv_file))
+
+        # PHASE 4.5: Clean up invalid FK strings for ORDINATE_ITEM table
+        if table_name == 'pybirdai_ordinate_item':
+            print(f"Cleaning up invalid FK strings in {table_name}...")
+            with connection.cursor() as cursor:
+                # Fix empty strings, whitespace, and 'None' string to NULL
+                cursor.execute("UPDATE pybirdai_ordinate_item SET member_id_id = NULL WHERE member_id_id = '' OR TRIM(member_id_id) = '' OR member_id_id = 'None'")
+                member_fixes = cursor.rowcount
+                cursor.execute("UPDATE pybirdai_ordinate_item SET member_hierarchy_id_id = NULL WHERE member_hierarchy_id_id = '' OR TRIM(member_hierarchy_id_id) = '' OR member_hierarchy_id_id = 'None'")
+                hierarchy_fixes = cursor.rowcount
+                cursor.execute("UPDATE pybirdai_ordinate_item SET starting_member_id_id = NULL WHERE starting_member_id_id = '' OR TRIM(starting_member_id_id) = '' OR starting_member_id_id = 'None'")
+                starting_fixes = cursor.rowcount
+                total_fixes = member_fixes + hierarchy_fixes + starting_fixes
+                if total_fixes > 0:
+                    print(f"Fixed {total_fixes} invalid FK strings (member={member_fixes}, hierarchy={hierarchy_fixes}, starting={starting_fixes})")
+                else:
+                    print(f"FK cleanup completed - no invalid strings found")
 
         # PHASE 5: Cleanup backup table
         print(f"Cleaning up backup table {backup_table_name}...")

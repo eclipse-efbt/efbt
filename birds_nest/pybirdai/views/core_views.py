@@ -9,6 +9,112 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
+"""
+Core views module.
+
+NOTE: This module has been refactored. Most views are now in the pybirdai.views.core package.
+Import from pybirdai.views.core for the modular versions.
+
+The remaining views in this file (semantic integration, hierarchy editor, automode)
+are kept here temporarily until they can be fully extracted.
+"""
+
+# Re-export all functions from the core package for backward compatibility
+from pybirdai.views.core import (
+    # Navigation
+    home_view,
+    automode_view,
+    show_report,
+    bird_diffs_and_corrections,
+    # Process execution
+    run_create_joins_meta_data,
+    create_django_models,
+    run_create_python_joins,
+    run_delete_joins_meta_data,
+    run_delete_mappings,
+    run_delete_output_concepts,
+    delete_existing_contents_of_bird_metadata_database,
+    run_import_semantic_integrations_from_website,
+    run_import_input_model_from_sqldev,
+    run_import_hierarchies,
+    import_report_templates,
+    run_create_filters,
+    run_create_executable_filters,
+    run_create_executable_filters_from_db,
+    run_create_python_joins_from_db,
+    run_create_python_transformations_from_db,
+    convert_ldm_to_sdd_hierarchies,
+    upload_sqldev_eil_files,
+    upload_sqldev_eldm_files,
+    upload_technical_export_files,
+    upload_joins_configuration,
+    execute_data_point,
+    # Variable mappings
+    edit_variable_mappings,
+    edit_variable_mapping_items,
+    create_variable_mapping_item,
+    create_variable_mapping,
+    delete_variable_mapping,
+    delete_variable_mapping_item,
+    # Member mappings
+    edit_member_mappings,
+    edit_member_mapping_items,
+    create_member_mapping,
+    add_member_mapping_item,
+    delete_member_mapping,
+    delete_member_mapping_item,
+    view_member_mapping_items_by_row,
+    # Cube links
+    edit_cube_links,
+    edit_cube_structure_item_links,
+    delete_cube_link,
+    delete_cube_structure_item_link,
+    delete_cube_structure_item_link_dupl,
+    bulk_delete_cube_structure_item_links,
+    add_cube_structure_item_link,
+    add_cube_link,
+    # Mapping definitions
+    edit_mapping_definitions,
+    edit_mapping_to_cubes,
+    create_mapping_definition,
+    create_mapping_to_cube,
+    delete_mapping_definition,
+    delete_mapping_to_cube,
+    # Combinations
+    combinations,
+    combination_items,
+    output_layers,
+    delete_combination,
+    delete_combination_item,
+    delete_cube,
+    # CSV
+    list_lineage_files,
+    view_csv_file,
+    view_ldm_to_sdd_results,
+    import_members_from_csv,
+    import_variables_from_csv,
+    export_database_to_csv,
+    import_bird_data_from_csv_export,
+    load_variables_from_csv_file,
+    # Analysis
+    DuplicatePrimaryMemberIdListView,
+    JoinIdentifierListView,
+    duplicate_primary_member_id_list,
+    show_gaps,
+    return_cubelink_visualisation,
+    # Setup
+    execute_full_setup_core,
+    run_full_setup,
+    test_report_view,
+    # Helpers
+    create_response_with_loading,
+    create_response_with_loading_extended,
+    serialize_datetime,
+    paginated_modelformset_view,
+    delete_item,
+)
+
+# Original imports for remaining views (semantic integration, hierarchy, automode)
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -45,8 +151,6 @@ from pybirdai.entry_points.delete_output_concepts import RunDeleteOutputConcepts
 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from pybirdai.entry_points.import_export_mapping_join_metadata import RunExporterJoins, RunImporterJoins,RunMappingJoinsEIL_LDM
 
-
-from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
@@ -60,8 +164,6 @@ from pybirdai.process_steps.ancrdt_transformation.create_executable_joins_ancrdt
 from pybirdai.process_steps.ancrdt_transformation.ancrdt_importer import RunANCRDTImport
 from pybirdai.process_steps.ancrdt_transformation.create_joins_meta_data_ancrdt import JoinsMetaDataCreatorANCRDT
 
-import os
-import csv
 from pathlib import Path
 from pybirdai.process_steps.upload_files.file_uploader import FileUploader
 from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
@@ -4615,64 +4717,6 @@ def automode_status(request):
             'success': False,
             'error': 'An internal error occurred while getting status.'
         })
-
-def prepare_dpm_data(request):
-    if request.GET.get('execute') == 'true':
-        app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=False)
-        return JsonResponse({'status': 'success'})
-
-    return create_response_with_loading(
-        request,
-        "Preparing DPM Data (this may take several minutes, don't press the back button on this web page)",
-        "Import DPM data prepared successfully. Report templates have also been imported.",
-        '/pybirdai/import_dpm_data',
-        "Import DPM Data into database"
-    )
-
-def import_dpm_data(request):
-    if request.GET.get('execute') == 'true':
-        app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=True)
-        return JsonResponse({'status': 'success'})
-
-    return create_response_with_loading(
-        request,
-        "Importing DPM Data (this may take several minutes, don't press the back button on this web page)",
-        "Import DPM data completed successfully. Report templates have also been imported.",
-        '/pybirdai/',
-        "Home"
-    )
-
-
-def dpm_output_layer_creation(request):
-    if request.method == 'GET' and request.GET.get('execute') == 'true':
-        # Get parameters from request
-        framework = request.GET.get('framework')
-        table_code = request.GET.get('table_code')
-        version = request.GET.get('version', '')
-
-        # Execute the output layer creation
-        app_config = RunDPMOutputLayerCreation('pybirdai', 'birds_nest')
-        results = app_config.run_creation(framework=framework, table_code=table_code, version=version)
-
-        return JsonResponse(results)
-
-    # If not executing, show the form page
-    framework_ids = sum(list(map(list,FRAMEWORK.objects.all().values_list("framework_id"))),[])
-
-    # Read DPM versions from CSV
-    versions = []
-    csv_path = os.path.join(settings.BASE_DIR, 'target', 'DpmPackage.csv')
-    if os.path.exists(csv_path):
-        with open(csv_path, 'r') as file:
-            reader = csv.DictReader(file)
-            versions = [row['DpmPackageCode'] for row in reader]
-
-    return render(request, 'pybirdai/dpm_output_layer_creation.html', {
-        'frameworks': framework_ids,
-        'versions': versions
-    })
 
 @require_http_methods(["POST", "GET"])
 def execute_datapoint_with_lineage(request, data_point_id):

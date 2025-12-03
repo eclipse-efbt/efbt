@@ -27,6 +27,10 @@ def map_axis_ordinate(path=os.path.join("target", "AxisOrdinate.csv"), axis_map:
 
     df['MAINTENANCE_AGENCY_ID'] = "EBA"
 
+    # Filter ordinates: only keep ordinates where AXIS_ID exists in axis_map (cascade filter)
+    if axis_map:
+        df = df[df['AXIS_ID'].astype(str).isin(axis_map.keys())]
+
     # Map axis IDs and create new ordinate IDs
     df['AXIS_ID'] = df['AXIS_ID'].astype(str).map(axis_map).fillna(df['AXIS_ID'])
     df['NEW_ORDINATE_ID'] = df['AXIS_ID'] + '_' + df['ORDINATE_CODE'].astype(str).str.strip()

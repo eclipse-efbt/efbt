@@ -30,7 +30,7 @@ import csv
 import os
 from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import ImportWebsiteToSDDModel
 
-class MainCategoryFinder(object):
+class MainCategoryFinder:
     '''
     This class is responsible for creating maps of information
     related to the EBA main category

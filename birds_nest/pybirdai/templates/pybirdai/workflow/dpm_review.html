@@ -42,6 +42,337 @@
     </div>
     {% endif %}
 
+    <!-- Step 4: Create Transformation Rules - Metadata Review Section -->
+    {% if step_number == 4 %}
+    <h2>Filter and Join Metadata Review</h2>
+
+    <div class="metadata-review-section">
+        <div class="review-category">
+            <h3>Filter Review</h3>
+            <p>Review the output layer and filters created in the previous steps:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:combinations' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Filter Combinations</span>
+                </a>
+                <a href="{% url 'pybirdai:combination_items' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Filter Combination Items</span>
+                </a>
+                <a href="{% url 'pybirdai:output_layers' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Output Layers</span>
+                </a>
+                <a href="{% url 'pybirdai:run_delete_output_concepts' %}" target="_blank" class="review-link">
+                    <span class="link-icon">❌</span>
+                    <span class="link-text">Delete Output Layers and Filters</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="review-category">
+            <h3>Join Metadata Review</h3>
+            <p>Review and validate the join metadata structures:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Review Duplicate Join Items</span>
+                </a>
+                <a href="{% url 'pybirdai:show_gaps' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚠️</span>
+                    <span class="link-text">Show Gaps in Join Metadata</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visualization Controls -->
+    <div class="visualization-section">
+        <h3><i class="fas fa-project-diagram"></i> Cube Links Visualization</h3>
+        <p>Generate a network diagram to visualize cube link relationships and their structure items.</p>
+
+        <div class="visualization-controls">
+            <div class="control-group">
+                <label for="viz-foreign-cube">Foreign Cube:</label>
+                <select id="viz-foreign-cube" class="viz-filter">
+                    <option value="">All Cubes</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="viz-join-identifier">Join Identifier:</label>
+                <select id="viz-join-identifier" class="viz-filter">
+                    <option value="">All Identifiers</option>
+                </select>
+            </div>
+            <div class="control-actions">
+                <button onclick="visualizeCubeLinks()" class="btn-visualize">
+                    <i class="fas fa-eye"></i> View Network Graph
+                </button>
+                <button onclick="exportVisualization()" class="btn-export">
+                    <i class="fas fa-download"></i> Export Diagram
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabbed Metadata Editor for Step 4 -->
+    <div class="tabs-container">
+        <h4><i class="fas fa-link"></i> Edit Joins Metadata</h4>
+
+        <!-- Tab Navigation -->
+        <div class="tabs-header">
+            <button class="tab-button active" onclick="switchTab('cube-links', 4)">
+                <i class="fas fa-cube"></i> Edit Cube Links
+            </button>
+            <button class="tab-button" onclick="switchTab('structure-links', 4)">
+                <i class="fas fa-sitemap"></i> Edit Cube Structure Item Links
+            </button>
+            <button class="tab-button" onclick="switchTab('member-links', 4)">
+                <i class="fas fa-link"></i> Edit Member Links
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content active" id="cube-links-tab-4">
+            <iframe
+                src="{% url 'pybirdai:edit_cube_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Cube Links">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="structure-links-tab-4">
+            <iframe
+                src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Cube Structure Item Links">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="member-links-tab-4">
+            <iframe
+                src="{% url 'pybirdai:edit_member_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Edit Member Links">
+            </iframe>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Step 5: Generate Python Code - Code Editor Section -->
+    {% if step_number == 5 %}
+    <h2>Generated Python Code Review</h2>
+
+    <!-- Execution Code Editors for Step 5 -->
+    <div class="tabs-container code-editor-container">
+        <h4><i class="fas fa-code"></i> Edit Execution Code</h4>
+
+        <!-- Tab Navigation -->
+        <div class="tabs-header">
+            <button class="tab-button active" onclick="switchTab('filters', 5)">
+                <i class="fas fa-filter"></i> Filter Code ({{ filter_files_count }} files)
+            </button>
+            <button class="tab-button" onclick="switchTab('joins', 5)">
+                <i class="fas fa-link"></i> Join Code ({{ join_files_count }} files)
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content active" id="filters-tab-5">
+            <iframe
+                src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_filter_files }}&default_file=smallest"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Filter Code Editor">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="joins-tab-5">
+            <iframe
+                src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_join_files }}&default_file=smallest"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="same-origin"
+                title="Join Code Editor (Note: This uses filter code editor - join editor to be implemented)">
+            </iframe>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Step 6: Execute DPM Tests - Test Results Section -->
+    {% if step_number == 6 %}
+    <h2>DPM Test Results</h2>
+
+    <div class="execution-overview">
+        <div class="overview-card {% if execution_data.tests_executed %}success{% else %}warning{% endif %}">
+            <h2>Execution Status</h2>
+            <div class="status-icon">
+                {% if execution_data.tests_executed %}
+                <span style="font-size: 48px;">✓</span>
+                {% else %}
+                <span style="font-size: 48px;">⚠️</span>
+                {% endif %}
+            </div>
+            <p class="status-text">
+                {% if execution_data.tests_executed %}
+                DPM tests completed successfully
+                {% else %}
+                Tests not executed or completed with issues
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="test-summary">
+            <h2>Test Results Summary</h2>
+
+            <div class="test-summary-section">
+                <div class="test-summary-cards">
+                    <div class="summary-card total">
+                        <div class="card-icon">📊</div>
+                        <div class="card-content">
+                            <h3>{{ total_tests }}</h3>
+                            <p>Total Tests</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card passed">
+                        <div class="card-icon">✅</div>
+                        <div class="card-content">
+                            <h3>{{ passed_tests }}</h3>
+                            <p>Passed Tests</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card success-rate">
+                        <div class="card-icon">📈</div>
+                        <div class="card-content">
+                            <h3>{% if total_tests > 0 %}{% widthratio passed_tests total_tests 100 %}%{% else %}0%{% endif %}</h3>
+                            <p>Success Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Test Results Details</h3>
+    <div class="test-results-section">
+        {% if test_results %}
+        <div class="test-results-grid">
+            {% for result in test_results %}
+            <div class="test-result-card">
+                <div class="test-header">
+                    <h4>{{ result.test_information.regulatory_template_id }}</h4>
+                    <span class="test-timestamp">{{ result.timestamp|date:"Y-m-d H:i:s" }}</span>
+                </div>
+
+                <div class="suite-badge-container">
+                    <span class="suite-badge">Suite: DPM</span>
+                </div>
+
+                <div class="test-info">
+                    <div class="info-row">
+                        <span class="info-label">Datapoint:</span>
+                        <span class="info-value">{{ result.test_information.datapoint_suffix }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Value:</span>
+                        <span class="info-value">{{ result.test_information.datapoint_value }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Scenario:</span>
+                        <span class="info-value">{{ result.test_information.scenario_name }}</span>
+                    </div>
+                </div>
+
+                <div class="test-status">
+                    {% if result.test_results.passed|length > 0 %}
+                        <span class="status-badge passed">✓ PASSED ({{ result.test_results.passed|length }})</span>
+                    {% elif result.test_results.failed|length > 0 %}
+                        <span class="status-badge failed">✗ FAILED ({{ result.test_results.failed|length }})</span>
+                    {% else %}
+                        <span class="status-badge pending">⏳ NO RESULTS</span>
+                    {% endif %}
+                </div>
+
+                {% if result.test_results.details.failures %}
+                <div class="test-failures">
+                    <h5>Failures:</h5>
+                    <ul>
+                        {% for test_name, failure_list in result.test_results.details.failures.items %}
+                        <li>
+                            <strong>{{ test_name }}:</strong>
+                            <ul>
+                                {% for failure in failure_list %}
+                                <li>{{ failure }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="test-details-toggle">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="toggleDetails('{{ forloop.counter }}')">
+                        <i class="fas fa-info-circle"></i> Show Details
+                    </button>
+                </div>
+
+                <div id="details-{{ forloop.counter }}" class="test-details" style="display: none;">
+                    <h5>Platform Information:</h5>
+                    <div class="platform-info">
+                        <div class="info-row">
+                            <span class="info-label">OS:</span>
+                            <span class="info-value">{{ result.platform_info.os|default:"Not specified" }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Python:</span>
+                            <span class="info-value">{{ result.platform_info.python|default:"Not specified" }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Packages:</span>
+                            <span class="info-value">{{ result.platform_info.packages|default:"Not specified" }}</span>
+                        </div>
+                    </div>
+
+                    <h5>Path Configuration:</h5>
+                    <div class="path-info">
+                        <div class="info-row">
+                            <span class="info-label">Cache Dir:</span>
+                            <span class="info-value">{{ result.paths.cachedir|default:"Not specified" }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Root Dir:</span>
+                            <span class="info-value">{{ result.paths.rootdir|default:"Not specified" }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Config File:</span>
+                            <span class="info-value">{{ result.paths.configfile|default:"Not specified" }}</span>
+                        </div>
+                    </div>
+
+                    <h5>File Information:</h5>
+                    <div class="file-info">
+                        <div class="info-row">
+                            <span class="info-label">Filename:</span>
+                            <span class="info-value">{{ result.filename }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <p>No test results found. Please run DPM tests first.</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
     <!-- Execution Logs -->
     {% if execution_data %}
     <div class="review-section">
@@ -432,6 +763,565 @@
         font-size: 0.85em;
         margin-left: 10px;
     }
+
+    /* Step 4: Metadata Review, Visualization, and Tabbed Editor Styles (from Task 2) */
+    .metadata-review-section {
+        margin-bottom: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .review-category {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .review-category h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #495057;
+        border-bottom: 2px solid #0d6efd;
+        padding-bottom: 8px;
+    }
+
+    .review-category p {
+        margin-bottom: 15px;
+        color: #6c757d;
+    }
+
+    .review-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .review-link {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #495057;
+        transition: all 0.2s ease;
+    }
+
+    .review-link:hover {
+        background: #e9ecef;
+        border-color: #0d6efd;
+        color: #0d6efd;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .link-icon {
+        margin-right: 10px;
+        font-size: 16px;
+    }
+
+    .link-text {
+        font-weight: 500;
+    }
+
+    /* Visualization Section Styles */
+    .visualization-section {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .visualization-section h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #495057;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 8px;
+    }
+
+    .visualization-section p {
+        margin-bottom: 15px;
+        color: #6c757d;
+    }
+
+    .visualization-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .control-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .control-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+        font-size: 14px;
+    }
+
+    .viz-filter {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: white;
+        transition: border-color 0.3s ease;
+    }
+
+    .viz-filter:focus {
+        border-color: #667eea;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .control-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-visualize, .btn-export {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-visualize {
+        background-color: #1976D2;
+        color: white;
+    }
+
+    .btn-visualize:hover {
+        background-color: #1565C0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-export {
+        background-color: #7B1FA2;
+        color: white;
+    }
+
+    .btn-export:hover {
+        background-color: #6A1B9A;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Tabbed Interface Styles */
+    .tabs-container {
+        background: #fff;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        margin-top: 20px;
+        overflow: hidden;
+    }
+
+    .tabs-header {
+        display: flex;
+        background: #f8f9fa;
+        border-bottom: 2px solid #667eea;
+    }
+
+    .tab-button {
+        flex: 1;
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border: none;
+        border-right: 1px solid #e0e0e0;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        color: #555;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .tab-button:last-child {
+        border-right: none;
+    }
+
+    .tab-button:hover {
+        background: #e9ecef;
+        color: #333;
+    }
+
+    .tab-button.active {
+        background: #667eea;
+        color: white;
+        position: relative;
+    }
+
+    .tab-button.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #667eea;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 0;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .tab-content iframe {
+        width: 100%;
+        min-height: 800px;
+        border: none;
+        display: block;
+    }
+
+    .tabs-container h4 {
+        margin: 0 0 15px 0;
+        padding: 20px 20px 0 20px;
+        color: #667eea;
+    }
+
+    /* Step 5: Code Editor Container (purple theme to differentiate from Step 4) */
+    .code-editor-container {
+        background: #f3e5f5 !important;
+        border: 2px solid #9c27b0 !important;
+    }
+
+    .code-editor-container h4 {
+        color: #6a1b9a !important;
+    }
+
+    .code-editor-container .tabs-header {
+        background: #f3e5f5 !important;
+        border-bottom: 2px solid #9c27b0 !important;
+    }
+
+    .code-editor-container .tab-button.active {
+        background: #9c27b0 !important;
+    }
+
+    .code-editor-container .tab-button.active::after {
+        background: #9c27b0 !important;
+    }
+
+    /* Step 6: Test Results Styles (from Task 4) */
+    .execution-overview {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .overview-card {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 8px;
+        text-align: center;
+        border: 2px solid #dee2e6;
+    }
+
+    .overview-card.success {
+        border-color: #28a745;
+        background: #d4edda;
+    }
+
+    .overview-card.warning {
+        border-color: #ffc107;
+        background: #fff3cd;
+    }
+
+    .status-icon {
+        margin: 20px 0;
+    }
+
+    .status-text {
+        font-size: 18px;
+        font-weight: 500;
+        margin: 10px 0;
+    }
+
+    .test-summary {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .test-summary-section {
+        margin-bottom: 30px;
+    }
+
+    .test-summary-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .summary-card {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .summary-card.total {
+        border-left: 4px solid #007bff;
+    }
+
+    .summary-card.passed {
+        border-left: 4px solid #28a745;
+    }
+
+    .summary-card.failed {
+        border-left: 4px solid #dc3545;
+    }
+
+    .summary-card.success-rate {
+        border-left: 4px solid #17a2b8;
+    }
+
+    .card-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .card-content h3 {
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 0 5px 0;
+        color: #333;
+    }
+
+    .card-content p {
+        margin: 0;
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .test-results-section {
+        margin-bottom: 30px;
+    }
+
+    .test-results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 20px;
+    }
+
+    .test-result-card {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .test-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .test-header h4 {
+        margin: 0;
+        color: #333;
+        font-size: 16px;
+    }
+
+    .test-timestamp {
+        font-size: 12px;
+        color: #6c757d;
+        font-family: monospace;
+    }
+
+    .suite-badge-container {
+        margin-bottom: 10px;
+    }
+
+    .suite-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        background: #e7f3ff;
+        color: #0066cc;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid #b3d9ff;
+    }
+
+    .test-info {
+        margin-bottom: 15px;
+    }
+
+    .test-info .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        padding: 5px 0;
+    }
+
+    .test-info .info-label {
+        font-weight: 600;
+        color: #495057;
+        min-width: 80px;
+    }
+
+    .test-info .info-value {
+        color: #0d6efd;
+        font-family: monospace;
+        font-size: 13px;
+        word-break: break-all;
+    }
+
+    .test-status {
+        margin-bottom: 15px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .status-badge.passed {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .status-badge.failed {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f1aeb5;
+    }
+
+    .status-badge.pending {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    .test-failures {
+        margin-bottom: 15px;
+    }
+
+    .test-failures h5 {
+        margin: 0 0 10px 0;
+        color: #dc3545;
+        font-size: 14px;
+    }
+
+    .test-failures ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .test-failures li {
+        color: #721c24;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .test-details-toggle {
+        margin: 15px 0 10px 0;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .btn-outline-secondary {
+        background: white;
+        border: 1px solid #6c757d;
+        color: #6c757d;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-outline-secondary:hover {
+        background: #6c757d;
+        color: white;
+    }
+
+    .test-details {
+        margin-top: 15px;
+        padding: 15px;
+        background: #f1f3f4;
+        border-radius: 4px;
+        border: 1px solid #dee2e6;
+    }
+
+    .test-details h5 {
+        margin: 15px 0 10px 0;
+        color: #495057;
+        font-size: 14px;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 5px;
+    }
+
+    .test-details h5:first-child {
+        margin-top: 0;
+    }
+
+    .platform-info, .path-info, .file-info {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .platform-info .info-row, .path-info .info-row, .file-info .info-row {
+        margin-bottom: 5px;
+        padding: 2px 0;
+    }
+
+    .platform-info .info-value, .path-info .info-value, .file-info .info-value {
+        font-size: 12px;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        color: #6c757d;
+    }
 </style>
 {% endblock %}
 
@@ -601,6 +1491,235 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingIndicator.style.display = 'none';
     }
 });
+{% endif %}
+
+// Step 4: Tab Switching and Visualization Functions (from Task 2)
+{% if step_number == 4 %}
+// Tab switching function
+function switchTab(tabName, stepNumber) {
+    // Get all tab buttons and content for this step
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Remove active class from all buttons and content
+    tabButtons.forEach(button => button.classList.remove('active'));
+    tabContents.forEach(content => content.classList.remove('active'));
+
+    // Add active class to selected tab
+    const targetButton = Array.from(tabButtons).find(btn =>
+        btn.onclick && btn.onclick.toString().includes(`'${tabName}'`)
+    );
+    if (targetButton) {
+        targetButton.classList.add('active');
+    }
+
+    // Show selected tab content
+    const targetContent = document.getElementById(`${tabName}-tab-${stepNumber}`);
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+
+    // Save active tab to localStorage
+    localStorage.setItem(`dpm-step4-active-tab-${stepNumber}`, tabName);
+}
+
+// Restore active tab on page load
+window.addEventListener('DOMContentLoaded', function() {
+    const activeTab = localStorage.getItem('dpm-step4-active-tab-4');
+    if (activeTab) {
+        switchTab(activeTab, 4);
+    }
+    // Load filter options for visualization
+    loadFilterOptions();
+});
+
+// Load filter options for visualization controls
+function loadFilterOptions() {
+    fetch('/pybirdai/api/cube-links/filter-options/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Populate foreign cube filter
+                const foreignCubeSelect = document.getElementById('viz-foreign-cube');
+                if (foreignCubeSelect) {
+                    foreignCubeSelect.innerHTML = '<option value="">All Cubes</option>';
+                    data.foreign_cubes.forEach(cube => {
+                        const option = document.createElement('option');
+                        option.value = cube;
+                        option.textContent = cube;
+                        foreignCubeSelect.appendChild(option);
+                    });
+                }
+
+                // Populate join identifier filter
+                const joinIdentifierSelect = document.getElementById('viz-join-identifier');
+                if (joinIdentifierSelect) {
+                    joinIdentifierSelect.innerHTML = '<option value="">All Identifiers</option>';
+                    data.join_identifiers.forEach(identifier => {
+                        const option = document.createElement('option');
+                        option.value = identifier;
+                        option.textContent = identifier;
+                        joinIdentifierSelect.appendChild(option);
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error loading filter options:', error);
+        });
+}
+
+// Visualize cube links in a modal
+function visualizeCubeLinks() {
+    // Get selected filter values
+    const foreignCube = document.getElementById('viz-foreign-cube').value || '';
+    const joinIdentifier = document.getElementById('viz-join-identifier').value || '';
+
+    // Create modal for visualization
+    const modal = document.createElement('div');
+    modal.id = 'viz-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+    modal.style.zIndex = '1000';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+
+    // Create content container
+    const content = document.createElement('div');
+    content.style.backgroundColor = 'white';
+    content.style.borderRadius = '8px';
+    content.style.width = '90%';
+    content.style.height = '85%';
+    content.style.padding = '20px';
+    content.style.position = 'relative';
+    content.style.overflow = 'auto';
+
+    // Prepare query parameters
+    const params = new URLSearchParams({
+        cube_id: foreignCube,
+        join_identifier: joinIdentifier,
+        in_md: 'false'
+    });
+
+    // Create the visualization URL
+    const visualizationUrl = `/pybirdai/return_cubelink_visualisation/?${params.toString()}`;
+
+    // Add close button
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Close';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '10px';
+    closeBtn.style.right = '10px';
+    closeBtn.style.padding = '8px 16px';
+    closeBtn.style.backgroundColor = '#f44336';
+    closeBtn.style.color = 'white';
+    closeBtn.style.border = 'none';
+    closeBtn.style.borderRadius = '4px';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    // Create iframe to embed visualization
+    const iframe = document.createElement('iframe');
+    iframe.src = visualizationUrl;
+    iframe.style.width = '100%';
+    iframe.style.height = 'calc(100% - 70px)';
+    iframe.style.border = 'none';
+    iframe.style.marginTop = '20px';
+    iframe.style.borderRadius = '4px';
+    iframe.style.backgroundColor = '#f5f5f5';
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-forms');
+    iframe.setAttribute('referrerpolicy', 'same-origin');
+    iframe.setAttribute('loading', 'lazy');
+
+    // Append elements
+    content.appendChild(iframe);
+    content.appendChild(closeBtn);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+}
+
+// Export visualization as markdown
+function exportVisualization() {
+    // Get selected filter values
+    const foreignCube = document.getElementById('viz-foreign-cube').value || '';
+    const joinIdentifier = document.getElementById('viz-join-identifier').value || '';
+
+    // Prepare query parameters
+    const params = new URLSearchParams({
+        cube_id: foreignCube,
+        join_identifier: joinIdentifier,
+        in_md: 'true'
+    });
+
+    // Create download URL
+    const downloadUrl = `/pybirdai/return_cubelink_visualisation/?${params.toString()}`;
+
+    // Create a temporary anchor element to trigger the download
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = `cube_links_${foreignCube || 'all'}_${joinIdentifier || 'all'}.md`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+{% endif %}
+
+// Step 5: Tab Switching for Code Editors
+{% if step_number == 5 %}
+// Tab switching function for Step 5 code editors
+function switchTab(tabName, stepNumber) {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => button.classList.remove('active'));
+    tabContents.forEach(content => content.classList.remove('active'));
+
+    const targetButton = Array.from(tabButtons).find(btn =>
+        btn.onclick && btn.onclick.toString().includes(`'${tabName}'`)
+    );
+    if (targetButton) {
+        targetButton.classList.add('active');
+    }
+
+    const targetContent = document.getElementById(`${tabName}-tab-${stepNumber}`);
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+
+    localStorage.setItem(`dpm-step5-active-tab`, tabName);
+}
+
+// Restore active tab on page load
+window.addEventListener('DOMContentLoaded', function() {
+    const activeTab = localStorage.getItem('dpm-step5-active-tab');
+    if (activeTab) {
+        switchTab(activeTab, 5);
+    }
+});
+{% endif %}
+
+// Step 6: Toggle Details for Test Results
+{% if step_number == 6 %}
+function toggleDetails(cardId) {
+    const detailsDiv = document.getElementById('details-' + cardId);
+    const button = event.target.closest('button');
+
+    if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+        detailsDiv.style.display = 'block';
+        button.innerHTML = '<i class="fas fa-info-circle"></i> Hide Details';
+    } else {
+        detailsDiv.style.display = 'none';
+        button.innerHTML = '<i class="fas fa-info-circle"></i> Show Details';
+    }
+}
 {% endif %}
 </script>
 {% endblock %}

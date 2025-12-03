@@ -17,7 +17,7 @@ import os
 
 from pybirdai.regdna import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
 
-class InputLayerLinkEnricher(object):
+class InputLayerLinkEnricher:
     '''
     After the Forward Engineering process has been run on the LDM,
     SQLDevelepor stores information about how whicj column in the Input

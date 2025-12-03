@@ -28,12 +28,12 @@ import copy
 
 logging.basicConfig(level=logging.INFO)
 
-class ImportInputModel(object):
+class ImportInputModel:
     """
     A class for creating reference domains, variables, and cubes in the SDD model.
     """
 
-    def import_input_model(sdd_context, context):
+    def import_input_model(sdd_context, context, framework_id='BIRD_EIL'):
         """
         Create reference domains, variables, and cubes in the SDD model.
 
@@ -41,7 +41,14 @@ class ImportInputModel(object):
             sdd_context: The SDD context object containing dictionaries for
                          storing created elements.
             context: The context object containing configuration settings.
+            framework_id: The framework identifier (BIRD_EIL, BIRD_ELDM for input model;
+                         FINREP, COREP, ANCRDT for regulatory frameworks).
+                         Defaults to 'BIRD_EIL' for backward compatibility.
         """
+        # Store framework in context for use throughout import process
+        sdd_context.current_framework = framework_id
+        context.current_framework = framework_id
+
         sdd_context.csi_counter = dict()
         context.fields = dict()
         context.derived_properties = dict()
@@ -94,6 +101,11 @@ class ImportInputModel(object):
                 name="ECB",
                 code="ECB",
                 maintenance_agency_id="ECB"
+            ),
+            MAINTENANCE_AGENCY(
+                name="USER",
+                code="USER",
+                maintenance_agency_id="USER"
             )
         ]
 
@@ -180,6 +192,33 @@ class ImportInputModel(object):
         bird_cube_cube_structure.cube_structure_id = model.__name__
         bird_cube_cube_structure.name = model.__name__
         bird_cube.cube_structure_id = bird_cube_cube_structure
+
+        # Set framework_id on the cube if available in context
+        if hasattr(sdd_context, 'current_framework'):
+            # Determine the appropriate maintenance agency
+            # BIRD_* frameworks use USER agency, regulatory frameworks use ECB
+            if sdd_context.current_framework.startswith('BIRD_'):
+                agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+                    maintenance_agency_id='USER',
+                    defaults={'name': 'USER', 'code': 'USER'}
+                )
+            else:
+                # Regulatory frameworks (FINREP, COREP, ANCRDT) use ECB
+                agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+                    maintenance_agency_id='ECB',
+                    defaults={'name': 'ECB', 'code': 'ECB'}
+                )
+
+            # Get or create FRAMEWORK object with appropriate maintenance agency
+            framework, _ = FRAMEWORK.objects.get_or_create(
+                framework_id=sdd_context.current_framework,
+                defaults={
+                    'name': sdd_context.current_framework,
+                    'code': sdd_context.current_framework,
+                    'maintenance_agency_id': agency
+                }
+            )
+            bird_cube.framework_id = framework
 
         sdd_context.bird_cube_structure_dictionary[
             bird_cube_cube_structure.name] = bird_cube_cube_structure

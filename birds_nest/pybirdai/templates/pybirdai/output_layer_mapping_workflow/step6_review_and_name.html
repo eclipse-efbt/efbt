@@ -329,28 +329,6 @@
                     <div class="mapping-type-badge">{{ summary.group_type }}</div>
                 </div>
 
-                <!-- Summary Stats -->
-                <div class="summary-grid">
-                    {% if summary.dimension_count > 0 %}
-                    <div class="summary-card">
-                        <div class="summary-number">{{ summary.dimension_count }}</div>
-                        <div class="summary-label">Dimension Rows</div>
-                    </div>
-                    {% endif %}
-                    {% if summary.observation_count > 0 %}
-                    <div class="summary-card">
-                        <div class="summary-number">{{ summary.observation_count }}</div>
-                        <div class="summary-label">Observation Rows</div>
-                    </div>
-                    {% endif %}
-                    {% if summary.attribute_count > 0 %}
-                    <div class="summary-card">
-                        <div class="summary-number">{{ summary.attribute_count }}</div>
-                        <div class="summary-label">Attribute Rows</div>
-                    </div>
-                    {% endif %}
-                </div>
-
                 <!-- Auto-generated Name Display -->
                 <div class="form-group">
                     <label>Auto-generated Name:</label>
@@ -395,15 +373,91 @@
                     <div class="collapsible-content">
                         <div class="mapping-details">
                             <p><strong>Group Type:</strong> {{ summary.group_type|title }}</p>
-                            <p><strong>Total Mapping Rows:</strong> {{ summary.dimension_count|add:summary.observation_count|add:summary.attribute_count }}</p>
+
                             {% if summary.dimension_count > 0 %}
-                            <p><strong>Dimension Mappings:</strong> {{ summary.dimension_count }} row(s)</p>
+                            <div style="margin-top: 1rem;">
+                                <p><strong>Dimension Mappings:</strong> {{ summary.dimension_count }} member mapping row(s)</p>
+                                {% if summary.dimension_variables.source or summary.dimension_variables.target %}
+                                <div style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    {% if summary.dimension_variables.source %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Source Variables:</p>
+                                        {% for var in summary.dimension_variables.source %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #f0f8ff; border-left: 2px solid #4a90e2; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% if summary.dimension_variables.target %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Target Variables:</p>
+                                        {% for var in summary.dimension_variables.target %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #f0fff0; border-left: 2px solid #48bb78; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
                             {% endif %}
-                            {% if summary.observation_count > 0 %}
-                            <p><strong>Observation Mappings:</strong> {{ summary.observation_count }} row(s)</p>
+
+                            {% if summary.observation_variables.source or summary.observation_variables.target %}
+                            <div style="margin-top: 1rem;">
+                                <p><strong>Observation Variables:</strong></p>
+                                <div style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    {% if summary.observation_variables.source %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Source Variables:</p>
+                                        {% for var in summary.observation_variables.source %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #f0f8ff; border-left: 2px solid #4a90e2; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% if summary.observation_variables.target %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Target Variables:</p>
+                                        {% for var in summary.observation_variables.target %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #f0fff0; border-left: 2px solid #48bb78; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                             {% endif %}
-                            {% if summary.attribute_count > 0 %}
-                            <p><strong>Attribute Mappings:</strong> {{ summary.attribute_count }} row(s)</p>
+
+                            {% if summary.attribute_variables.source or summary.attribute_variables.target %}
+                            <div style="margin-top: 1rem;">
+                                <p><strong>Attribute Variables:</strong></p>
+                                <div style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    {% if summary.attribute_variables.source %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Source Variables:</p>
+                                        {% for var in summary.attribute_variables.source %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #fff5f0; border-left: 2px solid #ed8936; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% if summary.attribute_variables.target %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Target Variables:</p>
+                                        {% for var in summary.attribute_variables.target %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #fef5ff; border-left: 2px solid #9f7aea; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                             {% endif %}
                         </div>
                     </div>

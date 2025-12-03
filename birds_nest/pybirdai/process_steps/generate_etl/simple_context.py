@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #    Benjamin Arfa - improvements
 #
-class SimpleContext(object):
+class SimpleContext:
     '''
        
     '''

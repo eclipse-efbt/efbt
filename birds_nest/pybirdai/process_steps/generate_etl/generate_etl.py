@@ -18,7 +18,7 @@ from .simple_context import SimpleContext
 
 import math
 
-class GenerateETL(object):
+class GenerateETL:
 
     def __init__(self):
         self.entity_columns_by_schema = {}

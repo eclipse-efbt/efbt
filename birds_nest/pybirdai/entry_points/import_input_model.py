@@ -38,6 +38,7 @@ class RunImportInputModelFromSQLDev(AppConfig):
         and variables, and imports the website data into the SDD model.
         """
         from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
+        from pybirdai.models.workflow_model import AutomodeConfiguration
 
         from pybirdai.process_steps.input_model.import_input_model import (
             ImportInputModel
@@ -54,9 +55,18 @@ class RunImportInputModelFromSQLDev(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
+        # Determine framework from AutomodeConfiguration
+        # If ELDM data model is selected, use BIRD_ELDM framework
+        # Otherwise default to BIRD_EIL framework
+        config = AutomodeConfiguration.get_active_configuration()
+        if config and config.data_model_type == 'ELDM':
+            framework_id = 'BIRD_ELDM'
+        else:
+            framework_id = 'BIRD_EIL'  # Default to EIL
+
         # Create reference domains, variables, and cubes
         ImportInputModel.import_input_model(
-             sdd_context, context
+             sdd_context, context, framework_id=framework_id
         )
 
 

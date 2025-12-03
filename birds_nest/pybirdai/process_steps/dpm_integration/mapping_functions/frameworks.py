@@ -16,9 +16,44 @@ import pandas as pd
 from pybirdai.process_steps.dpm_integration.mapping_functions.utils import clean_spaces_df
 
 
-def map_frameworks(path=os.path.join("target", "ReportingFramework.csv")):
-    """Map frameworks from ReportingFramework.csv to the target format"""
+# Mapping of framework codes to friendly display names
+FRAMEWORK_FRIENDLY_NAMES = {
+    'FINREP': 'Financial Reporting',
+    'COREP': 'Common Reporting',
+    'AE': 'Asset Encumbrance',
+    'FP': 'Funding Plans',
+    'SBP': 'Supervisory Benchmarking Portfolios',
+    'REM': 'Remuneration',
+    'RES': 'Resolution',
+    'PAY': 'Payments',
+    'FINREPCOVID19': 'Financial Reporting of COVID19',
+    'IF': 'Investment Firms',
+    'GSII': 'Global Systemic and Important Institutions',
+    'MREL': 'MREL and TLAC',
+    'IMPRAC': 'Impracticability of Contractual Recognition of Bail-in',
+    'ESG': 'ESG',
+    'IPU': 'Intermediate Parent Undertaking',
+    'PILLAR3': 'Pillar 3 Disclosures',
+    'IRRBB': 'Interest Rate Risk in the Banking Book',
+    'DORA': 'Digital Operational Resilience',
+    'FC': 'FICO',
+    'MICA': 'MICA',
+}
+
+
+def map_frameworks(path=os.path.join("target", "ReportingFramework.csv"), frameworks=None):
+    """
+    Map frameworks from ReportingFramework.csv to the target format.
+
+    Args:
+        path: Path to ReportingFramework.csv
+        frameworks: List of framework codes to filter (e.g., ['FINREP', 'COREP']).
+                   If None, all frameworks are imported.
+    """
     df = pd.read_csv(path, dtype=str)
+
+    if frameworks:
+        df = df[df['FrameworkCode'].isin(frameworks)]
 
     framework_columns = [
         "MAINTENANCE_AGENCY_ID", "FRAMEWORK_ID", "NAME", "CODE", "DESCRIPTION",
@@ -32,11 +67,12 @@ def map_frameworks(path=os.path.join("target", "ReportingFramework.csv")):
     ))
 
     # Build transformed DataFrame
+    # Use friendly names from mapping dictionary, fallback to FrameworkLabel if not found
     df = df.assign(
         MAINTENANCE_AGENCY_ID="EBA",
         FRAMEWORK_ID="EBA_" + df['FrameworkCode'].astype(str),
         CODE=df['FrameworkCode'].astype(str),
-        NAME=df['FrameworkLabel'].astype(str),
+        NAME=df['FrameworkCode'].map(FRAMEWORK_FRIENDLY_NAMES).fillna(df['FrameworkLabel']).astype(str),
         FRAMEWORK_STATUS="PUBLISHED"
     )
 
