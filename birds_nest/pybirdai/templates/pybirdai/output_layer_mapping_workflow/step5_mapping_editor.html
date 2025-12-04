@@ -85,14 +85,13 @@
         color: white;
     }
 
-    /* Sidebar Layout for Mappings */
+    /* Horizontal Navbar Layout for Mappings */
     .sidebar-layout {
-        display: grid;
-        grid-template-columns: 250px minmax(0, 1fr);
+        display: flex;
+        flex-direction: column;
         gap: 1rem;
         margin-bottom: 2rem;
         max-width: 100%;
-        overflow: hidden;
     }
 
     .mapping-sidebar {
@@ -100,11 +99,7 @@
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         padding: 1rem;
-        height: fit-content;
-        position: sticky;
-        top: 1rem;
-        min-width: 0;
-        overflow: hidden;
+        width: 100%;
     }
 
     .sidebar-title {
@@ -112,42 +107,45 @@
         font-weight: 700;
         text-transform: uppercase;
         color: #666;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
         padding: 0 0.5rem;
         letter-spacing: 0.5px;
     }
 
     .outer-tab-navigation {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
         gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
     }
 
     .outer-tab-button {
-        padding: 1rem;
-        background: none;
+        padding: 0.75rem 1rem;
+        background: #f8f9fa;
         border: none;
-        border-left: 3px solid transparent;
+        border-bottom: 3px solid transparent;
         color: #666;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
-        font-size: 0.9rem;
-        text-align: left;
-        border-radius: 6px;
-        word-wrap: break-word;
-        white-space: normal;
+        font-size: 0.85rem;
+        text-align: center;
+        border-radius: 6px 6px 0 0;
+        white-space: nowrap;
+        min-width: fit-content;
     }
 
     .outer-tab-button:hover {
-        background-color: #f8f9fa;
-        border-left-color: #cbd5e0;
+        background-color: #e9ecef;
+        border-bottom-color: #cbd5e0;
     }
 
     .outer-tab-button.active {
         background-color: #e3f2fd;
         color: #0d6efd;
-        border-left-color: #0d6efd;
+        border-bottom-color: #0d6efd;
         font-weight: 700;
     }
 
@@ -157,15 +155,11 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         padding: 1.5rem;
         min-width: 0;
-        overflow: hidden;
+        overflow-x: auto;
     }
 
     /* Tablet Responsive */
     @media (max-width: 1024px) {
-        .sidebar-layout {
-            grid-template-columns: 200px minmax(0, 1fr);
-        }
-
         .workflow-container {
             padding: 1rem;
         }
@@ -173,32 +167,16 @@
 
     /* Mobile Responsive */
     @media (max-width: 768px) {
-        .sidebar-layout {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .mapping-sidebar {
-            position: static;
-        }
-
         .outer-tab-navigation {
-            flex-direction: row;
+            flex-wrap: nowrap;
             overflow-x: auto;
-            padding-bottom: 0.5rem;
             -webkit-overflow-scrolling: touch;
         }
 
         .outer-tab-button {
             min-width: 120px;
             flex-shrink: 0;
-            border-left: none;
-            border-bottom: 3px solid transparent;
-        }
-
-        .outer-tab-button.active {
-            border-left: none;
-            border-bottom-color: #0d6efd;
+            font-size: 0.8rem;
         }
 
         .workflow-steps {
@@ -444,10 +422,10 @@
         opacity: 0.8;
     }
 
-    /* Ensure table cells don't overflow */
+    /* Table cell styling */
     .mapping-table td {
-        max-width: 300px;
-        overflow: hidden;
+        min-width: 180px;
+        word-wrap: break-word;
     }
 
     /* Empty State */
@@ -471,6 +449,42 @@
         background: white;
         border-radius: 8px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Page content padding for floating buttons */
+    .container-fluid, .workflow-container {
+        padding-bottom: 6rem;
+    }
+
+    /* Floating Action Group */
+    .floating-action-group {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .floating-action-group .btn {
+        border-radius: 25px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+    }
+
+    .btn-success {
+        background: #198754;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #157347;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
     }
 
     .btn {
@@ -1051,10 +1065,10 @@
         <input type="hidden" name="mapping_data_{{ mapping.group_id }}" id="mapping_data_{{ mapping.group_id }}">
         {% endfor %}
 
-        <!-- Action Buttons -->
-        <div class="action-buttons">
+        <!-- Floating Action Group -->
+        <div class="floating-action-group">
             <a href="{% url 'pybirdai:output_layer_mapping_step4' %}" class="btn btn-secondary">← Back</a>
-            <button type="submit" class="btn btn-primary">Continue to Review →</button>
+            <button type="submit" class="btn btn-success">Continue to Review →</button>
         </div>
     </form>
 
@@ -1201,33 +1215,39 @@ function generateMemberCode(memberName) {
         'can', 'this', 'that', 'these', 'those'
     ];
 
-    let code = memberName;
+    // Step 1: Convert to lowercase and split into words
+    let words = memberName.toLowerCase().trim().split(/\s+/);
 
-    // Remove stop words (case-insensitive)
-    stopWords.forEach(word => {
-        const regex = new RegExp('\\b' + word + '\\b', 'gi');
-        code = code.replace(regex, '');
+    // Step 2: Remove stop words
+    words = words.filter(word => !stopWords.includes(word));
+
+    // Step 3: Keep first word intact, remove vowels from remaining words (preserve first letter)
+    words = words.map((word, index) => {
+        if (word.length === 0) return word;
+        // First word: keep all letters (vowels and consonants)
+        if (index === 0) return word;
+        // Other words: preserve first letter, remove vowels from rest
+        const firstLetter = word.charAt(0);
+        const restOfWord = word.slice(1).replace(/[aeiou]/gi, '');
+        return firstLetter + restOfWord;
     });
 
-    // Remove vowels (a, e, i, o, u, both uppercase and lowercase)
-    code = code.replace(/[aeiouAEIOU]/g, '');
+    // Step 4: Filter out empty words
+    words = words.filter(word => word.length > 0);
 
-    // Replace spaces and special characters with underscores
-    code = code.replace(/[\s\-\/\\]+/g, '_');
+    // Step 5: Join with underscores and uppercase
+    let code = words.join('_').toUpperCase();
 
-    // Convert to uppercase
-    code = code.toUpperCase();
+    // Step 6: Clean up - remove any remaining special characters (keep only A-Z, 0-9, _)
+    code = code.replace(/[^A-Z0-9_]/g, '_');
 
-    // Remove any remaining special characters (keep only letters, numbers, underscores)
-    code = code.replace(/[^A-Z0-9_]/g, '');
-
-    // Remove multiple consecutive underscores
+    // Step 7: Remove consecutive underscores
     code = code.replace(/_+/g, '_');
 
-    // Remove leading and trailing underscores
+    // Step 8: Remove leading/trailing underscores
     code = code.replace(/^_+|_+$/g, '');
 
-    return code;
+    return code || 'MEMBER';
 }
 
 /**

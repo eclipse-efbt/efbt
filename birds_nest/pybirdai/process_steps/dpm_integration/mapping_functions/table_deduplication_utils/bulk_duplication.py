@@ -214,11 +214,6 @@ def bulk_duplicate_axes_for_members(table_axes, table_id, members_df):
                 new_code_list.append(new_code)
         all_axes['CODE'] = new_code_list
 
-    # Update NAME with member info
-    if 'NAME' in all_axes.columns:
-        member_name_suffixes = np.repeat(member_names, n_axes)
-        all_axes['NAME'] = all_axes['NAME'].astype(str) + ' - Z axis : ' + member_name_suffixes
-
     return all_axes, axis_id_mappings
 
 
@@ -293,11 +288,6 @@ def bulk_duplicate_ordinates_for_members(table_ordinates, axis_id_mappings, memb
                 new_code_list.append(new_code)
         all_ordinates['CODE'] = new_code_list
 
-    # Update NAME with member info
-    if 'NAME' in all_ordinates.columns:
-        member_name_suffixes = np.repeat(member_names, n_ordinates)
-        all_ordinates['NAME'] = all_ordinates['NAME'].astype(str) + ' - Z axis : ' + member_name_suffixes
-
     # Update PARENT_AXIS_ORDINATE_ID using ordinate_id_mappings
     if 'PARENT_AXIS_ORDINATE_ID' in all_ordinates.columns:
         parent_updates = []
@@ -365,9 +355,6 @@ def bulk_duplicate_cells_for_members(table_cells, table_id, members_df):
 
     if 'CODE' in all_cells.columns:
         all_cells['CODE'] = all_cells['CODE'].astype(str) + '_' + member_suffixes
-
-    if 'NAME' in all_cells.columns:
-        all_cells['NAME'] = all_cells['NAME'].astype(str) + ' - Z axis : ' + member_name_suffixes
 
     # Build cell_id_mappings per member
     cell_id_mappings = {}

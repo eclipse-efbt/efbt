@@ -169,6 +169,42 @@
         border-top: 1px solid #e2e8f0;
     }
 
+    /* Page content padding for floating buttons */
+    .container-fluid {
+        padding-bottom: 6rem;
+    }
+
+    /* Floating Action Group */
+    .floating-action-group {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .floating-action-group .btn {
+        border-radius: 25px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+    }
+
+    .btn-success {
+        background: #198754;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #157347;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+    }
+
     .loading-spinner {
         display: none;
         margin-left: 1rem;
@@ -334,21 +370,18 @@
                 </div>
             </div>
 
-            <div class="form-actions">
-                <div>
-                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">
-                        Cancel
-                    </button>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-primary" id="nextButton" disabled>
-                        Next: Define Breakdowns →
-                    </button>
-                    <span class="loading-spinner">
-                        <i class="fa fa-spinner fa-spin"></i> Loading...
-                    </span>
-                </div>
+            <!-- Floating Action Group -->
+            <div class="floating-action-group">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-success" id="nextButton" disabled>
+                    Next: Define Breakdowns →
+                </button>
             </div>
+            <span class="loading-spinner">
+                <i class="fa fa-spinner fa-spin"></i> Loading...
+            </span>
         </form>
     </div>
 </div>

@@ -2008,8 +2008,9 @@ def edit_mappings_tabbed(request):
             print(f"[STEP 5] Skipping '{group_name}' - no target variables defined")
             continue
 
-        # Generate auto-name for this mapping
-        auto_name = f"DPM_{table.code}_{table.version}_{','.join(source_var_ids)}"
+        # Generate auto-name for this mapping (use base table code from session, not Z-axis variant)
+        base_table_code = request.session.get('olmw_table_code', table.code)
+        auto_name = f"DPM_{base_table_code}_{table.version}_{','.join(source_var_ids)}"
         print(f"[STEP 5] Auto-generated name: {auto_name}")
 
         # Get VARIABLE objects for this group
@@ -2946,7 +2947,8 @@ def generate_structures_for_table(table_id, table_code, framework, version,
         version_normalized = version.replace('.', '_')
 
         # Check if we should reuse existing mappings (for Z-axis variants)
-        if existing_mapping_definitions:
+        # Use explicit None check to handle empty lists correctly
+        if existing_mapping_definitions is not None:
             # Reuse provided mappings instead of creating new ones
             created_mapping_definitions = existing_mapping_definitions
             # Extract member mappings from existing mapping definitions for debug_data
@@ -4489,15 +4491,16 @@ def generate_structures(request):
                     f"CUBE {cube.cube_id}: cube_structure_id is NULL (required)"
                 )
 
-            # Validate SUBDOMAIN_ENUMERATION FKs
-            for sd_obj in debug_data.get('SUBDOMAIN', []):
-                if hasattr(sd_obj, 'subdomain_id'):
-                    enums = SUBDOMAIN_ENUMERATION.objects.filter(subdomain_id=sd_obj)
-                    for enum in enums:
-                        if enum.member_id and not MEMBER.objects.filter(member_id=enum.member_id.member_id).exists():
-                            fk_validation_errors.append(
-                                f"SUBDOMAIN_ENUMERATION in subdomain {sd_obj.subdomain_id}: member '{enum.member_id.member_id}' does not exist"
-                            )
+            # Validate SUBDOMAIN_ENUMERATION FKs (only if debug tracking is enabled)
+            if debug_data is not None:
+                for sd_obj in debug_data.get('SUBDOMAIN', []):
+                    if hasattr(sd_obj, 'subdomain_id'):
+                        enums = SUBDOMAIN_ENUMERATION.objects.filter(subdomain_id=sd_obj)
+                        for enum in enums:
+                            if enum.member_id and not MEMBER.objects.filter(member_id=enum.member_id.member_id).exists():
+                                fk_validation_errors.append(
+                                    f"SUBDOMAIN_ENUMERATION in subdomain {sd_obj.subdomain_id}: member '{enum.member_id.member_id}' does not exist"
+                                )
 
             if fk_validation_errors:
                 logger.error("[STEP 7 PRE-COMMIT FK VALIDATION] Found FK validation errors:")
@@ -4511,16 +4514,20 @@ def generate_structures(request):
             # Diagnostic logging before transaction commit
             logger.info("[STEP 7 PRE-COMMIT] Summary of structures created in this transaction:")
             logger.info(f"  - {len(created_mapping_definitions)} MAPPING_DEFINITIONs")
-            logger.info(f"  - {len(debug_data['CUBE_STRUCTURE'])} CUBE_STRUCTURE(s):")
-            for cs in debug_data['CUBE_STRUCTURE']:
-                logger.info(f"      {cs.cube_structure_id}")
-            logger.info(f"  - {len(debug_data['CUBE_STRUCTURE_ITEM'])} CUBE_STRUCTURE_ITEMs")
-            logger.info(f"  - {len(debug_data['CUBE'])} CUBE(s):")
-            for c in debug_data['CUBE']:
-                logger.info(f"      {c.cube_id}")
-            logger.info(f"  - {len(created_combinations)} COMBINATIONs")
-            logger.info(f"  - {len(debug_data['SUBDOMAIN'])} SUBDOMAINs created in this session")
-            logger.info(f"  - {len(debug_data['SUBDOMAIN_ENUMERATION'])} SUBDOMAIN_ENUMERATIONs")
+            if debug_data is not None:
+                logger.info(f"  - {len(debug_data['CUBE_STRUCTURE'])} CUBE_STRUCTURE(s):")
+                for cs in debug_data['CUBE_STRUCTURE']:
+                    logger.info(f"      {cs.cube_structure_id}")
+                logger.info(f"  - {len(debug_data['CUBE_STRUCTURE_ITEM'])} CUBE_STRUCTURE_ITEMs")
+                logger.info(f"  - {len(debug_data['CUBE'])} CUBE(s):")
+                for c in debug_data['CUBE']:
+                    logger.info(f"      {c.cube_id}")
+                logger.info(f"  - {len(created_combinations)} COMBINATIONs")
+                logger.info(f"  - {len(debug_data['SUBDOMAIN'])} SUBDOMAINs created in this session")
+                logger.info(f"  - {len(debug_data['SUBDOMAIN_ENUMERATION'])} SUBDOMAIN_ENUMERATIONs")
+            else:
+                logger.info(f"  - {len(created_combinations)} COMBINATIONs")
+                logger.info("  - Debug data tracking disabled (DEBUG_EXPORT_ENABLED=False)")
             logger.info("[STEP 7 PRE-COMMIT] Transaction will now attempt to commit...")
 
             # Clear session data after all processing (including replication) is complete

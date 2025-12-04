@@ -148,20 +148,22 @@ def execute_phase2_domains_members(
                     )
                     members_created_count += 1
                     logger.info(f"[PHASE 2] Created member {member_id} for variable {variable.variable_id}")
-                    
+
                     # Track in debug_data
-                    if new_member not in debug_data['MEMBER']:
-                        debug_data['MEMBER'].append(new_member)
+                    if debug_data is not None:
+                        if new_member not in debug_data['MEMBER']:
+                            debug_data['MEMBER'].append(new_member)
                 except Exception as e:
                     logger.error(f"[PHASE 2] Failed to create member {member_id}: {str(e)}")
                     # If member_id format is different, member might already exist but wasn't found
                     pass
             else:
                 members_validated_count += 1
-                
+
                 # Track existing member in debug_data
-                if existing_member not in debug_data['MEMBER']:
-                    debug_data['MEMBER'].append(existing_member)
+                if debug_data is not None:
+                    if existing_member not in debug_data['MEMBER']:
+                        debug_data['MEMBER'].append(existing_member)
     
     logger.info(f"[PHASE 2] Completed domain and member validation/creation: "
                 f"{members_created_count} members created, {members_validated_count} members validated")

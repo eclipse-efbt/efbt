@@ -97,8 +97,10 @@ def execute_phase3_mappings(
     # Normalize: replace spaces AND dots with underscores for consistent IDs
     table_code_normalized = base_table_code.replace(" ", "_").replace(".", "_")
     mapping_prefix = f"{table_code_normalized}_{version_normalized}_MAP"
-    existing_count = MAPPING_DEFINITION.objects.filter(
-        code__startswith=mapping_prefix
+    # Check existing VARIABLE_MAPPINGs by ID (not MAPPING_DEFINITION by code)
+    # to correctly calculate the next available sequence number
+    existing_count = VARIABLE_MAPPING.objects.filter(
+        variable_mapping_id__startswith=mapping_prefix
     ).count()
     mapping_sequence_start = existing_count + 1
     
@@ -128,7 +130,8 @@ def execute_phase3_mappings(
                 code=internal_id
             )
             logger.info(f"[PHASE 3] Created VARIABLE_MAPPING: {variable_mapping.variable_mapping_id}")
-            debug_data['VARIABLE_MAPPING'].append(variable_mapping)
+            if debug_data is not None:
+                debug_data['VARIABLE_MAPPING'].append(variable_mapping)
         except Exception as e:
             logger.error(f"[PHASE 3 ERROR] Failed to create VARIABLE_MAPPING: {str(e)}")
             raise
@@ -153,7 +156,8 @@ def execute_phase3_mappings(
                         variable_id=variable,
                         is_source=is_source
                     )
-                    debug_data['VARIABLE_MAPPING_ITEM'].append(vmi)
+                    if debug_data is not None:
+                        debug_data['VARIABLE_MAPPING_ITEM'].append(vmi)
                     created_var_ids.add(var_id)
         
         # 3. Create MEMBER_MAPPING if needed
@@ -175,7 +179,8 @@ def execute_phase3_mappings(
                     code=f"{internal_id}_MEM"
                 )
                 logger.info(f"[PHASE 3] Created MEMBER_MAPPING: {member_mapping.member_mapping_id}")
-                debug_data['MEMBER_MAPPING'].append(member_mapping)
+                if debug_data is not None:
+                    debug_data['MEMBER_MAPPING'].append(member_mapping)
             except Exception as e:
                 logger.error(f"[PHASE 3 ERROR] Failed to create MEMBER_MAPPING: {str(e)}")
                 raise
@@ -194,7 +199,8 @@ def execute_phase3_mappings(
                                 is_source="true",  # Simplified
                                 member_id=member
                             )
-                            debug_data['MEMBER_MAPPING_ITEM'].append(mmi)
+                            if debug_data is not None:
+                                debug_data['MEMBER_MAPPING_ITEM'].append(mmi)
         
         # 4. Create MAPPING_DEFINITION
         algorithm = f"Mapping: {mapping_name}\n{len(dimensions)} dimension rows, {len(observations)} observation rows"
@@ -240,7 +246,8 @@ def execute_phase3_mappings(
                 member_mapping_id=member_mapping
             )
             logger.info(f"[PHASE 3] Created MAPPING_DEFINITION: {mapping_definition.mapping_id}")
-            debug_data['MAPPING_DEFINITION'].append(mapping_definition)
+            if debug_data is not None:
+                debug_data['MAPPING_DEFINITION'].append(mapping_definition)
         except Exception as e:
             logger.error(f"[PHASE 3 ERROR] Failed to create MAPPING_DEFINITION: {str(e)}")
             logger.error(f"[PHASE 3 ERROR] variable_mapping type: {type(variable_mapping)}, value: {variable_mapping}")
@@ -278,9 +285,10 @@ def execute_phase3_mappings(
                     links_created += 1
 
         logger.info(f"[PHASE 3] Created {links_created} MAPPING_ORDINATE_LINK records")
-        if 'MAPPING_ORDINATE_LINK' not in debug_data:
-            debug_data['MAPPING_ORDINATE_LINK'] = []
-        debug_data['MAPPING_ORDINATE_LINK'].append(f"{links_created} links created")
+        if debug_data is not None:
+            if 'MAPPING_ORDINATE_LINK' not in debug_data:
+                debug_data['MAPPING_ORDINATE_LINK'] = []
+            debug_data['MAPPING_ORDINATE_LINK'].append(f"{links_created} links created")
 
     # NOTE: MAPPING_TO_CUBE links are created in Phase 3.5 (in the view) after CUBE is created in Phase 4
     logger.info(f"[PHASE 3] Completed: Created {len(created_mapping_definitions)} mapping definitions")

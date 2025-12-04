@@ -291,6 +291,42 @@
         border-top: 1px solid #e2e8f0;
     }
 
+    /* Page content padding for floating buttons */
+    .container-fluid {
+        padding-bottom: 6rem;
+    }
+
+    /* Floating Action Group */
+    .floating-action-group {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .floating-action-group .btn {
+        border-radius: 25px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+    }
+
+    .btn-success {
+        background: #198754;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #157347;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+    }
+
     .alert {
         padding: 1rem;
         border-radius: 8px;
@@ -326,14 +362,18 @@
     .selected-count {
         position: fixed;
         bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #0d6efd;
-        color: white;
+        left: 2rem;
+        background: white;
+        color: #333;
         padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         z-index: 100;
+        font-weight: 600;
+    }
+
+    .selected-count strong {
+        color: #0d6efd;
     }
 
     /* Embedded Table Preview Styles */
@@ -710,11 +750,12 @@
                     {% endfor %}
                 </div>
 
-                <div class="form-actions" style="margin-top: 2rem;">
+                <!-- Floating Action Group -->
+                <div class="floating-action-group">
                     <a href="{% url 'pybirdai:output_layer_mapping_step2' %}" class="btn btn-secondary">
                         ← Back
                     </a>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-success">
                         Continue to Variable Breakdown →
                     </button>
                 </div>
@@ -909,6 +950,30 @@
                 {% endfor %}
             {% endfor %}
         };
+
+        // ========== AXIS VALIDATION (on form submit only) ==========
+
+        // Form submission validation - requires at least one X and one Y ordinate
+        document.querySelector('form').addEventListener('submit', function(e) {
+            let hasX = false;
+            let hasY = false;
+
+            selectedOrdinates.forEach(ordId => {
+                const ord = ordinateData[ordId];
+                if (ord) {
+                    if (ord.axis_orientation === 'X' || ord.axis_orientation === '1') hasX = true;
+                    if (ord.axis_orientation === 'Y' || ord.axis_orientation === '2') hasY = true;
+                }
+            });
+
+            if (!hasX || !hasY) {
+                e.preventDefault();
+                let message = 'Please select at least one ordinate from:\n';
+                if (!hasX) message += '• X axis (rows)\n';
+                if (!hasY) message += '• Y axis (columns)';
+                alert(message);
+            }
+        });
 
         // Build hierarchy tree from path field
         function buildHierarchyTree() {

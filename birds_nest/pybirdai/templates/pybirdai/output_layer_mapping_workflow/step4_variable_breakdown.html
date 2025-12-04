@@ -308,6 +308,42 @@
         gap: 0.75rem;
     }
 
+    /* Page content padding for floating buttons */
+    .container-fluid {
+        padding-bottom: 6rem;
+    }
+
+    /* Floating Action Group */
+    .floating-action-group {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .floating-action-group .btn {
+        border-radius: 25px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+    }
+
+    .btn-success {
+        background: #198754;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #157347;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+    }
+
     .groups-container {
         min-height: 100px;
     }
@@ -974,11 +1010,6 @@
             <div class="grouping-panel">
                 <div class="grouping-header">
                     <h3>Variable Groups</h3>
-                    <div class="grouping-actions">
-                        <button type="button" class="btn btn-small btn-primary" onclick="createNewGroup()">
-                            + Create New Group
-                        </button>
-                    </div>
                 </div>
 
                 <!-- No Variables Warning -->
@@ -1008,17 +1039,17 @@
                 </div>
             </div>
 
-            <div class="form-actions">
-                <div>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step3' %}'">
-                        ← Back
-                    </button>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-primary">
-                        Next: Edit Mappings →
-                    </button>
-                </div>
+            <!-- Floating Action Group -->
+            <div class="floating-action-group">
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step3' %}'">
+                    ← Back
+                </button>
+                <button type="button" class="btn btn-primary" onclick="createNewGroup()">
+                    + Create Variable Group
+                </button>
+                <button type="submit" class="btn btn-success">
+                    Edit Mappings →
+                </button>
             </div>
         </form>
     </div>
@@ -1058,6 +1089,9 @@
 
             <div class="form-group">
                 <label for="new_var_domain">Domain: *</label>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyCodeToDomain()" style="margin-bottom: 8px; border: 2px solid #6c757d;">
+                    Copy Variable Code to Domain
+                </button>
                 <select id="new_var_domain" class="form-control" required>
                     <option value="">-- Select Domain --</option>
                 </select>
@@ -1146,6 +1180,11 @@
         if (!variable) {
             console.warn(`[Domain Validation] Variable ${varId} not found in AVAILABLE_VARIABLES`);
             return false;
+        }
+
+        // No filtering when group type is not set - show all variables
+        if (!groupType) {
+            return true;
         }
 
         if (groupType === 'Dimension') {
@@ -1468,7 +1507,7 @@
             variable_ids: [],
             mapping_type: 'many_to_one',
             targets: [],
-            group_type: 'Dimension'  // Default to Dimension (user can change to Observation or Attribute)
+            group_type: null  // No default - auto-set when first variable is selected
         };
 
         renderGroups();
@@ -1759,8 +1798,8 @@
                                 const currentGroupType = variableGroups[groupId].group_type;
                                 const suggestedRole = varData.suggested_role;
 
-                                // Only auto-set if group type is still default 'Dimension' OR if it's the first variable
-                                if (currentGroupType === 'Dimension' || sources.length === 1) {
+                                // Only auto-set if group type is not set OR if it's the first variable
+                                if (!currentGroupType || sources.length === 1) {
                                     variableGroups[groupId].group_type = suggestedRole;
                                     console.log(`[Auto-suggest] Setting group ${groupId} type to ${suggestedRole} based on ${firstVarId}`);
 
@@ -1958,8 +1997,16 @@
         // Step 2: Remove stop words
         words = words.filter(word => !stopWords.includes(word));
 
-        // Step 3: Remove vowels from each word
-        words = words.map(word => word.replace(/[aeiou]/gi, ''));
+        // Step 3: Keep first word intact, remove vowels from remaining words (preserve first letter)
+        words = words.map((word, index) => {
+            if (word.length === 0) return word;
+            // First word: keep all letters (vowels and consonants)
+            if (index === 0) return word;
+            // Other words: preserve first letter, remove vowels from rest
+            const firstLetter = word.charAt(0);
+            const restOfWord = word.slice(1).replace(/[aeiou]/gi, '');
+            return firstLetter + restOfWord;
+        });
 
         // Step 4: Filter out empty words (in case a word was all vowels)
         words = words.filter(word => word.length > 0);
@@ -2106,6 +2153,23 @@
             alert('Failed to create domain. Please try again.');
             callback(); // Call without arguments to cancel
         });
+    }
+
+    function copyCodeToDomain() {
+        const variableCode = document.getElementById('new_var_code').value.trim();
+        if (!variableCode) {
+            alert('Please enter a Variable Code first');
+            return;
+        }
+        if (domainTomSelect) {
+            // Call createNewDomain directly and add the result to Tom Select
+            createNewDomain(variableCode, function(option) {
+                if (option) {
+                    domainTomSelect.addOption(option);
+                    domainTomSelect.setValue(option.value);
+                }
+            });
+        }
     }
 
     function submitNewVariable() {

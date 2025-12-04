@@ -74,7 +74,8 @@ def execute_phase4_cube_structures(
         cube_structure.description = f"Cube structure for {len(created_mapping_definitions)} mappings"
         cube_structure.save()
 
-    debug_data['CUBE_STRUCTURE'].append(cube_structure)
+    if debug_data is not None:
+        debug_data['CUBE_STRUCTURE'].append(cube_structure)
     
     # ========== CREATE CUBE_STRUCTURE_ITEMS ==========
     csi_generator = CubeStructureGenerator()
@@ -109,8 +110,9 @@ def execute_phase4_cube_structures(
         )
         
         # Track subdomain in debug_data
-        if subdomain and subdomain not in debug_data['SUBDOMAIN']:
-            debug_data['SUBDOMAIN'].append(subdomain)
+        if debug_data is not None:
+            if subdomain and subdomain not in debug_data['SUBDOMAIN']:
+                debug_data['SUBDOMAIN'].append(subdomain)
         
         # Determine dimension_type based on variable name patterns
         dimension_type = "B"  # Default: Business
@@ -141,9 +143,10 @@ def execute_phase4_cube_structures(
         order_counter += 1
         
         # Track in debug_data
-        if item not in debug_data['CUBE_STRUCTURE_ITEM']:
-            debug_data['CUBE_STRUCTURE_ITEM'].append(item)
-    
+        if debug_data is not None:
+            if item not in debug_data['CUBE_STRUCTURE_ITEM']:
+                debug_data['CUBE_STRUCTURE_ITEM'].append(item)
+
     # ========== CREATE OBSERVATION ITEMS ==========
     for variable in unique_observation_vars:
         cube_variable_code = f"{cube_structure.code}__{variable.variable_id}"
@@ -161,11 +164,12 @@ def execute_phase4_cube_structures(
             description=f"Observation: {variable.name}"
         )
         order_counter += 1
-        
+
         # Track in debug_data
-        if item not in debug_data['CUBE_STRUCTURE_ITEM']:
-            debug_data['CUBE_STRUCTURE_ITEM'].append(item)
-    
+        if debug_data is not None:
+            if item not in debug_data['CUBE_STRUCTURE_ITEM']:
+                debug_data['CUBE_STRUCTURE_ITEM'].append(item)
+
     # ========== CREATE ATTRIBUTE ITEMS ==========
     for variable in unique_attribute_vars:
         cube_variable_code = f"{cube_structure.code}__{variable.variable_id}"
@@ -182,12 +186,16 @@ def execute_phase4_cube_structures(
             description=f"Attribute: {variable.name}"
         )
         order_counter += 1
-        
+
         # Track in debug_data
-        if item not in debug_data['CUBE_STRUCTURE_ITEM']:
-            debug_data['CUBE_STRUCTURE_ITEM'].append(item)
-    
-    logger.info(f"[PHASE 4] Created {len(debug_data['CUBE_STRUCTURE_ITEM'])} CUBE_STRUCTURE_ITEMs")
+        if debug_data is not None:
+            if item not in debug_data['CUBE_STRUCTURE_ITEM']:
+                debug_data['CUBE_STRUCTURE_ITEM'].append(item)
+
+    if debug_data is not None:
+        logger.info(f"[PHASE 4] Created {len(debug_data['CUBE_STRUCTURE_ITEM'])} CUBE_STRUCTURE_ITEMs")
+    else:
+        logger.info("[PHASE 4] Created CUBE_STRUCTURE_ITEMs (debug tracking disabled)")
     
     # ========== CREATE CUBE ==========
     # Framework was created in Phase 1, just validate it exists
@@ -231,7 +239,8 @@ def execute_phase4_cube_structures(
             }
         )
         logger.info(f"[PHASE 4] {'Created new' if cube_created else 'Retrieved existing'} CUBE: {cube_id}")
-        debug_data['CUBE'].append(cube)
+        if debug_data is not None:
+            debug_data['CUBE'].append(cube)
     except Exception as e:
         logger.error(f"[PHASE 4 ERROR] Failed to create CUBE {cube_id}: {str(e)}")
         logger.error(f"[PHASE 4 ERROR] framework_obj type: {type(framework_obj)}, value: {framework_obj}")
@@ -247,8 +256,11 @@ def execute_phase4_cube_structures(
         cube.description = f"Cube for {len(created_mapping_definitions)} mapping definitions"
         cube.save()
     
-    logger.info(f"[PHASE 4] Completed: CUBE_STRUCTURE, {len(debug_data['CUBE_STRUCTURE_ITEM'])} items, "
-               f"{len(debug_data['SUBDOMAIN'])} subdomains, and CUBE created")
+    if debug_data is not None:
+        logger.info(f"[PHASE 4] Completed: CUBE_STRUCTURE, {len(debug_data['CUBE_STRUCTURE_ITEM'])} items, "
+                   f"{len(debug_data['SUBDOMAIN'])} subdomains, and CUBE created")
+    else:
+        logger.info("[PHASE 4] Completed: CUBE_STRUCTURE, items, subdomains, and CUBE created")
     
     return {
         'cube_structure': cube_structure,

@@ -16,6 +16,7 @@ from .api import lineage_api
 from .api import enhanced_lineage_api
 from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
+from .views import annotated_template_visualizer_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -542,4 +543,9 @@ urlpatterns = [
     path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),
     path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
     path("api/create_domain/", output_layer_mapping_workflow_views.create_domain, name="api_create_domain"),
+
+    # Annotated Template Visualizer
+    path("annotated-template-visualizer/", annotated_template_visualizer_views.annotated_template_view, name="annotated_template_visualizer"),
+    path("api/annotated-template/<str:table_id>/", annotated_template_visualizer_views.get_annotated_template_api, name="annotated_template_api"),
+    path("export/annotated-template/<str:table_id>/excel/", annotated_template_visualizer_views.export_annotated_template_excel, name="annotated_template_export_excel"),
 ]

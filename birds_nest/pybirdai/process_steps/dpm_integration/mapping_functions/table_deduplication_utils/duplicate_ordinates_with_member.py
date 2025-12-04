@@ -18,8 +18,10 @@ import pandas as pd
 
 def duplicate_ordinates_with_member(ordinates_df, original_axis_ids, axis_id_mapping, member_id, member_name):
     """
-    Duplicate ordinates by replacing the AXIS_ID prefix in IDs and CODE,
-    and updating the NAME with human-readable member information.
+    Duplicate ordinates by replacing the AXIS_ID prefix in IDs and CODE.
+
+    NAME field is kept unchanged - only Table and Axis levels include member info
+    in their names for cleaner display.
 
     Option A: Replace AXIS_ID prefix in ORDINATE_ID to propagate the ID change.
     Example: AXIS_ID T_X → T_M_X means ORDINATE_ID T_X_O → T_M_X_O (not T_X_O_M)
@@ -29,7 +31,7 @@ def duplicate_ordinates_with_member(ordinates_df, original_axis_ids, axis_id_map
         original_axis_ids: List of original axis IDs
         axis_id_mapping: Dict mapping old axis IDs to new axis IDs
         member_id: The Z-axis member ID (e.g., "EBA_CU_USD")
-        member_name: The Z-axis member name for display (e.g., "United States Dollar")
+        member_name: The Z-axis member name (kept for signature compatibility)
 
     Returns:
         tuple: (new_ordinates_df, ordinate_id_mapping)
@@ -64,10 +66,6 @@ def duplicate_ordinates_with_member(ordinates_df, original_axis_ids, axis_id_map
             new_code = orig_code.replace(orig_axis_id, new_axis_id, 1)
             new_codes.append(new_code)
         table_ordinates['CODE'] = new_codes
-
-    # Update NAME field
-    if 'NAME' in table_ordinates.columns:
-        table_ordinates['NAME'] = table_ordinates['NAME'].astype(str) + f" - Z axis : {member_name}"
 
     # Create ID mapping dictionary
     ordinate_id_mapping = dict(zip(original_ordinate_ids, new_ordinate_ids))

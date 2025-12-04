@@ -53,12 +53,13 @@ def execute_phase1_base_setup(framework_id, debug_data):
         logger.info("[PHASE 1] Created MAINTENANCE_AGENCY: EBA")
     
     logger.info("[PHASE 1] Ensured maintenance agencies: USER, EBA")
-    
-    # Track in debug_data
-    if maintenance_agency not in debug_data['MAINTENANCE_AGENCY']:
-        debug_data['MAINTENANCE_AGENCY'].append(maintenance_agency)
-    if eba_agency not in debug_data['MAINTENANCE_AGENCY']:
-        debug_data['MAINTENANCE_AGENCY'].append(eba_agency)
+
+    # Track in debug_data (only if debug export is enabled)
+    if debug_data is not None:
+        if maintenance_agency not in debug_data['MAINTENANCE_AGENCY']:
+            debug_data['MAINTENANCE_AGENCY'].append(maintenance_agency)
+        if eba_agency not in debug_data['MAINTENANCE_AGENCY']:
+            debug_data['MAINTENANCE_AGENCY'].append(eba_agency)
     
     # ========== FRAMEWORK CREATION ==========
     # Get or create FRAMEWORK (needed by CUBE creation in Phase 4)
@@ -76,10 +77,11 @@ def execute_phase1_base_setup(framework_id, debug_data):
                 }
             )
             logger.info(f"[PHASE 1] EFBT maintenance agency exists: {efbt_agency.maintenance_agency_id}")
-            
+
             # Track EFBT agency in debug_data
-            if efbt_agency not in debug_data['MAINTENANCE_AGENCY']:
-                debug_data['MAINTENANCE_AGENCY'].append(efbt_agency)
+            if debug_data is not None:
+                if efbt_agency not in debug_data['MAINTENANCE_AGENCY']:
+                    debug_data['MAINTENANCE_AGENCY'].append(efbt_agency)
             
             # Create the missing framework
             framework_obj, created = FRAMEWORK.objects.get_or_create(
@@ -100,8 +102,9 @@ def execute_phase1_base_setup(framework_id, debug_data):
             raise
     
     # Add framework to debug_data (whether created or reused)
-    if framework_obj and framework_obj not in debug_data['FRAMEWORK']:
-        debug_data['FRAMEWORK'].append(framework_obj)
+    if debug_data is not None:
+        if framework_obj and framework_obj not in debug_data['FRAMEWORK']:
+            debug_data['FRAMEWORK'].append(framework_obj)
     
     # Validate framework_obj exists before proceeding
     if not framework_obj:

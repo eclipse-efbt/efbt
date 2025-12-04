@@ -18,15 +18,17 @@ import pandas as pd
 
 def duplicate_cells_with_member(cells_df, table_id, new_table_id, member_id, member_name):
     """
-    Duplicate cells by appending the Z-axis member ID to IDs and CODE,
-    and updating the NAME with human-readable member information.
+    Duplicate cells by appending the Z-axis member ID to IDs and CODE.
+
+    NAME field is kept unchanged - only Table and Axis levels include member info
+    in their names for cleaner display.
 
     Args:
         cells_df: DataFrame of all cells
         table_id: Original table ID
         new_table_id: New table ID with member ID appended
         member_id: The Z-axis member ID (e.g., "EBA_CU_USD")
-        member_name: The Z-axis member name for display (e.g., "United States Dollar")
+        member_name: The Z-axis member name (kept for signature compatibility)
 
     Returns:
         tuple: (new_cells_df, cell_id_mapping)
@@ -49,10 +51,6 @@ def duplicate_cells_with_member(cells_df, table_id, new_table_id, member_id, mem
     # Update CODE field (vectorized)
     if 'CODE' in table_cells.columns:
         table_cells['CODE'] = table_cells['CODE'].astype(str) + f"_{member_id}"
-
-    # Update NAME field (vectorized)
-    if 'NAME' in table_cells.columns:
-        table_cells['NAME'] = table_cells['NAME'].astype(str) + f" - Z axis : {member_name}"
 
     # Create ID mapping dictionary
     new_cell_ids = table_cells['CELL_ID'].tolist()

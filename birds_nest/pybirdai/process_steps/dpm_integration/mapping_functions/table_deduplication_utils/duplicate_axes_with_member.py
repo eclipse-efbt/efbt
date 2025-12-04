@@ -18,8 +18,10 @@ import pandas as pd
 
 def duplicate_axes_with_member(axes_df, table_id, new_table_id, member_id, member_name):
     """
-    Duplicate axes for a table by replacing the TABLE_ID prefix in IDs and CODE,
-    and updating the NAME with human-readable member information.
+    Duplicate axes for a table by replacing the TABLE_ID prefix in IDs and CODE.
+
+    NAME field is kept unchanged - only Table level includes member info
+    in its name for cleaner display.
 
     Option A: Replace TABLE_ID prefix in AXIS_ID to propagate the TABLE_ID change.
     Example: TABLE_ID T → T_M means AXIS_ID T_X → T_M_X (not T_X_M)
@@ -29,7 +31,7 @@ def duplicate_axes_with_member(axes_df, table_id, new_table_id, member_id, membe
         table_id: Original table ID
         new_table_id: New table ID with member ID appended
         member_id: The Z-axis member ID (e.g., "EBA_CU_USD")
-        member_name: The Z-axis member name for display (e.g., "United States Dollar")
+        member_name: The Z-axis member name (kept for signature compatibility)
 
     Returns:
         tuple: (new_axes_df, axis_id_mapping)
@@ -59,10 +61,6 @@ def duplicate_axes_with_member(axes_df, table_id, new_table_id, member_id, membe
         table_axes['CODE'] = table_axes['CODE'].astype(str).apply(
             lambda x: x.replace(original_table_id, new_table_id, 1)
         )
-
-    # Update NAME field
-    if 'NAME' in table_axes.columns:
-        table_axes['NAME'] = table_axes['NAME'].astype(str) + f" - Z axis : {member_name}"
 
     # Create ID mapping dictionary
     new_axis_ids = table_axes['AXIS_ID'].tolist()

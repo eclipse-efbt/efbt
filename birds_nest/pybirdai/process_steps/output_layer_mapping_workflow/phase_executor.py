@@ -86,8 +86,12 @@ class PhaseExecutor:
     
     def _log_phase_summary(self, phase_name, debug_data):
         """Log summary of objects created in this phase."""
+        if debug_data is None:
+            logger.info(f"\n[{phase_name}] Debug tracking disabled - skipping summary")
+            return
+
         logger.info(f"\n[{phase_name}] Summary of created objects:")
-        
+
         # Count objects by type
         for model_type, objects in debug_data.items():
             if objects:

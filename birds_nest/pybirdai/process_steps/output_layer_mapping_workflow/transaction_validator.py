@@ -102,15 +102,19 @@ def validate_orm_foreign_keys(model_instances, fk_fields):
 def validate_fks_for_phase(phase_name, debug_data, cursor=None):
     """
     Enhanced FK validation specific to each phase's models.
-    
+
     Args:
         phase_name: Name of the phase (e.g., "Phase 1: Base Setup")
         debug_data: Dict containing created objects by model type
         cursor: Database cursor for PRAGMA checks (optional)
-    
+
     Raises:
         ValueError: If FK validation fails
     """
+    if debug_data is None:
+        logger.info(f"[{phase_name} FK VALIDATION] Debug tracking disabled - skipping FK validation")
+        return
+
     logger.info(f"[{phase_name} FK VALIDATION] Validating foreign key references...")
     fk_validation_errors = []
     

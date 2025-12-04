@@ -292,6 +292,31 @@
         border-top: 1px solid #e2e8f0;
     }
 
+    /* Page content padding for floating buttons */
+    .container-fluid {
+        padding-bottom: 6rem;
+    }
+
+    /* Floating Action Group */
+    .floating-action-group {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .floating-action-group .btn {
+        border-radius: 25px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+    }
+
     /* Loading State */
     .loading-overlay {
         position: fixed;
@@ -1081,17 +1106,14 @@
             {% csrf_token %}
             <input type="hidden" name="confirm" value="true">
 
-            <div class="form-actions">
-                <div>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
-                        ← Back
-                    </button>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-success" id="confirmButton">
-                        Confirm and Generate
-                    </button>
-                </div>
+            <!-- Floating Action Group -->
+            <div class="floating-action-group">
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
+                    ← Back
+                </button>
+                <button type="submit" class="btn btn-success" id="confirmButton">
+                    Confirm and Generate
+                </button>
             </div>
         </form>
 
@@ -1103,10 +1125,11 @@
             <div class="status-message">Your output layer mapping has been created successfully.</div>
         </div>
 
+        <!-- Section 1: Generated Mapping Instances -->
         <div class="generated-objects">
             <div class="generated-title">
-                <span class="generated-icon">✓</span>
-                Generated Objects
+                <span class="generated-icon">1</span>
+                Generated Mapping Instances
             </div>
             <ul class="generated-list">
                 {% for mapping in generated.mapping_definitions %}
@@ -1132,6 +1155,16 @@
                     </span>
                 </li>
                 {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Section 2: Generated Cube, Structures and Combinations -->
+        <div class="generated-objects">
+            <div class="generated-title">
+                <span class="generated-icon">2</span>
+                Generated Cube, Structures and Combinations
+            </div>
+            <ul class="generated-list">
                 <li class="generated-item">
                     <span class="item-type">Structure</span>
                     <span class="item-id">
@@ -1164,54 +1197,37 @@
             </ul>
         </div>
 
-        {% if replication_results %}
-        <!-- Replication Results Section -->
-        <div class="generated-objects" style="border: 2px solid {% if replication_results|length > 0 %}#48bb78{% else %}#e2e8f0{% endif %};">
-            <div class="generated-title" style="color: #48bb78;">
-                <span class="generated-icon">🔄</span>
-                Replication Results ({{ replication_results|length }} table{{ replication_results|length|pluralize }})
+        <!-- Section 3: Generated Rendering Elements -->
+        <div class="generated-objects">
+            <div class="generated-title">
+                <span class="generated-icon">3</span>
+                Generated Rendering Elements
             </div>
             <ul class="generated-list">
-                {% for result in replication_results %}
-                <li class="generated-item" style="{% if result.status == 'error' %}background: #fff5f5; border-left: 4px solid #fc8181;{% else %}background: #f0fdf4; border-left: 4px solid #48bb78;{% endif %}">
-                    <span class="item-type" style="{% if result.status == 'error' %}background: #fc8181;{% else %}background: #48bb78;{% endif %}">
-                        {{ result.table_code }}
-                    </span>
-                    <span class="item-id" style="flex: 2;">
-                        <strong>{{ result.table_id }}</strong>
-                        {% if result.status == 'success' %}
-                            <br><small style="color: #666;">✓ {{ result.message }}</small>
-                        {% else %}
-                            <br><small style="color: #e53e3e;">✗ {{ result.message }}</small>
-                        {% endif %}
-                    </span>
-                    {% if result.status == 'success' and result.cube_id %}
-                    <span class="item-action">
-                        <button class="btn-small" onclick="viewObject('cube', '{{ result.cube_id }}')" style="background: #48bb78; color: white;">
-                            View Cube
-                        </button>
-                    </span>
-                    {% endif %}
+                <li class="generated-item">
+                    <span class="item-type">Reference Cells</span>
+                    <span class="item-id">{{ generated.combinations_created }} reference cells for selected ordinates</span>
                 </li>
-                {% endfor %}
+                <li class="generated-item" style="background: #f8fafc; font-size: 0.9rem; color: #64748b;">
+                    <span class="item-id" style="flex: 1;">
+                        These rendering elements correspond to the axis ordinates you selected in Step 3.
+                        The reference template will display cells matching your selection.
+                    </span>
+                </li>
             </ul>
         </div>
-        {% endif %}
 
-        <div class="form-actions">
-            <div>
-                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
-                    Create Another Mapping
-                </button>
-            </div>
-            <div>
-                <button type="button" class="btn btn-warning" onclick="regenerateCombinations('{{ generated.cube_id }}', '{{ generated.table_id }}')" style="margin-right: 1rem;">
-                    Regenerate Combinations
-                </button>
-                <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'pybirdai:workflow_dashboard' %}'">
-                    Go to Dashboard
-                </button>
-            </div>
+        <!-- Floating Action Group -->
+        <div class="floating-action-group">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
+                Create Another
+            </button>
+            <button type="button" class="btn btn-warning" onclick="regenerateCombinations('{{ generated.cube_id }}', '{{ generated.table_id }}')">
+                Regenerate Combinations
+            </button>
+            <button type="button" class="btn btn-success" onclick="window.location.href='{% url 'pybirdai:workflow_dashboard' %}'">
+                Go to Dashboard
+            </button>
         </div>
 
         {% else %}
@@ -1226,17 +1242,14 @@
             {{ error }}
         </div>
 
-        <div class="form-actions">
-            <div>
-                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
-                    ← Back to Review
-                </button>
-            </div>
-            <div>
-                <button type="button" class="btn btn-primary" onclick="window.location.reload()">
-                    Retry Generation
-                </button>
-            </div>
+        <!-- Floating Action Group -->
+        <div class="floating-action-group">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
+                ← Back
+            </button>
+            <button type="button" class="btn btn-success" onclick="window.location.reload()">
+                Retry Generation
+            </button>
         </div>
         {% endif %}
     </div>

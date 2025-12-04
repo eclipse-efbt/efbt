@@ -78,6 +78,9 @@ def map_axis(path=None, table_map: dict = {},
     # Add ORDER field (convert alphabetic orientation to numeric order)
     df['ORDER'] = df['ORIENTATION'].astype(str).map(order_map).fillna('')
 
+    # Set NAME to orientation-based name (X axis, Y axis, Z axis)
+    df['NAME'] = df['ORIENTATION'] + ' axis'
+
     # Add new fields
     df['MAINTENANCE_AGENCY_ID'] = "EBA"
     df['DESCRIPTION'] = ""

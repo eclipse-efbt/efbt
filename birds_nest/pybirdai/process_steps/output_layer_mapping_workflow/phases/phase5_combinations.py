@@ -109,15 +109,17 @@ def execute_phase5_combinations(
             created_combinations.append(combination)
             
             # Track in debug_data (might be dict format)
-            if combination not in debug_data['COMBINATION']:
-                debug_data['COMBINATION'].append(combination)
-            
+            if debug_data is not None:
+                if combination not in debug_data['COMBINATION']:
+                    debug_data['COMBINATION'].append(combination)
+
             # Create CUBE_TO_COMBINATION link (get or create to avoid duplicates)
             cube_to_combo, _ = CUBE_TO_COMBINATION.objects.get_or_create(
                 cube_id=cube,
                 combination_id=combination
             )
-            debug_data['CUBE_TO_COMBINATION'].append(cube_to_combo)
+            if debug_data is not None:
+                debug_data['CUBE_TO_COMBINATION'].append(cube_to_combo)
     
     logger.info(f"[PHASE 5] Created {len(created_combinations)} combinations and linked to cube")
     
