@@ -57,12 +57,23 @@ def load_table_to_framework_mapping(base_path=None):
     ))
     table_to_taxonomy = normalize_id_map(table_to_taxonomy)
 
+    # Helper to lookup with normalization fallback
+    def lookup_normalized(d, key):
+        """Lookup key in dict, trying both with and without .0 suffix."""
+        key_str = str(key)
+        result = d.get(key_str)
+        if result is None and not key_str.endswith('.0'):
+            result = d.get(key_str + '.0')
+        if result is None and key_str.endswith('.0'):
+            result = d.get(key_str[:-2])
+        return result
+
     # Build final mapping: TABLE_VID → FRAMEWORK_CODE
     table_to_framework = {}
     for table_vid, taxonomy_id in table_to_taxonomy.items():
-        framework_id = taxonomy_to_framework.get(taxonomy_id)
+        framework_id = lookup_normalized(taxonomy_to_framework, taxonomy_id)
         if framework_id:
-            framework_code = framework_id_to_code.get(framework_id)
+            framework_code = lookup_normalized(framework_id_to_code, framework_id)
             if framework_code:
                 table_to_framework[table_vid] = framework_code
 
@@ -167,7 +178,19 @@ def map_tables(path=None, framework_id_map: dict = {}, frameworks=None, generate
     df['CODE'] = df['ORIGINAL_TABLE_CODE'].astype(str).str.replace(" ", "_")
     df['VERSION'] = df.apply(generate_version, axis=1)
 
-    # Filter by version: only keep tables with VERSION starting with "4_" (semantic versioning)
+    # Debug: Log VERSION values before filtering
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"DEBUG: Tables after framework filter: {len(df)}")
+    logger.info(f"DEBUG: VERSION value samples: {df['VERSION'].head(10).tolist()}")
+    version_4_count = len(df[df['VERSION'].astype(str).str.startswith('4_')])
+    logger.info(f"DEBUG: Tables with VERSION starting with '4_': {version_4_count}")
+    # Also check what versions exist
+    unique_versions = df['VERSION'].unique()[:20]
+    logger.info(f"DEBUG: Unique VERSION values (first 20): {list(unique_versions)}")
+
+    # Filter to only keep latest version (DPM 4.0) tables for cleaner demo
+    # This removes older versions (2.x, 3.x) that create duplicate table entries
     if frameworks:
         df = df[df['VERSION'].astype(str).str.startswith('4_')]
 

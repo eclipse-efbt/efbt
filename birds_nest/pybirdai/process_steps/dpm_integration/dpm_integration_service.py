@@ -377,40 +377,25 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         if selected_tables:
             self.logger.info(f"Filtering to {len(selected_tables)} selected tables BEFORE mapping")
 
-            # Normalize selected_tables codes (replace . with _ for comparison)
-            # User passes codes like 'C_07.00.a', which may need normalization
-            normalized_codes = set()
-            for code in selected_tables:
-                # Add both original and normalized versions
-                normalized_codes.add(code)
-                normalized_codes.add(code.replace('.', '_'))
-
-            # Filter tables_df by CODE column (not TABLE_ID)
-            # CODE column contains values like 'C_07.00.a'
-            if 'CODE' in tables_df.columns:
-                tables_df = tables_df[tables_df['CODE'].isin(normalized_codes)]
-            else:
-                # Fallback: filter by TABLE_ID if CODE not available
+            # Modal sends TABLE_IDs like 'EBA_COREP_C_07_00_a_4_0'
+            # Filter tables_df by TABLE_ID column directly
+            self.logger.info(f"DEBUG: Selected TABLE_IDs from modal: {list(selected_tables)[:10]}")
+            if 'TABLE_ID' in tables_df.columns:
+                sample_table_ids = tables_df['TABLE_ID'].head(5).tolist()
+                self.logger.info(f"DEBUG: Sample table.csv TABLE_ID values: {sample_table_ids}")
                 tables_df = tables_df[tables_df['TABLE_ID'].isin(selected_tables)]
+            else:
+                self.logger.warning("TABLE_ID column not found in tables_df, cannot filter")
 
             # Get table_map from phase_a_data and filter to only selected tables
             # table_map values are TABLE_IDs like 'EBA_COREP_C_07_00_a_4_0'
-            # We need to match against the code pattern in the TABLE_ID
+            # selected_tables contains TABLE_IDs directly from modal
             table_map = phase_a_data.get('table_map', {})
 
-            def tid_matches_codes(tid, codes):
-                """Check if a TABLE_ID matches any of the selected table codes."""
-                for code in codes:
-                    # Normalize the code: C_07.00.a -> C_07_00_a
-                    normalized = code.replace('.', '_')
-                    # Check if normalized code appears in the TABLE_ID
-                    # e.g., 'C_07_00_a' in 'EBA_COREP_C_07_00_a_4_0'
-                    if normalized in tid:
-                        return True
-                return False
-
+            # Convert selected_tables to a set for faster lookup
+            selected_tables_set = set(selected_tables)
             table_map = {vid: tid for vid, tid in table_map.items()
-                        if tid_matches_codes(tid, selected_tables)}
+                        if tid in selected_tables_set}
 
             self.logger.info(f"Filtered to {len(tables_df)} tables (table_map: {len(table_map)} entries)")
         else:
@@ -466,9 +451,16 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
                 dimensions_array['DOMAIN_ID'].astype(str)
             ))
 
+            # Natural/scalar domains that should NOT have members/hierarchies
+            NATURAL_DOMAINS = {
+                'EBA_Float', 'EBA_String', 'EBA_Integer', 'EBA_Date', 'EBA_DateTime',
+                'EBA_Boolean', 'EBA_Decimal', 'EBA_Double', 'EBA_Long',
+                'EBA_Duration', 'EBA_Time', 'EBA_URI', 'EBA_XHTML'
+            }
+
             domains_needing_hierarchy = list(set(
                 variable_to_domain_map.get(var_id) for var_id in variables_with_null_members
-                if variable_to_domain_map.get(var_id)
+                if variable_to_domain_map.get(var_id) and variable_to_domain_map.get(var_id) not in NATURAL_DOMAINS
             ))
             logging.info(f"Domains needing default hierarchies: {domains_needing_hierarchy}")
 
