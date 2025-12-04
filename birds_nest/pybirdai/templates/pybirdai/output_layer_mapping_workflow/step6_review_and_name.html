@@ -1,65 +1,43 @@
-{% extends "base.html" %}
+{% extends "pybirdai/output_layer_mapping_workflow/workflow_base.html" %}
 {% load static %}
 
-{% block title %}Output Layer Mapping - Review and Name{% endblock %}
+{% block step_title %}Review and Name{% endblock %}
 
-{% block extra_css %}
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li class="active">
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
 <style>
-    .workflow-header {
-        background: #0d6efd;
-        color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-
-    .workflow-steps {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .workflow-steps li {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-    .workflow-steps li:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #ddd;
-        z-index: -1;
-    }
-
-    .workflow-steps .step-number {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #ddd;
-        color: #666;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .workflow-steps .active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .workflow-steps .completed .step-number {
-        background: #48bb78;
-        color: white;
-    }
-
     .review-container {
         background: white;
         padding: 2rem;
@@ -311,45 +289,8 @@
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="container">
-    <div class="workflow-header">
-        <h1>Output Layer Mapping Workflow</h1>
-        <p>Review and name your mappings before generation</p>
-    </div>
-
-    <ul class="workflow-steps">
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Table</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Existing Mappings</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Ordinates</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Variable Breakdown</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Mapping Editor</div>
-        </li>
-        <li class="active">
-            <span class="step-number">6</span>
-            <div>Review & Name</div>
-        </li>
-        <li>
-            <span class="step-number">7</span>
-            <div>Generate</div>
-        </li>
-    </ul>
-
-    <div class="review-container">
+{% block step_content %}
+<div class="review-container">
         <h2>Step 6: Review and Name Your Mappings</h2>
         <p>Review all {{ mappings_count }} mapping(s) and provide names for each.</p>
 
@@ -501,19 +442,20 @@
             </div>
             {% endfor %}
 
-            <!-- Floating Action Group -->
-            <div class="floating-action-group">
-                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step5' %}'">
-                    ← Back
-                </button>
-                <button type="submit" class="btn btn-success" id="generateButton">
-                    Generate Structures →
-                </button>
-            </div>
         </form>
     </div>
-</div>
+{% endblock %}
 
+{% block floating_actions %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step5' %}'">
+    ← Back
+</button>
+<button type="submit" form="namingForm" class="btn btn-success" id="generateButton">
+    Generate Structures →
+</button>
+{% endblock %}
+
+{% block step_js %}
 <script>
     function toggleCollapse(element) {
         element.classList.toggle('collapsed');

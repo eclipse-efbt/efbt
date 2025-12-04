@@ -1,86 +1,64 @@
-{% extends "base.html" %}
+{% extends "pybirdai/output_layer_mapping_workflow/workflow_base.html" %}
 {% load static %}
 
-{% block title %}Output Layer Mapping - Define Variable Breakdowns{% endblock %}
+{% block step_title %}Define Variable Breakdowns{% endblock %}
 
-{% block extra_css %}
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li class="active">
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li>
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li>
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
-    .workflow-header {
-        background: #0d6efd;
-        color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-
-    .workflow-steps {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .workflow-steps li {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-    .workflow-steps li:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #ddd;
-        z-index: -1;
-    }
-
-    .workflow-steps .step-number {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #ddd;
-        color: #666;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .workflow-steps .active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .workflow-steps .completed .step-number {
-        background: #48bb78;
-        color: white;
-    }
-
     .breakdown-form {
         background: white;
-        padding: 2rem;
+        padding: 1.5rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .table-info-banner {
         background: #f7f7f9;
-        padding: 1rem;
+        padding: 0.75rem 1rem;
         border-radius: 4px;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
 
     .variable-breakdown-card {
         background: white;
         border: 1px solid #e2e8f0;
         border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
         transition: box-shadow 0.3s;
     }
 
@@ -114,9 +92,9 @@
 
     .variable-info {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
     }
 
     .info-item {
@@ -286,15 +264,15 @@
         background: #f8f9fa;
         border: 2px dashed #cbd5e0;
         border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .grouping-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     .grouping-header h3 {
@@ -364,8 +342,8 @@
         background: white;
         border: 2px solid #0d6efd;
         border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
         transition: all 0.3s;
     }
 
@@ -638,7 +616,7 @@
 
     #variableStatusList {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 0.5rem;
     }
 
@@ -927,45 +905,8 @@
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="container">
-    <div class="workflow-header">
-        <h1>Output Layer Mapping Workflow</h1>
-        <p>Create non-reference combinations and mappings for output layers</p>
-    </div>
-
-    <ul class="workflow-steps">
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Table</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Existing Mappings</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Ordinates</div>
-        </li>
-        <li class="active">
-            <span class="step-number">4</span>
-            <div>Variable Breakdown</div>
-        </li>
-        <li>
-            <span class="step-number">5</span>
-            <div>Mapping Editor</div>
-        </li>
-        <li>
-            <span class="step-number">6</span>
-            <div>Review & Name</div>
-        </li>
-        <li>
-            <span class="step-number">7</span>
-            <div>Generate</div>
-        </li>
-    </ul>
-
-    {% if batch_edit_mode %}
+{% block step_content %}
+{% if batch_edit_mode %}
     <!-- Batch Edit Mode Banner -->
     <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
         <h4 style="margin: 0 0 0.5rem 0;">✏️ Batch Edit Mode - Variable Groups</h4>
@@ -1039,21 +980,21 @@
                 </div>
             </div>
 
-            <!-- Floating Action Group -->
-            <div class="floating-action-group">
-                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step3' %}'">
-                    ← Back
-                </button>
-                <button type="button" class="btn btn-primary" onclick="createNewGroup()">
-                    + Create Variable Group
-                </button>
-                <button type="submit" class="btn btn-success">
-                    Edit Mappings →
-                </button>
-            </div>
         </form>
     </div>
-</div>
+{% endblock %}
+
+{% block floating_actions %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step3' %}'">
+    ← Back
+</button>
+<button type="button" class="btn btn-primary" onclick="createNewGroup()">
+    + Create Variable Group
+</button>
+<button type="submit" form="breakdownForm" class="btn btn-success">
+    Edit Mappings →
+</button>
+{% endblock %}
 
 <!-- Create Variable Modal -->
 <div id="createVariableModal" class="output-layer-modal" style="display: none;">
@@ -1104,6 +1045,7 @@
     </div>
 </div>
 
+{% block step_js %}
 <script>
     // Inject SOURCE variables data from Django template (ordinate-filtered)
     const AVAILABLE_VARIABLES = {

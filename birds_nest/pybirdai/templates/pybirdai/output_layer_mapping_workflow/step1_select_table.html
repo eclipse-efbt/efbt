@@ -1,95 +1,49 @@
-{% extends "base.html" %}
+{% extends "pybirdai/output_layer_mapping_workflow/workflow_base.html" %}
 {% load static %}
 
-{% block title %}Output Layer Mapping - Select Table{% endblock %}
+{% block step_title %}Select Table{% endblock %}
 
-{% block extra_css %}
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="active">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li>
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li>
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li>
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li>
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li>
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 <style>
-    .workflow-header {
-        background: #0d6efd;
-        color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-
-    .workflow-steps {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .workflow-steps li {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-    .workflow-steps li:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #ddd;
-        z-index: -1;
-    }
-
-    .workflow-steps .step-number {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #ddd;
-        color: #666;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .workflow-steps .active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .workflow-steps .completed .step-number {
-        background: #48bb78;
-        color: white;
-    }
-
     .selection-form {
         background: white;
         padding: 2rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: #333;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 1rem;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
     }
 
     .table-preview {
@@ -123,86 +77,6 @@
         font-size: 1.125rem;
         font-weight: 600;
         color: #333;
-    }
-
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .btn-primary {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: #0b5ed7;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-    }
-
-    .btn-secondary {
-        background: #e2e8f0;
-        color: #4a5568;
-        margin-right: 1rem;
-    }
-
-    .btn-secondary:hover {
-        background: #cbd5e0;
-    }
-
-    .btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .form-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e2e8f0;
-    }
-
-    /* Page content padding for floating buttons */
-    .container-fluid {
-        padding-bottom: 6rem;
-    }
-
-    /* Floating Action Group */
-    .floating-action-group {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 1000;
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        background: white;
-        border-radius: 50px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .floating-action-group .btn {
-        border-radius: 25px;
-        padding: 0.75rem 1.25rem;
-        font-weight: 600;
-    }
-
-    .btn-success {
-        background: #198754;
-        color: white;
-    }
-
-    .btn-success:hover {
-        background: #157347;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
     }
 
     .loading-spinner {
@@ -271,121 +145,84 @@
         font-style: italic;
     }
 </style>
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 {% endblock %}
 
-{% block content %}
-<div class="container">
-    <div class="workflow-header">
-        <h1>Output Layer Mapping Workflow</h1>
-        <p>Create non-reference combinations and mappings for output layers</p>
-    </div>
+{% block step_content %}
+<div class="selection-form">
+    <h2>Step 1: Select Table for Mapping</h2>
+    <p>Choose the framework, version, and table you want to create mappings for.</p>
 
-    <ul class="workflow-steps">
-        <li class="active">
-            <span class="step-number">1</span>
-            <div>Select Table</div>
-        </li>
-        <li>
-            <span class="step-number">2</span>
-            <div>Existing Mappings</div>
-        </li>
-        <li>
-            <span class="step-number">3</span>
-            <div>Select Ordinates</div>
-        </li>
-        <li>
-            <span class="step-number">4</span>
-            <div>Variable Breakdown</div>
-        </li>
-        <li>
-            <span class="step-number">5</span>
-            <div>Mapping Editor</div>
-        </li>
-        <li>
-            <span class="step-number">6</span>
-            <div>Review & Name</div>
-        </li>
-        <li>
-            <span class="step-number">7</span>
-            <div>Generate</div>
-        </li>
-    </ul>
+    <form method="post" id="tableSelectionForm">
+        {% csrf_token %}
 
-    <div class="selection-form">
-        <h2>Step 1: Select Table for Mapping</h2>
-        <p>Choose the framework, version, and table you want to create mappings for.</p>
+        <div class="form-group">
+            <label for="framework">Framework:</label>
+            <select name="framework" id="framework" class="form-control" required>
+                <option value="">-- Select Framework --</option>
+                {% for fw in frameworks %}
+                <option value="{{ fw.framework_id }}">{{ fw.code }} - {{ fw.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-        <form method="post" id="tableSelectionForm">
-            {% csrf_token %}
+        <div class="form-group">
+            <label for="version">Version:</label>
+            <select name="version" id="version" class="form-control" required disabled>
+                <option value="">-- Select Framework First --</option>
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="framework">Framework:</label>
-                <select name="framework" id="framework" class="form-control" required>
-                    <option value="">-- Select Framework --</option>
-                    {% for fw in frameworks %}
-                    <option value="{{ fw.framework_id }}">{{ fw.code }} - {{ fw.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+        <div class="form-group">
+            <label for="table_code">Table:</label>
+            <select name="table_code" id="table_code" class="form-control" required disabled>
+                <option value="">-- Select Version First --</option>
+            </select>
+            <input type="hidden" name="table_id" id="table_id">
+        </div>
 
-            <div class="form-group">
-                <label for="version">Version:</label>
-                <select name="version" id="version" class="form-control" required disabled>
-                    <option value="">-- Select Framework First --</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="table_code">Table:</label>
-                <select name="table_code" id="table_code" class="form-control" required disabled>
-                    <option value="">-- Select Version First --</option>
-                </select>
-                <input type="hidden" name="table_id" id="table_id">
-            </div>
-
-            <div id="tablePreview" class="table-preview">
-                <h3>Table Preview</h3>
-                <div class="table-info">
-                    <div class="info-item">
-                        <div class="info-label">Table Name</div>
-                        <div class="info-value" id="tableName">-</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Table Code</div>
-                        <div class="info-value" id="tableCode">-</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Cell Count</div>
-                        <div class="info-value" id="cellCount">-</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Has Combinations</div>
-                        <div class="info-value" id="hasCombinations">-</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Z-Axis Variants</div>
-                        <div class="info-value" id="zAxisVariants">-</div>
-                    </div>
+        <div id="tablePreview" class="table-preview">
+            <h3>Table Preview</h3>
+            <div class="table-info">
+                <div class="info-item">
+                    <div class="info-label">Table Name</div>
+                    <div class="info-value" id="tableName">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Table Code</div>
+                    <div class="info-value" id="tableCode">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Cell Count</div>
+                    <div class="info-value" id="cellCount">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Has Combinations</div>
+                    <div class="info-value" id="hasCombinations">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Z-Axis Variants</div>
+                    <div class="info-value" id="zAxisVariants">-</div>
                 </div>
             </div>
+        </div>
 
-            <!-- Floating Action Group -->
-            <div class="floating-action-group">
-                <button type="button" class="btn btn-secondary" onclick="window.history.back()">
-                    Cancel
-                </button>
-                <button type="submit" class="btn btn-success" id="nextButton" disabled>
-                    Next: Define Breakdowns →
-                </button>
-            </div>
-            <span class="loading-spinner">
-                <i class="fa fa-spinner fa-spin"></i> Loading...
-            </span>
-        </form>
-    </div>
+        <span class="loading-spinner">
+            <i class="fa fa-spinner fa-spin"></i> Loading...
+        </span>
+    </form>
 </div>
+{% endblock %}
 
+{% block floating_actions %}
+<button type="button" class="btn btn-secondary" onclick="window.history.back()">
+    Cancel
+</button>
+<button type="submit" form="tableSelectionForm" class="btn btn-success" id="nextButton" disabled>
+    Next: Existing Mappings →
+</button>
+{% endblock %}
+
+{% block step_js %}
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
     // Global Tom Select instances
@@ -478,12 +315,10 @@
 
     /**
      * Handle framework selection change
-     * Loads versions filtered by the selected framework
      */
     function onFrameworkChange() {
         const framework = frameworkTS.getValue();
 
-        // Clear and disable dependent Tom Select instances
         versionTS.clearOptions();
         versionTS.clear();
         versionTS.disable();
@@ -494,7 +329,6 @@
         tableTS.disable();
         tableTS.settings.placeholder = 'Select version first...';
 
-        // Hide preview and disable next button
         document.getElementById('tablePreview').style.display = 'none';
         document.getElementById('nextButton').disabled = true;
 
@@ -503,8 +337,7 @@
             return;
         }
 
-        // Fetch versions for the selected framework
-        const frameworkCode = framework; // Use the framework_id as the code for filtering
+        const frameworkCode = framework;
         fetch(`/pybirdai/api/output-layer-mapping/filter-options/?framework_code=${encodeURIComponent(frameworkCode)}`)
             .then(response => response.json())
             .then(data => {
@@ -512,7 +345,6 @@
                     if (data.versions.length === 0) {
                         versionTS.settings.placeholder = 'No versions found';
                     } else {
-                        // Add options to Tom Select
                         data.versions.forEach(version => {
                             versionTS.addOption({
                                 value: version,
@@ -534,19 +366,16 @@
 
     /**
      * Handle version selection change
-     * Loads tables filtered by framework and version
      */
     function onVersionChange() {
         const framework = frameworkTS.getValue();
         const version = versionTS.getValue();
 
-        // Clear and disable table dropdown
         tableTS.clearOptions();
         tableTS.clear();
         tableTS.disable();
         tableTS.settings.placeholder = 'Loading tables...';
 
-        // Hide preview and disable next button
         document.getElementById('tablePreview').style.display = 'none';
         document.getElementById('nextButton').disabled = true;
 
@@ -555,7 +384,6 @@
             return;
         }
 
-        // Fetch tables for the selected framework and version
         const frameworkCode = framework;
         fetch(`/pybirdai/api/output-layer-mapping/filter-options/?framework_code=${encodeURIComponent(frameworkCode)}&version=${encodeURIComponent(version)}`)
             .then(response => response.json())
@@ -564,12 +392,11 @@
                     if (data.tables.length === 0) {
                         tableTS.settings.placeholder = 'No tables found';
                     } else {
-                        // Add options with data attributes
                         data.tables.forEach(table => {
                             tableTS.addOption({
                                 value: table.code,
                                 text: `${table.name} - ${table.description}`,
-                                tableId: table.id  // Store table ID in option
+                                tableId: table.id
                             });
                         });
                         tableTS.enable();
@@ -587,7 +414,6 @@
 
     /**
      * Handle table selection change
-     * Loads table preview and enables next button
      */
     function onTableSelect() {
         const selectedValue = tableTS.getValue();
@@ -598,17 +424,12 @@
             return;
         }
 
-        // Get table_id from Tom Select option data
         const selectedOption = tableTS.options[selectedValue];
         const tableId = selectedOption.tableId;
 
-        // Set hidden table_id field
         document.getElementById('table_id').value = tableId;
-
-        // Enable next button
         document.getElementById('nextButton').disabled = false;
 
-        // Load table preview via AJAX
         loadTablePreview(tableId);
     }
 
@@ -634,13 +455,12 @@
 
                     preview.style.display = 'block';
 
-                    // Fetch Z-axis variant information
                     fetch(`/pybirdai/api/output-layer-mapping/z-axis-siblings/?table_id=${encodeURIComponent(tableId)}`)
                         .then(response => response.json())
                         .then(zData => {
                             const zVariantsEl = document.getElementById('zAxisVariants');
                             if (zData.is_deduplicated) {
-                                const totalVariants = zData.siblings.length + 1; // siblings + current table
+                                const totalVariants = zData.siblings.length + 1;
                                 zVariantsEl.textContent = `Yes (${totalVariants} variants)`;
                                 zVariantsEl.style.color = '#0d6efd';
                                 zVariantsEl.style.fontWeight = '600';

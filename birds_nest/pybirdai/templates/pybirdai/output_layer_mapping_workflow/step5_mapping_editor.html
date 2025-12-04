@@ -1,9 +1,42 @@
-{% extends "base.html" %}
+{% extends "pybirdai/output_layer_mapping_workflow/workflow_base.html" %}
 {% load static %}
 
-{% block title %}Output Layer Mapping - Step 5: Multi-Mapping Editor{% endblock %}
+{% block step_title %}Multi-Mapping Editor{% endblock %}
 
-{% block extra_css %}
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li class="active">
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li>
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 <style>
     /* Global box-sizing fix */
@@ -12,85 +45,19 @@
     }
 
     .workflow-container {
-        max-width: 1600px;
+        max-width: 95%;
         width: 100%;
         margin: 0 auto;
-        padding: 1.5rem;
+        padding: 1rem;
         overflow-x: hidden;
-    }
-
-    .workflow-header {
-        background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
-        color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-
-    .workflow-header h1 {
-        margin: 0 0 0.5rem 0;
-        font-size: 2rem;
-    }
-
-    .workflow-header p {
-        margin: 0;
-        opacity: 0.9;
-    }
-
-    /* Workflow Steps */
-    .workflow-steps {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .workflow-steps li {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-    .workflow-steps li:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #ddd;
-        z-index: -1;
-    }
-
-    .workflow-steps .step-number {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #ddd;
-        color: #666;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .workflow-steps .active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .workflow-steps .completed .step-number {
-        background: #48bb78;
-        color: white;
     }
 
     /* Horizontal Navbar Layout for Mappings */
     .sidebar-layout {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        margin-bottom: 2rem;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
         max-width: 100%;
     }
 
@@ -153,7 +120,7 @@
         background: white;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        padding: 1.5rem;
+        padding: 1rem;
         min-width: 0;
         overflow-x: auto;
     }
@@ -283,7 +250,7 @@
 
     .mapping-table {
         width: 100%;
-        min-width: 600px;
+        min-width: 400px;
         border-collapse: separate;
         border-spacing: 0;
         table-layout: auto;
@@ -828,45 +795,8 @@
 </style>
 {% endblock %}
 
-{% block content %}
+{% block step_content %}
 <div class="workflow-container">
-    <div class="workflow-header">
-        <h1>Output Layer Mapping Workflow</h1>
-        <p>Step 5: Define member mappings for each variable group mapping</p>
-    </div>
-
-    <!-- Workflow Steps -->
-    <ul class="workflow-steps">
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Table</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Existing Mappings</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Ordinates</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Variable Breakdown</div>
-        </li>
-        <li class="active">
-            <span class="step-number">5</span>
-            <div>Mapping Editor</div>
-        </li>
-        <li>
-            <span class="step-number">6</span>
-            <div>Review & Name</div>
-        </li>
-        <li>
-            <span class="step-number">7</span>
-            <div>Generate</div>
-        </li>
-    </ul>
-
     {% if batch_edit_mode %}
     <!-- Batch Edit Mode Banner -->
     <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
@@ -1065,11 +995,6 @@
         <input type="hidden" name="mapping_data_{{ mapping.group_id }}" id="mapping_data_{{ mapping.group_id }}">
         {% endfor %}
 
-        <!-- Floating Action Group -->
-        <div class="floating-action-group">
-            <a href="{% url 'pybirdai:output_layer_mapping_step4' %}" class="btn btn-secondary">← Back</a>
-            <button type="submit" class="btn btn-success">Continue to Review →</button>
-        </div>
     </form>
 
     {% else %}
@@ -1081,6 +1006,12 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block floating_actions %}
+<a href="{% url 'pybirdai:output_layer_mapping_step4' %}" class="btn btn-secondary">← Back</a>
+<button type="submit" form="mappingForm" class="btn btn-success">Continue to Review →</button>
+{% endblock %}
 
 <!-- Member Creation Modal -->
 <div id="memberModal" class="member-modal">
@@ -1152,6 +1083,7 @@
     </div>
 </div>
 
+{% block step_js %}
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
 // Global variables

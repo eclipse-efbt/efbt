@@ -1,66 +1,44 @@
-{% extends "base.html" %}
+{% extends "pybirdai/output_layer_mapping_workflow/workflow_base.html" %}
 {% load static %}
 
-{% block title %}Output Layer Mapping - Confirmation{% endblock %}
+{% block step_title %}Confirmation{% endblock %}
 
-{% block extra_css %}
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Review & Name</div>
+    </li>
+    <li class="active">
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" />
 <style>
-    .workflow-header {
-        background: #0d6efd;
-        color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-
-    .workflow-steps {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .workflow-steps li {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-    .workflow-steps li:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #ddd;
-        z-index: -1;
-    }
-
-    .workflow-steps .step-number {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #ddd;
-        color: #666;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .workflow-steps .active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .workflow-steps .completed .step-number {
-        background: #48bb78;
-        color: white;
-    }
-
     .confirmation-container {
         background: white;
         padding: 2rem;
@@ -230,39 +208,6 @@
         background: #cbd5e0;
     }
 
-    /* Action Buttons */
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .btn-primary {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: #0b5ed7;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-success {
-        background: #48bb78;
-        color: white;
-    }
-
-    .btn-success:hover {
-        background: #38a169;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
-    }
-
     .btn-warning {
         background: #ed8936;
         color: white;
@@ -272,49 +217,6 @@
         background: #dd6b20;
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
-    }
-
-    .btn-secondary {
-        background: #e2e8f0;
-        color: #4a5568;
-        margin-right: 1rem;
-    }
-
-    .btn-secondary:hover {
-        background: #cbd5e0;
-    }
-
-    .form-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e2e8f0;
-    }
-
-    /* Page content padding for floating buttons */
-    .container-fluid {
-        padding-bottom: 6rem;
-    }
-
-    /* Floating Action Group */
-    .floating-action-group {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 1000;
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        background: white;
-        border-radius: 50px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .floating-action-group .btn {
-        border-radius: 25px;
-        padding: 0.75rem 1.25rem;
-        font-weight: 600;
     }
 
     /* Loading State */
@@ -934,48 +836,11 @@
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="container">
-    <div class="workflow-header">
-        <h1>Output Layer Mapping Workflow</h1>
-        <p>Create non-reference combinations and mappings for output layers</p>
-    </div>
-
-    <ul class="workflow-steps">
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Table</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Existing Mappings</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Ordinates</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Variable Breakdown</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Mapping Editor</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Review & Name</div>
-        </li>
-        <li class="active">
-            <span class="step-number">7</span>
-            <div>Generate</div>
-        </li>
-    </ul>
-
+{% block step_content %}
     {% if batch_edit_mode %}
     <!-- Batch Edit Mode Banner -->
     <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-        <h4 style="margin: 0 0 0.5rem 0;">✏️ Batch Edit Mode - Generation</h4>
+        <h4 style="margin: 0 0 0.5rem 0;">Edit Batch Edit Mode - Generation</h4>
         <p style="margin: 0; opacity: 0.9;">
             Updating <strong>{{ batch_edit_mapping_count }}</strong> existing mapping(s).
         </p>
@@ -1036,7 +901,7 @@
                 {% endfor %}
             </ul>
             <p style="font-size: 0.875rem; color: #666; margin-top: 1rem; padding: 0.75rem; background: #fff; border-radius: 4px; border: 1px solid #e2e8f0;">
-                <strong>💡 Note:</strong> All variable groups and member mappings will be replicated to these tables.
+                <strong>Note:</strong> All variable groups and member mappings will be replicated to these tables.
                 To change the selection, go back to Step 5.
             </p>
         </div>
@@ -1105,16 +970,6 @@
         <form method="post" id="generateForm">
             {% csrf_token %}
             <input type="hidden" name="confirm" value="true">
-
-            <!-- Floating Action Group -->
-            <div class="floating-action-group">
-                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
-                    ← Back
-                </button>
-                <button type="submit" class="btn btn-success" id="confirmButton">
-                    Confirm and Generate
-                </button>
-            </div>
         </form>
 
         {% elif success %}
@@ -1217,19 +1072,6 @@
             </ul>
         </div>
 
-        <!-- Floating Action Group -->
-        <div class="floating-action-group">
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
-                Create Another
-            </button>
-            <button type="button" class="btn btn-warning" onclick="regenerateCombinations('{{ generated.cube_id }}', '{{ generated.table_id }}')">
-                Regenerate Combinations
-            </button>
-            <button type="button" class="btn btn-success" onclick="window.location.href='{% url 'pybirdai:workflow_dashboard' %}'">
-                Go to Dashboard
-            </button>
-        </div>
-
         {% else %}
         <!-- Error State -->
         <div class="status-banner error">
@@ -1241,19 +1083,8 @@
         <div class="error-details">
             {{ error }}
         </div>
-
-        <!-- Floating Action Group -->
-        <div class="floating-action-group">
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
-                ← Back
-            </button>
-            <button type="button" class="btn btn-success" onclick="window.location.reload()">
-                Retry Generation
-            </button>
-        </div>
         {% endif %}
     </div>
-</div>
 
 <!-- Loading Overlay -->
 <div class="loading-overlay" id="loadingOverlay">
@@ -1338,7 +1169,37 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block floating_actions %}
+{% if preview %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
+    ← Back
+</button>
+<button type="submit" form="generateForm" class="btn btn-success" id="confirmButton">
+    Confirm and Generate
+</button>
+{% elif success %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
+    Create Another
+</button>
+<button type="button" class="btn btn-warning" onclick="regenerateCombinations('{{ generated.cube_id }}', '{{ generated.table_id }}')">
+    Regenerate Combinations
+</button>
+<button type="button" class="btn btn-success" onclick="window.location.href='{% url 'pybirdai:workflow_dashboard' %}'">
+    Go to Dashboard
+</button>
+{% else %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
+    ← Back
+</button>
+<button type="button" class="btn btn-success" onclick="window.location.reload()">
+    Retry Generation
+</button>
+{% endif %}
+{% endblock %}
+
+{% block step_js %}
 <script>
     // Show loading overlay when form is submitted
     document.getElementById('generateForm')?.addEventListener('submit', function() {

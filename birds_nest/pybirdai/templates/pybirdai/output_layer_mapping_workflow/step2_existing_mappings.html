@@ -1,65 +1,43 @@
-{% extends "base.html" %}
+{% extends "pybirdai/output_layer_mapping_workflow/workflow_base.html" %}
 {% load static %}
 
-{% block title %}Output Layer Mapping - Check Existing Mappings{% endblock %}
+{% block step_title %}Check Existing Mappings{% endblock %}
 
-{% block extra_css %}
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li class="active">
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li>
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li>
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li>
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li>
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
 <style>
-    .workflow-header {
-        background: #0d6efd;
-        color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-
-    .workflow-steps {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .workflow-steps li {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-    .workflow-steps li:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #ddd;
-        z-index: -1;
-    }
-
-    .workflow-steps .step-number {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #ddd;
-        color: #666;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .workflow-steps .active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .workflow-steps .completed .step-number {
-        background: #48bb78;
-        color: white;
-    }
-
     /* Action Cards Grid */
     .action-cards-grid {
         display: grid;
@@ -266,53 +244,6 @@
         border-top: 1px solid #e2e8f0;
     }
 
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .btn-secondary {
-        background: #e2e8f0;
-        color: #4a5568;
-    }
-
-    .btn-secondary:hover {
-        background: #cbd5e0;
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    /* Alert & Empty State */
-    .alert {
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
-    }
-
-    .alert-info {
-        background: #e0f2fe;
-        border: 1px solid #7dd3fc;
-        color: #0c4a6e;
-    }
-
     .empty-state {
         text-align: center;
         padding: 3rem;
@@ -324,52 +255,7 @@
         margin-bottom: 1rem;
     }
 
-    /* Form Actions */
-    .form-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e2e8f0;
-    }
-
-    /* Page content padding for floating buttons */
-    .container-fluid {
-        padding-bottom: 6rem;
-    }
-
-    /* Floating Action Group */
-    .floating-action-group {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 1000;
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        background: white;
-        border-radius: 50px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .floating-action-group .btn {
-        border-radius: 25px;
-        padding: 0.75rem 1.25rem;
-        font-weight: 600;
-    }
-
-    .btn-success {
-        background: #198754;
-        color: white;
-    }
-
-    .btn-success:hover {
-        background: #157347;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
-    }
-
-    /* Confirmation Modal */
+    /* Modal Styles */
     .modal-overlay {
         display: none;
         position: fixed;
@@ -438,234 +324,198 @@
         margin-bottom: 1rem;
         color: #0c4a6e;
     }
+
+    .btn-purple {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-purple:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="container-fluid">
-    <div class="workflow-header">
-        <h2>Output Layer Mapping Workflow</h2>
-        <p class="mb-0">Create mappings for output layer tables</p>
+{% block step_content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Table: {{ table.name }}</h4>
     </div>
+    <div class="card-body">
+        {% if has_existing %}
+            <div class="alert alert-info">
+                <strong>{{ existing_mappings|length }} existing mapping(s) found.</strong>
+                Choose how you want to proceed:
+            </div>
 
-    <!-- Progress Steps -->
-    <ul class="workflow-steps">
-        <li class="completed">
-            <span class="step-number">1</span>
-            <div>Select Table</div>
-        </li>
-        <li class="active">
-            <span class="step-number">2</span>
-            <div>Existing Mappings</div>
-        </li>
-        <li>
-            <span class="step-number">3</span>
-            <div>Select Ordinates</div>
-        </li>
-        <li>
-            <span class="step-number">4</span>
-            <div>Variable Breakdown</div>
-        </li>
-        <li>
-            <span class="step-number">5</span>
-            <div>Mapping Editor</div>
-        </li>
-        <li>
-            <span class="step-number">6</span>
-            <div>Review & Name</div>
-        </li>
-        <li>
-            <span class="step-number">7</span>
-            <div>Generate</div>
-        </li>
-    </ul>
-
-    <div class="card">
-        <div class="card-header">
-            <h4>Table: {{ table.name }}</h4>
-        </div>
-        <div class="card-body">
-            {% if has_existing %}
-                <div class="alert alert-info">
-                    <strong>{{ existing_mappings|length }} existing mapping(s) found.</strong>
-                    Choose how you want to proceed:
+            <!-- Three Action Cards -->
+            <div class="action-cards-grid">
+                <!-- Card 1: Regenerate -->
+                <div class="action-card" id="regenerateCard">
+                    <div class="action-card-icon">🔄</div>
+                    <div class="action-card-title">Regenerate Output Layers</div>
+                    <div class="action-card-badge info">{{ existing_mappings|length }} mapping(s)</div>
+                    <div class="action-card-description">
+                        Keep existing mapping definitions, regenerate CUBE and COMBINATIONS from all mappings.
+                    </div>
+                    <button type="button" class="action-card-btn regenerate" id="regenerateBtn">
+                        Regenerate
+                    </button>
                 </div>
 
-                <!-- Three Action Cards -->
-                <div class="action-cards-grid">
-                    <!-- Card 1: Regenerate -->
-                    <div class="action-card" id="regenerateCard">
-                        <div class="action-card-icon">🔄</div>
-                        <div class="action-card-title">Regenerate Output Layers</div>
-                        <div class="action-card-badge info">{{ existing_mappings|length }} mapping(s)</div>
-                        <div class="action-card-description">
-                            Keep existing mapping definitions, regenerate CUBE and COMBINATIONS from all mappings.
-                        </div>
-                        <button type="button" class="action-card-btn regenerate" id="regenerateBtn">
-                            Regenerate
-                        </button>
+                <!-- Card 2: Edit Mappings -->
+                <div class="action-card" id="editCard">
+                    <div class="action-card-icon">✏️</div>
+                    <div class="action-card-title">Edit Mappings</div>
+                    <div class="action-card-badge info">Select to edit</div>
+                    <div class="action-card-description">
+                        Modify variable groups, member mappings, or add ordinates to existing mappings.
                     </div>
-
-                    <!-- Card 2: Edit Mappings -->
-                    <div class="action-card" id="editCard">
-                        <div class="action-card-icon">✏️</div>
-                        <div class="action-card-title">Edit Mappings</div>
-                        <div class="action-card-badge info">Select to edit</div>
-                        <div class="action-card-description">
-                            Modify variable groups, member mappings, or add ordinates to existing mappings.
-                        </div>
-                        <button type="button" class="action-card-btn edit" id="editBtn">
-                            Select Mappings
-                        </button>
-                    </div>
-
-                    <!-- Card 3: Create New -->
-                    <div class="action-card" id="createCard">
-                        <div class="action-card-icon">➕</div>
-                        <div class="action-card-title">Create New Mappings</div>
-                        <div class="action-card-badge warning">Replaces existing</div>
-                        <div class="action-card-description">
-                            Start fresh with new mappings. Existing mappings will be deleted when new ones are generated.
-                        </div>
-                        <button type="button" class="action-card-btn create" id="createBtn">
-                            Create New
-                        </button>
-                    </div>
+                    <button type="button" class="action-card-btn edit" id="editBtn">
+                        Select Mappings
+                    </button>
                 </div>
 
-                <!-- Edit Selection Panel (shown when Edit is clicked) -->
-                <div class="edit-selection-panel" id="editSelectionPanel">
-                    <div class="panel-header">
-                        <div class="panel-title">Select mappings to edit:</div>
-                        <label class="select-all-label">
-                            <input type="checkbox" id="selectAllCheckbox">
-                            Select All
-                        </label>
+                <!-- Card 3: Create New -->
+                <div class="action-card" id="createCard">
+                    <div class="action-card-icon">➕</div>
+                    <div class="action-card-title">Create New Mappings</div>
+                    <div class="action-card-badge warning">Replaces existing</div>
+                    <div class="action-card-description">
+                        Start fresh with new mappings. Existing mappings will be deleted when new ones are generated.
                     </div>
-                    <div class="mappings-list">
-                        {% for mapping_detail in existing_mappings %}
-                        <div class="mapping-item" data-mapping-id="{{ mapping_detail.mapping.mapping_id }}">
-                            <input type="checkbox" class="mapping-checkbox"
-                                   id="mapping_{{ mapping_detail.mapping.mapping_id }}"
-                                   value="{{ mapping_detail.mapping.mapping_id }}">
-                            <div class="mapping-details">
-                                <div class="mapping-name">{{ mapping_detail.mapping.name }}</div>
-                                <div class="mapping-meta">
-                                    <span>{{ mapping_detail.variable_count }} variables</span>
-                                    <span>{{ mapping_detail.member_count }} members</span>
-                                    {% if mapping_detail.variant_count > 1 %}
-                                    <span>{{ mapping_detail.variant_count }} variants</span>
-                                    {% endif %}
-                                </div>
+                    <button type="button" class="action-card-btn create" id="createBtn">
+                        Create New
+                    </button>
+                </div>
+            </div>
+
+            <!-- Edit Selection Panel -->
+            <div class="edit-selection-panel" id="editSelectionPanel">
+                <div class="panel-header">
+                    <div class="panel-title">Select mappings to edit:</div>
+                    <label class="select-all-label">
+                        <input type="checkbox" id="selectAllCheckbox">
+                        Select All
+                    </label>
+                </div>
+                <div class="mappings-list">
+                    {% for mapping_detail in existing_mappings %}
+                    <div class="mapping-item" data-mapping-id="{{ mapping_detail.mapping.mapping_id }}">
+                        <input type="checkbox" class="mapping-checkbox"
+                               id="mapping_{{ mapping_detail.mapping.mapping_id }}"
+                               value="{{ mapping_detail.mapping.mapping_id }}">
+                        <div class="mapping-details">
+                            <div class="mapping-name">{{ mapping_detail.mapping.name }}</div>
+                            <div class="mapping-meta">
+                                <span>{{ mapping_detail.variable_count }} variables</span>
+                                <span>{{ mapping_detail.member_count }} members</span>
+                                {% if mapping_detail.variant_count > 1 %}
+                                <span>{{ mapping_detail.variant_count }} variants</span>
+                                {% endif %}
                             </div>
                         </div>
-                        {% endfor %}
                     </div>
-                    <div class="panel-actions">
-                        <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="confirmEditBtn" disabled>
-                            Edit Selected (<span id="selectedCount">0</span>)
-                        </button>
-                    </div>
+                    {% endfor %}
                 </div>
-
-                <!-- Floating Action Group -->
-                <div class="floating-action-group">
-                    <a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="btn btn-secondary">
-                        ← Back
-                    </a>
+                <div class="panel-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
+                    <button type="button" class="btn btn-purple" id="confirmEditBtn" disabled>
+                        Edit Selected (<span id="selectedCount">0</span>)
+                    </button>
                 </div>
-
-            {% else %}
-                <!-- No Existing Mappings -->
-                <div class="empty-state">
-                    <h3>No Existing Mappings Found</h3>
-                    <p>No existing mappings were found for the selected table.</p>
-                    <p>Click continue to create a new mapping from scratch.</p>
-                </div>
-
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="mapping_mode" value="new">
-                    <!-- Floating Action Group -->
-                    <div class="floating-action-group">
-                        <a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="btn btn-secondary">
-                            ← Back
-                        </a>
-                        <button type="submit" class="btn btn-success">
-                            Continue →
-                        </button>
-                    </div>
-                </form>
-            {% endif %}
-        </div>
+            </div>
+        {% else %}
+            <!-- No Existing Mappings -->
+            <div class="empty-state">
+                <h3>No Existing Mappings Found</h3>
+                <p>No existing mappings were found for the selected table.</p>
+                <p>Click continue to create a new mapping from scratch.</p>
+            </div>
+        {% endif %}
     </div>
+</div>
 
-    <!-- Regenerate Confirmation Modal -->
-    <div id="regenerateModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 style="color: #48bb78;">
-                    <span>🔄</span> Confirm Regeneration
-                </h3>
+<!-- Regenerate Confirmation Modal -->
+<div id="regenerateModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="color: #48bb78;">
+                <span>🔄</span> Confirm Regeneration
+            </h3>
+        </div>
+        <div class="modal-body">
+            <p>You are about to regenerate output layers for <strong>{{ table.name }}</strong>.</p>
+            <div class="warning-box">
+                <strong>The following will be deleted and recreated:</strong>
+                <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0;">
+                    <li>CUBE and CUBE_STRUCTURE records</li>
+                    <li>COMBINATION and COMBINATION_ITEM records</li>
+                    <li>MAPPING_TO_CUBE links</li>
+                </ul>
             </div>
-            <div class="modal-body">
-                <p>You are about to regenerate output layers for <strong>{{ table.name }}</strong>.</p>
-                <div class="warning-box">
-                    <strong>The following will be deleted and recreated:</strong>
-                    <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0;">
-                        <li>CUBE and CUBE_STRUCTURE records</li>
-                        <li>COMBINATION and COMBINATION_ITEM records</li>
-                        <li>MAPPING_TO_CUBE links</li>
-                    </ul>
-                </div>
-                <div class="info-box">
-                    <strong>{{ existing_mappings|length }} mapping(s) will be used:</strong>
-                    <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0;">
-                        {% for mapping_detail in existing_mappings %}
-                        <li>{{ mapping_detail.mapping.name }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancelRegenerateBtn">Cancel</button>
-                <button type="button" class="btn" style="background: #48bb78; color: white;" id="confirmRegenerateBtn">
-                    Regenerate
-                </button>
+            <div class="info-box">
+                <strong>{{ existing_mappings|length }} mapping(s) will be used:</strong>
+                <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0;">
+                    {% for mapping_detail in existing_mappings %}
+                    <li>{{ mapping_detail.mapping.name }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelRegenerateBtn">Cancel</button>
+            <button type="button" class="btn btn-success" id="confirmRegenerateBtn">
+                Regenerate
+            </button>
+        </div>
     </div>
+</div>
 
-    <!-- Create New Confirmation Modal -->
-    <div id="createModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 style="color: #0d6efd;">
-                    <span>➕</span> Create New Mappings
-                </h3>
+<!-- Create New Confirmation Modal -->
+<div id="createModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="color: #0d6efd;">
+                <span>➕</span> Create New Mappings
+            </h3>
+        </div>
+        <div class="modal-body">
+            <p>You are about to create new mappings for <strong>{{ table.name }}</strong>.</p>
+            <div class="warning-box">
+                <strong>Warning:</strong> When you complete the workflow, the {{ existing_mappings|length }} existing mapping(s) will be replaced by the new ones.
             </div>
-            <div class="modal-body">
-                <p>You are about to create new mappings for <strong>{{ table.name }}</strong>.</p>
-                <div class="warning-box">
-                    <strong>Warning:</strong> When you complete the workflow, the {{ existing_mappings|length }} existing mapping(s) will be replaced by the new ones.
-                </div>
-                <p style="color: #64748b; font-size: 0.9rem;">
-                    You will proceed through the workflow to define ordinates, variable groups, and member mappings.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancelCreateBtn">Cancel</button>
-                <button type="button" class="btn" style="background: #0d6efd; color: white;" id="confirmCreateBtn">
-                    Continue
-                </button>
-            </div>
+            <p style="color: #64748b; font-size: 0.9rem;">
+                You will proceed through the workflow to define ordinates, variable groups, and member mappings.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelCreateBtn">Cancel</button>
+            <button type="button" class="btn btn-primary" id="confirmCreateBtn">
+                Continue
+            </button>
         </div>
     </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block floating_actions %}
+<a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="btn btn-secondary">
+    ← Back
+</a>
+{% if not has_existing %}
+<form method="post" style="display: inline;">
+    {% csrf_token %}
+    <input type="hidden" name="mapping_mode" value="new">
+    <button type="submit" class="btn btn-success">
+        Continue →
+    </button>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block step_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // URL constants
@@ -677,12 +527,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = '{{ csrf_token }}';
 
     // Elements
-    const regenerateCard = document.getElementById('regenerateCard');
-    const editCard = document.getElementById('editCard');
-    const createCard = document.getElementById('createCard');
     const regenerateBtn = document.getElementById('regenerateBtn');
     const editBtn = document.getElementById('editBtn');
     const createBtn = document.getElementById('createBtn');
+    const editCard = document.getElementById('editCard');
 
     // Modals
     const regenerateModal = document.getElementById('regenerateModal');
@@ -712,7 +560,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('confirmRegenerateBtn')?.addEventListener('click', function() {
-        // Submit to apply bulk with all mappings
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = URLS.applyBulk;
@@ -723,7 +570,6 @@ document.addEventListener('DOMContentLoaded', function() {
         csrfInput.value = csrfToken;
         form.appendChild(csrfInput);
 
-        // Add all mapping IDs
         allMappingIds.forEach(id => {
             const input = document.createElement('input');
             input.type = 'hidden';
@@ -736,7 +582,6 @@ document.addEventListener('DOMContentLoaded', function() {
         form.submit();
     });
 
-    // Close modal on backdrop click
     regenerateModal?.addEventListener('click', function(e) {
         if (e.target === regenerateModal) {
             regenerateModal.classList.remove('active');
@@ -748,12 +593,10 @@ document.addEventListener('DOMContentLoaded', function() {
         editBtn.addEventListener('click', function() {
             editSelectionPanel.classList.add('active');
             editCard.classList.add('selected');
-            // Scroll to panel
             editSelectionPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
     }
 
-    // Mapping item click handler
     mappingItems.forEach(item => {
         item.addEventListener('click', function(e) {
             if (e.target.type !== 'checkbox') {
@@ -764,12 +607,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Checkbox change handler
     mappingCheckboxes.forEach(cb => {
         cb.addEventListener('change', updateEditUI);
     });
 
-    // Select All handler
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function() {
             mappingCheckboxes.forEach(cb => {
@@ -781,10 +622,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateEditUI() {
         const selectedCount = document.querySelectorAll('.mapping-checkbox:checked').length;
-        selectedCountSpan.textContent = selectedCount;
-        confirmEditBtn.disabled = selectedCount === 0;
+        if (selectedCountSpan) selectedCountSpan.textContent = selectedCount;
+        if (confirmEditBtn) confirmEditBtn.disabled = selectedCount === 0;
 
-        // Update item styling
         mappingItems.forEach(item => {
             const checkbox = item.querySelector('.mapping-checkbox');
             if (checkbox.checked) {
@@ -794,7 +634,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Update select all state
         if (selectAllCheckbox) {
             const total = mappingCheckboxes.length;
             selectAllCheckbox.checked = selectedCount === total;
@@ -806,7 +645,6 @@ document.addEventListener('DOMContentLoaded', function() {
         cancelEditBtn.addEventListener('click', function() {
             editSelectionPanel.classList.remove('active');
             editCard.classList.remove('selected');
-            // Clear selection
             mappingCheckboxes.forEach(cb => cb.checked = false);
             if (selectAllCheckbox) selectAllCheckbox.checked = false;
             updateEditUI();
@@ -822,7 +660,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Submit to edit bulk
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = URLS.editBulk;
@@ -858,10 +695,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('confirmCreateBtn')?.addEventListener('click', function() {
-        // Submit form to go to Step 3 with create_new mode
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = window.location.href; // Current page
+        form.action = window.location.href;
 
         const csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
@@ -875,7 +711,6 @@ document.addEventListener('DOMContentLoaded', function() {
         modeInput.value = 'new';
         form.appendChild(modeInput);
 
-        // Flag to indicate existing mappings should be deleted in Step 7
         const deleteExistingInput = document.createElement('input');
         deleteExistingInput.type = 'hidden';
         deleteExistingInput.name = 'delete_existing_on_generate';
@@ -886,7 +721,6 @@ document.addEventListener('DOMContentLoaded', function() {
         form.submit();
     });
 
-    // Close modal on backdrop click
     createModal?.addEventListener('click', function(e) {
         if (e.target === createModal) {
             createModal.classList.remove('active');
