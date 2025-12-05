@@ -501,8 +501,9 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Redirect to the hierarchy editor
-                    window.location.href = '/pybirdai/member_hierarchy_editor/' + hierarchyId + '/';
+                    // Open hierarchy editor in a new tab (works from within iframe)
+                    window.open('/pybirdai/member_hierarchy_editor/' + hierarchyId + '/', '_blank');
+                    closeModal();
                 } else {
                     document.getElementById('hierarchy-id-error').textContent = data.error || 'Failed to create hierarchy';
                     document.getElementById('hierarchy-id-error').style.display = 'block';

@@ -111,15 +111,27 @@ def execute_phase3_mappings(
         internal_id = mapping_data['internal_id']
         group_type = mapping_data.get('group_type', 'dimension').lower()
         dimensions = mapping_data.get('dimensions', [])
-        observations = mapping_data.get('observations', [])
-        attributes = mapping_data.get('attributes', [])
-        
+        observations = mapping_data.get('observations', {})
+        attributes = mapping_data.get('attributes', {})
+
+        # Count unique variable IDs (not rows) for logging
+        # dimensions: list of dicts [{var_id: member_id, ...}, ...]
+        unique_dim_vars = set()
+        for row in dimensions:
+            if isinstance(row, dict):
+                unique_dim_vars.update(row.keys())
+        # observations: dict {'source_vars': [...], 'target_vars': [...]}
+        unique_obs_vars = set()
+        if isinstance(observations, dict):
+            unique_obs_vars.update(observations.get('source_vars', []))
+            unique_obs_vars.update(observations.get('target_vars', []))
+
         # Calculate current mapping sequence number
         current_sequence = mapping_sequence_start + mapping_counter
         mapping_id_suffix = f"{current_sequence:03d}"
         mapping_counter += 1
-        
-        print(f"[PHASE 3] Processing mapping '{mapping_name}' ({len(dimensions)} dims, {len(observations)} observations)")
+
+        print(f"[PHASE 3] Processing mapping '{mapping_name}' ({len(unique_dim_vars)} dims, {len(unique_obs_vars)} observations)")
         
         # 1. Create VARIABLE_MAPPING for this mapping
         try:
@@ -192,11 +204,13 @@ def execute_phase3_mappings(
                         variable = VARIABLE.objects.filter(variable_id=var_id).first()
                         member = MEMBER.objects.filter(member_id=member_id).first()
                         if variable and member:
+                            # Determine is_source based on whether variable is source or target
+                            is_source_value = "true" if var_id in source_var_ids else "false"
                             mmi = MEMBER_MAPPING_ITEM.objects.create(
                                 member_mapping_id=member_mapping,
                                 member_mapping_row=str(row_idx + 1),
                                 variable_id=variable,
-                                is_source="true",  # Simplified
+                                is_source=is_source_value,
                                 member_id=member
                             )
                             if debug_data is not None:

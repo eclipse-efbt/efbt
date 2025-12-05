@@ -26,6 +26,7 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
+from django.utils.html import escape
 
 from pybirdai.models.bird_meta_data_model import (
     TABLE,
@@ -56,6 +57,62 @@ def annotated_template_view(request):
     }
 
     return render(request, 'pybirdai/annotated_template_visualizer/index.html', context)
+
+
+def annotated_template_embed_view(request, table_id):
+    """
+    Embed view for the Annotated Template Visualizer.
+    Renders just the template visualization without selection form.
+    Suitable for embedding in iframes (e.g., modals in step 7).
+    """
+    try:
+        table = TABLE.objects.get(table_id=table_id)
+    except TABLE.DoesNotExist:
+        return render(request, 'pybirdai/annotated_template_visualizer/embed.html', {
+            'error': f'Table not found: {table_id}',
+            'table_id': table_id,
+        })
+
+    # Generate the HTML table directly
+    table_html = generate_annotated_table_html(table_id)
+
+    # Get summary info
+    table_axes = AXIS.objects.filter(table_id=table)
+    table_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=table_axes).select_related('axis_id')
+
+    # Count rows, cols, z-axis
+    row_count = 0
+    col_count = 0
+    z_ordinates = []
+
+    for ordinate in table_ordinates:
+        orientation = ordinate.axis_id.orientation if ordinate.axis_id else None
+        if orientation in ['Y', '2']:
+            row_count += 1
+        elif orientation in ['X', '1']:
+            col_count += 1
+        elif orientation in ['Z', '3']:
+            z_ordinates.append({
+                'id': ordinate.axis_ordinate_id,
+                'name': ordinate.name or ordinate.code or ordinate.axis_ordinate_id,
+            })
+
+    # Get cell count
+    cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
+    cell_count = cell_positions.values_list('cell_id', flat=True).distinct().count()
+
+    context = {
+        'table': table,
+        'table_id': table_id,
+        'table_html': table_html,
+        'row_count': row_count,
+        'col_count': col_count,
+        'cell_count': cell_count,
+        'z_ordinates': z_ordinates,
+        'page_title': f'Annotated Template - {table.name}',
+    }
+
+    return render(request, 'pybirdai/annotated_template_visualizer/embed.html', context)
 
 
 @require_http_methods(["GET"])
@@ -257,10 +314,11 @@ def export_annotated_template_excel(request, table_id):
         if ord_id:
             if ord_id not in ordinate_annotations:
                 ordinate_annotations[ord_id] = []
-            var_code = item.variable_id.code if item.variable_id else ''
-            mem_code = item.member_id.code if item.member_id else ''
-            if var_code or mem_code:
-                ordinate_annotations[ord_id].append(f"{var_code}:{mem_code}")
+            # Prefer name for display, fallback to code
+            var_display = item.variable_id.name if item.variable_id and item.variable_id.name else (item.variable_id.code if item.variable_id else '')
+            mem_display = item.member_id.name if item.member_id and item.member_id.name else (item.member_id.code if item.member_id else '')
+            if var_display or mem_display:
+                ordinate_annotations[ord_id].append(f"{var_display}:{mem_display}")
 
     # Get cell positions
     cell_positions = CELL_POSITION.objects.filter(
@@ -284,12 +342,16 @@ def export_annotated_template_excel(request, table_id):
     for ordinate in table_ordinates:
         orientation = ordinate.axis_id.orientation if ordinate.axis_id else 'Unknown'
         annotations = ordinate_annotations.get(ordinate.axis_ordinate_id, [])
+        # Calculate hierarchy level from path (dot-separated)
+        path = ordinate.path or ''
+        path_level = path.count('.') if path else 0
         ordinates_data[ordinate.axis_ordinate_id] = {
             'id': ordinate.axis_ordinate_id,
             'name': ordinate.name or ordinate.code or ordinate.axis_ordinate_id,
             'orientation': orientation,
-            'level': ordinate.level or 0,
+            'level': path_level,  # Use path-based level for hierarchy
             'order': ordinate.order or 0,
+            'path': path,
             'annotation': ' | '.join(annotations) if annotations else '',
         }
 
@@ -373,13 +435,10 @@ def export_annotated_template_excel(request, table_id):
     ws.cell(row=start_row, column=1).border = thin_border
     ws.cell(row=start_row, column=1).alignment = center_alignment
 
-    # Write column headers (including annotations)
+    # Write column headers (just the name, no annotations)
     for col_idx, col_ord_id in enumerate(col_ordinates, start=2):
         col_data = ordinates_data.get(col_ord_id, {})
         header_text = col_data.get('name', col_ord_id)
-        annotation = col_data.get('annotation', '')
-        if annotation:
-            header_text = f"{header_text}\n[{annotation}]"
 
         cell = ws.cell(row=start_row, column=col_idx, value=header_text)
         cell.fill = header_fill
@@ -393,13 +452,10 @@ def export_annotated_template_excel(request, table_id):
     # Set first column width for row headers
     ws.column_dimensions['A'].width = 25
 
-    # Write rows
+    # Write rows (just the name, no annotations)
     for row_idx, row_ord_id in enumerate(row_ordinates, start=start_row + 1):
         row_data = ordinates_data.get(row_ord_id, {})
         header_text = row_data.get('name', row_ord_id)
-        annotation = row_data.get('annotation', '')
-        if annotation:
-            header_text = f"{header_text}\n[{annotation}]"
 
         # Row header
         level = row_data.get('level', 0)
@@ -420,7 +476,13 @@ def export_annotated_template_excel(request, table_id):
             cell.alignment = center_alignment
 
             if cell_info:
-                cell.value = cell_info.get('name', '') or 'X'
+                # Show reference cell ID (table_cell_combination_id) or just 'X' for filled cells
+                cell_id = cell_info.get('cell_id', '')
+                # Clean the cell ID - use just the REF_ prefix version if available
+                if cell_id.startswith('REF_'):
+                    cell.value = cell_id
+                else:
+                    cell.value = 'X'
                 if cell_info.get('is_shaded'):
                     cell.fill = shaded_fill
             else:
@@ -477,14 +539,34 @@ def generate_annotated_table_html(table_id):
             mem_code = item.member_id.code if item.member_id else ''
             var_name = item.variable_id.name if item.variable_id else ''
             mem_name = item.member_id.name if item.member_id else ''
+
+            # Use name for display if available, fallback to code
+            # Truncate long values for cleaner display
+            def truncate(text, max_len=25):
+                if text and len(text) > max_len:
+                    return text[:max_len-3] + '...'
+                return text or ''
+
+            # Prefer name for display, fallback to code
+            var_display = truncate(var_name) if var_name else truncate(var_code)
+            mem_display = truncate(mem_name) if mem_name else truncate(mem_code)
+
+            # Build display string
+            if var_display and mem_display:
+                display_text = f"{var_display}:{mem_display}"
+            elif var_display:
+                display_text = var_display
+            else:
+                display_text = mem_display
+
             if var_code or mem_code:
                 ordinate_annotations[ord_id].append({
                     'var_code': var_code,
                     'mem_code': mem_code,
                     'var_name': var_name,
                     'mem_name': mem_name,
-                    'display': f"{var_code}:{mem_code}",
-                    'tooltip': f"{var_name}: {mem_name}" if var_name or mem_name else f"{var_code}:{mem_code}",
+                    'display': display_text,
+                    'tooltip': f"{var_name or var_code}: {mem_name or mem_code}",
                 })
 
     # Get cell positions
@@ -565,14 +647,14 @@ def generate_annotated_table_html(table_id):
     html.append('<th class="corner-cell">Row / Column</th>')
 
     for col_ord in col_ordinates:
-        name = col_ord.get('name', 'N/A')
+        name = escape(col_ord.get('name', 'N/A'))
         annotations = col_ord.get('annotations', [])
         annotation_html = ''
         if annotations:
-            annotation_parts = [a['display'] for a in annotations]
+            annotation_parts = [escape(a['display']) for a in annotations]
             annotation_html = f'<div class="ordinate-annotation">{" | ".join(annotation_parts)}</div>'
-        tooltip_parts = [a['tooltip'] for a in annotations] if annotations else []
-        tooltip = f"{name}\n" + "\n".join(tooltip_parts) if tooltip_parts else name
+        tooltip_parts = [escape(a['tooltip']) for a in annotations] if annotations else []
+        tooltip = escape(f"{name}\n" + "\n".join(tooltip_parts) if tooltip_parts else name)
 
         html.append(
             f'<th class="col-header" title="{tooltip}">'
@@ -588,15 +670,15 @@ def generate_annotated_table_html(table_id):
     for row_ord in row_ordinates:
         html.append('<tr>')
 
-        name = row_ord.get('name', 'N/A')
+        name = escape(row_ord.get('name', 'N/A'))
         level = row_ord.get('level', 0)
         annotations = row_ord.get('annotations', [])
         annotation_html = ''
         if annotations:
-            annotation_parts = [a['display'] for a in annotations]
+            annotation_parts = [escape(a['display']) for a in annotations]
             annotation_html = f'<div class="ordinate-annotation">{" | ".join(annotation_parts)}</div>'
-        tooltip_parts = [a['tooltip'] for a in annotations] if annotations else []
-        tooltip = f"{name}\n" + "\n".join(tooltip_parts) if tooltip_parts else name
+        tooltip_parts = [escape(a['tooltip']) for a in annotations] if annotations else []
+        tooltip = escape(f"{name}\n" + "\n".join(tooltip_parts) if tooltip_parts else name)
 
         indent_style = f'padding-left: {level * 20 + 8}px;' if level > 0 else ''
 
@@ -613,12 +695,12 @@ def generate_annotated_table_html(table_id):
 
             if cell_info:
                 is_shaded = cell_info.get('is_shaded')
-                cell_name = cell_info.get('name', '')
+                cell_name = escape(cell_info.get('name', ''))
                 shade_class = 'cell-shaded' if is_shaded else ''
-                tooltip = f"Cell: {cell_name}" if cell_name else "Data cell"
+                cell_tooltip = escape(f"Cell: {cell_name}" if cell_name else "Data cell")
 
                 html.append(
-                    f'<td class="data-cell {shade_class}" title="{tooltip}">'
+                    f'<td class="data-cell {shade_class}" title="{cell_tooltip}">'
                     f'<span class="cell-indicator">X</span></td>'
                 )
             else:

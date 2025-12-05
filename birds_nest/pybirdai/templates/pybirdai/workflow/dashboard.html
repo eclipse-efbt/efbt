@@ -2580,6 +2580,20 @@ function executeBIRDTask1ThenDPMManual() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 
 <style>
+/* DPM Table Row Clickable Styles */
+.dpm-table-row {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.dpm-table-row:hover {
+    background-color: #f0f7ff;
+}
+
+.dpm-table-row.selected {
+    background-color: #e3f2fd;
+}
+
 /* Modal styles */
 .output-layer-modal {
     display: none;
@@ -3023,9 +3037,9 @@ function renderDPMTables() {
     }
 
     tbody.innerHTML = dpmTablesData.map(table => `
-        <tr class="dpm-table-row" data-table-id="${table.table_id}" data-framework="${table.framework || 'unknown'}">
+        <tr class="dpm-table-row" data-table-id="${table.table_id}" data-framework="${table.framework || 'unknown'}" onclick="toggleDPMTableRow(this, event)">
             <td style="padding: 10px; border-bottom: 1px solid #e2e8f0;">
-                <input type="checkbox" class="dpm-table-checkbox" value="${table.table_id}" onchange="updateDPMSelectionCount()" />
+                <input type="checkbox" class="dpm-table-checkbox" value="${table.table_id}" onchange="updateDPMSelectionCount(); updateRowSelectedClass(this);" onclick="event.stopPropagation();" />
             </td>
             <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; font-size: 12px;">${table.table_code || table.table_id}</td>
             <td style="padding: 10px; border-bottom: 1px solid #e2e8f0;">${table.table_name || ''}</td>
@@ -3038,6 +3052,28 @@ function renderDPMTables() {
     `).join('');
 
     updateDPMSelectionCount();
+}
+
+// Toggle row selection when clicking anywhere on the row
+function toggleDPMTableRow(row, event) {
+    const checkbox = row.querySelector('.dpm-table-checkbox');
+    if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        updateRowSelectedClass(checkbox);
+        updateDPMSelectionCount();
+    }
+}
+
+// Update the row's selected class based on checkbox state
+function updateRowSelectedClass(checkbox) {
+    const row = checkbox.closest('tr');
+    if (row) {
+        if (checkbox.checked) {
+            row.classList.add('selected');
+        } else {
+            row.classList.remove('selected');
+        }
+    }
 }
 
 function populateFrameworkFilter() {
@@ -3089,6 +3125,7 @@ function toggleAllDPMTables() {
 
     visibleCheckboxes.forEach(checkbox => {
         checkbox.checked = selectAllCheckbox.checked;
+        updateRowSelectedClass(checkbox);
     });
 
     updateDPMSelectionCount();
@@ -3100,14 +3137,20 @@ function selectAllDPMTables() {
         cb.closest('tr').style.display !== 'none'
     );
 
-    visibleCheckboxes.forEach(checkbox => checkbox.checked = true);
+    visibleCheckboxes.forEach(checkbox => {
+        checkbox.checked = true;
+        updateRowSelectedClass(checkbox);
+    });
     document.getElementById('select-all-checkbox').checked = true;
     updateDPMSelectionCount();
 }
 
 function clearAllDPMTables() {
     const checkboxes = document.querySelectorAll('.dpm-table-checkbox');
-    checkboxes.forEach(checkbox => checkbox.checked = false);
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        updateRowSelectedClass(checkbox);
+    });
     document.getElementById('select-all-checkbox').checked = false;
     updateDPMSelectionCount();
 }
@@ -3187,6 +3230,7 @@ function loadDPMPreset() {
         const checkbox = document.querySelector(`.dpm-table-checkbox[value="${tableId}"]`);
         if (checkbox) {
             checkbox.checked = true;
+            updateRowSelectedClass(checkbox);
         }
     });
 

@@ -152,10 +152,6 @@ urlpatterns = [
 
     # ANCRDT Workflow - Separate step execution views
     path("ancrdt-workflow/step-0/", ancrdt_workflow_views.ancrdt_step_0_view, name="ancrdt_step_0"),
-    # Steps 1, 2, 3 direct access removed - use review pages instead
-    # path("ancrdt-workflow/step-1/", ancrdt_workflow_views.ancrdt_step_1_view, name="ancrdt_step_1"),
-    # path("ancrdt-workflow/step-2/", ancrdt_workflow_views.ancrdt_step_2_view, name="ancrdt_step_2"),
-    # path("ancrdt-workflow/step-3/", ancrdt_workflow_views.ancrdt_step_3_view, name="ancrdt_step_3"),
 
     # ANCRDT Workflow - Separate review views (no review for step 0)
     path("ancrdt-workflow/step-1/review/", ancrdt_workflow_views.ancrdt_step_1_review_view, name="ancrdt_step_1_review"),
@@ -519,6 +515,7 @@ urlpatterns = [
     path("output-layer-mapping/step2/delete-bulk/", output_layer_mapping_workflow_views.step2_delete_bulk, name="output_layer_mapping_step2_delete_bulk"),
 
     path("output-layer-mapping/step3/", output_layer_mapping_workflow_views.select_axis_ordinates, name="output_layer_mapping_step3"),
+    path("output-layer-mapping/step3/quick-start/", output_layer_mapping_workflow_views.quick_start_variable_groups, name="output_layer_mapping_quick_start"),
     path("output-layer-mapping/step4/", output_layer_mapping_workflow_views.define_variable_breakdown, name="output_layer_mapping_step4"),
     path("output-layer-mapping/step5/", output_layer_mapping_workflow_views.edit_mappings_tabbed, name="output_layer_mapping_step5"),
     path("output-layer-mapping/step6/", output_layer_mapping_workflow_views.review_and_name_mapping, name="output_layer_mapping_step6"),
@@ -542,10 +539,13 @@ urlpatterns = [
     path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
     path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),
     path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
+    path("api/update_variable_domain/", output_layer_mapping_workflow_views.update_variable_domain, name="api_update_variable_domain"),
+    path("api/get_variable_info/", output_layer_mapping_workflow_views.get_variable_info, name="api_get_variable_info"),
     path("api/create_domain/", output_layer_mapping_workflow_views.create_domain, name="api_create_domain"),
 
     # Annotated Template Visualizer
     path("annotated-template-visualizer/", annotated_template_visualizer_views.annotated_template_view, name="annotated_template_visualizer"),
+    path("annotated-template/<str:table_id>/embed/", annotated_template_visualizer_views.annotated_template_embed_view, name="annotated_template_embed"),
     path("api/annotated-template/<str:table_id>/", annotated_template_visualizer_views.get_annotated_template_api, name="annotated_template_api"),
     path("export/annotated-template/<str:table_id>/excel/", annotated_template_visualizer_views.export_annotated_template_excel, name="annotated_template_export_excel"),
 ]

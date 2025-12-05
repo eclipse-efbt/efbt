@@ -118,6 +118,46 @@
     .tree-children.collapsed { display: none; }
     .axis-section { margin-bottom: 1.5rem; }
     .axis-section-title { font-weight: 600; color: #0d6efd; margin-bottom: 0.5rem; padding: 0.5rem; background: #f0f5ff; border-radius: 4px; }
+
+    /* View Tab Navigation */
+    .view-tab-navigation {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 0;
+    }
+    .view-tab-button {
+        padding: 0.75rem 1.25rem;
+        background: #f8f9fa;
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #666;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 6px 6px 0 0;
+        font-size: 0.95rem;
+    }
+    .view-tab-button:hover {
+        background: #e9ecef;
+        color: #333;
+    }
+    .view-tab-button.active {
+        background: #e3f2fd;
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+    }
+    .view-tab-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .view-tab-content {
+        display: none;
+    }
+    .view-tab-content.active {
+        display: block;
+    }
 </style>
 {% endblock %}
 
@@ -165,21 +205,37 @@
             Axis ordinates define the dimensional coordinates of table cells. Select specific ordinates to filter which portions of the table will be included in your mapping.
         </div>
 
-        <div class="hierarchy-visualizations">
-            <h5 style="margin-bottom: 1rem;">Ordinate Hierarchy Tree</h5>
-            <div class="alert alert-success" style="margin-bottom: 1rem;">
-                <strong>Interactive Selection:</strong> Click on parent nodes to select all their children automatically!
-            </div>
-            <div class="tree-view" id="treeViewContainer"></div>
+        <!-- Tab Navigation -->
+        <div class="view-tab-navigation">
+            <button type="button" class="view-tab-button active" id="tabTreeView" onclick="switchViewTab('TreeView')">
+                Hierarchy Tree
+            </button>
+            {% if has_table_preview %}
+            <button type="button" class="view-tab-button" id="tabTableView" onclick="switchViewTab('TableView')">
+                Table Preview
+            </button>
+            {% endif %}
         </div>
 
-        {% if has_table_preview %}
-        <div class="table-preview-section">
-            <h5 class="preview-title">Visual Table Preview - Click to Select Rows and Columns</h5>
-            <div class="alert alert-success">
-                <strong>Interactive Selection:</strong> Click on <strong>row headers</strong> or <strong>column headers</strong> to select ordinates.
+        <!-- Tree View Tab Content -->
+        <div class="view-tab-content active" id="contentTreeView">
+            <div class="hierarchy-visualizations">
+                <div class="alert alert-success" style="margin-bottom: 1rem;">
+                    <strong>Interactive Selection:</strong> Click on parent nodes to select all their children automatically!
+                </div>
+                <div class="tree-view" id="treeViewContainer"></div>
             </div>
-            <div class="table-preview-container">{{ embedded_table_html|safe }}</div>
+        </div>
+
+        <!-- Table View Tab Content -->
+        {% if has_table_preview %}
+        <div class="view-tab-content" id="contentTableView">
+            <div class="table-preview-section">
+                <div class="alert alert-success" style="margin-bottom: 1rem;">
+                    <strong>Interactive Selection:</strong> Click on <strong>row headers</strong> or <strong>column headers</strong> to select ordinates.
+                </div>
+                <div class="table-preview-container">{{ embedded_table_html|safe }}</div>
+            </div>
         </div>
         {% endif %}
 
@@ -203,11 +259,25 @@
 
 {% block floating_actions %}
 <a href="{% url 'pybirdai:output_layer_mapping_step2' %}" class="btn btn-secondary">← Back</a>
-<button type="submit" form="ordinatesForm" class="btn btn-success">Continue to Variable Breakdown →</button>
+<button type="submit" form="ordinatesForm" formaction="{% url 'pybirdai:output_layer_mapping_quick_start' %}" class="btn btn-primary" title="Create variable groups automatically by axis orientation">
+    ⚡ Quick Start
+</button>
+<button type="submit" form="ordinatesForm" class="btn btn-success">Continue →</button>
 {% endblock %}
 
 {% block step_js %}
 <script>
+// Tab switching function
+function switchViewTab(tabName) {
+    // Hide all tab content
+    document.querySelectorAll('.view-tab-content').forEach(el => el.classList.remove('active'));
+    // Deactivate all tab buttons
+    document.querySelectorAll('.view-tab-button').forEach(el => el.classList.remove('active'));
+    // Show selected content and activate button
+    document.getElementById('content' + tabName).classList.add('active');
+    document.getElementById('tab' + tabName).classList.add('active');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const checkboxes = document.querySelectorAll('.ordinate-check');
     const floatingCounter = document.getElementById('floatingCounter');
@@ -233,6 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (checkbox.checked) { selectedOrdinates.add(ordinateId); } else { selectedOrdinates.delete(ordinateId); }
         updateSelectedCount();
         updateTableVisualState();
+        updateTreeViewState();
     }
 
     function updateTableVisualState() {
@@ -256,10 +327,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     document.querySelectorAll('.row-header').forEach(header => {
-        header.addEventListener('click', function(e) { e.stopPropagation(); toggleOrdinateSelection(this.dataset.ordinateId); });
+        header.addEventListener('click', function(e) { e.stopPropagation(); toggleOrdinateWithCascade(this.dataset.ordinateId); });
     });
     document.querySelectorAll('.col-header').forEach(header => {
-        header.addEventListener('click', function(e) { e.stopPropagation(); toggleOrdinateSelection(this.dataset.ordinateId); });
+        header.addEventListener('click', function(e) { e.stopPropagation(); toggleOrdinateWithCascade(this.dataset.ordinateId); });
     });
     document.querySelectorAll('.data-cell:not(.cell-empty)').forEach(cell => {
         cell.addEventListener('click', function(e) {

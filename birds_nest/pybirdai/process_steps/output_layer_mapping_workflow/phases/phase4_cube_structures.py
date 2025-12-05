@@ -10,6 +10,7 @@ from pybirdai.models.bird_meta_data_model import (
     CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, CUBE, MEMBER
 )
 from pybirdai.process_steps.output_layer_mapping_workflow.cube_structure_generator import CubeStructureGenerator
+from pybirdai.process_steps.output_layer_mapping_workflow.naming_utils import NamingUtils
 
 logger = logging.getLogger(__name__)
 
@@ -52,15 +53,24 @@ def execute_phase4_cube_structures(
         }
     """
     logger.info("[PHASE 4] Creating cube structure and subdomains...")
-    
+
     # ========== CREATE CUBE_STRUCTURE ==========
-    cube_structure_id = f"{table_id}_STRUCTURE"
+    # Strip Z-ordinate suffix from table_id for cleaner naming
+    # e.g., "EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx2029" -> "EBA_COREP_C_07_00_a_4_0"
+    clean_table_id = NamingUtils.strip_z_ordinate_suffix(table_id)
+
+    # Extract framework short name for consistent naming
+    framework = framework_obj.framework_id
+    framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
+
+    # Use clean ID for structure: {FRAMEWORK_SHORT}_REF_{clean_table_id}_STRUCTURE
+    cube_structure_id = f"{framework_short}_REF_{clean_table_id}_STRUCTURE"
     cube_structure, cs_created = CUBE_STRUCTURE.objects.get_or_create(
         cube_structure_id=cube_structure_id,
         defaults={
             'maintenance_agency_id': maintenance_agency,
-            'name': f"Reference structure for {table_id}",
-            'code': f"{table_code}_CS",
+            'name': f"Reference structure for {clean_table_id}",
+            'code': f"{framework_short}_REF_{table_code}_CS",
             'description': f"Cube structure for {len(created_mapping_definitions)} mappings",
             'version': version
         }
@@ -220,15 +230,15 @@ def execute_phase4_cube_structures(
                f"cube_structure={cube_structure.cube_structure_id}")
     
     try:
-        # Use full table_id to ensure uniqueness across variants
-        framework = framework_obj.framework_id  # Get framework ID for cube_id
-        cube_id = f"{table_id}_{framework}_CUBE"
+        # Use clean table_id (with Z-ordinate suffix stripped) for cube naming
+        # New naming: {FRAMEWORK_SHORT}_REF_{clean_table_id}_CUBE
+        cube_id = f"{framework_short}_REF_{clean_table_id}_CUBE"
         cube, cube_created = CUBE.objects.get_or_create(
             cube_id=cube_id,
             defaults={
                 'maintenance_agency_id': maintenance_agency,
-                'name': f"Reference cube for {table_id}",
-                'code': f"{table_code}_CUBE",
+                'name': f"Reference cube for {clean_table_id}",
+                'code': f"{framework_short}_REF_{table_code}_CUBE",
                 'framework_id': framework_obj,
                 'cube_structure_id': cube_structure,
                 'cube_type': "RC",  # Reference Cube

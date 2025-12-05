@@ -31,6 +31,7 @@ from pybirdai.process_steps.output_layer_mapping_workflow.combination_creator im
 from pybirdai.process_steps.output_layer_mapping_workflow.domain_manager import DomainManager
 from pybirdai.process_steps.output_layer_mapping_workflow.cube_structure_generator import CubeStructureGenerator
 from pybirdai.process_steps.output_layer_mapping_workflow.naming_utils import NamingUtils
+from pybirdai.process_steps.output_layer_mapping_workflow.reference_table_generator import generate_reference_table_artifacts
 
 # Phase-based transaction handling
 from pybirdai.process_steps.output_layer_mapping_workflow.phase_executor import PhaseExecutor
@@ -1121,7 +1122,6 @@ def define_variable_breakdown(request):
     selected_ordinates = request.session.get('olmw_selected_ordinates', [])
     logging.info(f"[Step 4] Table: {table_id}")
     logging.info(f"[Step 4] Selected ordinates count: {len(selected_ordinates)}")
-    print(f"[STEP 4 DEBUG] olmw_selected_z_tables in session: {request.session.get('olmw_selected_z_tables')}")
 
     # If ordinates were selected, filter variables to only those from selected ordinates
     if selected_ordinates:
@@ -1195,15 +1195,6 @@ def define_variable_breakdown(request):
         logging.info(f"[Step 4] Found {cells.count()} table cells, {len(combination_ids)} unique combinations")
 
     if request.method == 'POST':
-        # ========== DEBUG: Log POST Data ==========
-        print("\n" + "="*80)
-        print("[STEP 2 DEBUG] POST Data Received:")
-        for key in sorted(request.POST.keys()):
-            if '_type' in key or '_name' in key:
-                print(f"  {key} = {request.POST.get(key)}")
-        print("="*80 + "\n")
-        # ========== END DEBUG ==========
-
         # Process and store variable groups
         groups = {}
         # Extract all group IDs from POST data
@@ -1234,15 +1225,6 @@ def define_variable_breakdown(request):
                     'targets': target_ids,
                     'group_type': group_type  # None if not set, or 'dimension'/'observation'
                 }
-
-        # ========== DEBUG: Log Extracted Groups ==========
-        print(f"\n[STEP 2] Extracted {len(groups)} Groups:")
-        for group_id, group_data in groups.items():
-            group_type_display = group_data.get('group_type') or 'MISSING/NULL'
-            emoji = '✓' if group_data.get('group_type') else '✗'
-            print(f"  {emoji} {group_id}: '{group_data['name']}' -> group_type='{group_type_display}'")
-        print()
-        # ========== END DEBUG ==========
 
         # Validate: Check for duplicate source variables across groups
         all_variables = []
@@ -1418,7 +1400,6 @@ def define_variable_breakdown(request):
                 f"Please select either 'Dimension', 'Observation', or 'Attribute' for each group before submitting."
             )
             messages.error(request, error_message)
-            print(f"\n[STEP 4 VALIDATION ERROR] {error_message}\n")
 
             # Re-render form with error (don't store invalid data)
             all_variables = VARIABLE.objects.all().order_by('name')
@@ -1438,20 +1419,10 @@ def define_variable_breakdown(request):
             return render(request, 'pybirdai/output_layer_mapping_workflow/step4_variable_breakdown.html', context)
         # ========== END STRICT VALIDATION ==========
 
-        print(f"\n[STEP 2 SUCCESS] All {len(groups)} groups validated and saved to session.")
-        for group_id, group_data in groups.items():
-            print(f"  ✓ {group_data['name']}: {group_data['group_type']}")
-        print()
-
-        # ========== NORMALIZE group_type to lowercase for step5 compatibility ==========
-        # Step4 validation uses title case ('Dimension', 'Observation', 'Attribute')
-        # Step5 validation expects lowercase ('dimension', 'observation', 'attribute')
-        # Normalize here before saving to session
+        # Normalize group_type to lowercase for step5 compatibility
         for group_id, group_data in groups.items():
             if group_data.get('group_type'):
                 group_data['group_type'] = group_data['group_type'].lower()
-        print(f"[DEBUG] Normalized group_type values to lowercase for session storage")
-        # ========== END NORMALIZATION ==========
 
         request.session['olmw_variable_groups'] = json.dumps(groups)
 
@@ -1467,26 +1438,6 @@ def define_variable_breakdown(request):
     ).exclude(
         variable_id__regex=r'[a-z]'
     ).order_by('name')
-
-    # DEBUG: Log variable counts and sample IDs
-    print(f"[DEBUG] Step 2 Variable Breakdown - Variables in context: {len(variables)}")
-    print(f"[DEBUG] All variables count: {all_variables.count()}")
-    print(f"[DEBUG] Target variables (filtered) count: {target_variables.count()}")
-    if variables:
-        sample_var_ids = list(variables.keys())[:5]
-        print(f"[DEBUG] Sample variable IDs from context: {sample_var_ids}")
-    else:
-        print("[DEBUG] WARNING: No variables in context! Check if ordinates were selected.")
-    if all_variables.exists():
-        sample_all_vars = [v.variable_id for v in all_variables[:5]]
-        print(f"[DEBUG] Sample all_variables IDs: {sample_all_vars}")
-    else:
-        print("[DEBUG] WARNING: No variables in database!")
-    if target_variables.exists():
-        sample_target_vars = [v.variable_id for v in target_variables[:5]]
-        print(f"[DEBUG] Sample target_variables IDs: {sample_target_vars}")
-    else:
-        print("[DEBUG] WARNING: No target variables after filtering!")
 
     # Serialize variables with members for JavaScript consumption
     # This allows the frontend to display EBA_ATY members when user selects Observation type
@@ -1560,6 +1511,17 @@ def define_variable_breakdown(request):
         context['existing_mapping_id'] = request.session.get('olmw_existing_mapping_id', '')
         logger.info(f"[STEP 4] Single edit mode: {len(existing_groups)} existing variable group(s)")
 
+    # ========== QUICK START GROUPS ==========
+    # Check if quick start groups were created in step 3
+    quick_start_groups_str = request.session.pop('olmw_quick_start_groups', None)
+    if quick_start_groups_str:
+        try:
+            quick_start_groups = json.loads(quick_start_groups_str)
+            context['initial_variable_groups_json'] = json.dumps(quick_start_groups)
+            logger.info(f"[STEP 4] Quick Start mode: {len(quick_start_groups)} pre-populated group(s)")
+        except json.JSONDecodeError:
+            logger.warning("[STEP 4] Failed to parse quick start groups JSON")
+
     return render(request, 'pybirdai/output_layer_mapping_workflow/step4_variable_breakdown.html', context)
 
 
@@ -1589,7 +1551,6 @@ def select_axis_ordinates(request):
 
     logging.info(f"[Step 3] Loading ordinates for table: {table_id}")
     logging.info(f"[Step 3] Table code: {table.code}, version: {table.version}")
-    print(f"[STEP 3 DEBUG] olmw_selected_z_tables in session: {request.session.get('olmw_selected_z_tables')}")
 
     # Get axes directly from the table (works for both original and deduplicated tables)
     table_axes = AXIS.objects.filter(table_id=table)
@@ -1718,6 +1679,152 @@ def select_axis_ordinates(request):
                    f"{len(pre_selected_ordinates)} pre-selected")
 
     return render(request, 'pybirdai/output_layer_mapping_workflow/step3_select_ordinates.html', context)
+
+
+def quick_start_variable_groups(request):
+    """
+    Quick Start: Automatically create variable groups by axis orientation.
+    Creates one group per axis (Row, Column, Z) with all variables from that axis's ordinates.
+    """
+    from pybirdai.models.bird_meta_data_model import (
+        ORDINATE_ITEM, AXIS_ORDINATE, AXIS
+    )
+
+    # Check prerequisites
+    if 'olmw_table_id' not in request.session:
+        messages.error(request, 'Please select a table first.')
+        return redirect('pybirdai:output_layer_mapping_step1')
+
+    if request.method != 'POST':
+        return redirect('pybirdai:output_layer_mapping_step3')
+
+    table_id = request.session['olmw_table_id']
+    try:
+        table = TABLE.objects.get(table_id=table_id)
+    except TABLE.DoesNotExist:
+        messages.error(request, 'Selected table not found.')
+        return redirect('pybirdai:output_layer_mapping_step1')
+
+    # Get selected ordinates from POST (same as regular step 3 submission)
+    selected_ordinates = request.POST.getlist('selected_ordinates')
+
+    if not selected_ordinates:
+        messages.warning(request, 'Please select at least one ordinate for Quick Start.')
+        return redirect('pybirdai:output_layer_mapping_step3')
+
+    # Store selected ordinates in session
+    request.session['olmw_selected_ordinates'] = selected_ordinates
+
+    # Get ordinate items with axis information
+    ordinate_items = ORDINATE_ITEM.objects.filter(
+        axis_ordinate_id__in=selected_ordinates
+    ).select_related(
+        'variable_id',
+        'axis_ordinate_id',
+        'axis_ordinate_id__axis_id'
+    )
+
+    # Group variables by axis orientation
+    axis_variables = {}  # orientation -> set of variable_ids
+    variable_info = {}   # variable_id -> variable data for role suggestion
+
+    for item in ordinate_items:
+        if item.variable_id and item.axis_ordinate_id and item.axis_ordinate_id.axis_id:
+            var_id = item.variable_id.variable_id
+            orientation = item.axis_ordinate_id.axis_id.orientation or 'Unknown'
+
+            if orientation not in axis_variables:
+                axis_variables[orientation] = set()
+            axis_variables[orientation].add(var_id)
+
+            # Store variable info for role suggestion
+            if var_id not in variable_info:
+                variable_info[var_id] = {
+                    'variable': item.variable_id,
+                    'suggested_role': suggest_variable_role(item.variable_id)
+                }
+
+    # Separate variables by role: Dimension vs Observation
+    # Dimensions stay grouped by axis, Observations go to a single group
+    dimension_vars_by_axis = {}  # orientation -> [var_ids with Dimension role]
+    observation_vars = []         # All observation variables (any axis)
+    attribute_vars = []           # All attribute variables (any axis)
+
+    logger.info(f"[Quick Start] Found orientations in data: {list(axis_variables.keys())}")
+
+    for orientation, var_ids_set in axis_variables.items():
+        for var_id in var_ids_set:
+            role = variable_info.get(var_id, {}).get('suggested_role', 'Dimension')
+            if role == 'Observation':
+                observation_vars.append(var_id)
+            elif role == 'Attribute':
+                attribute_vars.append(var_id)
+            else:  # Dimension
+                if orientation not in dimension_vars_by_axis:
+                    dimension_vars_by_axis[orientation] = []
+                dimension_vars_by_axis[orientation].append(var_id)
+
+    # Create variable groups
+    quick_start_groups = {}
+    group_counter = 0
+
+    # 1. Create axis groups for Dimension variables
+    for orientation, var_ids in dimension_vars_by_axis.items():
+        if var_ids:
+            group_counter += 1
+            group_id = f'group_{group_counter}'
+            orientation_display = orientation.capitalize() if orientation else 'Unknown'
+
+            quick_start_groups[group_id] = {
+                'name': f'{orientation_display} Variables',
+                'variable_ids': var_ids,
+                'group_type': 'Dimension',
+                'targets': [],
+                'mapping_type': 'many_to_one'
+            }
+            logger.info(f"[Quick Start] Created Dimension group '{orientation_display} Variables' with {len(var_ids)} variables")
+
+    # 2. Create single Observation group (if any observation variables exist)
+    if observation_vars:
+        group_counter += 1
+        group_id = f'group_{group_counter}'
+        quick_start_groups[group_id] = {
+            'name': 'Observation Variables',
+            'variable_ids': observation_vars,
+            'group_type': 'Observation',
+            'targets': [],
+            'mapping_type': 'many_to_one'
+        }
+        logger.info(f"[Quick Start] Created Observation group with {len(observation_vars)} variables")
+
+    # 3. Create single Attribute group (if any attribute variables exist)
+    if attribute_vars:
+        group_counter += 1
+        group_id = f'group_{group_counter}'
+        quick_start_groups[group_id] = {
+            'name': 'Attribute Variables',
+            'variable_ids': attribute_vars,
+            'group_type': 'Attribute',
+            'targets': [],
+            'mapping_type': 'many_to_one'
+        }
+        logger.info(f"[Quick Start] Created Attribute group with {len(attribute_vars)} variables")
+
+    # Store quick start groups in session for step 4
+    request.session['olmw_quick_start_groups'] = json.dumps(quick_start_groups)
+
+    # Success message
+    group_count = len(quick_start_groups)
+    total_vars = sum(len(g['variable_ids']) for g in quick_start_groups.values())
+    messages.success(
+        request,
+        f'Quick Start: Created {group_count} variable group(s) with {total_vars} variable(s). '
+        f'You can now review and modify the groups.'
+    )
+
+    logger.info(f"[Quick Start] Created {group_count} groups with {total_vars} variables for table {table_id}")
+
+    return redirect('pybirdai:output_layer_mapping_step4')
 
 
 def generate_table_html(table, ordinates_data):
@@ -1896,8 +2003,6 @@ def edit_mappings_tabbed(request):
     table = TABLE.objects.get(table_id=table_id)
     variable_groups = json.loads(request.session['olmw_variable_groups'])
 
-    print(f"\n[STEP 5] Processing {len(variable_groups)} groups for table '{table.name}'")
-
     # ========== BATCH EDIT MODE: Pre-select Z-tables from existing mappings ==========
     batch_edit_mode = request.session.get('olmw_batch_edit_mode', False)
     if batch_edit_mode and not request.session.get('olmw_selected_z_tables'):
@@ -1942,7 +2047,6 @@ def edit_mappings_tabbed(request):
             f"{', '.join(invalid_groups)}. Please go back and resubmit Step 4."
         )
         messages.error(request, error_msg)
-        print(f"[STEP 5 ERROR] {error_msg}")
         return redirect('pybirdai:output_layer_mapping_step4')
 
     # ========== 2.5. HELPER FUNCTION TO DETERMINE DOMAIN TYPE ==========
@@ -1975,7 +2079,6 @@ def edit_mappings_tabbed(request):
     all_ordinate_members = {}  # {variable_id: [member objects]}
 
     if selected_ordinates:
-        print(f"[STEP 5] Querying ordinate members for {len(selected_ordinates)} selected ordinates")
         ordinate_items = ORDINATE_ITEM.objects.filter(
             axis_ordinate_id__in=selected_ordinates
         ).select_related('variable_id', 'member_id')
@@ -1988,8 +2091,6 @@ def edit_mappings_tabbed(request):
                 if item.member_id not in all_ordinate_members[var_id]:
                     all_ordinate_members[var_id].append(item.member_id)
 
-        print(f"[STEP 5] Found ordinate members for {len(all_ordinate_members)} variables")
-
     # ========== 4. PROCESS EACH VARIABLE GROUP AS A SEPARATE MAPPING ==========
     from itertools import product
 
@@ -2001,17 +2102,16 @@ def edit_mappings_tabbed(request):
         source_var_ids = group_data.get('variable_ids', [])
         target_var_ids = group_data.get('targets', [])
 
-        print(f"[STEP 5] Processing group '{group_name}': {group_type} | {len(source_var_ids)} sources → {len(target_var_ids)} targets")
-
         # Skip groups with no targets
         if not target_var_ids:
-            print(f"[STEP 5] Skipping '{group_name}' - no target variables defined")
             continue
 
         # Generate auto-name for this mapping (use base table code from session, not Z-axis variant)
         base_table_code = request.session.get('olmw_table_code', table.code)
-        auto_name = f"DPM_{base_table_code}_{table.version}_{','.join(source_var_ids)}"
-        print(f"[STEP 5] Auto-generated name: {auto_name}")
+
+        # Clean variable IDs: remove "EBA_" prefix and use underscore separator
+        cleaned_var_ids = [var_id.replace('EBA_', '') for var_id in source_var_ids]
+        auto_name = f"DPM_{base_table_code}_{table.version}__{'_'.join(cleaned_var_ids)}"
 
         # Get VARIABLE objects for this group
         source_vars = list(VARIABLE.objects.filter(variable_id__in=source_var_ids))
@@ -2057,32 +2157,17 @@ def edit_mappings_tabbed(request):
         z_axis_domain_id = None
 
         if is_deduplicated_table(table_id):
-            # DEBUG: Log session state at Step 5 entry
-            print(f"\n[STEP 5 Z-AXIS DEBUG] ==========================================")
-            print(f"[STEP 5 Z-AXIS DEBUG] Session keys: {list(request.session.keys())}")
-            print(f"[STEP 5 Z-AXIS DEBUG] olmw_selected_z_tables in session: {'olmw_selected_z_tables' in request.session}")
-            print(f"[STEP 5 Z-AXIS DEBUG] Raw session value: {request.session.get('olmw_selected_z_tables')}")
-            print(f"[STEP 5 Z-AXIS DEBUG] Current table_id: {table_id}")
-            print(f"[STEP 5 Z-AXIS DEBUG] Batch edit mode: {request.session.get('olmw_batch_edit_mode', False)}")
-            print(f"[STEP 5 Z-AXIS DEBUG] ==========================================\n")
-
             # Get selected Z-tables from session (defaults to current table only on first load)
             selected_z_tables = request.session.get('olmw_selected_z_tables')
             if not selected_z_tables:
                 # Only default to current table if session is empty (first load)
                 # Otherwise, respect user's selection - they can choose ANY Z-variant tables
                 selected_z_tables = [table_id]
-                print(f"[STEP 5 Z-AXIS] Session was empty, defaulting to current table: {table_id}")
-
-            print(f"[STEP 5 Z-AXIS] Processing {len(selected_z_tables)} selected Z-variant tables")
-            print(f"[STEP 5 Z-AXIS] Selected tables from session: {selected_z_tables}")
 
             for selected_table_id in selected_z_tables:
                 z_member_suffix = extract_z_axis_member_from_table_id(selected_table_id)
 
                 if z_member_suffix:
-                    print(f"[STEP 5 Z-AXIS] Extracting Z-axis member from table {selected_table_id}: {z_member_suffix}")
-
                     # Find which variable is the Z-axis dimension (typically Exposure Class domain)
                     for var_id in source_var_ids:
                         try:
@@ -2101,8 +2186,6 @@ def edit_mappings_tabbed(request):
                                         z_members_to_merge.append(correct_member)
                                         z_axis_variable_id = var_id
                                         z_axis_domain_id = domain_id_str  # Save domain ID for use in serialization
-
-                                        print(f"[STEP 5 Z-AXIS] Added Z-member {full_member_id} from table {selected_table_id}")
                                         break
 
                                     except MEMBER.DoesNotExist:
@@ -2113,12 +2196,7 @@ def edit_mappings_tabbed(request):
 
             # Merge all Z-axis members into the ordinate members for the Z-axis variable
             if z_members_to_merge and z_axis_variable_id:
-                old_members = group_ordinate_members.get(z_axis_variable_id, [])
                 group_ordinate_members[z_axis_variable_id] = z_members_to_merge
-
-                print(f"[STEP 5 Z-AXIS] Merged {len(z_members_to_merge)} Z-axis members for {z_axis_variable_id}")
-                print(f"[STEP 5 Z-AXIS] Old: {[m.member_id for m in old_members]}")
-                print(f"[STEP 5 Z-AXIS] New: {[m.member_id for m in z_members_to_merge]}")
                 logger.info(f"[STEP 5 Z-AXIS] Merged Z-axis members: {z_axis_variable_id} = {[m.code for m in z_members_to_merge]}")
 
                 # CRITICAL FIX: Filter out any other exposure class members from group_ordinate_members
@@ -2129,9 +2207,6 @@ def edit_mappings_tabbed(request):
                     if z_axis_var.domain_id:
                         z_axis_domain_id = z_axis_var.domain_id.domain_id
                         z_member_ids_set = {m.member_id for m in z_members_to_merge}
-
-                        print(f"[STEP 5 Z-AXIS FILTER] Z-axis domain: {z_axis_domain_id}")
-                        print(f"[STEP 5 Z-AXIS FILTER] Allowed Z-member IDs: {z_member_ids_set}")
 
                         # Filter all variables to remove exposure class members not in our set
                         filtered_count = 0
@@ -2152,16 +2227,12 @@ def edit_mappings_tabbed(request):
                                     if len(filtered_members) != original_count:
                                         group_ordinate_members[var_id] = filtered_members
                                         filtered_count += (original_count - len(filtered_members))
-                                        print(f"[STEP 5 Z-AXIS FILTER] Filtered {var_id}: {original_count} → {len(filtered_members)} members")
                                         logger.info(f"[STEP 5 Z-AXIS FILTER] Removed {original_count - len(filtered_members)} extra exposure class members from {var_id}")
                             except VARIABLE.DoesNotExist:
                                 continue
 
                         if filtered_count > 0:
-                            print(f"[STEP 5 Z-AXIS FILTER] Total filtered: {filtered_count} extra exposure class members removed")
                             logger.info(f"[STEP 5 Z-AXIS FILTER] Removed total of {filtered_count} extra exposure class members across all variables")
-                        else:
-                            print(f"[STEP 5 Z-AXIS FILTER] No extra members found - filtering not needed")
 
                 except VARIABLE.DoesNotExist:
                     logger.warning(f"[STEP 5 Z-AXIS FILTER] Could not load Z-axis variable {z_axis_variable_id} for domain filtering")
@@ -2187,7 +2258,6 @@ def edit_mappings_tabbed(request):
                         }
                         for m in ordinate_filtered_members
                     ]
-                    print(f"[STEP 5] Using {len(ordinate_filtered_members)} ordinate-filtered members for {var_id}")
                 elif z_members_to_merge and z_axis_domain_id and variable.domain_id and variable.domain_id.domain_id == z_axis_domain_id:
                     # CRITICAL: For Z-axis domain variables without ordinate members (typically target variables),
                     # use the extracted Z-members instead of loading all domain members
@@ -2200,7 +2270,6 @@ def edit_mappings_tabbed(request):
                         }
                         for m in z_members_to_merge
                     ]
-                    print(f"[STEP 5 Z-AXIS FALLBACK] Using {len(z_members_to_merge)} extracted Z-axis members for {var_id} (target variable)")
                     logger.info(f"[STEP 5 Z-AXIS FALLBACK] Applied Z-axis filter to target variable {var_id}")
                 elif variable.domain_id and hasattr(variable.domain_id, 'domain_id'):
                     # Fallback: Load all domain members if no ordinate members exist
@@ -2217,11 +2286,9 @@ def edit_mappings_tabbed(request):
                         }
                         for m in all_domain_members
                     ]
-                    print(f"[STEP 5] Loaded {len(all_domain_members)} domain members for {var_id} (no ordinate filter)")
                 else:
                     # No members available
                     ordinate_members_json[var_id] = []
-                    print(f"[STEP 5] Warning: No members available for variable {var_id}")
 
             except VARIABLE.DoesNotExist:
                 # Fallback to ordinate members
@@ -2297,9 +2364,7 @@ def edit_mappings_tabbed(request):
                         # Match by name
                         if mm_data.get('mapping_name') == group_name or mm_data.get('mapping_name') == group_data.get('name'):
                             existing_dims = mm_data.get('dimensions', [])
-                            print(f"[BATCH EDIT] Found {len(existing_dims)} dimension rows for group '{group_name}'")
                             if existing_dims:
-                                print(f"[BATCH EDIT] First dim_row keys: {list(existing_dims[0].keys()) if existing_dims else 'none'}")
                                 # Convert existing dimensions to the expected format
                                 for dim_row in existing_dims:
                                     combo_dict = {}
@@ -2352,7 +2417,6 @@ def edit_mappings_tabbed(request):
                     source_member_lists.append(members_data)
                     vars_with_members.append(var)
                 else:
-                    print(f"[STEP 5] Warning: No ordinate members for dimension source variable {var_id}")
                     skipped_vars.append(var_id)
 
             # Generate Cartesian product only from variables with members
@@ -2363,13 +2427,6 @@ def edit_mappings_tabbed(request):
                         var_id = vars_with_members[i].variable_id
                         combo_dict[var_id] = member
                     dimension_combinations.append(combo_dict)
-
-                print(f"[STEP 5] Generated {len(dimension_combinations)} dimension combinations for group '{group_name}'")
-
-                if skipped_vars:
-                    print(f"[STEP 5] Skipped {len(skipped_vars)} variables without ordinate members: {', '.join(skipped_vars)}")
-            elif not source_member_lists:
-                print(f"[STEP 5] No dimension variables with ordinate members found for group '{group_name}'")
 
         # Serialize variables for JavaScript
         mapping_obj = {
@@ -2422,7 +2479,6 @@ def edit_mappings_tabbed(request):
             "No mappings were created. This usually means groups have no target variables defined. "
             "Go back to Step 4 and ensure each group has at least one target variable selected."
         )
-        print("[STEP 5 WARNING] No mappings created - check target variables in Step 4")
 
     # ========== 6. HANDLE FORM SUBMISSION ==========
     if request.method == 'POST':
@@ -2448,7 +2504,6 @@ def edit_mappings_tabbed(request):
             }
 
         request.session['olmw_multi_mappings'] = json.dumps(all_mappings)
-        print(f"[STEP 5] Saved {len(all_mappings)} mappings to session")
         return redirect('pybirdai:output_layer_mapping_step6')
 
     # ========== 7. RENDER TEMPLATE ==========
@@ -2463,16 +2518,14 @@ def edit_mappings_tabbed(request):
     if is_dedup:
         z_siblings = list(get_z_axis_sibling_tables(table_id))
 
-    # Debug: Show what Z-tables will be passed to template
     # Ensure selected_z_tables is defined (it's set inside the for loop)
     try:
         selected_z_for_template = selected_z_tables if is_dedup else []
     except NameError:
         # Variable not defined (loop didn't execute or table not deduplicated)
         selected_z_for_template = []
-        print(f"[STEP 5 CONTEXT DEBUG] WARNING: selected_z_tables was not defined!")
 
-    # CRITICAL FIX: Ensure all session-selected tables are in the dropdown options
+    # Ensure all session-selected tables are in the dropdown options
     # This prevents Tom Select from dropping tables that aren't in z_siblings
     if selected_z_for_template and is_dedup:
         z_sibling_ids = {t.table_id for t in z_siblings}
@@ -2482,13 +2535,8 @@ def edit_mappings_tabbed(request):
                 try:
                     missing_table = TABLE.objects.get(table_id=session_table_id)
                     z_siblings.append(missing_table)
-                    print(f"[STEP 5 CONTEXT DEBUG] Added missing session table to dropdown: {session_table_id}")
                 except TABLE.DoesNotExist:
-                    print(f"[STEP 5 CONTEXT DEBUG] Session table not found: {session_table_id}")
-
-    print(f"[STEP 5 CONTEXT DEBUG] is_dedup: {is_dedup}")
-    print(f"[STEP 5 CONTEXT DEBUG] z_siblings count: {len(z_siblings)}")
-    print(f"[STEP 5 CONTEXT DEBUG] selected_z_table_ids for template: {selected_z_for_template}")
+                    pass
 
     context = {
         'table': table,
@@ -2549,8 +2597,8 @@ def create_member(request):
         except DOMAIN.DoesNotExist:
             return JsonResponse({'success': False, 'error': f'Domain not found: {domain_id}'}, status=404)
 
-        # Generate member_id (using domain_id and code)
-        member_id = f"{domain_id}_{code}"
+        # Generate member_id (using domain_id.code format for clearer separation)
+        member_id = f"{domain_id}.{code}"
 
         # Check if member already exists
         if MEMBER.objects.filter(member_id=member_id).exists():
@@ -2610,7 +2658,7 @@ def create_member(request):
         })
 
     except Exception as e:
-        print(f"[ERROR] Error creating member: {str(e)}")
+        logger.error(f"Error creating member: {str(e)}")
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
@@ -2728,7 +2776,6 @@ def review_and_name_mapping(request):
 
         # Save updated mappings back to session
         request.session['olmw_multi_mappings'] = json.dumps(all_mappings)
-        print(f"[STEP 6] Saved {len(all_mappings)} mappings with names")
 
         return redirect('pybirdai:output_layer_mapping_step7')
 
@@ -2890,12 +2937,6 @@ def generate_structures_for_table(table_id, table_code, framework, version,
             - error: str (if success=False)
     """
     try:
-        print(f"\n{'='*80}")
-        print(f"[GENERATE_FOR_TABLE ENTRY] Starting generation for table {table_id}")
-        print(f"[GENERATE_FOR_TABLE ENTRY] Received variable_groups: {len(variable_groups)} groups")
-        print(f"[GENERATE_FOR_TABLE ENTRY] Received all_mappings: {len(all_mappings)} mappings")
-        print(f"{'='*80}\n")
-
         logger.info(f"[GENERATE_FOR_TABLE] Starting generation for table {table_id}")
 
         # Initialize orchestrator
@@ -2909,22 +2950,12 @@ def generate_structures_for_table(table_id, table_code, framework, version,
         created_member_mappings = []  # Track MEMBER_MAPPING objects for debug_data collection
 
         # Extract target variables from variable_groups
-        print(f"[GENERATE_FOR_TABLE] Extracting variables from {len(variable_groups)} groups...")
-        logger.info(f"[GENERATE_FOR_TABLE VAR DEBUG] variable_groups has {len(variable_groups)} groups")
         for group_id, group_data in variable_groups.items():
             group_type = group_data.get('group_type', 'dimension').lower()
             target_var_ids = group_data.get('targets', [])
 
-            print(f"[GENERATE_FOR_TABLE] Group {group_id}: type={group_type}, targets={len(target_var_ids) if target_var_ids else 0}")
-
-            logger.info(f"[GENERATE_FOR_TABLE VAR DEBUG] Group {group_id}: type={group_type}, target_var_ids count={len(target_var_ids) if target_var_ids else 0}")
-            if target_var_ids:
-                logger.info(f"[GENERATE_FOR_TABLE VAR DEBUG]   target_var_ids: {target_var_ids}")
-
             if target_var_ids:
                 target_vars = list(VARIABLE.objects.filter(variable_id__in=target_var_ids))
-                print(f"[GENERATE_FOR_TABLE]   Found {len(target_vars)} variables for group {group_id}")
-                logger.info(f"[GENERATE_FOR_TABLE VAR DEBUG]   Found {len(target_vars)} variables in database for group {group_id}")
 
                 if group_type == 'dimension':
                     dimension_target_vars.extend(target_vars)
@@ -2933,15 +2964,10 @@ def generate_structures_for_table(table_id, table_code, framework, version,
                 elif group_type == 'attribute':
                     attribute_target_vars.extend(target_vars)
             else:
-                print(f"[GENERATE_FOR_TABLE] WARNING: Group {group_id} has NO targets!")
-                logger.warning(f"[GENERATE_FOR_TABLE VAR DEBUG]   No target_var_ids for group {group_id}")
+                logger.warning(f"[GENERATE_FOR_TABLE] No target_var_ids for group {group_id}")
 
         logger.info(f"[GENERATE_FOR_TABLE] Target variables: {len(dimension_target_vars)} dims, "
                    f"{len(observation_target_vars)} obs, {len(attribute_target_vars)} attrs")
-
-        print(f"[GENERATE_FOR_TABLE] Total extracted: {len(dimension_target_vars)} dimensions, {len(observation_target_vars)} observations, {len(attribute_target_vars)} attributes")
-        if len(dimension_target_vars) == 0 and len(observation_target_vars) == 0:
-            print(f"[GENERATE_FOR_TABLE] CRITICAL: NO variables extracted - will create 0 CUBE_STRUCTURE_ITEMs!")
 
         # Normalize version for use in IDs
         version_normalized = version.replace('.', '_')
@@ -2957,7 +2983,6 @@ def generate_structures_for_table(table_id, table_code, framework, version,
                 if mapping_def.member_mapping_id:
                     created_member_mappings.append(mapping_def.member_mapping_id)
             logger.info(f"[GENERATE_FOR_TABLE] Reusing {len(created_mapping_definitions)} existing mapping definitions (Z-axis variant)")
-            print(f"[GENERATE_FOR_TABLE] Reusing {len(created_mapping_definitions)} existing mappings for Z-axis variant")
         else:
             # Create new MAPPING_DEFINITIONs
             # Generate mapping IDs
@@ -2996,15 +3021,12 @@ def generate_structures_for_table(table_id, table_code, framework, version,
 
             # Create MAPPING_DEFINITIONs for each mapping
             mapping_counter = 0
-            print(f"[GENERATE_FOR_TABLE] Processing {len(all_mappings)} mappings...")
-            logger.info(f"[GENERATE_FOR_TABLE MAPPING LOOP] Processing {len(all_mappings)} mappings")
+            logger.info(f"[GENERATE_FOR_TABLE] Processing {len(all_mappings)} mappings")
             for group_id, mapping_data in all_mappings.items():
                 mapping_name = mapping_data['mapping_name']
                 internal_id = mapping_data['internal_id']
                 group_type = mapping_data.get('group_type', 'dimension').lower()
                 dimensions = mapping_data.get('dimensions', [])
-                print(f"[GENERATE_FOR_TABLE] Mapping {group_id}: {len(dimensions)} dimension rows")
-                logger.info(f"[GENERATE_FOR_TABLE MAPPING LOOP] Mapping {group_id}: name='{mapping_name}', has {len(dimensions)} dimension rows")
                 observations = mapping_data.get('observations', [])
                 attributes = mapping_data.get('attributes', [])
 
@@ -3433,13 +3455,16 @@ def generate_structures_for_table(table_id, table_code, framework, version,
             )
 
         # Use full table_id to ensure uniqueness across variants
-        cube_id = f"{table_id}_{framework}_CUBE"
+        # Extract framework short name (e.g., 'EBA_COREP' -> 'COREP')
+        framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
+        # New naming: {FRAMEWORK_SHORT}_REF_{table_id}_CUBE
+        cube_id = f"{framework_short}_REF_{table_id}_CUBE"
         cube, cube_created = CUBE.objects.get_or_create(
             cube_id=cube_id,
             defaults={
                 'maintenance_agency_id': maintenance_agency,
                 'name': f"Reference cube for {table_id}",
-                'code': f"{table_code}_CUBE",
+                'code': f"{framework_short}_REF_{table_code}_CUBE",
                 'framework_id': framework_obj,
                 'cube_structure_id': cube_structure,
                 'cube_type': "RC",
@@ -3513,13 +3538,37 @@ def generate_structures_for_table(table_id, table_code, framework, version,
         logger.info(f"[GENERATE_FOR_TABLE] Found {cells.count()} cells for table {table_id}")
 
         # Filter cells by selected ordinates if provided
+        # Use AND logic across axes: cells must match selected ordinates in EACH axis
         if selected_ordinates:
-            filtered_cell_positions = CELL_POSITION.objects.filter(
-                axis_ordinate_id__in=selected_ordinates,
-                cell_id__in=cells
-            ).values_list('cell_id', flat=True).distinct()
-            cells = cells.filter(cell_id__in=filtered_cell_positions)
-            logger.info(f"[GENERATE_FOR_TABLE] Filtered to {cells.count()} cells matching selected ordinates")
+            # Group selected ordinates by their axis
+            from collections import defaultdict
+            ordinates_by_axis = defaultdict(list)
+            selected_ordinate_objs = AXIS_ORDINATE.objects.filter(
+                axis_ordinate_id__in=selected_ordinates
+            )
+            for ordinate in selected_ordinate_objs:
+                if ordinate.axis_id:
+                    ordinates_by_axis[ordinate.axis_id_id].append(ordinate.axis_ordinate_id)
+
+            logger.info(f'[GENERATE_FOR_TABLE] Selected ordinates grouped by {len(ordinates_by_axis)} axes')
+
+            # For each axis, find cells with matching ordinates, then intersect
+            filtered_cell_sets = []
+            for axis_id, axis_ordinates in ordinates_by_axis.items():
+                cells_for_axis = set(CELL_POSITION.objects.filter(
+                    axis_ordinate_id__in=axis_ordinates,
+                    cell_id__in=cells
+                ).values_list('cell_id', flat=True).distinct())
+                filtered_cell_sets.append(cells_for_axis)
+                logger.info(f'[GENERATE_FOR_TABLE] Axis {axis_id}: {len(axis_ordinates)} ordinates -> {len(cells_for_axis)} cells')
+
+            # Intersect all sets - cells must match in ALL axes
+            if filtered_cell_sets:
+                final_cell_ids = filtered_cell_sets[0]
+                for cell_set in filtered_cell_sets[1:]:
+                    final_cell_ids = final_cell_ids.intersection(cell_set)
+                cells = cells.filter(cell_id__in=final_cell_ids)
+            logger.info(f"[GENERATE_FOR_TABLE] Filtered to {cells.count()} cells (intersection of {len(ordinates_by_axis)} axes)")
 
         # Generate combinations
         generation_timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -3849,7 +3898,6 @@ def generate_structures(request):
             if regenerate_mode:
                 existing_mapping_ids = request.session.get('olmw_existing_mapping_ids', [])
                 if existing_mapping_ids:
-                    print(f"[STEP 7 REGENERATE] Deleting old artifacts for {len(existing_mapping_ids)} mappings before regeneration")
                     deletion_stats = delete_mapping_artifacts(existing_mapping_ids)
                     logger.info(f"[STEP 7 REGENERATE] Deleted artifacts: {deletion_stats}")
 
@@ -4026,7 +4074,7 @@ def generate_structures(request):
                 old_count = old_mapping_to_cube.count()
                 if old_count > 0:
                     old_mapping_to_cube.delete()
-                    print(f"[STEP 7] Deleted {old_count} old MAPPING_TO_CUBE record(s) matching patterns: {cube_mapping_id_pattern} or {cube_mapping_id_pattern_new}")
+                    logger.info(f"[STEP 7] Deleted {old_count} old MAPPING_TO_CUBE record(s)")
 
                 # Create new MAPPING_TO_CUBE records
                 today_start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -4051,7 +4099,6 @@ def generate_structures(request):
                     )
                     if debug_data is not None:
                         debug_data['MAPPING_TO_CUBE'].append(mtc)
-                    print(f"[STEP 7] Linked {mapping_def.mapping_id} to {cube.cube_id}")
 
             # ========== PHASE 5: COMBINATIONS ==========
             phase5_result = executor.execute_phase(
@@ -4074,6 +4121,26 @@ def generate_structures(request):
             # Save table_id before clearing session (needed for regenerate feature)
             saved_table_id = table_id
 
+            # ========== GENERATE REFERENCE TABLE ARTIFACTS ==========
+            # Create a reference table with only the selected ordinates
+            # Pass mapping definitions so reference table shows mapped variables/members
+            selected_ordinates = request.session.get('olmw_selected_ordinates', [])
+            reference_table_result = generate_reference_table_artifacts(
+                source_table_id=table_id,
+                selected_ordinates=selected_ordinates,
+                framework=framework,
+                version=version,
+                maintenance_agency=maintenance_agency,
+                mapping_definitions=created_mapping_definitions
+            )
+
+            if reference_table_result['success']:
+                reference_table_id = reference_table_result['reference_table_id']
+                logger.info(f"[STEP 7] Generated reference table: {reference_table_id}")
+            else:
+                reference_table_id = saved_table_id  # Fallback to DPM table
+                logger.warning(f"[STEP 7] Failed to generate reference table: {reference_table_result.get('error', 'Unknown error')}")
+
             # Prepare success context
             context = {
                 'success': True,
@@ -4092,7 +4159,8 @@ def generate_structures(request):
                     'cube_structure_id': cube_structure.cube_structure_id,
                     'cube_id': cube.cube_id,
                     'combinations_created': len(created_combinations),
-                    'table_id': saved_table_id  # For regenerate feature
+                    'table_id': saved_table_id,  # For regenerate feature
+                    'reference_table_id': reference_table_id  # For annotated template viewer
                 },
                 'conflicts': [],
                 'conflicts_json': '[]',
@@ -4113,24 +4181,6 @@ def generate_structures(request):
                     'multi_mappings': json.loads(request.session.get('olmw_multi_mappings', '{}')),
                     'selected_ordinates': request.session.get('olmw_selected_ordinates', [])
                 }
-
-                # DIAGNOSTIC: Log session data structure (using print() to bypass any logger caching)
-                print(f"\n{'='*80}")
-                print(f"[STEP 7 SESSION DATA] variable_groups has {len(original_config['variable_groups'])} groups")
-                for group_id, group_data in list(original_config['variable_groups'].items())[:3]:  # Show first 3
-                    targets = group_data.get('targets', [])
-                    var_ids = group_data.get('variable_ids', [])
-                    print(f"[STEP 7 SESSION DATA]   Group {group_id}: {len(var_ids)} variable_ids, {len(targets)} targets")
-                    if not targets:
-                        print(f"[STEP 7 SESSION DATA]   WARNING: Group {group_id} has NO TARGETS - this will cause 0 CUBE_STRUCTURE_ITEMs!")
-
-                print(f"[STEP 7 SESSION DATA] multi_mappings has {len(original_config['multi_mappings'])} mappings")
-                for group_id, mapping_data in list(original_config['multi_mappings'].items())[:3]:  # Show first 3
-                    dimensions = mapping_data.get('dimensions', [])
-                    print(f"[STEP 7 SESSION DATA]   Mapping {group_id}: {len(dimensions)} dimension rows")
-                    if not dimensions:
-                        print(f"[STEP 7 SESSION DATA]   WARNING: Mapping {group_id} has NO DIMENSIONS - this will cause 0 MEMBER_MAPPING_ITEMs!")
-                print(f"{'='*80}\n")
 
                 # Parse Z-axis member mappings from form data
                 z_member_mappings = {}
@@ -4530,11 +4580,10 @@ def generate_structures(request):
                 logger.info("  - Debug data tracking disabled (DEBUG_EXPORT_ENABLED=False)")
             logger.info("[STEP 7 PRE-COMMIT] Transaction will now attempt to commit...")
 
-            # Clear session data after all processing (including replication) is complete
-            for key in list(request.session.keys()):
-                if key.startswith('olmw_'):
-                    del request.session[key]
-            logger.info("[STEP 7] Cleared session data after successful generation")
+            # Note: Session data is NOT cleared here anymore to avoid redirect loops.
+            # The session will be overwritten when the user starts a new workflow (Step 1 POST).
+            # This prevents the browser from cascading redirects if the user refreshes
+            # or navigates after completion, which was causing SQLite locking issues.
 
             messages.success(request, f'Successfully created {len(created_mapping_definitions)} output layer mappings with shared cube')
 
@@ -4598,12 +4647,37 @@ def generate_structures(request):
         else:
             # Normal mode: build summaries from session data
             for group_id, mapping_data in all_mappings.items():
+                # Count unique variable IDs for each category
+                # dimensions: list of dicts [{var_id: member_id, ...}, ...]
+                # observations/attributes: dict {'source_vars': [...], 'target_vars': [...]}
+                dims = mapping_data.get('dimensions', [])
+                obs = mapping_data.get('observations', {})
+                attrs = mapping_data.get('attributes', {})
+
+                # dimensions is a list of dicts - count unique keys
+                unique_dim_vars = set()
+                for row in dims:
+                    if isinstance(row, dict):
+                        unique_dim_vars.update(row.keys())
+
+                # observations is a dict with source_vars and target_vars lists
+                unique_obs_vars = set()
+                if isinstance(obs, dict):
+                    unique_obs_vars.update(obs.get('source_vars', []))
+                    unique_obs_vars.update(obs.get('target_vars', []))
+
+                # attributes is a dict with source_vars and target_vars lists
+                unique_attr_vars = set()
+                if isinstance(attrs, dict):
+                    unique_attr_vars.update(attrs.get('source_vars', []))
+                    unique_attr_vars.update(attrs.get('target_vars', []))
+
                 mapping_summaries.append({
                     'name': mapping_data['mapping_name'],
                     'internal_id': mapping_data.get('internal_id', ''),
-                    'dimension_count': len(mapping_data.get('dimensions', [])),
-                    'observation_count': len(mapping_data.get('observations', [])),
-                    'attribute_count': len(mapping_data.get('attributes', []))
+                    'dimension_count': len(unique_dim_vars),
+                    'observation_count': len(unique_obs_vars),
+                    'attribute_count': len(unique_attr_vars)
                 })
 
             # Check for conflicts (only in normal mode, not regenerate mode)
@@ -4636,18 +4710,27 @@ def generate_structures(request):
             ]
             logger.info(f"[STEP 7] Found {len(related_duplicates)} related duplicate tables for {table_id}")
 
+        # Compute preview IDs matching actual generation format
+        framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
+        clean_table_id = NamingUtils.strip_z_ordinate_suffix(table_id)
+        preview_cube_id = f"{framework_short}_REF_{clean_table_id}_CUBE"
+        preview_structure_id = f"{framework_short}_REF_{clean_table_id}_STRUCTURE"
+
         # Read tables selected in Step 5 (Z-variant table selector)
         selected_z_table_ids = request.session.get('olmw_selected_z_tables', [])
         selected_z_tables = []
         if selected_z_table_ids:
-            # Get full table objects for display
+            # Get full table objects for display with preview IDs
             for z_table_id in selected_z_table_ids:
                 try:
                     t = TABLE.objects.get(table_id=z_table_id)
+                    z_clean_table_id = NamingUtils.strip_z_ordinate_suffix(z_table_id)
+                    z_preview_cube_id = f"{framework_short}_REF_{z_clean_table_id}_CUBE"
                     selected_z_tables.append({
                         'table_id': t.table_id,
                         'table_code': t.table_code if hasattr(t, 'table_code') else t.table_id,
-                        'name': t.name if t.name else t.table_id
+                        'name': t.name if t.name else t.table_id,
+                        'preview_cube_id': z_preview_cube_id
                     })
                 except TABLE.DoesNotExist:
                     logger.warning(f"[STEP 7] Selected Z-table {z_table_id} not found in database")
@@ -4671,7 +4754,9 @@ def generate_structures(request):
             'is_duplicated_table': is_duplicated,
             'related_duplicates': related_duplicates,
             'related_duplicates_json': json.dumps(related_duplicates),
-            'selected_z_tables': selected_z_tables  # Tables selected in Step 5
+            'selected_z_tables': selected_z_tables,  # Tables selected in Step 5
+            'preview_cube_id': preview_cube_id,
+            'preview_structure_id': preview_structure_id
         }
 
     return render(request, 'pybirdai/output_layer_mapping_workflow/step7_confirmation.html', context)
@@ -4949,9 +5034,20 @@ def create_variable(request):
 
             variable_id = data.get('variable_id')
 
-            # Check if variable already exists
+            # Check if variable already exists - return it instead of error
             if VARIABLE.objects.filter(variable_id=variable_id).exists():
-                return JsonResponse({'success': False, 'error': 'Variable ID already exists'})
+                existing_variable = VARIABLE.objects.get(variable_id=variable_id)
+                return JsonResponse({
+                    'success': True,
+                    'existing': True,
+                    'variable': {
+                        'variable_id': existing_variable.variable_id,
+                        'name': existing_variable.name,
+                        'code': existing_variable.code or '',
+                        'description': existing_variable.description or '',
+                        'domain_id': existing_variable.domain_id.domain_id if existing_variable.domain_id else None
+                    }
+                })
 
             # Create variable
             variable = VARIABLE()
@@ -4986,6 +5082,85 @@ def create_variable(request):
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
 
 
+def update_variable_domain(request):
+    """
+    API endpoint to update a variable's domain
+    """
+    if request.method == 'POST':
+        try:
+            from pybirdai.models.bird_meta_data_model import VARIABLE, DOMAIN
+            data = json.loads(request.body)
+
+            variable_id = data.get('variable_id')
+            domain_id = data.get('domain_id')
+
+            if not variable_id or not domain_id:
+                return JsonResponse({'success': False, 'error': 'Variable ID and Domain ID are required'})
+
+            # Get the variable
+            try:
+                variable = VARIABLE.objects.get(variable_id=variable_id)
+            except VARIABLE.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Variable not found'})
+
+            # Get the domain
+            try:
+                domain = DOMAIN.objects.get(domain_id=domain_id)
+            except DOMAIN.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Domain not found'})
+
+            # Update the variable's domain
+            variable.domain_id = domain
+            variable.save()
+
+            logger.info(f"[API] Updated variable {variable_id} domain to {domain_id}")
+
+            return JsonResponse({
+                'success': True,
+                'variable': {
+                    'variable_id': variable.variable_id,
+                    'name': variable.name,
+                    'domain_id': domain.domain_id,
+                    'domain_name': domain.name
+                }
+            })
+
+        except Exception as e:
+            logger.error(f"[API] Error updating variable domain: {e}")
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+
+def get_variable_info(request):
+    """
+    API endpoint to get variable information including domain
+    """
+    variable_id = request.GET.get('variable_id')
+    if not variable_id:
+        return JsonResponse({'success': False, 'error': 'Variable ID required'})
+
+    try:
+        from pybirdai.models.bird_meta_data_model import VARIABLE
+        variable = VARIABLE.objects.get(variable_id=variable_id)
+
+        return JsonResponse({
+            'success': True,
+            'variable': {
+                'variable_id': variable.variable_id,
+                'name': variable.name,
+                'code': variable.code or '',
+                'description': variable.description or '',
+                'domain_id': variable.domain_id.domain_id if variable.domain_id else None,
+                'domain_name': variable.domain_id.name if variable.domain_id else None
+            }
+        })
+    except VARIABLE.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Variable not found'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
 def create_domain(request):
     """
     API endpoint to create a new enumerated reference domain
@@ -5000,9 +5175,20 @@ def create_domain(request):
             if not domain_id:
                 return JsonResponse({'success': False, 'error': 'Domain ID is required'})
 
-            # Check if domain already exists
-            if DOMAIN.objects.filter(domain_id=domain_id).exists():
-                return JsonResponse({'success': False, 'error': 'Domain ID already exists'})
+            # Check if domain already exists - return it instead of error
+            existing_domain = DOMAIN.objects.filter(domain_id=domain_id).first()
+            if existing_domain:
+                return JsonResponse({
+                    'success': True,
+                    'existing': True,
+                    'domain': {
+                        'domain_id': existing_domain.domain_id,
+                        'name': existing_domain.name,
+                        'code': existing_domain.code,
+                        'is_enumerated': existing_domain.is_enumerated,
+                        'is_reference': existing_domain.is_reference
+                    }
+                })
 
             # Get maintenance agency (use first one if available)
             maintenance_agency = MAINTENANCE_AGENCY.objects.first()
@@ -5277,7 +5463,7 @@ def regenerate_combinations_api(request):
         cube = CUBE.objects.get(cube_id=cube_id)
         table = TABLE.objects.get(table_id=table_id)
 
-        print(f"[REGENERATE] Regenerating combinations for cube {cube_id}, table {table_id}")
+        logger.info(f"[REGENERATE] Regenerating combinations for cube {cube_id}, table {table_id}")
 
         # Delete existing combinations linked to this cube
         existing_links = CUBE_TO_COMBINATION.objects.filter(cube_id=cube)
@@ -5287,16 +5473,12 @@ def regenerate_combinations_api(request):
         existing_links.delete()
         COMBINATION.objects.filter(combination_id__in=combination_ids).delete()
 
-        print(f"[REGENERATE] Deleted {deleted_count} existing combinations")
-
         # Regenerate combinations using fixed cell lookup (CELL_POSITION traversal)
         table_axes = AXIS.objects.filter(table_id=table)
         table_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=table_axes)
         all_cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
         cell_ids = all_cell_positions.values_list('cell_id', flat=True).distinct()
         cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
-
-        print(f"[REGENERATE] Found {cells.count()} cells via CELL_POSITION traversal")
 
         # Create combinations
         generation_timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -5314,7 +5496,7 @@ def regenerate_combinations_api(request):
                     combination_id=combination
                 )
 
-        print(f"[REGENERATE] Created {len(created_combinations)} new combinations")
+        logger.info(f"[REGENERATE] Created {len(created_combinations)} new combinations")
 
         return JsonResponse({
             'success': True,
@@ -5565,14 +5747,12 @@ def step2_edit_bulk(request):
 
         z_table_ids = set()
         mtc_records = MAPPING_TO_CUBE.objects.filter(mapping_id=mapping_id)
-        print(f"[STEP 2 EDIT SINGLE] Found {mtc_records.count()} MAPPING_TO_CUBE records")
 
         # Get base table from session
         base_table_id = None
         current_table_id = request.session.get('olmw_table_id')
         if current_table_id:
             base_table_id = get_base_table_id(current_table_id)
-            print(f"[STEP 2 EDIT SINGLE] Base table ID: {base_table_id}")
 
         # Pattern to extract Z-member from cube_mapping_id
         z_variant_pattern = r'_(EBA_q[A-Z]+_EBA_q[a-z0-9]+)_'
@@ -5582,7 +5762,6 @@ def step2_edit_bulk(request):
                 if match:
                     z_member = match.group(1)
                     z_suffix = '_' + z_member
-                    print(f"[STEP 2 EDIT SINGLE] cube_mapping_id '{mtc.cube_mapping_id}' -> Z-member: {z_member}")
 
                     if base_table_id:
                         matching_tables = TABLE.objects.filter(
@@ -5594,24 +5773,16 @@ def step2_edit_bulk(request):
 
                     for tbl in matching_tables:
                         z_table_ids.add(tbl.table_id)
-                        print(f"[STEP 2 EDIT SINGLE] Matched table: {tbl.table_id}")
 
         # Always include the current session table (the table user is editing from)
         if current_table_id:
             z_table_ids.add(current_table_id)
-            print(f"[STEP 2 EDIT SINGLE] Added current session table: {current_table_id}")
 
         if z_table_ids:
             z_table_list = list(z_table_ids)
             request.session['olmw_selected_z_tables'] = z_table_list
             request.session.modified = True  # Ensure session is saved
-            print(f"[STEP 2 EDIT SINGLE] SET SESSION olmw_selected_z_tables = {z_table_list}")
-            print(f"[STEP 2 EDIT SINGLE] Session keys after setting: {list(request.session.keys())}")
             logger.info(f"[STEP 2 EDIT SINGLE] Pre-selected {len(z_table_ids)} Z-tables from existing mapping: {z_table_ids}")
-        else:
-            print(f"[STEP 2 EDIT SINGLE] WARNING: z_table_ids is empty!")
-            print(f"[STEP 2 EDIT SINGLE] current_table_id = {current_table_id}")
-            print(f"[STEP 2 EDIT SINGLE] mtc_records.count() = {mtc_records.count()}")
 
         messages.info(
             request,
@@ -5668,8 +5839,6 @@ def step2_edit_bulk(request):
         request.session['olmw_selected_ordinates'] = list(all_ordinates)
 
         # Pre-select Z-tables from MAPPING_TO_CUBE records
-        print(f"\n[STEP 2 EDIT BULK] === Z-TABLE PRE-SELECTION DEBUG ===")
-
         z_table_ids = set()
         import re
         from pybirdai.process_steps.output_layer_mapping_workflow.table_utils import get_base_table_id
@@ -5679,58 +5848,39 @@ def step2_edit_bulk(request):
         current_table_id = request.session.get('olmw_table_id')
         if current_table_id:
             base_table_id = get_base_table_id(current_table_id)
-            print(f"[STEP 2 EDIT BULK] Base table ID from session: {base_table_id}")
 
         # Query MAPPING_TO_CUBE for all selected mappings
         mtc_records = MAPPING_TO_CUBE.objects.filter(mapping_id__in=selected_mappings)
-        print(f"[STEP 2 EDIT BULK] Found {mtc_records.count()} MAPPING_TO_CUBE records")
 
         # Extract Z-variant pattern from cube_mapping_id
-        # Format: M_C_07_00_a_EBA_qEC_EBA_qx1_REF_EBA_COREP_4_0
-        # The Z-suffix is in the middle, followed by _REF_...
-        z_variant_pattern = r'_(EBA_q[A-Z]+_EBA_q[a-z0-9]+)_'  # Capture just the member ID
+        z_variant_pattern = r'_(EBA_q[A-Z]+_EBA_q[a-z0-9]+)_'
 
         for mtc in mtc_records:
             if mtc.cube_mapping_id:
-                # Find Z-variant pattern in cube_mapping_id
                 match = re.search(z_variant_pattern, mtc.cube_mapping_id)
                 if match:
-                    z_member = match.group(1)  # e.g., 'EBA_qEC_EBA_qx1' (without leading underscore)
-                    print(f"[STEP 2 EDIT BULK] cube_mapping_id '{mtc.cube_mapping_id}' -> Z-member: {z_member}")
-
-                    # Find TABLE records with exact Z-suffix ending AND matching base table
-                    z_suffix = '_' + z_member  # Add underscore back for table matching
+                    z_member = match.group(1)
+                    z_suffix = '_' + z_member
                     if base_table_id:
-                        # Filter by base table AND exact Z-suffix at end of table_id
                         matching_tables = TABLE.objects.filter(
                             table_id__startswith=base_table_id,
                             table_id__endswith=z_suffix
                         )
                     else:
-                        # Fallback: just exact Z-suffix at end
                         matching_tables = TABLE.objects.filter(table_id__endswith=z_suffix)
 
                     for tbl in matching_tables:
                         z_table_ids.add(tbl.table_id)
-                        print(f"[STEP 2 EDIT BULK] Matched table: {tbl.table_id}")
 
         # Always include the current session table (the table user is editing from)
         if current_table_id:
             z_table_ids.add(current_table_id)
-            print(f"[STEP 2 EDIT BULK] Added current session table: {current_table_id}")
-
-        print(f"[STEP 2 EDIT BULK] Found {len(z_table_ids)} unique table IDs: {z_table_ids}")
-        logger.info(f"[STEP 2 EDIT BULK] Found {len(z_table_ids)} unique table IDs: {z_table_ids}")
 
         if z_table_ids:
             z_table_list = list(z_table_ids)
             request.session['olmw_selected_z_tables'] = z_table_list
-            request.session.modified = True  # Ensure session is saved
-            print(f"[STEP 2 EDIT BULK] SET SESSION olmw_selected_z_tables = {z_table_list}")
-            print(f"[STEP 2 EDIT BULK] Session keys after setting: {list(request.session.keys())}")
+            request.session.modified = True
             logger.info(f"[STEP 2 EDIT BULK] Pre-selected {len(z_table_ids)} Z-tables from existing mappings")
-        else:
-            print(f"[STEP 2 EDIT BULK] NO Z-tables found, session NOT set")
 
         logger.info(f"[STEP 2 EDIT BULK] Loaded data for {len(batch_edit_data)} mappings, {len(all_ordinates)} unique ordinates")
 

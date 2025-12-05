@@ -42,6 +42,7 @@
     .breakdown-form {
         background: white;
         padding: 1.5rem;
+        padding-bottom: 6rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
@@ -198,45 +199,6 @@
         font-weight: 600;
     }
 
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .btn-primary {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: #0b5ed7;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-secondary {
-        background: #e2e8f0;
-        color: #4a5568;
-        margin-right: 1rem;
-    }
-
-    .btn-secondary:hover {
-        background: #cbd5e0;
-    }
-
-    .form-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e2e8f0;
-    }
-
     .bulk-actions {
         background: #f7f7f9;
         padding: 1rem;
@@ -264,8 +226,8 @@
         background: #f8f9fa;
         border: 2px dashed #cbd5e0;
         border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
     }
 
     .grouping-header {
@@ -284,42 +246,6 @@
     .grouping-actions {
         display: flex;
         gap: 0.75rem;
-    }
-
-    /* Page content padding for floating buttons */
-    .container-fluid {
-        padding-bottom: 6rem;
-    }
-
-    /* Floating Action Group */
-    .floating-action-group {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 1000;
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        background: white;
-        border-radius: 50px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .floating-action-group .btn {
-        border-radius: 25px;
-        padding: 0.75rem 1.25rem;
-        font-weight: 600;
-    }
-
-    .btn-success {
-        background: #198754;
-        color: white;
-    }
-
-    .btn-success:hover {
-        background: #157347;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
     }
 
     .groups-container {
@@ -342,8 +268,8 @@
         background: white;
         border: 2px solid #0d6efd;
         border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 0.75rem;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
         transition: all 0.3s;
     }
 
@@ -389,20 +315,21 @@
     }
 
     .group-delete-btn {
-        background: #f56565;
-        color: white;
+        background: transparent;
+        color: #adb5bd;
+        font-size: 1.25rem;
+        line-height: 1;
+        padding: 0.25rem 0.5rem;
         border: none;
-        padding: 0.5rem 1rem;
         border-radius: 4px;
         cursor: pointer;
-        font-size: 0.875rem;
-        font-weight: 600;
-        transition: all 0.3s;
+        font-weight: 300;
+        transition: all 0.2s;
     }
 
     .group-delete-btn:hover {
-        background: #e53e3e;
-        transform: translateY(-1px);
+        color: #dc3545;
+        background: rgba(220, 53, 69, 0.1);
     }
 
     .group-variables {
@@ -982,6 +909,93 @@
 
         </form>
     </div>
+
+    <!-- Create Variable Modal -->
+    <div id="createVariableModal" class="output-layer-modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeCreateVariableModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Variable</h3>
+                <button class="modal-close" onclick="closeCreateVariableModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="new_var_name">Name: *</label>
+                    <input type="text" id="new_var_name" class="form-control" required>
+                    <small style="color: #666;">Human-readable name in English</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_var_id">Variable ID: *</label>
+                    <input type="text" id="new_var_id" class="form-control" required>
+                    <small style="color: #666;">Auto-generated from name (can be edited)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_var_code">Code: *</label>
+                    <input type="text" id="new_var_code" class="form-control" required>
+                    <small style="color: #666;">Auto-generated from name (can be edited)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_var_description">Description:</label>
+                    <textarea id="new_var_description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_var_domain">Domain: *</label>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyCodeToDomain()" style="margin-bottom: 8px; border: 2px solid #6c757d;">
+                        Copy Variable Code to Domain
+                    </button>
+                    <select id="new_var_domain" class="form-control" required>
+                        <option value="">-- Select Domain --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCreateVariableModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitNewVariable()">Create Variable</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Variable Domain Modal -->
+    <div id="editDomainModal" class="output-layer-modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeEditDomainModal()"></div>
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header" style="background: #0d6efd; color: white;">
+                <h3 style="color: white; margin: 0;">Edit Variable Domain</h3>
+                <button class="modal-close" onclick="closeEditDomainModal()" style="color: white;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Variable ID:</label>
+                    <div id="edit_var_id_display" style="font-weight: bold; padding: 0.5rem; background: #f8f9fa; border-radius: 4px;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Variable Name:</label>
+                    <div id="edit_var_name_display" style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Current Domain:</label>
+                    <div id="edit_var_current_domain" style="padding: 0.5rem; background: #e9ecef; border-radius: 4px; color: #495057;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_var_domain">New Domain:</label>
+                    <select id="edit_var_domain" class="form-control" required>
+                        <option value="">-- Select Domain --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditDomainModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveVariableDomain()">Save Domain</button>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block floating_actions %}
@@ -995,55 +1009,6 @@
     Edit Mappings →
 </button>
 {% endblock %}
-
-<!-- Create Variable Modal -->
-<div id="createVariableModal" class="output-layer-modal" style="display: none;">
-    <div class="modal-overlay" onclick="closeCreateVariableModal()"></div>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Create New Variable</h3>
-            <button class="modal-close" onclick="closeCreateVariableModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="new_var_name">Name: *</label>
-                <input type="text" id="new_var_name" class="form-control" required>
-                <small style="color: #666;">Human-readable name in English</small>
-            </div>
-
-            <div class="form-group">
-                <label for="new_var_id">Variable ID: *</label>
-                <input type="text" id="new_var_id" class="form-control" required>
-                <small style="color: #666;">Auto-generated from name (can be edited)</small>
-            </div>
-
-            <div class="form-group">
-                <label for="new_var_code">Code: *</label>
-                <input type="text" id="new_var_code" class="form-control" required>
-                <small style="color: #666;">Auto-generated from name (can be edited)</small>
-            </div>
-
-            <div class="form-group">
-                <label for="new_var_description">Description:</label>
-                <textarea id="new_var_description" class="form-control" rows="3"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="new_var_domain">Domain: *</label>
-                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyCodeToDomain()" style="margin-bottom: 8px; border: 2px solid #6c757d;">
-                    Copy Variable Code to Domain
-                </button>
-                <select id="new_var_domain" class="form-control" required>
-                    <option value="">-- Select Domain --</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeCreateVariableModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="submitNewVariable()">Create Variable</button>
-        </div>
-    </div>
-</div>
 
 {% block step_js %}
 <script>
@@ -1082,32 +1047,8 @@
         text: `${varId} - ${varData.name}`
     }));
 
-    // DEBUG: Log variable arrays to console
-    console.log('[DEBUG] AVAILABLE_VARIABLES (source, ordinate-filtered) count:', Object.keys(AVAILABLE_VARIABLES).length);
-    console.log('[DEBUG] TARGET_VARIABLES (backend-filtered) count:', Object.keys(TARGET_VARIABLES).length);
-    console.log('[DEBUG] ALL_VARIABLES_ARRAY count:', ALL_VARIABLES_ARRAY.length);
-    console.log('[DEBUG] TARGET_VARIABLES_ARRAY count:', TARGET_VARIABLES_ARRAY.length);
-
-    if (Object.keys(AVAILABLE_VARIABLES).length === 0) {
-        console.warn('[DEBUG] WARNING: No source variables available! Check if ordinates were selected in previous steps.');
-    }
-    if (Object.keys(TARGET_VARIABLES).length === 0) {
-        console.warn('[DEBUG] WARNING: No target variables available after backend filtering!');
-    }
-
-    console.log('[DEBUG] Sample source variables:', Object.keys(AVAILABLE_VARIABLES).slice(0, 5));
-    console.log('[DEBUG] Sample target variables:', Object.keys(TARGET_VARIABLES).slice(0, 5));
-    console.log('[DEBUG] Sample TARGET_VARIABLES_ARRAY:', TARGET_VARIABLES_ARRAY.slice(0, 3));
-
     // Inject variables with members data from Django template (includes member info for EBA_ATY, etc.)
     const VARIABLES_WITH_MEMBERS = {{ variables_with_members_json|safe }};
-    console.log('[DEBUG] VARIABLES_WITH_MEMBERS loaded with', Object.keys(VARIABLES_WITH_MEMBERS).length, 'variables');
-
-    // Log EBA_ATY members if available
-    if (VARIABLES_WITH_MEMBERS['EBA_ATY']) {
-        console.log('[DEBUG] EBA_ATY has', VARIABLES_WITH_MEMBERS['EBA_ATY'].members.length, 'members from ordinates');
-        console.log('[DEBUG] Sample EBA_ATY members:', VARIABLES_WITH_MEMBERS['EBA_ATY'].members.slice(0, 3));
-    }
 
     // ========== Domain Validation Helper Functions ==========
 
@@ -1454,6 +1395,14 @@
 
         renderGroups();
         updateVariableMappingIndicator(); // Update indicator when group is created
+
+        // Scroll to the newly created group
+        setTimeout(() => {
+            const newGroupCard = document.querySelector(`[data-group-id="${groupId}"]`);
+            if (newGroupCard) {
+                newGroupCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
     }
 
     // Delete a group
@@ -1511,22 +1460,10 @@
             const hiddenInput = document.querySelector(`input[type="hidden"][name="group_${groupId}_${shortField}"]`);
             if (hiddenInput) {
                 hiddenInput.value = value;
-
-                // Debug logging for group_type changes
-                if (field === 'group_type') {
-                    console.log(`[DEBUG] ✓ Updated group_type for ${groupId}: ${value}`);
-                    console.log(`[DEBUG]   - Hidden input name: group_${groupId}_${shortField}`);
-                    console.log(`[DEBUG]   - Hidden input value: ${hiddenInput.value}`);
-                }
-            } else {
-                if (field === 'group_type') {
-                    console.error(`[DEBUG] ✗ Hidden input NOT FOUND for ${groupId}: group_${groupId}_${shortField}`);
-                }
             }
 
             // If group type changes, refresh the dropdown to show only valid variables
             if (field === 'group_type') {
-                console.log(`[Domain Filter] Group type changed to ${value} for ${groupId}, refreshing dropdown...`);
                 refreshSingleGroupDropdown(groupId);
             }
 
@@ -1594,8 +1531,8 @@
                                    onchange="updateGroupName('${groupId}', this.value)"
                                    placeholder="Group Name">
                         </div>
-                        <button type="button" class="group-delete-btn" data-group-id="${groupId}">
-                            Delete Group
+                        <button type="button" class="group-delete-btn" data-group-id="${groupId}" title="Delete Group">
+                            ×
                         </button>
                     </div>
 
@@ -1651,7 +1588,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="targets_${groupId}">Target Variable(s):</label>
+                            <label for="targets_${groupId}" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Target Variable(s):</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                        onclick="autoAssignTargets('${groupId}')"
+                                        title="Auto-create target variables from source names"
+                                        style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                                    ⚡ Auto-assign
+                                </button>
+                            </label>
                             <select id="targets_${groupId}"
                                     class="form-control target-variables-select"
                                     multiple
@@ -1704,7 +1649,6 @@
             });
 
             const finalSourceOptions = Array.from(optionsMap.values());
-            console.log(`[DEBUG] Creating source Tom Select for ${sourceId} with ${finalSourceOptions.length} options (${availableSourceOptions.length} available + ${selectedVarIds.length} pre-selected)`);
 
             tomSelectInstances[sourceId] = new TomSelect(`#${sourceId}`, {
                 options: finalSourceOptions,  // Use merged options that include pre-selected variables
@@ -1723,7 +1667,6 @@
                         return '<div class="item">' + escape(data.text) + '</div>';
                     },
                     no_results: function(data, escape) {
-                        console.log(`[DEBUG] Source Tom Select: No results for search term "${data.input}" (Total options: ${availableSourceOptions.length})`);
                         return '<div class="no-results">No variables found matching "' + escape(data.input) + '" (some variables may be selected in other groups)</div>';
                     }
                 },
@@ -1743,7 +1686,6 @@
                                 // Only auto-set if group type is not set OR if it's the first variable
                                 if (!currentGroupType || sources.length === 1) {
                                     variableGroups[groupId].group_type = suggestedRole;
-                                    console.log(`[Auto-suggest] Setting group ${groupId} type to ${suggestedRole} based on ${firstVarId}`);
 
                                     // Update radio button and hidden input
                                     const radioButton = document.querySelector(`input[name="group_${groupId}_type"][value="${suggestedRole}"]`);
@@ -1768,12 +1710,14 @@
                         refreshAllGroupDropdowns(groupId);
 
                         updateVariableMappingIndicator(); // Update indicator when source variables change
+
+                        // Keep dropdown open with remaining options after selection
+                        this.refreshOptions(true);
                     }
                 }
             });
 
             // Create Tom Select for target variables (instance destroyed before innerHTML replacement)
-            console.log(`[DEBUG] Creating target Tom Select for ${targetId} with ${TARGET_VARIABLES_ARRAY.length} options`);
             tomSelectInstances[targetId] = new TomSelect(`#${targetId}`, {
                 options: TARGET_VARIABLES_ARRAY,
                 items: group.targets, // Restore selections from preserved data
@@ -1791,10 +1735,14 @@
                         return '<div class="option">' + escape(data.text) + '</div>';
                     },
                     item: function(data, escape) {
-                        return '<div class="item">' + escape(data.text) + '</div>';
+                        return '<div class="item" style="display: flex; align-items: center; gap: 0.25rem;">' +
+                               '<span>' + escape(data.text) + '</span>' +
+                               '<span class="edit-domain-btn" onclick="event.stopPropagation(); editVariableDomain(\'' + escape(data.value) + '\')" ' +
+                               'style="cursor: pointer; opacity: 0.6; font-size: 0.8rem; margin-left: 0.25rem;" ' +
+                               'title="Edit domain">✏️</span>' +
+                               '</div>';
                     },
                     no_results: function(data, escape) {
-                        console.log(`[DEBUG] Target Tom Select: No results for search term "${data.input}" (Total options: ${TARGET_VARIABLES_ARRAY.length})`);
                         return '<div class="no-results">No variables found matching "' + escape(data.input) + '"</div>';
                     }
                 },
@@ -1805,6 +1753,9 @@
                         // Calculate mapping type implicitly
                         variableGroups[groupId].mapping_type = calculateMappingType(variableGroups[groupId].variable_ids.length, targets.length);
                         updateVariableMappingIndicator(); // Update indicator when target variables change
+
+                        // Keep dropdown open with remaining options after selection
+                        this.refreshOptions(true);
                     }
                 }
             });
@@ -1837,8 +1788,6 @@
             const availableOptions = getAvailableVariablesForGroup(groupId, true);
             const availableSet = new Set(availableOptions.map(opt => opt.value));
 
-            console.log(`[Domain Filter] Refreshing ${sourceId}: ${availableOptions.length} available options for group type ${variableGroups[groupId].group_type}`);
-
             // Clear all options
             instance.clearOptions();
 
@@ -1852,11 +1801,9 @@
             if (validSelections.length > 0) {
                 instance.setValue(validSelections, true);
                 variableGroups[groupId].variable_ids = validSelections;
-                console.log(`[Domain Filter] Restored ${validSelections.length}/${currentValuesArray.length} selections that match new group type`);
             } else if (currentValuesArray.length > 0) {
                 // Clear selections in group data if none are valid
                 variableGroups[groupId].variable_ids = [];
-                console.log(`[Domain Filter] Cleared all ${currentValuesArray.length} selections (none match new group type)`);
             }
 
             instance.refreshOptions(false);
@@ -1867,7 +1814,6 @@
         Object.entries(variableGroups).forEach(([groupId, group]) => {
             // Skip the group that triggered this refresh to avoid clearing its selection
             if (groupId === excludeGroupId) {
-                console.log(`[DEBUG] Skipping refresh for ${groupId} (current group)`);
                 return;
             }
 
@@ -1880,8 +1826,6 @@
                 const currentValuesSet = new Set(currentValues);
                 const availableOptions = getAvailableVariablesForGroup(groupId, true);
                 const availableSet = new Set(availableOptions.map(opt => opt.value));
-
-                console.log(`[DEBUG] Refreshing ${sourceId}: ${availableOptions.length} available options`);
 
                 // Remove options that shouldn't be available (except currently selected ones to preserve them)
                 Object.keys(instance.options).forEach(optValue => {
@@ -2083,8 +2027,6 @@
                     value: data.domain.domain_id,
                     text: displayText
                 });
-
-                console.log('Domain created successfully:', data.domain.domain_id);
             } else {
                 alert('Error creating domain: ' + data.error);
                 callback(); // Call without arguments to cancel
@@ -2178,6 +2120,269 @@
     }
 
     // ========== End Variable Creation Modal Functions ==========
+
+    // ========== Auto-Assign Target Variables ==========
+
+    /**
+     * Auto-assign target variables for a group based on source variable names.
+     * Creates new variables if they don't exist, using the naming convention.
+     */
+    async function autoAssignTargets(groupId) {
+        const group = variableGroups[groupId];
+        if (!group || !group.variable_ids || group.variable_ids.length === 0) {
+            alert('Please select source variables first.');
+            return;
+        }
+
+        const targetId = `targets_${groupId}`;
+        const targetInstance = tomSelectInstances[targetId];
+        if (!targetInstance) {
+            console.error('Target Tom Select instance not found for', groupId);
+            return;
+        }
+
+        // Disable button during processing
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Processing...';
+
+        try {
+            const newTargets = [];
+
+            for (const sourceVarId of group.variable_ids) {
+                const sourceVar = AVAILABLE_VARIABLES[sourceVarId];
+                if (!sourceVar) {
+                    console.warn('Source variable not found:', sourceVarId);
+                    continue;
+                }
+
+                // Generate target variable code from source name
+                const targetCode = generateVariableCode(sourceVar.name);
+
+                // Check if target already exists
+                if (TARGET_VARIABLES[targetCode]) {
+                    newTargets.push(targetCode);
+                } else {
+                    // Create new variable with a new empty domain
+                    try {
+                        // Generate a unique domain ID for this target variable
+                        const newDomainId = `${targetCode}_DOMAIN`;
+
+                        // First, create an empty enumerated domain
+                        const domainResult = await createDomainAsync(newDomainId);
+                        if (!domainResult.success && !domainResult.existing) {
+                            continue;
+                        }
+
+                        // Then create the variable with the new domain
+                        const result = await createVariableAsync(targetCode, sourceVar.name, targetCode, newDomainId);
+
+                        if (result.success) {
+                            // Add to TARGET_VARIABLES
+                            const newOption = {
+                                value: result.variable.variable_id,
+                                text: `${result.variable.variable_id} - ${result.variable.name}`
+                            };
+                            TARGET_VARIABLES[result.variable.variable_id] = {
+                                id: result.variable.variable_id,
+                                name: result.variable.name
+                            };
+                            TARGET_VARIABLES_ARRAY.push(newOption);
+
+                            // Add option to Tom Select
+                            targetInstance.addOption(newOption);
+                            newTargets.push(result.variable.variable_id);
+                        }
+                    } catch (error) {
+                        // Silently continue on error
+                    }
+                }
+            }
+
+            // Set all new targets in Tom Select
+            if (newTargets.length > 0) {
+                const currentTargets = targetInstance.getValue() || [];
+                const allTargets = [...new Set([...currentTargets, ...newTargets])];
+                targetInstance.setValue(allTargets);
+
+                // Update group data
+                variableGroups[groupId].targets = allTargets;
+            }
+
+        } finally {
+            // Re-enable button
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+
+    /**
+     * Create a variable via API (async version for auto-assign)
+     */
+    async function createVariableAsync(variableId, name, code, domainId) {
+        const response = await fetch('/pybirdai/api/create_variable/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                variable_id: variableId,
+                name: name,
+                code: code,
+                description: `Auto-generated from ${name}`,
+                domain_id: domainId
+            })
+        });
+        return await response.json();
+    }
+
+    /**
+     * Create an empty enumerated domain via API (async version for auto-assign)
+     */
+    async function createDomainAsync(domainId) {
+        const response = await fetch('/pybirdai/api/create_domain/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                domain_id: domainId
+            })
+        });
+        return await response.json();
+    }
+
+    // ========== End Auto-Assign Target Variables ==========
+
+    // ========== Edit Variable Domain Functions ==========
+
+    let editDomainTomSelect = null;
+    let currentEditingVariableId = null;
+
+    /**
+     * Open modal to edit a variable's domain
+     */
+    function editVariableDomain(variableId) {
+        currentEditingVariableId = variableId;
+
+        // Set loading state
+        document.getElementById('edit_var_id_display').textContent = variableId;
+        document.getElementById('edit_var_name_display').textContent = 'Loading...';
+        document.getElementById('edit_var_current_domain').textContent = 'Loading...';
+
+        // Show modal
+        document.getElementById('editDomainModal').style.display = 'block';
+        document.body.classList.add('modal-open');
+
+        // Fetch variable info from API to get current domain
+        fetch(`/pybirdai/api/get_variable_info/?variable_id=${encodeURIComponent(variableId)}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    document.getElementById('edit_var_name_display').textContent = result.variable.name || variableId;
+                    const currentDomain = result.variable.domain_name
+                        ? `${result.variable.domain_name} (${result.variable.domain_id})`
+                        : (result.variable.domain_id || 'No domain set');
+                    document.getElementById('edit_var_current_domain').textContent = currentDomain;
+
+                    // Load domains and pre-select current one
+                    loadDomainsForEdit(result.variable.domain_id);
+                } else {
+                    document.getElementById('edit_var_name_display').textContent = variableId;
+                    document.getElementById('edit_var_current_domain').textContent = 'Unable to load';
+                    loadDomainsForEdit();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching variable info:', error);
+                document.getElementById('edit_var_name_display').textContent = variableId;
+                document.getElementById('edit_var_current_domain').textContent = 'Error loading';
+                loadDomainsForEdit();
+            });
+    }
+
+    function closeEditDomainModal() {
+        document.getElementById('editDomainModal').style.display = 'none';
+        document.body.classList.remove('modal-open');
+        currentEditingVariableId = null;
+    }
+
+    function loadDomainsForEdit(currentDomainId = null) {
+        // If Tom Select already exists, just set the value
+        if (editDomainTomSelect !== null) {
+            if (currentDomainId) {
+                editDomainTomSelect.setValue(currentDomainId);
+            }
+            return;
+        }
+
+        fetch('/pybirdai/api/get_domains/')
+            .then(response => response.json())
+            .then(data => {
+                const domainOptions = data.domains.map(domain => {
+                    const displayText = domain.name ? `${domain.name} (${domain.domain_id})` : domain.domain_id;
+                    return { value: domain.domain_id, text: displayText };
+                });
+
+                editDomainTomSelect = new TomSelect('#edit_var_domain', {
+                    maxItems: 1,
+                    options: domainOptions,
+                    placeholder: 'Select new domain...',
+                    searchField: ['text', 'value'],
+                    sortField: { field: 'text', direction: 'asc' }
+                });
+
+                // Pre-select current domain if provided
+                if (currentDomainId) {
+                    editDomainTomSelect.setValue(currentDomainId);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading domains for edit:', error);
+                alert('Failed to load domains.');
+            });
+    }
+
+    function saveVariableDomain() {
+        if (!currentEditingVariableId || !editDomainTomSelect) {
+            return;
+        }
+
+        const newDomainId = editDomainTomSelect.getValue();
+        if (!newDomainId) {
+            alert('Please select a domain.');
+            return;
+        }
+
+        fetch('/pybirdai/api/update_variable_domain/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                variable_id: currentEditingVariableId,
+                domain_id: newDomainId
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                closeEditDomainModal();
+            } else {
+                alert('Error updating domain: ' + result.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating domain:', error);
+            alert('Failed to update domain.');
+        });
+    }
+
+    // ========== End Edit Variable Domain Functions ==========
 
     // Toggle selection mode
     function toggleSelectionMode() {
@@ -2283,17 +2488,13 @@
     // ========== Pre-Submit Data Sync ==========
     // Sync all group data from JavaScript to hidden inputs before submission
     function syncAllGroupDataToHiddenInputs() {
-        console.log('[SYNC] Syncing all group data from JavaScript to hidden inputs...');
         Object.entries(variableGroups).forEach(([groupId, group]) => {
             updateHiddenInput(`group_${groupId}_name`, group.name);
             updateHiddenInput(`group_${groupId}_variables`, group.variable_ids.join(','));
             updateHiddenInput(`group_${groupId}_mapping_type`, group.mapping_type);
             updateHiddenInput(`group_${groupId}_targets`, group.targets.join(','));
             updateHiddenInput(`group_${groupId}_type`, group.group_type || 'Dimension');
-
-            console.log(`[SYNC] ${groupId}: "${group.name}" -> type="${group.group_type}"`);
         });
-        console.log('[SYNC] ✓ Sync complete');
     }
 
     function updateHiddenInput(name, value) {
@@ -2410,12 +2611,8 @@
      * Loads ALL variable groups from ALL mappings directly into variableGroups.
      */
     function initBatchEditMode() {
-        console.log('[BATCH EDIT] Initializing batch edit mode with', Object.keys(BATCH_EDIT_DATA).length, 'mappings');
-
         // Load all variable groups from all mappings into the global variableGroups
         Object.entries(BATCH_EDIT_DATA).forEach(([mappingId, mappingData]) => {
-            console.log(`[BATCH EDIT] Loading mapping ${mappingId}:`, mappingData.name);
-
             // Load variable groups from mapping data
             const varGroups = mappingData.variable_groups || {};
 
@@ -2431,8 +2628,6 @@
                     targets: groupData.targets || [],
                     group_type: groupData.group_type || 'Dimension'
                 };
-
-                console.log(`[BATCH EDIT] Loaded group ${newGroupId} from mapping ${mappingId}:`, variableGroups[newGroupId]);
             });
         });
 
@@ -2441,8 +2636,6 @@
 
         // Update the variable mapping indicator
         updateVariableMappingIndicator();
-
-        console.log('[BATCH EDIT] Initialization complete:', Object.keys(variableGroups).length, 'groups loaded from', Object.keys(BATCH_EDIT_DATA).length, 'mappings');
     }
 
     // Initialize batch edit mode after DOM is ready
@@ -2464,8 +2657,6 @@
      * Loads existing variable groups from the mapping being edited.
      */
     function initSingleEditMode() {
-        console.log('[SINGLE EDIT] Initializing single edit mode with', Object.keys(EXISTING_VARIABLE_GROUPS).length, 'existing groups');
-
         // Load variable groups from existing mapping data
         Object.entries(EXISTING_VARIABLE_GROUPS).forEach(([groupId, groupData]) => {
             groupCounter++;
@@ -2479,8 +2670,6 @@
                 targets: groupData.targets || [],
                 group_type: groupData.group_type || 'Dimension'
             };
-
-            console.log(`[SINGLE EDIT] Loaded group ${newGroupId}:`, variableGroups[newGroupId]);
         });
 
         // Render all loaded groups at once
@@ -2488,8 +2677,6 @@
 
         // Update the variable mapping indicator
         updateVariableMappingIndicator();
-
-        console.log('[SINGLE EDIT] Initialization complete:', Object.keys(variableGroups).length, 'groups loaded');
     }
 
     // Initialize single edit mode after DOM is ready
@@ -2501,6 +2688,47 @@
     });
     {% endif %}
     // ========== END SINGLE EDIT MODE INITIALIZATION ==========
+
+    {% if initial_variable_groups_json %}
+    // ========== QUICK START INITIALIZATION ==========
+    const INITIAL_VARIABLE_GROUPS = {{ initial_variable_groups_json|safe }};
+
+    /**
+     * Initialize quick start mode on page load.
+     * Loads pre-populated variable groups created by the Quick Start feature.
+     */
+    function initQuickStartMode() {
+        // Load variable groups from quick start data
+        Object.entries(INITIAL_VARIABLE_GROUPS).forEach(([groupId, groupData]) => {
+            groupCounter++;
+            const newGroupId = `group_${groupCounter}`;
+
+            variableGroups[newGroupId] = {
+                id: newGroupId,
+                name: groupData.name || `Variable Group ${groupCounter}`,
+                variable_ids: groupData.variable_ids || [],
+                mapping_type: groupData.mapping_type || 'many_to_one',
+                targets: groupData.targets || [],
+                group_type: groupData.group_type || 'Dimension'
+            };
+        });
+
+        // Render all loaded groups at once
+        renderGroups();
+
+        // Update the variable mapping indicator
+        updateVariableMappingIndicator();
+    }
+
+    // Initialize quick start mode after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for Tom Select script to load, then initialize
+        setTimeout(function() {
+            initQuickStartMode();
+        }, 100);
+    });
+    {% endif %}
+    // ========== END QUICK START INITIALIZATION ==========
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>

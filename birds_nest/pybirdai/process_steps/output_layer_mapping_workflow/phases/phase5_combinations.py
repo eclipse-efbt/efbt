@@ -79,15 +79,38 @@ def execute_phase5_combinations(
     # ========== FILTER CELLS BY SELECTED ORDINATES ==========
     selected_ordinates = request.session.get('olmw_selected_ordinates', [])
     if selected_ordinates:
-        # Get cells that have positions in selected ordinates
-        filtered_cell_positions = CELL_POSITION.objects.filter(
-            axis_ordinate_id__in=selected_ordinates,
-            cell_id__in=cells
-        ).values_list('cell_id', flat=True).distinct()
-        
-        # Filter to only cells with selected ordinates
-        cells = cells.filter(cell_id__in=filtered_cell_positions)
-        logger.info(f'[PHASE 5] Creating combinations for {cells.count()} cells matching selected ordinates')
+        # Group selected ordinates by their axis
+        # Cells must have positions matching selected ordinates in EACH axis (AND logic)
+        from collections import defaultdict
+        ordinates_by_axis = defaultdict(list)
+        selected_ordinate_objs = AXIS_ORDINATE.objects.filter(
+            axis_ordinate_id__in=selected_ordinates
+        ).select_related('axis_id')
+
+        for ordinate in selected_ordinate_objs:
+            if ordinate.axis_id:
+                ordinates_by_axis[ordinate.axis_id_id].append(ordinate.axis_ordinate_id)
+
+        logger.info(f'[PHASE 5] Selected ordinates grouped by {len(ordinates_by_axis)} axes')
+
+        # For each axis, find cells with positions in that axis's selected ordinates
+        # Then intersect across all axes
+        filtered_cell_sets = []
+        for axis_id, axis_ordinates in ordinates_by_axis.items():
+            cells_for_axis = set(CELL_POSITION.objects.filter(
+                axis_ordinate_id__in=axis_ordinates,
+                cell_id__in=cells
+            ).values_list('cell_id', flat=True).distinct())
+            filtered_cell_sets.append(cells_for_axis)
+            logger.info(f'[PHASE 5] Axis {axis_id}: {len(axis_ordinates)} ordinates -> {len(cells_for_axis)} cells')
+
+        # Intersect all sets - cells must match in ALL axes
+        if filtered_cell_sets:
+            final_cell_ids = filtered_cell_sets[0]
+            for cell_set in filtered_cell_sets[1:]:
+                final_cell_ids = final_cell_ids.intersection(cell_set)
+            cells = cells.filter(cell_id__in=final_cell_ids)
+            logger.info(f'[PHASE 5] After intersection: {len(final_cell_ids)} cells (expected: product of ordinate counts per axis)')
     
     # ========== CREATE COMBINATIONS ==========
     # Generate single timestamp for entire generation run

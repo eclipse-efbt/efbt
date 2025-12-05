@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            margin: 0;
+            padding: 1rem;
+            background: #f8f9fa;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* Z-axis Info */
+        .z-axis-info {
+            background: #e0f2fe;
+            border: 1px solid #7dd3fc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .z-axis-title {
+            font-weight: 600;
+            color: #0c4a6e;
+            margin-bottom: 0.5rem;
+        }
+
+        .z-axis-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .z-axis-item {
+            background: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            border: 1px solid #7dd3fc;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        /* Annotated Table Styles */
+        .annotated-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.875rem;
+        }
+
+        .annotated-table th,
+        .annotated-table td {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Sticky headers for better navigation */
+        .annotated-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .annotated-table tbody th {
+            position: sticky;
+            left: 0;
+            z-index: 5;
+        }
+
+        .corner-cell {
+            background: #4c51bf;
+            color: white;
+            font-weight: 600;
+            min-width: 120px;
+            max-width: 200px;
+            position: sticky;
+            left: 0;
+            top: 0;
+            z-index: 15;
+        }
+
+        .col-header {
+            background: #0d6efd;
+            color: white;
+            font-weight: 600;
+            min-width: 100px;
+            max-width: 180px;
+        }
+
+        .row-header {
+            background: #334155;
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            min-width: 150px;
+            max-width: 250px;
+        }
+
+        .ordinate-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ordinate-annotation {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: normal;
+            margin-top: 4px;
+            padding: 2px 4px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Show full text on hover */
+        .ordinate-name:hover,
+        .ordinate-annotation:hover {
+            white-space: normal;
+            overflow: visible;
+            position: relative;
+            z-index: 20;
+        }
+
+        .data-cell {
+            background-color: white;
+        }
+
+        .cell-indicator {
+            color: #28a745;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .cell-empty {
+            background-color: #f8f9fa;
+            background-image: linear-gradient(
+                45deg,
+                #e9ecef 25%,
+                transparent 25%,
+                transparent 75%,
+                #e9ecef 75%,
+                #e9ecef
+            ),
+            linear-gradient(
+                45deg,
+                #e9ecef 25%,
+                transparent 25%,
+                transparent 75%,
+                #e9ecef 75%,
+                #e9ecef
+            );
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+        }
+
+        .empty-indicator {
+            color: #999;
+            font-size: 1rem;
+        }
+
+        .cell-shaded {
+            background-color: #fff3cd !important;
+        }
+
+        .cell-shaded .cell-indicator {
+            color: #856404;
+        }
+
+        /* Error State */
+        .error-container {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #991b1b;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Export Button */
+        .export-section {
+            margin-bottom: 1rem;
+            text-align: right;
+        }
+
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+
+        .btn-export:hover {
+            background: #157347;
+        }
+    </style>
+</head>
+<body>
+    {% if error %}
+    <div class="error-container">
+        <div class="error-icon">X</div>
+        <div class="error-title">Error Loading Template</div>
+        <p>{{ error }}</p>
+    </div>
+    {% else %}
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="summary-card">
+            <div class="summary-value">{{ table.name|truncatechars:20 }}</div>
+            <div class="summary-label">Table Name</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ cell_count }}</div>
+            <div class="summary-label">Total Cells</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ row_count }}</div>
+            <div class="summary-label">Row Ordinates</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">{{ col_count }}</div>
+            <div class="summary-label">Column Ordinates</div>
+        </div>
+    </div>
+
+    {% if z_ordinates %}
+    <!-- Z-Axis Info -->
+    <div class="z-axis-info">
+        <div class="z-axis-title">Z-Axis Ordinates</div>
+        <div class="z-axis-items">
+            {% for z_ord in z_ordinates %}
+            <span class="z-axis-item">{{ z_ord.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Export Button -->
+    <div class="export-section">
+        <a href="/pybirdai/export/annotated-template/{{ table_id }}/excel/" class="btn-export">
+            Export to Excel
+        </a>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+        {{ table_html|safe }}
+    </div>
+    {% endif %}
+</body>
+</html>

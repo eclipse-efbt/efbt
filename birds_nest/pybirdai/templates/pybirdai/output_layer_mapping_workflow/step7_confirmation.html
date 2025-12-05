@@ -939,21 +939,14 @@
                     </span>
                 </li>
                 {% endfor %}
-                {% if selected_z_tables %}
-                <!-- Cubes for selected Z-variant tables -->
-                {% for z_table in selected_z_tables %}
+                <!-- Single shared cube for all Z-variant tables -->
                 <li class="generated-item">
                     <span class="item-type">Cube</span>
-                    <span class="item-id">{{ z_table.table_code }}_{{ framework }}_{{ version }}_CUBE</span>
+                    <span class="item-id">{{ preview_cube_id }}</span>
+                    {% if selected_z_tables %}
+                    <small style="color: #666; margin-left: 0.5rem;">(shared by {{ selected_z_tables|length }} tables)</small>
+                    {% endif %}
                 </li>
-                {% endfor %}
-                {% else %}
-                <!-- Cube for current table -->
-                <li class="generated-item">
-                    <span class="item-type">Cube</span>
-                    <span class="item-id">{{ table_code }}_{{ framework }}_{{ version }}_CUBE</span>
-                </li>
-                {% endif %}
                 <li class="generated-item">
                     <span class="item-type">Combinations</span>
                     <span class="item-id">
@@ -1062,6 +1055,11 @@
                 <li class="generated-item">
                     <span class="item-type">Reference Cells</span>
                     <span class="item-id">{{ generated.combinations_created }} reference cells for selected ordinates</span>
+                    <span class="item-action">
+                        <button class="btn-small" onclick="openAnnotatedTemplateModal('{{ generated.reference_table_id }}')">
+                            View Annotated Template
+                        </button>
+                    </span>
                 </li>
                 <li class="generated-item" style="background: #f8fafc; font-size: 0.9rem; color: #64748b;">
                     <span class="item-id" style="flex: 1;">
@@ -1103,6 +1101,19 @@
         </div>
         <div class="modal-body">
             <iframe id="cubeViewerFrame" src=""></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- Annotated Template Viewer Modal -->
+<div class="modal-overlay" id="annotatedTemplateModal">
+    <div class="modal-container">
+        <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);">
+            <h3 id="annotatedModalTitle" style="color: white;">Annotated Template Viewer</h3>
+            <button class="modal-close" onclick="closeAnnotatedTemplateModal()" style="color: white;">&times;</button>
+        </div>
+        <div class="modal-body">
+            <iframe id="annotatedTemplateFrame" src=""></iframe>
         </div>
     </div>
 </div>
@@ -1309,6 +1320,39 @@
         iframe.src = '';
     }
 
+    // ========== Annotated Template Modal Functions ==========
+
+    function openAnnotatedTemplateModal(tableId) {
+        const modal = document.getElementById('annotatedTemplateModal');
+        const iframe = document.getElementById('annotatedTemplateFrame');
+        const title = document.getElementById('annotatedModalTitle');
+
+        // Set the iframe source to the annotated template embed URL
+        iframe.src = '/pybirdai/annotated-template/' + encodeURIComponent(tableId) + '/embed/';
+        title.textContent = 'Annotated Template - ' + tableId;
+
+        // Show the modal
+        modal.classList.add('active');
+    }
+
+    function closeAnnotatedTemplateModal() {
+        const modal = document.getElementById('annotatedTemplateModal');
+        const iframe = document.getElementById('annotatedTemplateFrame');
+
+        // Hide the modal
+        modal.classList.remove('active');
+
+        // Clear the iframe to stop loading
+        iframe.src = '';
+    }
+
+    // Close annotated template modal when clicking outside
+    document.getElementById('annotatedTemplateModal')?.addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeAnnotatedTemplateModal();
+        }
+    });
+
     // Close modal when clicking outside the modal container
     document.getElementById('cubeViewerModal')?.addEventListener('click', function(event) {
         if (event.target === this) {
@@ -1320,6 +1364,7 @@
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeCubeModal();
+            closeAnnotatedTemplateModal();
             closeConflictModal();
         }
     });
@@ -1328,7 +1373,6 @@
 
     // Load conflicts data from Django template
     const CONFLICTS = {{ conflicts_json|safe }};
-    console.log('[CONFLICT MODAL] Loaded conflicts:', CONFLICTS);
 
     /**
      * Show the conflict resolution modal and populate it with conflict data
@@ -1391,8 +1435,6 @@
 
         // Show the modal
         modal.classList.add('active');
-
-        console.log('[CONFLICT MODAL] Modal shown with', CONFLICTS.length, 'conflicts');
     }
 
     /**
@@ -1401,7 +1443,6 @@
     function closeConflictModal() {
         const modal = document.getElementById('conflictModal');
         modal.classList.remove('active');
-        console.log('[CONFLICT MODAL] Modal closed');
     }
 
     /**
@@ -1415,8 +1456,6 @@
         confirmBtn.disabled = true;
         confirmBtn.textContent = 'Deleting...';
         loadingOverlay.classList.add('active');
-
-        console.log('[CONFLICT MODAL] User confirmed deletion, sending request...');
 
         // Extract conflict IDs
         const conflictIds = CONFLICTS.map(c => c.variable_mapping_id);
@@ -1437,8 +1476,6 @@
             const data = await response.json();
 
             if (response.ok && data.success) {
-                console.log('[CONFLICT MODAL] Deletion successful:', data);
-
                 // Close the modal
                 closeConflictModal();
 
@@ -1493,7 +1530,6 @@
     // Show conflict modal on page load if conflicts exist
     {% if conflicts %}
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('[CONFLICT MODAL] Page loaded, conflicts detected, showing modal...');
         showConflictModal();
     });
     {% endif %}
@@ -1513,10 +1549,7 @@
                 persist: false,
                 create: false,
                 placeholder: 'Select tables to replicate to...',
-                maxItems: {{ related_duplicates|length }},
-                onInitialize: function() {
-                    console.log('[REPLICATION] Selectize initialized with {{ related_duplicates|length }} options');
-                }
+                maxItems: {{ related_duplicates|length }}
             });
         }
     };
@@ -1529,7 +1562,6 @@
         const selectElement = document.getElementById('replicateTablesSelect');
         if (selectElement) {
             const selectedValues = $(selectElement).val();
-            console.log('[REPLICATION] Selected tables for replication:', selectedValues);
 
             // Check if Z-axis member mappings are needed
             if (selectedValues && selectedValues.length > 0 && !zMemberMappingsProvided) {
@@ -1550,9 +1582,6 @@
                     hiddenInput.value = tableId;
                     this.appendChild(hiddenInput);
                 });
-                console.log('[REPLICATION] Added', selectedValues.length, 'tables to form submission');
-            } else {
-                console.log('[REPLICATION] No tables selected for replication');
             }
         }
     });
@@ -1580,8 +1609,6 @@
     }
 
     function showZMemberModal(selectedTableIds) {
-        console.log('[Z-MEMBER] Showing modal for', selectedTableIds.length, 'tables');
-
         const modal = document.getElementById('zMemberModal');
         const list = document.getElementById('zMemberList');
         const count = document.getElementById('zMemberCount');
@@ -1626,12 +1653,9 @@
     function closeZMemberModal() {
         const modal = document.getElementById('zMemberModal');
         modal.classList.remove('active');
-        console.log('[Z-MEMBER] Modal closed');
     }
 
     function confirmZMemberMappings() {
-        console.log('[Z-MEMBER] Confirming member mappings...');
-
         const selects = document.querySelectorAll('.z-member-select');
         let allSelected = true;
 
@@ -1651,8 +1675,6 @@
             alert('Please select a member mapping for all tables');
             return;
         }
-
-        console.log('[Z-MEMBER] Collected mappings:', Z_MEMBER_MAPPINGS);
 
         // Add mappings to form as hidden inputs
         const form = document.getElementById('generateForm');
