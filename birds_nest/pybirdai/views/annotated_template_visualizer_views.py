@@ -489,7 +489,9 @@ def export_annotated_template_excel(request, table_id):
         cell.font = white_font
         cell.border = thin_border
         cell.alignment = center_alignment
-        ws.column_dimensions[get_column_letter(col_idx)].width = 18
+        # Set column width based on header length (min 20, max 40)
+        col_width = min(max(len(header_text) + 4, 20), 40)
+        ws.column_dimensions[get_column_letter(col_idx)].width = col_width
 
     # Column codes
     code_row = header_row + 1
@@ -541,12 +543,21 @@ def export_annotated_template_excel(request, table_id):
         cell.font = white_font
         cell.border = thin_border
         cell.alignment = center_alignment
-        ws.column_dimensions[get_column_letter(dim_start_col + dim_idx)].width = 30
+        # Set width based on header length (min 35, max 50)
+        dim_col_width = min(max(len(header_text) + 4, 35), 50)
+        ws.column_dimensions[get_column_letter(dim_start_col + dim_idx)].width = dim_col_width
 
     # Set column widths for first 3 columns
     ws.column_dimensions['A'].width = 8
-    ws.column_dimensions['B'].width = 35
-    ws.column_dimensions['C'].width = 8
+    ws.column_dimensions['B'].width = 45  # Row names
+    ws.column_dimensions['C'].width = 45  # Also row names (X-axis labels below)
+
+    # Set row heights for better readability
+    ws.row_dimensions[header_row].height = 40  # Column headers
+    ws.row_dimensions[code_row].height = 20    # Column codes
+
+    # Freeze panes so headers stay visible when scrolling
+    ws.freeze_panes = ws.cell(row=code_row + 1, column=4)
 
     # Data rows (dynamic start based on header rows)
     data_start_row = code_row + 1
@@ -624,14 +635,14 @@ def export_annotated_template_excel(request, table_id):
 
     for x_dim_idx, x_dim_var in enumerate(x_dim_vars_list):
         current_row = x_dim_start_row + x_dim_idx
-        # Label in column C: variable_name (variable_code)
+        # Label in column B (wider): variable_name (variable_code)
         var_name = x_var_names.get(x_dim_var, x_dim_var)
         label_text = f"{var_name} ({x_dim_var})" if var_name != x_dim_var else x_dim_var
-        label_cell = ws.cell(row=current_row, column=3, value=label_text)
+        label_cell = ws.cell(row=current_row, column=2, value=label_text)
         label_cell.font = white_font
         label_cell.fill = dim_header_fill
         label_cell.border = thin_border
-        label_cell.alignment = center_alignment
+        label_cell.alignment = left_alignment
 
         # For each column, show that column's ordinate item for this variable
         for col_idx, col_ord_id in enumerate(col_ordinates, start=4):
@@ -645,7 +656,7 @@ def export_annotated_template_excel(request, table_id):
 
             cell = ws.cell(row=current_row, column=col_idx)
             cell.border = thin_border
-            cell.alignment = center_alignment
+            cell.alignment = left_alignment
             if item_for_var:
                 # Format: member_name (member_code)
                 mem_name = item_for_var['member_name'] or item_for_var['member_code'] or '*'
