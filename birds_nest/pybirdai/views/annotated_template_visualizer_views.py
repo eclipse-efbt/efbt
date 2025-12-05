@@ -454,29 +454,33 @@ def export_annotated_template_excel(request, table_id):
     ws['A1'] = f"{table.code or table_id} - {table.name or 'Annotated Template'}"
     ws['A1'].font = Font(size=14, bold=True)
 
-    # Row 2: Z-axis variable (if applicable)
-    z_var_info = ""
-    z_mem_info = ""
+    # Row 2+: Z-axis info (display ALL Z ordinate items)
+    z_row = 2
     if z_ordinates:
-        z_ord_id = z_ordinates[0]
-        z_items = ordinate_items_map.get(z_ord_id, [])
-        if z_items:
-            z_item = z_items[0]
-            z_var_info = f"({z_item['variable_code']}:{z_item['domain_code']}) {z_item['variable_name']}"
-            z_mem_info = f"({z_item['domain_code']}:{z_item['member_code']}) {z_item['member_name']}"
+        for z_ord_id in z_ordinates:
+            z_items = ordinate_items_map.get(z_ord_id, [])
+            for z_item in z_items:
+                # Variable info: variable_name (variable_code)
+                var_name = z_item['variable_name'] or z_item['variable_code'] or ''
+                var_code = z_item['variable_code'] or ''
+                z_var_info = f"{var_name} ({var_code})" if var_code else var_name
+                ws.cell(row=z_row, column=4, value=z_var_info)
+                ws.cell(row=z_row, column=4).font = bold_font
+                z_row += 1
+                # Member info: member_name (member_code)
+                mem_name = z_item['member_name'] or z_item['member_code'] or ''
+                mem_code = z_item['member_code'] or ''
+                z_mem_info = f"{mem_name} ({mem_code})" if mem_code else mem_name
+                ws.cell(row=z_row, column=4, value=z_mem_info)
+                z_row += 1
 
-    if z_var_info:
-        ws.cell(row=2, column=4, value=z_var_info)
-        ws.cell(row=2, column=4).font = bold_font
-    if z_mem_info:
-        ws.cell(row=3, column=4, value=z_mem_info)
+    # Dynamic row positioning based on Z items
+    columns_label_row = max(z_row + 1, 5)
+    ws.cell(row=columns_label_row, column=4, value='Columns')
+    ws.cell(row=columns_label_row, column=4).font = bold_font
 
-    # Row 5: "Columns" label
-    ws.cell(row=5, column=4, value='Columns')
-    ws.cell(row=5, column=4).font = bold_font
-
-    # Row 6: Column header names
-    header_row = 6
+    # Column header names
+    header_row = columns_label_row + 1
     for col_idx, col_ord_id in enumerate(col_ordinates, start=4):
         col_data = ordinates_data.get(col_ord_id, {})
         header_text = col_data.get('name', col_ord_id)
@@ -487,39 +491,65 @@ def export_annotated_template_excel(request, table_id):
         cell.alignment = center_alignment
         ws.column_dimensions[get_column_letter(col_idx)].width = 18
 
-    # Row 7: Column codes
-    code_row = 7
+    # Column codes
+    code_row = header_row + 1
     for col_idx, col_ord_id in enumerate(col_ordinates, start=4):
         col_data = ordinates_data.get(col_ord_id, {})
         cell = ws.cell(row=code_row, column=col_idx, value=col_data.get('code', ''))
         cell.border = thin_border
         cell.alignment = center_alignment
 
-    # Collect all unique dimension variables for column headers at the end
-    all_dim_vars = set()
+    # Collect Z-axis variables first (to exclude from X and Y axis - they're shown at top)
+    z_dim_vars = set()
+    for z_ord_id in z_ordinates:
+        for item in ordinate_items_map.get(z_ord_id, []):
+            if item['variable_code']:
+                z_dim_vars.add(item['variable_code'])
+
+    # Collect dimension variables SEPARATELY by axis
+    # X-axis (column) dimension variables - exclude Z-axis variables
+    x_dim_vars = set()
+    for col_ord_id in col_ordinates:
+        for item in ordinate_items_map.get(col_ord_id, []):
+            if item['variable_code'] and item['variable_code'] not in z_dim_vars:
+                x_dim_vars.add(item['variable_code'])
+    x_dim_vars_list = sorted(x_dim_vars)
+
+    # Y-axis (row) dimension variables - exclude Z-axis variables
+    y_dim_vars = set()
     for row_ord_id in row_ordinates:
         for item in ordinate_items_map.get(row_ord_id, []):
-            if item['variable_code']:
-                all_dim_vars.add(item['variable_code'])
-    dim_vars_list = sorted(all_dim_vars)
+            if item['variable_code'] and item['variable_code'] not in z_dim_vars:
+                y_dim_vars.add(item['variable_code'])
+    y_dim_vars_list = sorted(y_dim_vars)
 
-    # Dimension column headers (at the end, after data columns)
+    # Build Y-axis variable code -> variable name lookup
+    y_var_names = {}
+    for row_ord_id in row_ordinates:
+        for item in ordinate_items_map.get(row_ord_id, []):
+            if item['variable_code'] and item['variable_code'] not in y_var_names:
+                y_var_names[item['variable_code']] = item['variable_name'] or item['variable_code']
+
+    # Y-axis dimension column headers (at the end, after data columns)
     dim_start_col = 4 + len(col_ordinates) + 2  # Leave a gap
-    for dim_idx, dim_var in enumerate(dim_vars_list):
-        cell = ws.cell(row=header_row, column=dim_start_col + dim_idx, value=dim_var)
+    for dim_idx, dim_var in enumerate(y_dim_vars_list):
+        # Header: variable_name (variable_code)
+        var_name = y_var_names.get(dim_var, dim_var)
+        header_text = f"{var_name} ({dim_var})" if var_name != dim_var else dim_var
+        cell = ws.cell(row=header_row, column=dim_start_col + dim_idx, value=header_text)
         cell.fill = dim_header_fill
         cell.font = white_font
         cell.border = thin_border
         cell.alignment = center_alignment
-        ws.column_dimensions[get_column_letter(dim_start_col + dim_idx)].width = 25
+        ws.column_dimensions[get_column_letter(dim_start_col + dim_idx)].width = 30
 
     # Set column widths for first 3 columns
     ws.column_dimensions['A'].width = 8
     ws.column_dimensions['B'].width = 35
     ws.column_dimensions['C'].width = 8
 
-    # Row 8+: Data rows
-    data_start_row = 8
+    # Data rows (dynamic start based on header rows)
+    data_start_row = code_row + 1
     for row_idx, row_ord_id in enumerate(row_ordinates, start=data_start_row):
         row_data = ordinates_data.get(row_ord_id, {})
 
@@ -566,18 +596,61 @@ def export_annotated_template_excel(request, table_id):
             else:
                 cell.value = ''
 
-        # Dimension columns at end of row
+        # Y-axis dimension columns at end of row - ONLY row ordinate items
         row_items = ordinate_items_map.get(row_ord_id, [])
-        row_dim_values = {item['variable_code']: item for item in row_items}
+        row_dim_values = {item['variable_code']: item for item in row_items if item['variable_code']}
 
-        for dim_idx, dim_var in enumerate(dim_vars_list):
+        for dim_idx, dim_var in enumerate(y_dim_vars_list):
             if dim_var in row_dim_values:
                 item = row_dim_values[dim_var]
-                # Format: (var_code:member_code) Member name
-                dim_text = f"({item['variable_code']}:{item['member_code']}) {item['member_name']}"
+                # Format: member_name (member_code)
+                mem_name = item['member_name'] or item['member_code'] or '*'
+                mem_code = item['member_code'] or ''
+                dim_text = f"{mem_name} ({mem_code})" if mem_code else mem_name
                 cell = ws.cell(row=row_idx, column=dim_start_col + dim_idx, value=dim_text)
                 cell.border = thin_border
                 cell.alignment = left_alignment
+
+    # X-axis ordinate item rows (BELOW the data rows, in front of X-axis columns)
+    # One row per unique X-axis variable
+    x_dim_start_row = data_start_row + len(row_ordinates) + 1  # After data rows + gap
+
+    # Build variable code -> variable name lookup
+    x_var_names = {}
+    for col_ord_id in col_ordinates:
+        for item in ordinate_items_map.get(col_ord_id, []):
+            if item['variable_code'] and item['variable_code'] not in x_var_names:
+                x_var_names[item['variable_code']] = item['variable_name'] or item['variable_code']
+
+    for x_dim_idx, x_dim_var in enumerate(x_dim_vars_list):
+        current_row = x_dim_start_row + x_dim_idx
+        # Label in column C: variable_name (variable_code)
+        var_name = x_var_names.get(x_dim_var, x_dim_var)
+        label_text = f"{var_name} ({x_dim_var})" if var_name != x_dim_var else x_dim_var
+        label_cell = ws.cell(row=current_row, column=3, value=label_text)
+        label_cell.font = white_font
+        label_cell.fill = dim_header_fill
+        label_cell.border = thin_border
+        label_cell.alignment = center_alignment
+
+        # For each column, show that column's ordinate item for this variable
+        for col_idx, col_ord_id in enumerate(col_ordinates, start=4):
+            col_items = ordinate_items_map.get(col_ord_id, [])
+            # Find item with this variable
+            item_for_var = None
+            for item in col_items:
+                if item['variable_code'] == x_dim_var:
+                    item_for_var = item
+                    break
+
+            cell = ws.cell(row=current_row, column=col_idx)
+            cell.border = thin_border
+            cell.alignment = center_alignment
+            if item_for_var:
+                # Format: member_name (member_code)
+                mem_name = item_for_var['member_name'] or item_for_var['member_code'] or '*'
+                mem_code = item_for_var['member_code'] or ''
+                cell.value = f"{mem_name} ({mem_code})" if mem_code else mem_name
 
     # Create response
     output = io.BytesIO()
